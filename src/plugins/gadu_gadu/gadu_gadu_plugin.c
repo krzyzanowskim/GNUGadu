@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.7 2003/03/24 19:05:25 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.8 2003/03/24 22:00:54 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -108,46 +108,46 @@ gchar *insert_cr(gchar *txt)
 
 gpointer gadu_gadu_login(gpointer data, gint status)
 {
-    struct gg_login_params p;
-    gchar *serveraddr = (gchar *)config_var_get(handler,"server");
-    gchar **serv_addr = NULL;
+		struct gg_login_params p;
+		gchar *serveraddr = (gchar *)config_var_get(handler,"server");
+		gchar **serv_addr = NULL;
 
-    if (connected) {
-		gg_logoff(session);
-		gg_free_session(session);
-		connected = FALSE;
-		return FALSE;
+		if (connected) {
+			gg_logoff(session);
+			gg_free_session(session);
+			connected = FALSE;
+			return FALSE;
     }
     
-    memset(&p, 0, sizeof(p));
+		memset(&p, 0, sizeof(p));
 
-    p.server_port =  GG_DEFAULT_PORT;
+		p.server_port =  GG_DEFAULT_PORT;
     
-    if (serveraddr == NULL)
-		serveraddr = g_strdup("217.17.41.85");
-    else {
-		serv_addr = g_strsplit(serveraddr,":",2);
+		if (serveraddr == NULL)
+			serveraddr = g_strdup("217.17.41.85");
+    else 
+		{
+			serv_addr = g_strsplit(serveraddr,":",2);
 	
-		if (serv_addr) {
-			serveraddr = serv_addr[0];
+			if (serv_addr) {
+				serveraddr = serv_addr[0];
 
-		if (serv_addr[1] != NULL)
-			p.server_port =  g_strtod(serv_addr[1],NULL);
-		else
-			 p.server_port =  GG_DEFAULT_PORT;
-		
-		}
+				if (serv_addr[1] != NULL)
+					p.server_port =  g_strtod(serv_addr[1],NULL);
+				else
+					p.server_port =  GG_DEFAULT_PORT;
+			}
     }
     
-    print_debug("loguje sie GG# %d do serwera %s %d\n",(gint)config_var_get(handler,"uin"),serveraddr,p.server_port);
+		print_debug("loguje sie GG# %d do serwera %s %d\n",(gint)config_var_get(handler,"uin"),serveraddr,p.server_port);
 
-    p.uin	= (int) config_var_get(handler,"uin");
-    p.password	= (gchar *)config_var_get(handler,"password");
-    p.async	= 1;
-    p.status	= status;
+		p.uin	= (int) config_var_get(handler,"uin");
+		p.password	= (gchar *)config_var_get(handler,"password");
+		p.async	= 1;
+		p.status	= status;
 	
-    if (serveraddr != NULL)
-		p.server_addr = inet_addr(serveraddr);
+		if (serveraddr != NULL)
+			p.server_addr = inet_addr(serveraddr);
 
     if (!p.uin || (!p.password || !*p.password)) {
 		user_preferences_action(NULL);
@@ -624,29 +624,30 @@ gpointer search_action(gpointer user_data)
 
 gchar *userlist_dump(GSList *list)
 {
-    gchar *dump = NULL;
-    GSList *us = list;
+	gchar *dump = NULL;
+	GSList *us = list;
     
-    while (us){
-	gchar	 *line		= NULL;
-	GGaduContact *k		= (GGaduContact *)us->data;    
+	while (us)
+	{
+		gchar	 *line		= NULL;
+		GGaduContact *k		= (GGaduContact *)us->data;    
 	    
-	line = g_strdup_printf("%s;%s;%s;%s;%s;%s;%s\r\n",k->first_name,k->last_name,k->nick,k->comment,k->mobile,k->group,k->id);
+		line = g_strdup_printf("%s;%s;%s;%s;%s;%s;%s;;;;;\r\n",k->first_name,k->last_name,k->nick,k->comment,k->mobile,k->group,k->id);
 	    
-	if (!dump) 
-	    dump = g_strdup(line);
-	else {
-	    gchar *tmp = dump;
-	    dump = g_strjoin(NULL, dump, line, NULL);
-	    g_free(tmp);
+		if (!dump) 
+			dump = g_strdup(line);
+		else {
+			gchar *tmp = dump;
+			dump = g_strjoin(NULL, dump, line, NULL);
+			g_free(tmp);
+		}
+	    
+		g_free(line);
+		us = us->next;
 	}
-	    
-	g_free(line);
-
-	us = us->next;
-    }
-    print_debug("userlist_dump\n");
-    return dump;
+	
+	print_debug("userlist_dump\n");
+	return dump;
 }
 gboolean user_exists(gchar *id)
 {
@@ -664,65 +665,53 @@ gboolean user_exists(gchar *id)
 
 void import_userlist(gchar *list)
 {
-    gchar **all, **tmp;
+	gchar **all, **tmp;
     
-    all = g_strsplit(list, "\r\n", 1000);
-    tmp = all;
+	all = g_strsplit(list, "\r\n", 1000);
+	tmp = all;
     
-    while (*tmp) {
-	gchar *first_name, *last_name, *nick, *comment, *mobile, *group, *uin;
-	gchar **l, **tmpl;
-	GGaduContact *k;
+	while (*tmp) {
+		gchar *first_name, *last_name, *nick, *comment, *mobile, *group, *uin;
+		gchar **l = NULL;
+		GGaduContact *k;
 	
-	l = g_strsplit(*tmp++, ";", 8);
-	tmpl = l;
+		l = g_strsplit(*tmp++, ";", 11);
 		
-	first_name = *l;
-	l++;
-	last_name = *l;
-	l++;
-	nick = *l;
-	l++;
-	comment = *l;
-	l++;
-	mobile = *l;
-	l++;
-	group = *l;
-	l++;
-	uin = *l;
+		first_name = l[0];
+		last_name = l[1];
+		nick = l[2];
+		mobile = l[4];
+		group = l[5];
+		uin = l[6];
+		comment = l[7];
 
-	if ((!uin || !*uin) && (!mobile || !*mobile)) {
-	    continue;
-	}
-	if (user_exists(uin)) {
-	    continue;
-	}
-	k = g_new0(GGaduContact, 1);
+		if ((!uin || !*uin) && (!mobile || !*mobile))
+			continue;
 
-	if (uin != NULL)
-	    k->id = g_strdup(uin);
-	else
-	    k->id = g_strdup("");
+		if (user_exists(uin))
+			continue;
+
+		k = g_new0(GGaduContact, 1);
+
+		k->id = uin ? g_strdup(uin) : g_strdup("");
 		
-	print_debug("%s\n", uin);    
+		print_debug("%s\n", uin);    
 		
-	k->first_name = g_strdup(first_name);
-	k->last_name = g_strdup(last_name);
-	
-	if (strlen(nick) == 0)
-	    k->nick = g_strconcat(first_name," ",last_name,NULL);
-	else
-	    k->nick = g_strdup(nick);
+		k->first_name = g_strdup(first_name);
+		k->last_name = g_strdup(last_name);
+		k->nick = (strlen(nick) == 0) ? g_strconcat(first_name," ",last_name,NULL) : g_strdup(nick);
+		k->comment = g_strdup(comment);
+		k->mobile = g_strdup(mobile);
+		k->group = g_strdup(group);
+		k->status = GG_STATUS_NOT_AVAIL;
 
-	k->comment = g_strdup(comment);
-	k->mobile = g_strdup(mobile);
-	k->group = g_strdup(group);
-	k->status = GG_STATUS_NOT_AVAIL;
-
-	userlist = g_slist_append(userlist, k);
-	if (connected && session)
+		userlist = g_slist_append(userlist, k);
+		
+		if (connected && session)
 	    gg_add_notify(session,atoi(k->id));
-//	g_strfreev(tmpl);
+		
+		g_strfreev(l);
+		
     }
     
     signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
@@ -816,23 +805,23 @@ gpointer import_userlist_action(gpointer user_data)
 
 gpointer export_userlist_action(gpointer user_data)
 {
-    struct gg_http *h;
-    gchar *dump, *tmp = userlist_dump(userlist);
-    GIOChannel *chan;
+	struct gg_http *h;
+	gchar *dump, *tmp = userlist_dump(userlist);
+	GIOChannel *chan;
         
-    from_utf8("CP1250", tmp, dump);
-    g_free(tmp);
+	from_utf8("CP1250", tmp, dump);
+	g_free(tmp);
     
-    if (!(h = gg_userlist_put((gint)config_var_get(handler, "uin"), config_var_get(handler, "password"), dump, 1))) {
-	print_debug("userlist put error!\n");
+	if (!(h = gg_userlist_put((gint)config_var_get(handler, "uin"), config_var_get(handler, "password"), dump, 1))) {
+		print_debug("userlist put error!\n");
+		return NULL;
+	}
+    
+	chan = g_io_channel_unix_new(h->fd);
+	g_io_add_watch(chan, G_IO_IN | G_IO_OUT | G_IO_ERR, handle_userlist, h);
+	g_free(dump);
+    
 	return NULL;
-    }
-    
-    chan = g_io_channel_unix_new(h->fd);
-    g_io_add_watch(chan, G_IO_IN | G_IO_OUT | G_IO_ERR, handle_userlist, h);
-    g_free(dump);
-    
-    return NULL;
 }
 
 gpointer delete_userlist_action(gpointer user_data)
@@ -1577,7 +1566,7 @@ void load_contacts(gchar *encoding)
 	while (fgets(line, 1023, fp)) 
 	{
 		gchar *buf = NULL;
-		gchar **l, **tmp;
+		gchar **l;
 		gchar *first_name, *last_name, *nick, *comment, *mobile, *group, *uin;
 		
 		if (line[0] == '#' || !strcmp(g_strstrip(line), ""))
@@ -1585,49 +1574,32 @@ void load_contacts(gchar *encoding)
 
 		to_utf8(encoding,line,buf);
 		
-		l = g_strsplit(buf, ";", 8);
-		tmp = l;
+		l = g_strsplit(buf, ";", 11);
 		
-		first_name = *l;
-		l++;
-		last_name = *l;
-		l++;
-		nick = *l;
-		l++;
-		comment = *l;
-		l++;
-		mobile = *l;
-		l++;
-		group = *l;
-		l++;
-		uin = *l;
+		first_name = l[0];
+		last_name = l[1];
+		nick = l[2];
+		mobile = l[4];
+		group = l[5];
+		uin = l[6];
+		comment = l[7];
 
 		if ((!uin || !*uin) && (!mobile || !*mobile))
 			continue;
 
 		k = g_new0(GGaduContact, 1);
-
-		if (uin != NULL)
-		    k->id = g_strdup(uin);
-		else
-		    k->id = g_strdup("");
 		
 		print_debug("%s\n", uin);    
-		
+		k->id = uin ? g_strdup(uin) : g_strdup("");
 		k->first_name = g_strdup(first_name);
 		k->last_name = g_strdup(last_name);
-		
-		if (strlen(nick) == 0)
-		    k->nick = g_strconcat(first_name," ",last_name,NULL);
-		else
-		    k->nick = g_strdup(nick);
-		    
+		k->nick = (strlen(nick) == 0) ? g_strconcat(first_name," ",last_name,NULL) : g_strdup(nick);
 		k->comment = g_strdup(comment);
 		k->mobile = g_strdup(mobile);
 		k->group = g_strdup(group);
 		k->status = GG_STATUS_NOT_AVAIL;
 
-		g_strfreev(tmp);
+		g_strfreev(l);
 
 		userlist = g_slist_append(userlist, k);
 	}
@@ -1638,22 +1610,22 @@ void load_contacts(gchar *encoding)
 
 void save_addressbook_file(gpointer userlist) 
 {
-    GIOChannel *ch = NULL;
-    gchar *path = NULL;
+	GIOChannel *ch = NULL;
+	gchar *path = NULL;
     
-    path = g_build_filename(this_configdir, "userlist", NULL);
-    print_debug("path is %s\n", path);
-    ch = g_io_channel_new_file(path,"w",NULL);
+	path = g_build_filename(this_configdir, "userlist", NULL);
+	print_debug("path is %s\n", path);
+	ch = g_io_channel_new_file(path,"w",NULL);
     
-    if (ch) {	
-	gchar *temp = userlist_dump(userlist);
-	if (g_io_channel_set_encoding(ch,"ISO-8859-2",NULL) != G_IO_STATUS_ERROR) {
-	    if (temp != NULL)
-		g_io_channel_write_chars(ch,temp,-1,NULL,NULL);	    
+	if (ch) {	
+		gchar *temp = userlist_dump(userlist);
+		if (g_io_channel_set_encoding(ch,"ISO-8859-2",NULL) != G_IO_STATUS_ERROR) {
+			if (temp != NULL)
+				g_io_channel_write_chars(ch,temp,-1,NULL,NULL);	    
+		}
+		g_free(temp);
+		g_io_channel_shutdown(ch,TRUE,NULL);
 	}
-	g_free(temp);
-        g_io_channel_shutdown(ch,TRUE,NULL);
-    }
 
-    g_free(path);
+	g_free(path);
 }
