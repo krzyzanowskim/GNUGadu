@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.229 2004/12/29 16:27:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.230 2005/01/02 00:13:15 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -188,6 +188,43 @@ void gadu_gadu_enable_dcc_socket(gboolean state)
 		gg_dcc_ip = 0;
 		gg_dcc_port = 0;
 	}
+}
+
+static gpointer user_preferences_action(gpointer user_data)
+{
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Gadu-gadu plugin configuration"), "update config");
+	GList *statuslist_names = NULL;
+	GSList *tmplist = p->statuslist;
+	while (tmplist)
+	{
+		GGaduStatusPrototype *sp = tmplist->data;
+
+		if ((!sp->receive_only) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR) && (sp->status != GG_STATUS_NOT_AVAIL))
+			statuslist_names = g_list_append(statuslist_names, sp->description);
+
+		/* set selected as first in list */
+		if (sp->status == (gint) ggadu_config_var_get(handler, "status"))
+			statuslist_names = g_list_prepend(statuslist_names, sp->description);
+
+		tmplist = tmplist->next;
+	}
+
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, ggadu_config_var_get(handler, "uin"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PASSWORD, _("_Password:"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, ggadu_config_var_get(handler, "reason"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for _friends"), VAR_BOOL, ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
+
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("A_utoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Au_toconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
+
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_HISTORY, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_DCC, _("E_nable DCC"), VAR_BOOL, ggadu_config_var_get(handler, "dcc"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_SERVER, _("Ser_ver address:"), VAR_STR, ggadu_config_var_get(handler, "server"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PROXY,
+			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(handler, "proxy"), VAR_FLAG_ADVANCED);
+
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
+	return NULL;
 }
 
 static gpointer gadu_gadu_login(gpointer desc, gint status)
@@ -840,7 +877,7 @@ gpointer user_ask_remove_user_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_remove_user_action(gpointer user_data)
+static gpointer user_remove_user_action(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
 
@@ -865,7 +902,36 @@ gpointer user_remove_user_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_change_user_action(gpointer user_data)
+static gpointer user_info_user_action(gpointer user_data)
+{
+    GGaduDialog *dialog;
+    GSList *users;
+    GGaduContact *k;
+
+    if (!connected)
+    {
+	signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("You have to be connected to perform searching!")), "main-gui");
+	return NULL;
+    }
+    
+    users = (GSList *) user_data;
+    
+    if (!users)
+	return NULL;
+    
+    k = (GGaduContact *) users->data;
+    if (!k)
+	return NULL;
+    
+    dialog = g_new0(GGaduDialog, 1);
+    dialog->response = GGADU_OK;
+    ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, k->id, VAR_FLAG_NONE);
+    signal_emit("main-gui", "search", dialog, GGadu_PLUGIN_NAME);
+
+    return NULL;
+}
+
+static gpointer user_change_user_action(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) users->data;
@@ -881,7 +947,7 @@ gpointer user_change_user_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_add_user_action(gpointer user_data)
+static gpointer user_add_user_action(gpointer user_data)
 {
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
 	ggadu_dialog_add_entry(dialog, GGADU_ID, "GG#", VAR_STR, NULL, VAR_FLAG_NONE);
@@ -894,44 +960,8 @@ gpointer user_add_user_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_preferences_action(gpointer user_data)
-{
-	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Gadu-gadu plugin configuration"), "update config");
-	GList *statuslist_names = NULL;
-	GSList *tmplist = p->statuslist;
-	while (tmplist)
-	{
-		GGaduStatusPrototype *sp = tmplist->data;
 
-		if ((!sp->receive_only) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR) && (sp->status != GG_STATUS_NOT_AVAIL))
-			statuslist_names = g_list_append(statuslist_names, sp->description);
-
-		/* set selected as first in list */
-		if (sp->status == (gint) ggadu_config_var_get(handler, "status"))
-			statuslist_names = g_list_prepend(statuslist_names, sp->description);
-
-		tmplist = tmplist->next;
-	}
-
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, ggadu_config_var_get(handler, "uin"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PASSWORD, _("_Password:"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, ggadu_config_var_get(handler, "reason"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for _friends"), VAR_BOOL, ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
-
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("A_utoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Au_toconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
-
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_HISTORY, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_DCC, _("E_nable DCC"), VAR_BOOL, ggadu_config_var_get(handler, "dcc"), VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_SERVER, _("Ser_ver address:"), VAR_STR, ggadu_config_var_get(handler, "server"), VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PROXY,
-			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(handler, "proxy"), VAR_FLAG_ADVANCED);
-
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
-	return NULL;
-}
-
-gpointer register_account(gpointer data)
+static gpointer register_account(gpointer data)
 {
 	struct ggadu_gg_register *reg = (struct ggadu_gg_register *) data;
 	struct gg_http *r = gg_register3(reg->email, reg->password, reg->token_id, reg->token, 0);
@@ -971,7 +1001,7 @@ gpointer register_account(gpointer data)
 	return NULL;
 }
 
-gpointer _register_account_action(gpointer user_data)
+static gpointer _register_account_action(gpointer user_data)
 {
 	GGaduDialog *dialog = NULL;
 	GIOChannel *ch = NULL;
@@ -1028,13 +1058,13 @@ gpointer _register_account_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer register_account_action(gpointer user_data)
+static gpointer register_account_action(gpointer user_data)
 {
 	g_thread_create(_register_account_action, NULL, FALSE, NULL);
 	return NULL;
 }
 
-gpointer search_action(gpointer user_data)
+static gpointer search_action(gpointer user_data)
 {
 	GGaduDialog *dialog = NULL;
 	GList *gender_list = NULL;
@@ -1795,6 +1825,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send _File"), send_file_action, NULL));
 
 		ggadu_menu_add_user_menu_extensions(umenu, handler);
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Personal data"), user_info_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("E_dit"), user_change_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Rem_ove"), user_ask_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));

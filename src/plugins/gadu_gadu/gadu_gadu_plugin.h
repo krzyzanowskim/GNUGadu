@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.31 2004/12/29 13:10:20 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.32 2005/01/02 00:13:16 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -98,10 +98,6 @@ gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer
 
 void my_signal_receive(gpointer name, gpointer signal_ptr);
 
-void start_plugin();
-
-void destroy_plugin();
-
 void gadu_gadu_enable_dcc_socket(gboolean state);
 
 void wyjdz_signal_handler();
@@ -112,8 +108,5 @@ void save_addressbook_file();
 gboolean import_userlist(gchar * list);
 
 void test();
-
-
-gpointer user_preferences_action(gpointer user_data);
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: gui_search.c,v 1.9 2004/12/20 09:15:15 krzyzak Exp $ */
+/* $Id: gui_search.c,v 1.10 2005/01/02 00:13:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -186,7 +186,7 @@ void gui_show_search_results(GSList * list, gchar * plugin_name)
     hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
-    button_close = gtk_button_new_with_mnemonic(_("_Close"));
+    button_close = gtk_button_new_from_stock("gtk-close");
     gtk_box_pack_end(GTK_BOX(hbox), button_close, FALSE, FALSE, 0);
 
     g_signal_connect(search, "destroy", G_CALLBACK(on_destroy_search), list);
