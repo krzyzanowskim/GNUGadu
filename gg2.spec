@@ -1,22 +1,23 @@
-# $Revision: 1.3 $, $Date: 2003/06/02 10:48:43 $
+# $Revision: 1.4 $, $Date: 2003/06/03 11:30:54 $
 
-%define		_pre	pre2
+%define		snap	snap
 
 Summary:	GNU Gadu 2 - free talking
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.0
-Release:	0.%{_pre}.1
+Version:	%{snap}
+Release:	1
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Communications
-#Source0:	http://www.hakore.com/~krzak/gg2/%{name}-%{snap}.tar.gz
-Source0:	http://telia.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}%{_pre}.tar.bz2
+Source0:	http://www.hakore.com/~krzak/gg2/%{name}-%{snap}.tar.gz
+#Source0:	http://telia.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}%{_pre}.tar.bz2
+# Source0-md5: dc131e52db8fa2f9c16e8024b5236c99
 Source1:	%{name}.desktop
 URL:		http://www.gadu.gnu.pl/
 #BuildRequires:	arts-devel
 BuildRequires:	autoconf
-BuildRequires:	automake >= 1.6
+BuildRequires:	automake >= 1.7
 BuildRequires:	esound-devel >= 0.2.7
 BuildRequires:	iksemel-devel >= 0.0.1
 BuildRequires:	glib2-devel  >= 2.2.0
@@ -209,7 +210,7 @@ Themes for GNU Gadu 2 GUI.
 Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
-%setup -q -n %{name}-%{version}%{_pre}
+%setup -q -n %{name}
 
 %build
 rm -f missing
@@ -222,17 +223,17 @@ intltoolize --copy --force
 %configure \
 	--disable-gdb \
 	--disable-debug \
-	--with-gui \
-	--with-gadu \
-	--with-tlen \
-	--with-jabber \
-	--with-xosd \
-	--with-docklet \
-	--with-esd \
-	--with-oss \
-	--with-sms \
-	--with-external \
-	--with-remote
+ 	--with-gui \
+ 	--with-gadu \
+ 	--with-tlen \
+ 	--with-jabber \
+ 	--with-xosd \
+ 	--with-docklet \
+ 	--with-esd \
+ 	--with-oss \
+ 	--with-sms \
+ 	--with-external \
+ 	--with-remote
 #	--with-arts
 
 %{__make}
@@ -247,7 +248,7 @@ install -d $RPM_BUILD_ROOT%{_datadir}/applications
 install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/applications
 install -d $RPM_BUILD_ROOT%{_pixmapsdir}
 install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/sounds
-install $RPM_BUILD_ROOT%{_datadir}/%{name}/pixmaps/online.png $RPM_BUILD_ROOT%{_pixmapsdir}/%{name}.png
+install $RPM_BUILD_ROOT%{_datadir}/%{name}/pixmaps/icon.png $RPM_BUILD_ROOT%{_pixmapsdir}/%{name}.png
 
 %find_lang %{name} --all-name --with-gnome
 
@@ -260,6 +261,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gg2
 %dir %{_libdir}/gg2
 %{_datadir}/%{name}/sounds
+%{_libdir}/libgg2_core.so*
 
 %files gui-gtk+2
 %defattr(644,root,root,755)
@@ -341,15 +343,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %define date	%(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 %changelog
-* %{date} PLD Team <feedback@pld.org.pl>
-All persons listed below can be reached at <cvs_login>@pld.org.pl
+* %{date} PLD Team <feedback@pld-linux.org>
+All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.3  2003/06/02 10:48:43  shaster
-language fixes
+Revision 1.4  2003/06/03 11:30:54  krzyzak
+SPEC file update
 
-Revision 1.2  2003/04/15 18:03:47  krzyzak
-- sync with PLD repository
+Revision 1.41  2003/05/25 11:00:51  malekith
+- massive attack, adding Source-md5
+
+Revision 1.40  2003/05/25 05:47:50  misi3k
+- massive attack s/pld.org.pl/pld-linux.org/
 
 Revision 1.39  2003/04/11 21:07:02  adgor
 - Fixed %%doc

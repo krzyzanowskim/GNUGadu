@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=GnuGadu 2
+Comment=Instant messanger client
+Comment[pl]=Wolne Gadanie
+Exec=gg2
+Icon=icon.png
+Terminal=0
+Type=Application
+Categories=Application;Network;
+# vi: encoding=utf-8
