@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.6 2003/04/03 08:07:19 zapal Exp $ */
+/* $Id: gui_main.c,v 1.7 2003/04/05 17:35:03 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -98,6 +98,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	this_configdir = g_build_filename(g_get_home_dir(),".gg2",NULL);
 
     set_config_file_name((GGaduPlugin *)gui_handler, g_build_filename(this_configdir,"gui",NULL));
+    g_free (this_configdir);
 
     config_var_add(gui_handler, "theme", VAR_STR);
     config_var_add(gui_handler, "emot", VAR_BOOL);
@@ -261,4 +262,7 @@ void start_plugin()
 
 void destroy_plugin() 
 {
+  print_debug ("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+  
+  gtk_widget_destroy (GTK_WIDGET (window));
 }
