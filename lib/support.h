@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.10 2004/01/28 23:39:30 shaster Exp $ */
+/* $Id: support.h,v 1.11 2004/02/17 01:47:50 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -76,10 +76,11 @@ gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename);
 
 gboolean is_in_status(gint status, GSList * list);
 
+/* DEPRECATED */
 void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist);
-
+/* DEPRECATED */
 GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id);
-
+/* DEPRECATED */
 GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id);
 
 gboolean str_has_suffix(const gchar * str, const gchar * suffix);

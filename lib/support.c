@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.19 2004/02/17 01:34:29 krzyzak Exp $ */
+/* $Id: support.c,v 1.20 2004/02/17 01:47:50 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -135,7 +135,7 @@ void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlis
 {
 	GSList *slistmp = userlist;
 
-	print_debug("THIS FUNCTION IS DEPRECATED");
+	print_debug("\e[0;33mTHIS FUNCTION IS DEPRECATED AS IT USE USERLIST INSTEAD REPO\e[0m\n");
 	
 	if (slistmp == NULL)
 		return;
@@ -166,11 +166,14 @@ void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlis
 	}
 }
 
+/* DEPRECATED */
 GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id)
 {
 
 	GSList *slistmp = userlist;
 
+	print_debug("\e[0;33mTHIS FUNCTION IS DEPRECATED AS IT USE USERLIST INSTEAD REPO\e[0m\n");
+	
 	g_return_val_if_fail(userlist != NULL, NULL);
 	g_return_val_if_fail(id != NULL, NULL);
 
@@ -185,11 +188,14 @@ GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id)
 	return NULL;
 }
 
+/* DEPRECATED */
 GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id)
 {
 	GSList *tmp = list;
 	GGaduContact *k;
 
+	print_debug("\e[0;33mTHIS FUNCTION IS DEPRECATED AS IT USE USERLIST INSTEAD REPO\e[0m\n");
+	
 	while (list)
 	{
 		k = (GGaduContact *) tmp->data;
