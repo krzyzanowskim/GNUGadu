@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.1 2004/10/25 14:03:36 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.2 2004/10/25 15:40:09 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -32,7 +32,6 @@
 */
 
 #define DBUS_API_SUBJECT_TO_CHANGE
-#define DBUS_IM_FREEDESKTOP_ORG_SIGNAL_INTERFACE "im.freedesktop.org.Signal"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -50,50 +49,47 @@
 GGaduPlugin *plugin_handler = NULL;
 GGadu_PLUGIN_INIT("dbus", GGADU_PLUGIN_TYPE_MISC);
 
-static DBusHandlerResult dbus_signal_filter 
-      (DBusConnection *connection, DBusMessage *message, void *user_data)
+static void dbus_plugin_unregistered_func(DBusConnection * connection, gpointer user_data)
 {
-    if (dbus_message_is_signal(message,DBUS_IM_FREEDESKTOP_ORG_SIGNAL_INTERFACE,"Ping"))
-    {
+    print_debug("plumcium");
+}
+
+static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+{
 	DBusError error;
-	char *s;
-	dbus_error_init (&error);
-	if (dbus_message_get_args (message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID)) 
+	dbus_error_init(&error);
+	print_debug("tuptup");
+
+	if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_SIGNAL_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
 	{
-	    print_debug("DBUS: Ping received: %s\n", s);
-	    dbus_free(s);
+		gchar *contactURI = NULL;	/* URI of the user which we have to return presence. ex.  gg://13245  */
+		if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
+		{
+			print_debug("DBUS plugin: looking for %s", contactURI);
+			dbus_free(contactURI);
+		}
+		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-	return DBUS_HANDLER_RESULT_HANDLED;
-    }
-    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	
+
+	dbus_error_free(&error);
+	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
 
-static void dbus_plugin_signal_receive(gpointer name, gpointer signal_ptr)
-{
-}
+static DBusObjectPathVTable vtable = {
+	dbus_plugin_unregistered_func,
+	dbus_plugin_message_func,
+	NULL	/* internal */
+};
+
 
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-	gchar *this_configdir = NULL;
-
 	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
 	plugin_handler = register_plugin(GGadu_PLUGIN_NAME, _("DBUS interface plugin"));
-
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	ggadu_config_set_filename(plugin_handler, g_build_filename(this_configdir, "dbus", NULL));
-	g_free(this_configdir);
-
-	if (!ggadu_config_read(plugin_handler))
-		g_warning(_("Unable to read configuration file for plugin %s"), "dbus");
-
-	register_signal_receiver(plugin_handler, (signal_func_ptr) dbus_plugin_signal_receive);
 	return plugin_handler;
 }
 
@@ -101,168 +97,55 @@ void start_plugin()
 {
 	/* initialize dbus */
 	DBusConnection *bus = NULL;
-	/* DBusGProxy *proxy; */
 	DBusError dbuserror;
 	GError *error = NULL;
-	
-	dbus_error_init (&dbuserror);
-	bus = dbus_g_connection_get_connection(dbus_g_bus_get(DBUS_BUS_SYSTEM,&error));
+
+	dbus_error_init(&dbuserror);
+	bus = dbus_g_connection_get_connection(dbus_g_bus_get(DBUS_BUS_SYSTEM, &error));
 	if (!bus)
 	{
-		print_debug("Failed to connect to the D-BUS daemon: %s\n", error->message);
+		g_warning("Failed to connect to the D-BUS daemon: %s\n", error->message);
 		g_error_free(error);
 		return;
 	}
-	
-	dbus_connection_setup_with_g_main (bus, g_main_loop_get_context(config->main_loop));
-	dbus_bus_add_match (bus, "type='signal',interface='"DBUS_IM_FREEDESKTOP_ORG_SIGNAL_INTERFACE"'",&dbuserror);
-	dbus_connection_add_filter (bus,dbus_signal_filter, NULL,NULL);		
-}
 
+	dbus_connection_setup_with_g_main(bus, g_main_loop_get_context(config->main_loop));
 
-void destroy_plugin()
-{
-    print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
-}
-
-
-/*GGaduPlugin *handler;
-GGaduMenu *menu_pluginmenu = NULL;*/
-
-//GGadu_PLUGIN_INIT("dbus", GGADU_PLUGIN_TYPE_MISC);
-
-/*gpointer ggadu_play_file(gpointer user_data)
-{
-    gchar *cmd;
-    if (!ggadu_config_var_get(handler, "player"))
-	return NULL;
-
-    cmd = g_strdup_printf("%s %s", (char *) ggadu_config_var_get(handler, "player"), (gchar *) user_data);
-
-    system(cmd);
-    g_free(cmd);
-    return NULL;
-}
-
-gpointer se_preferences(gpointer user_data)
-{
-    GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("My Plugin preferences"),"update config");
-	
-    print_debug("%s: Preferences\n", "My Plugin");
-
-    ggadu_dialog_add_entry(dialog, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, ggadu_config_var_get(handler, "player"), VAR_FLAG_NONE);
-
-    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
-
-    return NULL;
-}
-*/
-
-/*
-void my_signal_receive(gpointer name, gpointer signal_ptr)
-{
-    GGaduSignal *signal = (GGaduSignal *) signal_ptr;
-
-    print_debug("%s : receive signal %d", GGadu_PLUGIN_NAME, signal->name);
-
-    if (signal->name == SOUND_PLAY_FILE_SIG)
-    {
-	gchar *filename = signal->data;
-
-	if (filename != NULL)
-	    g_thread_create(ggadu_play_file, filename, FALSE, NULL);
-    }
-
-    if (signal->name == UPDATE_CONFIG_SIG)
-    {
-	GGaduDialog *dialog = signal->data;
-
-	if (ggadu_dialog_get_response(dialog) == GGADU_OK)
+	if (!dbus_connection_register_fallback(bus, DBUS_ORG_FREEDESKTOP_IM_OBJECT, &vtable, NULL))
 	{
-	    GSList *tmplist = ggadu_dialog_get_entries(dialog);
-	    
-	    while (tmplist)
-	    {
-		GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
-		switch (kv->key)
-		{
-		case GGADU_SE_CONFIG_PLAYER:
-		    print_debug("changing var setting player to %s\n", kv->value);
-		    ggadu_config_var_set(handler, "player", kv->value);
-		    break;
-		}
-		tmplist = tmplist->next;
-	    }
-	    ggadu_config_save(handler);
+		g_warning("Failed to register object path.");
+		return;
 	}
-	GGaduDialog_free(dialog);
-    }
+	print_debug("kurwa");
+
 }
-*/
 
-
-/*
-GGaduMenu *build_plugin_menu()
-{
-    GGaduMenu *root = ggadu_menu_create();
-    GGaduMenu *item_gg = ggadu_menu_add_item(root, "My Plugin", NULL, NULL);
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), se_preferences, NULL));
-
-    return root;
-}
-*/
-
-/* MAIN */
-/*
-void start_plugin()
-{
-    menu_pluginmenu = build_plugin_menu();
-    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_pluginmenu, "main-gui");
-}
-*/
-
-/* PLUGIN INITIALISATION */
-/*
-GGaduPlugin *initialize_plugin(gpointer conf_ptr)
-{
-    gchar *this_configdir;
-
-    print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
-
-    GGadu_PLUGIN_ACTIVATE(conf_ptr);
-    handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("External player sound driver"));
-
-    SOUND_PLAY_FILE_SIG = register_signal(handler, "sound play file");
-    UPDATE_CONFIG_SIG = register_signal(handler, "update config");
-
-
-    if (g_getenv("HOME_ETC"))
-	this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-    else
-	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-    ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "my-plugin", NULL));
-
-    g_free(this_configdir);
-
-    ggadu_config_var_add(handler, "player", VAR_STR);
-
-    if (!ggadu_config_read(handler))
-	g_warning(_("Unable to read configuration file for plugin %s"), "");
-
-    register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
-
-    return handler;
-}
 
 void destroy_plugin()
 {
+	print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
+}
 
-    print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
 
-    if (menu_pluginmenu)
-    {
-	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
-    }
+
+/*
+	dbus_bus_add_match (bus, "type='signal',interface='"DBUS_IM_FREEDESKTOP_ORG_SIGNAL_INTERFACE"'",&dbuserror);
+	dbus_connection_add_filter (bus,dbus_signal_filter, NULL,NULL);
+*/
+/*static DBusHandlerResult dbus_signal_filter(DBusConnection * connection, DBusMessage * message, void *user_data)
+{
+	if (dbus_message_is_signal(message, DBUS_IM_FREEDESKTOP_ORG_SIGNAL_INTERFACE, "Ping"))
+	{
+		DBusError error;
+		char *s;
+		dbus_error_init(&error);
+		if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID))
+		{
+			print_debug("DBUS: Ping received: %s\n", s);
+			dbus_free(s);
+		}
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 */

@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.h,v 1.1 2004/10/25 14:03:36 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.2 2004/10/25 15:40:09 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -20,13 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#define DBUS_ORG_FREEDESKTOP_IM_SIGNAL_INTERFACE "org.freedesktop.im"
+#define DBUS_ORG_FREEDESKTOP_IM_OBJECT "/org/freedesktop/im"
 
-/*GGaduSigID SOUND_PLAY_FILE_SIG;
-GGaduSigID UPDATE_CONFIG_SIG;
+#define DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE "getPresence"
 
-enum
-{
-    GGADU_SE_CONFIG_PLAYER
-};
-*/
+
 

@@ -3,10 +3,7 @@
 #include <glib.h>
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
-
-#define DBUS_IM_FREEDESKTOP_ORG_SIGNAL_INTERFACE "im.freedesktop.org.Signal"
-#define DBUS_IM_FREEDESKTOP_ORG_OBJECT "/im/freedesktop/org"
-
+#include "dbus_plugin.h"
 
 static gboolean send_ping(DBusConnection * bus);
 
@@ -45,15 +42,17 @@ static gboolean send_ping(DBusConnection * bus)
 
 	/* Create a new signal "Ping" on the "com.burtonini.dbus.Signal" interface,
 	 * from the object "/com/burtonini/dbus/ping". */
-	message = dbus_message_new_signal(DBUS_IM_FREEDESKTOP_ORG_OBJECT, DBUS_IM_FREEDESKTOP_ORG_SIGNAL_INTERFACE, "Ping");
+	/*message = dbus_message_new_signal(DBUS_ORG_FREEDESKTOP_IM_OBJECT, DBUS_ORG_FREEDESKTOP_IM_SIGNAL_INTERFACE, "Ping"); */
+	message = dbus_message_new_method_call(NULL, DBUS_ORG_FREEDESKTOP_IM_OBJECT, DBUS_ORG_FREEDESKTOP_IM_SIGNAL_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE);
 	/* Append the string "Ping!" to the signal */
-	dbus_message_append_args(message, DBUS_TYPE_STRING, "Pinges!", DBUS_TYPE_INVALID);
+	dbus_message_append_args(message, DBUS_TYPE_STRING, "gg://12345", DBUS_TYPE_INVALID);
 	/* Send the signal */
 	dbus_connection_send(bus, message, NULL);
+	dbus_connection_flush(bus);
 	/* Free the signal now we have finished with it */
 	dbus_message_unref(message);
 	/* Tell the user we send a signal */
-	/*g_print("Ping!\n");*/
+	g_print("Ping!\n");
 	/* Return TRUE to tell the event loop we want to be called again */
 	return TRUE;
 }
