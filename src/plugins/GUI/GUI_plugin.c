@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.66 2004/04/06 22:56:25 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.67 2004/04/06 23:24:18 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -800,11 +800,12 @@ void gui_msg_receive(GGaduSignal * signal)
 		{
 			if (showwindow == FALSE)
 			{
-			    if (signal_emit_full
-				("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free) == NULL)
-			    	    showwindow = TRUE;
+			    if (find_plugin_by_name("docklet-*"))
+				signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
+			/*    	    showwindow = FALSE;
 			    else
-				    showwindow = FALSE;
+				    showwindow = TRUE;
+			*/
 			} else {
 				g_slist_free(sigdata);
 			}
