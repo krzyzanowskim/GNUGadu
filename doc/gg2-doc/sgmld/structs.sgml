@@ -48,6 +48,8 @@ typedef struct {
   gchar *img_filename;
   GSList *statuslist;
   gint   offline_status;
+  GSList *away_status;
+  GSList *online_status;
 } GGaduProtocol;
 </programlisting>
 
@@ -61,10 +63,19 @@ nie ma połączenia z serwerem (jest w stanie offline).</para>
 
 </sect2>
 
+<sect2 id="GGaduSigID" xreflabel="GGaduSigID"><title>GGaduSigID</title>
+<programlisting>
+typedef GQuark GGaduSigID;
+</programlisting>
+
+<para>Unikalny numer ID dla sygna�u.</para>
+</sect2>
+
+
 <sect2 id="GGaduSignal" xreflabel="GGaduSignal"><title>GGaduSignal</title>
 <programlisting>
 typedef struct {
-  gpointer name;
+  <xref linkend="GGaduSigID"/> name;
   gpointer source_plugin_name;
   gpointer destination_plugin_name;
   gpointer data;
@@ -176,12 +187,12 @@ typedef struct {
   guint height;
   gint pos_x;
   gint pos_y;
-
   GSList *all_available_plugins;
   GSList *plugins;
 
   gchar  *configdir;
   GSList *waiting_signals;
+  GSList *signal_hooks;
   gboolean all_plugins_loaded;
   GMainLoop *main_loop;
 
@@ -211,6 +222,8 @@ typedef struct {
   gchar *birthdate;
   gchar *status_descr;
   gchar *ip;
+  gchar *city;
+  gchar *age;
   gint status;
 } GGaduContact;
 </programlisting>

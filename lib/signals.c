@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.6 2003/06/09 13:10:30 krzyzak Exp $ */
+/* $Id: signals.c,v 1.7 2003/06/09 17:24:15 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -40,7 +40,7 @@ GGaduSignal *signal_cpy(GGaduSignal *sig)
  * tylko wrzuca signal do listy signali funkcje zwalniajaca signal 
  * BUL? kiedy zdejmowac to z listy? nie wiem, a moze przybic to dosignala ? a moze nie
  */
-GQuark register_signal(GGaduPlugin * plugin_handler, gpointer name)
+GGaduSigID register_signal(GGaduPlugin * plugin_handler, gpointer name)
 {
 	GQuark q_name = g_quark_from_string(name);
 	GGaduPlugin *tmplugin = (GGaduPlugin *) plugin_handler;
@@ -161,7 +161,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	while (hooks)
 	{
 	  GGaduSignalHook *hook = (GGaduSignalHook *) hooks->data;
-	  print_debug("qq %d %s - %d %s\n",tmpsignal->name,g_quark_to_string(tmpsignal->name),hook->name,g_quark_to_string(hook->name));
+	  /* print_debug("qq %d %s - %d %s\n",tmpsignal->name,g_quark_to_string(tmpsignal->name),hook->name,g_quark_to_string(hook->name)); */
 	  if (tmpsignal->name == hook->name)
 	  {
 	    GSList *list = hook->hooks;

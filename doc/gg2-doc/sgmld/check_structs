@@ -1,5 +1,7 @@
 #! /usr/bin/perl -w
 
+my $homepath = "/home/bartek/Projekty/poligon/tmp/gg2/"
+#my $homepath = "/home/users/krzak/gg2/";
 my @structs = ();
 my @tab = ();
 my $plik = "";
@@ -106,7 +108,7 @@ foreach (@structs) {
       $plik   = $1;
 
       splice @tab;
-      open PLIK, "</home/bartek/Projekty/poligon/tmp/gg2/$plik" or die;
+      open PLIK, "<".$homepath."/".$plik or die;
       while (<PLIK>) {
 	push @tab, $_;
       }

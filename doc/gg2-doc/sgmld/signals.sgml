@@ -22,7 +22,7 @@ Może to zrobić za pośrednictwem dwóch funkcji:</para>
 <programlisting>
 void register_signal_receiver(<xref linkend="GGaduPlugin"/> *plugin_handler,void
 			      (*sgr)(gpointer,gpointer));
-void register_signal(<xref linkend="GGaduPlugin"/> *plugin_handler,gpointer name);
+<xref linkend="GGaduSigID"/> register_signal(<xref linkend="GGaduPlugin"/> *plugin_handler,gpointer name);
 </programlisting>
 
 <para>Pierwsza z nich, <function>register_signal_receiver()</function> jest
@@ -31,7 +31,7 @@ wywołać, gdy plugin otrzymuje sygnał.</para>
 
 <para>Druga funkcja, <function>register_signal()</function> informuje
 o gotowości do odbioru danego sygnału. Nazwa sygnału jest podawana
-jako <type>name</type>.</para>
+jako <type>name</type>, oraz zwraca unikalny <type>ID</type> dla sygnału którym należy się posługiwać w dalszej części kodu</para>
 
 </sect2>
 
@@ -43,13 +43,17 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data,
 		       gpointer dest_name, void (*signal_free) (gpointer));
 </programlisting>
 
-<para><type>src_name</type> określa nazwę pluginu źródłowego.
-<type>name</type> jest nazwą sygnału, natomiast
-<type>dest_name</type> nazwą pluginu docelowego.
-<type>data</type> jest wskaźnikiem do danych towarzyszących
-sygnałowi. <type>signal_free</type> jest wskaźnikiem do
-funkcji zwlaniającej pamięć po <type>data</type> po
-zakończeniu sygnału.</para>
+Opis:
+<para>(const char *)<type>src_name</type> określa nazwę pluginu źródłowego.
+(const char *) <type>name</type> jest nazwą sygnału, natomiast
+(const char *) <type>dest_name</type> nazwą pluginu docelowego.
+(gpointer) <type>data</type> jest wskaźnikiem do danych towarzyszących sygnałowi. 
+<type>signal_free</type> jest wskaźnikiem do funkcji zwlaniającej pamięć po <type>data</type> 
+po zakończeniu sygnału.</para>
+
+<programlisting>
+Przykład : signal_emit_full("my-plugin", "open window", GTK_WINDOW(win), "window-plugin", free_open_window);
+</programlisting>
 
 </sect2>
 </sect1>
