@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.1 2003/10/31 19:44:23 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.2 2003/11/05 10:46:29 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -201,6 +201,14 @@ void docklet_clicked_cb(GtkWidget * widget, GdkEventButton * ev, gpointer data)
     }
 }
 
+static void
+docklet_destroyed_cb(GtkWidget *widget, void *data)
+{
+	print_debug("tray icon destroyed\n");
+
+	g_object_unref(G_OBJECT(widget));
+}
+
 
 GtkWidget *create_docklet()
 {
@@ -209,12 +217,17 @@ GtkWidget *create_docklet()
 	GdkAtom kwm_dockwindow_atom			= gdk_atom_intern("KWM_DOCKWINDOW", FALSE);
 	GdkAtom kde_net_system_tray_window_for_atom	= gdk_atom_intern("_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR", FALSE);
 	glong data[1];
+
 	egg = egg_tray_icon_new("GNU Gadu 2");
 
 	if (!egg) return NULL;
 	
 	if (egg->manager_window == None) {
+
 	    docklet = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	    
+	    if (docklet == NULL) return NULL;
+	    
 	    gtk_window_set_title(GTK_WINDOW(docklet), "GNU Gadu 2");
 	    gtk_window_set_wmclass(GTK_WINDOW(docklet), "GM_Statusdocklet", "gg2");
 	    gtk_window_set_decorated(GTK_WINDOW(docklet), 0);
@@ -262,6 +275,9 @@ GtkWidget *create_docklet()
 	gtk_container_add(GTK_CONTAINER(docklet), eventbox);
 	
 	g_signal_connect(G_OBJECT(docklet),"button_press_event",G_CALLBACK(docklet_clicked_cb),pixmap);
+	g_signal_connect(G_OBJECT(docklet), "destroy", G_CALLBACK(docklet_destroyed_cb), NULL);
+
+	g_object_ref(G_OBJECT(docklet));
 
 	gtk_widget_show_all(docklet);
 	

@@ -57,7 +57,10 @@ egg_tray_icon_get_type (void)
 
       our_type = g_type_register_static (GTK_TYPE_PLUG, "EggTrayIcon", &our_info, 0);
     }
-
+  else if (parent_class == NULL) { /* part from Gaim */
+    /* we're reheating the old class from a previous instance -  engage ugly hack =( */
+    egg_tray_icon_class_init((EggTrayIconClass *)g_type_class_peek(our_type));
+  }
   return our_type;
 }
 
