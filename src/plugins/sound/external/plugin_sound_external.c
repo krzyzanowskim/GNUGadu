@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.3 2003/05/04 16:19:12 zapal Exp $ */
+/* $Id: plugin_sound_external.c,v 1.4 2003/05/18 10:51:19 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -64,8 +64,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
                     	    config_var_set(handler, "player", kv->value);
                     	    break;
 		    }
+		    tmplist = tmplist->next;
 		}
-		tmplist = tmplist->next;
 	    }
 	    config_save(handler);
 	    GGaduDialog_free(d);
