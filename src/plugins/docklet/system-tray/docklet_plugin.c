@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.6 2004/01/07 21:41:01 thrulliq Exp $ */
+/* $Id: docklet_plugin.c,v 1.7 2004/01/09 10:47:59 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -209,6 +209,64 @@ void docklet_quit(GtkWidget *widget, gpointer user_data) {
     g_main_loop_quit(config->main_loop);
 }
 
+void go_online(GtkWidget *widget, gpointer user_data) 
+{
+    gpointer key, index;
+    if (ggadu_repo_exists("_protocols_")) {
+	GGaduProtocol *p = NULL;
+	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+
+	while (index) {
+	    GGaduStatusPrototype *sp;
+	    gint status;
+	    p = ggadu_repo_find_value("_protocols_", key);
+	    
+	    if (p && p->online_status) {
+		GSList *tmp = p->statuslist;
+		status = (gint)p->online_status->data;
+		while (tmp) {
+		    sp = tmp->data;
+		    if (sp->status == status) {
+			signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
+			break;    
+		    }
+		    tmp = tmp->next;
+		}
+	    } 
+	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+	}
+    }
+}
+
+void go_offline(GtkWidget *widget, gpointer user_data) 
+{
+    gpointer key, index;
+    if (ggadu_repo_exists("_protocols_")) {
+	GGaduProtocol *p = NULL;
+	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+
+	while (index) {
+	    GGaduStatusPrototype *sp;
+	    gint status;
+	    p = ggadu_repo_find_value("_protocols_", key);
+	    
+	    if (p && p->offline_status) {
+		GSList *tmp = p->statuslist;
+		status = (gint)p->offline_status->data;
+		while (tmp) {
+		    sp = tmp->data;
+		    if (sp->status == status) {
+			signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
+			break;    
+		    }
+		    tmp = tmp->next;
+		}
+	    } 
+	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+	}
+    }
+}
+
 void docklet_menu(GdkEventButton *event) {
     static GtkWidget *menu = NULL;
     gpointer key, index;
@@ -221,10 +279,10 @@ void docklet_menu(GdkEventButton *event) {
 	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
 
 	while (index) {
+	    GGaduStatusPrototype *sp;
 	    p = ggadu_repo_find_value("_protocols_", key);
-	    menuitem = gtk_menu_item_new_with_label(p->display_name);
-	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+	    sp = p->statuslist->data;
+	    menuitem = ggadu_new_item_from_image(menu, p->display_name, sp->image, NULL, NULL, 0, 0, 0);
 	    
 	    if (p->statuslist) {
 		GSList *tmp = p->statuslist;
@@ -232,7 +290,7 @@ void docklet_menu(GdkEventButton *event) {
 		GtkWidget *subitem;
 		
 		while (tmp) {
-		    GGaduStatusPrototype *sp = tmp->data;
+		    sp = tmp->data;
 		    if (!sp->receive_only) {
 			subitem = ggadu_new_item_from_image(submenu, sp->description, sp->image, G_CALLBACK(docklet_status_activate), sp, 0, 0, 0);
 			g_object_set_data(G_OBJECT(subitem), "protocol", p);
@@ -241,7 +299,19 @@ void docklet_menu(GdkEventButton *event) {
 		}
 		gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem), submenu);
 	    }
+	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
 	}
+	/* separator */
+        menuitem = gtk_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+        menuitem = gtk_menu_item_new_with_label(_("Go online (all)"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+        g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_online), NULL);	
+	
+	menuitem = gtk_menu_item_new_with_label(_("Go offline (all)"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+	g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_offline), NULL);
 	
 	/* separator */
         menuitem = gtk_menu_item_new();
