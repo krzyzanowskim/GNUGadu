@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.58 2004/12/19 19:40:48 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.59 2004/12/19 22:11:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -237,11 +237,11 @@ void gui_list_add(gui_protocol * gp)
 
 	users_liststore = gtk_list_store_new(3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER);
 
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(users_liststore), 2, GTK_SORT_ASCENDING);
 	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(users_liststore), 2, (GtkTreeIterCompareFunc) sort_func, gp,
 					NULL);
-
-	model = gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(users_liststore));
+	model = GTK_TREE_MODEL(users_liststore);
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model), 2, GTK_SORT_ASCENDING);
+	
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(model));
 	g_object_set_data(G_OBJECT(users_liststore),"treeview",treeview);
 	g_signal_connect(G_OBJECT(model),"row-changed",G_CALLBACK(nick_list_row_changed2),users_liststore);
@@ -388,10 +388,10 @@ void gui_create_tree()
 	users_treestore = gtk_tree_store_new(4, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER);
 	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(users_treestore), 3, (GtkTreeIterCompareFunc) sort_func, NULL,
 					NULL);
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(users_treestore), 3, GTK_SORT_ASCENDING);
 
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(users_treestore));
 	model = GTK_TREE_MODEL(users_treestore);
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model), 3, GTK_SORT_ASCENDING);
 	g_object_set_data(G_OBJECT(users_treestore),"treeview",treeview);
 	g_signal_connect(G_OBJECT(model),"row-changed",G_CALLBACK(nick_list_row_changed2),users_treestore);
 	

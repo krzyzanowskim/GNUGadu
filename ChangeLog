@@ -1,6 +1,5 @@
 19.12.2004
-- changes for gtk 2.6, there is still broken sorting order in with gtk 2.6
-  http://bugzilla.gnome.org/show_bug.cgi?id=161720 (GUI)
+- fixes for gtk 2.6 (GUI)
 - config->argv config->argc values from main(..)
 - small fixes.
 - introduce ggadu_strcmp(const gchar *s1,const gchar *s2) a case sensitive coparision
