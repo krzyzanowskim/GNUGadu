@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.33 2004/08/05 09:51:33 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.34 2004/08/09 20:06:34 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -135,6 +135,10 @@ gpointer jabber_login_connect(gpointer status)
 		/* lm_connection_unref(connection); */
 		lm_proxy_unref(jabber_data.proxy);
 	}
+
+#ifdef BUILD_WITH_NEW_LOUDMOUTH	
+	lm_connection_set_jid(jabber_data.connection, jid);
+#endif
 
 	if (ggadu_config_var_get(jabber_handler, "use_ssl"))
 	{

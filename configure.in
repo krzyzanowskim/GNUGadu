@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.73 2004/08/04 22:48:12 krzyzak Exp $
+dnl $Id: configure.in,v 1.74 2004/08/09 20:06:33 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.4])
 
@@ -281,6 +281,8 @@ if test "x$with_jabber" = "xyes"; then
 	echo
 
     fi
+    AC_CHECK_LIB([loudmouth],[lm_connection_set_jid],new_loudmouth=yes,new_loudmouth=no)
+    AC_DEFINE(BUILD_WITH_NEW_LOUDMOUTH)
     AC_SUBST(JABBER_LIBS)
     AC_SUBST(JABBER_CFLAGS)
 fi
