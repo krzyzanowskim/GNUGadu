@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.29 2003/04/13 11:57:17 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.30 2003/04/13 15:13:51 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -915,7 +915,7 @@ gpointer send_file_action(gpointer user_data) {
 	GGaduContact *k = (GGaduContact *)users->data;
 	GGaduDialog *d = NULL;
 
-	if (!k->ip || !g_strcasecmp(k->ip,"0.0.0.0:0"))
+	if (!k->ip || !g_str_has_prefix(k->ip,"0.0.0.0"))
 				return NULL;
 
 	d = ggadu_dialog_new();

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.13 2003/04/11 09:22:01 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.14 2003/04/13 15:13:51 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -297,7 +297,10 @@ void on_emoticons_clicked(GtkWidget *button, gpointer user_data)
 	gint chat_type = (gint)config_var_get(gui_handler,"chat_type");
 	GtkWidget *emoticons_window = NULL;
 	GtkWidget *vbox = NULL;
+	GtkWidget *outervbox = NULL;
 	GtkWidget *button_close = NULL;
+	GtkWidget *scrolledwindow1;
+        GtkWidget *viewport1;
 	gui_chat_session *session = NULL;
 
 	if (chat_type == CHAT_TYPE_TABBED) {
@@ -315,12 +318,39 @@ void on_emoticons_clicked(GtkWidget *button, gpointer user_data)
 	gtk_window_set_modal(GTK_WINDOW(emoticons_window), TRUE);
 	gtk_window_set_position(GTK_WINDOW(emoticons_window), GTK_WIN_POS_MOUSE);
 	
+	gtk_widget_set_usize (emoticons_window, 510, 300);
+	
 	g_object_set_data(G_OBJECT(emoticons_window), "session", session);
 	
 	g_object_set_data(G_OBJECT(emoticons_window), "emoticons_window", emoticons_window);
 
+
+/* dodajê po drodze viewport i scroll 
+	Pawe³ Marchewka <pmgiant@student.uci.agh.edu.pl> 12.04.2003
+*/
+        outervbox = gtk_vbox_new(FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(emoticons_window), outervbox);
+
+	scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
+	        gtk_widget_set_name (scrolledwindow1, "scrolledwindow1");
+	        gtk_widget_ref (scrolledwindow1);
+	        gtk_object_set_data_full (GTK_OBJECT (emoticons_window), "scrolledwindow1", scrolledwindow1,
+			(GtkDestroyNotify) gtk_widget_unref);
+	        gtk_box_pack_start(GTK_BOX(outervbox), scrolledwindow1, TRUE, TRUE, 0);
+	
+		gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow1), 5);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1),
+		GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+												
+	viewport1 = gtk_viewport_new (NULL, NULL);
+		gtk_widget_set_name (viewport1, "viewport1");
+		gtk_widget_ref (viewport1);
+		gtk_object_set_data_full (GTK_OBJECT (emoticons_window), "viewport1", viewport1,
+			(GtkDestroyNotify) gtk_widget_unref);
+		gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
+	
 	vbox = gtk_vbox_new(TRUE, 0);
-	gtk_container_add(GTK_CONTAINER(emoticons_window), vbox);
+		gtk_container_add(GTK_CONTAINER(viewport1), vbox);
 
 	if (emoticons) {
 		GSList *emotlist = NULL; 
@@ -347,6 +377,7 @@ void on_emoticons_clicked(GtkWidget *button, gpointer user_data)
 
 	while (emottmp) 
 	{
+		GtkTooltips *tip;
 		gui_emoticon *gemo = (gui_emoticon *)emottmp->data;
 		widget = GTK_WIDGET(create_image(gemo->file));
 		event_box = gtk_event_box_new();
@@ -359,6 +390,10 @@ void on_emoticons_clicked(GtkWidget *button, gpointer user_data)
 
 		gtk_container_add (GTK_CONTAINER (event_box), widget);
 		gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);
+		gtk_widget_set_usize (event_box, 60, 30);
+		
+		tip = gtk_tooltips_new();
+		gtk_tooltips_set_tip(tip, event_box, gemo->emoticon, gemo->file);
 		g_signal_connect(event_box, "button_press_event", G_CALLBACK(on_emoticon_press_event), gemo);
 		emottmp = emottmp->next;
 		count++;
@@ -369,7 +404,8 @@ void on_emoticons_clicked(GtkWidget *button, gpointer user_data)
 
 	button_close = gtk_button_new_with_mnemonic(_("_Close"));
 
-	gtk_box_pack_start(GTK_BOX(vbox), button_close, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(outervbox), button_close, FALSE, FALSE, 0);
+
 	g_signal_connect_swapped(button_close, "clicked", G_CALLBACK(gtk_widget_destroy), emoticons_window);
 
 	gtk_widget_show_all(emoticons_window);
