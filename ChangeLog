@@ -1,4 +1,5 @@
 3.04.2003
+- fix in plugins dynamic load (GUI/krzak)
 - small cleanups in sound plugins, signal registration (sound/THrull)
 - added new sound plugin, it uses extarenal program to play sound files (sound/THrull) 
 - dynamically load/unload plugins from GUI (restart isn't necessary)
