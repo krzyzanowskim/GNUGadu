@@ -1,5 +1,6 @@
-/* $Id: plugins.c,v 1.7 2003/09/27 22:35:09 shaster Exp $ */
+/* $Id: plugins.c,v 1.8 2003/12/01 22:43:09 krzyzak Exp $ */
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -472,7 +473,9 @@ gboolean config_save (GGaduPlugin * plugin_handler)
 
     path = g_strdup (plugin_handler->config_file);
     path_dest = g_strconcat (plugin_handler->config_file, ".tmp_", NULL);
-
+    
+    if (!g_file_test (g_path_get_dirname (path) , G_FILE_TEST_IS_DIR))
+    	mkdir(g_path_get_dirname (path), 0700);
 
     ch_dest = g_io_channel_new_file (path_dest, "w", NULL);
 

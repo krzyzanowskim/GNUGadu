@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.26 2003/11/06 20:03:27 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.27 2003/12/01 22:43:10 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -86,8 +86,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     
     register_signal_receiver((GGaduPlugin *)gui_handler, (signal_func_ptr)gui_signal_receive);
     
-    if (g_getenv("CONFIG_DIR"))
-	this_configdir = g_build_filename(g_get_home_dir(),g_getenv("CONFIG_DIR"),"gg2",NULL);
+    if (g_getenv("CONFIG_DIR") || g_getenv ("HOME_ETC") )
+	this_configdir = g_build_filename(g_get_home_dir(),g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv ("HOME_ETC"),"gg2",NULL);
     else
 	this_configdir = g_build_filename(g_get_home_dir(),".gg2",NULL);
 

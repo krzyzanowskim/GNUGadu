@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.3 2003/11/25 23:40:30 thrulliq Exp $ */
+/* $Id: dockapp_plugin.c,v 1.4 2003/12/01 22:43:10 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -509,10 +509,12 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     /* configure plugin */
     config_var_add(handler, "dockapp_protocol", VAR_STR);
     
-    if (g_getenv("CONFIG_DIR"))
-	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR"), "gg", NULL);
+    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
+	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg", NULL);
     else
-	this_configdir = g_build_filename(g_get_home_dir(), ".gg", NULL);
+	this_configdir = g_build_filename (g_get_home_dir (), ".gg", NULL);
+
+
     path = g_build_filename(this_configdir, "config", NULL);
     set_config_file_name((GGaduPlugin *) handler, path);
     if (!config_read(handler))

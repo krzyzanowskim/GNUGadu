@@ -1,3 +1,7 @@
+01.12.2003
+- HOME_ETC support (CONFIG_DIR already supported) (krzak/All)
+- config_save create directory that it want save to (krzak/core)
+
 26.11.2003
 - small fixes (emvi)
 

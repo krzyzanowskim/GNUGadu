@@ -1,12 +1,14 @@
-<?xml version='1.0'?>
+<?xml version="1.0"?>
+<!DOCTYPE sect2 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+]>
 <sect2><title>docklet</title>
-<table frame="all"><title>Sygnały obsługiwane przez docklet</title>
-<tgroup cols='3' align="center" colsep='1' rowsep='1'>
-<colspec colname='Nazwa'/>
-<colspec colnum='3' colname='Opis'/>
+<table frame="all"><title>Sygna&#x142;y obs&#x142;ugiwane przez docklet</title>
+<tgroup cols="3" align="center" colsep="1" rowsep="1">
+<colspec colname="Nazwa"/>
+<colspec colnum="3" colname="Opis"/>
 <thead>
   <row>
-    <entry align="center">Nazwa sygnału</entry>
+    <entry align="center">Nazwa sygna&#x142;u</entry>
     <entry align="center">Dane</entry>
     <entry align="center">Opis</entry>
   </row>
@@ -16,21 +18,20 @@
   <row>
     <entry><computeroutput>docklet set icon</computeroutput></entry>
     <entry><type>GSList *</type></entry>
-    <entry>Ustawia ikonę dockletu oraz podpowiedź informującą o oczekującej
-    wiadomości. Ikona jest podawana w postaci nazwy katalogu i nazwy pliku,
-    które znajdują się odpowiednio w pierwszym i drugim elemencie listy.
-    Podpowiedź znajduje się w trzecim elemencie.</entry>
+    <entry>Ustawia ikon&#x119; dockletu oraz podpowied&#x17A; informuj&#x105;c&#x105; o oczekuj&#x105;cej
+    wiadomo&#x15B;ci. Ikona jest podawana w postaci nazwy katalogu i nazwy pliku,
+    kt&#xF3;re znajduj&#x105; si&#x119; odpowiednio w pierwszym i drugim elemencie listy.
+    Podpowied&#x17A; znajduje si&#x119; w trzecim elemencie.</entry>
   </row>
   <row>
     <entry><computeroutput>docklet set default icon</computeroutput></entry>
     <entry><type>GSList *</type></entry>
-    <entry>Ustawia ikonę dockletu oraz podpowiedź informującą o normalnym
-    stanie. Ikona i podpowiedź jest podawana tak samo jak w przypadku
-    poprzedniego sygnału.</entry>
+    <entry>Ustawia ikon&#x119; dockletu oraz podpowied&#x17A; informuj&#x105;c&#x105; o normalnym
+    stanie. Ikona i podpowied&#x17A; jest podawana tak samo jak w przypadku
+    poprzedniego sygna&#x142;u.</entry>
   </row>
 </tbody>
 
 </tgroup>
 </table>
 </sect2>
-

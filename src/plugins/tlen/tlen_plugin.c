@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.43 2003/11/26 18:07:31 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.44 2003/12/01 22:43:13 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -644,8 +644,8 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 
     register_signal_receiver ((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
 
-    if (g_getenv ("CONFIG_DIR"))
-	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR"), "tlen", NULL);
+    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
+	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "tlen", NULL);
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".tlen", NULL);
 

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.94 2003/11/26 18:07:31 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.95 2003/12/01 22:43:10 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1520,8 +1520,8 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     config_var_add (handler, "dcc", VAR_BOOL);
 
 
-    if (g_getenv ("CONFIG_DIR"))
-	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR"), "gg", NULL);
+    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
+	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg", NULL);
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".gg", NULL);
 	

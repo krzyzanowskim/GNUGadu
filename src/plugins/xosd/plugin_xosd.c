@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.15 2003/07/05 18:27:15 shaster Exp $ */
+/* $Id: plugin_xosd.c,v 1.16 2003/12/01 22:43:14 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -492,10 +492,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     config_var_add(handler, "pos", VAR_STR);
     config_var_add(handler, "numlines", VAR_INT);
 
-    if (g_getenv("CONFIG_DIR"))
-	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR"), "gg2", NULL);
+    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
+	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg2", NULL);
     else
-	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
+	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
 
     set_config_file_name((GGaduPlugin *) handler, g_build_filename(this_configdir, "xosd", NULL));
 

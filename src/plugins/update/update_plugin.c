@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.9 2003/11/25 23:34:26 thrulliq Exp $ */
+/* $Id: update_plugin.c,v 1.10 2003/12/01 22:43:14 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -406,10 +406,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     update_handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Update checker"));
 
     print_debug("%s : read configuration\n", GGadu_PLUGIN_NAME);
-    if (g_getenv("CONFIG_DIR"))
-	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR"), "gg2", NULL);
+    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
+	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg2", NULL);
     else
-	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
+	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
 
     set_config_file_name((GGaduPlugin *) update_handler, g_build_filename(this_configdir, "update", NULL));
 

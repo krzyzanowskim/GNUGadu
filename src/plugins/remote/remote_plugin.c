@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.10 2003/10/31 19:44:23 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.11 2003/12/01 22:43:11 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -673,11 +673,11 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
   handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,
       _("Remote control"));
 
-  if (g_getenv("CONFIG_DIR"))
-    this_configdir = g_build_filename(g_get_home_dir(),
-	g_getenv("CONFIG_DIR"), "gg2", NULL);
-  else
-    this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
+
+    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
+	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg2", NULL);
+    else
+	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
 
   set_config_file_name((GGaduPlugin *)handler,
       g_build_filename(this_configdir, "remote", NULL));
