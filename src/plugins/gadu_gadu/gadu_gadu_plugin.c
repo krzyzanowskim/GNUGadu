@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.127 2004/01/19 20:56:42 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.128 2004/01/19 23:18:31 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -639,9 +639,9 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 	case GG_EVENT_ACK:
 		if (e->event.ack.status == GG_ACK_QUEUED)
-			print_debug("wiadomosc bedzie dostarczona pozniej do %d.\n", e->event.ack.recipient);
+			print_debug("wiadomosc bedzie dostarczona pozniej do %d.", e->event.ack.recipient);
 		else
-			print_debug("wiadomosc dotarla do %d.\n", e->event.ack.recipient);
+			print_debug("wiadomosc dotarla do %d.", e->event.ack.recipient);
 		break;
 	case GG_EVENT_PUBDIR50_SEARCH_REPLY:
 		handle_search_event(e);

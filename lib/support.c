@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.16 2004/01/18 21:13:25 krzyzak Exp $ */
+/* $Id: support.c,v 1.17 2004/01/19 23:17:10 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -23,12 +23,8 @@ gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
 	gchar *out = NULL;
 	GError *err = NULL;
 
-#ifdef GGADU_DEBUG
-	g_return_val_if_fail(text != NULL, NULL);
-#else
 	if (!text)
 		return NULL;
-#endif
 
 	if (!(out = g_convert(text, -1, to_encoding, from_encoding ? from_encoding : "UTF-8", NULL, NULL, &err)))
 	{
