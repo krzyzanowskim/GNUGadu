@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.61 2004/09/12 21:02:45 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.62 2004/09/17 17:58:50 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -385,6 +385,8 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user get software");
 		LmMessageNode *node;
 		
+		ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
+
 		node = lm_message_node_find_child(message->node, "name");
 		ggadu_dialog_add_entry(dialog, GGADU_JABBER_CLIENT, _("Client"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
@@ -481,8 +483,9 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 	{
 		LmMessageNode *node;
 		gchar *string = g_strdup_printf(_("%s's personal info:"),lm_message_node_get_attribute(message->node, "from"));
-		GGaduDialog *dialog = dialog=ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user show vcard");
+		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user show vcard");
 
+		ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
 		g_free(string);
 
 		node = lm_message_node_find_child(message->node, "GIVEN");
