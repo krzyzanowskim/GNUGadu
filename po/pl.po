@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.92 2005/01/07 21:05:13 aflinta Exp $
+# $Id: pl.po,v 1.93 2005/01/07 21:18:46 aflinta Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-07 21:59+0100\n"
+"POT-Creation-Date: 2005-01-07 22:17+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: Artur Flinta\n"
 "Language-Team: GNU Gadu Team\n"
@@ -1281,7 +1281,7 @@ msgstr "Ksywa:"
 
 #: src/plugins/jabber/jabber_plugin.c:133
 msgid "Request authorization from"
-msgstr "Poproś o autoryzację od"
+msgstr "Prośba o autoryzację"
 
 #: src/plugins/jabber/jabber_plugin.c:148 src/plugins/sms/sms_gui.c:82
 msgid "Edit contact"
@@ -1312,6 +1312,7 @@ msgid "Jabber server for account registration"
 msgstr "Serwer Jabbera do rejestracji konta"
 
 #: src/plugins/jabber/jabber_plugin.c:373
+#: src/plugins/jabber/jabber_plugin.c:1274
 msgid "_Server:"
 msgstr "_Serwer:"
 
@@ -1394,11 +1395,7 @@ msgstr "Błąd"
 
 #: src/plugins/jabber/jabber_plugin.c:1272
 msgid "Jabber search server"
-msgstr "W_yszukiwanie Jabbera: serwer"
-
-#: src/plugins/jabber/jabber_plugin.c:1274
-msgid "_Server"
-msgstr "_Serwer"
+msgstr "Serwer wyszukiwania Jabbera"
 
 #: src/plugins/jabber/jabber_plugin.c:1284
 msgid "Jabber plugin configuration"
@@ -1406,23 +1403,23 @@ msgstr "Konfiguracja wtyczki Jabbera"
 
 #: src/plugins/jabber/jabber_plugin.c:1285
 msgid "_Jabber ID:"
-msgstr "_Identyfikator Jabbera"
+msgstr "_Identyfikator Jabbera:"
 
 #: src/plugins/jabber/jabber_plugin.c:1287
 msgid "_Receive messages from friends only"
-msgstr "_Przyjmowanie wiadomości tylko od przyjaciół"
+msgstr "_Przyjmowanie wiadomości tylko od znajomych"
 
 #: src/plugins/jabber/jabber_plugin.c:1293
 msgid "Use _encrypted connection (SSL)"
-msgstr "Szyfrowane połączenie (SSL)"
+msgstr "Połączenie _szyfrowane (SSL)"
 
 #: src/plugins/jabber/jabber_plugin.c:1298
-msgid "Re_source"
-msgstr "_Zasób"
+msgid "Re_source:"
+msgstr "_Zasób:"
 
 #: src/plugins/jabber/jabber_plugin.c:1300
-msgid "Jabber server a_ddress"
-msgstr "_Wyszukiwanie Jabbera: serwer"
+msgid "Jabber server a_ddress:"
+msgstr "A_dres serwera Jabbera:"
 
 #: src/plugins/jabber/jabber_plugin.c:1387
 msgid "Personal _data"
@@ -2131,6 +2128,9 @@ msgstr "Sterownik zewnętrznego odtwarzacza dźwięku"
 #: src/plugins/sound/oss/plugin_sound_oss.c:162
 msgid "OSS sound driver"
 msgstr "Sterownik dźwiękowy OSS"
+
+#~ msgid "_Server"
+#~ msgstr "_Serwer"
 
 #~ msgid "ESD plugin: Problems while playing file"
 #~ msgstr "Wtyczka ESD: Błąd podczas odtwarzania pliku"
