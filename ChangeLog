@@ -1,5 +1,5 @@
 25.12.2004
-- patch for external-history plugin destroy function by BJ (foxia@alexandria.cc)
+- patch for external-history plugin destroy function by BJ (foxia[at]alexandria.cc)
 - search for X libraries for aaway plugin (krzak)
 - chat window design modified a bit (GUI/krzak)
 - show "stick" button only if more than one workspace available (GUI/krzak)
@@ -170,7 +170,7 @@
 - fixed lib/ggadu_conf.c/ggadu_config_var_set() with g_strstrip() not called with NULL argument.
   Close bug #82 thanks Marcin Grzeskowiak.
 - check for messages handlers before unregister them.
-  suggested by Michael Hallendal (micke@imendio.com) (jabber)
+  suggested by Michael Hallendal (micke[at]imendio.com) (jabber)
 
 24.09.2004
 - "remote" plugin do not build by default anymore
@@ -183,7 +183,7 @@
 - small fixes with gtk_window_set_title (krzak/GUI)
 
 21.09.2004
-- dlerror() - clear error messages after dlopen (piotr.smyrak@heron.pl)
+- dlerror() - clear error messages after dlopen (piotr.smyrak[at]heron.pl)
 
 17.09.2004
 - option to create dialog boxes with OK button only (mkobierzycki)
@@ -196,7 +196,7 @@
 - Implemented probing software version (JEP-0092) (mkobierzycki/jabber)
 
 10.09.2004
-- gg2.png remastered by Rafa³ Glazar <rafal_glazar@o2.pl>
+- gg2.png remastered by Rafa³ Glazar <rafal_glazar[at]o2.pl>
 
 07.09.2004
 - Updated po/pl.po translation. If anyone is creating GUI, please remeber to:
@@ -211,7 +211,7 @@
 - release 2.0.6
      
 06.09.2004
-- gg2-select.patch for userlist right click by madej@afn.no-ip.org (GUI/Madej)
+- gg2-select.patch for userlist right click by madej[at]afn.no-ip.org (GUI/Madej)
 
 02.09.2004
 - set wrap mode to GTK_WRAP_WORD_CHAR (GUI/krzak)
@@ -239,7 +239,7 @@
 22.08.2004
 - tlen-3d icons set as default, current tlen icons set as tlen-classic (core/krzak)
 - close bug #76 (gadu-gadu/krzak)
-- Jep-0054 - vcard support (jabber/m-kobierzycki@debian.linux.org.pl)
+- Jep-0054 - vcard support (jabber/m-kobierzycki[at]debian.linux.org.pl)
 - translations update (Aflinta)
 - release 2.0.5
 
@@ -266,7 +266,7 @@
 - small fixes in jabber plugin
 
 16.08.2004
-- jabber ignore/unignore functionality (jabber/m-kobierzycki@debian.linux.org.pl)
+- jabber ignore/unignore functionality (jabber/m-kobierzycki[at]debian.linux.org.pl)
 
 12.08.2004
 - fixed gghist if build without debug (ughhh) (gghist/krzak)
@@ -290,14 +290,14 @@
 - ~/.gg create if do not exist, fixed save userlist after import (gadu-gadu/krzak)
 
 02.08.2004
-- tropic.theme and office.theme sent by Krzysztof Foltman <krzysztof@foltman.com>
+- tropic.theme and office.theme sent by Krzysztof Foltman <krzysztof[at]foltman.com>
 - keep history in utf-8, and some cleanups (gghist/krzak)
 - fixed make dist, more changes in gghist (krzak)
 
 01.08.2004
 - ggadu_save_history() as a base for history in every plugin, to keep similar
   history format (krzak)
-- contrib/gghist nice history viewer prototype send by Kazik <kazik.cz@interia.pl>
+- contrib/gghist nice history viewer prototype send by Kazik <kazik.cz[at]interia.pl>
 - ggadu_menu_add_user_menu_extensions(..) to get extensions easy (krzak)
 - history from all plugins should be stored in .gg2/history directory (krzak)
 - added history-external-viewer plugin - this plugin install as a extension in usermenu and
