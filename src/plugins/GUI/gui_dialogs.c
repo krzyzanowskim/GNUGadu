@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.40 2004/03/09 10:31:40 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.41 2004/03/28 23:03:43 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -537,6 +537,11 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog_widget)->vbox), table, TRUE, TRUE, 0);
 
 	g_signal_connect(G_OBJECT(dialog_widget), "response", G_CALLBACK(gui_dialog_response), signal_cpy(signal));
+	
+	if (ggadu_dialog_get_type(dialog) == GGADU_DIALOG_PROGRESS)
+	{
+		g_timeout_add(1000,dialog->watch_func,NULL);
+	}
 
 	gtk_widget_show_all(dialog_widget);
 }

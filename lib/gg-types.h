@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.16 2004/01/28 23:39:25 shaster Exp $ */
+/* $Id: gg-types.h,v 1.17 2004/03/28 23:03:43 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -106,7 +106,7 @@ typedef struct
 {
     const gchar *txt;
     guint type;
-      gpointer(*callback) (gpointer user_data);
+    gpointer(*callback) (gpointer user_data);
 } GGaduPluginExtension;
 
 /*

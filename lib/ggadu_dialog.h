@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.3 2004/03/28 12:12:31 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.4 2004/03/28 23:03:43 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -25,6 +25,8 @@
 
 #include "unified-types.h"
 
+typedef gboolean(*watch_func) (gpointer);
+
 typedef enum
 {
 	GGADU_DIALOG_GENERIC,
@@ -42,7 +44,7 @@ typedef struct
 	gpointer user_data;
 	gint type;
 	
-	
+	gboolean(*watch_func) (gpointer);
 } GGaduDialog;
 
 #define ggadu_dialog_new(type, title, callback_signal) \
@@ -55,6 +57,8 @@ void 			ggadu_dialog_add_entry			(GGaduDialog * dialog, gint key, gchar * desc, 
 GSList*			ggadu_dialog_get_entries		(GGaduDialog * dialog);
 
 void			ggadu_dialog_set_callback_signal(GGaduDialog * dialog, const gchar * signal);
+
+void			ggadu_dialog_set_progress_watch (GGaduDialog * dialog, watch_func watch);
 
 void			ggadu_dialog_set_title			(GGaduDialog * dialog, const gchar * title);
 

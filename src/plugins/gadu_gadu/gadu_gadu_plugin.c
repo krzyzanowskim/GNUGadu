@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.159 2004/03/28 12:12:31 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.160 2004/03/28 23:03:44 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -166,6 +166,7 @@ void gadu_gadu_enable_dcc_socket(gboolean state)
 		gg_dcc_ip = inet_addr("255.255.255.255");
 		gg_dcc_port = dcc_session_get->port;
 
+		/* ZONK */
 		dcc_channel_get = g_io_channel_unix_new(dcc_session_get->fd);
 		cond = (dcc_session_get->check == GG_CHECK_READ) ? G_IO_IN : G_IO_OUT;
 		watch_dcc_file = g_io_add_watch(dcc_channel_get, G_IO_ERR | cond, test_chan_dcc_get, dcc_session_get);
@@ -480,39 +481,18 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	case GG_EVENT_MSG:
 
 		print_debug("GG_EVENT_MSG from: %d type: %d", e->event.msg.sender, e->event.msg.msgclass);
-
-		if ((e->event.msg.msgclass == GG_CLASS_CTCP))
+exit(0);
+		if ((e->event.msg.msgclass & GG_CLASS_CTCP))
 		{		/* dcc part */
-			struct gg_dcc *d = NULL;
-			gchar *idtmp = g_strdup_printf("%d", e->event.msg.sender);
-			gchar **addr_arr = NULL;
-			GGaduContact *k = NULL;
-			GIOChannel *ch = NULL;
-
+			GGaduDialog *dialog = NULL;
+			gchar *tmp = NULL;
+				
 			print_debug("somebody want to send you a file");	/* ZONK */
+					exit(0);
+			tmp = g_strdup_printf(_("%d sending you a  file"), e->event.msg.sender);
+			dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, tmp, "get file", (gpointer) e->event.msg.sender);
 
-			if (!(k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(idtmp))))
-			{
-				g_free(idtmp);
-				return TRUE;
-			}
-
-			addr_arr = g_strsplit(k->ip, ":", 2);
-			if (!addr_arr[0] || !addr_arr[1])
-			{
-				g_strfreev(addr_arr);
-				g_free(idtmp);
-				return TRUE;
-			}
-
-			d = gg_dcc_get_file(inet_addr(addr_arr[0]), atoi(addr_arr[1]),
-					    (gint) ggadu_config_var_get(handler, "uin"), e->event.msg.sender);
-
-			ch = g_io_channel_unix_new(d->fd);
-			watch_dcc_file = g_io_add_watch(ch, G_IO_ERR | G_IO_IN, test_chan_dcc, d);
-
-			g_free(idtmp);
-			g_strfreev(addr_arr);
+			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 			break;
 		}
 		/* end of dcc part */
@@ -1197,7 +1177,7 @@ gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer
 		if (d->type != GG_SESSION_DCC_SOCKET)
 		{
 			gg_free_dcc(d);
-			print_debug("wylazimy stad albercik\n");
+			print_debug("wylazimy stad albercik");
 			return FALSE;
 		}
 	}
@@ -1205,16 +1185,14 @@ gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer
 	switch (e->type)
 	{
 	case GG_EVENT_DCC_NEW:
-		{
-			GIOChannel *ch = NULL;
-			struct gg_dcc *dcc_new = e->event.dcc_new;
-			print_debug("GG_EVENT_DCC_NEW %ld\n", (guint32) d->uin);
-			ch = g_io_channel_unix_new(dcc_new->fd);
-			watch_dcc_file = g_io_add_watch(ch, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_new);
-		}
+	{
+		struct gg_dcc *dcc_new = e->event.dcc_new;
+		GIOChannel	*ch = g_io_channel_unix_new(dcc_new->fd);
+		watch_dcc_file = g_io_add_watch(ch, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_new);
 		e->event.dcc_new = NULL;
 		gg_event_free(e);
 		break;
+	}
 	case GG_EVENT_DCC_ERROR:
 		print_debug("GG_EVENT_DCC_ERROR\n");
 		switch (e->event.dcc_error)
@@ -1245,7 +1223,14 @@ gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer
 		watch_dcc_file = g_io_add_watch(source, G_IO_IN | G_IO_ERR, test_chan_dcc_get, d);
 		return FALSE;
 	}
-
+	
+/*	if (d->state == GG_STATE_READING_FILE_HEADER)
+	{
+		print_debug("GG_CHECK_READ DCC_GET\n");
+		watch_dcc_file = g_io_add_watch(source, G_IO_IN | G_IO_OUT| G_IO_ERR, test_chan_dcc_get, d);
+		return FALSE;
+	}
+*/
 	if (d->check == GG_CHECK_WRITE)
 	{
 		print_debug("GG_CHECK_WRITE DCC_GET\n");
@@ -1281,7 +1266,7 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 	{
 	case GG_EVENT_DCC_CLIENT_ACCEPT:
 		print_debug("GG_EVENT_DCC_CLIENT_ACCEPT %ld %ld %ld\n", (guint32) d->uin, (guint32) d->peer_uin,
-			    ggadu_config_var_get(handler, "uin"));
+		ggadu_config_var_get(handler, "uin"));
 		gg_event_free(e);
 		break;
 	case GG_EVENT_DCC_CALLBACK:
@@ -1331,6 +1316,7 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 			g_free(filename);
 			return FALSE;
 		}
+		gg_event_free(e);
 		break;
 	case GG_EVENT_DCC_ERROR:
 		print_debug("GG_EVENT_DCC_ERROR\n");
@@ -1377,6 +1363,7 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 			return FALSE;
 		}
 	}
+	
 
 	return TRUE;
 }
@@ -1604,6 +1591,7 @@ void start_plugin()
 	ADD_USER_SEARCH_SIG = register_signal(handler, "add user search");
 	GET_CURRENT_STATUS_SIG = register_signal(handler, "get current status");
 	SEND_FILE_SIG = register_signal(handler, "send file");
+	GET_FILE_SIG = register_signal(handler, "get file");
 	GET_USER_MENU_SIG = register_signal(handler, "get user menu");
 	REGISTER_ACCOUNT = register_signal(handler, "register account");
 	load_contacts("ISO-8859-2");
@@ -1650,6 +1638,47 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
 		ggadu_menu_print(umenu, NULL);
 		signal->data_return = umenu;
+	}
+	
+	if (signal->name == GET_FILE_SIG)
+	{
+		GGaduDialog *d = signal->data;
+		
+		if (ggadu_dialog_get_response(d) == GGADU_OK)
+		{
+			
+			guint sender = (guint)d->user_data;
+			GGaduContact *k;
+			struct gg_dcc *dcc;
+			gchar **addr_arr = NULL;
+			gchar *idtmp = g_strdup_printf("%d", sender);
+			GIOChannel	*ch;
+			
+			if (!(k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(idtmp))))
+			{
+				g_free(idtmp);
+				return;
+			}
+			
+			addr_arr = g_strsplit(k->ip, ":", 2);
+			if (!addr_arr[0] || !addr_arr[1])
+			{
+				g_strfreev(addr_arr);
+				g_free(idtmp);
+				return;
+			}
+			dcc = gg_dcc_get_file(inet_addr(addr_arr[0]), atoi(addr_arr[1]),
+					    (gint) ggadu_config_var_get(handler, "uin"), sender);
+
+			ch = g_io_channel_unix_new(dcc->fd);
+			watch_dcc_file = g_io_add_watch(ch, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc);
+			g_strfreev(addr_arr);			
+			g_free(idtmp);
+		} else {
+		}
+		
+		GGaduDialog_free(d);
+		return;
 	}
 
 	if (signal->name == SEND_FILE_SIG)
