@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.71 2004/08/02 00:09:07 krzyzak Exp $
+dnl $Id: configure.in,v 1.72 2004/08/02 01:02:20 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.3])
 
@@ -117,6 +117,7 @@ if test x$want_gdb = xyes; then
 fi
 
 want_gui=no
+want_gghist=no
 want_gtkspell=no
 want_gadu=no
 want_tlen=no
@@ -137,6 +138,7 @@ want_perl=no
 AC_ARG_WITH(all_plugins, [  --with-all-plugins	  Build all plugins with all features		default=no])
 if test x$with_all_plugins = xyes; then
     with_gui=yes
+    with_gghist=yes
     with_gtkspell=yes
     with_gadu=yes
     with_tlen=yes
@@ -191,6 +193,14 @@ dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lnsl //'`
 dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
 dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
 dnl fi
+
+AC_ARG_WITH(gghist, [  --with-gghist		  Build gghist		default=no])
+if test "x$with_gghist" = "xyes"; then 
+    want_gghist=yes
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    AC_SUBST(GTK_CFLAGS)
+    AC_SUBST(GTK_LIBS)
+fi
 
 AC_ARG_WITH(gui, [  --with-gui		  Build gtk2 GUI plugin		default=no])
 if test "x$with_gui" = "xyes"; then 
@@ -410,6 +420,7 @@ if test "x$with_update" = "xyes"; then
 	want_update=no
 fi
 
+AM_CONDITIONAL(BUILD_GGHIST, test "$want_gghist" = "yes")
 AM_CONDITIONAL(BUILD_GUI, test "$want_gui" = "yes")
 AM_CONDITIONAL(USE_GTKSPELL, test "$want_gtkspell" = "yes")
 AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")
@@ -490,6 +501,8 @@ Makefile
 lib/Makefile
 lib/gg2_core.pc
 lib/gg2_core.h
+contrib/Makefile
+contrib/gghist/Makefile
 src/Makefile
 src/plugins/Makefile
 src/plugins/GUI/Makefile
@@ -544,6 +557,7 @@ echo Build plugin sms....................... : $want_sms
 echo Build plugin remote.................... : $want_remote
 echo Build plugin update.................... : $want_update
 echo Build plugin external history viewer... : $want_history_external_viewer
+echo Build gghist - history viewer.......... : $want_gghist
 echo Build with perl support................ : $want_perl
 echo
 echo "*************************************************************"

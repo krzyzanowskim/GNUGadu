@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.17 2004/05/04 21:39:12 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.18 2004/08/02 01:02:22 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -167,3 +167,4 @@ void destroy_plugin()
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
     }
 }
+

@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.h,v 1.4 2004/08/02 00:09:11 krzyzak Exp $ */
+/* $Id: plugin_sound_external.h,v 1.5 2004/08/02 01:02:22 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 

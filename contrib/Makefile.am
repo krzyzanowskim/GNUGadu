@@ -1,0 +1,5 @@
+if BUILD_GGHIST
+GGHIST=gghist
+endif
+
+SUBDIRS = $(GGHIST)

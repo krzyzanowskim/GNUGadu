@@ -1,6 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-
-SUBDIRS = intl m4 lib src po pixmaps sounds themes
+SUBDIRS = intl m4 lib src po pixmaps sounds themes contrib
 
 EXTRA_DIST = \
 	autogen.sh \

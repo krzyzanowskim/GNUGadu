@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <gtk/gtk.h>
 
-#include "gg_history.c"
+#include "gg_history.h"
 
 
 GtkWidget *text_view;
