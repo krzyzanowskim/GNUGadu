@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.2 2003/03/22 21:46:12 zapal Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -88,14 +88,14 @@ gboolean load_plugin (gchar *path)
     }
   }
 
-  if (g_slist_find (config->all_available_plugins, ggadu_plugin_name ()))
+  if (g_slist_find (config->plugins, ggadu_plugin_name ()))
   {
     print_debug ("core: ekhm... plugin %s is already loaded\n", path);
     dlclose (handler);
     return FALSE;
   }
   
-  if (plugin_at_list (ggadu_plugin_name ()))
+  if (plugin_at_list (ggadu_plugin_name ()) || config->all_plugins_loaded)
   {
     plugin_handler                    = initialize_plugin (config);
     plugin_handler->plugin_so_handler = handler;
@@ -105,8 +105,15 @@ gboolean load_plugin (gchar *path)
     plugin_handler->type              = ggadu_plugin_type ();
   }
 
-  config->all_available_plugins = g_slist_append (config->all_available_plugins,
-      ggadu_plugin_name ());
+  if (config->all_plugins_loaded)
+  {
+    config->plugins = g_slist_append (config->plugins, plugin_handler);
+    start_plugin ();
+  } else
+  {
+    config->all_available_plugins = g_slist_append
+      (config->all_available_plugins, ggadu_plugin_name ());
+  }
 
   return TRUE;
 }

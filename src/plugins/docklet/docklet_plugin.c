@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.2 2003/03/22 20:35:34 zapal Exp $ */
+/* $Id: docklet_plugin.c,v 1.3 2003/03/22 21:46:13 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -27,6 +27,8 @@ GtkWidget *pixmap = NULL;
 GdkPixbuf *logopix = NULL;
 GtkTooltips *tooltips = NULL;
 gchar *tooltipstr = NULL;
+
+EggTrayIcon *egg;
 
 GGadu_PLUGIN_INIT("docklet",GGADU_PLUGIN_TYPE_MISC);
 
@@ -200,7 +202,7 @@ GtkWidget *create_docklet()
 	GdkAtom kwm_dockwindow_atom			= gdk_atom_intern("KWM_DOCKWINDOW", FALSE);
 	GdkAtom kde_net_system_tray_window_for_atom	= gdk_atom_intern("_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR", FALSE);
 	glong data[1];
-	EggTrayIcon *egg = egg_tray_icon_new("GNU Gadu 2");
+	egg = egg_tray_icon_new("GNU Gadu 2");
 
 	if (!egg) return NULL;
 	
@@ -355,5 +357,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
 
 void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
-    gtk_widget_unref (GTK_WIDGET(pixmap));
+    gtk_widget_destroy (GTK_WIDGET(status_docklet));
+    gtk_widget_destroy (GTK_WIDGET(egg));
 }
