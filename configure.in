@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.30 2003/09/22 17:09:16 krzyzak Exp $
+dnl $Id: configure.in,v 1.31 2003/09/28 10:14:32 shaster Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -203,7 +203,7 @@ if test "x$with_gadu" = "xyes"; then
 
 	if test "$want_gadu" = "no"; then 
 	    PKG_CHECK_MODULES(GG,libgadu = CVS,want_gadu=yes,want_gadu=no)
-	    AC_MSG_RESULT([*****************\nI don't know what is you libgadu version, "CVS" as a Version doesn't get me any information about it, so you use it on you own risk\n*****************])
+	    AC_MSG_RESULT([*****************\nI don't know what is your libgadu version, "CVS" as a Version doesn't give me any information about it, so you use it on you own risk\n*****************])
 	fi
 	
     if test "$want_gadu" = "no"; then 
