@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.46 2004/01/07 23:49:17 thrulliq Exp $ */
+/* $Id: jabber_plugin.c,v 1.47 2004/01/08 09:57:28 krzyzak Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -167,11 +167,6 @@ gpointer user_remove_action (gpointer user_data)
 		      node = lm_message_node_add_child (node, "item", NULL);
 		      lm_message_node_set_attributes (node, "jid", g_strdup (k->id), "subscription", "remove", NULL);
 
-		      //jabber_data.userlist = g_slist_remove (jabber_data.userlist, k);
-		      //ggadu_repo_del_value ("jabber", k->id);
-		      //signal_emit ("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
-		      //GGaduContact_free (k);
-
 		      if (lm_connection_send (connection, m, NULL)) {
                 print_debug("send remove request");
                 action_queue_add ("roster_remove", "result", action_roster_remove_result,k->id);
@@ -294,8 +289,6 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 
 	  if (d->response == GGADU_OK)
 	    {
-        LmMessage *m;
-        
 		if (jabber_data.status_descr)
 		    g_free (jabber_data.status_descr);
 

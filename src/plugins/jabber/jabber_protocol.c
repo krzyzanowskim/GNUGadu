@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.14 2004/01/07 23:49:17 thrulliq Exp $ */
+/* $Id: jabber_protocol.c,v 1.15 2004/01/08 09:57:28 krzyzak Exp $ */
 
 #include <loudmouth/loudmouth.h>
 #include <string.h>
@@ -50,7 +50,6 @@ void action_roster_remove_result (LmConnection *connection, LmMessage *message, 
 void jabber_change_status (enum states status)
 {
   LmMessage *m;
-  gboolean result;
   gchar *show = NULL;
   gchar *show_away = "away";
   gchar *show_xa   = "xa";
@@ -81,14 +80,14 @@ void jabber_change_status (enum states status)
   
   print_debug ("STATUS - %d\n", status);
   
-  result = lm_connection_send (connection, m, NULL);
-  lm_message_unref (m);
-  if (!result)
+  if (!lm_connection_send (connection, m, NULL))
+  {
     print_debug ("jabber: Couldn't change status!\n");
-  else {
+  } else {
     jabber_data.status = status;
     signal_emit ("jabber", "gui status changed", (gpointer) status, "main-gui");
   }
+  lm_message_unref (m);
 }
 
 void jabber_fetch_roster (void)
