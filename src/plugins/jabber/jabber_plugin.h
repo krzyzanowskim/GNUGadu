@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.44 2004/12/20 09:15:20 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.45 2004/12/27 13:20:28 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -144,5 +144,7 @@ typedef struct
 } jabber_data_type;
 
 gpointer jabber_register_account_dialog(gpointer user_data);
+gpointer jabber_services_discovery_action(gpointer user_data);
+
 
 #endif

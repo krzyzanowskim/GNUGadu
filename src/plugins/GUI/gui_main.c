@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.69 2004/12/27 12:12:22 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.70 2004/12/27 13:20:26 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -189,8 +189,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 		g_warning(_("Unable to read configuration file for plugin GUI, don't worry"));
 
 	/* 
-	 * SIGNAL : gui register menu
-	 * Rejestruje menu w oknie glownym wieceij info na ten temat w dokumentacji do gtk2.
+	 * SIGNAL : gui register protocol
+	 * Rejestruje menu w oknie glownym wiecej info na ten temat w dokumentacji do gtk2.
 	 * przeslany parametr powinien byc wskaznikiem do GtkItemFactoryEntry menu_for_gui[] = {}
 	 * 
 	 */

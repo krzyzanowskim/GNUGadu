@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.78 2004/12/27 09:43:43 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.79 2004/12/27 13:20:28 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -194,6 +194,7 @@ void connection_auth_cb(LmConnection * connection, gboolean success, gpointer st
 
 	print_debug("jabber: Authentication succeeded. Changing status...\n");
 	jabber_fetch_roster(status);
+	jabber_services_discovery_action(NULL);
 }
 
 void connection_open_result_cb(LmConnection * connection, gboolean success, gint * status)

@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.64 2004/12/20 09:15:14 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.65 2004/12/27 13:20:26 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -252,6 +252,7 @@ void handle_unregister_menu(GGaduSignal * signal)
 
 		gtk_item_factory_delete_item(item_factory, path);
 		g_free(path);
+		ggadu_menu_free(root);
 	}
 }
 

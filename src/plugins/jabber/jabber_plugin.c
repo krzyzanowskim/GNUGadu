@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.140 2004/12/27 09:43:43 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.141 2004/12/27 13:20:28 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -69,6 +69,10 @@ static GQuark USER_GET_SOFTWARE_SIG;
 jabber_data_type jabber_data;
 
 GGaduMenu *jabbermenu;
+GGaduMenu *jabber_services_discovery_menu;
+
+static GGaduMenu *build_jabber_menu();
+
 
 GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
 
@@ -94,19 +98,19 @@ static gpointer user_chat_action(gpointer user_data)
 
 		/* check if ignored */
 		{
-		    GGaduContact *ki = g_new0(GGaduContact,1);
-		    
-		    ki->id = g_strdup(msg->id);
-		    if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
-		    {
-			GGaduMsg_free(msg);
+			GGaduContact *ki = g_new0(GGaduContact, 1);
+
+			ki->id = g_strdup(msg->id);
+			if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
+			{
+				GGaduMsg_free(msg);
+				GGaduContact_free(ki);
+				return NULL;
+			}
+
 			GGaduContact_free(ki);
-			return NULL;
-		    }
-	
-		    GGaduContact_free(ki);
 		}
-		
+
 		signal_emit("jabber", "gui msg receive", msg, "main-gui");
 	}
 
@@ -116,17 +120,17 @@ static gpointer user_chat_action(gpointer user_data)
 static gpointer user_add_action(gpointer user_data)
 {
 	GGaduDialog *dialog;
-	
-	if(!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
+
+	if (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
 	{
 		signal_emit("jabber", "gui show warning", g_strdup(_("Not connected to server")), "main-gui");
 		return NULL;
 	}
-	
+
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
 	ggadu_dialog_add_entry(dialog, GGADU_ID, _("Jabber ID:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nickname:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_REQUEST_AUTH_FROM, _("Request authorization from"), VAR_BOOL, (gpointer)TRUE, VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_REQUEST_AUTH_FROM, _("Request authorization from"), VAR_BOOL, (gpointer) TRUE, VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
@@ -152,40 +156,40 @@ static gpointer user_edit_action(gpointer user_data)
 
 static gpointer user_own_vcard_action(gpointer user_data)
 {
-        LmMessage *msg;
-        LmMessageNode *node;
+	LmMessage *msg;
+	LmMessageNode *node;
 
-	if(!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
+	if (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
 	{
 		signal_emit("jabber", "gui show warning", g_strdup(_("Not connected to server")), "main-gui");
 		return NULL;
 	}
-	
-        msg=lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
-        lm_message_node_set_attribute(msg->node, "from", ggadu_config_var_get(jabber_handler, "jid"));
-        lm_message_node_set_attribute(msg->node, "id", "v1");
 
-        node=lm_message_node_add_child(msg->node, "vCard", NULL);
-        lm_message_node_set_attribute(node, "xmlns", "vcard-temp");
-        lm_connection_send(jabber_data.connection, msg, NULL);
-        lm_message_unref(msg);
-	    
-        return NULL;
+	msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+	lm_message_node_set_attribute(msg->node, "from", ggadu_config_var_get(jabber_handler, "jid"));
+	lm_message_node_set_attribute(msg->node, "id", "v1");
+
+	node = lm_message_node_add_child(msg->node, "vCard", NULL);
+	lm_message_node_set_attribute(node, "xmlns", "vcard-temp");
+	lm_connection_send(jabber_data.connection, msg, NULL);
+	lm_message_unref(msg);
+
+	return NULL;
 }
 
 static gpointer user_vcard_action(gpointer user_data)
 {
-        GSList *user = (GSList *) user_data;
+	GSList *user = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) user->data;
 	LmMessage *msg;
 	LmMessageNode *node;
 
-	if(!user)
+	if (!user)
 		return NULL;
 
-	msg=lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+	msg = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 	lm_message_node_set_attribute(msg->node, "id", "v3");
-	node=lm_message_node_add_child(msg->node, "vCard", NULL);
+	node = lm_message_node_add_child(msg->node, "vCard", NULL);
 	lm_message_node_set_attribute(node, "xmlns", "vcard-temp");
 	lm_connection_send(jabber_data.connection, msg, NULL);
 
@@ -202,24 +206,22 @@ static gpointer user_get_software_action(gpointer user_data)
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) user->data;
 	GGaduContact *k0;
-        GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+	GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
 	gchar *string0, *string1;
 
-	while(roster)
+	while (roster)
 	{
 		k0 = roster->data;
-		if(!strcmp(k->id, k0->id))
+		if (!strcmp(k->id, k0->id))
 			break;
 
 		roster = roster->next;
 	}
-	
+
 	string0 = g_strconcat(k0->id, "/", k0->resource, NULL);
 	m = lm_message_new_with_sub_type(string0, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 	string1 = g_strconcat(ggadu_config_var_get(jabber_handler, "jid"), "/",
-			      ggadu_config_var_get(jabber_handler, "resource") ?
-			      ggadu_config_var_get(jabber_handler, "resource") :
-			      JABBER_DEFAULT_RESOURCE, NULL);
+			      ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler, "resource") : JABBER_DEFAULT_RESOURCE, NULL);
 	lm_message_node_set_attribute(m->node, "from", string1);
 	lm_message_node_set_attribute(m->node, "id", "version_1");
 	node = lm_message_node_add_child(m->node, "query", NULL);
@@ -239,12 +241,12 @@ static gpointer user_change_password_action(gpointer user_data)
 {
 	GGaduDialog *dialog;
 
-	if(!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
+	if (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
 	{
 		signal_emit("jabber", "gui show warning", g_strdup(_("Not connected to server")), "main-gui");
 		return NULL;
 	}
-	
+
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Change password"), "user change password");
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("_Old password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_NEW, _("_New password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
@@ -259,7 +261,7 @@ static gpointer user_remove_account_action(gpointer user_data)
 {
 	GGaduDialog *dialog;
 
-	if(!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
+	if (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
 	{
 		signal_emit("jabber", "gui show warning", g_strdup(_("Not connected to server")), "main-gui");
 		return NULL;
@@ -267,7 +269,7 @@ static gpointer user_remove_account_action(gpointer user_data)
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, _("Account removal confirmation"), "remove account");
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, g_strdup_printf("Do you really want to remove account: %s ?",
-			       (gchar *) ggadu_config_var_get(jabber_handler, "jid")), VAR_NULL, NULL, VAR_FLAG_NONE);
+									    (gchar *) ggadu_config_var_get(jabber_handler, "jid")), VAR_NULL, NULL, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
@@ -275,11 +277,10 @@ static gpointer user_remove_account_action(gpointer user_data)
 
 static gpointer user_ask_remove_action(gpointer user_data)
 {
-        GGaduDialog *dialog;
-	                                                                                                               
-	dialog = ggadu_dialog_new_full(GGADU_DIALOG_YES_NO, _("Are You sure You want to delete selected user(s)?"), 
-					"user remove action", user_data);
-					
+	GGaduDialog *dialog;
+
+	dialog = ggadu_dialog_new_full(GGADU_DIALOG_YES_NO, _("Are You sure You want to delete selected user(s)?"), "user remove action", user_data);
+
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }
@@ -306,14 +307,12 @@ static gpointer user_remove_action(gpointer user_data)
 				lm_message_node_set_attribute(m->node, "id", "roster_remove");
 
 				node = lm_message_node_add_child(node, "item", NULL);
-				lm_message_node_set_attributes(node, "jid", g_strdup(k->id), "subscription", "remove",
-							       NULL);
+				lm_message_node_set_attributes(node, "jid", g_strdup(k->id), "subscription", "remove", NULL);
 
 				if (lm_connection_send(jabber_data.connection, m, NULL))
 				{
 					print_debug("send remove request");
-					action_queue_add("roster_remove", "result", action_roster_remove_result, k->id,
-							 TRUE);
+					action_queue_add("roster_remove", "result", action_roster_remove_result, k->id, TRUE);
 				}
 				else
 				{
@@ -345,9 +344,10 @@ static gpointer user_rerequest_auth_from(gpointer user_data)
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = NULL;
 	LmMessage *m = NULL;
-	
-	if (!user) return NULL;
-	
+
+	if (!user)
+		return NULL;
+
 	k = (GGaduContact *) user->data;
 	m = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
 	lm_connection_send(jabber_data.connection, m, NULL);
@@ -379,23 +379,21 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 static GGaduMenu *build_userlist_menu(void)
 {
 	GGaduMenu *menu = ggadu_menu_create();
-	GGaduMenu *listmenu,*infomenu;
+	GGaduMenu *listmenu, *infomenu;
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
-	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
+	ggadu_menu_add_user_menu_extensions(menu, jabber_handler);
 
 	infomenu = ggadu_menu_new_item(_("Contact info"), NULL, NULL);
 	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("_Personal data"), user_vcard_action, NULL));
 	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("_Software"), user_get_software_action, NULL));
 	ggadu_menu_add_submenu(menu, infomenu);
-	
+
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
-	ggadu_menu_add_submenu(listmenu,
-			       ggadu_menu_new_item(_("_Request presence subscription"), user_rerequest_auth_from, NULL));
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("_Request presence subscription"), user_rerequest_auth_from, NULL));
 	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("S_end presence authorization"), user_resend_auth_to, NULL));
 	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(listmenu,
-			       ggadu_menu_new_item(_("Re_move authorization"), user_remove_auth_from, NULL));
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Re_move authorization"), user_remove_auth_from, NULL));
 	ggadu_menu_add_submenu(menu, listmenu);
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
@@ -431,9 +429,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_JABBER_JID:
 					{
 						field = ggadu_config_var_get(jabber_handler, "jid");
-						if(kv->value && field && ggadu_strcmp(kv->value, field))
+						if (kv->value && field && ggadu_strcmp(kv->value, field))
 							reconn = TRUE;
-						if(!(kv->value && field) && (kv->value || field))
+						if (!(kv->value && field) && (kv->value || field))
 							reconn = TRUE;
 
 						ggadu_config_var_set(jabber_handler, "jid", kv->value);
@@ -457,20 +455,20 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_JABBER_RESOURCE:
 					{
 						field = ggadu_config_var_get(jabber_handler, "resource");
-						if(kv->value && field && ggadu_strcmp(kv->value, field))
+						if (kv->value && field && ggadu_strcmp(kv->value, field))
 							reconn = TRUE;
-						if(!(kv->value && field) && (kv->value || field))
+						if (!(kv->value && field) && (kv->value || field))
 							reconn = TRUE;
-		
+
 						ggadu_config_var_set(jabber_handler, "resource", kv->value);
 					}
 					break;
 				case GGADU_JABBER_SERVER:
 					{
 						field = ggadu_config_var_get(jabber_handler, "server");
-						if(kv->value && field && ggadu_strcmp(kv->value, field))
+						if (kv->value && field && ggadu_strcmp(kv->value, field))
 							reconn = TRUE;
-						if(!(kv->value && field) && (kv->value || field))
+						if (!(kv->value && field) && (kv->value || field))
 							reconn = TRUE;
 
 						ggadu_config_var_set(jabber_handler, "server", kv->value);
@@ -479,19 +477,19 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_JABBER_PROXY:
 					{
 						field = ggadu_config_var_get(jabber_handler, "proxy");
-						if(kv->value && field && ggadu_strcmp(kv->value, field))
+						if (kv->value && field && ggadu_strcmp(kv->value, field))
 							reconn = TRUE;
-						if(!(kv->value && field) && (kv->value || field))
+						if (!(kv->value && field) && (kv->value || field))
 							reconn = TRUE;
 
-			       			ggadu_config_var_set(jabber_handler, "proxy", kv->value);
+						ggadu_config_var_set(jabber_handler, "proxy", kv->value);
 					}
 					break;
 				}
 				tmplist = tmplist->next;
 			}
 			ggadu_config_save(jabber_handler);
-			if(reconn && jabber_data.status != JABBER_STATUS_UNAVAILABLE)
+			if (reconn && jabber_data.status != JABBER_STATUS_UNAVAILABLE)
 			{
 				lm_connection_close(jabber_data.connection, NULL);
 				g_thread_create(jabber_login_connect, (gpointer) JABBER_STATUS_AVAILABLE, FALSE, NULL);
@@ -503,16 +501,15 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 	{
 		GGaduDialog *dialog = signal->data;
 
-		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			GSList *list = ggadu_dialog_get_entries(dialog);
 			GGaduKeyValue *kv = (GGaduKeyValue *) list->data;
 			LmConnection *conn;
 
-			conn=lm_connection_new(kv->value);
-			if(!lm_connection_open(conn, (LmResultFunction) jabber_register_account_cb, NULL, NULL, NULL))
-				signal_emit("jabber", "gui show warning",
-					    g_strdup(_("Couldn't open connection for account registration.")), "main-gui");
+			conn = lm_connection_new(kv->value);
+			if (!lm_connection_open(conn, (LmResultFunction) jabber_register_account_cb, NULL, NULL, NULL))
+				signal_emit("jabber", "gui show warning", g_strdup(_("Couldn't open connection for account registration.")), "main-gui");
 		}
 
 		GGaduDialog_free(dialog);
@@ -529,12 +526,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			LmMessageNode *node;
 			LmMessageHandler *handler;
 			gboolean error = FALSE;
-			
-			msg=lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+
+			msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
 			lm_message_node_set_attribute(msg->node, "id", "reg2");
-			node=lm_message_node_add_child(msg->node, "query", NULL);
+			node = lm_message_node_add_child(msg->node, "query", NULL);
 			lm_message_node_set_attribute(node, "xmlns", "jabber:iq:register");
-			
+
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -542,11 +539,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				{
 				case GGADU_JABBER_USERNAME:
 					{
-						if(!kv->value)
+						if (!kv->value)
 						{
 							error = TRUE;
 							break;
-						} else
+						}
+						else
 						{
 							lm_message_node_add_child(node, "username", kv->value);
 							gjr->username = g_strdup(kv->value);
@@ -555,11 +553,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_PASSWORD:
 					{
-						if(!kv->value)
+						if (!kv->value)
 						{
 							error = TRUE;
 							break;
-						} else
+						}
+						else
 						{
 							lm_message_node_add_child(node, "password", kv->value);
 							gjr->password = g_strdup(kv->value);
@@ -568,11 +567,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_FN:
 					{
-						if(!kv->value)
+						if (!kv->value)
 						{
 							error = TRUE;
 							break;
-						} else
+						}
+						else
 						{
 							lm_message_node_add_child(node, "name", kv->value);
 						}
@@ -580,11 +580,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_USERID:
 					{
-						if(!kv->value)
+						if (!kv->value)
 						{
 							error = TRUE;
 							break;
-						} else
+						}
+						else
 						{
 							lm_message_node_add_child(node, "email", kv->value);
 						}
@@ -593,22 +594,20 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_JABBER_UPDATE_CONFIG:
 					{
 						gjr->update_config = (gboolean) kv->value;
-						gjr->server = g_strdup(lm_connection_get_server((LmConnection *)
-								       dialog->user_data));
+						gjr->server = g_strdup(lm_connection_get_server((LmConnection *) dialog->user_data));
 					}
 					break;
 				}
 				tmplist = tmplist->next;
 			}
 
-			if(error)
+			if (error)
 			{
-				signal_emit("jabber", "gui show warning", g_strdup(_("Invalid data passed, try again")),
-					    "main-gui");
-			} else
+				signal_emit("jabber", "gui show warning", g_strdup(_("Invalid data passed, try again")), "main-gui");
+			}
+			else
 			{
-				handler=lm_message_handler_new((LmHandleMessageFunction) register_register_handler,
-							       (gpointer) gjr, NULL);
+				handler = lm_message_handler_new((LmHandleMessageFunction) register_register_handler, (gpointer) gjr, NULL);
 				lm_connection_send_with_reply((LmConnection *) dialog->user_data, msg, handler, NULL);
 			}
 
@@ -620,7 +619,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 	{
 		GGaduDialog *dialog = (GGaduDialog *) signal->data;
 
-		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			LmMessage *msg;
 			LmMessageNode *node;
@@ -646,15 +645,16 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		{
 			GGaduStatusPrototype *sp = dialog->user_data;
 			GGaduKeyValue *kv = NULL;
-			
+
 			if (ggadu_dialog_get_entries(dialog))
 			{
 				kv = (GGaduKeyValue *) ggadu_dialog_get_entries(dialog)->data;
 
-				if(kv)
+				if (kv)
 				{
-				    if(jabber_data.description) g_free(jabber_data.description);
-				    jabber_data.description = g_strdup(kv->value);
+					if (jabber_data.description)
+						g_free(jabber_data.description);
+					jabber_data.description = g_strdup(kv->value);
 				}
 				jabber_change_status(sp->status);
 			}
@@ -670,14 +670,14 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		if (sp->status == JABBER_STATUS_DESCR)
 		{
-			GGaduDialog *dialog =
-				ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
-						       "change status descr", sp);
+			GGaduDialog *dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
+								    "change status descr", sp);
 
 			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.description, VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 			return;
-		} else
+		}
+		else
 			jabber_change_status(sp->status);
 
 	}
@@ -706,7 +706,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				print_debug("jabber: Can't send!\n");
 			}
 
-			ggadu_jabber_save_history(GGADU_HISTORY_TYPE_SEND,msg, msg->id);
+			ggadu_jabber_save_history(GGADU_HISTORY_TYPE_SEND, msg, msg->id);
 
 			lm_message_unref(m);
 		}
@@ -735,13 +735,13 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					k->id = g_strdup(kv->value);
 					break;
 				case GGADU_NICK:
-					if (kv->value && (((gchar *)kv->value)[0] != '\0'))
+					if (kv->value && (((gchar *) kv->value)[0] != '\0'))
 						k->nick = g_strdup(kv->value);
 					break;
 				case GGADU_JABBER_REQUEST_AUTH_FROM:
-					if ((gboolean)kv->value == TRUE)
+					if ((gboolean) kv->value == TRUE)
 						send_request = TRUE;
-						/*user_rerequest_auth_from(k);*/
+					/*user_rerequest_auth_from(k); */
 					break;
 				}
 
@@ -769,144 +769,143 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			{
 				print_debug("jabber: Couldn't send.");
 			}
-			
-			if (send_request) {
-				GSList *listtmp = g_slist_append(NULL,k);
+
+			if (send_request)
+			{
+				GSList *listtmp = g_slist_append(NULL, k);
 				user_rerequest_auth_from(listtmp);
 				user_resend_auth_to(listtmp);
 				g_slist_free(listtmp);
 			}
-			
+
 			lm_message_unref(m);
 			GGaduContact_free(k);
 		}
 
 		GGaduDialog_free(dialog);
-	} else if (signal->name == GET_USER_SIG)
+	}
+	else if (signal->name == GET_USER_SIG)
 	{
 		GGaduContact *k = NULL;
-		gchar *id = (gchar *)signal->data;
+		gchar *id = (gchar *) signal->data;
 		if (id && (k = ggadu_repo_find_value("jabber", ggadu_repo_key_from_string(id))))
 		{
-		    /* return copy of GGaduContact */
-		    signal->data_return = GGaduContact_copy(k);
+			/* return copy of GGaduContact */
+			signal->data_return = GGaduContact_copy(k);
 		}
-		
-	} else if(signal->name == USER_EDIT_VCARD_SIG)
+
+	}
+	else if (signal->name == USER_EDIT_VCARD_SIG)
 	{
 		GGaduDialog *dialog = signal->data;
-		
-		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
+
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			GSList *entries = ggadu_dialog_get_entries(dialog);
-			LmMessage *msg  = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+			LmMessage *msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
 			LmMessageNode *node;
 			gchar *string;
-			gchar *given  = NULL;
+			gchar *given = NULL;
 			gchar *family = NULL;
 			gint bday;
 			gint bmonth;
 			gint byear;
 
 			lm_message_node_set_attribute(msg->node, "id", "v1");
-			node=lm_message_node_add_child(msg->node, "vCard", NULL);
+			node = lm_message_node_add_child(msg->node, "vCard", NULL);
 			lm_message_node_set_attribute(node, "xmlns", "vcard-temp");
 
-			while(entries)
+			while (entries)
 			{
-			        GGaduKeyValue *kv = entries->data;
+				GGaduKeyValue *kv = entries->data;
 
-				switch(kv->key)
+				switch (kv->key)
 				{
-					case GGADU_JABBER_GIVEN:
-						        given  = (gchar *) kv->value;
-						break;
-					case GGADU_JABBER_FAMILY:
-						        family = (gchar *) kv->value;
-						break;
-					case GGADU_JABBER_FN:
-						{
-							string = g_strconcat(given ? given : "",
-									     (given && family) ? " " : "", family,
-									     NULL);
-							lm_message_node_add_child(node, "FN", string);
-							node = lm_message_node_add_child(node, "N", NULL);
-							lm_message_node_add_child(node, "FAMILY", family);
-							lm_message_node_add_child(node, "GIVEN", given);
-							lm_message_node_add_child(node, "MIDDLE", NULL);
+				case GGADU_JABBER_GIVEN:
+					given = (gchar *) kv->value;
+					break;
+				case GGADU_JABBER_FAMILY:
+					family = (gchar *) kv->value;
+					break;
+				case GGADU_JABBER_FN:
+					{
+						string = g_strconcat(given ? given : "", (given && family) ? " " : "", family, NULL);
+						lm_message_node_add_child(node, "FN", string);
+						node = lm_message_node_add_child(node, "N", NULL);
+						lm_message_node_add_child(node, "FAMILY", family);
+						lm_message_node_add_child(node, "GIVEN", given);
+						lm_message_node_add_child(node, "MIDDLE", NULL);
 
-							g_free(string);
-						}
-						break;
-					case GGADU_JABBER_NICKNAME:
-						{
-							node = lm_message_node_find_child(msg->node, "vCard");
-							lm_message_node_add_child(node, "NICKNAME", kv->value);
-						}
-						break;
-					case GGADU_JABBER_URL:
-							lm_message_node_add_child(node, "URL", kv->value);
-						break;
-					case GGADU_JABBER_BDAY:
-							bday = (gint) kv->value;
-						break;
-					case GGADU_JABBER_BMONTH:
-							bmonth = (gint) kv->value;
-						break;
-					case GGADU_JABBER_BYEAR:
-						{
-							byear  = (gint) kv->value;
-							string = (byear && bmonth && bday)
-								 ? g_strdup_printf("%d-%02d-%02d", byear, bmonth, bday)
-								 : NULL;
-							lm_message_node_add_child(node, "BDAY", string);
+						g_free(string);
+					}
+					break;
+				case GGADU_JABBER_NICKNAME:
+					{
+						node = lm_message_node_find_child(msg->node, "vCard");
+						lm_message_node_add_child(node, "NICKNAME", kv->value);
+					}
+					break;
+				case GGADU_JABBER_URL:
+					lm_message_node_add_child(node, "URL", kv->value);
+					break;
+				case GGADU_JABBER_BDAY:
+					bday = (gint) kv->value;
+					break;
+				case GGADU_JABBER_BMONTH:
+					bmonth = (gint) kv->value;
+					break;
+				case GGADU_JABBER_BYEAR:
+					{
+						byear = (gint) kv->value;
+						string = (byear && bmonth && bday) ? g_strdup_printf("%d-%02d-%02d", byear, bmonth, bday) : NULL;
+						lm_message_node_add_child(node, "BDAY", string);
 
-							g_free(string);
-						}
-						break;
-					case GGADU_JABBER_ORGNAME:
-						{
-							node = lm_message_node_add_child(node, "ORG", NULL);
-							lm_message_node_add_child(node, "ORGNAME", kv->value);
-							lm_message_node_add_child(node, "ORGUNIT", NULL);
-							node = lm_message_node_find_child(msg->node, "vCard");
-							lm_message_node_add_child(node, "TITLE", NULL);
-							lm_message_node_add_child(node, "ROLE", NULL);
-						}
-						break;
-					case GGADU_JABBER_NUMBER:
-						{
-							node = lm_message_node_add_child(node, "TEL", NULL);
-							lm_message_node_add_child(node, "NUMBER", kv->value);
-							node = lm_message_node_find_child(msg->node, "vCard");
-						}
-						break;
-					case GGADU_JABBER_LOCALITY:
-						{
-							node = lm_message_node_add_child(node, "ADR", NULL);
-							lm_message_node_add_child(node, "HOME", NULL);
-							lm_message_node_add_child(node, "EXTADD", NULL);
-							lm_message_node_add_child(node, "STREET", NULL);
-							lm_message_node_add_child(node, "LOCALITY", kv->value);
-							lm_message_node_add_child(node, "REGION", NULL);
-							lm_message_node_add_child(node, "PCODE", NULL);
+						g_free(string);
+					}
+					break;
+				case GGADU_JABBER_ORGNAME:
+					{
+						node = lm_message_node_add_child(node, "ORG", NULL);
+						lm_message_node_add_child(node, "ORGNAME", kv->value);
+						lm_message_node_add_child(node, "ORGUNIT", NULL);
+						node = lm_message_node_find_child(msg->node, "vCard");
+						lm_message_node_add_child(node, "TITLE", NULL);
+						lm_message_node_add_child(node, "ROLE", NULL);
+					}
+					break;
+				case GGADU_JABBER_NUMBER:
+					{
+						node = lm_message_node_add_child(node, "TEL", NULL);
+						lm_message_node_add_child(node, "NUMBER", kv->value);
+						node = lm_message_node_find_child(msg->node, "vCard");
+					}
+					break;
+				case GGADU_JABBER_LOCALITY:
+					{
+						node = lm_message_node_add_child(node, "ADR", NULL);
+						lm_message_node_add_child(node, "HOME", NULL);
+						lm_message_node_add_child(node, "EXTADD", NULL);
+						lm_message_node_add_child(node, "STREET", NULL);
+						lm_message_node_add_child(node, "LOCALITY", kv->value);
+						lm_message_node_add_child(node, "REGION", NULL);
+						lm_message_node_add_child(node, "PCODE", NULL);
 
-						}
-						break;
-					case GGADU_JABBER_CTRY:
-						{
-							lm_message_node_add_child(node, "CTRY", kv->value);
-							node = lm_message_node_find_child(msg->node, "vCard");
-						}
-						break;
-					case GGADU_JABBER_USERID:
-						{
-							node = lm_message_node_add_child(node, "EMAIL", NULL);
-							lm_message_node_add_child(node, "USERID", kv->value);
-						}
-						break;
+					}
+					break;
+				case GGADU_JABBER_CTRY:
+					{
+						lm_message_node_add_child(node, "CTRY", kv->value);
+						node = lm_message_node_find_child(msg->node, "vCard");
+					}
+					break;
+				case GGADU_JABBER_USERID:
+					{
+						node = lm_message_node_add_child(node, "EMAIL", NULL);
+						lm_message_node_add_child(node, "USERID", kv->value);
+					}
+					break;
 				}
-                                entries = entries->next;
+				entries = entries->next;
 			}
 
 			lm_connection_send(jabber_data.connection, msg, NULL);
@@ -924,98 +923,82 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 	{
 		GGaduDialog *dialog = (GGaduDialog *) signal->data;
 
-		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			GSList *list = ggadu_dialog_get_entries(dialog);
 			gchar *pass0;
 
-			while(list)
+			while (list)
 			{
 				GGaduKeyValue *kv = list->data;
 
-				switch(kv->key)
+				switch (kv->key)
 				{
-					case GGADU_JABBER_PASSWORD:
+				case GGADU_JABBER_PASSWORD:
+					{
+						if (strcmp(ggadu_config_var_get(jabber_handler, "password"), kv->value))
 						{
-							if(strcmp(ggadu_config_var_get(jabber_handler, "password"), kv->value))
+							signal_emit("jabber", "gui show warning", g_strdup(_("Incorrect old password")), "main-gui");
+							GGaduDialog_free(dialog);
+							return;
+						}
+					}
+					break;
+				case GGADU_JABBER_PASSWORD_NEW:
+					{
+						if (kv->value)
+						{
+							pass0 = kv->value;
+						}
+						else
+						{
+							signal_emit("jabber", "gui show warning", g_strdup(_("New password not specified")), "main-gui");
+							GGaduDialog_free(dialog);
+							return;
+						}
+					}
+					break;
+				case GGADU_JABBER_PASSWORD_RETYPE:
+					{
+						if (kv->value)
+						{
+							if (!strcmp(pass0, kv->value))
 							{
-								signal_emit("jabber", "gui show warning",
-									    g_strdup(_("Incorrect old password")), "main-gui");
+								LmMessage *msg;
+								LmMessageNode *node;
+								gchar *username = g_strdup(ggadu_config_var_get(jabber_handler,
+														"jid"));
+
+								msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+								lm_message_node_set_attributes(msg->node,
+											       "to", lm_connection_get_server(jabber_data.connection), "id", "change1", NULL);
+								node = lm_message_node_add_child(msg->node, "query", NULL);
+								lm_message_node_set_attribute(node, "xmlns", "jabber:iq:register");
+								strchr(username, '@')[0] = 0;
+								lm_message_node_add_child(node, "username", username);
+								lm_message_node_add_child(node, "password", kv->value);
+
+								ggadu_config_var_set(jabber_handler, "password", kv->value);
+								lm_connection_send(jabber_data.connection, msg, NULL);
+								lm_message_unref(msg);
+
+								g_free(username);
+							}
+							else
+							{
+								signal_emit("jabber", "gui show warning", g_strdup(_("Passwords mismatch")), "main-gui");
 								GGaduDialog_free(dialog);
 								return;
 							}
 						}
-						break;
-					case GGADU_JABBER_PASSWORD_NEW:
+						else
 						{
-							if(kv->value)
-							{
-								pass0 = kv->value;
-							} else
-							{
-								signal_emit("jabber", "gui show warning",
-									    g_strdup(_("New password not specified")),
-									    "main-gui");
-								GGaduDialog_free(dialog);
-								return;
-							}
+							signal_emit("jabber", "gui show warning", g_strdup(_("New password not specified twice")), "main-gui");
+							GGaduDialog_free(dialog);
+							return;
 						}
-						break;
-					case GGADU_JABBER_PASSWORD_RETYPE:
-						{
-							if(kv->value)
-							{
-								if(!strcmp(pass0, kv->value))
-								{
-									LmMessage *msg;
-									LmMessageNode *node;
-									gchar *username =
-										g_strdup(ggadu_config_var_get(jabber_handler,
-											 "jid"));
-
-									msg = lm_message_new_with_sub_type(NULL,
-											LM_MESSAGE_TYPE_IQ,
-											LM_MESSAGE_SUB_TYPE_SET);
-									lm_message_node_set_attributes(msg->node,
-											"to",
-											lm_connection_get_server(
-												jabber_data.connection),
-											"id", "change1", NULL);
-									node = lm_message_node_add_child(msg->node,
-											"query", NULL);
-									lm_message_node_set_attribute(node, "xmlns",
-											"jabber:iq:register");
-									strchr(username, '@')[0] = 0;
-									lm_message_node_add_child(node, "username",
-											username);
-									lm_message_node_add_child(node, "password",
-											kv->value);
-
-									ggadu_config_var_set(jabber_handler, "password",
-									kv->value);
-									lm_connection_send(jabber_data.connection, msg,
-											   NULL);
-									lm_message_unref(msg);
-
-									g_free(username);
-								} else
-								{
-									signal_emit("jabber", "gui show warning",
-										    g_strdup(_("Passwords mismatch")),
-										    "main-gui");
-									GGaduDialog_free(dialog);
-									return;
-								}
-							} else
-							{
-								signal_emit("jabber", "gui show warning",
-									    g_strdup(_("New password not specified twice")),
-									    "main-gui");
-								GGaduDialog_free(dialog);
-								return;
-							}
-						}
-						break;
+					}
+					break;
 				}
 
 				list = list->next;
@@ -1037,20 +1020,18 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		if (jid && ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
-			msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_PRESENCE,
-							   LM_MESSAGE_SUB_TYPE_SUBSCRIBED);
+			msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBED);
 		}
 		else if (jid && ggadu_dialog_get_response(dialog) == GGADU_CANCEL)
 		{
-			msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_PRESENCE,
-							   LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED);
+			msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED);
 		}
 
 		lm_connection_send(jabber_data.connection, msg, NULL);
 		lm_message_unref(msg);
 
 		g_free(jid);
-			
+
 		GGaduDialog_free(dialog);
 
 	}
@@ -1077,12 +1058,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 						LmMessage *message;
 						LmMessageNode *node;
 
-						message =
-							lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ,
-										     LM_MESSAGE_SUB_TYPE_GET);
+						message = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 
-						lm_message_node_set_attributes(message->node, "to", kv->value, "id",
-									       "search1", NULL);
+						lm_message_node_set_attributes(message->node, "to", kv->value, "id", "search1", NULL);
 						node = lm_message_node_add_child(message->node, "query", NULL);
 						lm_message_node_set_attribute(node, "xmlns", "jabber:iq:search");
 
@@ -1093,8 +1071,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 						if (!lm_connection_send(jabber_data.connection, message, NULL))
 						{
-							signal_emit("jabber", "gui show warning",
-								    g_strdup(_("Can't perform search!")), "main-gui");
+							signal_emit("jabber", "gui show warning", g_strdup(_("Can't perform search!")), "main-gui");
 						}
 						lm_message_unref(message);
 					}
@@ -1117,11 +1094,11 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			GSList *tmplist = ggadu_dialog_get_entries(dialog);
 			LmMessage *message = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
 			LmMessageNode *node = lm_message_node_add_child(message->node, "query", NULL);
-			gchar *search_server = ggadu_config_var_get(jabber_handler,"search_server");
+			gchar *search_server = ggadu_config_var_get(jabber_handler, "search_server");
 
 			lm_message_node_set_attributes(message->node, "to", search_server, "id", "search2", NULL);
 			lm_message_node_set_attribute(node, "xmlns", "jabber:iq:search");
-			
+
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -1139,15 +1116,14 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_SEARCH_NICKNAME:
 					if (kv->value)
 					{
-						gchar *nick = g_strrstr(kv->value,"@")
-						? g_strndup(kv->value, strlen(kv->value)-strlen(g_strrstr(kv->value,"@")))
-						: g_strdup(kv->value);
+						gchar *nick = g_strrstr(kv->value, "@")
+							? g_strndup(kv->value, strlen(kv->value) - strlen(g_strrstr(kv->value, "@"))) : g_strdup(kv->value);
 						lm_message_node_add_child(node, "nick", nick);
 						g_free(nick);
 					}
 					break;
 				case GGADU_SEARCH_EMAIL:
-					if(kv->value)
+					if (kv->value)
 						lm_message_node_add_child(node, "email", kv->value);
 					break;
 
@@ -1160,9 +1136,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			action_queue_add("search2", "result", action_search_result, NULL, FALSE);
 
 			if (!lm_connection_send(jabber_data.connection, message, NULL))
-				signal_emit("jabber", "gui show warning", g_strdup(_("Can't perform search!")),
-					    "main-gui");
-			
+				signal_emit("jabber", "gui show warning", g_strdup(_("Can't perform search!")), "main-gui");
+
 			print_debug(lm_message_node_to_string(message->node));
 
 			lm_message_unref(message);
@@ -1170,15 +1145,17 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		}
 		GGaduDialog_free(dialog);
 	}
-	
-	if (signal->name == USER_REMOVE_SIG) {
+
+	if (signal->name == USER_REMOVE_SIG)
+	{
 		GGaduDialog *d = signal->data;
-		if (ggadu_dialog_get_response(d) == GGADU_OK) {
+		if (ggadu_dialog_get_response(d) == GGADU_OK)
+		{
 			user_remove_action(d->user_data);
 		}
 		g_slist_free(d->user_data);
 		return;
-	}																
+	}
 }
 
 static GSList *status_init()
@@ -1252,8 +1229,7 @@ gpointer user_search_action(gpointer user_data)
 
 	if (!lm_connection_is_authenticated(jabber_data.connection))
 	{
-		signal_emit("jabber", "gui show warning", g_strdup(_("You have to be connected to perform searching!")),
-			    "main-gui");
+		signal_emit("jabber", "gui show warning", g_strdup(_("You have to be connected to perform searching!")), "main-gui");
 		return NULL;
 	}
 
@@ -1286,101 +1262,96 @@ gpointer user_preferences_action(gpointer user_data)
 	GGaduDialog *dialog;
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber plugin configuration"), "update config");
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, _("_Jabber ID:"), VAR_STR,
-				ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("_Password:"), VAR_STR,
-				ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, _("_Jabber ID:"), VAR_STR, ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("_Password:"), VAR_STR, ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_ONLY_FRIENDS, _("_Receive messages from friends only"), VAR_BOOL,
-                               ggadu_config_var_get(jabber_handler, "only_friends"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("_Autoconnect on startup"), VAR_BOOL,
-				ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
+			       ggadu_config_var_get(jabber_handler, "only_friends"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("_Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
 	if (lm_ssl_is_supported())
 	{
-		ggadu_dialog_add_entry(dialog, GGADU_JABBER_USESSL, _("Use _encrypted connection (SSL)"), VAR_BOOL,
-					ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
+		ggadu_dialog_add_entry(dialog, GGADU_JABBER_USESSL, _("Use _encrypted connection (SSL)"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
 	}
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("_Log chats to history file"), VAR_BOOL,
-				ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_ADVANCED);
-				
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Re_source"), VAR_STR,
-				ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_ADVANCED);
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server a_ddress"), VAR_STR,
-				ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
-	
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Re_source"), VAR_STR, ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_ADVANCED);
+
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server a_ddress"), VAR_STR, ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
+
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PROXY,
-			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR,
-			       ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
+			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }
 
-static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler *handler,LmConnection *connection,LmMessage *message,gpointer user_data)
+static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
 {
-	LmMessageNode* node;
-	LmMessageNode* nodes_service;
-	LmMessageNode* n_service;
-	GGaduDialog *dialog;
-	
-	
-
-	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber Services"), "");
-	ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
-	
+	LmMessageNode *node;
+	LmMessageNode *nodes_service;
+	LmMessageNode *n_service;
 	/* add checking */
 	node = lm_message_get_node(message);
-	nodes_service = lm_message_node_get_child(node,"service");
-	n_service = lm_message_node_get_child(nodes_service,"service");
-	while (n_service)
+	/* before JEP-0030 style */
+	nodes_service = lm_message_node_get_child(node, "service");
+	if (nodes_service) 
 	{
-	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, 
-				    (gpointer)lm_message_node_get_attribute(n_service,"name"), 
-				    VAR_STR,
-				    (gpointer)lm_message_node_get_attribute(n_service,"jid"),
-				    VAR_FLAG_INSENSITIVE);
-	    
-	    print_debug(lm_message_node_to_string(n_service));
-	    n_service = n_service->next;
+	    signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", jabbermenu, "main-gui");
+	    jabbermenu = build_jabber_menu();
+		n_service = lm_message_node_get_child(nodes_service, "service");
+		while (n_service)
+		{
+/*
+			ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID,
+					       (gpointer) lm_message_node_get_attribute(n_service, "name"),
+					       VAR_STR, (gpointer) lm_message_node_get_attribute(n_service, "jid"), VAR_FLAG_INSENSITIVE);
+*/    			
+
+			ggadu_menu_add_submenu(jabber_services_discovery_menu,
+					       ggadu_menu_new_item( (gchar *)lm_message_node_get_attribute(n_service, "name"),
+					    			    jabber_services_discovery_action,
+								    NULL)
+					       );
+			
+			print_debug(lm_message_node_to_string(n_service));
+			n_service = n_service->next;
+		}
+	    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
+	    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+
 	}
-	
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
-	
-	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
-static gpointer jabber_services_discovery_action(gpointer user_data)
+gpointer jabber_services_discovery_action(gpointer user_data)
 {
 	LmMessage *msg;
 	LmMessageNode *node;
 	LmMessageHandler *message_handler;
-	
-	if(!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
+
+	if (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
 	{
 		signal_emit("jabber", "gui show warning", g_strdup(_("Not connected to server")), "main-gui");
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
-	
-        msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+
+	msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 	lm_message_node_set_attribute(msg->node, "to", lm_connection_get_server(jabber_data.connection));
-        lm_message_node_set_attribute(msg->node, "id", "services_browse_1");
+	lm_message_node_set_attribute(msg->node, "id", "services_browse_1");
 
 	node = lm_message_node_add_child(msg->node, "query", NULL);
 	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:browse");
 
-	message_handler = lm_message_handler_new(jabber_services_discovery_handler,
-						NULL,
-						NULL);  
+	message_handler = lm_message_handler_new(jabber_services_discovery_handler, NULL, NULL);
 
-	lm_connection_send_with_reply(jabber_data.connection, msg,message_handler,NULL);
-        lm_message_unref(msg);
+	lm_connection_send_with_reply(jabber_data.connection, msg, message_handler, NULL);
+	lm_message_unref(msg);
 	lm_message_handler_unref(message_handler);
 	return NULL;
 }
 
-GGaduMenu *build_jabber_menu()
+static GGaduMenu *build_jabber_menu()
 {
 	GGaduMenu *root;
 	GGaduMenu *item;
@@ -1395,14 +1366,17 @@ GGaduMenu *build_jabber_menu()
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("_Preferences"), user_preferences_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Personal _data"), user_own_vcard_action, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Service d_iscovery"), jabber_services_discovery_action, NULL));
+
+	jabber_services_discovery_menu = ggadu_menu_new_item(_("Service d_iscovery"), NULL, NULL);
+	ggadu_menu_add_submenu(item, jabber_services_discovery_menu);
+
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
-	account=ggadu_menu_new_item(_("Account"), NULL, NULL);
+	account = ggadu_menu_new_item(_("Account"), NULL, NULL);
 	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("R_egister account"), jabber_register_account_dialog, NULL));
 	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Remo_ve account"), user_remove_account_action, NULL));
 	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("C_hange password"), user_change_password_action, NULL));
 	ggadu_menu_add_submenu(item, account);
-	
+
 	return root;
 }
 
@@ -1419,7 +1393,7 @@ void start_plugin()
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_DND);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_XA);
 	jabber_handler->plugin_data = p;
-	
+
 	ggadu_repo_add_value("_protocols_", GGadu_PLUGIN_NAME, p, REPO_VALUE_PROTOCOL);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
@@ -1436,7 +1410,7 @@ void start_plugin()
 	ADD_USER_SIG = register_signal(jabber_handler, "add user");
 	GET_USER_SIG = register_signal(jabber_handler, "get user");
 	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
-	REMOVE_ACCOUNT =  register_signal(jabber_handler, "remove account");
+	REMOVE_ACCOUNT = register_signal(jabber_handler, "remove account");
 	REGISTER_GET_FIELDS = register_signal(jabber_handler, "register get fields");
 	USER_REMOVE_SIG = register_signal(jabber_handler, "user remove action");
 	USER_EDIT_VCARD_SIG = register_signal(jabber_handler, "user edit vcard");

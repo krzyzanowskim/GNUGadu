@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.219 2004/12/27 08:42:54 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.220 2004/12/27 13:20:26 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2260,10 +2260,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (connected && msg)
 		{
 			gchar *message = NULL;
+			
 			message = from_utf8("CP1250", msg->message);
 			message = insert_cr(message);
-			print_debug("%s", message);
 			msg->time = time(NULL);
+
+			print_debug("%s", message);
+			
 			if ((msg->class == GGADU_CLASS_CONFERENCE) && (msg->recipients != NULL))
 			{
 				gint i = 0;
