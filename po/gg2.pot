@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-03 10:18+0200\n"
+"POT-Creation-Date: 2003-04-03 12:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,7 +141,7 @@ msgstr ""
 
 #: src/plugins/GUI/gui_preferences.c:398
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:881
-#: src/plugins/tlen/tlen_plugin.c:642 src/plugins/xosd/plugin_xosd.c:265
+#: src/plugins/tlen/tlen_plugin.c:642 src/plugins/xosd/plugin_xosd.c:254
 #: src/plugins/jabber/jabber_plugin.c:401
 #: src/plugins/remote/remote_plugin.c:615 src/plugins/sms/sms_gui.c:186
 msgid "Preferences"
@@ -508,7 +508,7 @@ msgid "Gadu-Gadu(c) protocol"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:950
-#: src/plugins/xosd/plugin_xosd.c:305
+#: src/plugins/xosd/plugin_xosd.c:309
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr ""
@@ -681,27 +681,27 @@ msgstr ""
 msgid "Auto connect on startup"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:245
+#: src/plugins/xosd/plugin_xosd.c:234
 msgid "X OSD Preferences"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:249
+#: src/plugins/xosd/plugin_xosd.c:238
 msgid "Colour"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:250
+#: src/plugins/xosd/plugin_xosd.c:239
 msgid "Number of lines"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:251
+#: src/plugins/xosd/plugin_xosd.c:240
 msgid "Timeout"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:252
+#: src/plugins/xosd/plugin_xosd.c:241
 msgid "Timestamp"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:277
+#: src/plugins/xosd/plugin_xosd.c:282
 msgid "On Screen Display"
 msgstr ""
 
