@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.148 2005/01/05 18:44:47 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.149 2005/01/07 21:16:47 aflinta Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1271,7 +1271,7 @@ gpointer user_search_action(gpointer user_data)
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Jabber search server"), "search-server");
 
-	ggadu_dialog_add_entry(dialog, 0, _("_Server"), VAR_STR, server, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, 0, _("_Server:"), VAR_STR, server, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
@@ -1295,9 +1295,9 @@ gpointer user_preferences_action(gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_ADVANCED);
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Re_source"), VAR_STR, ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Re_source:"), VAR_STR, ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_ADVANCED);
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server a_ddress"), VAR_STR, ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server a_ddress:"), VAR_STR, ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
 
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PROXY,
 			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
