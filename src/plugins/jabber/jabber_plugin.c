@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.144 2004/12/29 02:08:55 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.145 2004/12/29 13:31:18 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -49,7 +49,7 @@ LmMessageHandler *message_handler;
 static GQuark SEARCH_SERVER_SIG;
 static GQuark JABBER_SUBSCRIBE_SIG;
 static GQuark CHANGE_STATUS_SIG;
-static GQuark CHANGE_STATUS_DESCR_SIG;
+static GQuark CHANGE_STATUS_DESCR_DIALOG_SIG;
 static GQuark SEND_MESSAGE_SIG;
 static GQuark ADD_USER_SIG;
 static GQuark GET_USER_SIG;
@@ -637,7 +637,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		GGaduDialog_free(dialog);
 	}
-	else if (signal->name == CHANGE_STATUS_DESCR_SIG)
+	else if (signal->name == CHANGE_STATUS_DESCR_DIALOG_SIG)
 	{
 		GGaduDialog *dialog = signal->data;
 
@@ -664,7 +664,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				    sp->status_description = NULL;
 				}
 				
-				jabber_change_status(sp->status);
+				jabber_change_status(sp);
 			}
 		}
 		GGaduDialog_free(dialog);
@@ -686,7 +686,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			return;
 		}
 		else
-			jabber_change_status(sp->status);
+			jabber_change_status(sp);
 
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
@@ -1415,7 +1415,7 @@ void start_plugin()
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
 	CHANGE_STATUS_SIG = register_signal(jabber_handler, "change status");
-	CHANGE_STATUS_DESCR_SIG = register_signal(jabber_handler, "change status descr");
+	CHANGE_STATUS_DESCR_DIALOG_SIG = register_signal(jabber_handler, "change status descr dialog");
 	GET_CURRENT_STATUS_SIG = register_signal(jabber_handler, "get current status");
 	UPDATE_CONFIG_SIG = register_signal(jabber_handler, "update config");
 	SEND_MESSAGE_SIG = register_signal(jabber_handler, "send message");
@@ -1441,7 +1441,8 @@ void start_plugin()
 	if (ggadu_config_var_get(jabber_handler, "autoconnect"))
 	{
 		print_debug("jabber: autoconneting");
-		jabber_change_status(JABBER_STATUS_AVAILABLE);
+		GGaduStatusPrototype *sp = ggadu_find_status_prototype(p,JABBER_STATUS_AVAILABLE);
+		jabber_change_status(sp);
 	}
 
 }

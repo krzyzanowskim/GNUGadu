@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.h,v 1.11 2004/12/20 09:15:20 krzyzak Exp $ */
+/* $Id: jabber_protocol.h,v 1.12 2004/12/29 13:31:18 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -29,7 +29,8 @@ waiting_action *action_queue_add(gchar * id, gchar * type, gpointer action_callb
 
 void action_queue_del(waiting_action * action);
 
-void jabber_change_status(enum states status);
+void jabber_change_status(GGaduStatusPrototype *sp);
+//void jabber_change_status(enum states status);
 void jabber_fetch_roster(gpointer user_data);
 
 void action_roster_add_result(LmConnection * connection, LmMessage * message, gpointer id);
