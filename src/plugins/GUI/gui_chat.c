@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.33 2003/06/01 22:44:40 shaster Exp $ 
+ * $Id: gui_chat.c,v 1.34 2003/06/02 10:12:44 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -590,7 +590,6 @@ gboolean window_resize_signal (GtkWidget *window,GdkEventConfigure *event, gpoin
 	  GtkWidget *paned = g_object_get_data(G_OBJECT(session->chat),"paned");
 	  GtkWidget *hbox_buttons = g_object_get_data(G_OBJECT(session->chat),"hbox_buttons");
 	  gint percent = (gint) config_var_get (gui_handler, "chat_paned_size");
-	  float position = 0;
 	  float tab_minus = 0;
 	  
 	  if (chat_type == CHAT_TYPE_TABBED) 
@@ -608,13 +607,15 @@ gboolean window_resize_signal (GtkWidget *window,GdkEventConfigure *event, gpoin
 		}
 	  }
 
-	  r.height = event->height;
 
-	  gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
-
-	  position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
 	  
-	  gtk_paned_set_position (GTK_PANED (paned), (gint) position);
+	  if ((paned != NULL) && (GTK_IS_PANED(paned))) {
+	  	 float position = 0;
+	 	 r.height = event->height;
+	 	 gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
+	  	 position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
+	 	 gtk_paned_set_position (GTK_PANED (paned), (gint) position);
+	  }
 
 	return FALSE;
 }
