@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.32 2003/12/20 23:17:21 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.33 2004/01/09 02:39:40 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -307,9 +307,17 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	{
 	    method = GGADU_SMS_METHOD_CHAT;
 	    if (ggadu_config_var_get(sms_handler, "sender") != NULL)
-		send_sms((gboolean) ggadu_config_var_get(sms_handler, "external"), ggadu_config_var_get(sms_handler, "sender"),
-			 msg->id, msg->message, ggadu_config_var_get(sms_handler, "era_login"), ggadu_config_var_get(sms_handler,
-													 "era_password"));
+	    {
+		SMS *message = (SMS *) g_new0(SMS, 1);
+		message->external = (gboolean) ggadu_config_var_get(sms_handler, "external");
+		message->sender = g_strdup(ggadu_config_var_get(sms_handler, "sender"));  /* due to sender_temp somewhere below */
+		message->number = g_strdup(msg->id);
+		from_utf8("ISO-8859-2", msg->message, message->body);
+		message->era_login = ggadu_config_var_get(sms_handler, "era_login");
+		message->era_password = ggadu_config_var_get(sms_handler, "era_password");
+
+		g_thread_create((gpointer (*)()) send_sms, (gpointer) message, FALSE, NULL);
+	    }
 	    else
 		sms_preferences(0);
 	}
@@ -324,6 +332,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (d->response == GGADU_OK)
 	{
+	    SMS *message = (SMS *) g_new0(SMS, 1);
 	    while (tmplist)
 	    {
 		GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -345,11 +354,16 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		tmplist = tmplist->next;
 	    }
 	    method = GGADU_SMS_METHOD_POPUP;
-	    send_sms((gboolean) ggadu_config_var_get(sms_handler, "external"), sender_temp,
-		     ggadu_config_var_get(sms_handler, "number"), ggadu_config_var_get(sms_handler, "body"),
-		     ggadu_config_var_get(sms_handler, "era_login"), ggadu_config_var_get(sms_handler, "era_password"));
 
-//          g_free(sender_temp);
+	    message->external = (gboolean) ggadu_config_var_get(sms_handler, "external");
+	    message->sender = sender_temp;
+	    message->number = g_strdup(ggadu_config_var_get(sms_handler, "number"));
+	    message->body = g_strdup(ggadu_config_var_get(sms_handler, "body"));
+	    message->era_login = ggadu_config_var_get(sms_handler, "era_login");
+	    message->era_password = ggadu_config_var_get(sms_handler, "era_password");
+
+	    g_thread_create((gpointer (*)()) send_sms, message, FALSE, NULL);
+
 	    ggadu_config_var_set(sms_handler, "external", (gpointer) old_external);
 	    ggadu_config_save(sms_handler);
 	}
@@ -439,7 +453,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
     {
 	GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;
-	gchar *temp = NULL;
+	SMS *message = (SMS *) d->user_data;
 
 	if (d->response == GGADU_OK)
 	{
@@ -447,10 +461,10 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	    {
 		GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
 		if (kv->key == 1)
-		    temp = kv->value;
+		    message->idea_pass = kv->value;
 		tmplist = tmplist->next;
 	    }
-	    send_IDEA_stage2(temp, d->user_data);
+	    g_thread_create((gpointer (*)()) send_IDEA_stage2, message, FALSE, NULL);
 	}
 	GGaduDialog_free(d);
     }

@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.25 2003/12/20 13:37:00 shaster Exp $ */
+/* $Id: sms_core.c,v 1.26 2004/01/09 02:39:39 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -165,17 +165,17 @@ void httpstruct_free(HTTPstruct *h)
 }
                                                                                                     
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
-gboolean IDEA_logo(gpointer user_data)
+gboolean IDEA_logo(SMS *user_data)
 {
     GGaduDialog *d = ggadu_dialog_new();
     ggadu_dialog_set_title(d, _("IDEA token"));
     ggadu_dialog_callback_signal(d, "get token");
-    d->user_data = user_data;
+    d->user_data = (gpointer) user_data;
 
     ggadu_dialog_add_entry(&(d->optlist), 0, "", VAR_IMG, idea_token_path, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), 1, _("Enter token text"), VAR_STR, NULL, VAR_FLAG_NONE);
 
-    signal_emit("sms", "gui show dialog", d, "main-gui");
+    signal_emit_from_thread("sms", "gui show dialog", d, "main-gui");
 
     return FALSE;
 }
@@ -190,9 +190,9 @@ void sms_dialog_box(const gchar * sms_number, const gchar * message, gint type)
     if (method == GGADU_SMS_METHOD_POPUP)
     {
 	if (type == GGADU_SMS_TYPE_WARN)
-	    signal_emit("sms", "gui show warning", g_strdup(message), "main-gui");
+	    signal_emit_from_thread("sms", "gui show warning", g_strdup(message), "main-gui");
 	else if (type == GGADU_SMS_TYPE_INFO)
-	    signal_emit("sms", "gui show message", g_strdup(message), "main-gui");
+	    signal_emit_from_thread("sms", "gui show message", g_strdup(message), "main-gui");
     }
 
     if (method == GGADU_SMS_METHOD_CHAT)
@@ -201,7 +201,7 @@ void sms_dialog_box(const gchar * sms_number, const gchar * message, gint type)
 	msg->id = g_strdup(sms_number ? sms_number : _("None"));
 	msg->class = GGADU_CLASS_CHAT;
 	msg->message = g_strconcat(_("SMS plugin: "), message, NULL);
-	signal_emit("sms", "gui msg receive", msg, "main-gui");
+	signal_emit_from_thread("sms", "gui msg receive", msg, "main-gui");
     }
 }
 
@@ -218,7 +218,7 @@ void sms_warning(const gchar * sms_number, const gchar * warning)
 }
 
 /* wyslanie na idee */
-int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body)
+int send_IDEA(SMS *message)
 {
     gchar *token = NULL;
     gchar temp[2];
@@ -367,42 +367,54 @@ get_token:
     fwrite(recv_buff, 1, i - j, idea_logo);
     fclose(idea_logo);
 
-    /* *INDENT-OFF* */
-    /* no need to urlencode number, it's nothing but 9 digits */
     g_free(recv_buff);
-    recv_buff =	g_strconcat("token=", token,
-			"&SENDER=", ggadu_sms_urlencode(g_strdup(sms_sender)),
-			"&RECIPIENT=", sms_number,
-			"&SHORT_MESSAGE=", ggadu_sms_urlencode(g_strdup(sms_body)), NULL);
-    /* *INDENT-ON* */
 
-    IDEA_logo(recv_buff);
+    message->idea_token = token;
+    message->idea_pass = NULL;
+
+    IDEA_logo(message);
 
     return TRUE;
 }
 
-int send_IDEA_stage2(gchar * pass, gpointer user_data)
+gpointer send_IDEA_stage2(SMS *message)
 {
     gchar *recv_buff = NULL;
     gchar *post = NULL;
-    gchar *sms_number = NULL;
-    gchar *p = NULL;
+    gchar *sms_number = message->number;
     gchar temp[2];
     gint i, retries = 3;
     HTTPstruct *HTTP = NULL;
     int sock_s;
 
-    p = g_strstr_len(user_data, strlen(user_data), "&RECIPIENT=");
-    sms_number = g_strndup(p + 11, 9);
-
-    if (!pass)
+    if (!message)
     {
-	sms_warning(sms_number, _("Please enter token"));
-	g_free(sms_number);
-	return FALSE;
+	print_debug("Oops! message==NULL!\n");
+	g_thread_exit(NULL);
+	return NULL;
     }
 
-    post = g_strconcat((gchar *) user_data, "&pass=", pass, "&respInfo=2", NULL);
+    if (!message->idea_pass)
+    {
+	sms_warning(message->number, _("Please enter token"));
+	g_thread_exit(NULL);
+	return NULL;
+    }
+
+    /* Cut-off prefixes. 'just-in-case' */
+    if (g_str_has_prefix(message->number, "+48"))
+	sms_number += 3;
+
+    if (g_str_has_prefix(message->number, "0"))
+	sms_number++;
+
+    post = g_strconcat("token=", message->idea_token,
+			"&SENDER=", ggadu_sms_urlencode(g_strdup(message->sender)),
+			"&RECIPIENT=", sms_number,
+			"&SHORT_MESSAGE=", ggadu_sms_urlencode(g_strdup(message->body)),
+			 "&pass=", message->idea_pass, "&respInfo=2", NULL);
+
+    print_debug("Post data: %s\n", post);
 
     /* is there any better place for this? */
     unlink(idea_token_path);
@@ -414,15 +426,14 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     HTTP->url_params = g_strdup(" ");
     HTTP->post_data = g_strdup(post);
     HTTP->post_length = strlen(post);
+    g_free(post);
 
 send_sms:
     if (sms_connect("IDEA", "213.218.116.131", &sock_s))
     {
-	sms_warning(sms_number, _("Cannot connect!"));
+	sms_warning(message->number, _("Cannot connect!"));
 	httpstruct_free(HTTP);
-	g_free(post);
-	g_free(sms_number);
-	return FALSE;
+	goto out;
     }
 
     HTTP_io(HTTP, sock_s);
@@ -444,64 +455,81 @@ send_sms:
 	else
 	{
 	    httpstruct_free(HTTP);
-	    g_free(post);
-	    g_free(sms_number);
-	    return ERR_GATEWAY;
+	    goto out;
 	}
     }
     else
     {
 	httpstruct_free(HTTP);
-	g_free(post);
     }
 
     if (g_strstr_len(recv_buff, i, "SMS zosta³ wys³any"))
-	sms_message(sms_number, _("SMS has been sent"));
+	sms_message(message->number, _("SMS has been sent"));
 
     else if (g_strstr_len(recv_buff, i, "Podano b³êdne has³o, SMS nie zosta³ wys³any"))
-	sms_warning(sms_number, _("Bad token!"));
+	sms_warning(message->number, _("Bad token!"));
 
     else if (g_strstr_len(recv_buff, i, "Object moved"))
-	sms_warning(sms_number, _("Bad token entered!"));
+	sms_warning(message->number, _("Bad token entered!"));
 
     else if (g_strstr_len(recv_buff, i, "wyczerpany"))
-	sms_warning(sms_number, _("Daily limit exceeded!"));
+	sms_warning(message->number, _("Daily limit exceeded!"));
 
     else if (g_strstr_len(recv_buff, i, "serwis chwilowo"))
-	sms_warning(sms_number, _("Gateway error!"));
+	sms_warning(message->number, _("Gateway error!"));
 
     else if (g_strstr_len(recv_buff, i, "Odbiorca nie ma aktywnej"))
-	sms_warning(sms_number, _("Service not activated!"));
+	sms_warning(message->number, _("Service not activated!"));
 
     else if (g_strstr_len(recv_buff, i, "adres odbiorcy wiadomosci jest nieprawid"))
-	sms_warning(sms_number, _("Invalid number"));
+	sms_warning(message->number, _("Invalid number"));
 
-    g_free(sms_number);
     g_free(recv_buff);
-    return FALSE;
+
+out:
+    g_free(message->idea_token);
+    g_free(message->idea_pass);
+    g_free(message->sender);
+    g_free(message->number);
+    g_free(message->body);
+    g_free(message);
+
+    g_thread_exit(NULL);
+    return NULL;
 }
 
 /* wyslanie na plusa */
-int send_PLUS(const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body)
+int send_PLUS(SMS *message)
 {
     gchar *recv_buff = NULL;
     gchar *post = NULL;
     gchar tprefix[4];
     gchar temp[2];
+    gchar *sms_number = message->number;
     int i = 0, ret = ERR_UNKNOWN;
     HTTPstruct *HTTP = NULL;
     int sock_s;
 
     if (sms_connect("PLUS", GGADU_SMS_PLUS_HOST, &sock_s))
-	return ERR_SERVICE;
+    {
+	ret = ERR_SERVICE;
+	goto out;
+    }
+
+    /* Cut-off prefixes. 'just-in-case' */
+    if (g_str_has_prefix(message->number, "+48"))
+	sms_number += 3;
+
+    if (g_str_has_prefix(message->number, "0"))
+	sms_number++;
 
     strncpy(tprefix, sms_number, 3);
     tprefix[3] = 0;
 
     /* *INDENT-OFF* */
     post = g_strconcat("tprefix=", tprefix, "&numer=", (sms_number + 3),
-		"&odkogo=", ggadu_sms_urlencode(g_strdup(sms_sender)),
-		"&tekst=", ggadu_sms_urlencode(g_strdup(sms_body)), NULL);
+		"&odkogo=", ggadu_sms_urlencode(g_strdup(message->sender)),
+		"&tekst=", ggadu_sms_urlencode(g_strdup(message->body)), NULL);
     /* *INDENT-ON* */
 
     HTTP = httpstruct_new();
@@ -531,31 +559,48 @@ int send_PLUS(const gchar * sms_sender, const gchar * sms_number, const gchar * 
 	ret = ERR_LIMIT_EX;
 
     g_free(recv_buff);
+
+out:
+    g_free(message->sender);
+    g_free(message->number);
+    g_free(message->body);
+    g_free(message);
+
     return ret;
 }
 
 /* wyslanie na ere */
-int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body, const gchar * era_login,
-	     const gchar * era_password, int *era_left)
+int send_ERA(SMS *message, int *era_left)
 {
     gchar *recv_buff = NULL;
     gchar *returncode = NULL;
     gchar *get = NULL;
     gchar temp[2];
+    gchar *sms_number = message->number;
     int i = 0;
     int ret = ERR_UNKNOWN;
     HTTPstruct *HTTP;
     int sock_s;
 
     if (sms_connect("ERA", GGADU_SMS_ERA_HOST, &sock_s))
-	return ERR_SERVICE;
+    {
+	ret = ERR_SERVICE;
+	goto out;
+    }
+
+    /* Cut-off prefixes. 'just-in-case' */
+    if (g_str_has_prefix(message->number, "+48"))
+	sms_number += 3;
+
+    if (g_str_has_prefix(message->number, "0"))
+	sms_number++;
 
     /* *INDENT-OFF* */
-    get = g_strconcat ("?login=", ggadu_sms_urlencode(g_strdup(era_login)),
-		"&password=", ggadu_sms_urlencode(g_strdup(era_password)),
-		"&message=", ggadu_sms_urlencode(g_strdup(sms_body)),
+    get = g_strconcat ("?login=", ggadu_sms_urlencode(g_strdup(message->era_login)),
+		"&password=", ggadu_sms_urlencode(g_strdup(message->era_password)),
+		"&message=", ggadu_sms_urlencode(g_strdup(message->body)),
 		"&number=48", sms_number,
-		"&contact=", "&signature=", ggadu_sms_urlencode(g_strdup(sms_sender)),
+		"&contact=", "&signature=", ggadu_sms_urlencode(g_strdup(message->sender)),
 		"&success=OK", "&failure=FAIL", 
 		"&minute=", "&hour= ", NULL);
     /* *INDENT-ON* */
@@ -577,8 +622,8 @@ int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * s
 
     if (!strlen(recv_buff))
     {
-	g_free(recv_buff);
-	return ERR_SERVICE;
+	ret = ERR_SERVICE;
+	goto out;
     }
 
     if ((returncode = g_strstr_len(recv_buff, i, "OK?X-ERA-counter=")) != NULL)
@@ -592,27 +637,39 @@ int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * s
 	int r = (int) (*(returncode + 17) - '0');
 
 	/* error codes from www.eraomnix.pl/service/gw/bAPIPrv.jsp */
-	if (r == 0)
+	if (r == GGADU_SMS_ERA_ERR_NONE)
 	    ret = ERR_NONE;
-	else if (r == 1)
+	else if (r == GGADU_SMS_ERA_ERR_GATEWAY)
 	    ret = ERR_GATEWAY;
-	else if (r == 2)
+	else if (r == GGADU_SMS_ERA_ERR_UNAUTH)
 	    ret = ERR_UNAUTH;
-	else if (r == 3)
+	else if (r == GGADU_SMS_ERA_ERR_ACCESS_DENIED)
 	    ret = ERR_ACCESS_DENIED;
-	else if (r == 5)
+	else if (r == GGADU_SMS_ERA_ERR_SYNTAX)
 	    ret = ERR_SYNTAX;
-	else if (r == 7)
+	else if (r == GGADU_SMS_ERA_ERR_LIMIT_EX)
 	    ret = ERR_LIMIT_EX;
-	else if (r == 8)
+	else if (r == GGADU_SMS_ERA_ERR_BAD_RCPT)
 	    ret = ERR_BAD_RCPT;
-	else if (r == 9)
+	else if (r == GGADU_SMS_ERA_ERR_MSG_TOO_LONG)
 	    ret = ERR_MSG_TOO_LONG;
 	else
 	    ret = ERR_UNKNOWN;
     }
 
-    g_free(recv_buff);
+
+out:
+    if (recv_buff)
+	g_free(recv_buff);
+
+    if (returncode)
+	g_free(returncode);
+
+    g_free(message->sender);
+    g_free(message->number);
+    g_free(message->body);
+    g_free(message);
+
     return ret;
 }
 
@@ -637,99 +694,82 @@ int check_operator(const gchar * sms_number)
 }
 
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
-void send_sms(gboolean external, const gchar * sms_sender, gchar *number, const gchar * sms_body,
-	      const gchar * era_login, const gchar * era_password)
+/* nie zwalnia niczego zwiazanego z *message, wlasciwe send_*() musza sie o to zatroszczyc */
+gpointer send_sms(SMS *message)
 {
     gint result, gsm_oper;
     int era_left = 10;
-    gchar *sms_body_iso = NULL;
-    gchar *sms_number = number;
 
-    if (!sms_number)
+    if (!message->number)
     {
-	sms_warning(sms_number, _("Specify recipient number!"));
-	return;
+	sms_warning(message->number, _("Specify recipient number!"));
+	goto out;
     }
 
-    if (!sms_sender)
+    if (!message->sender)
     {
-	sms_warning(sms_number, _("Specify sender name!"));
-	return;
+	sms_warning(message->number, _("Specify sender name!"));
+	goto out;
     }
 
-    if (!sms_body)
+    if (!message->body)
     {
-	sms_warning(sms_number, _("Message is empty!"));
-	return;
+	sms_warning(message->number, _("Message is empty!"));
+	goto out;
     }
 
-    /* Cut-off prefixes. 'just-in-case' */
-    if (g_str_has_prefix(sms_number, "+48"))
-	sms_number += 3;
-
-    if (g_str_has_prefix(sms_number, "0"))
-	sms_number++;
-
-    from_utf8("ISO-8859-2", sms_body, sms_body_iso);
-
-    gsm_oper = check_operator(sms_number);
+    gsm_oper = check_operator(message->number);
     switch (gsm_oper)
     {
     case SMS_IDEA:
-	if (external)
+	if (message->external)
 	{
-	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body_iso, " ", sms_sender, "\"", NULL));
-	    g_free(sms_body_iso);
-	    return;
+	    result = system(g_strconcat("sms ", message->number, " \"", message->body, " ", message->sender, "\"", NULL));
+	    goto out;
 	}
 	else
-	    result = send_IDEA(sms_sender, sms_number, sms_body_iso);
+	    result = send_IDEA(message);
 
 	break;
 
     case SMS_PLUS:
-	if (external)
+	if (message->external)
 	{
-	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body_iso, " ", sms_sender, "\"", NULL));
-	    g_free(sms_body_iso);
-	    return;
+	    result = system(g_strconcat("sms ", message->number, " \"", message->body, " ", message->sender, "\"", NULL));
+	    goto out;
 	}
 	else
-	    result = send_PLUS(sms_sender, sms_number, sms_body_iso);
+	    result = send_PLUS(message);
 
 	break;
 
     case SMS_ERA:
-	if (external)
+	if (message->external)
 	{
-	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body_iso, " ", sms_sender, "\"", NULL));
-	    g_free(sms_body_iso);
-	    return;
+	    result = system(g_strconcat("sms ", message->number, " \"", message->body, " ", message->sender, "\"", NULL));
+	    goto out;
 	}
 	else
 	{
-	    if (!era_login)
+	    if (!message->era_login)
 	    {
-		sms_warning(sms_number, _("Empty Era login!"));
-		g_free(sms_body_iso);
-		return;
+		sms_warning(message->number, _("Empty Era login!"));
+		goto out;
 	    }
 
-	    if (!era_password)
+	    if (!message->era_password)
 	    {
-		sms_warning(sms_number, _("Empty Era password!"));
-		g_free(sms_body_iso);
-		return;
+		sms_warning(message->number, _("Empty Era password!"));
+		goto out;
 	    }
-	    result = send_ERA(sms_sender, sms_number, sms_body_iso, era_login, era_password, &era_left);
+	    result = send_ERA(message, &era_left);
 	}
 
 	break;
 
     case FALSE:
-	sms_warning(sms_number, _("Invalid number!"));
-	g_free(sms_body_iso);
-	return;
+	sms_warning(message->number, _("Invalid number!"));
+	goto out;
     }
 
 
@@ -741,56 +781,58 @@ void send_sms(gboolean external, const gchar * sms_sender, gchar *number, const 
 	/* dirty IDEA workaround: we can't handle send_idea*() return values here,
 	   send_idea*() eventually notifies about success itself. */
 	if (gsm_oper == SMS_PLUS)
-	    sms_message(sms_number, _("SMS has been sent"));
+	    sms_message(message->number, _("SMS has been sent"));
 	else if (gsm_oper == SMS_ERA)
-	    sms_message(sms_number, g_strdup_printf(_("SMS has been sent. Left: %d"), era_left));
+	    sms_message(message->number, g_strdup_printf(_("SMS has been sent. Left: %d"), era_left));
 	break;
 
 	/* failures */
     case FALSE:
-	sms_warning(sms_number, _("SMS not delivered!"));
+	sms_warning(message->number, _("SMS not delivered!"));
 	break;
     case ERR_UNAUTH:
-	sms_warning(sms_number, _("Unauthorized!"));
+	sms_warning(message->number, _("Unauthorized!"));
 	break;
     case ERR_ACCESS_DENIED:
-	sms_warning(sms_number, _("Access denied!"));
+	sms_warning(message->number, _("Access denied!"));
 	break;
     case ERR_SYNTAX:
-	sms_warning(sms_number, _("Syntax error!"));
+	sms_warning(message->number, _("Syntax error!"));
 	break;
     case ERR_BAD_RCPT:
-	sms_warning(sms_number, _("Invalid recipient!"));
+	sms_warning(message->number, _("Invalid recipient!"));
 	break;
     case ERR_MSG_TOO_LONG:
-	sms_warning(sms_number, _("Message too long!"));
+	sms_warning(message->number, _("Message too long!"));
 	break;
     case ERR_READ_TOKEN:
-	sms_warning(sms_number, _("Error while reading token!"));
+	sms_warning(message->number, _("Error while reading token!"));
 	break;
     case ERR_WRITE_TOKEN:
-	sms_warning(sms_number, _("Cannot write token image to file!"));
+	sms_warning(message->number, _("Cannot write token image to file!"));
 	break;
     case ERR_LIMIT_EX:
-	sms_warning(sms_number, _("Daily limit exceeded!"));
+	sms_warning(message->number, _("Daily limit exceeded!"));
 	break;
     case ERR_GATEWAY:
-	sms_warning(sms_number, _("Gateway error!"));
+	sms_warning(message->number, _("Gateway error!"));
 	break;
     case ERR_SERVICE:
-	sms_warning(sms_number, _("Cannot connect!"));
+	sms_warning(message->number, _("Cannot connect!"));
 	break;
 
 	/* unknowns */
     case ERR_UNKNOWN:
-	sms_warning(sms_number, _("Unknown error!"));
+	sms_warning(message->number, _("Unknown error!"));
 	break;
     case ERR_NONE:
-	print_debug("SMS: Strange, we got ERR_NONE for %s. Shouldn't happen.\n", sms_number);
+	print_debug("SMS: Strange, we got ERR_NONE for %s. Shouldn't happen.\n", message->number);
 	break;
     }
 
-    g_free(sms_body_iso);
+out:
+    g_thread_exit(0);
 
-    return;
+    return NULL;
 }
+

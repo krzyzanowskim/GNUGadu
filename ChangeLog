@@ -1,3 +1,6 @@
+09.01.2004
+- sms plugin uses threads now for network operations (sms/shasta)
+
 08.01.2004
 - fixed `private` setting usage with autoconnect (gadu-gadu/shasta)
 
