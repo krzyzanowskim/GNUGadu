@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.121 2004/12/02 12:02:12 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.122 2004/12/03 09:49:42 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -702,7 +702,6 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				{
 				    desc_utf = kv->value;
 				    jabber_data.description = desc_utf;
-//				    ggadu_set_protocol_status_description(p,desc_utf);
 				}
 				jabber_change_status(sp->status);
 			}

@@ -146,7 +146,7 @@ static gboolean check_idle_time()
 			    gint newstatus =  (gint)protocol->online_status->data;
 			    
 			    dialog->response = GGADU_OK;
-			    kv->value = (gpointer) message;
+/*			    kv->value = (gpointer) message; */
 			    dialog->optlist = g_slist_append(dialog->optlist, kv);
 			    dialog->user_data = ggadu_find_status_prototype(protocol,newstatus);
 			    signal_emit(GGadu_PLUGIN_NAME, "change status descr", dialog, plugin->name);
