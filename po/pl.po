@@ -1,12 +1,12 @@
-# $Id: pl.po,v 1.71 2004/08/22 19:59:47 aflinta Exp $
+# $Id: pl.po,v 1.72 2004/08/22 20:37:20 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-22 21:57+0200\n"
+"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
+"POT-Creation-Date: 2004-08-22 22:22+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -23,7 +23,6 @@ msgstr "Nie mo¿na odczytaæ zawarto¶ci ¿adnego katalogu z modu³ami\n"
 msgid "Unable to open directory with plugins (%s)\n"
 msgstr "Nie mo¿na odczytaæ zawarto¶ci katalogu z wtyczkami (%s)\n"
 
-#. zaladowanie plugina
 #: src/main.c:88
 #, c-format
 msgid "Cannot load plugin %s\n"
@@ -55,7 +54,6 @@ msgstr "GNU Gadu 2"
 msgid "There is no history file"
 msgstr "Nie ma pliku historii"
 
-#. button = PutNewButton(field, _("Find"));
 #: contrib/gghist/gghist.c:320
 msgid "Go to first page"
 msgstr "Przechodzi do pierwszej strony"
@@ -365,12 +363,10 @@ msgstr ""
 "Ustawienia zaawansowane\n"
 "\n"
 
-#. hide_on_start
 #: src/plugins/GUI/gui_preferences.c:742
 msgid "Auto hide window on start"
 msgstr "Automatyczne ukrywanie okna po uruchomieniu"
 
-#. blink
 #: src/plugins/GUI/gui_preferences.c:748
 msgid "Blink status icon while connecting every:"
 msgstr "Mruganie ikony stanu podczas ³±czenia:"
@@ -387,8 +383,6 @@ msgstr "Wybrany motyw:"
 msgid "Selected icon set:"
 msgstr "Wybrany zestaw ikon:"
 
-#. chat_paned_size
-#. ZONK - how to name it ?
 #: src/plugins/GUI/gui_preferences.c:872
 msgid "Chat window split position at:"
 msgstr "Podzia³ okna rozmowy w:"
@@ -400,7 +394,7 @@ msgstr "procentach"
 #: src/plugins/GUI/gui_preferences.c:937
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1500
 #: src/plugins/tlen/tlen_plugin.c:846 src/plugins/xosd/plugin_xosd.c:407
-#: src/plugins/jabber/jabber_plugin.c:951
+#: src/plugins/jabber/jabber_plugin.c:952
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
 #: src/plugins/history/external/history_viewer.c:107
@@ -489,7 +483,6 @@ msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki GUI, nie martw siê"
 msgid "Status"
 msgstr "Stan"
 
-#. *INDENT-OFF*
 #: src/plugins/GUI/gui_search.c:47 src/plugins/sms/sms_gui.c:87
 msgid "Id"
 msgstr "Id"
@@ -576,7 +569,6 @@ msgstr ""
 "<i>Data kompilacji:\n"
 "%s %s</i>"
 
-#. It must be here
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:403
 msgid "Docklet-dockapp2"
 msgstr "Docklet-dockapp2"
@@ -608,7 +600,6 @@ msgstr "Niedostêpny (wszystkie)"
 msgid "Quit"
 msgstr "Zakoñcz"
 
-#. wazne zeby to bylo tutaj
 #: src/plugins/docklet/system-tray/docklet_plugin.c:514
 msgid "Dockable icon"
 msgstr "Dokowalna ikona"
@@ -648,7 +639,6 @@ msgstr "Czy jeste¶ pewien, ¿e chcesz skasowaæ zaznaczonych u¿ytkowników?"
 msgid "Change contact informations"
 msgstr "Zmiana informacji o kontakcie"
 
-#. *INDENT-OFF*
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:842
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:856
 #: src/plugins/tlen/tlen_plugin.c:647 src/plugins/jabber/jabber_cb.c:393
@@ -682,7 +672,7 @@ msgid "Gadu-gadu plugin configuration"
 msgstr "Konfiguracja wtyczki Gadu-gadu"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:885
-#: src/plugins/tlen/tlen_plugin.c:823 src/plugins/jabber/jabber_plugin.c:909
+#: src/plugins/tlen/tlen_plugin.c:823 src/plugins/jabber/jabber_plugin.c:910
 msgid "Password"
 msgstr "Has³o"
 
@@ -703,12 +693,12 @@ msgid "Default reason"
 msgstr "Domy¶lny powód"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:896
-#: src/plugins/tlen/tlen_plugin.c:825 src/plugins/jabber/jabber_plugin.c:911
+#: src/plugins/tlen/tlen_plugin.c:825 src/plugins/jabber/jabber_plugin.c:912
 msgid "Log chats to history file"
 msgstr "Zapis tre¶ci rozmów w pliku"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:898
-#: src/plugins/tlen/tlen_plugin.c:827 src/plugins/jabber/jabber_plugin.c:915
+#: src/plugins/tlen/tlen_plugin.c:827 src/plugins/jabber/jabber_plugin.c:916
 msgid "Autoconnect on startup"
 msgstr "Automatyczne ³±czenie po uruchomieniu"
 
@@ -781,7 +771,7 @@ msgid "Update settings on success?"
 msgstr "Zaktualizowaæ ustawienia w razie powodzenia?"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1033
-#: src/plugins/tlen/tlen_plugin.c:775 src/plugins/jabber/jabber_plugin.c:873
+#: src/plugins/tlen/tlen_plugin.c:775 src/plugins/jabber/jabber_plugin.c:874
 msgid "You have to be connected to perform searching!"
 msgstr "Do wyszukiwania potrzebne jest nawi±zane po³±czenie z serwerem!"
 
@@ -892,13 +882,13 @@ msgid "Select File :"
 msgstr "Wybór pliku:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1497
-#: src/plugins/tlen/tlen_plugin.c:845 src/plugins/jabber/jabber_plugin.c:946
+#: src/plugins/tlen/tlen_plugin.c:845 src/plugins/jabber/jabber_plugin.c:947
 #: src/plugins/sms/sms_gui.c:172
 msgid "Add Contact"
 msgstr "Dodaj kontakt"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1499
-#: src/plugins/tlen/tlen_plugin.c:847 src/plugins/jabber/jabber_plugin.c:948
+#: src/plugins/tlen/tlen_plugin.c:847 src/plugins/jabber/jabber_plugin.c:949
 msgid "Search for friends"
 msgstr "Szukaj znajomych"
 
@@ -915,18 +905,17 @@ msgid "Delete userlist"
 msgstr "Usuñ listê kontaktów z serwera"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1506
-#: src/plugins/jabber/jabber_plugin.c:954
+#: src/plugins/jabber/jabber_plugin.c:955
 msgid "Register account"
 msgstr "Zarejestruj konto"
 
 # FIXME - co ma znaczyæ (c) w tym miejscu??!
-#. wazne zeby wywolac to makro w tym miejscu
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1537
 msgid "Gadu-Gadu(c) protocol"
 msgstr "Protokó³ Gadu-Gadu(c)"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1639
-#: src/plugins/tlen/tlen_plugin.c:703 src/plugins/jabber/jabber_plugin.c:811
+#: src/plugins/tlen/tlen_plugin.c:703 src/plugins/jabber/jabber_plugin.c:812
 msgid "Available"
 msgstr "Dostêpny"
 
@@ -967,7 +956,6 @@ msgstr "Zablokowany"
 msgid "no reason"
 msgstr "brak powodu"
 
-#. GGaduMenu *listmenu = NULL;
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1762
 #: src/plugins/tlen/tlen_plugin.c:906 src/plugins/jabber/jabber_plugin.c:362
 msgid "Chat"
@@ -982,11 +970,6 @@ msgstr "Wy¶lij plik"
 msgid "Edit"
 msgstr "Modyfikuj"
 
-#.
-#. listmenu = ggadu_menu_new_item(_("List"), NULL, NULL);
-#. ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"), user_add_user_action, NULL));
-#. ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
-#.
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1768
 #: src/plugins/tlen/tlen_plugin.c:914 src/plugins/jabber/jabber_plugin.c:384
 #: src/plugins/sms/sms_gui.c:232
@@ -994,7 +977,7 @@ msgid "Remove"
 msgstr "Usuñ"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1770
-#: src/plugins/tlen/tlen_plugin.c:915 src/plugins/jabber/jabber_plugin.c:385
+#: src/plugins/tlen/tlen_plugin.c:915 src/plugins/jabber/jabber_plugin.c:386
 #: src/plugins/sms/sms_gui.c:234
 msgid "Add New"
 msgstr "Nowy kontakt"
@@ -1003,14 +986,13 @@ msgstr "Nowy kontakt"
 msgid "Unable to create file"
 msgstr "Nie mo¿na utworzyæ pliku"
 
-#. end
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2031
-#: src/plugins/tlen/tlen_plugin.c:978 src/plugins/jabber/jabber_plugin.c:527
+#: src/plugins/tlen/tlen_plugin.c:978 src/plugins/jabber/jabber_plugin.c:528
 msgid "Enter status description"
 msgstr "Opis stanu"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2033
-#: src/plugins/jabber/jabber_plugin.c:530
+#: src/plugins/jabber/jabber_plugin.c:531
 msgid "Description:"
 msgstr "Opis:"
 
@@ -1068,7 +1050,7 @@ msgstr "Podaj swoj± nazwê u¿ytkownika i has³o"
 msgid "Group"
 msgstr "Grupa"
 
-#: src/plugins/tlen/tlen_plugin.c:709 src/plugins/jabber/jabber_plugin.c:821
+#: src/plugins/tlen/tlen_plugin.c:709 src/plugins/jabber/jabber_plugin.c:822
 msgid "Away"
 msgstr "Zajêty"
 
@@ -1080,15 +1062,15 @@ msgstr "Rozmowa"
 msgid "Very busy"
 msgstr "Bardzo zajêty"
 
-#: src/plugins/tlen/tlen_plugin.c:727 src/plugins/jabber/jabber_plugin.c:831
+#: src/plugins/tlen/tlen_plugin.c:727 src/plugins/jabber/jabber_plugin.c:832
 msgid "DND"
 msgstr "Nie przeszkadzaæ"
 
-#: src/plugins/tlen/tlen_plugin.c:739 src/plugins/jabber/jabber_plugin.c:848
+#: src/plugins/tlen/tlen_plugin.c:739 src/plugins/jabber/jabber_plugin.c:849
 msgid "Unavailable"
 msgstr "Niedostêpny"
 
-#: src/plugins/tlen/tlen_plugin.c:745 src/plugins/jabber/jabber_plugin.c:853
+#: src/plugins/tlen/tlen_plugin.c:745 src/plugins/jabber/jabber_plugin.c:854
 msgid "Set description ..."
 msgstr "Ustaw opis..."
 
@@ -1133,7 +1115,6 @@ msgstr ""
 msgid "XOSD Preferences"
 msgstr "Ustawienia XOSD"
 
-#. *INDENT-OFF*
 #: src/plugins/xosd/plugin_xosd.c:384
 msgid "Timestamp"
 msgstr "Znacznik czasowy"
@@ -1209,7 +1190,7 @@ msgid "Register Jabber account"
 msgstr "Rejestracja konta Jabbera"
 
 #: src/plugins/jabber/jabber_plugin.c:346
-#: src/plugins/jabber/jabber_plugin.c:896
+#: src/plugins/jabber/jabber_plugin.c:897
 msgid "Server:"
 msgstr "Serwer:"
 
@@ -1250,64 +1231,64 @@ msgid "Unignore contact"
 msgstr "Nie ignoruj kontaktu"
 
 #: src/plugins/jabber/jabber_plugin.c:379
-#: src/plugins/jabber/jabber_plugin.c:949
+#: src/plugins/jabber/jabber_plugin.c:950
 msgid "Show ignored"
 msgstr "Wy¶wietl ignorowych"
 
-#: src/plugins/jabber/jabber_plugin.c:483
+#: src/plugins/jabber/jabber_plugin.c:484
 msgid "Invalid data passed, try again"
 msgstr "Przekazano nieprawid³owe dane, spróbuj ponownie"
 
-#: src/plugins/jabber/jabber_plugin.c:718
-#: src/plugins/jabber/jabber_plugin.c:781
+#: src/plugins/jabber/jabber_plugin.c:719
+#: src/plugins/jabber/jabber_plugin.c:782
 msgid "Can't perform search!"
 msgstr "Nie mo¿na przeprowadziæ wyszukiwania!"
 
-#: src/plugins/jabber/jabber_plugin.c:816
+#: src/plugins/jabber/jabber_plugin.c:817
 msgid "Free for chat"
 msgstr "Chêtny do pogaduszek"
 
-#: src/plugins/jabber/jabber_plugin.c:826
+#: src/plugins/jabber/jabber_plugin.c:827
 msgid "eXtended Away"
 msgstr "Bardzo Zajêty"
 
-#: src/plugins/jabber/jabber_plugin.c:836
+#: src/plugins/jabber/jabber_plugin.c:837
 msgid "is subscribed to you presence"
 msgstr "¶ledzi zmiany Twojego stanu"
 
-#: src/plugins/jabber/jabber_plugin.c:842
+#: src/plugins/jabber/jabber_plugin.c:843
 msgid "No authorization"
 msgstr "Brak autoryzacji"
 
-#: src/plugins/jabber/jabber_plugin.c:858
+#: src/plugins/jabber/jabber_plugin.c:859
 msgid "Error"
 msgstr "B³±d"
 
-#: src/plugins/jabber/jabber_plugin.c:894
+#: src/plugins/jabber/jabber_plugin.c:895
 msgid "Jabber search: server"
 msgstr "Wyszukiwanie Jabbera: serwer"
 
-#: src/plugins/jabber/jabber_plugin.c:906
+#: src/plugins/jabber/jabber_plugin.c:907
 msgid "Jabber plugin configuration"
 msgstr "Konfiguracja wtyczki Jabbera"
 
-#: src/plugins/jabber/jabber_plugin.c:907
+#: src/plugins/jabber/jabber_plugin.c:908
 msgid "Jabber ID"
 msgstr "Identyfikator Jabbera"
 
-#: src/plugins/jabber/jabber_plugin.c:913
+#: src/plugins/jabber/jabber_plugin.c:914
 msgid "Receive messages from friends only"
 msgstr "Przyjmowanie wiadomo¶ci tylko od przyjació³"
 
-#: src/plugins/jabber/jabber_plugin.c:920
+#: src/plugins/jabber/jabber_plugin.c:921
 msgid "Use SSL"
 msgstr "U¿ycie SSL"
 
-#: src/plugins/jabber/jabber_plugin.c:924
+#: src/plugins/jabber/jabber_plugin.c:925
 msgid "Resource"
 msgstr "Zasób"
 
-#: src/plugins/jabber/jabber_plugin.c:927
+#: src/plugins/jabber/jabber_plugin.c:928
 msgid ""
 "Server\n"
 "(optional)"
@@ -1315,7 +1296,7 @@ msgstr ""
 "Serwer\n"
 "(opcjonalny)"
 
-#: src/plugins/jabber/jabber_plugin.c:931
+#: src/plugins/jabber/jabber_plugin.c:932
 msgid ""
 "Proxy server (optional)\n"
 "[user:pass@]host.com[:8080]"
@@ -1323,15 +1304,15 @@ msgstr ""
 "Serwer proxy (opcjonalny)\n"
 "[u¿ytkownik:has³o@]komputer.domena[:8080]"
 
-#: src/plugins/jabber/jabber_plugin.c:952
+#: src/plugins/jabber/jabber_plugin.c:953
 msgid "Personal data"
 msgstr "Dane osobiste"
 
-#: src/plugins/jabber/jabber_plugin.c:1007
+#: src/plugins/jabber/jabber_plugin.c:1008
 msgid "Jabber protocol"
 msgstr "Protokó³ Jabber"
 
-#: src/plugins/jabber/jabber_plugin.c:1031
+#: src/plugins/jabber/jabber_plugin.c:1032
 msgid "Unable to read configuration file for plugin jabber"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki jabber"
 
@@ -1624,12 +1605,10 @@ msgstr "Nieznany b³±d!"
 msgid "SMS Preferences"
 msgstr "Ustawienia SMS"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:64
 msgid "Use \"SMS\" program to send"
 msgstr "U¿ycie programu \"SMS\" do wysy³ania wiadomo¶ci"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:65 src/plugins/sms/sms_gui.c:157
 #: src/plugins/sms/sms_gui.c:303
 msgid "Sender"
@@ -1660,7 +1639,6 @@ msgstr "Brak numeru telefonu"
 msgid "Send to : "
 msgstr "Wy¶lij do: "
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:156
 msgid "Use external program"
 msgstr "U¿ycie zewnêtrznego programu"
@@ -1736,7 +1714,6 @@ msgstr "Brak dostêpnych aktualizacji"
 msgid "Update Preferences"
 msgstr "Ustawienia wtyczki aktualizacji"
 
-#. *INDENT-OFF*
 #: src/plugins/update/update_plugin.c:328
 msgid "Check for updates on startup"
 msgstr "Sprawdzanie aktualizacji przy uruchomieniu"

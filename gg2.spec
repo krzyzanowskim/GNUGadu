@@ -1,6 +1,6 @@
-# $Revision: 1.17 $, $Date: 2004/08/22 17:25:55 $
+# $Revision: 1.18 $, $Date: 2004/08/22 20:37:14 $
 #
-# Conditional build:
+# Conditional build: 
 %bcond_with	arts
 %bcond_without	perl
 %bcond_without	esd
@@ -15,8 +15,8 @@ Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}.tar.bz2
-# Source0-md5:	e8795ba49b9817a1db5e8628c9c9e30a
+Source0:	http://osdn.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}.tar.bz2
+# Source0-md5:	4b523493d4f66f05a9f6c3c47df8353f
 URL:		http://www.gnugadu.org/
 %{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
@@ -372,12 +372,12 @@ rm -f missing
  	--with-docklet_system_tray \
 	--with-docklet_dockapp \
 	--with%{!?with_esd:out}-esd \
+	--with%{!?with_arts:out}-arts \
  	--with-oss \
  	--with-external \
  	--with-update \
 	--with-history-external-viewer \
 	--with-gghist \
-	--with%{!?with_arts:out}-arts \
 	--with%{!?with_gtkspell:out}-gtkspell \
 	--%{?with_perl:with}%{!?with_perl:without}-perl \
  	--with-remote
@@ -502,6 +502,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/gg2/pixmaps/icons/classic
 %dir %{_datadir}/gg2/pixmaps/icons/modern
 %dir %{_datadir}/gg2/pixmaps/icons/rozgwiazda
+%dir %{_datadir}/gg2/pixmaps/icons/ghosts
+%dir %{_datadir}/gg2/pixmaps/icons/tlen-classic
 %{_datadir}/gg2/pixmaps/icons/bubble/*.png
 %{_datadir}/gg2/pixmaps/icons/bubble/README
 %{_datadir}/gg2/pixmaps/icons/classic/*.png
@@ -512,8 +514,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gg2/pixmaps/icons/rozgwiazda/license.txt
 %{_datadir}/gg2/pixmaps/icons/ghosts/*.png
 %{_datadir}/gg2/pixmaps/icons/ghosts/README
-%{_datadir}/gg2/pixmaps/icons/tlen-3d/README
-%{_datadir}/gg2/pixmaps/icons/tlen-3d/*.png
+%{_datadir}/gg2/pixmaps/icons/tlen-classic/*.png
 
 %define date	%(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 %changelog
@@ -521,11 +522,18 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.17  2004/08/22 17:25:55  krzyzak
-- not much
+Revision 1.18  2004/08/22 20:37:14  krzyzak
+- release 2.0.5
 
-Revision 1.16  2004/08/04 22:48:12  krzyzak
+Revision 1.113  2004/08/04 23:21:39  twittner
+- play with distfiles (or sf)
+
+Revision 1.112  2004/08/04 23:01:39  krzak
+- MD5 update
+
+Revision 1.111  2004/08/04 22:55:40  krzak
 - up to 2.0.4
+- history-external subpackage added
 
 Revision 1.110  2004/06/22 16:13:52  malekith
 - gg2-jabber R: new enough loudmouth
