@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.52 2004/10/15 09:10:53 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.53 2004/10/15 11:12:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -100,33 +100,15 @@ void gui_dialog_show_fontchooser(GtkWidget * txt_entry)
 	gtk_widget_destroy(font_selector);
 }
 
-void gui_dialog_show_colorchooser(GtkWidget * txt_entry)
+static void gui_dialog_show_colorchooser(GtkColorButton *color_button, gpointer entry)
 {
-	GtkWidget *color_selector = NULL;
-	GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data(G_OBJECT(txt_entry), "kv");
 	GdkColor color;
-	gchar *color_txt = NULL;
-	gint response;
-
-	color_selector = gtk_color_selection_dialog_new(_("Select color"));
-
-	color_txt = (gchar *) gtk_entry_get_text(GTK_ENTRY(txt_entry));
-	gdk_color_parse(color_txt, &color);
-	gtk_color_selection_set_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(color_selector)->colorsel),
-					      &color);
-
-	response = gtk_dialog_run(GTK_DIALOG(color_selector));
-
-	if (response == GTK_RESPONSE_OK)
-	{
-		gtk_color_selection_get_current_color(GTK_COLOR_SELECTION
-						      (GTK_COLOR_SELECTION_DIALOG(color_selector)->colorsel), &color);
-		color_txt = (gchar *) gtk_color_selection_palette_to_string(&color, 1);
-		gtk_entry_set_text(GTK_ENTRY(txt_entry), color_txt);
-		kv->value = (gpointer) color_txt;
-	}
-
-	gtk_widget_destroy(color_selector);
+	gchar *tmp = NULL;
+	
+	gtk_color_button_get_color(color_button,&color);
+	tmp = gtk_color_selection_palette_to_string(&color, 1);	
+	gtk_entry_set_text(GTK_ENTRY(entry), tmp);
+	g_free(tmp);
 }
 
 GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_progress)
@@ -225,23 +207,25 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 		{
 			GtkWidget *txt_entry = NULL;
 			GtkWidget *button_entry = NULL;
+			GdkColor color;
 
 			entry = gtk_hbox_new(FALSE, 2);
 
 			txt_entry = gtk_entry_new();
 			if (kv->value)
 				gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
-
+			
+			gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(txt_entry)), &color);
+			
 			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
 			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
 
-			button_entry = gtk_button_new_from_stock("gtk-select-color");
+			button_entry = gtk_color_button_new_with_color(&color);
 
 			gtk_box_pack_start_defaults(GTK_BOX(entry), txt_entry);
 			gtk_box_pack_start_defaults(GTK_BOX(entry), button_entry);
 
-			g_signal_connect_swapped(button_entry, "clicked", G_CALLBACK(gui_dialog_show_colorchooser),
-						 txt_entry);
+			g_signal_connect(G_OBJECT(button_entry), "color-set", G_CALLBACK(gui_dialog_show_colorchooser), txt_entry);
 		}
 			break;
 		case VAR_IMG:

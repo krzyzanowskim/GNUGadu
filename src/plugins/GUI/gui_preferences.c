@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.78 2004/10/15 09:10:54 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.79 2004/10/15 11:12:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -206,35 +206,15 @@ static void tree_toggled(GtkWidget * tree, gpointer data)
 	gtk_widget_set_sensitive(expand, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tree)));
 }
 
-static void show_colors_select_dialog(GtkWidget * widget, gpointer user_data)
+static void color_select_dialog(GtkColorButton *color_button, gpointer entry)
 {
-	GtkWidget *entry = (GtkWidget *) user_data;
-	GtkWidget *color_selector;
-	gint response;
-	const gchar *color_txt;
 	GdkColor color;
-
-	color_selector = gtk_color_selection_dialog_new(_("Select color"));
-
-	color_txt = gtk_entry_get_text(GTK_ENTRY(entry));
-	gdk_color_parse(color_txt, &color);
-	gtk_color_selection_set_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(color_selector)->colorsel),
-					      &color);
-
-	response = gtk_dialog_run(GTK_DIALOG(color_selector));
-
-	if (response == GTK_RESPONSE_OK)
-	{
-		gchar *tmp;
-
-		gtk_color_selection_get_current_color(GTK_COLOR_SELECTION
-						      (GTK_COLOR_SELECTION_DIALOG(color_selector)->colorsel), &color);
-		tmp = gtk_color_selection_palette_to_string(&color, 1);
-		gtk_entry_set_text(GTK_ENTRY(entry), tmp);
-		g_free(tmp);
-	}
-
-	gtk_widget_destroy(color_selector);
+	gchar *tmp = NULL;
+	
+	gtk_color_button_get_color(color_button,&color);
+	tmp = gtk_color_selection_palette_to_string(&color, 1);	
+	gtk_entry_set_text(GTK_ENTRY(entry), tmp);
+	g_free(tmp);
 }
 
 static GtkWidget *create_colors_tab()
@@ -247,6 +227,7 @@ static GtkWidget *create_colors_tab()
 	GtkWidget *entry;
 	GtkWidget *button;
 	GtkWidget *frame;
+	GdkColor color_msg_header,color_msg_body,color_out_msg_header,color_out_msg_body;
 
 	colors_vbox = gtk_vbox_new(FALSE, 2);
 
@@ -268,31 +249,39 @@ static GtkWidget *create_colors_tab()
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 
+	/* */
 	label = gtk_label_new(_("Message header"));
 	entry = gtk_entry_new();
-	button = gtk_button_new_from_stock("gtk-select-color");
+
+	if (ggadu_config_var_get(gui_handler, "msg_header_color"))
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_header_color"));
+	gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(entry)), &color_msg_header);
+
+	button = gtk_color_button_new_with_color(&color_msg_header);
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 0, 1);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_colors_select_dialog), entry);
+
+	g_signal_connect(G_OBJECT(button), "color-set", G_CALLBACK(color_select_dialog), entry);
 	g_object_set_data(G_OBJECT(colors_vbox), "msg_header_color", entry);
 
-	if (ggadu_config_var_get(gui_handler, "msg_header_color"))
-		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_header_color"));
-
+	/* */
 	label = gtk_label_new(_("Message body"));
 	entry = gtk_entry_new();
-	button = gtk_button_new_from_stock("gtk-select-color");
+
+	if (ggadu_config_var_get(gui_handler, "msg_body_color"))
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_body_color"));
+	gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(entry)), &color_msg_body);
+	
+	button = gtk_color_button_new_with_color(&color_msg_body);
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 1, 2);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_colors_select_dialog), entry);
+	g_signal_connect(G_OBJECT(button), "color-set", G_CALLBACK(color_select_dialog), entry);
 	g_object_set_data(G_OBJECT(colors_vbox), "msg_body_color", entry);
 
-	if (ggadu_config_var_get(gui_handler, "msg_body_color"))
-		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_body_color"));
 
 	frame = gtk_frame_new(_("Outgoing messages"));
 	gtk_box_pack_start(GTK_BOX(colors_vbox), frame, FALSE, FALSE, 0);
@@ -302,32 +291,41 @@ static GtkWidget *create_colors_tab()
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 
+	/* */
 	label = gtk_label_new(_("Message header"));
 	entry = gtk_entry_new();
-	button = gtk_button_new_from_stock("gtk-select-color");
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 0, 1);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_colors_select_dialog), entry);
-	g_object_set_data(G_OBJECT(colors_vbox), "msg_out_header_color", entry);
 
 	if (ggadu_config_var_get(gui_handler, "msg_out_header_color"))
 		gtk_entry_set_text(GTK_ENTRY(entry),
 				   (gchar *) ggadu_config_var_get(gui_handler, "msg_out_header_color"));
+				   
+	gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(entry)), &color_out_msg_header);
 
+	button = gtk_color_button_new_with_color(&color_out_msg_header);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 0, 1);
+	g_signal_connect(G_OBJECT(button), "color-set", G_CALLBACK(color_select_dialog), entry);
+	g_object_set_data(G_OBJECT(colors_vbox), "msg_out_header_color", entry);
+
+	/* */
 	label = gtk_label_new(_("Message body"));
 	entry = gtk_entry_new();
-	button = gtk_button_new_from_stock("gtk-select-color");
+
+	if (ggadu_config_var_get(gui_handler, "msg_out_body_color"))
+		gtk_entry_set_text(GTK_ENTRY(entry),
+				   (gchar *) ggadu_config_var_get(gui_handler, "msg_out_body_color"));
+
+	gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(entry)), &color_out_msg_body);
+	button = gtk_color_button_new_with_color(&color_out_msg_body);
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 1, 2);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_colors_select_dialog), entry);
-	g_object_set_data(G_OBJECT(colors_vbox), "msg_out_body_color", entry);
 
-	if (ggadu_config_var_get(gui_handler, "msg_out_body_color"))
-		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_out_body_color"));
+	g_signal_connect(G_OBJECT(button), "color-set", G_CALLBACK(color_select_dialog), entry);
+	g_object_set_data(G_OBJECT(colors_vbox), "msg_out_body_color", entry);
 
 	return colors_vbox;
 }
