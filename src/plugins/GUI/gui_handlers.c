@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.13 2003/05/12 09:29:05 thrulliq Exp $ */
+/* $Id: gui_handlers.c,v 1.14 2003/05/20 16:19:37 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -127,6 +127,11 @@ void perl_gui_msg_receive (GGaduSignal *signal, gchar *perl_func, void *pperl)
 
 void handle_msg_receive(GGaduSignal *signal)
 {
+	gchar *soundfile;
+  	if ((soundfile = config_var_get (gui_handler, "sound_msg_in")))
+	{
+	  signal_emit_full ("main-gui", "sound play file", soundfile, "sound*", NULL);
+	}
 	gui_msg_receive(signal);
 }
 
