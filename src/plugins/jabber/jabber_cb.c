@@ -8,6 +8,7 @@ void connection_auth_cb (LmConnection *connection, gboolean success, gint *statu
   if (!success)
   {
     print_debug ("jabber: Authentication failed.\n");
+    signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
     return;
   }
 
@@ -29,6 +30,7 @@ void connection_open_result_cb (LmConnection *connection, gboolean success, gint
   if (!success)
   {
     print_debug ("jabber: Connection failed.\n");
+    signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
     return;
   }
 
