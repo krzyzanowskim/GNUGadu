@@ -1,3 +1,6 @@
+19.12.2004
+- changes for gtk 2.6, there is still broken sorting order in with gtk 2.6 (GUI)
+
 15.12.2004
 - dbus plugin update (dbus/krzak)
 - small fixed (krzak)

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.211 2004/12/15 17:44:30 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.212 2004/12/19 03:48:24 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1733,15 +1733,15 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 		GGaduMenu *umenu = ggadu_menu_create();
 
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
 		if ((gboolean) ggadu_config_var_get(handler, "dcc"))
-			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Send File"), send_file_action, NULL));
+			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send File"), send_file_action, NULL));
 
 		ggadu_menu_add_user_menu_extensions(umenu, handler);
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Edit"), user_change_user_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Remove"), user_ask_remove_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), user_change_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_ask_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Add New"), user_add_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), user_add_user_action, NULL));
 		ggadu_menu_print(umenu, NULL);
 		signal->data_return = umenu;
 	}

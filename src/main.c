@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.26 2004/11/26 12:40:51 krzyzak Exp $ */
+/* $Id: main.c,v 1.27 2004/12/19 03:48:23 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -178,7 +178,6 @@ void start_plugins_ordered()
 
 gboolean gnu_gadu_init(gpointer data)
 {
-    config = g_new0(GGaduConfig, 1);
     config->main_loop = g_main_loop_new(NULL, FALSE);
 
     /* configure directory */
@@ -221,9 +220,12 @@ int main(int argc, char **argv)
     signal(SIGPIPE, SIG_IGN);
     signal(SIGCHLD, sigchld);
 
-    g_set_application_name(_("GNU Gadu 2"));
+    g_set_application_name("gg2");
 
     g_thread_init(NULL);
+    config = g_new0(GGaduConfig, 1);
+    config->argc = argc;
+    config->argv = argv;
     gnu_gadu_init(NULL);
     g_main_loop_run(config->main_loop);
 

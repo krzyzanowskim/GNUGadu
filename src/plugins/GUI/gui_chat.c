@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.128 2004/11/19 17:38:40 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.129 2004/12/19 03:48:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -528,6 +528,7 @@ static void on_emoticons_clicked(GtkWidget * button, gpointer user_data
 		gtk_container_add(GTK_CONTAINER(emoticons_window), outervbox);
 
 		scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_SHADOW_ETCHED_IN);
 		gtk_widget_set_name(scrolledwindow1, "scrolledwindow1");
 		gtk_widget_ref(scrolledwindow1);
 		gtk_object_set_data_full(GTK_OBJECT(emoticons_window), "scrolledwindow1", scrolledwindow1, (GtkDestroyNotify) gtk_widget_unref);

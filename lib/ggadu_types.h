@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.18 2004/12/15 17:15:24 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.19 2004/12/19 03:48:23 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -239,6 +239,8 @@ typedef struct
     GMainLoop *main_loop;		/*!< GMainLoop used by GNU Gadu */
     GSList *waiting_signals;		/*!< private used by internal core */
     GSList *signal_hooks;		/*!< private used by core */
+    int argc;
+    char **argv;
 } GGaduConfig;
 
 /*! \brief Main config available for any plugin */
