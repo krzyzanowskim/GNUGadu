@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.9 2003/04/01 15:09:25 thrulliq Exp $ */
+/* $Id: gui_dialogs.c,v 1.10 2003/04/02 10:10:14 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -166,7 +166,6 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 		
 		if ((kv->flag & VAR_FLAG_INSENSITIVE) != 0)
 			gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE);
-//		gtk_widget_set_state( GTK_WIDGET(entry) , GTK_STATE_INSENSITIVE);
 
     	if ((kv->flag & VAR_FLAG_PASSWORD) != 0)
 		gtk_entry_set_visibility( GTK_ENTRY(entry), FALSE);
@@ -174,7 +173,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 	kv->user_data = (gpointer)entry;	
         
 	if (need_label) {
-	    GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+	    GtkWidget *vbox = gtk_alignment_new(0,0,0,0);
 	    GtkWidget *label = gtk_label_new(kv->description);
 	    
 	    gtk_container_add(GTK_CONTAINER(vbox), label);
