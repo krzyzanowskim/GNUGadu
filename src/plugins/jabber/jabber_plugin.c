@@ -230,8 +230,13 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 
 			} else if ((sp->status != JABBER_STATUS_AVAILABLE) && (connected)) {
 					
+				g_io_channel_shutdown(source_chan, FALSE, NULL);
 				iks_disconnect(jabber_session->parser);
-				g_io_channel_shutdown(source_chan, TRUE, NULL);
+				if (g_source_remove(tag) == TRUE)
+					g_io_channel_unref(source_chan);
+				
+				tag = 0;
+
 				connected = FALSE;
 				signal_emit(GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
 
@@ -313,6 +318,8 @@ void register_userlist_menu() {
 gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 {
 
+	print_debug("T\n");
+	
 	if (!jabber_session) return FALSE;
 			
 	iks_recv(jabber_session->parser,0);
@@ -329,15 +336,22 @@ gboolean updatewatch(struct netdata *sess)
 {
 	static int fd = 0;
 	GIOCondition cond = G_IO_IN;
-
+	
+	print_debug("U\n");
+	
+	
 	if ((iks_fd(sess->parser) != fd) || (sess->state != NET_OFF)) {
 
 		if (tag) {
 				
-	    if (g_source_remove(tag) == TRUE)
+	    if (g_source_remove(tag) == TRUE){
 				g_io_channel_unref(source_chan);
-	    else 
+		}
+	    else {
+				g_io_channel_unref(source_chan);
+				print_debug("kukuruku111\n");
 				return FALSE;
+			}
 		}	
 
 		if ((source_chan = g_io_channel_unix_new(iks_fd(sess->parser))) == NULL) 

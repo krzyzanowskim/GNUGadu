@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.17 2003/04/15 13:40:57 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.18 2003/04/18 16:01:17 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -37,6 +37,7 @@ static GSList *search_results = NULL;
 
 GIOChannel *source_chan = NULL;
 gboolean connected = FALSE;
+static guint tag = 0;
 
 gchar *this_configdir = NULL;
 
@@ -109,7 +110,6 @@ void handle_search_item(struct tlen_pubdir *item)
 gboolean updatewatch(struct tlen_session *sess)
 {
     static int fd = 0;
-    static guint tag = 0;
 
     if ((sess->fd != fd) || (sess->state != 0))
     {
@@ -696,7 +696,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		    connected = FALSE;
 		    tlen_freesession(session);
 		    session = FALSE;
-		    g_io_channel_shutdown(source_chan, FALSE, NULL);
+//		    g_io_channel_shutdown(source_chan, FALSE, NULL);
+		    if (g_source_remove(tag) == TRUE)
+				g_io_channel_unref(source_chan);
+				
+			tag = 0;
+
 		    signal_emit(GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
 		    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 		}

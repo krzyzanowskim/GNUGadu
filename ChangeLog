@@ -1,3 +1,7 @@
+18.04.2003
+- fix jabber and tlen disconnect that get 100% CPU usage :)
+  (jabber/tlen/krzak)
+
 14.04.2003
 - chat window title contains current status of chatter, now in both
   tabbed and classic mode (GUI/shasta)
