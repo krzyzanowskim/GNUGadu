@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.120 2004/11/29 22:05:48 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.121 2004/12/02 12:02:12 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1409,7 +1409,7 @@ void start_plugin()
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_XA);
 	jabber_handler->plugin_data = p;
 	
-	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
+	ggadu_repo_add_value("_protocols_", GGadu_PLUGIN_NAME, p, REPO_VALUE_PROTOCOL);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
@@ -1495,7 +1495,7 @@ void destroy_plugin()
 		ggadu_menu_free(jabbermenu);
 	}
 
-	ggadu_repo_del_value("_protocols", p->display_name);
+	ggadu_repo_del_value("_protocols_", p);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 }

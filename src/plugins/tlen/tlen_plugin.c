@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.77 2004/11/26 12:40:56 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.78 2004/12/02 12:02:14 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -847,7 +847,7 @@ void start_plugin()
 	p->away_status = g_slist_append(p->away_status, (gint *) TLEN_STATUS_AWAY);
 	p->online_status = g_slist_append(p->online_status, (gint *) TLEN_STATUS_AVAILABLE);
 	handler->plugin_data = p;
-	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
+	ggadu_repo_add_value("_protocols_", GGadu_PLUGIN_NAME, p, REPO_VALUE_PROTOCOL);
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
 	register_signal(handler, "change status");
@@ -1259,7 +1259,7 @@ void destroy_plugin()
 {
 	print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
 	ggadu_repo_del("tlen");
-	ggadu_repo_del_value("_protocols_", p->display_name);
+	ggadu_repo_del_value("_protocols_", p);
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 	g_free(this_configdir);

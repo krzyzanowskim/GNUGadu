@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.61 2004/11/26 12:40:55 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.62 2004/12/02 12:02:13 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -541,7 +541,7 @@ void start_plugin()
 	register_signal(sms_handler, "send message");
 	register_signal(sms_handler, "get token");
 
-	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
+	ggadu_repo_add_value("_protocols_", GGadu_PLUGIN_NAME, p, REPO_VALUE_PROTOCOL);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
@@ -569,7 +569,7 @@ void destroy_plugin()
 	unregister_extension_for_plugins(ext);
 
 	ggadu_repo_del("sms");
-	ggadu_repo_del_value("_protocols_", p->display_name);
+	ggadu_repo_del_value("_protocols_", p);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_smsmenu, "main-gui");
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");

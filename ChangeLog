@@ -1,3 +1,6 @@
+02.12.2004
+- display_name is for display only, use plugin->name to identify plugin
+
 26.11.2004
 - doxygen documentation initial (krzak)
 - changes in some structures
