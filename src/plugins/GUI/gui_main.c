@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.76 2005/02/18 11:46:52 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.77 2005/03/01 17:03:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -154,7 +154,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(gui_handler, "msg_body_font", VAR_STR);
 	ggadu_config_var_add_with_default(gui_handler, "msg_out_body_color", VAR_STR,g_strdup("black"));
 	ggadu_config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
-	
+
+    ggadu_config_var_add(gui_handler, "msg_out_edit_font", VAR_STR);
+
 	ggadu_config_var_add_with_default(gui_handler, "hide_on_start", VAR_BOOL,(gpointer) FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "close_on_esc", VAR_BOOL, (gpointer) FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "notify_status_changes", VAR_BOOL, (gpointer) TRUE);

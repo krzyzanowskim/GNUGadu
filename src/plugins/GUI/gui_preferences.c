@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.98 2005/02/22 10:07:45 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.99 2005/03/01 17:03:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -450,6 +450,18 @@ static GtkWidget *create_fonts_tab(
 
 	if (ggadu_config_var_get(gui_handler, "msg_out_body_font"))
 		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_out_body_font"));
+
+    label = gtk_label_new(_("Message editing"));
+    entry = gtk_entry_new();
+    button = gtk_button_new_from_stock("gtk-select-font");
+                                                                                              gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 2, 3);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 2, 3);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 2, 3);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_fonts_select_dialog), entry);                                                                                             
+    g_object_set_data(G_OBJECT(fonts_vbox), "msg_out_edit_font", entry);
+        
+    if (ggadu_config_var_get(gui_handler, "msg_out_edit_font"))
+        gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_out_edit_font"));
 
 	frame = gtk_frame_new(_("Contact list"));
 	gtk_box_pack_start(GTK_BOX(fonts_vbox), frame, FALSE, FALSE, 0);
@@ -1461,6 +1473,10 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "msg_out_body_font");
 		g_return_if_fail(entry != NULL);
 		ggadu_config_var_set(gui_handler, "msg_out_body_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+
+        entry = g_object_get_data(G_OBJECT(fonts_vbox), "msg_out_edit_font");
+        g_return_if_fail(entry != NULL);
+        ggadu_config_var_set(gui_handler, "msg_out_edit_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_out");
 		g_return_if_fail(entry != NULL);

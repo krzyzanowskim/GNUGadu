@@ -1,6 +1,9 @@
+01.03.2005
+- font setting for editing text entry by Wiktor Grebla <greblis[at]wp.pl> (GUI)
+
 23.02.2005
-- Applied caching mechanism for current implementation of JEP-0092 (Software
-version). (mkobierzycki/jabber)
+- Applied caching mechanism for current implementation of JEP-0092 
+  (Software version). (mkobierzycki/jabber)
 
 22.02.2005
 - close #159 - fonts in chat window (GUI/krzak)

@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.93 2005/01/07 21:18:46 aflinta Exp $
+# $Id: pl.po,v 1.94 2005/03/01 17:03:11 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
@@ -241,6 +241,10 @@ msgstr "Nagłówek wiadomości"
 #: src/plugins/GUI/gui_preferences.c:407 src/plugins/GUI/gui_preferences.c:441
 msgid "Message body"
 msgstr "Treść wiadomości"
+
+#: gui_preferences.c:454
+msgid "Message editing"
+msgstr "Edycja wiadomości"
 
 #: src/plugins/GUI/gui_preferences.c:289 src/plugins/GUI/gui_preferences.c:420
 msgid "Outgoing messages"
