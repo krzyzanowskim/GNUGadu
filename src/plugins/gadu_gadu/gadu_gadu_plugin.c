@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.112 2004/01/13 20:14:23 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.113 2004/01/13 20:27:42 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -159,7 +159,8 @@ void gadu_gadu_enable_dcc_socket (gboolean state)
       }
     else if (state == FALSE)
       {
-	  g_source_remove (watch_dcc_file);
+    	  if (watch_dcc_file)
+	      g_source_remove (watch_dcc_file);
 	  gg_free_dcc (dcc_session_get);
 	  dcc_session_get = NULL;
 	  gg_dcc_ip = 0;
