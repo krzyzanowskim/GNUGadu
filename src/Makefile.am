@@ -35,3 +35,13 @@ libgg2_core_la_SOURCES = gg-types.h \
 libgg2_core_la_LIBADD = $(PERL_OPTION_LDFLAGS) -ldl 
 libgg2_core_la_LDFLAGS = -version-info 2:0:0
 
+all:
+	@cat $(top_builddir)/src/gg-types.h > $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/dialog.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/perl_embed.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/repo.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/support.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/menu.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/plugins.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/signals.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/unified-types.h >> $(top_builddir)/src/libgg2_core.h

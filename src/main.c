@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.10 2003/05/09 19:43:47 zapal Exp $ */
+/* $Id: main.c,v 1.11 2003/06/03 15:14:14 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -44,7 +44,6 @@ GGaduConfig *config;
 
 
 void load_available_modules();
-
 gboolean gnu_gadu_init(gpointer data);
 
 /** Load availabe plugin from configpath/modules. Only files with extension ".so" **/
@@ -143,6 +142,7 @@ void start_plugins_ordered()
 
   g_io_channel_shutdown(ch,TRUE,NULL);
 }
+
 gboolean gnu_gadu_init(gpointer data)
 {
 	config = g_new0(GGaduConfig,1);

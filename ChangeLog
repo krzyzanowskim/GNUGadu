@@ -2,6 +2,7 @@
 - make install now work again and install libgg2_core.so in you lib directory (krzak)
 - gender search (gadu-gadu/tlen/ManicMiner)
 - gg2.spec update
+- libgg2_core.h autogenerate
 
 02.06.2003
 - autoaway in minutes, not miliseconds (GUI/shasta)
