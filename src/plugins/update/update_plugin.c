@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.2 2003/05/31 20:45:13 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.3 2003/06/01 00:19:28 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -25,7 +25,6 @@
 #include "update_plugin.h"
 
 GGaduPlugin *update_handler;
-gchar *this_configdir = NULL;
 
 GGaduMenu *menu_updatemenu;
 guint timer = -1;
@@ -358,6 +357,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
+    gchar *this_configdir = NULL;
     print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
     GGadu_PLUGIN_ACTIVATE(conf_ptr);
@@ -370,6 +370,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
     set_config_file_name((GGaduPlugin *) update_handler, g_build_filename(this_configdir, "update", NULL));
+
+    g_free(this_configdir);
+
     config_var_add(update_handler, "check_on_startup", VAR_BOOL);
     config_var_add(update_handler, "check_automatically", VAR_BOOL);
     config_var_add(update_handler, "check_interval", VAR_INT);
