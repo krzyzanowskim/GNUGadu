@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.13 2003/06/14 20:39:43 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.14 2003/06/19 15:10:57 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -141,7 +141,7 @@ gint sort_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer use
 	
     // je¶li status jest taki sam posortuj alfabetycznie wg. tego co wy¶wietla
     if ((k1->status == k2->status))
-	return strcasecmp(d1, d2);
+	return g_strcasecmp(d1, d2);
     
     if (!gp)
         gtk_tree_model_get(GTK_TREE_MODEL(model), a, 3, &gp, -1);
@@ -363,7 +363,7 @@ void gui_user_view_clear(gui_protocol *gp)
 	gtk_list_store_clear(gp->users_liststore);
 	g_free(g_object_get_data(G_OBJECT(gp->users_liststore),"plugin_name"));
     } else {
-    	gboolean valid;
+    	gboolean valid = FALSE;
     	gchar *path = g_strdup_printf("%s:0", gp->tree_path);
     	valid = gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(users_treestore), &users_iter, path);
     	g_free(path);
@@ -640,8 +640,7 @@ void gui_user_view_unregister(gui_protocol *gp)
     
     gui_user_view_clear(gp);
     
-    if (!tree) {
-    } else {
+    if (tree) {
     	gchar *path = gp->tree_path;
 	gchar *txt = NULL;
     	gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(users_treestore), &users_iter, path);

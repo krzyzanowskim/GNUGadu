@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.71 2003/06/16 21:46:47 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.72 2003/06/19 15:10:57 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -347,8 +347,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	    }
 	  else
 	    {
-//		gchar *txt = g_strdup (_("Disconnected1"));
-		gchar *txt = g_strdup_printf (_("Disconnected %d"), session->state);
+		gchar *txt = g_strdup (_("Disconnected"));
 		ggadu_gadu_gadu_disconnect_msg (txt);
 		connect_count = 0;
 		g_free (txt);

@@ -1,5 +1,6 @@
 19.06.2003
 - Jabber plugin switch to Loudmouth library (http://www.imendio.com/projects/loudmouth)  (Jabber/Zapal)
+- few fixes of warnings and fix "offline issue" in gui (GUI/krzak)
 
 16.06.2003
 - proxy support for gadu-gadu protocol (gadu-gadu/krzak)

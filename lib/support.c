@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.4 2003/06/19 13:52:45 krzyzak Exp $ */
+/* $Id: support.c,v 1.5 2003/06/19 15:10:56 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -20,7 +20,7 @@
 gboolean is_in_status (gint status, GSList *list)
 {
   GSList *tmp = list;
-  gint st;
+  gint st = 0;
   
   if (!list)
     return FALSE;
