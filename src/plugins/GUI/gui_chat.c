@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.70 2004/01/28 23:40:03 shaster Exp $ */
+/* $Id: gui_chat.c,v 1.71 2004/02/10 22:23:03 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -515,7 +515,7 @@ static void on_emoticons_clicked(GtkWidget * button, gpointer user_data)
 static void on_chat_find_clicked(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
-	GGaduDialog *d = ggadu_dialog_new();
+	GGaduDialog *dialog = ggadu_dialog_new();
 	gui_chat_session *session = NULL;
 	gchar *plugin_name = NULL;
 
@@ -538,9 +538,9 @@ static void on_chat_find_clicked(GtkWidget * button, gpointer user_data)
 
 	print_debug("SEARCH %s\n", session->id);
 
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_ID, NULL, VAR_STR, session->id, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, session->id, VAR_FLAG_NONE);
 
-	signal_emit("main-gui", "search", d, plugin_name);
+	signal_emit("main-gui", "search", dialog, plugin_name);
 }
 
 void gui_chat_update_tags()

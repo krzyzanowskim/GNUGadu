@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.8 2004/02/09 23:28:51 krzyzak Exp $ */
+/* $Id: dialog.c,v 1.9 2004/02/10 22:23:02 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -54,7 +54,7 @@ void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint 
 	kv->type = type;
 
 
-	if (type == VAR_STR)
+	if ((type == VAR_STR) || (type == VAR_IMG))
 		kv->value = g_strdup(value);
 	else if (type == VAR_LIST)
 		kv->value = g_slist_copy(value);
@@ -76,7 +76,7 @@ void ggadu_dialog_add_entry1(GGaduDialog * d, gint key, gchar * desc, gint type,
 	
 	kv->type = type;
 	
-	if (type == VAR_STR)
+	if ((type == VAR_STR) || (type == VAR_IMG))
 		kv->value = g_strdup(value);
 	else if (type == VAR_LIST)
 		kv->value = g_slist_copy(value);

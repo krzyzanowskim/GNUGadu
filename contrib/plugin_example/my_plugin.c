@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.7 2004/01/28 23:39:04 shaster Exp $ */
+/* $Id: my_plugin.c,v 1.8 2004/02/10 22:23:02 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -59,18 +59,13 @@ gpointer ggadu_play_file(gpointer user_data)
 
 gpointer se_preferences(gpointer user_data)
 {
-    GGaduDialog *d = NULL;
+    GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("My Plugin preferences"),"update config");
+	
     print_debug("%s: Preferences\n", "My Plugin");
 
-    d = ggadu_dialog_new();
-    ggadu_dialog_set_title(d, _("My Plugin preferences"));
-    ggadu_dialog_callback_signal(d, "update config");
-    ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
+    ggadu_dialog_add_entry1(dialog, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, config_var_get(handler, "player"), VAR_FLAG_NONE);
 
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, config_var_get(handler, "player"),
-			   VAR_FLAG_NONE);
-
-    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
     return NULL;
 }

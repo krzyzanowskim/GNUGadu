@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.16 2004/02/09 23:28:57 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.17 2004/02/10 22:23:03 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -250,7 +250,7 @@ gpointer dockapp_preferences_action()
 	gpointer key = NULL, index = NULL;
 	gchar *utf = NULL, *current_proto;
 	GGaduProtocol *proto;
-	GGaduDialog *d;
+	GGaduDialog *dialog = NULL;
 	gint count = 0;
 
 	/* prepare list of protocol plugins */
@@ -273,23 +273,19 @@ gpointer dockapp_preferences_action()
 	}
 
 	/* create dialog */
-	d = ggadu_dialog_new();
-	ggadu_dialog_set_title(d, _("Dockapp plugin configuration"));
-	ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
-	ggadu_dialog_callback_signal(d, "update config");
+	dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("Dockapp plugin configuration"),"update config");
 
-/*
-    plugin_visible=(int)*ggadu_config_var_get(handler,"dockapp_visible");
-*/
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_DOCKAPP_CONFIG_VISIBLE, _("Visible"), VAR_BOOL,
+	/* plugin_visible=(int)*ggadu_config_var_get(handler,"dockapp_visible"); */
+	
+	ggadu_dialog_add_entry1(dialog, GGADU_DOCKAPP_CONFIG_VISIBLE, _("Visible"), VAR_BOOL,
 			       ggadu_config_var_get(handler, "dockapp_visible"), VAR_FLAG_NONE);
 
 	if (count > 0)
-		ggadu_dialog_add_entry(&(d->optlist), GGADU_DOCKAPP_CONFIG_PROTOCOL, _("Protocol"), VAR_LIST,
+		ggadu_dialog_add_entry1(dialog, GGADU_DOCKAPP_CONFIG_PROTOCOL, _("Protocol"), VAR_LIST,
 				       pluginlist_names, VAR_FLAG_NONE);
 
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	g_slist_free(pluginlist_names);
 	return NULL;
