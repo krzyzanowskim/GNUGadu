@@ -1,4 +1,4 @@
-/* $Id: */
+/* $Id: ggadu_conf.c,v 1.6 2004/01/16 20:04:45 shaster Exp $ */
 
 #include <sys/types.h>
 #include <sys/stat.h>

@@ -1,4 +1,4 @@
-/* $Id: */
+/* $Id: ggadu_conf.h,v 1.4 2004/01/16 20:04:45 shaster Exp $ */
 
 #ifndef GGadu_CONF_H
 #define GGadu_CONF_H 1
