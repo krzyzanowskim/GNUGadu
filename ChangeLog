@@ -1,7 +1,11 @@
 21.09.2003
 - sending sms to IDEA works again (sms/shasta)
 - cut +48/0 prefixes while loading userlist (sms/shasta)
-- lot of minor bugfixes, bunch of code cleanups (sms/shasta)
+- lots of minor bugfixes, bunch of code cleanups (sms/shasta)
+- removed eralogin/erapassword from "send sms" dialog box (sms/shasta)
+- better(?) userlist saving (sms/shasta)
+- more fixes and code cleanups (sms/shasta)
+- base64-encoding all config variables containing 'password' (lib/shasta)
 
 17.09.2003
 - fix userlist sorting with non-ascii chars (GUI/shasta)
@@ -26,7 +30,7 @@
 - fixed segfault with dcc (gadu-gadu/emvi)
 
 22.07.2003
-- wm_class form chat window (kaneda/GUI).
+- wm_class form chat window (GUI/kaneda).
 
 05.07.2003
 - fallback to defaults if xosd_set_* fails for some reason (xosd/shasta)
