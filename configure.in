@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.32 2003/10/31 19:44:20 krzyzak Exp $
+dnl $Id: configure.in,v 1.33 2003/11/03 11:09:30 thrulliq Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -206,11 +206,22 @@ if test "x$with_gadu" = "xyes"; then
 
 	if test "$want_gadu" = "no"; then 
 	    PKG_CHECK_MODULES(GG,libgadu = CVS,want_gadu=yes,want_gadu=no)
-	    AC_MSG_RESULT([*****************\nI don't know what is your libgadu version, "CVS" as a Version doesn't give me any information about it, so you use it on you own risk\n*****************])
+	    if test "$want_gadu" = "yes"; then
+	        AC_MSG_WARN(You are using CVS libgadu version! Hope you know what you are doing!)
+	    fi
 	fi
 	
     if test "$want_gadu" = "no"; then 
-    	AC_MSG_ERROR($GG_PKG_ERRORS)
+    	AC_MSG_WARN($GG_PKG_ERRORS)
+	echo 
+	echo "**********************************************************"
+	echo 
+	echo "Gadu-Gadu plugin has been disabled!"
+	echo "You don't have libgadu installed (or you have wrong version)"
+	echo "Please download ekg: http://dev.null.pl/ekg"
+	echo 
+	echo "**********************************************************"
+	echo
     fi
     
     AC_SUBST(GG_LIBS)
@@ -232,7 +243,17 @@ if test "x$with_jabber" = "xyes"; then
     want_jabber=yes
     PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.12, [],want_jabber=no)
     if test "$want_jabber" = "no"; then 
-    	AC_MSG_ERROR($JABBER_PKG_ERRORS)
+    	AC_MSG_WARN($JABBER_PKG_ERRORS)
+	echo
+	echo "**********************************************************"
+	echo 
+	echo "Jabber plugin has been disabled!"
+	echo "You don't have loudmouth installed (or you have wrong version)"
+	echo "Please download loudmouth: http://www.imendio.com/projects/loudmouth/"
+	echo 
+	echo "**********************************************************"
+	echo
+
     fi
     AC_SUBST(JABBER_LIBS)
     AC_SUBST(JABBER_CFLAGS)
@@ -458,6 +479,8 @@ echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 
 echo especially without gui plugin is probably useless for you!
 echo Check \"./configure --help\" to see how to enable some plugins
+echo You may enable all plugins with:
+echo \"./configure --with-all_plugins\"
 echo "*************************************************************"
 echo Please check README file for requirements !!!
 echo "*************************************************************"
