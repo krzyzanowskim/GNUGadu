@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.2 2003/03/23 11:51:31 zapal Exp $ */
 
 #include <gtk/gtk.h>
 
@@ -100,6 +100,27 @@ void handle_register_menu(GGaduSignal *signal)
     GGaduMenu *root = signal->data;
 
     gui_produce_menu_for_factory(root,item_factory,"/Menu",NULL);
+}
+
+void handle_unregister_menu(GGaduSignal *signal)
+{
+    GGaduMenu *root = signal->data;
+
+    if (G_NODE_IS_ROOT(root))
+      root = g_node_first_child(root);
+    else
+      root = g_node_first_sibling(root);
+
+    if (root)
+    {
+      GGaduMenuItem *it = root->data;
+      gchar *path;
+
+      path = g_strdup_printf("/Menu/%s", it->label);
+      
+      gtk_item_factory_delete_item (item_factory, path);
+      g_free (path);
+    }
 }
 
 void handle_register_userlist_menu(GGaduSignal *signal)

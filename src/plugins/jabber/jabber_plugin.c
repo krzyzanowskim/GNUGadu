@@ -40,6 +40,8 @@ gint watch = 0;
 static guint tag = 0;
 gboolean connected = FALSE;
 
+GGaduMenu *menu_jabbermenu;
+
 struct netdata *jabber_session = NULL;
 
 GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
@@ -417,7 +419,8 @@ void start_plugin()
     register_signal(jabber_handler,"add user search");
     register_signal(jabber_handler,"get current status");
 
-    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", build_jabber_menu(), "main-gui");
+    menu_jabbermenu = build_jabber_menu();
+    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_jabbermenu, "main-gui");
 	
     register_userlist_menu();
     
@@ -461,4 +464,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+    if (menu_jabbermenu)
+    {
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_jabbermenu, "main-gui");
+    }
 }

@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.1 2003/03/20 10:37:08 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.2 2003/03/23 11:51:35 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -26,6 +26,8 @@
 int fine = 1;
 GGaduPlugin *handler;
 xosd *osd;
+
+GGaduMenu *menu_pluginmenu;
 
 GGadu_PLUGIN_INIT("xosd", GGADU_PLUGIN_TYPE_MISC);
 
@@ -275,7 +277,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     
     /* Menu stuff */
     print_debug ("%s : Create Menu\n", GGadu_PLUGIN_NAME);
-    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", build_plugin_menu(), "main-gui");
+    menu_pluginmenu = build_plugin_menu();
+    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_pluginmenu, "main-gui");
     
     
     print_debug("%s : READ CONFIGURATION\n", GGadu_PLUGIN_NAME);
@@ -307,4 +310,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
 
 void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+    if (menu_pluginmenu)
+    {
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
+    }
 }

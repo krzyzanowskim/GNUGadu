@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.1 2003/03/20 10:37:08 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.2 2003/03/23 11:51:34 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -37,6 +37,8 @@ GIOChannel *source_chan = NULL;
 gboolean connected = FALSE;
 
 gchar *this_configdir = NULL;
+
+GGaduMenu *menu_tlenmenu;
 
 gchar *description = NULL;
 
@@ -668,7 +670,8 @@ void start_plugin()
         register_signal(handler,"add user search");
         register_signal(handler,"get current status");
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", build_tlen_menu(), "main-gui");
+	menu_tlenmenu = build_tlen_menu();
+	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_tlenmenu, "main-gui");
 	
 	register_userlist_menu();
 
@@ -946,5 +949,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 
 void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+    if (menu_tlenmenu)
+    {
+      signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_tlenmenu, "main-gui");
+    }
+
 }
 

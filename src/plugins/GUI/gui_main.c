@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.2 2003/03/23 11:51:31 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -41,6 +41,7 @@ gui_signal_handler handlers[] = {
 	{"gui show invisible chats", handle_show_invisible_chats},
 	{"gui register protocol", handle_register_protocol},
 	{"gui register menu", handle_register_menu},
+	{"gui unregister menu", handle_unregister_menu},
 	{"gui register userlist menu", handle_register_userlist_menu},
 	{"gui send userlist", handle_send_userlist},
 	{"auth request", handle_auth_request},
@@ -137,6 +138,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
      * rejestruje menu ktore jest dodawane do glownego menu
      */ 
     register_signal(gui_handler,"gui register menu");
+    register_signal(gui_handler,"gui unregister menu");
     
     /* przesyla cala liste kontaktow */
     register_signal(gui_handler,"gui send userlist");

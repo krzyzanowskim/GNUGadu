@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.1 2003/03/20 10:37:08 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.2 2003/03/23 11:51:33 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -34,6 +34,8 @@ gchar *sock_path;
 int sck = -1;
 GIOChannel *sck_ch;
 guint sck_watch;
+
+GGaduMenu *menu_remotemenu;
 
 regex_t regex;
 
@@ -635,7 +637,8 @@ void start_plugin()
   /* perfidnie podpinamy siê pod sygna³ dockleta */
   register_signal (handler, "docklet set icon");
   register_signal (handler, "docklet set default icon");
-  signal_emit (GGadu_PLUGIN_NAME, "gui register menu",remote_menu(),"main-gui");
+  menu_remotemenu = remote_menu();
+  signal_emit (GGadu_PLUGIN_NAME, "gui register menu",menu_remotemenu,"main-gui");
 }
 
 
@@ -675,6 +678,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
   print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+  if (menu_remotemenu)
+  {
+    signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_remotemenu, "main-gui");
+  }
   g_free (this_configdir);
   unlink (sock_path);
   g_free (sock_path);
