@@ -1,21 +1,8 @@
-#ifndef PERL_EMBED
-
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
 
-int perl_load_script (char *script_name)
-{
-  /* empty */
-  return -1;
-}
-
-void perl_unload_script (char *script_name)
-{
-  /* empty */
-}
-
-#else
+#ifdef PERL_EMBED
 
 #include <stdio.h>
 #include <EXTERN.h>
@@ -38,6 +25,8 @@ typedef struct {
 } perlscript;
 
 GSList *perlscripts = NULL;
+
+PerlInterpreter *my_perl;
 
 extern void boot_DynaLoader (pTHX_ CV* cv);
 
@@ -223,5 +212,25 @@ int perl_unload_script (char *script_name)
   return 0;
 }
 
-#endif
+char *perl_action_on_msg_receive (char *uid, char *msg)
+{
+  char *ret = msg;
+  GSList *list;
+  perlscript *script;
 
+  list = perlscripts;
+  while (list)
+  {
+    script = (perlscript *) list->data;
+    if (script->loaded && script->on_msg_receive)
+    {
+      PERL_SET_CONTEXT (script->perl);
+      my_perl = script->perl;
+      ret = execute_perl_string ("on_msg_receive", ret);
+    }
+    list = list->next;
+  }
+
+  return ret;
+}
+#endif
