@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.9 2004/02/10 22:23:02 krzyzak Exp $ */
+/* $Id: dialog.c,v 1.10 2004/02/14 02:08:08 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -31,10 +31,10 @@
 #include "gg-types.h"
 #include "unified-types.h"
 
-GGaduDialog *ggadu_dialog_new()
+/* GGaduDialog *ggadu_dialog_new()
 {
 	return g_new0(GGaduDialog, 1);
-}
+} */
 
 GGaduDialog *ggadu_dialog_new1(guint type, gchar * title, gchar * callback_signal)
 {
@@ -46,7 +46,7 @@ GGaduDialog *ggadu_dialog_new1(guint type, gchar * title, gchar * callback_signa
 }
 
 /* DEPRECATED form !!!!!!!!!!!!!!!! ZONK */
-void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint type, gpointer value, gint flags)
+/*void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint type, gpointer value, gint flags)
 {
 	GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
 	kv->key = key;
@@ -64,7 +64,7 @@ void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint 
 	kv->flag = flags;
 
 	*prefs = g_slist_append(*prefs, kv);
-}
+}*/
 
 
 void ggadu_dialog_add_entry1(GGaduDialog * d, gint key, gchar * desc, gint type, gpointer value, gint flags)

@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.15 2004/01/28 23:41:32 shaster Exp $ */
+/* $Id: remote_plugin.c,v 1.16 2004/02/14 02:08:10 krzyzak Exp $ */
 
 /* 
  * remote plugin for GNU Gadu 2 
@@ -621,20 +621,18 @@ int remote_init(void)
 
 gpointer remote_menu_preferences(gpointer user_data)
 {
-    GGaduDialog *d;
+    GGaduDialog *dialog;
 
     print_debug("%s : Preferences\n", GGadu_PLUGIN_NAME);
-    d = ggadu_dialog_new();
-    ggadu_dialog_set_title(d, _("Remote Preferences"));
-    ggadu_dialog_callback_signal(d, "update config");
-    ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
+	
+    dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("Remote Preferences"),"update config");
 
-    ggadu_dialog_add_entry(&(d->optlist), REMOTE_CONFIG_SAME_UID, _("Ignore commands with different uid"), VAR_BOOL,
+    ggadu_dialog_add_entry1(dialog, REMOTE_CONFIG_SAME_UID, _("Ignore commands with different uid"), VAR_BOOL,
 			   (gpointer) ggadu_config_var_get(handler, "same_uid"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), REMOTE_CONFIG_SAME_GID, _("Ignore commands with different gid"), VAR_BOOL,
+    ggadu_dialog_add_entry1(dialog, REMOTE_CONFIG_SAME_GID, _("Ignore commands with different gid"), VAR_BOOL,
 			   (gpointer) ggadu_config_var_get(handler, "same_gid"), VAR_FLAG_NONE);
 
-    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
     return NULL;
 }

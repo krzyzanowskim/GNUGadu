@@ -1,4 +1,4 @@
-/* $Id: dialog.h,v 1.7 2004/02/09 23:28:56 krzyzak Exp $ */
+/* $Id: dialog.h,v 1.8 2004/02/14 02:08:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -44,10 +44,10 @@ typedef struct
 
 void GGaduDialog_free(GGaduDialog * d);
 
-GGaduDialog *ggadu_dialog_new();
+/* DEPRECATED GGaduDialog *ggadu_dialog_new(); */
 GGaduDialog *ggadu_dialog_new1(guint type, gchar *title, gchar *callback_signal);
 
-void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint type, gpointer value, gint flags);
+/*DEPRECATED void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint type, gpointer value, gint flags);*/
 void ggadu_dialog_add_entry1(GGaduDialog *d, gint key, gchar * desc, gint type, gpointer value, gint flags);
 
 GSList *ggadu_dialog_get_entries(GGaduDialog *dialog);

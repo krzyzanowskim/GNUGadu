@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.22 2004/01/28 23:41:29 shaster Exp $ */
+/* $Id: jabber_protocol.c,v 1.23 2004/02/14 02:08:10 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -152,13 +152,11 @@ void jabber_fetch_roster(gpointer user_data)
 
 void action_search_form(LmConnection * connection, LmMessage * message, gpointer data)
 {
-	GGaduDialog *d = ggadu_dialog_new();
+	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Jabber search: form"),"search");
 	LmMessageNode *node;
 	LmMessageNode *child_first, *child_last, *child_nick, *child_email, *child_instr;
 
-	ggadu_dialog_set_title(d, _("Jabber search: form"));
-	ggadu_dialog_callback_signal(d, "search");
-	d->user_data = (gpointer) g_strdup(lm_message_node_get_attribute(message->node, "from"));
+	dialog->user_data = (gpointer) g_strdup(lm_message_node_get_attribute(message->node, "from"));
 
 	node = lm_message_node_get_child(message->node, "query");
 	if (!strcmp(lm_message_node_get_attribute(node, "xmlns"), "jabber:iq:search"))
@@ -170,19 +168,19 @@ void action_search_form(LmConnection * connection, LmMessage * message, gpointer
 		child_instr = lm_message_node_get_child(node, "instructions");
 
 		if (child_first)
-			ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 		if (child_last)
-			ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 		if (child_nick)
-			ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 		if (child_email)
-			ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_EMAIL, _("Email:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_EMAIL, _("Email:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 
-		signal_emit("jabber", "gui show dialog", d, "main-gui");
+		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 	}
 }
 

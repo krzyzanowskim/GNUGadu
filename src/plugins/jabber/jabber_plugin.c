@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.66 2004/02/14 01:56:41 thrulliq Exp $ */
+/* $Id: jabber_plugin.c,v 1.67 2004/02/14 02:08:10 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -398,14 +398,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		if (sp->status == JABBER_STATUS_DESCR)
 		{
-			GGaduDialog *d = ggadu_dialog_new();
+			GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr");
 
-			ggadu_dialog_set_title(d, _("Enter status description"));
-			ggadu_dialog_callback_signal(d, "change status descr");
-			ggadu_dialog_add_entry(&d->optlist, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
+			ggadu_dialog_add_entry1(dialog, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
 					       VAR_FLAG_FOCUS);
-			d->user_data = sp;
-			signal_emit("jabber", "gui show dialog", d, "main-gui");
+			dialog->user_data = sp;
+			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 			jabber_login(jabber_data.status);
 			return;
 		}
@@ -688,7 +686,7 @@ GSList *status_init()
 
 gpointer user_search_action(gpointer user_data)
 {
-	GGaduDialog *d;
+	GGaduDialog *dialog = NULL;
 	gchar *server;
 
 	if (jabber_data.connected != 2)
@@ -714,47 +712,41 @@ gpointer user_search_action(gpointer user_data)
 	if (!server || !*server)
 		server = NULL;
 
-	d = ggadu_dialog_new();
-	ggadu_dialog_set_title(d, _("Jabber search: server"));
-	ggadu_dialog_callback_signal(d, "search-server");
+	dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Jabber search: server"),"search-server");
 
-	ggadu_dialog_add_entry(&(d->optlist), 0, _("Server:"), VAR_STR, server, VAR_FLAG_NONE);
-	signal_emit("jabber", "gui show dialog", d, "main-gui");
+	ggadu_dialog_add_entry1(dialog, 0, _("Server:"), VAR_STR, server, VAR_FLAG_NONE);
+	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
 }
 
 gpointer user_preferences_action(gpointer user_data)
 {
-	GGaduDialog *d;
+	GGaduDialog *dialog;
 
-	d = g_new0(GGaduDialog, 1);
-	d->title = g_strdup(_("Jabber plugin configuration"));
-	d->callback_signal = g_strdup("update config");
-
-	ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_JID, _("Jabber ID"), VAR_STR,
+	dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("Jabber plugin configuration"),"update config");
+	ggadu_dialog_add_entry1(dialog, GGADU_JABBER_JID, _("Jabber ID"), VAR_STR,
 			       ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_PASSWORD, _("Password"), VAR_STR,
+	ggadu_dialog_add_entry1(dialog, GGADU_JABBER_PASSWORD, _("Password"), VAR_STR,
 			       ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
+	ggadu_dialog_add_entry1(dialog, GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
 			       ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
+	ggadu_dialog_add_entry1(dialog, GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 			       ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
 	if (lm_ssl_is_supported())
 	{
-		ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
+		ggadu_dialog_add_entry1(dialog, GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
 				       ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
 	}
 
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
+	ggadu_dialog_add_entry1(dialog, GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
 			       ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_NONE);
 
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_SERVER, _("Server\n(optional)"), VAR_STR,
+	ggadu_dialog_add_entry1(dialog, GGADU_JABBER_SERVER, _("Server\n(optional)"), VAR_STR,
 			       ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_NONE);
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }
 
