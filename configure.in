@@ -1,6 +1,6 @@
-dnl $Id: configure.in,v 1.79 2004/08/22 13:41:16 krzyzak Exp $
+dnl $Id: configure.in,v 1.80 2004/08/22 17:01:21 krzyzak Exp $
 
-m4_define([gg2_version],[2.0.4])
+m4_define([gg2_version],[2.0.5])
 
 AC_INIT(gg2,[gg2_version])
 AM_INIT_AUTOMAKE([gg2],[gg2_version])
@@ -9,6 +9,10 @@ AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
+
+GETTEXT_PACKAGE=$PACKAGE
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 
 AC_PROG_CPP
 AC_PROG_CC
