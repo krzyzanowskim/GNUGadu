@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.113 2004/12/26 00:10:53 krzyzak Exp $
+dnl $Id: configure.in,v 1.114 2004/12/26 13:34:56 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.3])
 
@@ -9,6 +9,8 @@ AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
+
+GTK_MIN_VER="2.4.0"
 
 GETTEXT_PACKAGE=$PACKAGE
 AC_SUBST(GETTEXT_PACKAGE)
@@ -300,7 +302,7 @@ if test "x$with_gui" != "xno"; then
     with_gui=yes
     AC_PATH_X
     AC_PATH_XTRA
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= $GTK_MIN_VER,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     GTK_CFLAGS="$GTK_CFLAGS $X_CFLAGS"
     GTK_LIBS="$GTK_LIBS $X_LIBS"
     AC_SUBST(GTK_CFLAGS)
@@ -440,6 +442,7 @@ fi
 AC_ARG_WITH(sms, [  --without-sms		  Build without sms plugin])
 if test "x$with_sms" != "xno"; then 
 	with_sms=yes
+	PKG_CHECK_MODULES(GTK,gtk+-2.0 >= $GTK_MIN_VER,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     else
 	with_sms=no
 fi
@@ -449,7 +452,7 @@ AC_ARG_WITH(aaway, [  --without-aaway		  Build without auto away plugin])
 if test "x$with_aaway" != "xno"; then
 	AC_PATH_X
 	AC_PATH_XTRA
-	PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+	PKG_CHECK_MODULES(GTK,gtk+-2.0 >= $GTK_MIN_VER,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
 	AAWAY_LIBS="$GTK_LIBS $X_LIBS $X_EXTRA_LIBS -lXss"
 	AAWAY_CFLAGS="$GTK_CFLAGS $X_CFLAGS"
 	AC_SUBST(AAWAY_CFLAGS)
@@ -490,7 +493,7 @@ else
 	AC_SUBST(DBUS_CFLAGS)
 	AC_SUBST(DBUS_LIBS)
 fi
-AC_ARG_WITH(dbus-dir,[  --with-dbus-dir=PFX   Prefix where D-BUS services are installed (/usr/share/dbus-1/services)],
+AC_ARG_WITH(dbus-dir,[  --with-dbus-dir=DIR   Prefix where D-BUS services are installed (/usr/share/dbus-1/services)],
             dbus_dir="$withval", dbus_dir="")
 	    
 if test x$dbus_dir != x ; then
@@ -505,7 +508,7 @@ AC_SUBST(DBUS_DIR)
 AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build without docklet plugin])
 if test "x$with_docklet_system_tray" != "xno"; then 
     with_docklet_system_tray=yes
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_system_tray=no)
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= $GTK_MIN_VER, [], with_docklet_system_tray=no)
     if test "$with_docklet_system_tray" = "no"; then 
     	AC_MSG_ERROR($GTK_PKG_ERRORS)
     fi
@@ -518,7 +521,7 @@ fi
 AC_ARG_WITH(docklet_dockapp, [  --without-docklet-dockapp	  Build without dockapp plugin])
 if test "x$with_docklet_dockapp" != "xno"; then 
     with_docklet_dockapp=yes
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_dockapp=no)
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= $GTK_MIN_VER, [], with_docklet_dockapp=no)
     if test "$with_docklet_dockapp" = "no"; then 
     	AC_MSG_ERROR($GTK_PKG_ERRORS)
     fi
@@ -563,7 +566,6 @@ if test "x$with_arts" != "xno"; then
     	AC_MSG_ERROR($AUDIOFILE_PKG_ERRORS)
     fi
 
-    
     ARTSC_LIBS=`$ARTSC --libs`
     ARTSC_CFLAGS=`$ARTSC --cflags`
     AC_SUBST(ARTSC_LIBS)
