@@ -1,3 +1,6 @@
+30.08.2004
+- Changing own password implemented (JEP-0077); Minor fixes. (jabber/mkobierzycki)
+
 29.08.2004
 - workaround for loudmouth 0.17 keepalive bug (krzak/jabber)
 - fixed bug with userlist with polish characters (krzak/gadu-gadu)
