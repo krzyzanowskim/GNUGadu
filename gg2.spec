@@ -1,7 +1,7 @@
-# $Revision: 1.20 $, $Date: 2004/09/07 14:59:17 $
+# $Revision: 1.21 $, $Date: 2004/09/16 08:10:08 $
 #
 # Conditional build: 
-%bcond_with	arts
+%bcond_without	arts
 %bcond_without	perl
 %bcond_without	esd
 %bcond_without	gtkspell
@@ -11,13 +11,14 @@ Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
 Version:	2.0.6
-Release:	1
+Release:	3
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://osdn.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}.tar.bz2
+Source0:	http://osdn.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}.tar.gz
+# Source0-md5:	ed977cb5bc00b37c9ceaece94f785b65
 URL:		http://www.gnugadu.org/
-%{?with_arts:BuildRequires:	arts-devel}
+%{?with_arts:BuildRequires:	artsc-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.7
 %{?with_esd:BuildRequires:	esound-devel >= 0.2.7}
@@ -69,21 +70,23 @@ libgg2_core necesarios para desarrollar plugins para GNU Gadu 2.
 Ten pakiet zawiera pliki nag³ówkowe biblioteki libgg2_core, potrzebne
 do rozwijania wtyczek do GNU Gadu 2.
 
-%package gui-gtk+2
+%package plugin-gui-gtk+2
 Summary:	GTK+2 GUI plugin
 Summary(es):	Plugin de GUI en GTK+2
 Summary(pl):	Wtyczka z GUI w GTK+2
 Group:		Applications/Communications
 Provides:	gg2-ui
+Provides:	%{name}-gui-gtk+2 = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-gui-gtk+2
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description gui-gtk+2
+%description plugin-gui-gtk+2
 GTK+2 GUI plugin for GNU Gadu 2.
 
-%description gui-gtk+2 -l es
+%description plugin-gui-gtk+2 -l es
 Un plugin con un GUI en GTK+2 para GNU Gadu 2.
 
-%description gui-gtk+2 -l pl
+%description plugin-gui-gtk+2 -l pl
 Wtyczka z GUI w GTK+2 do GNU Gadu 2.
 
 %package emoticons
@@ -102,233 +105,261 @@ Iconas de emociones y sus ficheros de descripción.
 %description emoticons -l pl
 Zestaw ikon z emotikonami, oraz plikiem konfiguracyjnym.
 
-%package gadu-gadu
+%package plugin-gadu-gadu
 Summary:	Gadu-Gadu plugin
 Summary(es):	Plugin de Gadu-Gadu
 Summary(pl):	Wtyczka protoko³u Gadu-Gadu
 Group:		Applications/Communications
+Provides:	%{name}-gadu-gadu = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-gadu-gadu
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description gadu-gadu
+%description plugin-gadu-gadu
 Gadu-Gadu protocol plugin.
 
-%description gadu-gadu -l es
+%description plugin-gadu-gadu -l es
 Un plugin para el protocolo Gadu-Gadu.
 
-%description gadu-gadu -l pl
+%description plugin-gadu-gadu -l pl
 Wtyczka protoko³u Gadu-Gadu.
 
-%package tlen
+%package plugin-tlen
 Summary:	Tlen.pl plugin
 Summary(es):	Plugin de Tlen.pl
 Summary(pl):	Wtyczka protoko³u Tlen.pl
 Group:		Applications/Communications
+Provides:	%{name}-tlen = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-tlen
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description tlen
+%description plugin-tlen
 Tlen.pl protocol plugin.
 
-%description tlen -l es
+%description plugin-tlen -l es
 Un plugin para el protocolo Tlen.pl.
 
-%description tlen -l pl
+%description plugin-tlen -l pl
 Wtyczka protoko³u Tlen.pl.
 
-%package jabber
+%package plugin-jabber
 Summary:	Jabber.org plugin
 Summary(es):	Plugin de Jabber.org
 Summary(pl):	Wtyczka protoko³u Jabber
 Group:		Applications/Communications
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	loudmouth >= 0.16-4
+Provides:	%{name}-jabber = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-jabber
 
-%description jabber
+%description plugin-jabber
 Jabber protocol plugin.
 
-%description jabber -l es
+%description plugin-jabber -l es
 Un plugin para el protocolo Jabber.
 
-%description jabber -l pl
+%description plugin-jabber -l pl
 Wtyczka protoko³u Jabber.
 
-%package sound-esd
+%package plugin-sound-esd
 Summary:	Sound support with ESD
 Summary(es):	Soporte de sonido a través de ESD
 Summary(pl):	Obs³uga d¼wiêku poprzez ESD
 Group:		Applications/Communications
+Provides:	%{name}-sound-esd = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-sound-esd
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description sound-esd
+%description plugin-sound-esd
 Sound support with ESD.
 
-%description sound-esd -l es
+%description plugin-sound-esd -l es
 Soporte de sonido a través de ESD.
 
-%description sound-esd -l pl
+%description plugin-sound-esd -l pl
 Obs³uga d¼wiêku poprzez ESD.
 
-%package sound-oss
+%package plugin-sound-oss
 Summary:	OSS sound support
 Summary(es):	Soporte de sonido a través de OSS
 Summary(pl):	Obs³uga d¼wiêku OSS
 Group:		Applications/Communications
+Provides:	%{name}-sound-oss = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-sound-oss
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description sound-oss
+%description plugin-sound-oss
 OSS sound support.
 
-%description sound-oss -l es
+%description plugin-sound-oss -l es
 Soporte de sonido a través de OSS.
 
-%description sound-oss -l pl
+%description plugin-sound-oss -l pl
 Obs³uga d¼wiêku OSS.
 
-%package sound-external
+%package plugin-sound-external
 Summary:	Sound support with external player
 Summary(es):	Soporte de sonido vía un reproductor externo
 Summary(pl):	Obs³uga d¼wiêku przez zewnêtrzny program
 Group:		Applications/Communications
+Provides:	%{name}-sound-external = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-sound-external
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description sound-external
+%description plugin-sound-external
 Sound support with external player.
 
-%description sound-external -l es
+%description plugin-sound-external -l es
 Soporte de sonido a través de un reproductor externo.
 
-%description sound-external -l pl
+%description plugin-sound-external -l pl
 Obs³uga d¼wiêku przez zewnêtrzny program.
 
-%package sound-aRts
+%package plugin-sound-aRts
 Summary:	Sound support with aRts
 Summary(es):	Soporte de sonido a través de aRts
 Summary(pl):	Obs³uga d¼wiêku poprzez aRts
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Provides:	%{name}-sound-aRts = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-sound-aRts
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description sound-aRts
+%description plugin-sound-aRts
 Sound support with aRts.
 
-%description sound-aRts -l es
+%description plugin-sound-aRts -l es
 Soporte de sonido a través de aRts.
 
-%description sound-aRts -l pl
+%description plugin-sound-aRts -l pl
 Obs³uga d¼wiêku poprzez aRts.
 
-%package xosd
+%package plugin-xosd
 Summary:	Support for X On Screen Display
 Summary(es):	Soporte para plasmar mensajes sobre el fondo de X
 Summary(pl):	Wy¶wietlanie komunikatów na ekranie X
 Group:		Applications/Communications
+Provides:	%{name}-xosd = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-xosd
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description xosd
+%description plugin-xosd
 Support for X On Screen Display.
 
-%description xosd -l es
+%description plugin-xosd -l es
 Soporte para plasmar mensajes sobre el fondo (XOSD).
 
-%description xosd -l pl
+%description plugin-xosd -l pl
 Wy¶wietlanie komunikatów na ekranie X.
 
-%package docklet-system-tray
+%package plugin-docklet-system-tray
 Summary:	Support for Window Managers notification areas
 Summary(es):	Soporte para áreas de notificación de los Manejantes de Ventanas
 Summary(pl):	Obs³uga obszarów powiadomieñ w ró¿nych zarz±dcach okien
 Group:		Applications/Communications
+Provides:	%{name}-docklet-system-tray = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-docklet-system-tray
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-docklet
 
-%description docklet-system-tray
+%description plugin-docklet-system-tray
 Support for Window Managers notification areas (GNOME, KDE).
 
-%description docklet-system-tray -l es
+%description plugin-docklet-system-tray -l es
 Soporte para áreas de notificación de los Manejantes de Ventanas
 (GNOME, KDE).
 
-%description docklet-system-tray -l pl
+%description plugin-docklet-system-tray -l pl
 Obs³uga obszarów powiadomieñ w ró¿nych zarz±dcach okien (GNOME, KDE).
 
-%package docklet-dockapp
+%package plugin-docklet-dockapp
 Summary:	Support for WindowMaker-style dockapp
 Summary(es):	Soporte de dockapp estilo WindowMaker
 Summary(pl):	Obs³uga dokowalnego apletu zgodnego z WindowMakerem
 Group:		Applications/Communications
+Provides:	%{name}-docklet-dockapp = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-docklet-dockapp
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-docklet
 
-%description docklet-dockapp
+%description plugin-docklet-dockapp
 Support for WindowMaker-style dockapp.
 
-%description docklet-dockapp -l es
+%description plugin-docklet-dockapp -l es
 Suporte de dockapp estilo WindowMaker.
 
-%description docklet-dockapp -l pl
+%description plugin-docklet-dockapp -l pl
 Obs³uga dokowalnego apletu zgodnego z WindowMakerem.
 
-%package sms
+%package plugin-sms
 Summary:	SMS Gateway
 Summary(es):	Puerta SMS
 Summary(pl):	Bramka SMS
 Group:		Applications/Communications
+Provides:	%{name}-sms = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-sms
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description sms
+%description plugin-sms
 Send SMS to cellular phones via web gateways.
 
-%description sms -l es
+%description plugin-sms -l es
 Manda mensajes SMS a móviles vía puertas del Web.
 
-%description sms -l pl
+%description plugin-sms -l pl
 Wtyczka wysy³aj±ca wiadomo¶ci SMS na telefony komórkowe przez bramki
 WWW.
 
-%package remote
+%package plugin-remote
 Summary:	Remote access from other applications
 Summary(es):	Acceso remoto desde otras aplicaciones
 Summary(pl):	Dostêp do programu z innych aplikacji
 Group:		Applications/Communications
+Provides:	%{name}-remote = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-remote
 Provides:	gg2-ui
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description remote
+%description plugin-remote
 Make possible exchange data with other applications.
 
-%description remote -l es
+%description plugin-remote -l es
 Permite intercambiar los datos con otras aplicaciones.
 
 
-%description remote -l pl
+%description plugin-remote -l pl
 Wtyczka umo¿liwiaj±ca wymianê informacji z innymi aplikacjami.
 
 
-%package history-external
+%package plugin-history-external
 Summary:	Allow to view GNU Gadu chat history
 Summary(pl):	Pozwala przegl±daæ historiê rozmów GNU Gadu.
 Group:		Applications/Communications
+Provides:	%{name}-history-external = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-history-external
 Requires:	gtk+2
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description history-external
+%description plugin-history-external
 Allow to view GNU Gadu chat history
 
-%description history-external -l pl
+%description plugin-history-external -l pl
 Pozwala przegl±daæ historiê rozmów GNU Gadu.
 
-%package update
+%package plugin-update
 Summary:	Check for new GNU Gadu newer version
 Summary(es):	Verifica si hay versiones nuevas de GNU Gadu
 Summary(pl):	Sprawdza czy jest dostêpna nowsza wersja GNU Gadu
 Group:		Applications/Communications
+Provides:	%{name}-update = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-update
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description update
+%description plugin-update
 Check for new GNU Gadu newer version.
 
-%description update -l es
+%description plugin-update -l es
 Verifica si hay nuevas versiones de GNU Gadu.
 
-%description update -l pl
+%description plugin-update -l pl
 Sprawdza czy jest dostêpna nowsza wersja GNU Gadu
 
 %package themes
@@ -410,7 +441,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gg2
 %{_datadir}/%{name}/sounds
 
-%files gui-gtk+2
+%files plugin-gui-gtk+2
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libGUI_plugin.so
 %dir %{_datadir}/gg2
@@ -431,64 +462,64 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_datadir}/gg2/pixmaps/emoticons
 
-%files gadu-gadu
+%files plugin-gadu-gadu
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libgadu_gadu_plugin.so
 
-%files tlen
+%files plugin-tlen
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libtlen_plugin.so
 
-%files jabber
+%files plugin-jabber
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libjabber_plugin.so
 
 %if %{with esd}
-%files sound-esd
+%files plugin-sound-esd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsound_esd_plugin.so
 %endif
 
-%files sound-oss
+%files plugin-sound-oss
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsound_oss_plugin.so
 
-%files sound-external
+%files plugin-sound-external
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsound_external_plugin.so
 
 %if %{with arts}
-%files sound-aRts
+%files plugin-sound-aRts
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsound_arts_plugin.so
 %endif
 
-%files xosd
+%files plugin-xosd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libxosd_plugin.so
 
-%files docklet-system-tray
+%files plugin-docklet-system-tray
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libdocklet_system_tray_plugin.so
 
-%files docklet-dockapp
+%files plugin-docklet-dockapp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libdocklet_dockapp_plugin.so
 
-%files sms
+%files plugin-sms
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsms_plugin.so
 
-%files remote
+%files plugin-remote
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libremote_plugin.so
 
-%files history-external
+%files plugin-history-external
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gghist
 %attr(755,root,root) %{_libdir}/gg2/libhistory_external_plugin.so
 
-%files update
+%files plugin-update
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libupdate_plugin.so
 
@@ -521,16 +552,27 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.20  2004/09/07 14:59:17  krzyzak
-- small fixes (krzak)
-- fixed multiline messages in history engine (krzak)
+Revision 1.21  2004/09/16 08:10:08  krzyzak
+- sync. with PLD CVS
 
-Revision 1.19  2004/08/23 14:41:32  krzyzak
-23.08.2004
-- 2.0.5.1 bugfix release - now jabber plugin compile and work with pre/post loudmouth 0.16
+Revision 1.118  2004/09/15 09:27:21  krzak
+- change subpackages with plugins to %{name}-plugin-foo
+- rel. 3
 
-Revision 1.18  2004/08/22 20:37:14  krzyzak
-- release 2.0.5
+Revision 1.117  2004/09/13 00:33:06  havner
+- strict internal deps
+- rel 2
+
+Revision 1.116  2004/09/08 12:22:41  krzak
+- up to 2.0.6
+- building aRts package is enabled by default now
+
+Revision 1.115  2004/08/23 14:52:17  krzak
+- up to 2.0.5.1
+
+Revision 1.114  2004/08/22 20:52:34  krzak
+- up to 2.0.5
+- jabber_login.patch not needed anymore
 
 Revision 1.113  2004/08/04 23:21:39  twittner
 - play with distfiles (or sf)
