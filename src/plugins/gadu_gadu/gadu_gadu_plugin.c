@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.241 2005/02/19 23:06:12 mkobierzycki Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.242 2005/03/02 08:42:44 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1182,7 +1182,14 @@ gboolean import_userlist(gchar * list)
 
 		first_name = l[0];
 		last_name = l[1];
-		nick = l[2] ? l[2] : g_strdup("unknown");
+
+		if (l[2])
+		    nick = l[2];
+		else if (l[3])
+		    nick = l[3];
+		else
+		    nick = g_strdup("unknown");
+		
 		mobile = l[4];
 		group = l[5];
 		uin = l[6];
