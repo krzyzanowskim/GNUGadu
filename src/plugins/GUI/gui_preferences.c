@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.12 2003/04/26 22:24:15 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.13 2003/04/28 15:15:15 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -375,15 +375,128 @@ static GtkWidget *create_fonts_tab()
     if (config_var_get(gui_handler, "msg_out_body_font"))
 	gtk_entry_set_text(GTK_ENTRY(entry), (gchar *)config_var_get(gui_handler, "msg_out_body_font"));
 
+    frame = gtk_frame_new(_("Contact list"));
+    gtk_box_pack_start(GTK_BOX(fonts_vbox), frame, FALSE, FALSE, 0);
+
+    tabbox = gtk_table_new(3, 3, FALSE);
+    gtk_container_add(GTK_CONTAINER(frame), tabbox);
+
+    label = gtk_label_new(_("Contact"));
+    entry = gtk_entry_new();
+    button = gtk_button_new_from_stock("gtk-select-font");
+    
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 0, 1);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 0, 1);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_fonts_select_dialog), entry);
+    g_object_set_data(G_OBJECT(fonts_vbox), "contact_list_contact_font", entry);
+
+    if (config_var_get(gui_handler, "contact_list_contact_font"))
+	gtk_entry_set_text(GTK_ENTRY(entry), (gchar *)config_var_get(gui_handler, "contact_list_contact_font"));
+
+    label = gtk_label_new(_("Protocol (tree view)"));
+    entry = gtk_entry_new();
+    button = gtk_button_new_from_stock("gtk-select-font");
+    
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 1, 2);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 1, 2);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_fonts_select_dialog), entry);
+    g_object_set_data(G_OBJECT(fonts_vbox), "contact_list_protocol_font", entry);
+
+    if (config_var_get(gui_handler, "contact_list_protocol_font"))
+	gtk_entry_set_text(GTK_ENTRY(entry), (gchar *)config_var_get(gui_handler, "contact_list_protocol_font"));
+
     return fonts_vbox;
 }
 
+static void show_file_select_dialog(GtkWidget *widget, gpointer user_data)
+{
+    GtkWidget *entry = (GtkWidget *)user_data;
+    GtkWidget *file_selector = NULL;
+    gchar     *filename = NULL;
+    gint       response;
+    const gchar *_filename;
+    
+    file_selector = gtk_file_selection_new(_("Select file"));
+    _filename = gtk_entry_get_text(GTK_ENTRY(entry));
+    if (_filename && *_filename)
+        gtk_file_selection_set_filename(GTK_FILE_SELECTION(file_selector), _filename);
+
+    response = gtk_dialog_run(GTK_DIALOG(file_selector));
+    
+    if (response == GTK_RESPONSE_OK) {
+	filename = (gchar *)gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selector));
+	gtk_entry_set_text(GTK_ENTRY(entry), filename);
+    }
+    
+    gtk_widget_destroy(file_selector);
+}
+
+static GtkWidget *create_sound_tab()
+{
+    GtkWidget *sound_vbox;
+    GtkWidget *image;
+    GtkWidget *label;
+    GtkWidget *hbox;
+    GtkWidget *tabbox;
+    GtkWidget *entry;
+    GtkWidget *button;
+    GtkWidget *frame;
+    
+    sound_vbox = gtk_vbox_new(FALSE, 2);
+
+    hbox = gtk_hbox_new(FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(sound_vbox), hbox, FALSE, FALSE, 0);
+
+    image = gtk_image_new();
+    gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-stock-cdrom", GTK_ICON_SIZE_DND);
+    label = gtk_label_new(_("\nSound settings\n\n"));
+	
+    gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+
+    frame = gtk_frame_new(_("Messages"));
+    gtk_box_pack_start(GTK_BOX(sound_vbox), frame, FALSE, FALSE, 0);
+
+    tabbox = gtk_table_new(3, 3, FALSE);
+    gtk_container_add(GTK_CONTAINER(frame), tabbox);
+
+    label = gtk_label_new(_("Incoming message:"));
+    entry = gtk_entry_new();
+    button = gtk_button_new_from_stock("gtk-open");
+    
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 0, 1);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 0, 1);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_file_select_dialog), entry);
+    g_object_set_data(G_OBJECT(sound_vbox), "sound_msg_in", entry);
+
+    if (config_var_get(gui_handler, "sound_msg_in"))
+	gtk_entry_set_text(GTK_ENTRY(entry), (gchar *)config_var_get(gui_handler, "sound_msg_in"));
+    
+    label = gtk_label_new(_("Outgoing message:"));
+    entry = gtk_entry_new();
+    button = gtk_button_new_from_stock("gtk-open");
+    
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 1, 2);
+    gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 1, 2);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_file_select_dialog), entry);
+    g_object_set_data(G_OBJECT(sound_vbox), "sound_msg_out", entry);
+
+    if (config_var_get(gui_handler, "sound_msg_out"))
+	gtk_entry_set_text(GTK_ENTRY(entry), (gchar *)config_var_get(gui_handler, "sound_msg_out"));
+
+    return sound_vbox;
+}
 void gui_preferences(GtkWidget * widget, gpointer data)
 {
 	GtkWidget *preferences;
 	GtkWidget *notebook;
 	GtkWidget *image;
 	GtkWidget *general_vbox;
+	GtkWidget *sound_vbox;
 	GtkWidget *colors_vbox;
 	GtkWidget *fonts_vbox;
 	GtkWidget *vbox;
@@ -426,11 +539,15 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 			  notebook);
 
 	general_vbox = gtk_vbox_new(FALSE, 4);
+	sound_vbox = create_sound_tab();	
 	colors_vbox = create_colors_tab();
 	fonts_vbox = create_fonts_tab();
 	
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), general_vbox,
 				 gtk_label_new(_("General")));
+
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), sound_vbox,
+				 gtk_label_new(_("Sound")));
 
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), colors_vbox,
 				 gtk_label_new(_("Colors")));
@@ -748,6 +865,30 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "msg_out_body_font");
 		g_return_if_fail(entry != NULL);
 		config_var_set(gui_handler, "msg_out_body_font",
+			       (gpointer)
+			       g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+
+		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_out");
+		g_return_if_fail(entry != NULL);
+		config_var_set(gui_handler, "sound_msg_out",
+			       (gpointer)
+			       g_strdup(gtk_entry_get_text(GTK_ENTRY(entry)))); 
+
+		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_in");
+		g_return_if_fail(entry != NULL);
+		config_var_set(gui_handler, "sound_msg_in",
+			       (gpointer)
+			       g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+
+		entry = g_object_get_data(G_OBJECT(fonts_vbox), "contact_list_contact_font");
+		g_return_if_fail(entry != NULL);
+		config_var_set(gui_handler, "contact_list_contact_font",
+			       (gpointer)
+			       g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+
+		entry = g_object_get_data(G_OBJECT(fonts_vbox), "contact_list_protocol_font");
+		g_return_if_fail(entry != NULL);
+		config_var_set(gui_handler, "contact_list_protocol_font",
 			       (gpointer)
 			       g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 

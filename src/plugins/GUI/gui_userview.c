@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.8 2003/04/16 14:40:58 shaster Exp $ */
+/* $Id: gui_userview.c,v 1.9 2003/04/28 15:15:16 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -74,9 +74,11 @@ void on_text_data(GtkTreeViewColumn *column, GtkCellRenderer *renderer,
     gtk_tree_model_get(model, iter, 2, &k, -1);
     
     if (!k) {
-	g_object_set(G_OBJECT(renderer), "font", "bold", NULL);
+	gchar *font = config_var_get(gui_handler, "contact_list_protocol_font");
+	g_object_set(G_OBJECT(renderer), "font", (font) ? font : "bold", NULL);
     } else {
-	g_object_set(G_OBJECT(renderer), "font", "normal", NULL);
+	gchar *font = config_var_get(gui_handler, "contact_list_contact_font");
+	g_object_set(G_OBJECT(renderer), "font", (font) ? font : "normal", NULL);
     }
 }
 

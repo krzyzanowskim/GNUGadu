@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.10 2003/04/26 22:24:15 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.11 2003/04/28 15:15:15 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -123,6 +123,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     config_var_add(gui_handler, "msg_out_header_font", VAR_STR);
     config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
     config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
+    config_var_add(gui_handler, "sound_msg_in", VAR_STR);
+    config_var_add(gui_handler, "sound_msg_out", VAR_STR);
+    config_var_add(gui_handler, "contact_list_contact_font", VAR_STR);
+    config_var_add(gui_handler, "contact_list_protocol_font", VAR_STR);
 
     if (!config_read(gui_handler))
 	g_warning(_("Unable to read configuration file for plugin GUI"));

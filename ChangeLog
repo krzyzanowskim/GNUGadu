@@ -1,4 +1,6 @@
 28.04.2003
+- font selection for userlist (GUI/THrull)
+- toplevel sound file selection not fully working ;-) (GUI/THrull)
 - added some info about protcol in info label in tree view - not much useful at the moment (GUI/THrull)
 
 26.04.2003
