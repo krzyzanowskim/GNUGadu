@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.5 2003/04/02 18:11:49 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.6 2003/04/02 18:14:41 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -578,7 +578,8 @@ static void gui_user_view_rescan_paths (gui_protocol *gp)
     GtkTreeIter iter;
     GtkTreeModel *model = GTK_TREE_MODEL(users_treestore);
 
-    while((valid = gtk_tree_model_get_iter_first (model, &iter)) != FALSE) {
+    valid = gtk_tree_model_get_iter_first (model, &iter);
+    while (valid) {
 	gui_protocol *_gp;
 
 	gtk_tree_model_get (model, &iter, 3, &_gp, -1);
