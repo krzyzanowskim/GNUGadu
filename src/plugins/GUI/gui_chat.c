@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.137 2005/01/02 04:38:38 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.138 2005/01/03 12:54:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -803,10 +803,26 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 static void
 url_clicked_cb(GtkWidget *w, const char *uri)
 {
-//	g_idle_add(url_clicked_idle_cb, g_strdup(uri));
-	gchar *browser_exec = ggadu_config_var_get(gui_handler, "browser_exec");
-	gchar *command = g_strdup_printf("\"%s\" \"%s\"",browser_exec ? browser_exec : "mozilla" ,uri);
-	g_spawn_command_line_async(command,NULL);
+	gchar *browser_exec;
+	gchar **argvp;
+	gint  argcp;
+	
+	browser_exec = ggadu_config_var_get(gui_handler, "browser_exec");
+	if (g_shell_parse_argv(browser_exec,&argcp,&argvp,NULL))
+	{
+		GPid childpid;
+		gint i = 0;
+		for (i=0;i<argcp;i++)
+		{
+		    if (!strcmp(argvp[i],"%s"))
+		    {
+			g_free(argvp[i]);
+			argvp[i] = g_strdup(uri);
+		    }
+		}			
+		g_spawn_async(NULL,argvp,NULL,G_SPAWN_SEARCH_PATH,NULL,NULL,&childpid,NULL);
+		g_strfreev(argvp);
+	}
 }
 
 
