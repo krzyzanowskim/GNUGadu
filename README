@@ -1,7 +1,7 @@
 To compile all plugins you need:
 
 - gcc-c   C compiler
-- gcc-c++ (for aspell)
+- gcc-c++ (for aspell support)
 - automake 1.7 or better
 - libtool 1.4e or better
 
