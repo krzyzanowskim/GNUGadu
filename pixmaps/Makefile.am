@@ -37,6 +37,7 @@ pixmap_DATA = \
     online.png \
     send-im.png \
     show-hide-inactive.png \
+    show-hide-descriptions.png \
     sms_i.png \
     sms.png \
     tlen-away.png \
