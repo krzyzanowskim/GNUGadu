@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.10 2003/05/22 19:00:47 shaster Exp $ */
+/* $Id: plugin_xosd.c,v 1.11 2003/05/22 19:14:09 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -131,7 +131,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 
 	    if (fine) {
 		gpointer ts;
-		
+
+		if (xosd_is_onscreen(osd))
+		    xosd_hide(osd);
+	
 	        xosd_scroll (osd, 1);
 		if (((ts = config_var_get(handler, "timestamp")) != NULL) && ((gboolean)ts == TRUE)) {
 		    gchar *ww = NULL;
@@ -243,6 +246,9 @@ gboolean osd_hide_window (gpointer user_data) {
 }
 
 gpointer osd_show_messages (gpointer user_data) {
+    if (xosd_is_onscreen(osd))
+	xosd_hide(osd);
+
     xosd_show(osd);
     g_timeout_add((config_var_get(handler, "timeout") ? (guint) config_var_get(handler, "timeout") * 1000 : 3000), osd_hide_window, NULL);
     return NULL;
