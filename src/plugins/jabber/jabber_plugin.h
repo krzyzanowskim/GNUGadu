@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.19 2004/01/17 00:45:01 shaster Exp $ */
+/* $Id: jabber_plugin.h,v 1.20 2004/01/17 12:37:58 krzyzak Exp $ */
 
 #ifndef GGADU_JABBER_PLUGIN_H
 #define GGADU_JABBER_PLUGIN_H 1
@@ -66,7 +66,6 @@ typedef struct
 {
     gint status;
     gchar *status_descr;
-    GSList *userlist;
     GSList *actions;
     gint connected;
 } jabber_data_type;

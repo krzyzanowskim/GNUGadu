@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.11 2004/01/17 00:44:58 shaster Exp $ */
+/* $Id: perl_embed.c,v 1.12 2004/01/17 12:37:58 krzyzak Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -28,9 +28,6 @@ extern GGaduConfig *config;
 
 typedef struct
 {
-/*
-    char *name;
-*/
     GGaduSigID q_name;
     char *func;
 } signal_hook;

@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.21 2004/01/17 00:45:01 shaster Exp $ */
+/* $Id: jabber_login.c,v 1.22 2004/01/17 12:37:58 krzyzak Exp $ */
 
 #include <string.h>
 
@@ -11,6 +11,8 @@ extern jabber_data_type jabber_data;
 
 void jabber_login(enum states status)
 {
+	GSList *list;
+	
     if (!jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE)
 	return;
 
@@ -20,8 +22,7 @@ void jabber_login(enum states status)
     }
     else if (jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE)
     {
-
-	GSList *list = jabber_data.userlist;
+	list = ggadu_repo_get_as_slist("jabber",REPO_VALUE_CONTACT);
 	jabber_data.status = status;
 
 	if (lm_connection_close(connection, NULL))
@@ -40,9 +41,7 @@ void jabber_login(enum states status)
 	    list = list->next;
 	}
 
-	g_slist_free(jabber_data.userlist);
-
-	jabber_data.userlist = NULL;
+	g_slist_free(list);
 	jabber_data.connected = 0;
     }
     else if (jabber_data.connected == 2)
