@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.22 2004/12/20 13:04:03 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.23 2005/01/18 14:53:30 krzyzak Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -182,7 +182,7 @@ void go_status(gint type)
 	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
 
 	while (index) {
-	    GGaduStatusPrototype *sp;
+	    GGaduStatusPrototype *sp = NULL;
 	    p = ggadu_repo_find_value("_protocols_", key);
 		
 	    if (p) {

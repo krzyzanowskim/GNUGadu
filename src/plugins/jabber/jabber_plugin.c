@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.151 2005/01/16 21:52:56 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.152 2005/01/18 14:53:33 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1448,7 +1448,7 @@ void start_plugin()
 		print_debug("jabber: autoconneting");
 		GGaduStatusPrototype *sp = ggadu_find_status_prototype(p,JABBER_STATUS_AVAILABLE);
 		jabber_change_status(sp);
-//		GGaduStatusPrototype_free(sp);
+		GGaduStatusPrototype_free(sp);
 	}
 
 }

@@ -50,7 +50,7 @@
 
 #include "aaway.h"
 
-guint timer_handle;
+static guint timer_handle;
 
 static GGaduPlugin *handler;
 static GGaduMenu *menu_pluginmenu;
@@ -89,6 +89,8 @@ static gboolean check_idle_time()
 {
 	gint local_idle = get_idle();
 	
+	print_debug("in");
+	
 	if ((local_idle >= (gint) ggadu_config_var_get(handler, "interval")) 
 	    && (gint) ggadu_config_var_get(handler, "enable"))
 	{
@@ -109,7 +111,7 @@ static gboolean check_idle_time()
 			print_debug("lustruje %s",plugin->name);
 			if (sp && ggadu_is_in_status(sp->status, protocol->online_status))
 			{
-			    GGaduStatusPrototype *sp2;
+			    GGaduStatusPrototype *sp2 = NULL;
 			    gchar *message = NULL;
 			    gint newstatus;
 
@@ -131,8 +133,8 @@ static gboolean check_idle_time()
 			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
 			    
 			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)TRUE);
-			    GGaduStatusPrototype_free(sp2);
 			    print_debug("SET %d %s",newstatus,plugin->name);
+			    GGaduStatusPrototype_free(sp2);
 //			    g_free(message);
 			}
 			GGaduStatusPrototype_free(sp);
@@ -189,6 +191,7 @@ static gboolean check_idle_time()
 		    plugins = plugins->next;
 		}
 	}
+	print_debug("out");
 	return TRUE;
 }
 

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.106 2005/01/16 21:52:52 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.107 2005/01/18 14:53:15 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -726,6 +726,7 @@ void change_status(GPtrArray * ptra)
 		}
 
 
+		GGaduStatusPrototype_free(sp2);
 		sp1 = ggadu_find_status_prototype(gp->p, sp2 ? sp2->status : last_resort_status);
 
 		if (sp1 && sp2 && ggadu_is_in_status(sp2->status, gp->p->offline_status))
@@ -739,6 +740,7 @@ void change_status(GPtrArray * ptra)
 			print_debug("gui: blinking %s and %s\n", sp1->image, sp->image);
 			/* *INDENT-ON* */
 		}
+		GGaduStatusPrototype_free(sp1);
 	}
 	else if (ggadu_is_in_status(sp->status, gp->p->offline_status) && gp->blinker > 0)
 	{
@@ -752,8 +754,6 @@ void change_status(GPtrArray * ptra)
 	    sp->status_description = NULL;
 	    signal_emit("main-gui", "change status", sp, plugin_source);
 	}
-	GGaduStatusPrototype_free(sp1);
-	GGaduStatusPrototype_free(sp2);
 	/* ZONK */
 	/* te tablice "ptra" kiedys tam mozna zwolic, ale nie mozna tutaj */
 }
