@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.6 2003/04/04 15:17:30 thrulliq Exp $ */
+/* $Id: gg-types.h,v 1.7 2003/04/12 19:59:27 zapal Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -160,6 +160,8 @@ typedef struct {
 	GMainLoop *main_loop;
 	
 	GSource *signals_source;
+
+	gpointer repos;
 } GGaduConfig;
 
 

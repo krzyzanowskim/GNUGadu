@@ -1,4 +1,4 @@
-/* $Id: repo.c,v 1.2 2003/04/12 16:38:53 zapal Exp $ */
+/* $Id: repo.c,v 1.3 2003/04/12 19:59:27 zapal Exp $ */
 
 #include <glib.h>
 
@@ -17,37 +17,21 @@ const gint REPO_value_mask = REPO_ACTION_VALUE_NEW | REPO_ACTION_VALUE_DEL | REP
  ********************************************************************
  */
 
-typedef struct {
-  gpointer key;
-  gpointer value;
-  gint     type;
-  GSList  *watches;
-} GGaduRepoValue;
-
-typedef struct {
-  gchar  *name;
-  GSList *values;
-  GSList *watches;
-} GGaduRepo;
-
-typedef struct {
-  gint      actions;
-  gint      types;
-  watch_ptr callback;
-} GGaduRepoWatch;
-
-static GGaduRepo repos;
+#define REPOS ((GGaduRepo *)(config->repos))
 
 GGaduRepo *ggadu_repo_find (gchar *repo_name)
 {
   GGaduRepo      *tmp;
   GSList         *list;
 
-  list = repos.values;
+  print_debug ("find %s\n", repo_name);
+  list = REPOS->values;
+  print_debug ("%p\n", REPOS->values);
   while (list)
   {
     tmp = (GGaduRepo *) list->data;
 
+    print_debug ("? %s\n", tmp->name);
     if (!ggadu_strcasecmp (repo_name, (gchar *)tmp->name))
       return tmp;
     
@@ -87,6 +71,8 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
   GSList         *list;
   GGaduRepoWatch *watch;
   GSList         *completed = NULL;
+
+  print_debug ("repo: repo_name = '%s', key = '%p', actions = '%d', types = '%d'\n", repo_name, key, actions, types);
 
   /* Wysy³amy ¿±dania w kolejno¶ci od najbardziej szczegó³owych do
    * najbardziej ogólnych. Na pierwszy rzut id± patrza³ki na poszczególne
@@ -129,7 +115,7 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
 	print_debug ("       actions: %d\n", actions);
 	print_debug ("          mask: %d\n", REPO_mask);
 	print_debug ("    value mask: %d\n", REPO_value_mask);
-	watch->callback (repo_name, key, watch->actions & actions & REPO_mask);
+	watch->callback (repo_name, key, watch->actions & actions);
 	completed = g_slist_append (completed, watch->callback);
       }
       list = list->next;
@@ -139,7 +125,7 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
   /* i w koñcu kierujemy patrza³ki na najbardziej ogólne - czyli na listê repów */
   if (actions & REPO_mask)
   {
-    list = repos.watches;
+    list = REPOS->watches;
     while (list)
     {
       watch = (GGaduRepoWatch *) list->data;
@@ -149,7 +135,7 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
 	print_debug ("       actions: %d\n", actions);
 	print_debug ("          mask: %d\n", REPO_mask);
 	print_debug ("    value mask: %d\n", REPO_value_mask);
-	watch->callback (repo_name, key, watch->actions & actions & REPO_mask);
+	watch->callback (repo_name, key, watch->actions & actions);
       }
       list = list->next;
     }
@@ -165,6 +151,7 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
 
 gboolean ggadu_repo_exists (gchar *repo_name)
 {
+  print_debug ("repo: repo_name = '%s'\n", repo_name);
   return ggadu_repo_find (repo_name) ? TRUE:FALSE;
 }
 
@@ -174,6 +161,8 @@ gboolean ggadu_repo_check_value (gchar *repo_name, gpointer key)
   GGaduRepoValue *tmpv;
   GSList         *list;
 
+  print_debug ("repo: repo_name = '%s', key = '%p'\n", repo_name, key);
+  
   tmp = ggadu_repo_find (repo_name);
   
   list = tmp->values;
@@ -196,6 +185,8 @@ gpointer ggadu_repo_find_value (gchar *repo_name, gpointer key)
   GGaduRepoValue *tmpv;
   GSList         *list;
 
+  print_debug ("repo: repo_name = '%s', key = '%p'\n", repo_name, key);
+  
   tmp = ggadu_repo_find (repo_name);
   
   list = tmp->values;
@@ -216,6 +207,8 @@ gboolean ggadu_repo_add (gchar *repo_name)
 {
   GGaduRepo *tmp;
 
+  print_debug ("repo: repo_name = '%s'\n", repo_name);
+  
   if (ggadu_repo_find (repo_name))
   {
     print_debug ("repo: repo %s exists\n", repo_name);
@@ -227,7 +220,7 @@ gboolean ggadu_repo_add (gchar *repo_name)
   tmp->values  = NULL;
   tmp->watches = NULL;
 
-  repos.values = g_slist_append (repos.values, tmp);
+  REPOS->values = g_slist_append (REPOS->values, tmp);
 
   ggadu_repo_watch_notify (repo_name, NULL, REPO_ACTION_NEW, REPO_VALUE_ANY);
   return TRUE;
@@ -238,6 +231,8 @@ gboolean ggadu_repo_add_value (gchar *repo_name, gpointer key, gpointer value, g
   GGaduRepoValue *tmpv;
   GGaduRepo      *tmp;
 
+  print_debug ("repo: repo_name = '%s', key = '%p', value = '%p', type = '%d'\n", repo_name, key, value, type);
+  
   if (ggadu_repo_check_value (repo_name, key))
   {
     print_debug ("wartosc jest\n");
@@ -265,7 +260,9 @@ gboolean ggadu_repo_change_value (gchar *repo_name, gpointer key, gpointer value
 {
   GGaduRepo      *tmp;
   GGaduRepoValue *tmpv;
-
+  
+  print_debug ("repo: repo_name = '%s', key = '%p', value = '%p', type = '%d'\n", repo_name, key, value, type);
+ 
   tmp = ggadu_repo_find (repo_name);
   if (!tmp)
     return FALSE;
@@ -291,6 +288,8 @@ gboolean ggadu_repo_del_value (gchar *repo_name, gpointer key)
   GGaduRepo      *tmp;
   GGaduRepoValue *tmpv;
 
+  print_debug ("repo: repo_name = '%s', key = '%p'\n", repo_name, key);
+ 
   tmp = ggadu_repo_find (repo_name);
   if (!tmp)
     return FALSE;
@@ -314,6 +313,8 @@ gboolean ggadu_repo_del (gchar *repo_name)
   GGaduRepoValue *tmpv;
   GSList         *list;
 
+  print_debug ("repo: repo_name = '%s'\n", repo_name);
+  
   tmp = ggadu_repo_find (repo_name);
   if (!tmp)
     return FALSE;
@@ -330,7 +331,7 @@ gboolean ggadu_repo_del (gchar *repo_name)
   }
   g_slist_free (tmp->values);
 
-  repos.values = g_slist_remove (repos.values, tmp);
+  REPOS->values = g_slist_remove (REPOS->values, tmp);
  
   g_slist_free (tmp->watches);
   g_free (tmp->name);
@@ -339,14 +340,46 @@ gboolean ggadu_repo_del (gchar *repo_name)
   return TRUE;
 }
 
+gpointer ggadu_repo_value_first (gchar *repo_name, gint type, gpointer *data)
+{
+  GGaduRepo *tmpr;
+  
+  print_debug ("repo: repo_name = '%s', type = '%d'\n", repo_name, type);
+
+  if (!(tmpr = ggadu_repo_find (repo_name)))
+    return NULL;
+  if (!tmpr->values || !(tmpr->values->data))
+    return NULL;
+  
+  *data = ((GGaduRepoValue *)(tmpr->values->data))->key;
+  return tmpr->values;
+}
+
+gpointer ggadu_repo_value_next (gchar *repo_name, gint type, gpointer *data, gpointer index)
+{
+  GSList *tmp;
+  
+  print_debug ("repo: repo_name = '%s', type = '%d'\n", repo_name, type);
+
+  tmp = ((GSList *)index)->next;
+
+  if (!tmp || !tmp->data)
+    return NULL;
+
+  *data = ((GGaduRepoValue *)(tmp->data))->key;
+  return tmp;
+}
+
 gboolean ggadu_repo_watch_add (gchar *repo_name, gint actions, gint types, watch_ptr callback)
 {
   GGaduRepo      *tmp;
   GSList         *list;
   GGaduRepoWatch *watch;
 
+  print_debug ("repo: repo_name = '%s', actions = '%d', types = '%d', callback = '%p'\n", repo_name, actions, types, callback);
+
   if (!repo_name)
-    tmp = &repos;
+    tmp = REPOS;
   else
   {
     tmp = ggadu_repo_find (repo_name);
@@ -390,8 +423,10 @@ gboolean ggadu_repo_watch_del (gchar *repo_name, gint actions, gint types, watch
   GSList         *list;
   GGaduRepoWatch *watch;
 
+  print_debug ("repo: repo_name = '%s', actions = '%d', types = '%d', callback = '%p'\n", repo_name, actions, types, callback);
+
   if (!repo_name)
-    tmp = &repos;
+    tmp = REPOS;
   else
   {
     tmp = ggadu_repo_find (repo_name);
@@ -429,6 +464,8 @@ gboolean ggadu_repo_watch_value_add (gchar *repo_name, gpointer key, gint action
   GGaduRepoValue *tmpv;
   GSList         *list;
   GGaduRepoWatch *watch;
+
+  print_debug ("repo: repo_name = '%s', actions = '%d', callback = '%p'\n", repo_name, actions, callback);
 
   if (repo_name && (actions & REPO_value_mask))
   {
@@ -470,6 +507,8 @@ gboolean ggadu_repo_watch_value_del (gchar *repo_name, gpointer key, gint action
   GGaduRepoValue *tmpv;
   GSList         *list;
   GGaduRepoWatch *watch;
+
+  print_debug ("repo: repo_name = '%s', actions = '%d', callback = '%p'\n", repo_name, actions, callback);
 
   if (repo_name && (actions & REPO_value_mask))
   {
@@ -529,7 +568,7 @@ gboolean ggadu_repo_watch_clear_callback (watch_ptr callback)
   GSList         *list;
   GSList         *listv;
 
-  tmp = &repos;
+  tmp = REPOS;
   
   /* najpierw id± patrza³ki na repos */
   drop_callback (&tmp->watches, callback);

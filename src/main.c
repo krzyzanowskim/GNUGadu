@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.7 2003/04/05 12:32:35 zapal Exp $ */
+/* $Id: main.c,v 1.8 2003/04/12 19:59:27 zapal Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -37,6 +37,7 @@
 #include "gg-types.h"
 #include "plugins.h"
 #include "signals.h"
+#include "repo.h"
 
 GGaduConfig *config;
 
@@ -152,6 +153,7 @@ gboolean gnu_gadu_init(gpointer data)
 		config->configdir = g_build_filename(g_getenv("HOME"), ".gg2", NULL);
 
 	mkdir(config->configdir, 0700);
+	config->repos = g_new0(GGaduRepo, 1);
 	load_available_modules();
 	start_plugins_ordered();
 	flush_queued_signals();

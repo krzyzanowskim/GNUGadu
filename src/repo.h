@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.2 2003/04/12 16:38:53 zapal Exp $ */
+/* $Id: repo.h,v 1.3 2003/04/12 19:59:27 zapal Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
@@ -9,6 +9,25 @@
 #include "gg-types.h"
 
 typedef void (*watch_ptr)(gchar *, gpointer, gint);
+
+typedef struct {
+  gpointer key;
+  gpointer value;
+  gint     type;
+  GSList  *watches;
+} GGaduRepoValue;
+
+typedef struct {
+  gchar  *name;
+  GSList *values;
+  GSList *watches;
+} GGaduRepo;
+
+typedef struct {
+  gint      actions;
+  gint      types;
+  watch_ptr callback;
+} GGaduRepoWatch;
 
 gboolean ggadu_repo_check_value (gchar *repo_name, gpointer key);
 gpointer ggadu_repo_find_value (gchar *repo_name, gpointer key);
@@ -28,6 +47,9 @@ gboolean ggadu_repo_add_value (gchar *repo_name, gpointer key, gpointer value, g
 gboolean ggadu_repo_change_value (gchar *repo_name,gpointer key,gpointer value, gint type);
 gboolean ggadu_repo_del_value (gchar *repo_name, gpointer key);
 gboolean ggadu_repo_del (gchar *repo_name);
+
+gpointer ggadu_repo_value_first (gchar *repo_name, gint type, gpointer *data);
+gpointer ggadu_repo_value_next (gchar *repo_name, gint type, gpointer *data, gpointer index);
 
 enum {
   REPO_ACTION_NEW          = 1,  /* dodanie nowego repo */
