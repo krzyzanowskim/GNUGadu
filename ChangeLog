@@ -1,8 +1,10 @@
+12.08.2004
+- fixed gghist if build without debug (ughhh) (gghist/krzak)
+
 09.08.2004
 - #ifdef BUILD_WITH_NEW_LOUDMOUTH
         lm_connection_set_jid(jabber_data.connection, jid);
-  #endif
-	
+  #endif	
 
 05.08.2004
 - fixed warning messages with g_strchomp() (GUI/krzak)
