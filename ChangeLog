@@ -5,6 +5,8 @@
   3) It will be good idea to add underscores for every option in config dialogs,
      so user will be able to change them using keyboard, not only fucking mouse
   4) Does any one heard about HiG?
+- small fixes (krzak)
+- fixed multiline messages in history engine (krzak)
      
 06.09.2004
 - gg2-select.patch for userlist right click by madej@afn.no-ip.org (GUI/Madej)

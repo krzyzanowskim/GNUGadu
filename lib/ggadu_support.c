@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.7 2004/08/02 11:13:59 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.8 2004/09/07 14:59:18 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -63,7 +63,7 @@ gchar *ggadu_strchomp(gchar * str)
 
 	while (string[strlen(string) - 1] == '\n')
 	{
-		string = g_strchomp(string);
+		string = g_strchomp(string ? string : "");
 	}
 
 	return string;
@@ -596,6 +596,9 @@ gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc)
 gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick, GGaduMsg *msg)
 {
 	gchar *line = NULL;
+	gchar *esc_line = NULL;
+	gchar *final_line = NULL;
+	gboolean ret = FALSE;
 	
 	g_return_val_if_fail(filepath != NULL,FALSE);
 	g_return_val_if_fail(msg   != NULL,FALSE);
@@ -604,12 +607,22 @@ gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick,
 	switch (type)
 	{
 	    case GGADU_HISTORY_TYPE_RECEIVE:
-		line = g_strdup_printf("chatrcv,%s,%s,%d,%d,%s\n", msg->id, nick, msg->time, (int)time(0), msg->message);
+		line = g_strdup_printf("chatrcv,%s,%s,%d,%d,%s", msg->id, nick, msg->time, (int)time(0), msg->message);
+		esc_line = g_strescape(line,"");
+		final_line = g_strconcat(esc_line,"\n",NULL);
+		g_free(esc_line);
+		g_free(line);
 	    break;
 	    case GGADU_HISTORY_TYPE_SEND:
-		line = g_strdup_printf("chatsend,%s,%s,%d,%s\n", msg->id, nick, (int)time(0), msg->message);
+		line = g_strdup_printf("chatsend,%s,%s,%d,%s", msg->id, nick, (int)time(0), msg->message);
+		esc_line = g_strescape(line,"");
+		final_line = g_strconcat(esc_line,"\n",NULL);
+		g_free(esc_line);
+		g_free(line);
 	    break;
 	}
 	
-	return write_line_to_file(filepath, line, NULL);
+	ret = write_line_to_file(filepath, final_line, NULL);
+	g_free(final_line);
+	return ret; 
 }

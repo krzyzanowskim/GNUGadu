@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.110 2004/09/02 12:44:00 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.111 2004/09/07 14:59:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -321,7 +321,9 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 	tmpmsg = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
 	
 	if (tmpmsg)
+	{
 	    tmpmsg = g_strchug(g_strchomp(tmpmsg));	/* obciete puste spacje z obu stron */
+	}
 
 	if (tmpmsg && strlen(tmpmsg) > 0)
 	{

@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.7 2004/08/29 11:13:00 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.8 2004/09/07 14:59:18 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -65,7 +65,7 @@
 #define to_cp(from_enc,text) ggadu_convert(from_enc,"CP1250",text);
 #define to_utf8(from_enc,text) ggadu_convert(from_enc,"UTF-8",text);
 #define from_utf8(to_enc,text) ggadu_convert("UTF-8",to_enc,text);
-#define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1,-1) , g_utf8_casefold(s2,-1))
+#define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1 ? s1 : "",-1) , g_utf8_casefold(s2 ? s2 : "",-1))
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
 
 #define ggadu_iso_in_utf_str "łęóśążźćńĘŁÓĄŚŁŻŹĆŃ"

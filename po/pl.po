@@ -1,12 +1,12 @@
-# $Id: pl.po,v 1.73 2004/09/07 10:32:56 aflinta Exp $
+# $Id: pl.po,v 1.74 2004/09/07 14:59:19 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-07 12:07+0200\n"
+"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
+"POT-Creation-Date: 2004-09-07 15:38+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -23,7 +23,6 @@ msgstr "Nie mo¿na odczytaæ zawarto¶ci ¿adnego katalogu z modu³ami\n"
 msgid "Unable to open directory with plugins (%s)\n"
 msgstr "Nie mo¿na odczytaæ zawarto¶ci katalogu z wtyczkami (%s)\n"
 
-#. zaladowanie plugina
 #: src/main.c:88
 #, c-format
 msgid "Cannot load plugin %s\n"
@@ -55,7 +54,6 @@ msgstr "GNU Gadu 2"
 msgid "There is no history file"
 msgstr "Nie ma pliku historii"
 
-#. button = PutNewButton(field, _("Find"));
 #: contrib/gghist/gghist.c:320
 msgid "Go to first page"
 msgstr "Przechodzi do pierwszej strony"
@@ -369,17 +367,14 @@ msgstr ""
 "Ustawienia zaawansowane\n"
 "\n"
 
-#. hide_on_start
 #: src/plugins/GUI/gui_preferences.c:748
 msgid "Auto hide window on start"
 msgstr "Automatyczne ukrywanie okna po uruchomieniu"
 
-#. notify status changes in Chat window
 #: src/plugins/GUI/gui_preferences.c:753
 msgid "Notify about status changes inside chat window"
 msgstr "Powiadamianie o zmianie stanu wewn±trz okna rozmowy"
 
-#. blink
 #: src/plugins/GUI/gui_preferences.c:758
 msgid "Blink status icon while connecting every:"
 msgstr "Mruganie ikony stanu podczas ³±czenia:"
@@ -388,8 +383,6 @@ msgstr "Mruganie ikony stanu podczas ³±czenia:"
 msgid "miliseconds"
 msgstr "milisekund"
 
-#. chat_paned_size
-#. ZONK - how to name it ?
 #: src/plugins/GUI/gui_preferences.c:787
 msgid "Chat window split position at:"
 msgstr "Podzia³ okna rozmowy w:"
@@ -494,7 +487,6 @@ msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki GUI, nie martw siê"
 msgid "Status"
 msgstr "Stan"
 
-#. *INDENT-OFF*
 #: src/plugins/GUI/gui_search.c:47 src/plugins/sms/sms_gui.c:87
 msgid "Id"
 msgstr "Id"
@@ -581,7 +573,6 @@ msgstr ""
 "<i>Data kompilacji:\n"
 "%s %s</i>"
 
-#. It must be here
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:403
 msgid "Docklet-dockapp2"
 msgstr "Docklet-dockapp2"
@@ -613,7 +604,6 @@ msgstr "Niedostêpny (wszystkie)"
 msgid "Quit"
 msgstr "Zakoñcz"
 
-#. wazne zeby to bylo tutaj
 #: src/plugins/docklet/system-tray/docklet_plugin.c:514
 msgid "Dockable icon"
 msgstr "Dokowalna ikona"
@@ -653,7 +643,6 @@ msgstr "Czy jeste¶ pewien, ¿e chcesz skasowaæ zaznaczonych u¿ytkowników?"
 msgid "Change contact informations"
 msgstr "Zmiana informacji o kontakcie"
 
-#. *INDENT-OFF*
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:842
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:856
 #: src/plugins/tlen/tlen_plugin.c:647 src/plugins/jabber/jabber_cb.c:401
@@ -925,7 +914,6 @@ msgid "Register account"
 msgstr "Zarejestruj konto"
 
 # FIXME - co ma znaczyæ (c) w tym miejscu??!
-#. wazne zeby wywolac to makro w tym miejscu
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1537
 msgid "Gadu-Gadu(c) protocol"
 msgstr "Protokó³ Gadu-Gadu(c)"
@@ -972,7 +960,6 @@ msgstr "Zablokowany"
 msgid "no reason"
 msgstr "brak powodu"
 
-#. GGaduMenu *listmenu = NULL;
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1762
 #: src/plugins/tlen/tlen_plugin.c:906 src/plugins/jabber/jabber_plugin.c:417
 msgid "Chat"
@@ -987,11 +974,6 @@ msgstr "Wy¶lij plik"
 msgid "Edit"
 msgstr "Modyfikuj"
 
-#.
-#. listmenu = ggadu_menu_new_item(_("List"), NULL, NULL);
-#. ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"), user_add_user_action, NULL));
-#. ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
-#.
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1768
 #: src/plugins/tlen/tlen_plugin.c:914 src/plugins/jabber/jabber_plugin.c:439
 #: src/plugins/sms/sms_gui.c:232
@@ -1008,7 +990,6 @@ msgstr "Nowy kontakt"
 msgid "Unable to create file"
 msgstr "Nie mo¿na utworzyæ pliku"
 
-#. end
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2031
 #: src/plugins/tlen/tlen_plugin.c:978 src/plugins/jabber/jabber_plugin.c:678
 msgid "Enter status description"
@@ -1134,7 +1115,6 @@ msgstr ""
 msgid "XOSD Preferences"
 msgstr "Ustawienia XOSD"
 
-#. *INDENT-OFF*
 #: src/plugins/xosd/plugin_xosd.c:384
 msgid "Timestamp"
 msgstr "Znacznik czasowy"
@@ -1735,12 +1715,10 @@ msgstr "Nieznany b³±d!"
 msgid "SMS Preferences"
 msgstr "Ustawienia SMS"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:64
 msgid "Use \"SMS\" program to send"
 msgstr "U¿ycie programu \"SMS\" do wysy³ania wiadomo¶ci"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:65 src/plugins/sms/sms_gui.c:157
 #: src/plugins/sms/sms_gui.c:303
 msgid "Sender"
@@ -1771,7 +1749,6 @@ msgstr "Brak numeru telefonu"
 msgid "Send to : "
 msgstr "Wy¶lij do: "
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:156
 msgid "Use external program"
 msgstr "U¿ycie zewnêtrznego programu"
@@ -1847,7 +1824,6 @@ msgstr "Brak dostêpnych aktualizacji"
 msgid "Update Preferences"
 msgstr "Ustawienia wtyczki aktualizacji"
 
-#. *INDENT-OFF*
 #: src/plugins/update/update_plugin.c:328
 msgid "Check for updates on startup"
 msgstr "Sprawdzanie aktualizacji przy uruchomieniu"

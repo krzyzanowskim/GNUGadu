@@ -63,7 +63,8 @@ char *getitem(int fd, int offset, char schr, char echr, int item, int cut)
 	lseek(fd, offset + start + cut, 0);
 	read(fd, tmp, end - start - cut);
 
-	return tmp;
+	
+	return g_strcompress(tmp);
 }
 
 int lines_count(int fd)

@@ -1,4 +1,4 @@
-# $Revision: 1.19 $, $Date: 2004/08/23 14:41:32 $
+# $Revision: 1.20 $, $Date: 2004/09/07 14:59:17 $
 #
 # Conditional build: 
 %bcond_with	arts
@@ -10,7 +10,7 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.0.5.1
+Version:	2.0.6
 Release:	1
 Epoch:		3
 License:	GPL v2+
@@ -521,6 +521,10 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.20  2004/09/07 14:59:17  krzyzak
+- small fixes (krzak)
+- fixed multiline messages in history engine (krzak)
+
 Revision 1.19  2004/08/23 14:41:32  krzyzak
 23.08.2004
 - 2.0.5.1 bugfix release - now jabber plugin compile and work with pre/post loudmouth 0.16
