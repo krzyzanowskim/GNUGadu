@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.40 2003/06/08 21:28:56 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.41 2003/06/09 00:55:36 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -202,18 +202,23 @@ gboolean on_input_press_event (gpointer object, GdkEventKey * event, gpointer us
 void on_stick_clicked (GtkWidget * button, gpointer user_data)
 {
     gui_chat_session *s = user_data;
-    gboolean q = (gboolean) g_object_get_data (G_OBJECT (s->chat), "stick");
-    GtkWidget *win = g_object_get_data (G_OBJECT (s->chat), "top_window");
+    gboolean q = FALSE;
+    GtkWidget *win = NULL;
+
+    if ((!s) || (!s->chat)) return;
+    
+    q = (gboolean) g_object_get_data (G_OBJECT (s->chat), "stick");
+    win = g_object_get_data (G_OBJECT (s->chat), "top_window");
 
     if (q)
       {
-	  gtk_window_unstick (GTK_WINDOW (win));
 	  g_object_set_data (G_OBJECT (s->chat), "stick", (gpointer) FALSE);
+	  gtk_window_unstick (GTK_WINDOW (win));
       }
     else
       {
-	  gtk_window_stick (GTK_WINDOW (win));
 	  g_object_set_data (G_OBJECT (s->chat), "stick", (gpointer) TRUE);
+	  gtk_window_stick (GTK_WINDOW (win));
       }
 }
 
