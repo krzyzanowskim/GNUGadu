@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.3 2003/03/24 19:05:18 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.4 2003/04/01 00:24:29 thrulliq Exp $ */
 
 #include <gtk/gtk.h>
 
@@ -301,12 +301,12 @@ void handle_status_changed(GGaduSignal *signal)
     GdkPixbuf		 *image = NULL;
     GtkWidget		 *status_image;
     GGaduStatusPrototype *sp = NULL;
-    gint		 status;
+    gint		 status = (gint)signal->data;
 
     gp = gui_find_protocol(signal->source_plugin_name,protocols);
     g_return_if_fail(gp != NULL);
 
-    status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+//    status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
     sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status);
     g_return_if_fail(sp != NULL);
     	    

@@ -188,7 +188,7 @@ void roster_update(ikspak *pak)
 		iks_delete(pak->x);
 	}
 
-	signal_emit("jabber", "gui status changed", NULL, "main-gui");
+	signal_emit("jabber", "gui status changed", (gpointer)jabber_session->status, "main-gui");
 }
 
 

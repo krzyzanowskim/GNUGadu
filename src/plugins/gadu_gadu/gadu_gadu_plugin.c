@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.12 2003/03/31 18:18:47 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.13 2003/04/01 00:24:30 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -244,16 +244,16 @@ void ggadu_gg_save_history(gchar *to,gchar *txt)
 {
 
 	if (config_var_get(handler, "log")) {
-		gchar *dir = g_build_filename(this_configdir, "history",NULL);
-		gchar *path = g_build_filename(this_configdir, "history", to, NULL);
+	    gchar *dir = g_build_filename(this_configdir, "history",NULL);
+	    gchar *path = g_build_filename(this_configdir, "history", to, NULL);
 
-		if (!g_file_test(dir,G_FILE_TEST_IS_DIR))
-			mkdir(dir, 0700);
+	    if (!g_file_test(dir,G_FILE_TEST_IS_DIR))
+		mkdir(dir, 0700);
 
-		write_line_to_file(path,txt,"CP1250");
+	    write_line_to_file(path,txt,"CP1250");
 
-		g_free(path);
-		g_free(dir);
+	    g_free(path);
+	    g_free(dir);
 	}
 }
 
@@ -325,11 +325,13 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			}
 
 			gg_notify(session,uins,i);
+			g_free(uins);
 			/* pingpong */
 			g_timeout_add(100000, gadu_gadu_ping,NULL);
 			signal_emit(GGadu_PLUGIN_NAME, "sound play file", config_var_get(handler, "sound_app_file"),"sound*");
-			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", NULL, "main-gui");
-			g_free(uins);
+			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
+				    (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->status ^ GG_STATUS_FRIENDS_MASK : session->status), 
+				    "main-gui");
 			break;
 
 		case GG_EVENT_CONN_FAILED:
@@ -1286,7 +1288,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			    signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("Unable to change status")),"main-gui");
 			    print_debug("zjebka podczas change_status %d\n",sp->status);
 			} else {
-					signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
+			    signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
 			}
 		    }
 		    
@@ -1332,8 +1334,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		    from_utf8("CP1250",desc_utf,desc_cp);
 		    config_var_set(handler, "reason", desc_cp);
 		    if (!gg_change_status_descr(session, _status, desc_cp))
-					signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
-
+			signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
 		    g_free(desc_cp);
 		}
 		
@@ -1544,7 +1545,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
         if (!ggadu_strcasecmp(signal->name,"get current status")) {
 	    if (session) 
-		signal->data_return = (gpointer) session->status;
+		signal->data_return = (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->status ^ GG_STATUS_FRIENDS_MASK : session->status);
 	    else
 		signal->data_return = (gpointer) GG_STATUS_NOT_AVAIL;
 	}

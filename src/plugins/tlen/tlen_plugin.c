@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.4 2003/03/31 18:19:03 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.5 2003/04/01 00:24:32 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -748,11 +748,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 		    signal_emit(GGadu_PLUGIN_NAME, "gui change icon", status, "main-gui");    
 		}
-		else
+		else 
 		{
 		    tlen_presence(session, sp->status, description);
-				signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
-
+		    signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
 		}
 	    }
 	    else if (sp && sp->status != TLEN_STATUS_UNAVAILABLE && sp->status != TLEN_STATUS_DESC) 
