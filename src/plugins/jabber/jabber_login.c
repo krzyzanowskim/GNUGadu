@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.36 2004/08/29 10:43:53 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.37 2004/08/30 11:46:52 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -186,6 +186,13 @@ gpointer jabber_login_connect(gpointer status)
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
+
+	if(!iq_account_data_handler)
+	{
+                iq_account_data_handler = lm_message_handler_new(iq_account_data_cb, NULL, NULL);
+		lm_connection_register_message_handler(jabber_data.connection, iq_account_data_handler, LM_MESSAGE_TYPE_IQ,
+						       LM_HANDLER_PRIORITY_NORMAL);
+	}
 
 	if (!presence_handler)
 	{

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.h,v 1.11 2004/08/27 14:37:55 mkobierzycki Exp $ */
+/* $Id: jabber_cb.h,v 1.12 2004/08/30 11:46:52 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -37,6 +37,8 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			      gpointer user_data);
 LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
+			      gpointer user_data);
+LmHandlerResult iq_account_data_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			      gpointer user_data);
 LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			   gpointer user_data);

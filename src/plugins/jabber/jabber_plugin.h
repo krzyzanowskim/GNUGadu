@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.38 2004/08/27 14:37:55 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.h,v 1.39 2004/08/30 11:46:52 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -58,7 +58,9 @@ enum
     GGADU_JABBER_UPDATE_CONFIG,
     GGADU_JABBER_REQUEST_AUTH_FROM,
     GGADU_JABBER_PROXY,
-    GGADU_JABBER_IGNORED
+    GGADU_JABBER_IGNORED,
+    GGADU_JABBER_PASSWORD_NEW,
+    GGADU_JABBER_PASSWORD_RETYPE
 };
 
 enum states
@@ -122,6 +124,7 @@ extern LmMessageHandler *iq_handler;
 extern LmMessageHandler *iq_roster_handler;
 extern LmMessageHandler *iq_version_handler;
 extern LmMessageHandler *iq_vcard_handler;
+extern LmMessageHandler *iq_account_data_handler;
 extern LmMessageHandler *presence_handler;
 extern LmMessageHandler *message_handler;
 

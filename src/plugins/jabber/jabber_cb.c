@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.56 2004/08/29 10:43:50 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.57 2004/08/30 11:46:52 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -42,6 +42,8 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 	iq_version_handler = NULL;
 	lm_connection_unregister_message_handler(connection, iq_vcard_handler, LM_MESSAGE_TYPE_IQ);
 	iq_vcard_handler = NULL;
+	lm_connection_unregister_message_handler(connection, iq_account_data_handler, LM_MESSAGE_TYPE_IQ);
+	iq_account_data_handler = NULL;
 	lm_connection_unregister_message_handler(connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE);
 	presence_handler = NULL;
 	lm_connection_unregister_message_handler(connection, message_handler, LM_MESSAGE_TYPE_MESSAGE);
@@ -500,6 +502,41 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	        else
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+}
+
+LmHandlerResult iq_account_data_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
+			      gpointer user_data)
+{
+	if(!lm_message_node_get_attribute(message->node, "id"))
+	        return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+
+	if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "change1"))
+	{
+		if(lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_RESULT)
+		{
+			signal_emit("jabber", "gui show message", g_strdup(_("Password successfully changed")), "main-gui");
+			ggadu_config_save(jabber_handler);
+		}
+
+		if(lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_ERROR)
+		{
+			if(lm_message_node_find_child(message->node, "not-authorized"))
+				signal_emit("jabber", "gui show warning",
+					    g_strdup(_("User is not authorized")), "main-gui");
+			if(lm_message_node_find_child(message->node, "not-allowed"))
+				signal_emit("jabber", "gui show warning",
+					    g_strdup(_("Password change is not allowed by the server")), "main-gui");
+			if(lm_message_node_find_child(message->node, "unexpected-request"))
+				signal_emit("jabber", "gui show warning",
+					    g_strdup(_("User is not registered with the server")), "main-gui");
+
+			ggadu_config_read(jabber_handler);
+		}
+
+		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+	}
+
+	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
 LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer data)
