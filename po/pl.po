@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.23 2003/05/30 13:34:04 shaster Exp $
+# $Id: pl.po,v 1.24 2003/06/01 00:32:07 shaster Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"POT-Creation-Date: 2003-05-30 15:30+0200\n"
+"POT-Creation-Date: 2003-06-01 02:31+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,12 +100,12 @@ msgid "Me :: %s ::\n"
 msgstr "Ja :: %s ::\n"
 
 #: src/plugins/GUI/gui_preferences.c:116
-msgid "Plugin name"
-msgstr "Nazwa wtyczki"
-
-#: src/plugins/GUI/gui_preferences.c:124
 msgid "Enable"
 msgstr "Aktywna"
+
+#: src/plugins/GUI/gui_preferences.c:126
+msgid "Plugin name"
+msgstr "Nazwa wtyczki"
 
 #: src/plugins/GUI/gui_preferences.c:155
 msgid "Select color"
@@ -197,7 +197,7 @@ msgstr "Wiadomo¶ci wychodz±ce:"
 #: src/plugins/tlen/tlen_plugin.c:651 src/plugins/xosd/plugin_xosd.c:311
 #: src/plugins/jabber/jabber_plugin.c:462
 #: src/plugins/remote/remote_plugin.c:616 src/plugins/sms/sms_gui.c:161
-#: src/plugins/update/update_plugin.c:280
+#: src/plugins/update/update_plugin.c:287
 msgid "Preferences"
 msgstr "Ustawienia"
 
@@ -340,19 +340,19 @@ msgstr "Wyniki wyszukiwania"
 msgid "Talking to %s %s"
 msgstr "Rozmowa z %s %s"
 
-#: src/plugins/GUI/gui_dialogs.c:198
+#: src/plugins/GUI/gui_dialogs.c:203
 msgid "Change User"
 msgstr "Modyfikacja danych kontaktu"
 
-#: src/plugins/GUI/gui_dialogs.c:198
+#: src/plugins/GUI/gui_dialogs.c:203
 msgid "Add User"
 msgstr "Nowy kontakt"
 
-#: src/plugins/GUI/gui_dialogs.c:550 src/plugins/docklet/docklet_plugin.c:175
+#: src/plugins/GUI/gui_dialogs.c:556 src/plugins/docklet/docklet_plugin.c:175
 msgid "About"
 msgstr "Informacje o"
 
-#: src/plugins/GUI/gui_dialogs.c:586
+#: src/plugins/GUI/gui_dialogs.c:592
 #, c-format
 msgid ""
 "<b>GNU Gadu %s</b>\n"
@@ -495,7 +495,7 @@ msgid "Log chats to history file"
 msgstr "Zapis tre¶ci rozmów w pliku"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:683
-#: src/plugins/jabber/jabber_plugin.c:447
+#: src/plugins/tlen/tlen_plugin.c:637 src/plugins/jabber/jabber_plugin.c:447
 msgid "Autoconnect on startup"
 msgstr "Automatyczne ³±czenie po uruchomieniu"
 
@@ -821,10 +821,6 @@ msgstr "Konfiguracja wtyczki Tlen"
 msgid "Tlen login"
 msgstr "Tlen login"
 
-#: src/plugins/tlen/tlen_plugin.c:637
-msgid "Auto connect on startup"
-msgstr "Automatyczne ³±czenie po uruchomieniu"
-
 #: src/plugins/xosd/plugin_xosd.c:268
 msgid "X OSD Preferences"
 msgstr "Ustawienia X OSD"
@@ -971,11 +967,11 @@ msgid "Please enter token"
 msgstr "Wpisz tekst z obrazka"
 
 #: src/plugins/sms/sms_core.c:269 src/plugins/sms/sms_core.c:290
-#: src/plugins/sms/sms_core.c:632
+#: src/plugins/sms/sms_core.c:642
 msgid "Cannot connect!"
 msgstr "Nie mo¿na siê po³±czyæ!"
 
-#: src/plugins/sms/sms_core.c:297 src/plugins/sms/sms_core.c:616
+#: src/plugins/sms/sms_core.c:297 src/plugins/sms/sms_core.c:626
 msgid "SMS has been sent"
 msgstr "SMS zosta³ wys³any"
 
@@ -983,11 +979,11 @@ msgstr "SMS zosta³ wys³any"
 msgid "Bad token entered!"
 msgstr "Wprowadzony z³y ¿eton!"
 
-#: src/plugins/sms/sms_core.c:311 src/plugins/sms/sms_core.c:626
+#: src/plugins/sms/sms_core.c:311 src/plugins/sms/sms_core.c:636
 msgid "Daily limit exceeded!"
 msgstr "Dzienny limit przekroczony!"
 
-#: src/plugins/sms/sms_core.c:318 src/plugins/sms/sms_core.c:629
+#: src/plugins/sms/sms_core.c:318 src/plugins/sms/sms_core.c:639
 msgid "Gateway error!"
 msgstr "B³±d bramki!"
 
@@ -999,39 +995,39 @@ msgstr "Us³uga nie jest aktywna!"
 msgid "Invalid number"
 msgstr "Nieprawid³owy numer!"
 
-#: src/plugins/sms/sms_core.c:527
+#: src/plugins/sms/sms_core.c:531
 msgid "None"
 msgstr "(Brak)"
 
-#: src/plugins/sms/sms_core.c:529
+#: src/plugins/sms/sms_core.c:533
 msgid "SMS plugin : "
 msgstr "Wtyczka SMS : "
 
-#: src/plugins/sms/sms_core.c:541
+#: src/plugins/sms/sms_core.c:555
 msgid "Specify recipient number!"
 msgstr "Okre¶l numer odbiorcy!"
 
-#: src/plugins/sms/sms_core.c:547
+#: src/plugins/sms/sms_core.c:561
 msgid "Specify sender name!"
 msgstr "Okre¶l nazwê nadawcy!"
 
-#: src/plugins/sms/sms_core.c:553
+#: src/plugins/sms/sms_core.c:567
 msgid "Message is empty!"
 msgstr "Tre¶æ wiadomo¶ci jest pusta"
 
-#: src/plugins/sms/sms_core.c:573
+#: src/plugins/sms/sms_core.c:583
 msgid "IDEA does not work this way!"
 msgstr "IDE nie dzia³a w ten sposób!"
 
-#: src/plugins/sms/sms_core.c:604
+#: src/plugins/sms/sms_core.c:614
 msgid "Invalid number!"
 msgstr "Nieprawid³owy numer!"
 
-#: src/plugins/sms/sms_core.c:610
+#: src/plugins/sms/sms_core.c:620
 msgid "SMS not delivered!"
 msgstr "SMS nie zosta³ dostarczony!"
 
-#: src/plugins/sms/sms_core.c:623
+#: src/plugins/sms/sms_core.c:633
 msgid "Token not found!"
 msgstr "¯eton nie odnaleziony"
 
@@ -1097,73 +1093,80 @@ msgstr "Wy¶lij SMS (wewnêtrznie)"
 msgid "Send SMS (external)"
 msgstr "Wy¶lij SMS (zewnêtrznie)"
 
-#: src/plugins/update/update_plugin.c:73 src/plugins/update/update_plugin.c:76
+#: src/plugins/update/update_plugin.c:71 src/plugins/update/update_plugin.c:74
 #, c-format
 msgid "Unknown host: %s"
 msgstr "Nieznany host: %s"
 
-#: src/plugins/update/update_plugin.c:104
-#: src/plugins/update/update_plugin.c:107
+#: src/plugins/update/update_plugin.c:102
+#: src/plugins/update/update_plugin.c:105
 #, c-format
 msgid "Error while connecting to %s"
 msgstr "B³±d podczas próby po³±czenia z %s"
 
+#: src/plugins/update/update_plugin.c:142
 #: src/plugins/update/update_plugin.c:144
-#: src/plugins/update/update_plugin.c:146
 msgid "Server-side error during update check"
 msgstr "B³±d serwera"
 
+#: src/plugins/update/update_plugin.c:156
 #: src/plugins/update/update_plugin.c:158
-#: src/plugins/update/update_plugin.c:160
+#: src/plugins/update/update_plugin.c:170
 #: src/plugins/update/update_plugin.c:172
-#: src/plugins/update/update_plugin.c:174
 msgid "Malformed server reply"
 msgstr "B³êdna odpowied¼ serwera"
 
-#: src/plugins/update/update_plugin.c:215
-#: src/plugins/update/update_plugin.c:218
+#: src/plugins/update/update_plugin.c:213
+#: src/plugins/update/update_plugin.c:216
 #, c-format
 msgid "Update available: %s"
 msgstr "Dostêpna aktualizacja: %s"
 
-#: src/plugins/update/update_plugin.c:215
-#: src/plugins/update/update_plugin.c:218
+#: src/plugins/update/update_plugin.c:213
+#: src/plugins/update/update_plugin.c:216
 msgid "[error]"
 msgstr "[b³±d]"
 
+#: src/plugins/update/update_plugin.c:242
 #: src/plugins/update/update_plugin.c:244
-#: src/plugins/update/update_plugin.c:246
 msgid "No updates available"
 msgstr "Brak dostêpnych aktualizacji"
 
-#: src/plugins/update/update_plugin.c:259
+#: src/plugins/update/update_plugin.c:265
 msgid "Update Preferences"
 msgstr "Ustawienia wtyczki update"
 
 #. *INDENT-OFF*
-#: src/plugins/update/update_plugin.c:264
+#: src/plugins/update/update_plugin.c:270
+msgid "Check for updates on startup"
+msgstr "Sprawdzaj aktualizacje przy uruchomieniu"
+
+#: src/plugins/update/update_plugin.c:271
 msgid "Check for updates automatically"
 msgstr "Automatycznie wyszukuj aktualizacji"
 
-#: src/plugins/update/update_plugin.c:265
+#: src/plugins/update/update_plugin.c:272
 msgid "Check interval (minutes)"
 msgstr "Odstêp pomiêdzy sprawdzeniami (w minutach)"
 
-#: src/plugins/update/update_plugin.c:266
+#: src/plugins/update/update_plugin.c:273
 msgid "Use XOSD instead of dialog boxes"
 msgstr "U¿yj XOSD zamiast okienek dialogowych"
 
-#: src/plugins/update/update_plugin.c:279
+#: src/plugins/update/update_plugin.c:286
 msgid "Check for updates"
 msgstr "Sprawd¼ aktualizacje"
 
-#: src/plugins/update/update_plugin.c:352
+#: src/plugins/update/update_plugin.c:364
 msgid "Update checker"
 msgstr "Sprawdzanie aktualizacji"
 
-#: src/plugins/update/update_plugin.c:366
+#: src/plugins/update/update_plugin.c:382
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki update"
+
+#~ msgid "Auto connect on startup"
+#~ msgstr "Automatyczne ³±czenie po uruchomieniu"
 
 #~ msgid "Specify sender name and message!"
 #~ msgstr "Okre¶l nazwê nadawcy oraz wiadomo¶æ!"
