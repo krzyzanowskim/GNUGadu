@@ -2,7 +2,7 @@
 - fixed sound preferences icon, docklet new message improved a bit (Maciek Gorniak/GUI)
 - ggadu_config_var_add_with_default() allow to specify default value for variable (krzak/core)
 - default colors blue and brown for msg_header_color,msg_out_header_color (GUI/krzak)
-
+- trivial 'log' variable fix (jabber/shasta)
 
 09.01.2004
 - sms plugin uses threads now for network operations (sms/shasta)

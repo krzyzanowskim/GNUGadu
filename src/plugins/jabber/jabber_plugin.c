@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.48 2004/01/08 20:46:57 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.49 2004/01/10 13:59:53 shaster Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -620,7 +620,7 @@ gpointer user_preferences_action (gpointer user_data)
     ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_PASSWORD, _("Password"), VAR_STR,
 			    ggadu_config_var_get (jabber_handler, "password"), VAR_FLAG_PASSWORD);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
-			    ggadu_config_var_get (jabber_handler, "history"), VAR_FLAG_NONE);
+			    ggadu_config_var_get (jabber_handler, "log"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 			    ggadu_config_var_get (jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
