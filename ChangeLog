@@ -1,5 +1,6 @@
 26.06.2003
 - some fixes, mostly in gui_chat.c (it's still so f*** ugly) (krzak/GUI)
+- autoloading perl scripts is now working (fixed path handling) (core/zapal)
 
 25.06.2003
 - remember last used search server (jabber/zapal)
