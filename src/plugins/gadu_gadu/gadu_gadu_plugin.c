@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.42 2003/05/02 11:30:35 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.43 2003/05/03 08:02:35 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -588,7 +588,7 @@ gpointer user_change_user_action(gpointer user_data)
     GSList 	 *users		= (GSList *)user_data;
     GGaduContact *k		= (GGaduContact *)users->data;
 
-    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_INT, k->id, VAR_FLAG_INSENSITIVE); 
+    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_STR, k->id, VAR_FLAG_INSENSITIVE); 
     ggadu_dialog_add_entry(&optlist, GGADU_NICK, _("Nick"), VAR_STR, k->nick, VAR_FLAG_SENSITIVE); 
     ggadu_dialog_add_entry(&optlist, GGADU_FIRST_NAME, _("First Name"), VAR_STR, k->first_name, VAR_FLAG_SENSITIVE); 
     ggadu_dialog_add_entry(&optlist, GGADU_LAST_NAME, _("Last Name"), VAR_STR, k->last_name, VAR_FLAG_SENSITIVE); 
@@ -605,7 +605,7 @@ gpointer user_add_user_action(gpointer user_data)
 {
     GSList *optlist   = NULL;
 
-    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_INT, NULL, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_STR, NULL, VAR_FLAG_NONE);
 //    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&optlist, GGADU_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&optlist, GGADU_FIRST_NAME, _("First Name"), VAR_STR, NULL, VAR_FLAG_NONE);
@@ -1395,7 +1395,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    GGaduContact *k = g_new0(GGaduContact,1);
 	    GSList *kvlist = (GSList *)signal->data;
 	    GSList *ulisttmp = userlist;
-	    gint i = 0;
 
 	    while (kvlist) 
 	    {
