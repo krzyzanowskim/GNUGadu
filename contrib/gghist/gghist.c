@@ -51,59 +51,59 @@ static void scroll_to_end()
 
 void first_page(GtkWidget * widget, gpointer gdata)
 {
-	if (lines > 20)
+	if (lines > display_pages)
 	{
 		page = 0;
 #ifdef GGADU_DEBUG
 		g_print("Going to first page..\n");
 #endif
 		clear_lines();
-		show_lines(page, page + 20, (int *) gdata);
+		show_lines(page, page + display_pages, (int *) gdata);
 	}
 }
 
 void last_page(GtkWidget * widget, gpointer gdata)
 {
-	if (lines > 20)
+	if (lines > display_pages)
 	{
-		page = lines - 20;
+		page = lines - display_pages;
 #ifdef GGADU_DEBUG
 		g_print("Going to last page..\n");
 #endif
 		clear_lines();
-		show_lines(page, page + 20, (int *) gdata);
+		show_lines(page, page + display_pages, (int *) gdata);
 	}
 }
 
 void next_page(GtkWidget * widget, gpointer gdata)
 {
-	if (lines > 20)
+	if (lines > display_pages)
 	{
-		if (page < lines - 20)
-			page += 20;
+		if (page < lines - display_pages)
+			page += display_pages;
 		else
-			page = lines - 20;
+			page = lines - display_pages;
 #ifdef GGADU_DEBUG
 		g_print("Going to next page..%d\n", page);
 #endif
 		clear_lines();
-		show_lines(page, page + 20, (int *) gdata);
+		show_lines(page, page + display_pages, (int *) gdata);
 	}
 }
 
 void prev_page(GtkWidget * widget, gpointer gdata)
 {
-	if (lines > 20)
+	if (lines > display_pages)
 	{
-		if (page > 20)
-			page -= 20;
+		if (page > display_pages)
+			page -= display_pages;
 		else
 			page = 0;
 #ifdef GGADU_DEBUG
-		g_print("Going to prev page..\n");
+		g_print("Going to prev page.. %d %d\n",lines,page);
 #endif
 		clear_lines();
-		show_lines(page, page + 20, (int *) gdata);
+		show_lines(page, page + display_pages, (int *) gdata);
 	}
 }
 
@@ -294,11 +294,11 @@ int main(int argc, char **argv)
 	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(text_view), FALSE);
 
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
-	gtk_text_buffer_create_tag(buf, "header", "foreground", "brown", "font", "Arial Bold", NULL);
-	gtk_text_buffer_create_tag(buf, "header2", "foreground", "blue", "font", "Arial Bold", NULL);
-	gtk_text_buffer_create_tag(buf, "status", "foreground", "#995500", "font", "Arial Bold", NULL);
-	gtk_text_buffer_create_tag(buf, "warning", "foreground", "#990099", "font", "Arial Bold", NULL);
-	gtk_text_buffer_create_tag(buf, "", "foreground", "#000000", "font", "Arial", NULL);
+	gtk_text_buffer_create_tag(buf, "header", "foreground", "brown", "font", "Bold", NULL);
+	gtk_text_buffer_create_tag(buf, "header2", "foreground", "blue", "font", "Bold",NULL);
+	gtk_text_buffer_create_tag(buf, "status", "foreground", "#995500", NULL);
+	gtk_text_buffer_create_tag(buf, "warning", "foreground", "#990099", NULL);
+	gtk_text_buffer_create_tag(buf, "", "foreground", "#000000", NULL);
 
 	field_s = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(field_s), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
@@ -341,7 +341,10 @@ int main(int argc, char **argv)
 
 	/* last page ? */
 	if (lines > display_pages)
+	    {
+	    page = lines - display_pages;
 	    show_lines(lines-display_pages, lines, list);
+	    }
 	else
 	    show_lines(0, display_pages, list);
 

@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.56 2004/06/11 01:25:33 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.57 2004/08/19 11:57:11 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -131,7 +131,7 @@ GtkWidget *gui_plugins_mgr_tab()
 
 	plugins_updated = FALSE;
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_vbox_new(FALSE, 5);
 	store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
 	g_signal_connect(G_OBJECT(store), "row-changed", G_CALLBACK(row_changed), NULL);
 
@@ -595,7 +595,6 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *tabbox;
 	GtkWidget *emotic;
 	GtkWidget *send_on_enter;
-	GtkWidget *notify_status_changes;
 	GtkWidget *chatstyle;
 	GtkWidget *chatwindowwidth;
 	GtkWidget *chatwindowheight;
@@ -610,11 +609,11 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *chat_paned_size;
 	GtkWidget *label0_align, *label1_align, *label2_align;
 
-	chat_vbox = gtk_vbox_new(FALSE, 2);
+	chat_vbox = gtk_vbox_new(FALSE, 5);
 
 	sound_vbox = gtk_vbox_new(FALSE, 2);
 
-	hbox = gtk_hbox_new(FALSE, 0);
+	hbox = gtk_hbox_new(FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(chat_vbox), hbox, FALSE, FALSE, 0);
 
 	image = gtk_image_new();
@@ -624,7 +623,7 @@ static GtkWidget *create_chat_tab()
 	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_vbox_new(FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(chat_vbox), vbox, FALSE, FALSE, 0);
 
 	chatstyle = gtk_check_button_new_with_label(_("Tabbed chat window style"));
@@ -642,10 +641,6 @@ static GtkWidget *create_chat_tab()
 
 	g_object_set_data(G_OBJECT(chat_vbox), "send_on_enter", send_on_enter);
 
-	notify_status_changes = gtk_check_button_new_with_label(_("Notify about status changes"));
-	gtk_box_pack_start(GTK_BOX(vbox), notify_status_changes, FALSE, FALSE, 0);
-
-	g_object_set_data(G_OBJECT(chat_vbox), "notify_status_changes", notify_status_changes);
 
 	chatwindowshow = gtk_check_button_new_with_label(_("Automatically show chat window"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatwindowshow, FALSE, FALSE, 0);
@@ -740,6 +735,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *tree;
 	GtkWidget *expand;
 	GtkWidget *usexosdfornewmsgs = NULL;
+	GtkWidget *notify_status_changes = NULL;
 	GtkWidget *hide_on_start;
 	GtkWidget *show_toolbar;
 	GtkWidget *blink;
@@ -817,7 +813,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_vbox_new(FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(general_vbox), vbox, FALSE, FALSE, 0);
 
 	show_active = gtk_check_button_new_with_label(_("Show only active users"));
@@ -830,6 +826,11 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_box_pack_start(GTK_BOX(vbox), expand, FALSE, FALSE, 0);
 
 	g_signal_connect(tree, "toggled", G_CALLBACK(tree_toggled), expand);
+
+	notify_status_changes = gtk_check_button_new_with_label(_("Notify about status changes"));
+	gtk_box_pack_start(GTK_BOX(vbox), notify_status_changes, FALSE, FALSE, 0);
+
+	g_object_set_data(G_OBJECT(chat_vbox), "notify_status_changes", notify_status_changes);
 
 	if (find_plugin_by_name("xosd"))
 	{

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.74 2004/08/02 00:09:09 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.75 2004/08/19 11:57:11 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -57,7 +57,7 @@ extern GSList *invisible_chats;
 
 GtkWidget *main_menu_bar = NULL;
 GtkWidget *main_toolbar = NULL;
-GtkWidget *toolbar_handle_box;
+GtkWidget *toolbar_handle_box = NULL;
 GtkWidget *status_hbox = NULL;
 GtkWidget *view_container = NULL;
 

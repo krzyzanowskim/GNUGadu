@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.46 2004/06/11 01:25:33 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.47 2004/08/19 11:57:11 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -870,8 +870,8 @@ static gboolean get_iter_from_path(GtkTreeModel *model, GtkTreeIter *iter, gchar
 
 void gui_user_view_refresh()
 {
-	GSList *tmplist;
-
+	GSList *tmplist = NULL;
+	
 	tree = (gboolean) ggadu_config_var_get(gui_handler, "tree");
 
 	print_debug("refreshing user view\n");
@@ -900,6 +900,9 @@ void gui_user_view_refresh()
 
 	if (tree && ggadu_config_var_get(gui_handler, "expand"))
 		gtk_tree_view_expand_all(GTK_TREE_VIEW(treeview));
+	
+	if (tree)	
+		gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview),TRUE);
 }
 
 void gui_user_view_switch()
