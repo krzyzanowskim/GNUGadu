@@ -11,6 +11,8 @@ theme_DATA = \
     vblue2.theme \
     vgreen2.theme \
     vred2.theme \
-    white2.theme
+    white2.theme \
+    tropic.theme \
+    office.theme
 
 EXTRA_DIST = $(theme_DATA)

@@ -1,3 +1,6 @@
+02.08.2004
+- tropic.theme and office.theme sent by Krzysztof Foltman <krzysztof@foltman.com>
+
 01.08.2004
 - ggadu_save_history() as a base for history in every plugin, to keep similar
   history format (krzak)

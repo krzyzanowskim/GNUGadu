@@ -1,0 +1,35 @@
+# theme by mfiore
+style "theme2"
+{
+  text[NORMAL]         = "#000000"
+  text[SELECTED]       = "#ffffff" #kolor kursora na li¶cie z fokusem
+  text[PRELIGHT]       = "#000000"
+  text[ACTIVE]         = "#C8EF93" #kolor elementu listy przy przelaczaniu aplikacji
+  text[INSENSITIVE]    = "#ff8080"
+  fg[NORMAL]           = "#000020" #kolor menu
+  fg[PRELIGHT]         = "#e0e0e0" #wybrana pozycja menu (napisy)
+  fg[ACTIVE]           = "#000030" #kolor w³±czonych checkboxów
+  fg[SELECTED]         = "#e0e0e0"
+  fg[INSENSITIVE]      = "#b06820" #zdisablowany checkbox
+  bg[NORMAL]           = "#FA9D40" #tlo menu
+  bg[PRELIGHT]         = "#20204f" #wybrana pozycja menu (tlo)
+  bg[ACTIVE]           = "#FFBD60" #nieaktywna zak³adka
+  bg[SELECTED]         = "#000000"
+  bg[INSENSITIVE]      = "#b0b4b8"
+  base[NORMAL]         = "#B9F55B" #tlo elementu listy
+  base[PRELIGHT]       = "#00001f"
+  base[ACTIVE]         = "#81A268" #tlo kursora bez fokusu
+  base[SELECTED]       = "#00004a" #tlo kursora na liscie z fokusem
+  base[INSENSITIVE]    = "#00001f"
+#  GtkWidget::cursor_color = "white"
+}
+
+class "GtkWidget" style "theme2"
+class "GtkMenu"	style	"theme2"
+
+widget_class "*.GtkMenuItem.*" style "theme2"
+widget_class "*.GtkImageMenuItem.*" style "theme2"
+widget_class "*.GtkAccelMenuItem.*" style "theme2"
+widget_class "*.GtkRadioMenuItem.*" style "theme2"
+widget_class "*.GtkCheckMenuItem.*" style "theme2"
+widget_class "*.GtkMenu.*" style "theme2"
