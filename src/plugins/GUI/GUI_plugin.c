@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.57 2004/02/29 23:35:51 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.58 2004/02/29 23:43:35 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -587,11 +587,11 @@ GtkWidget *create_status_menu(gui_protocol * gp, GtkWidget * status_image)
 void gui_build_default_menu()
 {
 	GtkItemFactoryEntry menu_items[] = {
-		{"/_GnuGadu", NULL, NULL, 0, "<Branch>", NULL},
-		{_("/GnuGadu/_Preferences"), NULL, gui_preferences, 0, "<StockItem>", GTK_STOCK_PREFERENCES},
-		{_("/GnuGadu/"), NULL, NULL, 0, "<Separator>", NULL},
-		{_("/GnuGadu/_About"), "<CTRL>a", gui_about, 0, "<StockItem>", GTK_STOCK_DIALOG_INFO},
-		{_("/GnuGadu/_Quit"), "<CTRL>q", gui_quit, 0, "<StockItem>", GTK_STOCK_QUIT},
+		{"/_GNU Gadu", NULL, NULL, 0, "<Branch>", NULL},
+		{_("/GNU Gadu/_Preferences"), NULL, gui_preferences, 0, "<StockItem>", GTK_STOCK_PREFERENCES},
+		{_("/GNU Gadu/"), NULL, NULL, 0, "<Separator>", NULL},
+		{_("/GNU Gadu/_About"), "<CTRL>a", gui_about, 0, "<StockItem>", GTK_STOCK_DIALOG_INFO},
+		{_("/GNU Gadu/_Quit"), "<CTRL>q", gui_quit, 0, "<StockItem>", GTK_STOCK_QUIT},
 		{"/_Menu", NULL, NULL, 0, "<Branch>", NULL},
 	};
 	gint Nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
