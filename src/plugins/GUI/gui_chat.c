@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.77 2004/02/15 16:35:40 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.78 2004/02/15 17:15:39 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -276,11 +276,11 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 	{
 		gchar *soundfile;
 		msg = g_new0(GGaduMsg, 1);
-		msg->id = session->id;
+		msg->id = g_strdup(session->id);
 		msg->message = tmpmsg;
 
 		msg->class = (g_slist_length(session->recipients) > 1) ? GGADU_CLASS_CONFERENCE : GGADU_CLASS_CHAT;
-		msg->recipients = session->recipients;
+		msg->recipients = g_slist_copy(session->recipients);
 
 		gui_chat_append(session->chat, msg->message, TRUE);
 		if ((soundfile = ggadu_config_var_get(gui_handler, "sound_msg_out")))
@@ -291,7 +291,7 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 		gp = gui_find_protocol(plugin_name, protocols);
 		auto_away_start(gp);
 
-		signal_emit("main-gui", "send message", msg, plugin_name);
+		signal_emit_full("main-gui", "send message", msg, plugin_name, GGaduMsg_free);
 	}
 	else
 		g_free(tmpmsg);

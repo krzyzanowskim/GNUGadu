@@ -1,4 +1,4 @@
-/* $Id: unified-types.c,v 1.8 2004/02/10 22:23:02 krzyzak Exp $ */
+/* $Id: unified-types.c,v 1.9 2004/02/15 17:15:38 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -30,6 +30,7 @@
 #include <glib.h>
 #include "unified-types.h"
 #include "gg-types.h"
+#include "support.h"
 
 void GGaduContact_free(GGaduContact * k)
 {
@@ -55,14 +56,18 @@ void GGaduContact_free(GGaduContact * k)
 	return;
 }
 
-void GGaduMsg_free(GGaduMsg * m)
+void GGaduMsg_free(gpointer msg)
 {
+	GGaduMsg *m = msg;
+	
+	print_debug("GGaduMsg_free");
+	
 	if (!m)
 		return;
 
 	g_free(m->id);
 	g_free(m->message);
-
+	g_slist_free(m->recipients);
 	g_free(m);
 	return;
 }

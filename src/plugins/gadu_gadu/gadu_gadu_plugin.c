@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.150 2004/02/15 14:14:07 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.151 2004/02/15 17:15:39 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -551,6 +551,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		g_free(hist_line);
 
 		signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
+		
+		GGaduMsg_free(msg);
 
 		if (ggadu_config_var_get(handler, "sound_msg_file") != NULL)
 			signal_emit(GGadu_PLUGIN_NAME, "sound play file",
@@ -2080,8 +2082,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				     message) == -1)
 				{
 					signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
-						    g_strdup(_("Unable send message")), "main-gui");
-					print_debug("zjebka podczas send message %s\n", msg->id);
+						    g_strdup(_("Unable to send message")), "main-gui");
+					print_debug("Unable to send send message %s", msg->id);
 				}
 				else if (ggadu_config_var_get(handler, "log"))
 				{
@@ -2106,8 +2108,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    (gg_send_message(session, class, atoi(msg->id), message) == -1))
 				{
 					signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
-						    g_strdup(_("Unable send message")), "main-gui");
-					print_debug("zjebka podczas send message %s\n", msg->id);
+						    g_strdup(_("Unable to send message")), "main-gui");
+					print_debug("Unable to send message %s\n", msg->id);
 				}
 				else if (ggadu_config_var_get(handler, "log"))
 				{

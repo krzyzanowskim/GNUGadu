@@ -1,3 +1,6 @@
+15.02.2004
+- GGaduMsg_free usage (krzak/GUI/gadu-gadu)
+
 14.02.2004
 - added ggadu_dialog_new1_full, replaced ggadu_dialog_new1 with macro (core/THrull)
 - systray code cleanups (docket/systray/THrull)

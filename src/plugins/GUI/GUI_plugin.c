@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.52 2004/01/28 23:39:46 shaster Exp $ */
+/* $Id: GUI_plugin.c,v 1.53 2004/02/15 17:15:39 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -710,7 +710,7 @@ void gui_msg_receive(GGaduSignal * signal)
 			}
 
 
-			session->recipients = msg->recipients;
+			session->recipients = g_slist_copy(msg->recipients);
 			session->chat = create_chat(session, gp->plugin_name, msg->id, showwindow);
 
 			if ((gint) ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs") == TRUE &&

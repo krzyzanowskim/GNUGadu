@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.9 2004/01/28 23:39:39 shaster Exp $ */
+/* $Id: unified-types.h,v 1.10 2004/02/15 17:15:38 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -100,7 +100,7 @@ typedef struct
 
 } GGaduMsg;
 
-void GGaduMsg_free(GGaduMsg * m);
+void GGaduMsg_free(gpointer msg);
 
 /*
  *	GGaduNotify
