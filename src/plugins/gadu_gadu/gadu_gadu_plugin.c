@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.57 2003/05/28 07:43:00 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.58 2003/06/03 09:04:59 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -695,11 +695,16 @@ gpointer user_preferences_action(gpointer user_data)
 gpointer search_action(gpointer user_data)
 {
     GGaduDialog *d = NULL;
+    GList *gender_list = NULL;
     
     if (!connected) {
 	signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("You have to be connected to perform searching!")),"main-gui");
 	return NULL;
     }
+    
+    gender_list = g_list_append (gender_list, NULL);
+    gender_list = g_list_append (gender_list, _("female"));
+    gender_list = g_list_append (gender_list, _("male"));
     
     d = ggadu_dialog_new();
     
@@ -710,11 +715,14 @@ gpointer search_action(gpointer user_data)
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_BIRTHYEAR, _("Birthyear:"), VAR_STR, NULL, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_ID, _("GG#"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_ACTIVE, _("Search only for active users"), VAR_BOOL, NULL, VAR_FLAG_NONE);
     
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
-        
+    
+    g_list_free(gender_list);
+            
     return NULL;
 }
 
@@ -1795,6 +1803,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			case GGADU_SEARCH_BIRTHYEAR:
 		    	    if (kv->value && *(gchar*)kv->value)
 				gg_pubdir50_add(req, GG_PUBDIR50_BIRTHYEAR, kv->value);
+			    break;
+			case GGADU_SEARCH_GENDER:
+			    if (kv->value){	
+				if (!g_strcasecmp(kv->value,_("female"))) gg_pubdir50_add(req, GG_PUBDIR50_GENDER, GG_PUBDIR50_GENDER_FEMALE);
+				if (!g_strcasecmp(kv->value,_("male"))) gg_pubdir50_add(req, GG_PUBDIR50_GENDER, GG_PUBDIR50_GENDER_MALE);
+				};
 			    break;
 			case GGADU_SEARCH_ACTIVE:
 			    if (kv->value)

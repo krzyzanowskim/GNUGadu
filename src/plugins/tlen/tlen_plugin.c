@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.30 2003/06/01 13:49:20 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.31 2003/06/03 09:05:00 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -584,6 +584,7 @@ void free_search_results()
 gpointer search_action(gpointer user_data)
 {
     GGaduDialog *d = NULL;
+    GList *gender_list = NULL;
     
     if (!connected) {
 	signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("You have to be connected to perform searching!")),"main-gui");
@@ -592,9 +593,12 @@ gpointer search_action(gpointer user_data)
     
 //    if (search_results)
 	//free_search_results();
+    gender_list = g_list_append (gender_list, NULL);
+    gender_list = g_list_append (gender_list, _("female"));
+    gender_list = g_list_append (gender_list, _("male"));
     
     d = ggadu_dialog_new();
-    
+        
     d->title = g_strdup(_("Tlen search")); 
     d->callback_signal = g_strdup("search");
 
@@ -602,9 +606,12 @@ gpointer search_action(gpointer user_data)
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_ID, _("@tlen.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
     
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+    
+    g_list_free(gender_list);
         
     return NULL;
 }
@@ -981,6 +988,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 			case GGADU_SEARCH_CITY:
 		    	    	    if (kv->value && *(gchar*)kv->value)
 					req->city = g_strdup(kv->value);
+				break;
+			case GGADU_SEARCH_GENDER:
+				    if (kv->value){
+					if (!g_strcasecmp(kv->value,_("female"))) req->gender = 2;
+					if (!g_strcasecmp(kv->value,_("male"))) req->gender = 1;
+					};	
 				break;
 			case GGADU_SEARCH_ID: {
     				    if (kv->value) {

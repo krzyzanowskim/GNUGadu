@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.25 2003/06/01 22:44:36 shaster Exp $
+# $Id: pl.po,v 1.26 2003/06/03 09:04:54 krzyzak Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
@@ -526,6 +526,21 @@ msgid "You have to be connected to perform searching!"
 msgstr "Do wyszukiwania potrzebne jest nawi±zane po³±czenie z serwerem!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:706
+#: src/plugins/tlen/tlen_plugin.c:597
+msgid "female"
+msgstr "kobieta"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:707
+#: src/plugins/tlen/tlen_plugin.c:598
+msgid "male"
+msgstr "mê¿czyzna"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:718
+#: src/plugins/tlen/tlen_plugin.c:609
+msgid "Gender:"
+msgstr "P³eæ:"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:706
 msgid "Gadu-Gadu search"
 msgstr "Wyszukiwanie w Gadu-Gadu"
 
@@ -552,6 +567,8 @@ msgstr "Miejscowo¶æ:"
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:712
 msgid "Birthyear:"
 msgstr "Rok urodzenia:"
+
+
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:713
 msgid "GG#"

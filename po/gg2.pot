@@ -489,6 +489,21 @@ msgid "You have to be connected to perform searching!"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:706
+#: src/plugins/tlen/tlen_plugin.c:597
+msgid "female"
+msgstr ""
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:707
+#: src/plugins/tlen/tlen_plugin.c:598
+msgid "male"
+msgstr ""
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:718
+#: src/plugins/tlen/tlen_plugin.c:609
+msgid "Gender:"
+msgstr ""
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:706
 msgid "Gadu-Gadu search"
 msgstr ""
 

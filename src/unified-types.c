@@ -1,4 +1,4 @@
-/* $Id: unified-types.c,v 1.2 2003/05/22 10:16:48 krzyzak Exp $ */
+/* $Id: unified-types.c,v 1.3 2003/06/03 09:04:57 krzyzak Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_FREE_H
 #define GGadu_UNIFIED_TYPES_FREE_H
 
@@ -26,6 +26,7 @@ void GGaduContact_free(GGaduContact *k)
     g_free(k->status_descr);
     g_free(k->city);
     g_free(k->age);
+    g_free(k->gender);
     
     g_free(k);
     return;
