@@ -1,8 +1,12 @@
 01.08.2004
 - ggadu_save_history() as a base for history in every plugin, to keep similar
-  history format
+  history format (krzak)
 - contrib/gghist nice history viewer prototype send by Kazik <kazik.cz@interia.pl>
-- ggadu_menu_add_user_menu_extensions(..) to get extensions easy
+- ggadu_menu_add_user_menu_extensions(..) to get extensions easy (krzak)
+- history from all plugins should be stored in .gg2/history directory (krzak)
+- added history-external-viewer plugin - this plugin install as a extension in usermenu and
+  launch external history viewer with file to read as parameter. Currently it can work with
+  prototype history viewer from contrib/ subdirectory. (krzak)
   
 28.07.2004
 - fixed fd leak (sound-oss/HelDoRe)

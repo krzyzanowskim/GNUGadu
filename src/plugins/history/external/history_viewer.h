@@ -1,9 +1,9 @@
-/* $Id: plugin_sound_external.h,v 1.4 2004/08/02 00:09:11 krzyzak Exp $ */
+/* $Id: history_viewer.h,v 1.1 2004/08/02 00:09:11 krzyzak Exp $ */
 
 /* 
- * sound-external plugin for GNU Gadu 2 
+ * Plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2001-2004 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 
@@ -20,12 +20,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef GGADU_SOUND_EXTERNAL_H
-#define GGADU_SOUND_EXTERNAL_H 1
+
+#ifndef GGADU_HISTORY_EXTERNAL_VIEWER_H
+#define GGADU_HISTORY_EXTERNAL_VIEWER_H 1
+
+GGaduSigID HISTORY_SHOW_FILE_SIG;
+GGaduSigID UPDATE_CONFIG_SIG;
 
 enum
 {
-    GGADU_SE_CONFIG_PLAYER
+    GGADU_HISTORY_CONFIG_VIEWER
 };
 
 #endif

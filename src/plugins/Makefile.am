@@ -54,8 +54,12 @@ if BUILD_UPDATE
 UPDATE=update
 endif
 
+if BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN
+HISTORY=history
+endif
 
-SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE)
+
+SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE) $(HISTORY)
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)/$(pkglibdir)

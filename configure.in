@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.70 2004/06/27 15:46:16 krzyzak Exp $
+dnl $Id: configure.in,v 1.71 2004/08/02 00:09:07 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.3])
 
@@ -128,6 +128,7 @@ want_esd=no
 want_oss=no
 want_arts=no
 want_external=no
+want_history_external_viewer=no
 want_update=no
 want_docklet_system_tray=no
 want_docklet_dockapp=no
@@ -147,6 +148,7 @@ if test x$with_all_plugins = xyes; then
     with_sms=yes
     with_remote=yes
     with_external=yes
+    with_history_external_viewer=yes
     with_update=yes
     with_docklet_system_tray=yes
     with_docklet_dockapp=yes
@@ -396,6 +398,11 @@ if test "x$with_external" = "xyes"; then
     want_external=yes
 fi
 
+AC_ARG_WITH(history_external_viewer, [  --with-history-external-viewer	  Build external history plugin	default=no])
+if test "x$with_history_external_viewer" = "xyes"; then
+    want_history_external_viewer=yes
+fi
+
 AC_ARG_WITH(update, [  --with-update		  Build update plugin		default=no])
 if test "x$with_update" = "xyes"; then 
 	want_update=yes
@@ -415,6 +422,7 @@ AM_CONDITIONAL(BUILD_SOUND_ESD, test "$want_esd" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_ARTS, test "$want_arts" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_OSS, test "$want_oss" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_EXTERNAL, test "$want_external" = "yes")
+AM_CONDITIONAL(BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN, test "$want_history_external_viewer" = "yes")
 AM_CONDITIONAL(BUILD_SMS, test "$want_sms" = "yes")
 AM_CONDITIONAL(BUILD_REMOTE, test "$want_remote" = "yes")
 AM_CONDITIONAL(BUILD_UPDATE, test "$want_update" = "yes")
@@ -500,6 +508,8 @@ src/plugins/sound/external/Makefile
 src/plugins/sms/Makefile
 src/plugins/remote/Makefile
 src/plugins/update/Makefile
+src/plugins/history/Makefile
+src/plugins/history/external/Makefile
 pixmaps/Makefile
 pixmaps/emoticons/Makefile
 pixmaps/icons/Makefile
@@ -533,6 +543,7 @@ echo Build plugin sound external............ : $want_external
 echo Build plugin sms....................... : $want_sms
 echo Build plugin remote.................... : $want_remote
 echo Build plugin update.................... : $want_update
+echo Build plugin external history viewer... : $want_history_external_viewer
 echo Build with perl support................ : $want_perl
 echo
 echo "*************************************************************"

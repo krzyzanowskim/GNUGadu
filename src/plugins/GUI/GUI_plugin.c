@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.73 2004/06/11 01:25:33 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.74 2004/08/02 00:09:09 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -868,6 +868,7 @@ void gui_produce_menu_for_factory(GGaduMenu * menu, GtkItemFactory * item_factor
 		{
 			e->item_type = g_strdup("<Item>");
 			e->callback = it->callback;	/* to sa rozne callbacki ale function_ptr dobrze sie sprawuje jako it->callback */
+			e->extra_data = it->data; /* bezsensu */
 		}
 
 		prev_root = root;

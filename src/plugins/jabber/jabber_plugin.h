@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.32 2004/08/01 21:05:06 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.33 2004/08/02 00:09:11 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -37,10 +37,12 @@
 #define ggadu_jabber_save_history(_type,_msg,_nick)	\
 	if (ggadu_config_var_get(jabber_handler, "log")) \
 	{ \
-	    gchar *path = g_build_filename(config->configdir, "jabber_history", (_msg->id ? _msg->id : "UNKOWN"), NULL); \
+	    gchar *path = g_build_filename(config->configdir, "history", _msg->id, NULL); \
 	    ggadu_save_history(_type, path, _nick, _msg, "ISO-8859-2"); \
 	    g_free(path); \
 	}
+
+//	    gchar *path = g_build_filename(config->configdir, "jabber_history", (_msg->id ? _msg->id : "UNKOWN"), NULL); 
 
 enum
 {
