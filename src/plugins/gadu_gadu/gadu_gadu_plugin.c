@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.40 2003/04/25 16:30:46 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.41 2003/04/28 09:19:38 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -588,7 +588,7 @@ gpointer user_change_user_action(gpointer user_data)
     GSList 	 *users		= (GSList *)user_data;
     GGaduContact *k		= (GGaduContact *)users->data;
 
-    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_STR, k->id, VAR_FLAG_INSENSITIVE); 
+    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_INT, k->id, VAR_FLAG_INSENSITIVE); 
     ggadu_dialog_add_entry(&optlist, GGADU_NICK, _("Nick"), VAR_STR, k->nick, VAR_FLAG_SENSITIVE); 
     ggadu_dialog_add_entry(&optlist, GGADU_FIRST_NAME, _("First Name"), VAR_STR, k->first_name, VAR_FLAG_SENSITIVE); 
     ggadu_dialog_add_entry(&optlist, GGADU_LAST_NAME, _("Last Name"), VAR_STR, k->last_name, VAR_FLAG_SENSITIVE); 
@@ -605,7 +605,8 @@ gpointer user_add_user_action(gpointer user_data)
 {
     GSList *optlist   = NULL;
 
-    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_STR, NULL, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_INT, NULL, VAR_FLAG_NONE);
+//    ggadu_dialog_add_entry(&optlist, GGADU_ID, "GG#", VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&optlist, GGADU_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&optlist, GGADU_FIRST_NAME, _("First Name"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&optlist, GGADU_LAST_NAME, _("Last Name"), VAR_STR, NULL, VAR_FLAG_NONE);
@@ -1326,21 +1327,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		
 		switch ((gint)kv->key) 
 		{
-		    case GGADU_ID: {
-			gint i = 0;
-			gchar *tmp = (gchar *)kv->value;
-			
-			for (i=0; i < strlen(tmp); i++)
-			    if (g_ascii_isdigit( (tmp)[i] ) == FALSE) {
-				signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("Not valid GG#")),"main-gui");
-				print_debug("This is not valid uin\n");
-				return;
-			    }
-			
-			k->id = g_strdup(tmp);
-			g_free(tmp);
-
-			}
+		    case GGADU_ID:
+			k->id = kv->value;
 			break;
 
 		    case GGADU_NICK:
@@ -1416,13 +1404,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		switch ((gint)kv->key) 
 		{
 		    case GGADU_ID:
-			k->id = g_strdup((gchar *)kv->value);
-			g_free(kv->value);
-			
-			for (i=0; i < strlen(k->id); i++)
-			    if (g_ascii_isdigit( (k->id)[i] ) == FALSE)
-				return;
-			    
+			k->id = kv->value;
 			break;
 
 		    case GGADU_NICK:
