@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.46 2004/05/25 14:45:10 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.47 2004/08/22 16:39:04 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -432,7 +432,7 @@ void gui_show_message_box(gint type, gpointer signal)
 
 	warning =
 		gtk_message_dialog_new(GTK_WINDOW(window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, type,
-				       GTK_BUTTONS_OK, txt);
+				       GTK_BUTTONS_CLOSE, txt);
 
 	gp = gui_find_protocol(((GGaduSignal *) signal)->source_plugin_name, protocols);
 

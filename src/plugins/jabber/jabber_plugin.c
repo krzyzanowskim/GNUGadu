@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.90 2004/08/18 12:42:44 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.91 2004/08/22 16:39:07 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -126,10 +126,11 @@ static gpointer user_ignore_action(gpointer user_data)
 	if(!user)
 	        return NULL;
 
-	ignored=ggadu_config_var_get(jabber_handler, "ignored");
+	ignored = ggadu_config_var_get(jabber_handler, "ignored");
+	
 	if(!g_strrstr(ignored, k->id))
 	{
-		gchar *string=g_strconcat(ignored, k->id, NULL);
+		gchar *string = g_strconcat(ignored, k->id, NULL);
 
                 ggadu_config_var_set(jabber_handler, "ignored", string);
 	        ggadu_config_save(jabber_handler);
@@ -148,14 +149,15 @@ static gpointer user_unignore_action(gpointer user_data)
 	if(!user)
 	        return NULL;
 
-	ignored=ggadu_config_var_get(jabber_handler, "ignored");
+	ignored = ggadu_config_var_get(jabber_handler, "ignored");
+	
 	if(g_strrstr(ignored, k->id))
 	{
 	        gchar **tab;
 		gchar *string;
 
-	        tab=g_strsplit(ignored, k->id, 2);
-		string=g_strconcat(tab[0], tab[1], NULL);
+	        tab = g_strsplit(ignored, k->id, 2);
+		string = g_strconcat(tab[0], tab[1], NULL);
                 ggadu_config_var_set(jabber_handler, "ignored", string);
 	        ggadu_config_save(jabber_handler);
 		g_strfreev(tab);
@@ -169,25 +171,25 @@ static gpointer user_show_ignored_action(gpointer user_data)
 {
         GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
 	GGaduContact *k;
-	gchar *string=NULL;
+	gchar *string = NULL;
 	gchar *tmp;
 
 	while(roster)
 	{
-                k=roster->data;
+                k = roster->data;
 	        if(g_strrstr(ggadu_config_var_get(jabber_handler, "ignored"), k->id))
 	        {
 		        if(string)
 			{
-				tmp=string;
-                                string=g_strconcat(string, k->id, "\n", NULL);
+				tmp = string;
+                                string = g_strconcat(string, k->id, "\n", NULL);
 				g_free(tmp);
 			} else
 			{
-                                string=g_strconcat(k->id, "\n", NULL);
+                                string = g_strconcat(k->id, "\n", NULL);
 			}
 	        }
-	        roster=roster->next;
+	        roster = roster->next;
 	}
 
 	g_slist_free(roster);
@@ -212,6 +214,7 @@ static gpointer user_ask_remove_action(gpointer user_data)
 	                                                                                                               
 	dialog = ggadu_dialog_new_full(GGADU_DIALOG_YES_NO, _("Are You sure You want to delete selected user(s)?"), 
 					"user remove action", user_data);
+					
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }
@@ -315,7 +318,7 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 static GGaduMenu *build_userlist_menu(void)
 {
 	GGaduMenu *menu = ggadu_menu_create();
-	GGaduMenu *listmenu;
+	GGaduMenu *listmenu,*ignoremenu;
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
 
@@ -330,14 +333,16 @@ static GGaduMenu *build_userlist_menu(void)
 			       ggadu_menu_new_item(_("Remove authorization"), user_remove_auth_from, NULL));
 	ggadu_menu_add_submenu(menu, listmenu);
 
+	ignoremenu = ggadu_menu_new_item(_("Ignore"), NULL, NULL);
+	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("Ignore contact"), user_ignore_action, NULL));
+	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("Unignore contact"), user_unignore_action, NULL));
+	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
+	ggadu_menu_add_submenu(menu, ignoremenu);
 	
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_ask_remove_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Ignore"), user_ignore_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Unignore"), user_unignore_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add New"), user_add_action, NULL));
 

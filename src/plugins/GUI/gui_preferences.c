@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.67 2004/08/22 13:41:41 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.68 2004/08/22 16:39:05 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -745,7 +745,7 @@ static GtkWidget *create_advanced_tab()
 
 
 	/* blink */
-	blink = gtk_check_button_new_with_label(_("Blink status icon"));
+	blink = gtk_check_button_new_with_label(_("Blink status icon while connecting"));
 	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
 	g_object_set_data(G_OBJECT(adv_vbox), "blink", blink);
 	g_object_set_data(G_OBJECT(adv_vbox), "blink_interval", blink_interval);
@@ -1098,20 +1098,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
   		AspellDictInfoList * dlist;
   		AspellDictInfoEnumeration * dels;
   		const AspellDictInfo * dict_entry;
+		gint i = 0;
 
 		g_return_if_fail(entry2 != NULL);
-
-
-		if (cur_dict && (cur_dict[0] != '\0')) 
-		{
-			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),cur_dict);
-			dict_list = g_slist_append(dict_list,cur_dict);
-		}
-		else
-		{
-			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),"default");
-			dict_list = g_slist_append(dict_list,"default");
-		}
 
 		config = new_aspell_config();
 		/* the returned pointer should _not_ need to be deleted */
@@ -1125,15 +1114,21 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		{
 			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),dict_entry->name);
 			dict_list = g_slist_append(dict_list,(gpointer)dict_entry->name);
+			
+			if (!ggadu_strcasecmp(cur_dict,dict_entry->name))
+			    gtk_combo_box_set_active(GTK_COMBO_BOX(entry2),i);
+			    
+			i++;
 		}
 		
+		if (i == 0) 
+		{
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), FALSE);
+			gtk_widget_set_sensitive(entry,FALSE);	
+		}
 
 		delete_aspell_dict_info_enumeration(dels);
-		
-		gtk_combo_box_set_active(GTK_COMBO_BOX(entry2),0);
-		
 		g_object_set_data(G_OBJECT(entry2), "dictionary_slist", dict_list);
-
 	}
 #endif
 
