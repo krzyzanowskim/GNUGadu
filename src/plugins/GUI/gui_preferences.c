@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.42 2004/01/11 14:23:16 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.43 2004/01/11 15:24:14 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -1000,10 +1000,10 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
 	  ggadu_config_var_set (gui_handler, "expand", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (expand)));
 	  
-	  entry = g_object_get_data (G_OBJECT (chat_vbox), "use_username");
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "chatstyle");
 	  g_return_if_fail (entry != NULL);
  
-	  ggadu_config_var_set (gui_handler, "chatstyle",
+	  ggadu_config_var_set (gui_handler, "chat_type",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
 	  
 	  entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowshow");
@@ -1012,7 +1012,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	  ggadu_config_var_set (gui_handler, "chat_window_auto_show",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
 	  
-	  entry = g_object_get_data (G_OBJECT (chat_vbox), "use_username");
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowraise");
 	  g_return_if_fail (entry != NULL);
 	  
 	  ggadu_config_var_set (gui_handler, "chat_window_auto_raise",
