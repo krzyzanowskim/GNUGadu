@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.9 2003/05/12 09:42:19 thrulliq Exp $ */
+/* $Id: plugin_xosd.c,v 1.10 2003/05/22 19:00:47 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -237,6 +237,17 @@ gint set_configuration (void) {
     return 1;
 }
 
+gboolean osd_hide_window (gpointer user_data) {
+    xosd_hide(osd);
+    return FALSE;
+}
+
+gpointer osd_show_messages (gpointer user_data) {
+    xosd_show(osd);
+    g_timeout_add((config_var_get(handler, "timeout") ? (guint) config_var_get(handler, "timeout") * 1000 : 3000), osd_hide_window, NULL);
+    return NULL;
+}
+
 gpointer osd_preferences (gpointer user_data)
 {
     GGaduDialog *d = NULL;
@@ -292,6 +303,7 @@ GGaduMenu *build_plugin_menu ()
     GGaduMenu *root     = ggadu_menu_create();
     GGaduMenu *item_gg  = ggadu_menu_add_item(root,"X OSD",NULL,NULL);
     ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"),osd_preferences, NULL) );
+    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Show messages"),osd_show_messages, NULL) );
     
     return root;   
 }

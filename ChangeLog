@@ -1,5 +1,7 @@
 22.05.2003
 - search fixes, add city and age category (gadu-gadu/tlen/ManicMiner)
+- added xosd 'show messages' menu option, it displays the xosd box for
+  a while and hides it. Useful for unread messages. (xosd/shasta)
 
 21.05.2003
 - use global sound configuration to play sound on message send (GUI/zapal)
