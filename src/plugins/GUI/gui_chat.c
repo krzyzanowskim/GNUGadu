@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.11 2003/04/10 10:11:32 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.12 2003/04/10 19:17:17 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -66,8 +66,17 @@ void on_destroy_chat(GtkWidget *button, gpointer user_data)
 		case CHAT_TYPE_TABBED : 
 		{
 			GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
-			guint			nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
-			GtkWidget *chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),nr);
+			guint			nr;
+			GtkWidget *chat = NULL;
+		
+			if (!user_data) {
+				nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+			} else {
+				gui_chat_session *s = (gui_chat_session *)user_data;
+				nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook),s->chat);
+			}
+
+			chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),nr);
 		
 			plugin_name = g_object_get_data(G_OBJECT(chat), "plugin_name");
 			session = (gui_chat_session *)g_object_get_data(G_OBJECT(chat), "gui_session");
@@ -738,7 +747,7 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 
 	switch (chat_type) {
 		case CHAT_TYPE_TABBED  : 
-				g_signal_connect(button_close,  "clicked",  G_CALLBACK(on_destroy_chat), session);
+				g_signal_connect(button_close,  "clicked",  G_CALLBACK(on_destroy_chat), NULL);
 				g_signal_connect(chat_window,  "destroy",  G_CALLBACK(on_destroy_chat_window), NULL);
 		break;
 		case CHAT_TYPE_CLASSIC : 

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.14 2003/04/10 18:11:49 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.15 2003/04/10 19:17:20 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -157,6 +157,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 			break;
 		case VAR_LIST:
 			entry = gtk_combo_new();
+			gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(entry)->entry), FALSE);
 			gtk_combo_set_popdown_strings(GTK_COMBO(entry), kv->value);
 			break;
 	}
