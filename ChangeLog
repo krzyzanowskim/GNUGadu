@@ -1,3 +1,6 @@
+8.04.2003
+- rewriten chat window creation, still sux but less (GUI/krzak)
+
 7.04.2003
 - add documentation (docs/zapal)
 - sync eggtrayicon.c with libegg repository (docklet/krzak)
