@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.12 2003/08/23 19:52:49 krzyzak Exp $ */
+/* $Id: main.c,v 1.13 2003/11/25 23:14:11 thrulliq Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -147,6 +147,7 @@ gboolean gnu_gadu_init (gpointer data)
 #ifdef PERL_EMBED
     perl_load_scripts ();
 #endif
+    signal_from_thread_enabled();
     load_available_modules ();
     start_plugins_ordered ();
     flush_queued_signals ();

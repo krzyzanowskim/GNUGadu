@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.9 2003/09/22 17:17:47 krzyzak Exp $ */
+/* $Id: signals.c,v 1.10 2003/11/25 23:12:05 thrulliq Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -14,6 +14,14 @@
 #include "signals.h"
 
 extern GGaduConfig *config;
+
+static GMutex *thread_signal_mutex = NULL;
+static GAsyncQueue *thread_signal_queue = NULL;
+static gboolean check_thread_signals = FALSE;
+static GIOChannel *thread_signal_channel = NULL;
+static gint thread_signal_watch = 0;
+static gint thread_signal_write_pipe = 0;
+
 
 void GGaduSignal_free(GGaduSignal *sig)
 {
@@ -280,7 +288,7 @@ void flush_queued_signals()
 	config->all_plugins_loaded = TRUE;
 
 	g_slist_free(config->waiting_signals);
-	
+	config->waiting_signals = NULL;	
 }
 
 /*
@@ -333,4 +341,117 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer
 	return ret;
 }
 
+/*
+ * src_name     - nazwa nadawczego plugina
+ * name         - nazwa signala
+ * data		- dane do przeslania
+ * dest_name    - nazwa plugina docelowego
+ * signal_free  - funkcja zwalniajaca "data"
+ */
+ 
+void signal_emit_from_thread_full(gpointer src_name, gpointer name, gpointer data, gpointer dest_name, void (*signal_free) (gpointer))
+{
+	GQuark q_name = g_quark_from_string(name);
+	GGaduSignal 	*tmpsignal  = NULL;
+	char dummy;
+	
+	tmpsignal = g_new0(GGaduSignal, 1);
 
+	tmpsignal->name    = q_name;
+	tmpsignal->source_plugin_name      = g_strdup(src_name);
+	tmpsignal->destination_plugin_name = g_strdup(dest_name);
+
+	tmpsignal->data    = data;
+	tmpsignal->free_me = TRUE;	// flaga czy zwalniac signal po wykonaniu czy tez nie
+	tmpsignal->free    = signal_free;
+
+	print_debug("%s : signal_emit_from_thread %d %s\n", src_name, q_name, name);
+	
+	g_async_queue_push(thread_signal_queue, tmpsignal);
+
+	// wyslij komu trzeba ze jest sygnal do odebrania
+	write(thread_signal_write_pipe, &dummy, sizeof(dummy));
+}
+
+static gboolean thread_signal_test_chan(GIOChannel *source, GIOCondition cond, gpointer data)
+{
+    GGaduSignal *signal = NULL;
+    print_debug("thread_signal_test_chan()\n");
+
+    g_mutex_lock(thread_signal_mutex);
+
+    if ((cond & G_IO_ERR) || (cond & G_IO_HUP) || !thread_signal_queue) {
+	print_debug("IO_ERR || IO_HUP!\n");
+	check_thread_signals = FALSE;
+	
+	thread_signal_watch = 0;
+	
+	g_io_channel_unref(thread_signal_channel);
+	thread_signal_channel = NULL;
+	
+	g_mutex_unlock(thread_signal_mutex);
+	
+	return FALSE;
+    } else if (cond & G_IO_IN) {
+        if ((signal = g_async_queue_try_pop(thread_signal_queue)) != NULL) {
+	    char c;
+	    gint bytes_read;
+    	    print_debug("signal popped!\n");
+	    config->waiting_signals = g_slist_append(config->waiting_signals, signal);	
+	    g_io_channel_read_chars(source, &c, sizeof(c), &bytes_read, NULL);
+	}
+        flush_queued_signals();
+    }
+
+    g_mutex_unlock(thread_signal_mutex);
+        
+    return TRUE;
+}
+
+gboolean signal_from_thread_enabled()
+{
+    gint p[2];
+    
+    print_debug("signal_thread_enabled()\n");
+    
+    if (!thread_signal_mutex)
+	    thread_signal_mutex = g_mutex_new();
+
+    g_mutex_lock(thread_signal_mutex);
+    
+    if (thread_signal_channel) {
+        g_mutex_unlock(thread_signal_mutex);
+	return TRUE;
+    }
+    
+    if (pipe(p) == -1) {
+	print_debug("cannot create pipe\n");
+        g_mutex_unlock(thread_signal_mutex);
+	return FALSE;
+    }
+    
+    thread_signal_channel = g_io_channel_unix_new(p[0]);
+    
+    if (!thread_signal_channel)	{
+	print_debug("cannot create channel\n");
+        g_mutex_unlock(thread_signal_mutex);
+	return FALSE;
+    }
+    
+    if (!thread_signal_queue)
+        thread_signal_queue = g_async_queue_new();
+    
+    thread_signal_watch = g_io_add_watch(thread_signal_channel, G_IO_IN|G_IO_ERR|G_IO_HUP, thread_signal_test_chan, NULL);
+    
+    thread_signal_write_pipe = p[1];
+    
+    g_mutex_unlock(thread_signal_mutex);
+    return TRUE;
+}
+
+void signal_from_thread_disabled()
+{
+    g_mutex_lock(thread_signal_mutex);
+    check_thread_signals = FALSE;
+    g_mutex_unlock(thread_signal_mutex);
+}
