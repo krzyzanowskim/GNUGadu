@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.85 2004/12/20 09:15:14 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.86 2004/12/26 23:26:09 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -661,7 +661,7 @@ static GtkWidget *create_chat_tab(
 
 	g_object_set_data(G_OBJECT(chat_vbox), "chatwindowraise", chatwindowraise);
 
-	use_username = gtk_check_button_new_with_label(_("Use username instead of \"Me\" in chat window"));
+	use_username = gtk_check_button_new_with_label(_("Use system username instead of \"Me\" in chat window"));
 	gtk_box_pack_start(GTK_BOX(vbox), use_username, FALSE, FALSE, 0);
 
 	g_object_set_data(G_OBJECT(chat_vbox), "use_username", use_username);
@@ -764,7 +764,7 @@ static GtkWidget *create_advanced_tab(
 	g_object_set_data(G_OBJECT(adv_vbox), "notify_status_changes", notify_status_changes);
 
 	/* close_on_esc */
-	close_on_esc = gtk_check_button_new_with_label(_("'ESC' - close chatwindow"));
+	close_on_esc = gtk_check_button_new_with_label(_("'ESC' - close chat window"));
 	gtk_box_pack_start(GTK_BOX(adv_vbox), close_on_esc, FALSE, FALSE, 0);
 	g_object_set_data(G_OBJECT(adv_vbox), "close_on_esc", close_on_esc);
 	
@@ -1021,8 +1021,6 @@ void gui_preferences(GtkWidget * widget, gpointer data
 	vbox = gtk_vbox_new(FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(general_vbox), vbox, FALSE, FALSE, 0);
 
-	show_active = gtk_check_button_new_with_label(_("Show only active users"));
-	gtk_box_pack_start(GTK_BOX(vbox), show_active, FALSE, FALSE, 0);
 
 	tree = gtk_check_button_new_with_label(_("Tree users list"));
 	gtk_box_pack_start(GTK_BOX(vbox), tree, FALSE, FALSE, 0);
@@ -1032,6 +1030,8 @@ void gui_preferences(GtkWidget * widget, gpointer data
 
 	g_signal_connect(tree, "toggled", G_CALLBACK(tree_toggled), expand);
 
+	show_active = gtk_check_button_new_with_label(_("Show only active users"));
+	gtk_box_pack_start(GTK_BOX(vbox), show_active, FALSE, FALSE, 0);
 
 	if (find_plugin_by_name("xosd"))
 	{
