@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.4 2003/04/02 18:40:37 zapal Exp $ */
+/* $Id: remote_plugin.c,v 1.5 2003/04/02 19:09:36 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -591,6 +591,7 @@ gpointer remote_menu_preferences (gpointer user_data)
   d = ggadu_dialog_new();
   ggadu_dialog_set_title(d,_("Remote Preferences"));
   ggadu_dialog_callback_signal(d, "update config");
+  ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
 
   ggadu_dialog_add_entry(&(d->optlist), REMOTE_CONFIG_SAME_UID,
       _("Ignore commands with different uid"), VAR_BOOL,
