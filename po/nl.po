@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-08-02 13:58+0200\n"
+"POT-Creation-Date: 2004-08-02 14:13+0200\n"
 "PO-Revision-Date: 04/06/04 21:02\n"
 "Last-Translator: Sander Devrieze <s.devrieze@pandora.be>\n"
 "Language-Team: Nederlands <i18n@kde.nl>\n"
@@ -364,6 +364,7 @@ msgstr "Woordenboek"
 #: src/plugins/jabber/jabber_plugin.c:836
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
+#: src/plugins/history/external/history_viewer.c:128
 msgid "Preferences"
 msgstr "Voorkeuren"
 
@@ -557,6 +558,7 @@ msgstr ""
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1628
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1632
 #: src/plugins/xosd/plugin_xosd.c:517
+#: src/plugins/history/external/history_viewer.c:172
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr "Kon configuratiebestand voor plugin %s niet lezen"
@@ -941,6 +943,7 @@ msgstr "Verstuur bestand"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1797
 #: src/plugins/tlen/tlen_plugin.c:907 src/plugins/jabber/jabber_plugin.c:275
+#: src/plugins/history/external/history_viewer.c:140
 msgid "View History"
 msgstr "Bekijk geschiedenis"
 
@@ -1637,6 +1640,27 @@ msgstr "Updatecontroleerder"
 #: src/plugins/update/update_plugin.c:440
 msgid "Unable to read config file for plugin update"
 msgstr "Kan configuratiebestand van update-plugin niet lezen"
+
+#: src/plugins/history/external/history_viewer.c:52
+msgid "External History Viewer Preferences"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:56
+msgid "Path to external viewer"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:114
+#, fuzzy
+msgid "User not selected"
+msgstr "Gebruikerslijst exporteren gelukt!"
+
+#: src/plugins/history/external/history_viewer.c:127
+msgid "History Viewer"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:156
+msgid "External history viewer"
+msgstr ""
 
 #~ msgid "Dockapp plugin configuration"
 #~ msgstr "Dockapp plugin configuratie"

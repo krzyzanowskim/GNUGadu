@@ -25,3 +25,4 @@ src/plugins/remote/remote_plugin.c
 src/plugins/sms/sms_core.c
 src/plugins/sms/sms_gui.c
 src/plugins/update/update_plugin.c
+src/plugins/history/external/history_viewer.c

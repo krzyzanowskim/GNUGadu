@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-08-02 13:58+0200\n"
+"POT-Creation-Date: 2004-08-02 14:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -333,6 +333,7 @@ msgstr ""
 #: src/plugins/jabber/jabber_plugin.c:836
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
+#: src/plugins/history/external/history_viewer.c:128
 msgid "Preferences"
 msgstr ""
 
@@ -497,6 +498,7 @@ msgstr ""
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1628
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1632
 #: src/plugins/xosd/plugin_xosd.c:517
+#: src/plugins/history/external/history_viewer.c:172
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr ""
@@ -873,6 +875,7 @@ msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1797
 #: src/plugins/tlen/tlen_plugin.c:907 src/plugins/jabber/jabber_plugin.c:275
+#: src/plugins/history/external/history_viewer.c:140
 msgid "View History"
 msgstr ""
 
@@ -1546,4 +1549,24 @@ msgstr ""
 
 #: src/plugins/update/update_plugin.c:440
 msgid "Unable to read config file for plugin update"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:52
+msgid "External History Viewer Preferences"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:56
+msgid "Path to external viewer"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:114
+msgid "User not selected"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:127
+msgid "History Viewer"
+msgstr ""
+
+#: src/plugins/history/external/history_viewer.c:156
+msgid "External history viewer"
 msgstr ""

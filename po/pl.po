@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.66 2004/08/02 12:11:54 krzyzak Exp $
+# $Id: pl.po,v 1.67 2004/08/02 12:18:58 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-08-02 13:58+0200\n"
+"POT-Creation-Date: 2004-08-02 14:13+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -362,6 +362,7 @@ msgstr "S³ownik"
 #: src/plugins/jabber/jabber_plugin.c:836
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
+#: src/plugins/history/external/history_viewer.c:128
 msgid "Preferences"
 msgstr "Ustawienia"
 
@@ -555,6 +556,7 @@ msgstr "Docklet-dockapp2"
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1628
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1632
 #: src/plugins/xosd/plugin_xosd.c:517
+#: src/plugins/history/external/history_viewer.c:172
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki %s"
@@ -940,6 +942,7 @@ msgstr "Wy¶lij plik"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1797
 #: src/plugins/tlen/tlen_plugin.c:907 src/plugins/jabber/jabber_plugin.c:275
+#: src/plugins/history/external/history_viewer.c:140
 msgid "View History"
 msgstr "Wy¶wietl historiê"
 
@@ -1200,11 +1203,8 @@ msgid "eXtended Away"
 msgstr "Bardzo Zajêty"
 
 #: src/plugins/jabber/jabber_plugin.c:727
-#, fuzzy
 msgid "is subscribed to you presence"
-msgstr ""
-"Osoba : %s\n"
-"chce ¶ledziæ zmiany Twojego stanu"
+msgstr "¶ledzi zmiany Twojego stanu"
 
 #: src/plugins/jabber/jabber_plugin.c:733
 msgid "No authorization"
@@ -1634,6 +1634,26 @@ msgstr "Sprawdzanie aktualizacji"
 #: src/plugins/update/update_plugin.c:440
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki aktualizacji"
+
+#: src/plugins/history/external/history_viewer.c:52
+msgid "External History Viewer Preferences"
+msgstr "Ustawienia Zewnêtrznej przegl±darki historii"
+
+#: src/plugins/history/external/history_viewer.c:56
+msgid "Path to external viewer"
+msgstr "¦cie¿ka do przegl±darki historii"
+
+#: src/plugins/history/external/history_viewer.c:114
+msgid "User not selected"
+msgstr "Nie wybrano kontaktu z listy"
+
+#: src/plugins/history/external/history_viewer.c:127
+msgid "History Viewer"
+msgstr "Przegl±darka historii"
+
+#: src/plugins/history/external/history_viewer.c:156
+msgid "External history viewer"
+msgstr "Zewnêtrzna przegl±darka historii"
 
 #~ msgid "Dockapp plugin configuration"
 #~ msgstr "Konfiguracja wtyczki Dockapp"
