@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.31 2003/06/03 09:05:00 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.32 2003/06/04 20:48:02 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -926,6 +926,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    
 	}
 
+    if (!ggadu_strcasecmp(signal->name, "add user search"))
+    {
+        GGaduContact *k = signal->data;
+                                                                                                                              
+        userlist = g_slist_append(userlist, k);
+        ggadu_repo_add_value("gadu-gadu", k->id, k, REPO_VALUE_CONTACT);
+        tlen_addcontact(session, k->nick, k->id, k->group);
+                                                                                                                              
+        tlen_request_subscribe(session, k->id);
+        signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
+                                                                                                                              
+        return;
+    }
 
 	if (!ggadu_strcasecmp(signal->name,"send message")) {
 		
