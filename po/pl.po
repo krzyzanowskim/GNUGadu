@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.96 2005/03/09 14:02:35 krzyzak Exp $
+# $Id: pl.po,v 1.97 2005/03/14 09:57:45 aflinta Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
@@ -324,7 +324,7 @@ msgstr "Zakładki w oknie rozmowy"
 
 #: src/plugins/GUI/gui_preferences.c:658
 msgid "IRC-like messages displaying"
-msgstr ""
+msgstr "Wyświetlanie komunikatów tak jak w IRC"
 
 #: src/plugins/GUI/gui_preferences.c:662
 msgid "Enable emoticons"
@@ -409,13 +409,12 @@ msgid "Selected theme:"
 msgstr "Wybrany motyw:"
 
 #: src/plugins/GUI/gui_preferences.c:904
-#, fuzzy
 msgid "Selected skin (need restart):"
-msgstr "Wybrany zestaw ikon:"
+msgstr "Wybrany motyw (wymga restartu):"
 
 #: src/plugins/GUI/gui_preferences.c:929
 msgid "default"
-msgstr ""
+msgstr "domyślny"
 
 #: src/plugins/GUI/gui_preferences.c:965
 msgid "Selected icon set:"
@@ -650,30 +649,27 @@ msgstr "Konfiguracja wtyczki Dockapp"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:453
 msgid "Notify on protocol"
-msgstr ""
+msgstr "Powiadamianie na protokole"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:454
-#, fuzzy
 msgid "User status font"
-msgstr "Opis stanu"
+msgstr "Czcionka opisu stanu"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:455
-#, fuzzy
 msgid "Online status color"
-msgstr "Mruganie ikonką stanu podczas łączenia"
+msgstr "Kolor stanu połączony"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:456
 msgid "Away status color"
-msgstr ""
+msgstr "Kolor stanu podczas zajętości"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:457
-#, fuzzy
 msgid "Offline status color"
-msgstr "Mruganie ikonką stanu podczas łączenia"
+msgstr "Kolor stanu podczas niedostępności"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:458
 msgid "Background color"
-msgstr ""
+msgstr "Kolor tła"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:559
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1580
@@ -1336,9 +1332,8 @@ msgid "Operating System"
 msgstr "System operacyjny"
 
 #: src/plugins/jabber/jabber_plugin.c:225
-#, fuzzy
 msgid "Resource"
-msgstr "_Zasób:"
+msgstr "Zasób"
 
 #: src/plugins/jabber/jabber_plugin.c:244
 msgid "Change password"
@@ -1435,7 +1430,6 @@ msgid "eXtended Away"
 msgstr "Bardzo Zajęty"
 
 #: src/plugins/jabber/jabber_plugin.c:1236
-#, fuzzy
 msgid "is subscribed to your presence"
 msgstr "śledzi zmiany Twojego stanu"
 
@@ -1690,12 +1684,11 @@ msgstr "Brak rejestracji na serwerze"
 
 #: src/plugins/jabber/jabber_login.c:53
 msgid "Jabber ID and password must be specified in preferences!"
-msgstr ""
+msgstr "Identyfikator Jabbera oraz hasło muszą być podane w ustawieniach!"
 
 #: src/plugins/jabber/jabber_login.c:67 src/plugins/jabber/jabber_login.c:80
-#, fuzzy
 msgid "Invalid Jabber ID!"
-msgstr "Nieprawidłowy numer!"
+msgstr "Nieprawidłowy identyfikator Jabbera!"
 
 #: src/plugins/jabber/jabber_login.c:160
 msgid "SSL not supported by loudmouth"
