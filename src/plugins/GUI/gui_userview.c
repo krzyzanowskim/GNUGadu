@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.9 2003/04/28 15:15:16 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.10 2003/04/29 19:21:22 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -383,7 +383,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
     
     g_return_if_fail(gp != NULL);
     g_return_if_fail(n != NULL);
-
+    
     sp = gui_find_status_prototype(gp->p, n->status);
 
     g_return_if_fail(sp != NULL);
@@ -402,7 +402,6 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
     {
 	GGaduContact *k = NULL;
 	GdkPixbuf *oldpixbuf = NULL;
-
 	gtk_tree_model_get(model, &users_iter, 0, &oldpixbuf, 2, &k, -1);
 
 	if (k && !ggadu_strcasecmp(n->id, k->id)) 
@@ -413,7 +412,6 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 	    gchar 	     *st = NULL;
 
 	    found = TRUE;
-
 	    if (k->status_descr)
 		st = g_strdup_printf("- %s (%s)", (sp ? sp->description : ""), k->status_descr);
 	    else
@@ -450,9 +448,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 		    g_free(tmp);
 		}
 	    }
-	    
 	    if (config_var_get(gui_handler, "show_active") && n->status == gp->p->offline_status) {
-
 	        if (tree)
 		    gtk_tree_store_remove(GTK_TREE_STORE(users_treestore), &users_iter);
 		else 
@@ -492,14 +488,14 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
     if (config_var_get(gui_handler, "show_active") && !found) {
 	GSList *tmplist = gp->userlist;
 	GGaduContact *k;
-	
+
 	if (tree)
 	    gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL(users_treestore), &parent_iter, gp->tree_path);
 		
 	while (tmplist) {
 	    k = tmplist->data;
 	    
-	    if (k && !ggadu_strcasecmp(n->id, k->id)) {
+	    if (k && n->status != gp->p->offline_status && !ggadu_strcasecmp(n->id, k->id)) {
 		GdkPixbuf	 *image		= create_pixbuf(sp->image);
 		    
 		if (image == NULL)
