@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.103 2004/01/07 19:49:48 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.104 2004/01/07 23:53:15 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -509,8 +509,10 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
 		addr_arr = g_strsplit (k->ip, ":", 2);
 
-		if (!addr_arr[0] || !addr_arr[1])
+		if (!addr_arr[0] || !addr_arr[1]) {
+		    g_strfreev(addr_arr);
 		    return TRUE;
+		}
 
 		d = gg_dcc_get_file (inet_addr (addr_arr[0]), atoi (addr_arr[1]),
 				     (gint) ggadu_config_var_get (handler, "uin"), e->event.msg.sender);
@@ -1362,8 +1364,10 @@ gpointer send_file_action (gpointer user_data)
 
     addr_arr = g_strsplit (k->ip, ":", 2);
 
-    if (!addr_arr[0] || !addr_arr[1])
+    if (!addr_arr[0] || !addr_arr[1]) {
+	g_strfreev(addr_arr);
 	return NULL;
+    }
 
     port = atoi (addr_arr[1]);
 
