@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.36 2003/11/17 12:25:37 thrulliq Exp $
+dnl $Id: configure.in,v 1.37 2003/11/19 06:46:14 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -153,7 +153,7 @@ AC_ARG_ENABLE(perl, [  --enable-perl		  perl support			default=disabled],
     if test x$enableval = xyes; then
 	want_perl=yes
     else
-	if text "x$enableval" = xno; then
+	if test "x$enableval" = xno; then
 	    want_perl=no
 	else
 	    want_perl=yes
