@@ -11,21 +11,22 @@ upubliczniæ pierwsz± wersjê - 2.0pre0 jako wersjê pogl±dow±.
 	- wszystko, program zosta³ napisany od nowa w oparciu o bibliotekê 
 	  glib 2.2.0
 
-2. Mo¿liwo¶ci GNU Gadu 2.0pre1
+2. Mo¿liwo¶ci GNU Gadu 2.0pre3
 	- Obs³uga wtyczek (plugins)
-	- Dostêpne wtyczki :
-		gui-gtk+2  ( Interfejs u¿ytkownika napisany w gtk+2 )
-		gadu-gadu  ( Obs³uga protoko³u Gadu-Gadu(C) )
-		tlen	   ( Obs³uga protoko³u Tlen(C) )
-		jabber	   ( Obs³uga protoko³u Jabber )
-		sound-esd  ( Obs³uga d¼wiêku poprzez Esound )
-		sound-oss  ( Obs³uga d¼wiêku poprzez OSS )
-		sound-aRts ( Obs³uga d¼wiêku poprzez aRts )
-		xosd	   ( Wy¶wietlanie ró¿nych informacji na ekranie )
-		sms	   ( Wysy³anie SMS'ów do polskich operatorów GSM )
-		remote     ( Do komunikacji gg2 z zewnêtrznymi aplikacjami )
-		update	   ( Sprawdza czy jest nowsza wersja programu )
-		docklet    ( Obs³uga dokowania ikonki w ¶rodowiskach:
+	- Dostêpne wtyczki:
+		gui-gtk+2	( Interfejs u¿ytkownika napisany w gtk+2 )
+		gadu-gadu	( Obs³uga protoko³u Gadu-Gadu(C) )
+		tlen		( Obs³uga protoko³u Tlen(C) )
+		jabber		( Obs³uga protoko³u Jabber )
+		sound-esd	( Obs³uga d¼wiêku poprzez Esound )
+		sound-oss	( Obs³uga d¼wiêku poprzez OSS )
+		sound-aRts	( Obs³uga d¼wiêku poprzez aRts )
+		sound-external	( Obs³uga d¼wiêku poprzez zewnêtrzny program )
+		xosd		( Wy¶wietlanie ró¿nych informacji na ekranie )
+		sms		( Wysy³anie SMS'ów do polskich operatorów GSM )
+		remote		( Do komunikacji gg2 z zewnêtrznymi aplikacjami )
+		update		( Wyszukiwanie dostêpnych aktualizacji )
+		docklet		( Obs³uga dokowania ikonki w ¶rodowiskach:
 					gnome, kde, fluxbox, blackbox, *box )
 	
 	- Statusy opisowe
@@ -34,7 +35,7 @@ upubliczniæ pierwsz± wersjê - 2.0pre0 jako wersjê pogl±dow±.
 	- Historia rozmowy
 	- Tematy graficzne
 	- Zak³adki w oknie rozmowy
-	- Zozliwosc ladowania skryptow perla
+	- Mo¿liwo¶æ ³adowania skryptów napisanych w perlu
 
 2.1 Tabela zaimplementowanych mo¿liwo¶ci w pluginach:
 
@@ -47,11 +48,11 @@ upubliczniæ pierwsz± wersjê - 2.0pre0 jako wersjê pogl±dow±.
    \-------------------------------------------------------------------------/
 
 
-2.2 API wtyczek jest bardzo proste i kazdy jest w stanie napisaæ w³asn±
+2.2 API wtyczek jest bardzo proste i ka¿dy jest w stanie napisaæ w³asn±
     wtyczkê, do czego zachêcamy. Ma³e HOWTO jak to zrobiæ znajduje siê
     w dokumentacji, a pomoc mo¿na uzyskaæ na li¶cie dyskusyjnej ( http://gadu.gnu.pl/lista.html ).
-    Dobrze jest zapoznac sie z przykladowym pluginem, ktory jest na bierz±co
-    aktualizowny, wiec najbardziej pasuje jako podrecznik.
+    Dobrze jest zapoznaæ siê z przyk³adowym pluginem, ktory jest na bie¿±co
+    aktualizowany, wiêc najbardziej pasuje jako podrêcznik.
     
 
 3. Plany
