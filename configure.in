@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.51 2004/03/09 23:59:40 krzyzak Exp $
+dnl $Id: configure.in,v 1.52 2004/03/12 13:06:10 shaster Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -201,7 +201,10 @@ fi
 AC_ARG_WITH(gtkspell, [  --with-gtkspell	  Build GUI plugin with gtkspell support 	default=no])
 if test "x$with_gtkspell" = "xyes"; then 
     want_gtkspell=yes
-    PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],want_gtkspell=no)
+    if test "$want_gtkspell" = "no"; then 
+    	AC_MSG_WARN([*** gtkspell support has been disabled ***])
+    fi
     AC_SUBST(GTKSPELL_CFLAGS)
     AC_SUBST(GTKSPELL_LIBS)
 fi
@@ -306,20 +309,26 @@ fi
 AC_ARG_WITH(docklet_system_tray, [  --with-docklet_system_tray	  Build docklet plugin		default=no])
 if test "x$with_docklet_system_tray" = "xyes"; then 
     want_docklet_system_tray=yes
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], want_docklet_system_tray=no)
+    if test "$want_docklet_system_tray" = "no"; then 
+    	AC_MSG_WARN($GTK_PKG_ERRORS)
+    fi
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
-    else
+else
     want_docklet_system_tray=no
 fi
 
 AC_ARG_WITH(docklet_dockapp, [  --with-docklet_dockapp	  Build dockapp plugin		default=no])
 if test "x$with_docklet_dockapp" = "xyes"; then 
     want_docklet_dockapp=yes
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], want_docklet_dockapp=no)
+    if test "$want_docklet_dockapp" = "no"; then 
+    	AC_MSG_WARN($GTK_PKG_ERRORS)
+    fi
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
-    else
+else
     want_docklet_dockapp=no
 fi
 
@@ -481,7 +490,7 @@ themes/Makefile
 
 echo
 echo Build plugin GUI-GTK2.................. : $want_gui
-echo Build plugin GUI with gtkspell support..: $want_gtkspell
+echo Build plugin GUI with gtkspell support. : $want_gtkspell
 echo Build plugin Gadu-Gadu................. : $want_gadu
 echo Build plugin Tlen.pl................... : $want_tlen
 echo Build plugin Jabber.................... : $want_jabber
@@ -495,7 +504,7 @@ echo Build plugin sound external............ : $want_external
 echo Build plugin sms....................... : $want_sms
 echo Build plugin remote.................... : $want_remote
 echo Build plugin update.................... : $want_update
-echo Build perl support..................... : $want_perl
+echo Build with perl support................ : $want_perl
 echo
 echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 
