@@ -5,3 +5,4 @@
 #undef VERSION
 #undef DEBUG
 #undef ENABLE_NLS
+#undef WORDS_BIGENDIAN
