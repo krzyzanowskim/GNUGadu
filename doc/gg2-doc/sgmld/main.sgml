@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
   "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
 <!ENTITY autor "Bartosz Zapałowski">
-<!ENTITY gad "GNU Gadu2">
+<!ENTITY gad "GNU Gadu 2">
 <!ENTITY introduction SYSTEM "introduction.sgml">
 <!ENTITY signals SYSTEM "signals.sgml">
 <!ENTITY signals_main-gui SYSTEM "signals_main-gui.sgml">
@@ -24,7 +24,7 @@
 ]>
 <book lang="pl">
 <bookinfo>
-<title>Podręcznik dewelopera GNU Gadu2</title>
+<title>Podręcznik dewelopera &gad;</title>
 <author>
 	<firstname>Bartosz</firstname> 
 	<surname>Zapałowski</surname>
