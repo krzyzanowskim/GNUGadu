@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.77 2005/03/01 17:03:15 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.78 2005/03/02 13:36:04 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -111,7 +111,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	gchar *path = NULL;
 
 	/*gdk_threads_init();*/
-	gtk_init(&config->argc,&config->argv);
+	gtk_init(config->argc,config->argv);
 	gtk_window_set_auto_startup_notification(FALSE);
 
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);

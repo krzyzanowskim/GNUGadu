@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.29 2005/02/01 12:23:19 krzyzak Exp $ */
+/* $Id: main.c,v 1.30 2005/03/02 13:36:04 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -224,8 +224,8 @@ int main(int argc, char **argv)
 
     g_thread_init(NULL);
     config = g_new0(GGaduConfig, 1);
-    config->argc = argc;
-    config->argv = argv;
+    config->argc = &argc;
+    config->argv = &argv;
     gnu_gadu_init(NULL);
     g_main_loop_run(config->main_loop);
 
