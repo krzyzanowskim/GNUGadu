@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.4 2003/06/09 13:10:30 krzyzak Exp $ */
+/* $Id: perl_embed.c,v 1.5 2003/06/09 18:44:28 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -461,11 +461,32 @@ int perl_unload_script (char *script_name)
 
 gint perl_load_scripts (void)
 {
-  GIOChannel *ch = NULL;
-  GString *buffer = g_string_new (NULL);
+/*  GIOChannel *ch = NULL;
+  GString *buffer = g_string_new (NULL);*/
   gchar *filename;
   gint loaded = 0;
+  GDir *dir;
+  gchar *file;
 
+  filename = g_build_filename (config->configdir, "perl.scripts", NULL);
+  dir = g_dir_open (filename, 0, NULL);
+  g_free (filename);
+  if (!dir)
+    return 0;
+  
+  while ((file = g_dir_read_name (dir)))
+  {
+    print_debug ("perl: Autoloading script %s\n", file);
+    perl_load_script (file);
+    print_debug ("perl: %s loaded\n", file);
+    loaded++;
+  }
+  
+  g_dir_close (dir);
+
+  print_debug ("perl: Loaded %d scripts.\n", loaded);
+
+/*
   filename = g_build_filename (config->configdir, "perl.load", NULL);
 
   ch = g_io_channel_new_file (filename, "r", NULL);
@@ -488,7 +509,7 @@ gint perl_load_scripts (void)
   g_io_channel_shutdown (ch, TRUE, NULL);
 
   g_string_free (buffer, TRUE);
-
+*/
   return loaded;
 }
 
