@@ -134,14 +134,17 @@ void ggadu_menu_print(GGaduMenu *node, gchar *p)
 	    
 	    if ((child = g_node_first_child(node)) != NULL) 
 	    {
-	    
-		g_strlcat(p,"->",10);
+		char *s = p;
+		p = g_strdup_printf("->%s", s);
+		g_free (s);
 		dep++;
 		
 		ggadu_menu_print(child,p); /* rekurencja */
 		
 		dep--;
-		p = g_strndup(p,strlen(p)-2);
+		s = p;
+		p = g_strndup(s,strlen(p)-2);
+		g_free (s);
 		
 	    }
 	    

@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.7 2003/04/29 14:04:11 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.8 2003/05/04 10:22:47 zapal Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,19 +23,32 @@ gboolean plugin_at_list(gchar *name)
 {
     GIOChannel *ch = NULL;
     GString *buffer = g_string_new(NULL);
+    gchar *filename;
     
-    ch = g_io_channel_new_file(g_build_filename(config->configdir,"modules.load",NULL),"r",NULL);
+    filename = g_build_filename (config->configdir, "modules.load", NULL);
     
-    if (!ch) return TRUE;
+    ch = g_io_channel_new_file(filename,"r",NULL);
+
+    g_free (filename);
+    
+    if (!ch)
+    {
+      g_string_free (buffer, TRUE);
+      return TRUE;
+    }
     
     while (g_io_channel_read_line_string(ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
     {
 	if (!g_strncasecmp(buffer->str,name,buffer->len-1))
+	{
+	    g_string_free (buffer, TRUE);
 	    return TRUE;
+	}
     }
     
     g_io_channel_shutdown(ch,TRUE,NULL);
         
+    g_string_free (buffer, TRUE);
     return FALSE;
 };
 
