@@ -1,5 +1,6 @@
 28.07.2004
 - fixed fd leak (sound-oss/HelDoRe)
+- fixed some memory allocation issues, closing #63 (gadu-gadu/su829)
 
 21.07.2004
 - fixed detecting 'service not activated' at IDEA GSM (sms/shasta)

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.175 2004/06/12 07:04:53 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.176 2004/07/28 10:13:36 shaster Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1942,16 +1942,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					k->id = g_strdup(kv->value);
 					break;
 				case GGADU_NICK:
-					k->nick =  kv->value ? g_strdup((gchar *) kv->value) : "";
+					k->nick = g_strdup(kv->value ? (gchar *) kv->value : "");
 					break;
 				case GGADU_FIRST_NAME:
-					k->first_name =  kv->value ? g_strdup((gchar *) kv->value) : "";
+					k->first_name = g_strdup(kv->value ? (gchar *) kv->value : "");
 					break;
 				case GGADU_LAST_NAME:
-					k->last_name =  kv->value ? g_strdup((gchar *) kv->value) : "";
+					k->last_name = g_strdup(kv->value ? (gchar *) kv->value : "");
 					break;
 				case GGADU_MOBILE:
-					k->mobile = kv->value ? g_strdup((gchar *) kv->value) : "";
+					k->mobile = g_strdup(kv->value ? (gchar *) kv->value : "");
 					break;
 				}
 				kvlist = kvlist->next;
@@ -2006,19 +2006,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					{
 					case GGADU_NICK:
 						g_free(k->nick);
-						k->nick = kv->value ? g_strdup((gchar *) kv->value) : "";
+						k->nick = g_strdup(kv->value ? (gchar *) kv->value : "");
 						break;
 					case GGADU_FIRST_NAME:
 						g_free(k->first_name);
-						k->first_name = kv->value ? g_strdup((gchar *) kv->value) : "";
+						k->first_name = g_strdup(kv->value ? (gchar *) kv->value : "");
 						break;
 					case GGADU_LAST_NAME:
 						g_free(k->last_name);
-						k->last_name = kv->value ? g_strdup((gchar *) kv->value) : "";
+						k->last_name = g_strdup(kv->value ? (gchar *) kv->value : "");
 						break;
 					case GGADU_MOBILE:
 						g_free(k->mobile);
-						k->mobile = kv->value ? g_strdup((gchar *) kv->value) : "";
+						k->mobile = g_strdup(kv->value ? (gchar *) kv->value : "");
 						break;
 					}
 					kvlist = kvlist->next;
@@ -2596,7 +2596,7 @@ void load_contacts(gchar * encoding)
 		}
 
 		k = g_new0(GGaduContact, 1);
-		k->id = uin ? g_strdup(uin) : g_strdup("");
+		k->id = g_strdup(uin ? uin : "");
 		k->first_name = g_strdup(first_name);
 		k->last_name = g_strdup(last_name);
 		
