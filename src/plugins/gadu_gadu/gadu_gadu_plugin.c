@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.123 2004/01/17 17:51:08 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.124 2004/01/17 19:41:13 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -308,13 +308,13 @@ void handle_search_event(struct gg_event *e)
 		}
 
 		if (first_name)
-			to_utf8("CP1250", first_name, k->first_name);
+			k->first_name = to_utf8("CP1250", (gchar *)first_name);
 
 		if (nick)
-			to_utf8("CP1250", nick, k->nick);
+			k->nick = to_utf8("CP1250", (gchar *)nick);
 
 		if (city)
-			to_utf8("CP1250", city, k->city);
+			k->city = to_utf8("CP1250", (gchar *)city);
 
 		k->status = (status) ? atoi(status) : GG_STATUS_NOT_AVAIL;
 		list = g_slist_append(list, k);
@@ -426,7 +426,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			print_debug("GG_USERLIST_GET_REPLY");
 
-			to_utf8("CP1250", e->event.userlist.reply, list);
+			list = to_utf8("CP1250", e->event.userlist.reply);
 			if (import_userlist(list))
 			{
 				signal_emit(GGadu_PLUGIN_NAME, "gui show message",
@@ -488,7 +488,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		msg = g_new0(GGaduMsg, 1);
 		msg->id = g_strdup_printf("%d", e->event.msg.sender);
-		to_utf8("CP1250", e->event.msg.message, msg->message);
+		msg->message = to_utf8("CP1250", e->event.msg.message);
 		msg->class = e->event.msg.msgclass;
 		msg->time = e->event.msg.time;
 
@@ -547,7 +547,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			if (strIP && (ggadu_strcasecmp(strIP, "0.0.0.0")))
 				notify->ip = g_strdup_printf("%s:%d", strIP, e->event.notify60[i].remote_port);
 
-			ggadu_convert("CP1250", "UTF-8", e->event.notify60[i].descr, desc_utf8);
+			desc_utf8 = ggadu_convert("CP1250", "UTF-8", e->event.notify60[i].descr);
 			set_userlist_status(notify, desc_utf8, userlist);
 
 			l = userlist;
@@ -591,7 +591,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				notify->ip = g_strdup_printf("%s:%d", strIP, n->remote_port);
 
 			if (e->type == GG_EVENT_NOTIFY_DESCR)
-				ggadu_convert("CP1250", "UTF-8", e->event.notify_descr.descr, desc_utf8);
+				desc_utf8 = ggadu_convert("CP1250", "UTF-8", e->event.notify_descr.descr);
 
 			set_userlist_status(notify, desc_utf8, userlist);
 
@@ -617,7 +617,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		print_debug("GG_EVENT_STATUS");
 
 			/* *INDENT-OFF* */
-			ggadu_convert("CP1250", "UTF-8",((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr), desc_utf8);
+			desc_utf8 = ggadu_convert("CP1250", "UTF-8",((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr));
 			notify = g_new0(GGaduNotify, 1);
 			notify->id = g_strdup_printf("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
 			notify->status = (e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
@@ -851,7 +851,7 @@ gpointer user_preferences_action(gpointer user_data)
 			       _("Proxy server (optional)\n[user:pass@]host.com[:80]"), VAR_STR,
 			       ggadu_config_var_get(handler, "proxy"), VAR_FLAG_NONE);
 
-	to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"), utf);
+	utf = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf,
 			       VAR_FLAG_NONE);
@@ -1037,7 +1037,7 @@ gpointer export_userlist_action(gpointer user_data)
 	gchar *dump = NULL;
 	gchar *tmp = userlist_dump(userlist);
 
-	from_utf8("CP1250", tmp, dump);
+	dump = from_utf8("CP1250", tmp);
 
 	if (gg_userlist_request(session, GG_USERLIST_PUT, dump) == -1)
 	{
@@ -1572,7 +1572,7 @@ void start_plugin()
 		if (ggadu_config_var_get(handler, "private"))
 			status |= GG_STATUS_FRIENDS_MASK;
 
-		to_cp("ISO-8859-2", ggadu_config_var_get(handler, "reason"), cp);
+		cp = to_cp("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 
 		gadu_gadu_login((ggadu_config_var_check(handler, "reason")) ? cp : _("no reason"), status);
 	}
@@ -1847,9 +1847,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			if (ggadu_is_status_descriptive(sp->status))
 			{
 				GGaduDialog *d = ggadu_dialog_new();
-				gchar *reason_c = NULL;
-
-				to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"), reason_c);
+				gchar *reason_c = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 
 				ggadu_dialog_set_title(d, _("Enter status description"));
 				ggadu_dialog_callback_signal(d, "change status descr");
@@ -1915,9 +1913,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 				desc_utf = kv->value;
 				/* do sesji */
-				from_utf8("CP1250", desc_utf, desc_cp);
+				desc_cp = from_utf8("CP1250", desc_utf);
 				/* do konfiga */
-				from_utf8("ISO-8859-2", desc_utf, desc_iso);
+				desc_iso = from_utf8("ISO-8859-2", desc_utf);
 				ggadu_config_var_set(handler, "reason", desc_iso);
 
 				if (!connected)
@@ -1979,12 +1977,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					ggadu_config_var_set(handler, "log", kv->value);
 					break;
 				case GGADU_GADU_GADU_CONFIG_DCC:
-					print_debug("changing var setting dcc to %d\n", kv->value);
+					print_debug("changing var setting dcc to %d", kv->value);
 					ggadu_config_var_set(handler, "dcc", kv->value);
 					gadu_gadu_enable_dcc_socket((gboolean) ggadu_config_var_get(handler, "dcc"));
 					break;
 				case GGADU_GADU_GADU_CONFIG_AUTOCONNECT:
-					print_debug("changing var setting autoconnect to %d\n", kv->value);
+					print_debug("changing var setting autoconnect to %d", kv->value);
 					ggadu_config_var_set(handler, "autoconnect", kv->value);
 					break;
 				case GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS:
@@ -2004,20 +2002,20 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 						statuslist_tmp = statuslist_tmp->next;
 					}
 
-					print_debug("changing var setting status to %d\n", val);
+					print_debug("changing var setting status to %d", val);
 					ggadu_config_var_set(handler, "status", (gpointer) val);
 				}
 					break;
 				case GGADU_GADU_GADU_CONFIG_REASON:
 				{
 					gchar *utf = NULL;
-					print_debug("changing derault reason %s\n", kv->value);
-					from_utf8("ISO-8859-2", kv->value, utf);
+					print_debug("changing derault reason %s", kv->value);
+					utf = from_utf8("ISO-8859-2", kv->value);
 					ggadu_config_var_set(handler, "reason", utf);
 				}
 					break;
 				case GGADU_GADU_GADU_CONFIG_FRIENDS_MASK:
-					print_debug("changing var setting private to %d\n", kv->value);
+					print_debug("changing var setting private to %d", kv->value);
 					ggadu_config_var_set(handler, "private", kv->value);
 					break;
 				}
@@ -2037,7 +2035,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 			gchar *message = NULL;
 
-			from_utf8("CP1250", msg->message, message);
+			message = from_utf8("CP1250", msg->message);
 			message = insert_cr(message);
 
 			print_debug("%s\n", message);
@@ -2131,8 +2129,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				case GGADU_SEARCH_FIRSTNAME:
 					if (kv->value && *(gchar *) kv->value)
 					{
-						gchar *first_name;
-						to_cp("UTF-8", kv->value, first_name);
+						gchar *first_name = to_cp("UTF-8", kv->value);
 						gg_pubdir50_add(req, GG_PUBDIR50_FIRSTNAME, first_name);
 						g_free(first_name);
 					}
@@ -2140,8 +2137,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				case GGADU_SEARCH_LASTNAME:
 					if (kv->value && *(gchar *) kv->value)
 					{
-						gchar *last_name;
-						to_cp("UTF-8", kv->value, last_name);
+						gchar *last_name = to_cp("UTF-8", kv->value);
 						gg_pubdir50_add(req, GG_PUBDIR50_LASTNAME, last_name);
 						g_free(last_name);
 					}
@@ -2149,8 +2145,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				case GGADU_SEARCH_NICKNAME:
 					if (kv->value && *(gchar *) kv->value)
 					{
-						gchar *nick_name;
-						to_cp("UTF-8", kv->value, nick_name);
+						gchar *nick_name = to_cp("UTF-8", kv->value);
 						gg_pubdir50_add(req, GG_PUBDIR50_NICKNAME, nick_name);
 						g_free(nick_name);
 					}
@@ -2158,8 +2153,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				case GGADU_SEARCH_CITY:
 					if (kv->value && *(gchar *) kv->value)
 					{
-						gchar *city;
-						to_cp("UTF-8", kv->value, city);
+						gchar *city = to_cp("UTF-8", kv->value);
 						gg_pubdir50_add(req, GG_PUBDIR50_CITY, city);
 						g_free(city);
 					}
@@ -2274,7 +2268,7 @@ void load_contacts(gchar * encoding)
 		if (line[0] == '#' || !ggadu_strcasecmp(g_strstrip(line), ""))
 			continue;
 
-		to_utf8(encoding, line, buf);
+		buf = to_utf8(encoding, line);
 
 		l = g_strsplit(buf, ";", 11);
 		if (!l[0])	/* ZONK */

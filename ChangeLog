@@ -4,6 +4,7 @@
 - use repo [fixes disappearing userlist] (sms/shasta)
 - full repo support with contacts in Jabber protocol plugin (jabber/krzak)
 - ggadu_repo_key_from_string() that will create constat, unique key for string based value (core/krzak)
+- ggadu_convert() based macros change, now it return converted text so it's easer to use (core/all/krzak)
 
 16.01.2004
 - "gui send userlist" signal relay on Repo values, not userlist signal parameter (GUI/krzak)

@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.7 2004/01/17 00:44:58 shaster Exp $ */
+/* $Id: support.h,v 1.8 2004/01/17 19:41:12 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -39,57 +39,16 @@
 
 #define array_length(arr,type) sizeof(arr) / sizeof(type)
 
-#define ggadu_convert(from_encoding,to_encoding,text,out) \
-	if (text != NULL) {	\
-	    out = g_convert(text,-1,to_encoding,from_encoding,NULL,NULL,NULL); \
-	    if (out == NULL) { \
-		print_debug("ggadu_convert : bez zmiany!!!\n"); \
-		out = g_strdup(text); \
-	    } \
-	}
-
-#define to_iso(from_encoding,text,out) \
-	if (text != NULL) {	\
-	    out = g_convert(text,-1,"ISO-8859-2",from_encoding,NULL,NULL,NULL); \
-	    if (out == NULL) { \
-		print_debug("to_iso : bez zmiany!!!\n"); \
-		out = g_strdup(text); \
-	    } \
-	}
-
-#define to_cp(from_encoding,text,out) \
-	if (text != NULL) {	\
-	    out = g_convert(text,-1,"CP1250",(from_encoding) ? from_encoding : "UTF-8",NULL,NULL,NULL); \
-	    if (out == NULL) { \
-		print_debug("to_cp : bez zmiany!!!\n"); \
-		out = g_strdup(text); \
-	    } \
-	}
-
-
-#define to_utf8(from_encoding,text,out) \
-	if (text != NULL) {	\
-	    out = g_convert(text,-1,"UTF-8",from_encoding,NULL,NULL,NULL); \
-	    if (out == NULL) { \
-		print_debug("to_utf8 : bez zmiany!!!\n"); \
-		out = g_strdup(text); \
-	    } \
-	}
-
-#define from_utf8(to_encoding,text,out) \
-	if (text != NULL) {	\
-	    out = g_convert(text,-1,to_encoding,"UTF-8",NULL,NULL,NULL); \
-	    if (out == NULL) { \
-		print_debug("from_utf8 : bez zmiany!!!\n"); \
-	        out = g_strdup(text); \
-	    } \
-	} else { \
-	    out = NULL; \
-	}
+#define to_iso(from_enc,text) ggadu_convert(from_enc,"ISO-8859-2",text);
+#define to_cp(from_enc,text) ggadu_convert(from_enc,"CP1250",text);
+#define to_utf8(from_enc,text) ggadu_convert(from_enc,"UTF-8",text);
+#define from_utf8(to_enc,text) ggadu_convert("UTF-8",to_enc,text);
 
 #define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1,-1) , g_utf8_casefold(s2,-1))
 
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
+
+gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text);
 
 gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename);
 
