@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.61 2004/01/12 19:45:48 thrulliq Exp $ 
+ * $Id: gui_chat.c,v 1.62 2004/01/12 22:19:57 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -965,7 +965,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
 
     gtk_container_add (GTK_CONTAINER (sw), history);
-    gtk_paned_add1 (GTK_PANED (paned), sw);
+    gtk_paned_pack1 (GTK_PANED (paned), sw, TRUE, FALSE);
 
     /*
      * SW2 
@@ -974,8 +974,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
     gtk_container_add (GTK_CONTAINER (sw), input);
-    gtk_paned_add2 (GTK_PANED (paned), sw);
-
+    gtk_paned_pack2 (GTK_PANED (paned), sw, FALSE, FALSE);
 
     /*
      * attach paned to vbox_in_out 

@@ -1,5 +1,6 @@
 12.01.2004
 - really fixed segfault when resizing chat window in tabbed mode (GUI/THrull)
+- resize chat window will grow history window instead input (GUI/Grzegorz Dabrowski)
 
 11.01.2004 - Released 2.0pre5
 
