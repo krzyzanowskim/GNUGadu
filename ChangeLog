@@ -1,3 +1,6 @@
+28.06.2003
+- added search by email (jabber/zapal)
+
 26.06.2003
 - some fixes, mostly in gui_chat.c (it's still so f*** ugly) (krzak/GUI)
 - autoloading perl scripts is now working (fixed path handling) (core/zapal)
