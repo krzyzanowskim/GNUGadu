@@ -17,7 +17,7 @@ void jabber_login (enum states status)
 		print_debug ("jabber: Slow down, please");
 	} else if (jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE) {
     
-		GSList *list = jabber_data.rosterlist;
+        GSList *list = jabber_data.userlist;
 
 		jabber_data.status = status;
     
@@ -37,9 +37,8 @@ void jabber_login (enum states status)
 		}
     
 		g_slist_free (jabber_data.userlist);
-		g_slist_free (jabber_data.rosterlist);
     
-		jabber_data.userlist = jabber_data.rosterlist = NULL;
+		jabber_data.userlist = NULL;
 		jabber_data.connected = 0;
 	}
 	else if (jabber_data.connected == 2)

@@ -64,7 +64,7 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 			     gpointer user_data)
 {
 	gchar *jid;
-	GSList *list = jabber_data.rosterlist;
+	GSList *list = jabber_data.userlist;
 	GGaduContact *k = NULL;
 	LmMessageNode *status;
 	gchar *descr = NULL;
@@ -126,9 +126,7 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 			gchar *olddescr = k->status_descr;
             
 			if (k->status_descr)
-            {
 				g_free (k->status_descr);
-            }
             
 			k->status_descr = NULL;
 
@@ -139,9 +137,7 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 				node = lm_message_node_get_child (message->node, "show");
 				show = NULL;
 				if (node)
-				{
 					show = (gchar *) lm_message_node_get_value (node);
-				}
 
 				if (show)
 				{
@@ -258,7 +254,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 	int first_time = 0;
 	int first_seen = 1;
 
-	if (!jabber_data.rosterlist)
+	if (!jabber_data.userlist)
 		first_time = 1;
 
 	print_debug ("%s", lm_message_node_to_string (message->node));
@@ -331,9 +327,9 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		}
 */
         /* co to kurwa jest ? tu sprawdzac raczej czy id=roster_1 bo to jest lista kontaktow */
-		if (jabber_data.rosterlist)
+		if (jabber_data.userlist)
 		{
-			GSList *list = jabber_data.rosterlist;
+			GSList *list = jabber_data.userlist;
 			while (list)
 			{
 				k = (GGaduContact *) list->data;
@@ -353,7 +349,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		{
 			k = g_new0 (GGaduContact, 1);
 			k->id = g_strdup (jid);
-			jabber_data.rosterlist = g_slist_append (jabber_data.rosterlist, k);
+			jabber_data.userlist = g_slist_append (jabber_data.userlist, k);
 		}
     
 		k->nick = g_strdup (name ? name : jid);

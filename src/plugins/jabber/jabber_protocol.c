@@ -30,7 +30,7 @@ void action_roster_add_result (LmConnection *connection, LmMessage *message, gpo
     signal_emit ("jabber", "gui show message", g_strdup (_("Contact added")), "main-gui");
 }
 
-void action_subscribe (LmConnection *connection, LmMessage *message, gpointer data)
+/*void action_subscribe (LmConnection *connection, LmMessage *message, gpointer data)
 {
   LmMessage *m;
   LmMessageNode *node;
@@ -72,7 +72,7 @@ void action_subscribe_result (LmConnection *connection, LmMessage *message, gpoi
   if (!result)
     print_debug ("jabber: Can't send.\n");
 }
-
+*/
 void jabber_change_status (enum states status)
 {
   LmMessage *m;
@@ -120,16 +120,16 @@ void jabber_fetch_roster (void)
 {
   LmMessage *m;
   LmMessageNode *node;
-  gboolean result;
 
   m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
   node = lm_message_node_add_child (m->node, "query", NULL);
   lm_message_node_set_attribute (node, "xmlns", "jabber:iq:roster");
-  result = lm_connection_send (connection, m, NULL);
+
+  if (!lm_connection_send (connection, m, NULL))
+    print_debug ("jabber: Can't fetch roster (lm_connection_send() failed).\n");
+  
   lm_message_unref (m);
 
-  if (!result)
-    print_debug ("jabber: Can't fetch roster (lm_connection_send() failed).\n");
   
 }
 

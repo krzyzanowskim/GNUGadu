@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.100 2003/12/29 19:22:28 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.101 2004/01/03 16:23:42 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1440,9 +1440,6 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     ggadu_config_var_add (handler, "password", VAR_STR);
     ggadu_config_var_add (handler, "proxy", VAR_STR);
     ggadu_config_var_add (handler, "server", VAR_STR);
-/*  ggadu_config_var_add (handler, "sound_msg_file", VAR_STR);
-    ggadu_config_var_add (handler, "sound_chat_file", VAR_STR);
-    ggadu_config_var_add (handler, "sound_app_file", VAR_STR); */
     ggadu_config_var_add (handler, "log", VAR_BOOL);
     ggadu_config_var_add (handler, "autoconnect", VAR_BOOL);
     ggadu_config_var_add (handler, "status", VAR_INT);
