@@ -1,6 +1,7 @@
 20.06.2003
 - fixes in gtkanimlabel mostly (after button click, text go to clipboard) (GUI/krzak)
 - dcc file sending feature fixed, and now it really works (gadu-gadu/krzak)
+- userlist file format changed !!! to real EKG (not documented) style (You are warned) (gadu-gadu/krzak)
 
 19.06.2003
 - Jabber plugin switch to Loudmouth library (http://www.imendio.com/projects/loudmouth)  (Jabber/Zapal)
