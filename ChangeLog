@@ -1,4 +1,5 @@
-7.04.2003.
+7.04.2003
+- add documentation (docs/zapal)
 - sync eggtrayicon.c with libegg repository (docklet/krzak)
 
 6.04.2003
