@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.7 2003/03/24 10:42:36 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.8 2003/03/24 11:13:07 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -747,9 +747,9 @@ void gui_chat_append(GtkWidget *chat, gpointer msg, gboolean self)
 		GGaduContact *k		 = gui_find_user(gmsg->id,gui_find_protocol(plugin_name_,protocols));
 	
 		if (chat_type == CHAT_TYPE_TABBED) {
-			GtkWidget 	 *chat_notebook    = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
-			gint	 curr_page         = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
-			GtkWidget	 *curr_page_widget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),curr_page);
+			GtkWidget	*chat_notebook	= g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
+			gint	curr_page	= gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+			GtkWidget	*curr_page_widget	= gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),curr_page);
 		
 			if ((gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook)) > 1) && (curr_page_widget != chat)) {
 				gchar *markup = g_strdup_printf("<span foreground=\"blue\">%s</span>",(gchar *)g_object_get_data(G_OBJECT(chat),"tab_label_txt_char"));
@@ -806,7 +806,7 @@ void gui_chat_append(GtkWidget *chat, gpointer msg, gboolean self)
 		gui_emoticon *gemo = (gui_emoticon *)emottmp->data;
 		
 		while (gtk_text_iter_backward_search(&istart, gemo->emoticon, GTK_TEXT_SEARCH_VISIBLE_ONLY, &istart, &iend, NULL))
-	  {
+		{
 			GtkTextChildAnchor *anchor;
 	    
 			gtk_text_buffer_delete(buf, &istart, &iend);
@@ -826,10 +826,8 @@ void gui_chat_append(GtkWidget *chat, gpointer msg, gboolean self)
 	/* Is it should be called somewhere or not ? this is a question, rather no, but....*/
 	/* gtk_text_buffer_delete_mark_by_name(buf,"gg_end"); */
 
-	if (((gint)config_var_get(gui_handler,"chat_window_auto_raise") == TRUE) && (!self) && (GTK_WIDGET_VISIBLE(chat))) {
-		GtkWidget *win = g_object_get_data(G_OBJECT(chat),"top_window");
-		gtk_window_present(GTK_WINDOW(win));
-	}
+	if (((gint)config_var_get(gui_handler,"chat_window_auto_raise") == TRUE) && (!self) && (GTK_WIDGET_VISIBLE(chat)))
+		gtk_window_present(GTK_WINDOW(g_object_get_data(G_OBJECT(chat),"top_window")));
 	
 	g_free(timestamp);
 	g_free(header);

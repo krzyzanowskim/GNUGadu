@@ -1,6 +1,10 @@
 23.03.2003
 - default sound files path (gadu-gadu/krzak)
 - little fixes in chat window (GUI/krzak)
+- GGaduDialog's have types now, eg. d->type GGADU_DIALOG_CONFIG will be
+  displayed as config dialog (preferences icon) (GUI/Thrull)
+- added function gui_user_view_unregister to use with dynamic plugin
+  unloading, but is not working now (GUI/Thrull)
 
 20.03.2003
 - Sourceforge CVS 
