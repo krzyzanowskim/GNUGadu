@@ -1,6 +1,7 @@
 2.04.2003
 - fix "reason" variable encoding (gadu-gadu/krzak)
 - fixed removal of protocols upon unregistering (GUI/zapal)
+- free memory used by menus in destroy_plugin (gadu-gadu/jabber/tlen/sms/remote/xosd/zapal)
 
 1.04.2003
 - add VAR_LIST variable type (core/gui/THrull)
