@@ -1,4 +1,4 @@
-/* $Id: common.c,v 1.5 2004/10/25 08:20:45 krzyzak Exp $ */
+/* $Id: common.c,v 1.6 2004/11/18 09:47:53 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
+ *  USA.
  */
 
 #include <sys/types.h>
@@ -428,62 +429,90 @@ int gg_http_hash(const char *format, ...)
 /*
  * gg_gethostbyname() // funkcja pomocnicza
  *
- * odpowiednik gethostbyname() u¿ywaj±cy gethostbyname_r()
+ * odpowiednik gethostbyname() troszcz±cy siê o wspó³bie¿no¶æ, gdy mamy do
+ * dyspozycji funkcjê gethostbyname_r().
  *
  *  - hostname - nazwa serwera
- *  - buf - parametr wyj¶ciowy: wska¼nik na tablicê, któr± nale¿y pó¼niej zwolniæ
  *
- * zaalokowany bufor, który nale¿y zwolniæ lub NULL w przypadku b³êdu.
- * po u¿yciu zwracanej warto¶ci nale¿y zwolniæ *buf
+ * zwraca wska¼nik na strukturê in_addr, któr± nale¿y zwolniæ.
  */
-struct hostent *gg_gethostbyname(const char *hostname, char **buf)
+struct in_addr *gg_gethostbyname(const char *hostname)
 {
-#ifdef __GLIBC__
-	char *tmpbuf;
-	struct hostent *hp, *hp2;
+	struct in_addr *addr = NULL;
+
+#ifdef HAVE_GETHOSTBYNAME_R
+	char *tmpbuf = NULL, *buf = NULL;
+	struct hostent *hp = NULL, *hp2 = NULL;
 	int h_errnop, ret;
-	size_t buflen=1024;
+	size_t buflen = 1024;
+	int new_errno;
 	
-	*buf=NULL;
-	if (!(hp=calloc(1, sizeof(*hp))))
-		return NULL;
-	*buf=malloc(buflen);
-	if (*buf==NULL)
-	{
-		free(hp);
-		return NULL;
-	}
+	new_errno = ENOMEM;
 	
-	while ((ret=gethostbyname_r(hostname, hp, *buf, buflen, &hp2, &h_errnop))==ERANGE)
-	{
-		buflen*=2;
-		tmpbuf=realloc(*buf, buflen);
-		if (tmpbuf==0)
+	if (!(addr = malloc(sizeof(struct in_addr))))
+		goto cleanup;
+	
+	if (!(hp = calloc(1, sizeof(*hp))))
+		goto cleanup;
+
+	if (!(buf = malloc(buflen)))
+		goto cleanup;
+
+	tmpbuf = buf;
+	
+	while ((ret = gethostbyname_r(hostname, hp, buf, buflen, &hp2, &h_errnop)) == ERANGE) {
+		buflen *= 2;
+		
+		if (!(tmpbuf = realloc(buf, buflen)))
 			break;
-		*buf=tmpbuf;
+		
+		buf = tmpbuf;
 	}
-	if (ret || hp2==NULL || tmpbuf==NULL)
-	{
-		if (*buf)
-			free(buf);
-		*buf=NULL;
+	
+	if (ret)
+		new_errno = h_errnop;
+
+	if (ret || !hp2 || !tmpbuf)
+		goto cleanup;
+	
+	memcpy(addr, hp->h_addr, sizeof(struct in_addr));
+	
+	free(buf);
+	free(hp);
+	
+	return addr;
+	
+cleanup:
+	errno = new_errno;
+	
+	if (addr)
+		free(addr);
+	if (hp)
 		free(hp);
-		return NULL;
-	}
-	return hp;
+	if (buf)
+		free(buf);
+	
+	return NULL;
 #else
-	struct hostent *hp, *hp2;
-	*buf=NULL;
+	struct hostent *hp;
+
+	if (!(addr = malloc(sizeof(struct in_addr)))) {
+		errno = ENOMEM;
+		goto cleanup;
+	}
 
 	if (!(hp = gethostbyname(hostname)))
-		return NULL;
+		goto cleanup;
 
-	if (!(hp2 = calloc(1, sizeof(*hp))))
-		return NULL;
+	memcpy(addr, hp->h_addr, sizeof(struct in_addr));
 
-	memcpy(hp2, hp, sizeof(*hp));
+	return addr;
+	
+cleanup:
+	if (addr)
+		free(addr);
 
-	return hp2;
+	return NULL;
 #endif
 }
 

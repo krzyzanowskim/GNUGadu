@@ -1,4 +1,4 @@
-/* $Id: libgadu.h,v 1.5 2004/10/25 08:20:45 krzyzak Exp $ */
+/* $Id: libgadu.h,v 1.6 2004/11/18 09:47:53 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -19,7 +19,8 @@
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
+ *  USA.
  */
 
 #ifndef __GG_LIBGADU_H
@@ -903,7 +904,7 @@ char *gg_vsaprintf(const char *format, va_list ap);
 char *gg_get_line(char **ptr);
 
 int gg_connect(void *addr, int port, int async);
-struct hostent *gg_gethostbyname(const char *hostname, char **buf);
+struct in_addr *gg_gethostbyname(const char *hostname);
 char *gg_read_line(int sock, char *buf, int length);
 void gg_chomp(char *line);
 char *gg_urlencode(const char *str);
@@ -1200,10 +1201,8 @@ struct gg_msg_image_reply {
 
 #define GG_SEND_MSG_ACK 0x0005
 
-#define GG_ACK_BLOCKED 0x0001
 #define GG_ACK_DELIVERED 0x0002
 #define GG_ACK_QUEUED 0x0003
-#define GG_ACK_MBOXFULL 0x0004
 #define GG_ACK_NOT_DELIVERED 0x0006
 	
 struct gg_send_msg_ack {

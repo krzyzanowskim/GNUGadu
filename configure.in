@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.104 2004/11/10 11:28:57 krzyzak Exp $
+dnl $Id: configure.in,v 1.105 2004/11/18 09:47:51 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.2])
 
@@ -102,6 +102,28 @@ if test "x$with_c99_vsnprintf" = "x"; then
 	])
 fi
 
+dnl
+dnl  Resolver libgadu oparty na pthread
+dnl
+
+ACX_PTHREAD(
+[
+ 	dnl workaround dla pkconfiga
+	if test "x$PTHREAD_CFLAGS" = "x-pthread"; then
+		PTHREAD_LIBS="$PTHREAD_LIBS -pthread"
+	fi
+	
+	LIBS="$PTHREAD_LIBS $LIBS"
+	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+	CFLAGS_LIBGADU="$CFLAGS_LIBGADU $PTHREAD_CFLAGS"
+	CC="$PTHREAD_CC"
+	
+	have_pthread=yes
+	
+	AC_DEFINE([HAVE_PTHREAD])
+	], [
+	AC_MSG_ERROR([Your system is not supporting pthreads])
+])
 
 
 dnl AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
