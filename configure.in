@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.110 2004/12/22 15:56:22 krzyzak Exp $
+dnl $Id: configure.in,v 1.111 2004/12/23 11:59:55 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.3])
 
@@ -455,15 +455,15 @@ if test "x$with_aaway" != "xno"; then
 fi
 
 AC_ARG_WITH(ignore, [  --with-ignore		  Build without ignore plugin])
-if test "x$with_ignore" != "xyes"; then 
-	with_ignore=no
-    else
+if test "x$with_ignore" != "xno"; then 
 	with_ignore=yes
 	AC_SUBST(IGNORE_CFLAGS)
 	AC_SUBST(IGNORE_LIBS)
+    else
+	with_ignore=no
 fi
 
-AC_ARG_WITH(remote, [  --with-remote		  Build with remote plugin])
+AC_ARG_WITH(remote, [  --with-remote		  Build with remote plugin (deprecated)])
 if test "x$with_remote" != "xyes"; then 
 	with_remote=no
 else
@@ -483,7 +483,7 @@ else
 	AC_SUBST(DBUS_CFLAGS)
 	AC_SUBST(DBUS_LIBS)
 fi
-AC_ARG_WITH(dbus-dir,[  --with-dbus-dir=PFX   Prefix where D-BUS services are installed (/usr/share/dbus-1.0/services)],
+AC_ARG_WITH(dbus-dir,[  --with-dbus-dir=PFX   Prefix where D-BUS services are installed (/usr/share/dbus-1/services)],
             dbus_dir="$withval", dbus_dir="")
 	    
 if test x$dbus_dir != x ; then
@@ -755,7 +755,7 @@ echo Build plugin Auto Away................. : $with_aaway
 echo Build plugin Ignore.................... : $with_ignore
 echo Build plugin update.................... : $with_update
 echo Build plugin external history viewer... : $with_history_external_viewer
-echo Build plugin remote.................... : $with_remote
+echo Build plugin remote - deprecated....... : $with_remote
 echo Build plugin DBUS...................... : $with_dbus
 echo Build gghist - history viewer.......... : $with_gghist
 echo Build with perl support................ : $with_perl
