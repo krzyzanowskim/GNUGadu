@@ -1,22 +1,16 @@
---------------------------
 --- GNU Gadu 2 credits ---
 --- codename:  TNNJNG  ---
---------------------------
 --- alphabetical order ---
---------------------------
 
 
 CORE and MAINTAINERS :
 	Marcin Krzy풹nowski	<krzak@hakore.com>
 	Igor Popik		<igipop@wsfiz.edu.pl>
-
 also :
 	Bartosz Zapa쿽wski 	<bartek@klepisko.eu.org>
 	Jakub Jankowski		<shasta@atn.pl>
 
-----------------------------------------------------------------
 -- PLUGINS -----------------------------------------------------
-----------------------------------------------------------------
 GUI (gtk+-2)	
 		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
@@ -50,7 +44,8 @@ XOSD
 		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
 		: Jakub Jankowski	<shasta@atn.pl>
 
-Sound-*		
+sound-*		
+		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
 remote
@@ -67,12 +62,9 @@ DBUS
                 : Marcin Krzy풹nowski   <krzak@linux.net.pl>
 
 ----------------------------------------------------------------
-
-
-----------------------------------------------------------------
 -- THANKS FOR --------------------------------------------------
 ----------------------------------------------------------------
-Aflinta      - gettext patch, testing
+Aflinta      - gettext patch, testing, translations
 Dwuziu       - testing
 Piotr Smyrak - FreeBSD stuff
 Mateusz Maliszewski - icons and testing.

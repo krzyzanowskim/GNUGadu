@@ -1,12 +1,12 @@
-# $Id: pl.po,v 1.90 2005/01/05 13:07:26 aflinta Exp $
+# $Id: pl.po,v 1.91 2005/01/05 13:24:14 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-05 14:05+0100\n"
+"Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
+"POT-Creation-Date: 2005-01-05 14:17+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: Artur Flinta\n"
 "Language-Team: GNU Gadu Team\n"
@@ -23,7 +23,6 @@ msgstr "Nie można odczytać zawartości żadnego katalogu z modułami\n"
 msgid "Unable to open directory with plugins (%s)\n"
 msgstr "Nie można odczytać zawartości katalogu z wtyczkami (%s)\n"
 
-#. zaladowanie plugina
 #: src/main.c:88
 #, c-format
 msgid "Cannot load plugin %s\n"
@@ -51,7 +50,6 @@ msgstr ""
 msgid "There is no history file"
 msgstr "Nie ma pliku historii"
 
-#. button = PutNewButton(field, _("Find"));
 #: contrib/gghist/gghist.c:320
 msgid "Go to first page"
 msgstr "Przechodzi do pierwszej strony"
@@ -230,13 +228,11 @@ msgstr ""
 msgid "Incoming messages"
 msgstr "Wiadomości przychodzące"
 
-#.
 #: src/plugins/GUI/gui_preferences.c:256 src/plugins/GUI/gui_preferences.c:298
 #: src/plugins/GUI/gui_preferences.c:394 src/plugins/GUI/gui_preferences.c:428
 msgid "Message header"
 msgstr "Nagłówek wiadomości"
 
-#.
 #: src/plugins/GUI/gui_preferences.c:273 src/plugins/GUI/gui_preferences.c:315
 #: src/plugins/GUI/gui_preferences.c:407 src/plugins/GUI/gui_preferences.c:441
 msgid "Message body"
@@ -364,8 +360,6 @@ msgstr "Szerokość:"
 msgid "Height:"
 msgstr "Wysokość:"
 
-#. chat_paned_size
-#. ZONK - how to name it ?
 #: src/plugins/GUI/gui_preferences.c:725
 msgid "Window split (percent):"
 msgstr "Podział okna (w procentach):"
@@ -380,22 +374,18 @@ msgstr ""
 "Ustawienia zaawansowane\n"
 "\n"
 
-#. hide_on_start
 #: src/plugins/GUI/gui_preferences.c:780
 msgid "Auto hide window on start"
 msgstr "Automatyczne ukrywanie okna po uruchomieniu"
 
-#. notify status changes in Chat window
 #: src/plugins/GUI/gui_preferences.c:785
 msgid "Notify about status changes inside chat window"
 msgstr "Powiadamianie o zmianie stanu wewnątrz okna rozmowy"
 
-#. close_on_esc
 #: src/plugins/GUI/gui_preferences.c:790
 msgid "'ESC' - close chat window"
 msgstr "Zamknięcie okna rozmowy klawiszem \"Esc\""
 
-#. blink
 #: src/plugins/GUI/gui_preferences.c:795
 msgid "Blink status icon while connecting every:"
 msgstr "Mruganie ikony stanu podczas łączenia:"
@@ -543,7 +533,6 @@ msgstr "Nie można odczytać pliku z konfiguracją wtyczki GUI, nie martw się"
 msgid "Status"
 msgstr "Stan"
 
-#. *INDENT-OFF*
 #: src/plugins/GUI/gui_search.c:47 src/plugins/sms/sms_gui.c:87
 msgid "Id"
 msgstr "Id"
@@ -636,7 +625,6 @@ msgstr ""
 "<i>Data kompilacji:\n"
 "%s %s</i>"
 
-#. It must be here
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:427
 msgid "Docklet-dockapp2"
 msgstr "Docklet-dockapp2"
@@ -674,7 +662,6 @@ msgstr "Zakończ"
 msgid "Unable to create system-tray docklet"
 msgstr "Nie można utworzyć elmentu w obszarze powiadamaina"
 
-#. wazne zeby to bylo tutaj
 #: src/plugins/docklet/system-tray/docklet_plugin.c:527
 msgid "Dockable icon"
 msgstr "Ikona obszaru powiadamiania"
@@ -693,7 +680,6 @@ msgstr "Konfiguracja wtyczki Gadu-gadu"
 msgid "_Password:"
 msgstr "_Hasło:"
 
-#. ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, ggadu_config_var_get(handler, "reason"), VAR_FLAG_NONE);
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:221
 msgid "Available only for _friends"
 msgstr "D_ostępność tylko dla znajomych"
@@ -1020,7 +1006,6 @@ msgid "Blocked"
 msgstr "Zablokowany"
 
 # FIXME - co ma znaczyć (c) w tym miejscu??!
-#. wazne zeby wywolac to makro w tym miejscu
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1659
 msgid "Gadu-Gadu(c) protocol"
 msgstr "Protokół Gadu-Gadu(c)"
@@ -1029,7 +1014,6 @@ msgstr "Protokół Gadu-Gadu(c)"
 msgid "no reason"
 msgstr "brak powodu"
 
-#. GGaduMenu *listmenu = NULL;
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1831
 #: src/plugins/tlen/tlen_plugin.c:845 src/plugins/jabber/jabber_plugin.c:384
 msgid "_Chat"
@@ -1059,7 +1043,6 @@ msgstr "_Usuń"
 msgid "Add _New"
 msgstr "_Nowy kontakt"
 
-#. end
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2122
 #: src/plugins/tlen/tlen_plugin.c:912 src/plugins/jabber/jabber_plugin.c:681
 msgid "Enter status description"
@@ -1128,12 +1111,10 @@ msgstr "Błąd przy operacji GETROSTERITEM"
 msgid "You received sound alert"
 msgstr "Otrzymałeś alarm"
 
-#. warning pokazujemy pozniej, bo jest modalny!
 #: src/plugins/tlen/tlen_plugin.c:508
 msgid "You have to enter your login and password first!"
 msgstr "Podaj swoją nazwę użytkownika i hasło"
 
-#. *INDENT-OFF*
 #: src/plugins/tlen/tlen_plugin.c:594 src/plugins/jabber/jabber_cb.c:478
 #: src/plugins/jabber/jabber_cb.c:545 src/plugins/sms/sms_gui.c:88
 #: src/plugins/sms/sms_gui.c:106
@@ -1212,7 +1193,6 @@ msgstr "_Nowy kontakt"
 msgid "XOSD Preferences"
 msgstr "Ustawienia XOSD"
 
-#. *INDENT-OFF*
 #: src/plugins/xosd/plugin_xosd.c:384
 msgid "Timestamp"
 msgstr "Znacznik czasowy"
@@ -1839,12 +1819,10 @@ msgstr "Nieznany błąd!"
 msgid "SMS Preferences"
 msgstr "Ustawienia SMS"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:64
 msgid "Use \"SMS\" program to send"
 msgstr "Użycie programu \"SMS\" do wysyłania wiadomości"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:65 src/plugins/sms/sms_gui.c:303
 msgid "Sender"
 msgstr "Nadawca:"
@@ -1874,7 +1852,6 @@ msgstr "Brak numeru telefonu"
 msgid "Send to : "
 msgstr "Wyślij do: "
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:156
 msgid "Use _external program"
 msgstr "Użycie z_ewnętrznego programu"
@@ -1944,7 +1921,6 @@ msgstr "Plugin interfejsu DBUS"
 msgid "Auto-Away Preferences"
 msgstr "Ustawienia"
 
-#. gchar *utf = NULL;
 #: src/plugins/aaway/aaway.c:251
 msgid "Enable auto-away"
 msgstr "Włączony automatyczny stan zajętości"
@@ -1999,7 +1975,6 @@ msgstr "Brak dostępnych aktualizacji"
 msgid "Update Preferences"
 msgstr "Ustawienia wtyczki aktualizacji"
 
-#. *INDENT-OFF*
 #: src/plugins/update/update_plugin.c:328
 msgid "Check for updates on startup"
 msgstr "Sprawdzanie aktualizacji przy uruchomieniu"

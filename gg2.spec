@@ -1,8 +1,8 @@
-# $Revision: 1.25 $, $Date: 2004/12/20 09:11:09 $
+# $Revision: 1.26 $, $Date: 2005/01/05 13:24:13 $
 #
 # Conditional build: 
 %bcond_without	arts
-%bcond_without	perl
+%bcond_with	perl
 %bcond_without	esd
 %bcond_without	gtkspell
 %bcond_without	dbus
@@ -11,22 +11,20 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.2.3
-Release:	2
+Version:	2.2.4
+Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://osdn.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}.tar.gz
-# Source0-md5:	5d38e161612307ea2a7a00f9453678e3
+Source0:	http://osdn.dl.sourceforge.net/ggadu/%{name}-%{version}.tar.gz
 URL:		http://www.gnugadu.org/
-#Patch0:	%{name}-desktop.patch
 %{?with_arts:BuildRequires:	artsc-devel}
 BuildRequires:	autoconf
-BuildRequires:	automake >= 1.7
+BuildRequires:	automake >= 1:1.7
 %{?with_esd:BuildRequires:	esound-devel >= 0.2.7}
 BuildRequires:	gettext-devel >= 0.11.0
-BuildRequires:	glib2-devel  >= 2.2.0
-BuildRequires:	gtk+2-devel  >= 2.4.0
+BuildRequires:	glib2-devel >= 2.2.0
+BuildRequires:	gtk+2-devel >= 2.4.0
 BuildRequires:	libtlen-devel
 BuildRequires:	libtool
 BuildRequires:	loudmouth-devel >= 0.17.1
@@ -35,7 +33,7 @@ BuildRequires:	openssl-devel >= 0.9.7d
 %{?with_gtkspell:BuildRequires:	gtkspell-devel}
 %{?with_gtkspell:BuildRequires:	aspell-devel}
 BuildRequires:	pkgconfig
-BuildRequires:	xosd-devel   >= 2.0.0
+BuildRequires:	xosd-devel >= 2.0.0
 %if %{with perl}
 BuildRequires:	perl-devel
 Requires:	perl(DynaLoader) = %(%{__perl} -MDynaLoader -e 'print DynaLoader->VERSION')
@@ -375,8 +373,6 @@ Wtyczka sprawdzaj±ca, czy jest dostêpna nowsza wersja GNU Gadu.
 Summary:	Allow to communicate using D-BUS message bus
 Summary(pl):	Komunikacja za pomoc± magistrali D-BUS
 Group:		Applications/Communications
-Provides:	%{name}-update = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-update
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description plugin-dbus
@@ -384,6 +380,30 @@ This plugin allows to communicate using D-BUS interface.
 
 %description plugin-dbus -l pl
 Wtyczka pozwala na komunikacjê za pomoc± magistrali D-BUS.
+
+%package plugin-auto-away
+Summary:	Auto-Away Plugin
+Summary(pl):	Wtyczka automatycznego stany zajêto¶ci
+Group:		Applications/Communications
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description plugin-auto-away
+Auto-Away Plugin.
+
+%description plugin-auto-away -l pl
+Wtyczka automatycznego stany zajêto¶ci.
+
+%package plugin-ignore
+Summary:	Allow to create list of ignored contacts
+Summary(pl):	Wtyczka pozwalaj±ca stworzyæ listê kontaktów ignorowanych
+Group:		Applications/Communications
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description plugin-ignore
+Allow to create list of ignored contacts.
+
+%description plugin-ignore -l pl
+Wtyczka pozwalaj±ca stworzyæ listê kontaktów ignorowanych.
 
 %package themes
 Summary:	Themes for GNU Gadu 2 GUI
@@ -404,7 +424,6 @@ Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__gettextize}
@@ -430,10 +449,12 @@ Motywy graficzne dla GUI GNU Gadu 2.
  	--with-external \
  	--with-update \
 	--with-history-external-viewer \
+	--with-aaway \
+	--with-ignore \
 	--with-gghist \
 	--with%{!?with_gtkspell:out}-gtkspell \
 	--with%{!?with_dbus:out}-dbus \
-	%{?with_dbus:--with-dbus-dir=%{_datadir}/dbus-1.0/services/} \
+	%{?with_dbus:--with-dbus-dir=%{_datadir}/dbus-1/services/} \
 	--%{?with_perl:with}%{!?with_perl:without}-perl \
  	--with-remote
 
@@ -548,11 +569,19 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libupdate_plugin.so
 
+%files plugin-auto-away
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gg2/libaaway_plugin.so
+
+%files plugin-ignore
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gg2/libignore_main_plugin.so
+
 %if %{with dbus}
 %files plugin-dbus
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libdbus_plugin.so
-%{_datadir}/dbus-1.0/services/org.freedesktop.im.GG.service
+%{_datadir}/dbus-1/services/org.freedesktop.im.GG.service
 %endif
 
 %files themes
@@ -584,8 +613,14 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.25  2004/12/20 09:11:09  krzyzak
-- sync with PLD
+Revision 1.26  2005/01/05 13:24:13  krzyzak
+- 2.2.4
+
+Revision 1.134  2004/12/25 18:04:55  qboosh
+- automake epoch
+
+Revision 1.133  2004/12/25 17:55:31  qboosh
+- cleanups
 
 Revision 1.132  2004/12/07 12:47:35  zbyniu
 - BR: dbus-libs -> dbus-glib-devel

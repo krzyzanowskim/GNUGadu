@@ -14,5 +14,5 @@ libdbus_plugin_la_LDFLAGS = -avoid-version
 servicesdir = $(DBUS_DIR)
 services_DATA = org.freedesktop.im.GG.service
 
-EXTRA_DIST = $(services_DATA) README
+EXTRA_DIST = $(services_DATA)
 
