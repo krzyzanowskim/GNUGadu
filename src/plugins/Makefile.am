@@ -46,6 +46,10 @@ if BUILD_SMS
 SMS=sms
 endif
 
+if BUILD_AAWAY
+AAWAY=aaway
+endif
+
 if BUILD_REMOTE
 REMOTE=remote
 endif
@@ -63,7 +67,7 @@ HISTORY=history
 endif
 
 
-SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE) $(HISTORY) $(DBUS)
+SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE) $(HISTORY) $(DBUS) $(AAWAY)
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)/$(pkglibdir)

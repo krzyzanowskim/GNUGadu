@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.205 2004/11/03 12:42:45 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.206 2004/11/19 17:28:46 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2079,21 +2079,24 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 				print_debug(" %d %d\n ", GG_STATUS_INVISIBLE_DESCR, sp->status);
 
-				desc_utf = kv->value;
-				/* do sesji */
-				desc_cp = from_utf8("CP1250", desc_utf);
-				/* do konfiga */
-				desc_iso = from_utf8("ISO-8859-2", desc_utf);
+				if (kv)
+				{
+				    desc_utf = kv->value;
+				    /* do sesji */
+				    desc_cp = from_utf8("CP1250", desc_utf);
+				    /* do konfiga */
+				    desc_iso = from_utf8("ISO-8859-2", desc_utf);
 
-				ggadu_config_var_set(handler, "reason", desc_iso);
-				ggadu_set_protocol_status_description(p, desc_utf);
+				    ggadu_config_var_set(handler, "reason", desc_iso);
+				    ggadu_set_protocol_status_description(p, desc_utf);
+				}
 
 				if (!connected)
 				{
 					connect_count = 0;
 					gadu_gadu_login(desc_cp, _status);
 				}
-				else if (!gg_change_status_descr(session, _status, desc_cp))
+				else if (!gg_change_status_descr(session, _status, desc_cp ? desc_cp : ""))
 					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
 
 				g_free(desc_cp);
@@ -2381,6 +2384,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 			gint s = ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status);
 			signal->data_return = ggadu_find_status_prototype(p, s);
+			print_debug("GG %d",s);
 		}
 		else
 			signal->data_return = ggadu_find_status_prototype(p, GG_STATUS_NOT_AVAIL);

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.117 2004/11/17 11:14:50 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.118 2004/11/19 17:28:47 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -694,9 +694,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			{
 				gchar *desc_utf = NULL;
 				kv = (GGaduKeyValue *) ggadu_dialog_get_entries(dialog)->data;
-				desc_utf = kv->value;
 				
-				ggadu_set_protocol_status_description(p,desc_utf);
+				if (kv)
+				{
+				    desc_utf = kv->value;
+				    ggadu_set_protocol_status_description(p,desc_utf);
+				}
 				jabber_change_status(sp->status);
 			}
 			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 

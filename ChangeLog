@@ -1,3 +1,6 @@
+19.11.2004
+- added modified auto-away plugin to main stream from gg2-plugins cvs module (aaway/krzak)
+
 18.11.2004
 - sync libgadu with ekg cvs version (gadu-gadu/krzak)
 - close bugs #116,#91,#115

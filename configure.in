@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.107 2004/11/18 13:34:32 krzyzak Exp $
+dnl $Id: configure.in,v 1.108 2004/11/19 17:28:43 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.3])
 
@@ -237,6 +237,7 @@ if test x$with_all_plugins = xyes; then
     with_sms=yes
     with_remote=yes
     with_dbus=yes
+    with_aaway=yes
     with_external=yes
     with_history_external_viewer=yes
     with_update=yes
@@ -438,6 +439,13 @@ if test "x$with_sms" != "xno"; then
 	with_sms=no
 fi
 
+AC_ARG_WITH(aaway, [  --without-aaway		  Build without auto away plugin])
+if test "x$with_aaway" != "xno"; then 
+	with_aaway=yes
+    else
+	with_aaway=no
+fi
+
 AC_ARG_WITH(remote, [  --with-remote		  Build with remote plugin])
 if test "x$with_remote" != "xyes"; then 
 	with_remote=no
@@ -600,6 +608,7 @@ AM_CONDITIONAL(BUILD_SOUND_OSS, test "$with_oss" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_EXTERNAL, test "$with_external" = "yes")
 AM_CONDITIONAL(BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN, test "$with_history_external_viewer" = "yes")
 AM_CONDITIONAL(BUILD_SMS, test "$with_sms" = "yes")
+AM_CONDITIONAL(BUILD_AAWAY, test "$with_aaway" = "yes")
 AM_CONDITIONAL(BUILD_REMOTE, test "$with_remote" = "yes")
 AM_CONDITIONAL(BUILD_DBUS, test "$with_dbus" = "yes")
 AM_CONDITIONAL(BUILD_UPDATE, test "$with_update" = "yes")
@@ -676,6 +685,7 @@ src/plugins/gadu_gadu/Makefile
 src/plugins/tlen/Makefile
 src/plugins/jabber/Makefile
 src/plugins/xosd/Makefile
+src/plugins/aaway/Makefile
 src/plugins/docklet/Makefile
 src/plugins/docklet/system-tray/Makefile
 src/plugins/docklet/dockapp/Makefile
@@ -722,6 +732,7 @@ echo Build plugin sound aRts................ : $with_arts
 echo Build plugin sound OSS................. : $with_oss
 echo Build plugin sound external............ : $with_external
 echo Build plugin sms....................... : $with_sms
+echo Build plugin Auto Away................. : $with_aaway
 echo Build plugin update.................... : $with_update
 echo Build plugin external history viewer... : $with_history_external_viewer
 echo Build plugin remote.................... : $with_remote

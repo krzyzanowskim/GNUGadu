@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.75 2004/11/03 07:53:45 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.76 2004/11/19 17:28:47 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -1045,10 +1045,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					/* w kv->value jest opis, w utf8 */
 					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
 
-					ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
+					if (kv)
+					{
+					    ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
 
-					/* ustaw nowy opis w sesji */
-					tlen_presence(session, sp->status, ggadu_get_protocol_status_description(p));
+					    /* ustaw nowy opis w sesji */
+					    tlen_presence(session, sp->status, ggadu_get_protocol_status_description(p));
+					}
 
 					/* uaktualnij GUI */
 					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
