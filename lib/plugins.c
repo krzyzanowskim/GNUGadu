@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.19 2004/08/01 22:29:11 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.20 2004/09/21 15:22:29 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -118,6 +118,7 @@ gboolean load_plugin(gchar * path)
 		g_warning("%s is not a valid plugin file, load failed! %s\n", path, dlerror());
 		return FALSE;
 	}
+	dlerror(); /* Clear previous errors */
 
 	for (i = 0; syms[i].name; i++)
 	{
