@@ -54,6 +54,48 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 		
 	print_debug("%s : receive signal %s\n",GGadu_PLUGIN_NAME,(gchar *)signal->name);
 
+	if (!ggadu_strcasecmp(signal->name,"jabber subscribe")) { 
+		GGaduDialog *d = signal->data;
+			
+		if (d->response == GGADU_OK) {
+				iksid *id = d->user_data;
+				
+				if (id) {
+					iks *x = NULL;
+						
+					x = iks_make_pres(IKS_TYPE_SUBSCRIBED, 0, iks_id_printx(id,id_print), NULL);
+					iks_send(jabber_session->parser, x);
+					iks_delete(x);
+						
+					x = iks_make_pres(IKS_TYPE_SUBSCRIBE, 0, iks_id_printx(id,id_print), NULL);
+					iks_send(jabber_session->parser, x);
+					iks_delete(x);
+				}
+		}	    
+		
+		GGaduDialog_free(d);
+		return;
+	}
+		
+	if (!ggadu_strcasecmp(signal->name,"jabber unsubscribe")) { 
+		GGaduDialog *d = signal->data;
+			
+		if (d->response == GGADU_OK) {
+				iksid *id = d->user_data;
+				
+				if (id) {
+					iks *x = NULL;
+					x = iks_make_pres(IKS_TYPE_UNSUBSCRIBE, 0, iks_id_printx(id,id_print), NULL);
+					iks_send(jabber_session->parser, x);
+					iks_delete(x);
+				}
+		}	    
+		
+		GGaduDialog_free(d);
+		return;
+	}
+
+	
 	if (!ggadu_strcasecmp(signal->name,"add user")) { 
 
 		GGaduContact *k = g_new0(GGaduContact,1);
@@ -411,6 +453,8 @@ void start_plugin()
 	register_signal(jabber_handler,"search");
 	register_signal(jabber_handler,"add user search");
 	register_signal(jabber_handler,"get current status");
+	register_signal(jabber_handler,"jabber subscribe");
+	register_signal(jabber_handler,"jabber unsubscribe");
 
 	menu_jabbermenu = build_jabber_menu();
 		

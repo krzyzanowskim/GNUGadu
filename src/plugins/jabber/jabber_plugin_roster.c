@@ -5,6 +5,7 @@
 #include "plugins.h"
 #include "signals.h"
 #include "support.h"
+#include "dialog.h"
 
 #include "jabber_plugin.h"
 #include "jabber_plugin_protocol.h"
@@ -189,7 +190,9 @@ void roster_update(ikspak *pak)
 
 void presence_parse(ikspak *pak)
 {
-	iks *x;
+	iks *x = NULL;
+	iksid *id = NULL;
+	gchar *from = NULL;
 	char *errnum;
 
 	switch(pak->subtype) {
@@ -210,39 +213,58 @@ void presence_parse(ikspak *pak)
 			} else print_debug(": No error message!\n");
 		break;
 
-		case IKS_TYPE_SUBSCRIBE:
-			print_debug("wants to subscribe your presence.\n");
+		case IKS_TYPE_SUBSCRIBE: {
+			GGaduDialog *d = ggadu_dialog_new();
+
+			id = pak->from;
+			from = g_strdup_printf(_("User : %s@%s \nwants to SUBSCRIBE your presence"),id->user,id->server);
 			
-			x = iks_make_pres(IKS_TYPE_SUBSCRIBED, 0, iks_id_printx(pak->from,id_print), NULL);
-			iks_send(jabber_session->parser, x);
-			iks_delete(x);
-
-			x = iks_make_pres(IKS_TYPE_SUBSCRIBE, 0, iks_id_printx(pak->from,id_print), NULL);
-			iks_send(jabber_session->parser, x);
-			iks_delete(x);
-
+			ggadu_dialog_set_title(d, _("Confirmation"));
+			ggadu_dialog_set_type(d, GGADU_DIALOG_YES_NO);       
+			ggadu_dialog_callback_signal(d,"jabber subscribe");
+			ggadu_dialog_add_entry(&(d->optlist), 0, from, VAR_NULL, NULL, VAR_FLAG_NONE);
+			d->user_data = pak->from;
+					
+			signal_emit("jabber", "gui show dialog", d, "main-gui");
+					
+			}
 			break;
 
-		case IKS_TYPE_SUBSCRIBED:
-			print_debug("accepts your subscription.\n");
+		case IKS_TYPE_SUBSCRIBED: {
+			id = pak->from;
+			from = g_strdup_printf(_("%s accepts your subscription"),id->user);
+			signal_emit("jabber", "gui show message",from,"main-gui");
+			}
 			break;
 
-		case IKS_TYPE_UNSUBSCRIBE:
+		case IKS_TYPE_UNSUBSCRIBE: {
+			GGaduDialog *d = ggadu_dialog_new();
 
-			x = iks_make_pres(IKS_TYPE_UNSUBSCRIBE, 0, iks_id_printx(pak->from,id_print), NULL);
-			iks_send(jabber_session->parser, x);
-			iks_delete(x);
+			id = pak->from;
+			from = g_strdup_printf(_("User : %s@%s \nwants to UNSUBSCRIBE your presence"),id->user,id->server);
+
+			ggadu_dialog_set_title(d, _("Confirmation"));
+			ggadu_dialog_set_type(d, GGADU_DIALOG_YES_NO);       
+			ggadu_dialog_callback_signal(d,"jabber unsubscribe");
+			ggadu_dialog_add_entry(&(d->optlist), 0, from, VAR_NULL, NULL, VAR_FLAG_NONE);
+			d->user_data = pak->from;
+					
+			signal_emit("jabber", "gui show dialog", d, "main-gui");
 
 			print_debug("wants to unsubscribe from your presence.\n");
+			}
 			break;
 
 		case IKS_TYPE_UNSUBSCRIBED:
 			/* WTF ? */
+			id = pak->from;
+			from = g_strdup_printf(_("%s unsubscribe you from presence"),id->user);
+			signal_emit("jabber", "gui show message",from,"main-gui");
+		
 			x = iks_make_pres(IKS_TYPE_UNSUBSCRIBED, 0, iks_id_printx(pak->from,id_print), NULL);
 			iks_send(jabber_session->parser, x);
 			iks_delete(x);
 
-			print_debug("unsubscribes you from her presence.\n");
 			break;
 		default:
 			print_debug("(unknown presence code)\n");
