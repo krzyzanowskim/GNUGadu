@@ -1,4 +1,4 @@
-# $Revision: 1.5 $, $Date: 2003/06/03 21:30:04 $
+# $Revision: 1.6 $, $Date: 2003/06/03 21:43:18 $
 
 %define		snap	snap
 
@@ -39,6 +39,21 @@ GTK+2 GUI on GNU/GPL.
 %description -l pl
 Klient Gadu-Gadu, Tlen.pl oraz innych protoko³ów z GUI pod GTK+2 na
 licencji GNU/GPL.
+
+%package devel
+Summary:	Headers to develop plugins
+Summary(pl):	Pliki potrzebne do rozwijania pluginow
+Group:		Applications/Communications
+Requires:	%{name} = %{version}
+
+%description devel
+Gadu-Gadu, Tlen.pl and others instant messanger client with
+GTK+2 GUI on GNU/GPL. Package contain header files.
+
+%description devel -l pl
+Klient Gadu-Gadu, Tlen.pl oraz innych protoko³ów z GUI pod GTK+2 na
+licencji GNU/GPL. - Pakiet zawiera pliki naglowkowe.
+
 
 %package gui-gtk+2
 Summary:	GTK+2 GUI plugin
@@ -262,7 +277,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gg2
 %{_datadir}/%{name}/sounds
 %{_libdir}/libgg2_core.so*
-%{_libdir}/pkgconfig/gg2_core.pc
 
 %files gui-gtk+2
 %defattr(644,root,root,755)
@@ -274,6 +288,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_pixmapsdir}/%{name}.png
 %{_datadir}/applications/gg2.desktop
+
+%files devel
+%{_includedir}/gg2_core.h
+%dir %{_libdir}/pkgconfig
+%{_libdir}/pkgconfig/gg2_core.pc
 
 %files emoticons
 %defattr(644,root,root,755)
@@ -348,14 +367,8 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.5  2003/06/03 21:30:04  krzyzak
-- revolution
-- libgg2_core.so in "lib" directory
-- example plugin that can be build out the main tree in "contrib" directory
-- fuck automake
-
-Revision 1.4  2003/06/03 11:30:54  krzyzak
-SPEC file update
+Revision 1.6  2003/06/03 21:43:18  krzyzak
+- update to latest snap
 
 Revision 1.41  2003/05/25 11:00:51  malekith
 - massive attack, adding Source-md5
