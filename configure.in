@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.100 2004/11/03 07:53:39 krzyzak Exp $
+dnl $Id: configure.in,v 1.101 2004/11/05 09:11:48 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.1])
 
@@ -262,7 +262,7 @@ dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
 dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
 dnl fi
 
-AC_ARG_WITH(gghist, [  --without-gghist		  Build gghist])
+AC_ARG_WITH(gghist, [  --without-gghist		  Build without gghist])
 if test "x$with_gghist" != "xno"; then 
     with_gghist=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
@@ -272,7 +272,7 @@ else
     with_gghist=no
 fi
 
-AC_ARG_WITH(gui, [  --without-gui		  Build gtk2 GUI plugin	])
+AC_ARG_WITH(gui, [  --without-gui		  Build without gtk2 GUI plugin	])
 if test "x$with_gui" != "xno"; then 
     with_gui=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
@@ -282,7 +282,7 @@ else
     with_gui=no
 fi
 
-AC_ARG_WITH(gtkspell, [  --without-gtkspell	  Build GUI plugin with gtkspell support])
+AC_ARG_WITH(gtkspell, [  --without-gtkspell	  Build without GUI plugin with gtkspell support])
 if test "x$with_gtkspell" != "xno"; then 
     with_gtkspell=yes
     PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],with_gtkspell=no)
@@ -300,8 +300,8 @@ else
     with_gtkspell=no
 fi
 
-AC_ARG_WITH(gadu, [  --without-gadu		  Build gadu-gadu plugin])
-AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu])
+AC_ARG_WITH(gadu, [  --without-gadu		  Build without gadu-gadu plugin])
+AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build without gadu-gadu plugin with external libgadu])
 
 if test "x$with_external_libgadu" = "xyes"; then 
     PKG_CHECK_MODULES(LIBGADU,libgadu,with_external_libgadu=yes,AC_MSG_ERROR($GTK_PKG_ERRORS))
@@ -334,7 +334,7 @@ else
     with_gadu=no
 fi
 
-AC_ARG_WITH(tlen, [  --without-tlen		  Build tlen plugin])
+AC_ARG_WITH(tlen, [  --without-tlen		  Build without tlen plugin])
 if test "x$with_tlen" != "xno"; then 
     with_tlen=yes
     AC_CHECK_LIB([tlen], [tlen_set_hub_blocking], with_tlen=yes, with_tlen=no)
@@ -349,7 +349,7 @@ else
     with_tlen=no
 fi
 
-AC_ARG_WITH(jabber, [  --without-jabber		  Build jabber plugin])
+AC_ARG_WITH(jabber, [  --without-jabber		  Build without jabber plugin])
 if test "x$with_jabber" != "xno"; then 
     with_jabber=yes
     PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.17, [],with_jabber=no)
@@ -378,7 +378,7 @@ else
     with_jabber=no
 fi
 
-AC_ARG_WITH(xosd, [  --without-xosd		  Build XOSD plugin])
+AC_ARG_WITH(xosd, [  --without-xosd		  Build without XOSD plugin])
 if test "x$with_xosd" != "xno"; then 
     with_xosd=yes
     AC_PATH_PROG(xosd_config_script, xosd-config, "none")
@@ -404,21 +404,21 @@ else
     with_xosd=no
 fi
 
-AC_ARG_WITH(sms, [  --without-sms		  Build sms plugin])
+AC_ARG_WITH(sms, [  --without-sms		  Build without sms plugin])
 if test "x$with_sms" != "xno"; then 
 	with_sms=yes
     else
 	with_sms=no
 fi
 
-AC_ARG_WITH(remote, [  --with-remote		  Build remote plugin])
+AC_ARG_WITH(remote, [  --with-remote		  Build with remote plugin])
 if test "x$with_remote" != "xyes"; then 
 	with_remote=no
 else
 	with_remote=yes
 fi
 
-AC_ARG_WITH(dbus, [  --with-dbus		  Build DBUS plugin])
+AC_ARG_WITH(dbus, [  --with-dbus		  Build with DBUS plugin])
 if test "x$with_dbus" != "xyes"; then 
 	with_dbus=no
 else
@@ -445,7 +445,7 @@ else
 	AC_SUBST(MOZILLA_PLUGIN_LIBS)
 fi
 
-AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build docklet plugin])
+AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build without docklet plugin])
 if test "x$with_docklet_system_tray" != "xno"; then 
     with_docklet_system_tray=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_system_tray=no)
@@ -458,7 +458,7 @@ else
     with_docklet_system_tray=no
 fi
 
-AC_ARG_WITH(docklet_dockapp, [  --without-docklet-dockapp	  Build dockapp plugin])
+AC_ARG_WITH(docklet_dockapp, [  --without-docklet-dockapp	  Build without dockapp plugin])
 if test "x$with_docklet_dockapp" != "xno"; then 
     with_docklet_dockapp=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_dockapp=no)
@@ -471,7 +471,7 @@ else
     with_docklet_dockapp=no
 fi
 
-AC_ARG_WITH(esd, [  --without-esd		  Build esd sound plugin])
+AC_ARG_WITH(esd, [  --without-esd		  Build without esd sound plugin])
 if test "x$with_esd" != "xno"; then
 
     with_esd=yes
@@ -490,7 +490,7 @@ else
     with_esd=no
 fi
 
-AC_ARG_WITH(arts, [  --without-arts		  Build aRts! sound plugin])
+AC_ARG_WITH(arts, [  --without-arts		  Build without aRts! sound plugin])
 if test "x$with_arts" != "xno"; then 
     with_arts=yes
 
@@ -516,7 +516,7 @@ else
      with_arts=no
 fi
 
-AC_ARG_WITH(oss, [  --without-oss		  Build OSS sound plugin])
+AC_ARG_WITH(oss, [  --without-oss		  Build without OSS sound plugin])
 if test "x$with_oss" != "xno"; then
     with_oss=yes
     have_soundcardh=no
@@ -539,21 +539,21 @@ else
     with_oss=no
 fi
 
-AC_ARG_WITH(external, [  --without-external	  Build external player sound plugin])
+AC_ARG_WITH(external, [  --without-external	  Build without external player sound plugin])
 if test "x$with_external" != "xno"; then
     with_external=yes
 else
     with_external=no
 fi
 
-AC_ARG_WITH(history_external_viewer, [  --without-history-external-viewer	  Build external history plugin])
+AC_ARG_WITH(history_external_viewer, [  --without-history-external-viewer	  Build without external history plugin])
 if test "x$with_history_external_viewer" != "xno"; then
     with_history_external_viewer=yes
 else
     with_history_external_viewer=no
 fi
 
-AC_ARG_WITH(update, [  --without-update		  Build update plugin])
+AC_ARG_WITH(update, [  --without-update		  Build without update plugin])
 if test "x$with_update" != "xno"; then 
 	with_update=yes
 else
