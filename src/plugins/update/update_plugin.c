@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.6 2003/06/09 18:49:57 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.7 2003/09/22 11:09:33 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -54,7 +54,8 @@ gchar *update_get_current_version(gboolean show)
     struct hostent *h;
     struct sockaddr_in servAddr;
     const gchar *server = GGADU_UPDATE_SERVER;
-    gchar *get = NULL, *recv_buff = NULL, *temp = NULL, *buf1 = NULL;
+    gchar temp[2];
+    gchar *get = NULL, *recv_buff = NULL, *buf1 = NULL;
     gchar *reply = NULL;
 
     /* where to connect */
@@ -107,30 +108,23 @@ gchar *update_get_current_version(gboolean show)
 	return NULL;
     }
 
+    /* *INDENT-OFF* */
     /* the GET request */
-    get =
-	g_strdup_printf("GET %s HTTP/1.0\r\nHost: %s\r\nUser-Agent: %s\r\n\r\n", GGADU_UPDATE_URL, server,
-			GGADU_UPDATE_USERAGENT_STRING);
+    get = g_strdup_printf("GET %s HTTP/1.0\r\nHost: %s\r\nUser-Agent: %s\r\n\r\n",
+			GGADU_UPDATE_URL, server, GGADU_UPDATE_USERAGENT_STRING);
+    /* *INDENT-ON* */
     send(sock_s, get, strlen(get), MSG_WAITALL);
     g_free(get);
 
     /* allocate some buffers */
-    recv_buff = g_malloc0(8000);
-    temp = g_malloc0(2);
-
-    if (!recv_buff || !temp)
-    {
-	close(sock_s);
-	return NULL;
-    }
+    recv_buff = g_malloc0(GGADU_UPDATE_BUFLEN);
 
     /* receiving data */
-    while (recv(sock_s, temp, 1, MSG_WAITALL))
+    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_UPDATE_BUFLEN)
 	recv_buff[i++] = temp[0];
 
-    /* close socket, free some memory */
+    /* disconnect */
     close(sock_s);
-    g_free(temp);
 
     /* check for "200 OK" response */
     if ((recv_buff = g_strstr_len(recv_buff, i, "200 OK")) == NULL)
@@ -147,7 +141,7 @@ gchar *update_get_current_version(gboolean show)
 	return NULL;
     }
 
-    /* Search for: <title>gg2 XXXXXX released (XXXXXXXXXXXXXXXXXXXXXXX)</title> */
+    /* Search for: <title>gg2 XXXXXX released */
     if ((recv_buff = g_strstr_len(recv_buff, strlen(recv_buff), "<title>gg2")) == NULL)
     {
 	if (show)
@@ -160,7 +154,7 @@ gchar *update_get_current_version(gboolean show)
 	return NULL;
     }
 
-    buf1 = g_malloc0(8000);
+    buf1 = g_malloc0(GGADU_UPDATE_BUFLEN);
     buf1 = g_strstr_len(recv_buff + 11, strlen(recv_buff) - 11, " released");
     if (!buf1)
     {
@@ -179,10 +173,55 @@ gchar *update_get_current_version(gboolean show)
 
     print_debug("%s : Server returned version ,,%s''\n", GGadu_PLUGIN_NAME, reply);
 
-    if (reply)
-	return reply;
+    return reply;
+}
+
+/* this is kludgy, because we want to:
+ *  - "2.0rc1" be newer than "2.0pre1"
+ *  - "2.0" be newer than "2.0pre1"
+ *  - "2.0" be newer than "2.0rc1"
+ *  - "2.1" be newer than "2.0"
+ */
+int update_compare(const gchar * servers, const gchar * ours)
+{
+    int slen, olen, i, ret = 0;
+    gchar *buf = NULL;
+
+    if (!servers || !ours)
+	return 0;
+
+    slen = strlen(servers);
+    olen = strlen(ours);
+
+    print_debug("strlen(server)=%d, strlen(ours)=%d\n", slen, olen);
+
+    /* same lengths, just compare them */
+    if (slen == olen)
+    {
+	print_debug("calling ggadu_strcasecmp(%s, %s);\n", servers, ours);
+	return ggadu_strcasecmp(servers, ours);
+    }
+
+    /* servers is longer than ours */
+    if (slen > olen)
+    {
+	buf = g_strnfill(slen, 'z');
+	for (i = 0; i < olen; i++)
+	    buf[i] = ours[i];
+	ret = ggadu_strcasecmp(servers, buf);
+	print_debug("ggadu_stracasecmp(%s, %s) returns %d\n", servers, buf, ret);
+    }
     else
-	return NULL;
+    {
+	buf = g_strnfill(olen, 'z');
+	for (i = 0; i < slen; i++)
+	    buf[i] = servers[i];
+	ret = ggadu_strcasecmp(buf, ours);
+	print_debug("ggadu_stracasecmp(%s, %s) returns %d\n", buf, ours, ret);
+    }
+
+    g_free(buf);
+    return ret;
 }
 
 /* compares. show == FALSE will disable any gui/xosd notices
@@ -204,7 +243,7 @@ int update_check_real(gboolean show)
 	    version[i] = 'z';
 
     /* compare, notice if something new was found */
-    if (ggadu_strcasecmp(reply, version) > 0)
+    if (update_compare(reply, version) > 0)
     {
 	if (show)
 	{

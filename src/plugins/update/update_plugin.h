@@ -1,4 +1,4 @@
-/* $Id: update_plugin.h,v 1.2 2003/05/31 20:45:13 shaster Exp $ */
+/* $Id: update_plugin.h,v 1.3 2003/09/22 11:09:33 shaster Exp $ */
 
 #ifndef UPDATE_PLUGIN_H
 #define UPDATE_PLUGIN_H 1
@@ -11,6 +11,8 @@
 #define GGADU_UPDATE_SERVER "sourceforge.net"
 #define GGADU_UPDATE_URL "/export/rss2_projfiles.php?group_id=76206"
 #define GGADU_UPDATE_PORT 80
+
+#define GGADU_UPDATE_BUFLEN 8192
 
 enum
 {
