@@ -8,8 +8,8 @@ BEFORE 2.0:
 Later:
 - current status description text somewhere
 - memory leaks audit (all)
-- sound configuration (all)
-- authorization dialogs (jabber/tlen)
+(done) sound configuration (all)
+(done) authorization dialogs (jabber/tlen)
 - jabber confference (jabber)
 
 (done)- docklet menu (??)
