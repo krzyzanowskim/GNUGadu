@@ -5,7 +5,11 @@ pkgdir = $(libdir)/gg2
 pkg_LTLIBRARIES = libGUI_plugin.la
 noinst_LIBRARIES =
 
+if USE_GTKSPELL
+libGUI_plugin_la_CFLAGS = $(GTK_CFLAGS) $(GTKSPELL_CFLAGS) -DUSE_GTKSPELL
+else
 libGUI_plugin_la_CFLAGS = $(GTK_CFLAGS)
+endif
 
 libGUI_plugin_la_SOURCES = gui_main.c \
     gui_main.h \
@@ -31,7 +35,10 @@ libGUI_plugin_la_SOURCES = gui_main.c \
     gui_chat_session.h
 
     
+if USE_GTKSPELL
+libGUI_plugin_la_LIBADD = $(GTK_LIBS) $(GTKSPELL_LIBS) $(top_builddir)/lib/libgg2_core.la
+else
 libGUI_plugin_la_LIBADD = $(GTK_LIBS) $(top_builddir)/lib/libgg2_core.la
-#libGUI_plugin_la_LIBADD = $(GTK_LIBS)
+endif
     
 libGUI_plugin_la_LDFLAGS = -avoid-version

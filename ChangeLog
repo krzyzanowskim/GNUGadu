@@ -1,5 +1,6 @@
 09.03.2004
-- http://www.gnugadu.org
+- http://www.gnugadu.org (krzak)
+- gtkspell support in GUI plugin (Krzysztof Smigrodzki)
 
 29.02.2004
 - GUI user list can now show user descriptions under nicknames (THrull/GUI)

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.83 2004/02/26 21:23:18 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.84 2004/03/09 20:58:42 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -100,7 +100,7 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 	gui_chat_session *session = NULL;
 	gui_protocol *gp = NULL;
 	gchar *plugin_name = NULL;
-
+	
 	print_debug("on_destroy_chat");
 
 	switch (chat_type)
@@ -112,7 +112,11 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),
 							     "chat_notebook");
 		GtkWidget *chat = NULL;
-
+		GtkWidget *input = NULL;
+#ifdef USE_GTKSPELL
+		GtkSpell  *spell = NULL;
+#endif
+		
 		if (!user_data)
 		{
 			nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
@@ -126,9 +130,18 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 		chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook), nr);
 
 		plugin_name = g_object_get_data(G_OBJECT(chat), "plugin_name");
+		
 		session = (gui_chat_session *) g_object_get_data(G_OBJECT(chat), "gui_session");
 		gp = gui_find_protocol(plugin_name, protocols);
 
+		input = g_object_get_data(G_OBJECT(chat), "input");
+
+#ifdef USE_GTKSPELL
+		if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
+		{
+			gtkspell_detach (spell);
+		}
+#endif				
 		gtk_notebook_remove_page(GTK_NOTEBOOK(chat_notebook), nr);
 
 
@@ -155,7 +168,20 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 		break;
 	case CHAT_TYPE_CLASSIC:
 	{
+		GtkWidget *input = NULL;
+#ifdef USE_GTKSPELL
+		GtkSpell  *spell = NULL;
+#endif		
 		session = (gui_chat_session *) user_data;
+		
+		input = g_object_get_data(G_OBJECT(session->chat), "input");
+
+#ifdef USE_GTKSPELL
+		if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
+		{
+			gtkspell_detach (spell);
+		}
+#endif
 		plugin_name = g_object_get_data(G_OBJECT(session->chat), "plugin_name");
 		if (!plugin_name)
 			return;
@@ -724,6 +750,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gchar *fontstr = NULL;
 	GGaduStatusPrototype *sp = NULL;
 	GdkPixbuf *image = NULL;
+	GError *err = NULL;
 
 	if (!session || !plugin_name || !id)
 		return NULL;
@@ -973,6 +1000,23 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	 * input 
 	 */
 	input = gtk_text_view_new();
+
+#ifdef USE_GTKSPELL	
+	if (!gtkspell_new_attach(GTK_TEXT_VIEW(input), g_getenv("LANG"), &err)) 
+	{
+/*		GtkWidget *errdlg;
+        	errdlg = gtk_message_dialog_new(GTK_WINDOW(chat_window),
+                        GTK_DIALOG_DESTROY_WITH_PARENT,
+                        GTK_MESSAGE_ERROR,
+                        GTK_BUTTONS_CLOSE,
+                        _("Error initializing spell checking: \n%s\nTry install appropriate language support with aspell"),
+                        err->message);
+        	gtk_dialog_run(GTK_DIALOG(errdlg));
+        	gtk_widget_destroy(errdlg);
+        	g_error_free(err);
+*/
+	}
+#endif
 	gtk_widget_set_name(GTK_WIDGET(input), "GGInput");
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(input), GTK_WRAP_WORD);
 	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(input), 2);
