@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.90 2004/09/17 09:14:45 krzyzak Exp $
+dnl $Id: configure.in,v 1.91 2004/09/22 22:30:48 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.6])
 
@@ -471,12 +471,12 @@ if test "x$with_arts" != "xno"; then
     fi
 
     PKG_CHECK_MODULES(AUDIOFILE,audiofile >= 0.2.0, [], with_audiofile=no)
+    AC_SUBST(AUDIOFILE_CFLAGS)
+    AC_SUBST(AUDIOFILE_LIBS)
     if test "$with_audiofile" = "no"; then 
     	AC_MSG_ERROR($AUDIOFILE_PKG_ERRORS)
     fi
 
-    AC_SUBST(AUDIOFILE_CFLAGS)
-    AC_SUBST(AUDIOFILE_LIBS)
     
     ARTSC_LIBS=`$ARTSC --libs`
     ARTSC_CFLAGS=`$ARTSC --cflags`
@@ -492,6 +492,14 @@ if test "x$with_oss" != "xno"; then
     with_oss=yes
     have_soundcardh=no
     AC_CHECK_HEADERS(sys/soundcard.h, have_soundcardh=yes, have_soundcardh=no)
+
+    PKG_CHECK_MODULES(AUDIOFILE,audiofile >= 0.2.0, [], with_audiofile=no)
+    AC_SUBST(AUDIOFILE_CFLAGS)
+    AC_SUBST(AUDIOFILE_LIBS)
+    if test "$with_audiofile" = "no"; then 
+    	AC_MSG_ERROR($AUDIOFILE_PKG_ERRORS)
+    fi
+
     if test "$have_soundcardh" = yes; then
 	with_oss=yes
     else

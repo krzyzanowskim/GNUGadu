@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.10 2004/07/28 09:56:14 shaster Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.11 2004/09/22 22:30:49 krzyzak Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
@@ -35,6 +35,7 @@
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <sys/soundcard.h>
+#include <audiofile.h>
 
 #include "ggadu_types.h"
 #include "plugins.h"
@@ -47,109 +48,88 @@ GGaduPlugin *handler;
 GGadu_PLUGIN_INIT("sound-oss", GGADU_PLUGIN_TYPE_MISC);
 
 #define DSPDEV "/dev/dsp"
+#define MAX_BUF_SIZE (4 * 1024)
 
-void oss_play_file(const gchar * file)
+static gint oss_play_file(gchar *filename)
 {
-    int s, w, d = -1;
-    gchar buff[4096];
-    struct wfmt
-    {
-	gint32 size;		/* fmt chunk size */
-	gchar *data;		/* fmt data */
-	gint16 format;		/* format */
-	guint16 chan;		/* channels */
-	guint32 rate;		/* sample rate */
-	guint16 blk;		/* avg block size */
-	guint16 sample;		/* bits per sample */
-    } fmt;
+    /* input from libaudiofile... */
+    AFfilehandle in_file;
+    gint in_format, in_width, in_channels, frame_count;
+    double in_rate;
+    gint bytes_per_frame;
+    gchar buf[ MAX_BUF_SIZE ];
+    gint buf_frames;
+    gint frames_read;
+    gint retry = 0;
+    gint dspfile;
 
-    for (s = 0; s < 10; s++)
-	if ((d = open(DSPDEV, O_WRONLY)) < 0)
+
+    for (retry = 0; retry < 10; retry++)
+    {
+	if ((dspfile = open(DSPDEV, O_WRONLY)) < 0)
 	{
 	    g_warning("Can't open %s", DSPDEV);
 	    usleep(100000);
-	}
-	else
-	    break;
-    if (d < 0)
+	} else
+	break;
+    }
+
+    if (dspfile < 0)
     {
 	print_debug("Couldn't open %s", DSPDEV);
-	return;
+	return 0;
     }
+    
 
-    if ((w = open(file, O_RDONLY)) < 0)
-    {
-	print_debug("Can't open %s: %s", file, g_strerror(errno));
-	return;
-    }
+    /* open the audio file */
+    in_file = afOpenFile( filename, "rb", NULL );
+    if ( !in_file )
+	return 0;
 
-    if (read(w, buff, 20) < 20)
-    {
-	print_debug("Error while reading %s", file);
-	return;
-    }
+    /* get audio file parameters */
+    frame_count = afGetFrameCount( in_file, AF_DEFAULT_TRACK );
+    in_channels = afGetChannels( in_file, AF_DEFAULT_TRACK );
+    in_rate = afGetRate( in_file, AF_DEFAULT_TRACK );
+    afGetSampleFormat( in_file, AF_DEFAULT_TRACK, &in_format, &in_width );
 
-    if (strncmp(buff, "RIFF", 4) || strncmp(buff + 8, "WAVE", 4) || strncmp(buff + 12, "fmt ", 4))
-    {
-	print_debug("Not a RIFF/WAVE file?");
-	return;
-    }
-    memcpy(&fmt.size, buff + 16, 4);
-    fmt.data = g_malloc(fmt.size);
-    g_assert(fmt.data != NULL);
-
-    if (read(w, fmt.data, fmt.size) < fmt.size)
-    {
-	print_debug("Error while reading %s", file);
-	return;
-    }
-
-    memcpy(&fmt.format, fmt.data, 2);
-    if (fmt.format != 1)
-    {
-	print_debug("Unsupported format (not PCM)");
-	return;
-    }
-
-    memcpy(&fmt.chan, fmt.data + 2, 2);
-    if (ioctl(d, SNDCTL_DSP_CHANNELS, &fmt.chan) < 0)
+    bytes_per_frame = ( in_width  * in_channels ) / 8;
+    buf_frames = MAX_BUF_SIZE / bytes_per_frame;
+    
+/*    if (ioctl(dspfile, SNDCTL_DSP_CHANNELS, in_channels) < 0)
 	perror("ioctl(SNDCTL_DSP_CHANNELS)");
-    memcpy(&fmt.rate, fmt.data + 4, 4);
-    if (ioctl(d, SNDCTL_DSP_SPEED, &fmt.rate) < 0)
+	
+    if (ioctl(dspfile, SNDCTL_DSP_SPEED,in_rate) < 0)
 	perror("ioctl(SNDCTL_DSP_SPEED)");
-    memcpy(&fmt.blk, fmt.data + 12, 2);
-    if (ioctl(d, SNDCTL_DSP_GETBLKSIZE, &fmt.blk) < 0)
-	perror("ioctl(SNDCTL_DSP_GETBLKSIZE)");
-    memcpy(&fmt.sample, fmt.data + 14, 2);
-    if (ioctl(d, SNDCTL_DSP_SAMPLESIZE, &fmt.sample) < 0)
+
+    defaultSampleWidth = afQueryLong(AF_QUERYTYPE_FILEFMT,
+	AF_QUERY_SAMPLE_SIZES, AF_QUERY_DEFAULT, in_format, 0);
+
+    if (ioctl(dspfile, SNDCTL_DSP_SAMPLESIZE, defaultSampleWidth) < 0)
 	perror("ioctl(SNDCTL_DSP_SAMPLESIZE)");
-    g_free(fmt.data);
-
-    if (fmt.sample == 8)
-    {
-	s = AFMT_S8;
-    }
-    else if (fmt.sample == 16)
-    {
-	s = AFMT_S16_NE;
-    }
-    else
-    {
-	print_debug("Strange sample size");
-	return;
-    }
-    if (ioctl(d, SNDCTL_DSP_SETFMT, &s) < 0)
+	
+    if (ioctl(dspfile, SNDCTL_DSP_SETFMT, in_format) < 0)
 	perror("ioctl(SNDCTL_DSP_SETFMT)");
+*/
 
-    while ((s = read(w, buff, 4096)) > 0)
-	if (write(d, buff, s) == -1)
+    /* play a stream */    
+    while ( ( frames_read = afReadFrames( in_file, AF_DEFAULT_TRACK, buf, buf_frames ) ) )
+    {
+	if (write(dspfile,buf,frames_read * bytes_per_frame) <= 0)
 	{
 	    print_debug("Error while writing to %s", DSPDEV);
-	    return;
+	    afCloseFile (in_file);
+	    close(dspfile);
+	    return 0;
 	}
-    close(d);
-    close(w);
+    }
+    
+
+    if ( afCloseFile(in_file) || (close(dspfile) == -1))
+	return 0;
+
+    return 1;
 }
+
 
 gpointer ggadu_play_file(gpointer user_data)
 {
