@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.37 2003/06/22 17:43:46 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.38 2003/06/22 17:49:19 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -700,6 +700,8 @@ GGaduMenu *build_tlen_menu ()
     ggadu_menu_add_submenu (item_tl, ggadu_menu_new_item (_("Add Contact"), user_add_user_action, NULL));
     ggadu_menu_add_submenu (item_tl, ggadu_menu_new_item (_("Preferences"), user_preferences_action, NULL));
     ggadu_menu_add_submenu (item_tl, ggadu_menu_new_item (_("Search for friends"), search_action, NULL));
+    
+    signal_emit (GGadu_PLUGIN_NAME, "gui register menu", root, "main-gui");
 
     return root;
 }
@@ -733,6 +735,8 @@ void start_plugin ()
     register_signal (handler, "search");
     register_signal (handler, "add user search");
     register_signal (handler, "get current status");
+    
+    build_tlen_menu();
 
     if (config_var_get (handler, "autoconnect") && !connected)
 	ggadu_tlen_login (config_var_get (handler, "autoconnect_status") ? (gpointer)
