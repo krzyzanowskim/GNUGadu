@@ -1,3 +1,7 @@
+19.01.2005
+- fixes realted to GGaduStatusPrototype (krzak)
+- config->configdir in all plugins (krzak)
+
 16.01.2005
 - "get current status" and ggadu_find_status_prototype() return 
   duplicate of GGaduStatusPrototype stucture (krzak)

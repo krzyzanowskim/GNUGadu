@@ -290,18 +290,11 @@ void start_plugin()
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-	gchar *this_configdir = NULL;
 	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
 	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Auto Away"));
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "aaway", NULL));
-	g_free(this_configdir);
+	ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(config->configdir, "aaway", NULL));
 
 	ggadu_config_var_add_with_default(handler, "enable", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(handler, "interval", VAR_INT, (gpointer) 5);

@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.30 2005/01/05 13:05:36 aflinta Exp $ */
+/* $Id: plugin_sound_external.c,v 1.31 2005/01/19 21:02:20 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -152,8 +152,7 @@ void start_plugin()
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-    gchar *this_configdir = NULL;
-	gchar *path = NULL;
+    gchar *path = NULL;
 
     print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
@@ -163,16 +162,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     register_signal(handler, "sound play file");
     register_signal(handler, "update config");
 
-    if (g_getenv("HOME_ETC"))
-	this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-    else
-	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-    path = g_build_filename(this_configdir, "sound-external", NULL);
+    path = g_build_filename(config->configdir, "sound-external", NULL);
     ggadu_config_set_filename((GGaduPlugin *) handler, path);
     g_free(path);
-
-    g_free(this_configdir);
 
     ggadu_config_var_add_with_default(handler, "player", VAR_STR,"/usr/bin/play %s");
 

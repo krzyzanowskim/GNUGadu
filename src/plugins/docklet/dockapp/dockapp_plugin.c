@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.26 2004/12/20 09:15:17 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.27 2005/01/19 21:02:14 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -51,8 +51,6 @@ static GdkColor clwhite = { 0, 65535, 65535, 65535 };
 static GdkColor clOnline = { 0, 3000, 3000, 65535 };
 static GdkColor clOffline = { 0, 65535, 3000, 3000 };
 
-
-static gchar *this_configdir = NULL;
 
 //Przyciski
 GdkPixbuf *icon1_img;
@@ -429,13 +427,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "dockapp_protocol", VAR_STR);
 	ggadu_config_var_add(handler, "dockapp_visible", VAR_BOOL);
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg", NULL);
-
-
-	path = g_build_filename(this_configdir, "config", NULL);
+	path = g_build_filename(config->configdir, "config", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
 	g_free(path);
 	if (!ggadu_config_read(handler))

@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.22 2004/12/20 09:15:21 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.23 2005/01/19 21:02:17 krzyzak Exp $ */
 
 /* 
  * remote plugin for GNU Gadu 2 
@@ -48,8 +48,6 @@
 #include "remote_plugin.h"
 
 GGaduPlugin *handler;
-
-gchar *this_configdir = NULL;
 
 const char *pth_unix = ".gg2_remote";
 gchar *sock_path;
@@ -580,7 +578,7 @@ int remote_init(void)
 	struct sockaddr_un sun;
 	int yes = 1;
 
-	sock_path = g_build_filename(this_configdir, pth_unix, NULL);
+	sock_path = g_build_filename(config->configdir, pth_unix, NULL);
 
 	/* poni¿szy kod nie podoba mi siê za bardzo 
 	 * jako¶ tak niezbyt ³adnie wygl±da na moim monitorze
@@ -681,13 +679,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Remote control"));
 
-
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	path = g_build_filename(this_configdir, "remote", NULL);
+	path = g_build_filename(config->configdir, "remote", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
 	g_free(path);
 
@@ -713,7 +705,6 @@ void destroy_plugin()
 		signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_remotemenu, "main-gui");
 		ggadu_menu_free(menu_remotemenu);
 	}
-	g_free(this_configdir);
 	unlink(sock_path);
 	g_free(sock_path);
 	regfree(&regex);

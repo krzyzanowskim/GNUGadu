@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.74 2005/01/05 18:17:16 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.75 2005/01/19 21:02:12 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -108,7 +108,6 @@ void gui_signal_receive(gpointer name, gpointer signal_ptr)
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-	gchar *this_configdir = NULL;
 	gchar *path = NULL;
 
 	/*gdk_threads_init();*/
@@ -123,14 +122,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	register_signal_receiver((GGaduPlugin *) gui_handler, (signal_func_ptr) gui_signal_receive);
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	path = g_build_filename(this_configdir, "gui", NULL);
+	path = g_build_filename(config->configdir, "gui", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) gui_handler, path);
-	g_free(this_configdir);
 	g_free(path);
 
 	ggadu_config_var_add_with_default(gui_handler, "theme", VAR_STR, g_strdup("default"));

@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.35 2004/12/20 09:15:43 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.36 2005/01/19 21:02:22 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -475,7 +475,6 @@ void perl_xosd_show_message(GGaduSignal * signal, gchar * perl_func, void *pperl
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-	gchar *this_configdir = NULL;
 	gchar *path = NULL;
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
 	
@@ -502,16 +501,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(handler, "pos", VAR_STR,g_strdup("middle"));
 	ggadu_config_var_add(handler, "numlines", VAR_INT);
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	path = g_build_filename(this_configdir, "xosd", NULL);
+	path = g_build_filename(config->configdir, "xosd", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
 	g_free(path);
-
-	g_free(this_configdir);
 
 	if (!ggadu_config_read(handler))
 		g_warning(_("Unable to read configuration file for plugin %s"), "xosd");

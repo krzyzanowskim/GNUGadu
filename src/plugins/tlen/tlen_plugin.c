@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.94 2005/01/16 21:52:56 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.95 2005/01/19 21:02:20 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -49,7 +49,6 @@
 static GGaduPlugin *handler;
 static GGaduProtocol *p;
 
-static gchar *this_configdir = NULL;
 struct tlen_session *session = NULL;
 static GSList *userlist = NULL;
 static GSList *search_results = NULL;
@@ -672,14 +671,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "tlen", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".tlen", NULL);
-
-	mkdir(this_configdir, 0700);
-
-	path = g_build_filename(this_configdir, "config", NULL);
+	path = g_build_filename(config->configdir, "config", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
 	g_free(path);
 
@@ -1228,5 +1220,4 @@ void destroy_plugin()
 	ggadu_repo_del_value("_protocols_", p);
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
-	g_free(this_configdir);
 }

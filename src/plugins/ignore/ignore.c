@@ -1,4 +1,4 @@
-/* $Id: ignore.c,v 1.11 2004/12/27 09:44:34 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.12 2005/01/19 21:02:16 krzyzak Exp $ */
 
 /* 
  * Ignore plugin code for GNU Gadu 2 
@@ -282,8 +282,6 @@ void start_plugin()
 /* PLUGIN INITIALISATION */
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-	gchar *this_configdir = NULL;
-
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
 	ignore_handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Ignore option support"));
 
@@ -293,12 +291,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	IGNORE_DIALOG_ADD_ID_SIG = register_signal(ignore_handler, "ignore dialog add id");
 	IGNORE_DIALOG_REMOVE_ID_SIG = register_signal(ignore_handler, "ignore dialog remove id");
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	ggadu_config_set_filename(ignore_handler, g_build_filename(this_configdir, "ignore-main", NULL));
+	ggadu_config_set_filename(ignore_handler, g_build_filename(config->configdir, "ignore-main", NULL));
 	ggadu_config_var_add(ignore_handler, "list", VAR_STR);
 
 	if (!ggadu_config_read(ignore_handler))
@@ -306,7 +299,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	register_signal_receiver(ignore_handler, (signal_func_ptr) my_signal_receive);
 
-	g_free(this_configdir);
 	return ignore_handler;
 }
 

@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.65 2004/12/20 09:15:38 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.66 2005/01/19 21:02:18 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -43,7 +43,6 @@
 
 GGaduPlugin *sms_handler;
 GSList *smslist = NULL;
-gchar *this_configdir = NULL;
 gchar *idea_token_path = NULL;
 gint method;
 
@@ -186,12 +185,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	print_debug("%s : read configuration\n", GGadu_PLUGIN_NAME);
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	path = g_build_filename(this_configdir, "sms", NULL);
+	path = g_build_filename(config->configdir, "sms", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) sms_handler, path);
 	g_free(path);
 
@@ -206,7 +200,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	if (!ggadu_config_read(sms_handler))
 		g_warning(_("Unable to read config file for plugin sms"));
 
-	idea_token_path = g_build_filename(this_configdir, IDEA_GFX, NULL);
+	idea_token_path = g_build_filename(config->configdir, IDEA_GFX, NULL);
 
 	register_signal_receiver((GGaduPlugin *) sms_handler, (signal_func_ptr) signal_receive);
 
@@ -576,7 +570,6 @@ void destroy_plugin()
 	ggadu_menu_free(menu_smsmenu);
 
 	g_free(idea_token_path);
-	g_free(this_configdir);
 }
 
 /* zapis listy numerow do pliku */
@@ -589,7 +582,7 @@ void save_smslist()
 	gsize bytes_written;
 
 	/* open temporary file */
-	path_tmp = g_build_filename(this_configdir, GGADU_SMS_USERLIST_TMPFILE, NULL);
+	path_tmp = g_build_filename(config->configdir, GGADU_SMS_USERLIST_TMPFILE, NULL);
 	ch_tmp = g_io_channel_new_file(path_tmp, "w", NULL);
 
 	if (!ch_tmp)
@@ -631,7 +624,7 @@ void save_smslist()
 	g_io_channel_unref(ch_tmp);
 
 	/* mv temporary_file destination_file */
-	path = g_build_filename(this_configdir, GGADU_SMS_USERLIST_FILENAME, NULL);
+	path = g_build_filename(config->configdir, GGADU_SMS_USERLIST_FILENAME, NULL);
 	if (rename(path_tmp, path) != 0)
 	{
 		print_debug("error renaming %s to %s\n", path_tmp, path);
@@ -652,7 +645,7 @@ void load_smslist()
 	gchar *path;
 	gchar *nick = NULL, *mobile = NULL;
 
-	path = g_build_filename(this_configdir, GGADU_SMS_USERLIST_FILENAME, NULL);
+	path = g_build_filename(config->configdir, GGADU_SMS_USERLIST_FILENAME, NULL);
 
 	fp = fopen(path, "r");
 

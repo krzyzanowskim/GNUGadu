@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.13 2005/01/07 20:57:29 aflinta Exp $ */
+/* $Id: history_viewer.c,v 1.14 2005/01/19 21:02:16 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -125,8 +125,6 @@ void start_plugin()
 /* PLUGIN INITIALISATION */
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-	gchar *this_configdir = NULL;
-
 	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
@@ -135,13 +133,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	HISTORY_SHOW_FILE_SIG = register_signal(handler, "history show file");
 	UPDATE_CONFIG_SIG = register_signal(handler, "update config");
 
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
-
-	ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "history-external", NULL));
-	g_free(this_configdir);
+	ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(config->configdir, "history-external", NULL));
 
 	ggadu_config_var_add_with_default(handler, "viewer", VAR_STR, g_build_filename(BINDIR, "gghist %s", NULL));
 
