@@ -23,18 +23,6 @@ EXTRA_DIST = \
 	gg2.spec \
 	gg2-devel.SlackBuild \
 	slack-desc
-#	config.rpath
-#	mkinstalldirs
-		
-dist-hook:
-	if test -d doc/gg2-doc; then \
-	  mkdir $(distdir)/doc/gg2-doc; \
-	  for docsf in doc/gg2-doc/*; do \
-	    if test -d $$docsf; then \
-		cp -rp $$docsf $(distdir)/doc/gg2-doc; \
-	    fi \
-	  done \
-	fi
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)
@@ -42,13 +30,3 @@ libtool: $(LIBTOOL_DEPS)
 
 ACLOCAL_AMFLAGS = -I m4
 
-#if BUILD_GG
-#all: config.h
-#	(cd $(top_srcdir)/src/plugins/gadu_gadu/libgadu/; make)
-#	$(MAKE) $(AM_MAKEFLAGS) all-recursive
-#else
-
-all: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-recursive
-	
-#endif
