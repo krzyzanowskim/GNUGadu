@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.c,v 1.1 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_types.c,v 1.2 2004/09/15 14:51:20 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -49,6 +49,7 @@ void GGaduContact_free(GGaduContact * k)
 	g_free(k->status_descr);
 	g_free(k->city);
 	g_free(k->age);
+	g_free(k->resource);
 	g_free(k->gender);
 
 	g_free(k);
