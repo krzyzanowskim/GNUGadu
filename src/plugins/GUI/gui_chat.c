@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.143 2005/02/22 15:35:50 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.144 2005/02/22 15:36:45 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1501,7 +1501,6 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	g_free(tmp);
 
 	tmp = g_strconcat(text, (notice_message) ? "" : "\n", NULL);
-//	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text", NULL);
 	colorstr = self ? ggadu_config_var_get(gui_handler, "msg_out_body_color") : ggadu_config_var_get(gui_handler, "msg_body_color");
 	gtk_imhtml_toggle_forecolor(GTK_IMHTML(history),colorstr);
 
