@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.26 2004/10/22 08:51:11 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.27 2004/12/15 15:07:05 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -147,7 +147,6 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 			case VAR_STR:
 			case VAR_IMG:	/* VAR_IMG is a path to image file */
 
-				print_debug("VAR_STR %s\n", (gchar *) val);
 
 				if (!val)
 				    var->ptr = NULL;
@@ -155,6 +154,9 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 				    var->ptr = (gpointer) base64_decode(g_strstrip((gchar *) val + 1));
 				else
 				    var->ptr = (gpointer) g_strescape(g_strstrip((gchar *) val),""); /* escape */
+
+				if (var->ptr)
+				    print_debug("VAR_STR %s\n", (gchar *) var->ptr);
 
 				break;
 			case VAR_INT:
