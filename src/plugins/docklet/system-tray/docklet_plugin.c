@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.12 2004/01/28 23:40:43 shaster Exp $ */
+/* $Id: docklet_plugin.c,v 1.13 2004/02/14 12:34:27 thrulliq Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -170,106 +170,70 @@ void docklet_quit(GtkWidget * widget, gpointer user_data)
 	g_main_loop_quit(config->main_loop);
 }
 
+static
+void go_status(gint type)
+{
+	GGaduProtocol *p = NULL;
+	gpointer key, index;
+
+	if (!ggadu_repo_exists("_protocols_"))
+	    return;
+	
+	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+
+	while (index) {
+	    GGaduStatusPrototype *sp;
+	    p = ggadu_repo_find_value("_protocols_", key);
+		
+	    if (p) {
+	        GSList *status_ = NULL;
+		GSList *tmp;
+	        gint status;
+			    
+		switch (type) {
+		    case STATUS_ONLINE:
+		        status_ = p->online_status;
+		        break;
+		    case STATUS_AWAY:
+		        status_ = p->away_status;
+		        break;
+		    case STATUS_OFFLINE:
+		        status_ = p->offline_status;
+		        break;
+		}
+		
+		if (status_) {
+		    tmp = p->statuslist;
+    		    status = (gint) status_->data;
+		
+		    while (tmp) {
+			sp = tmp->data;
+			if (sp->status == status) {
+				signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
+				break;
+			}
+			tmp = tmp->next;
+		    }
+		}
+	    }
+	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+	}
+}
+
+
 void go_online(GtkWidget * widget, gpointer user_data)
 {
-	gpointer key, index;
-	if (ggadu_repo_exists("_protocols_"))
-	{
-		GGaduProtocol *p = NULL;
-		index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
-
-		while (index)
-		{
-			GGaduStatusPrototype *sp;
-			gint status;
-			p = ggadu_repo_find_value("_protocols_", key);
-
-			if (p && p->online_status)
-			{
-				GSList *tmp = p->statuslist;
-				status = (gint) p->online_status->data;
-				while (tmp)
-				{
-					sp = tmp->data;
-					if (sp->status == status)
-					{
-						signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
-						break;
-					}
-					tmp = tmp->next;
-				}
-			}
-			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
-		}
-	}
+    go_status(STATUS_ONLINE);
 }
 
 void go_offline(GtkWidget * widget, gpointer user_data)
 {
-	gpointer key, index;
-	if (ggadu_repo_exists("_protocols_"))
-	{
-		GGaduProtocol *p = NULL;
-		index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
-
-		while (index)
-		{
-			GGaduStatusPrototype *sp;
-			gint status;
-			p = ggadu_repo_find_value("_protocols_", key);
-
-			if (p && p->offline_status)
-			{
-				GSList *tmp = p->statuslist;
-				status = (gint) p->offline_status->data;
-				while (tmp)
-				{
-					sp = tmp->data;
-					if (sp->status == status)
-					{
-						signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
-						break;
-					}
-					tmp = tmp->next;
-				}
-			}
-			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
-		}
-	}
+    go_status(STATUS_OFFLINE);
 }
 
 void go_away(GtkWidget * widget, gpointer user_data)
 {
-	gpointer key, index;
-	if (ggadu_repo_exists("_protocols_"))
-	{
-		GGaduProtocol *p = NULL;
-		index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
-
-		while (index)
-		{
-			GGaduStatusPrototype *sp;
-			gint status;
-			p = ggadu_repo_find_value("_protocols_", key);
-
-			if (p && p->away_status)
-			{
-				GSList *tmp = p->statuslist;
-				status = (gint) p->away_status->data;
-				while (tmp)
-				{
-					sp = tmp->data;
-					if (sp->status == status)
-					{
-						signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
-						break;
-					}
-					tmp = tmp->next;
-				}
-			}
-			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
-		}
-	}
+    go_status(STATUS_AWAY);
 }
 
 void docklet_menu(GdkEventButton * event)

@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.h,v 1.3 2004/01/28 23:40:46 shaster Exp $ */
+/* $Id: docklet_plugin.h,v 1.4 2004/02/14 12:34:27 thrulliq Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -28,5 +28,11 @@
 #endif
 
 #define DOCKLET_PLUGIN_NAME "docklet-system-tray"
+
+enum {
+    STATUS_ONLINE,
+    STATUS_AWAY,
+    STATUS_OFFLINE
+};
 
 #endif
