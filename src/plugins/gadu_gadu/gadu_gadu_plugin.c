@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.8 2003/03/24 22:00:54 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.9 2003/03/25 08:31:21 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -108,60 +108,59 @@ gchar *insert_cr(gchar *txt)
 
 gpointer gadu_gadu_login(gpointer data, gint status)
 {
-		struct gg_login_params p;
-		gchar *serveraddr = (gchar *)config_var_get(handler,"server");
-		gchar **serv_addr = NULL;
+    struct gg_login_params p;
+    gchar *serveraddr = (gchar *)config_var_get(handler,"server");
+    gchar **serv_addr = NULL;
 
-		if (connected) {
-			gg_logoff(session);
-			gg_free_session(session);
-			connected = FALSE;
-			return FALSE;
+    if (connected) {
+    	gg_logoff(session);
+	gg_free_session(session);
+	connected = FALSE;
+	return FALSE;
     }
     
-		memset(&p, 0, sizeof(p));
+    memset(&p, 0, sizeof(p));
 
+    p.server_port =  GG_DEFAULT_PORT;
+    if (serveraddr == NULL)
+	serveraddr = g_strdup("217.17.41.85");
+    else {
+	serv_addr = g_strsplit(serveraddr,":",2);
+	
+	if (serv_addr) {
+	    serveraddr = serv_addr[0];
+	    if (serv_addr[1] != NULL)
+		p.server_port =  g_strtod(serv_addr[1],NULL);
+	    else
 		p.server_port =  GG_DEFAULT_PORT;
-    
-		if (serveraddr == NULL)
-			serveraddr = g_strdup("217.17.41.85");
-    else 
-		{
-			serv_addr = g_strsplit(serveraddr,":",2);
-	
-			if (serv_addr) {
-				serveraddr = serv_addr[0];
-
-				if (serv_addr[1] != NULL)
-					p.server_port =  g_strtod(serv_addr[1],NULL);
-				else
-					p.server_port =  GG_DEFAULT_PORT;
-			}
+	}
     }
     
-		print_debug("loguje sie GG# %d do serwera %s %d\n",(gint)config_var_get(handler,"uin"),serveraddr,p.server_port);
+    print_debug("loguje sie GG# %d do serwera %s %d\n",(gint)config_var_get(handler,"uin"),serveraddr,p.server_port);
 
-		p.uin	= (int) config_var_get(handler,"uin");
-		p.password	= (gchar *)config_var_get(handler,"password");
-		p.async	= 1;
-		p.status	= status;
-	
-		if (serveraddr != NULL)
-			p.server_addr = inet_addr(serveraddr);
+    p.uin	= (int) config_var_get(handler,"uin");
+    p.password	= (gchar *)config_var_get(handler,"password");
+    p.async	= 1;
+    p.status	= status;
+    if (config_var_get(handler, "private"))
+	p.status |= GG_STATUS_FRIENDS_MASK;
+    
+    if (serveraddr != NULL)
+	p.server_addr = inet_addr(serveraddr);
 
     if (!p.uin || (!p.password || !*p.password)) {
-		user_preferences_action(NULL);
-		signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("You have to enter your GG# and password first!")),"main-gui");
-		ggadu_gadu_gadu_disconnect();
-		return NULL;
+	user_preferences_action(NULL);
+	signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("You have to enter your GG# and password first!")),"main-gui");
+	ggadu_gadu_gadu_disconnect();
+	return NULL;
     }
     
     g_free(serveraddr);
     
     if (!(session = gg_login(&p))) {
-		print_debug("%s \t\t connection failed\n", GGadu_PLUGIN_NAME);
-		ggadu_gadu_gadu_disconnect_msg(NULL);
-		return NULL;
+	print_debug("%s \t\t connection failed\n", GGadu_PLUGIN_NAME);
+	ggadu_gadu_gadu_disconnect_msg(NULL);
+	return NULL;
     }
 
     /* do tego chyba przydal by sie jakis nasz wrapper choc tak naprawde nie jest potrzebny */
@@ -212,31 +211,31 @@ void set_userlist_status(gchar *id, gint status, gchar *status_descr)
 
 void handle_search_event(struct gg_event *e)
 {
-	gg_pubdir50_t res = e->event.pubdir50;
-	gint count, i;
-	GSList *list = NULL;
+    gg_pubdir50_t res = e->event.pubdir50;
+    gint count, i;
+    GSList *list = NULL;
 
-	if ((count = gg_pubdir50_count(res)) < 1) {
-		signal_emit(GGadu_PLUGIN_NAME, "gui show message",g_strdup(_("No users have been found!")),"main-gui");
-		return;
-	}
+    if ((count = gg_pubdir50_count(res)) < 1) {
+	signal_emit(GGadu_PLUGIN_NAME, "gui show message",g_strdup(_("No users have been found!")),"main-gui");
+    	return;
+    }
 
-	for (i = 0; i < count; i++) {
-		GGaduContact *k = g_new0(GGaduContact, 1);
-		const gchar * uin = gg_pubdir50_get(res, i, GG_PUBDIR50_UIN);
-		const gchar * first_name = gg_pubdir50_get(res, i, GG_PUBDIR50_FIRSTNAME);
-		const gchar * nick = gg_pubdir50_get(res, i, GG_PUBDIR50_NICKNAME);
-		const gchar * status = gg_pubdir50_get(res, i, GG_PUBDIR50_STATUS);
+    for (i = 0; i < count; i++) {
+	GGaduContact *k = g_new0(GGaduContact, 1);
+	const gchar * uin = gg_pubdir50_get(res, i, GG_PUBDIR50_UIN);
+	const gchar * first_name = gg_pubdir50_get(res, i, GG_PUBDIR50_FIRSTNAME);
+	const gchar * nick = gg_pubdir50_get(res, i, GG_PUBDIR50_NICKNAME);
+	const gchar * status = gg_pubdir50_get(res, i, GG_PUBDIR50_STATUS);
 
-		k->id = g_strdup((uin) ? uin : "?");
+	k->id = g_strdup((uin) ? uin : "?");
 
-		if (first_name != NULL) to_utf8("CP1250", first_name, k->first_name);
+	if (first_name != NULL) to_utf8("CP1250", first_name, k->first_name);
 
-		if (nick != NULL) to_utf8("CP1250", nick, k->nick);
+	if (nick != NULL) to_utf8("CP1250", nick, k->nick);
 
-		k->status = (status) ? atoi(status) : GG_STATUS_NOT_AVAIL;
-
-		list = g_slist_append(list, k);
+	k->status = (status) ? atoi(status) : GG_STATUS_NOT_AVAIL;
+    
+	list = g_slist_append(list, k);
     }
     signal_emit(GGadu_PLUGIN_NAME, "gui show search results", list, "main-gui");
 }
@@ -587,6 +586,7 @@ gpointer user_preferences_action(gpointer user_data)
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, config_var_get(handler, "reason"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL, config_var_get(handler, "log"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"), VAR_BOOL, config_var_get(handler, "private"), VAR_FLAG_NONE);
 
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE, _("Sound file (app)"), VAR_FILE_CHOOSER, config_var_get(handler, "sound_app_file"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE, _("Sound file (chat)"), VAR_FILE_CHOOSER, config_var_get(handler, "sound_chat_file"), VAR_FLAG_NONE);
@@ -923,6 +923,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	config_var_add(handler, "log", VAR_BOOL);
 	config_var_add(handler, "autoconnect", VAR_BOOL);
 	config_var_add(handler, "reason", VAR_STR);
+	config_var_add(handler, "private", VAR_BOOL);
 
 	if (g_getenv("CONFIG_DIR"))
 		this_configdir = g_build_filename(g_get_home_dir(),g_getenv("CONFIG_DIR"),"gg",NULL);
@@ -1274,9 +1275,15 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			d->user_data = sp;
 			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 			
-		    } else if (gg_change_status(session,sp->status) == -1) {
-			signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("Unable change status")),"main-gui");
-			print_debug("zjebka podczas change_status %d\n",sp->status);
+		    } else {
+			gint _status = sp->status;
+			if (config_var_get(handler, "private")) 
+			    _status |= GG_STATUS_FRIENDS_MASK;
+
+			if (gg_change_status(session, _status) == -1) {
+			    signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("Unable to change status")),"main-gui");
+			    print_debug("zjebka podczas change_status %d\n",sp->status);
+			}
 		    }
 		    
 		} else {
@@ -1308,20 +1315,24 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		GGaduKeyValue *kv = NULL;
 		if (d->optlist) {
 		    gchar *desc_utf = NULL, *desc_cp = NULL;
+		    gint _status = sp->status;
+		    
+		    if (config_var_get(handler, "private")) 
+			_status |= GG_STATUS_FRIENDS_MASK;
+
 		    kv = (GGaduKeyValue *)d->optlist->data;
 		    
 		    print_debug(" %d %d\n ",GG_STATUS_INVISIBLE_DESCR,sp->status);
 		    
 		    desc_utf = kv->value;
 		    from_utf8("CP1250",desc_utf,desc_cp);
-		    config_var_set(handler, "reason",desc_cp);
-		    gg_change_status_descr(session, sp->status, desc_cp);
+		    config_var_set(handler, "reason", desc_cp);
+		    gg_change_status_descr(session, _status, desc_cp);
 		    g_free(desc_cp);
-
 		}
 		
 		if (sp->status == GG_STATUS_NOT_AVAIL_DESCR) {
-			    ggadu_gadu_gadu_disconnect();
+		    ggadu_gadu_gadu_disconnect();
 		}
 
 	    }
@@ -1373,10 +1384,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    print_debug("changing var setting autoconnect to %d\n", kv->value);
 				    config_var_set(handler, "autoconnect", kv->value);
 				    break;
-
 		    case GGADU_GADU_GADU_CONFIG_REASON:
 				    print_debug("changing derault reason %s\n", kv->value);
 				    config_var_set(handler, "reason", kv->value);
+				    break;
+		    case GGADU_GADU_GADU_CONFIG_FRIENDS_MASK:
+				    print_debug("changing var setting private to %d\n", kv->value);
+				    config_var_set(handler, "private", kv->value);
 				    break;
 		}
 		tmplist = tmplist->next;

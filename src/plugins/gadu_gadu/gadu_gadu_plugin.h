@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.2 2003/03/24 17:30:51 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.3 2003/03/25 08:31:21 thrulliq Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -16,7 +16,8 @@ enum {
     GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE,
     GGADU_GADU_GADU_CONFIG_HISTORY,
     GGADU_GADU_GADU_CONFIG_AUTOCONNECT,
-    GGADU_GADU_GADU_CONFIG_REASON
+    GGADU_GADU_GADU_CONFIG_REASON,
+    GGADU_GADU_GADU_CONFIG_FRIENDS_MASK
 };
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr);
