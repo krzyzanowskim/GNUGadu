@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.230 2005/01/02 00:13:15 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.231 2005/01/02 15:23:50 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -211,7 +211,7 @@ static gpointer user_preferences_action(gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, ggadu_config_var_get(handler, "uin"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PASSWORD, _("_Password:"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, ggadu_config_var_get(handler, "reason"), VAR_FLAG_NONE);
+/*	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, ggadu_config_var_get(handler, "reason"), VAR_FLAG_NONE);*/
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for _friends"), VAR_BOOL, ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
 
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("A_utoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
