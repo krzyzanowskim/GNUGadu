@@ -653,8 +653,13 @@ gpointer user_preferences_action (gpointer user_data)
 				config_var_get (jabber_handler, "history"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 				config_var_get (jabber_handler, "autoconnect"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
+    
+    if (lm_connection_supports_ssl ())
+    {
+        ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
 				config_var_get (jabber_handler, "use_ssl"), VAR_FLAG_NONE);
+    }
+    
 	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
 				config_var_get (jabber_handler, "resource"), VAR_FLAG_NONE);
 
@@ -697,13 +702,14 @@ void start_plugin ()
 	register_signal (jabber_handler, "get current status");
 	register_signal (jabber_handler, "update config");
 	register_signal (jabber_handler, "send message");
-	register_signal (jabber_handler, "add user");
 	register_signal (jabber_handler, "jabber subscribe");
 	register_signal (jabber_handler, "get user menu");
 	register_signal (jabber_handler, "search-server");
 	register_signal (jabber_handler, "search");
+    register_signal (jabber_handler, "add user");
 
 	jabbermenu = build_jabber_menu ();
+    
 	signal_emit (GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
 
 	if (config_var_get (jabber_handler, "autoconnect") && !connected)
@@ -731,9 +737,10 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 	config_var_add (jabber_handler, "password", VAR_STR);
 	config_var_add (jabber_handler, "log", VAR_BOOL);
 	config_var_add (jabber_handler, "autoconnect", VAR_BOOL);
-	config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
 	config_var_add (jabber_handler, "resource", VAR_STR);
 	config_var_add (jabber_handler, "search_server", VAR_STR);
+    
+    if (lm_connection_supports_ssl ()) config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
 
 	if (!config_read (jabber_handler))
 		g_warning (_("Unable to read configuration file for plugin jabber"));

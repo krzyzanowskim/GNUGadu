@@ -118,8 +118,12 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 		{
 			gint oldstatus = k->status;
 			gchar *olddescr = k->status_descr;
+            
 			if (k->status_descr)
+            {
 				g_free (k->status_descr);
+            }
+            
 			k->status_descr = NULL;
 
 			switch (lm_message_get_sub_type (message))
@@ -129,7 +133,10 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 				node = lm_message_node_get_child (message->node, "show");
 				show = NULL;
 				if (node)
+				{
 					show = (gchar *) lm_message_node_get_value (node);
+				}
+
 				if (show)
 				{
 					if (!strcmp (show, "away"))
@@ -145,14 +152,20 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 				}
 				else
 					k->status = JABBER_STATUS_AVAILABLE;
+
 				if (descr)
 					k->status_descr = g_strdup (descr);
+
 				break;
 			case LM_MESSAGE_SUB_TYPE_ERROR:
 			case LM_MESSAGE_SUB_TYPE_UNAVAILABLE:
 				k->status = JABBER_STATUS_UNAVAILABLE;
+
 				if (descr)
+				{
 					k->status_descr = g_strdup (descr);
+				}
+
 				break;
 			}
 
@@ -197,12 +210,14 @@ LmHandlerResult iq_cb (LmMessageHandler * handler, LmConnection * connection, Lm
 	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
-LmHandlerResult iq_version_cb (LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
+LmHandlerResult iq_version_cb (LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
+			       gpointer user_data)
 {
-    LmMessageNode *node;
-    LmMessage *m;
+	LmMessageNode *node;
+	LmMessage *m;
+    gchar *from;
 
-    if (!(node = lm_message_node_get_child (message->node, "query")))
+	if (!(node = lm_message_node_get_child (message->node, "query")))
 	{
 		print_debug ("jabber: weird roster.\n%s", lm_message_node_to_string (message->node));
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
@@ -211,24 +226,24 @@ LmHandlerResult iq_version_cb (LmMessageHandler * handler, LmConnection * connec
 	if (strcmp (lm_message_node_get_attribute (node, "xmlns"), "jabber:iq:version"))
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 
-    gchar *from = (gchar *) lm_message_node_get_attribute (message->node, "from");
-        
+	from = (gchar *) lm_message_node_get_attribute (message->node, "from");
+
 	m = lm_message_new_with_sub_type (from, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_RESULT);
-    
-    lm_message_node_set_attribute (m->node, "id", lm_message_node_get_attribute (message->node, "id"));
-    
-    node = lm_message_node_add_child (m->node, "query", NULL);
-    lm_message_node_set_attribute (node, "xmlns", "jabber:iq:version");
-    
-    lm_message_node_add_child (node, "name", "GNU Gadu");
-    lm_message_node_add_child (node, "version", VERSION);
-        
+
+	lm_message_node_set_attribute (m->node, "id", lm_message_node_get_attribute (message->node, "id"));
+
+	node = lm_message_node_add_child (m->node, "query", NULL);
+	lm_message_node_set_attribute (node, "xmlns", "jabber:iq:version");
+
+	lm_message_node_add_child (node, "name", "GNU Gadu");
+	lm_message_node_add_child (node, "version", VERSION);
+
 	print_debug ("%s", lm_message_node_to_string (m->node));
 	lm_connection_send (connection, m, NULL);
-    
+
 	lm_message_unref (m);
-        
-    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+
+	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
 
 LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer data)
@@ -242,7 +257,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		first_time = 1;
 
 	print_debug ("%s", lm_message_node_to_string (message->node));
-    
+
 	if (!(node = lm_message_node_get_child (message->node, "query")))
 	{
 		print_debug ("jabber: weird roster.\n%s", lm_message_node_to_string (message->node));
@@ -259,7 +274,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
 	if (strcmp (lm_message_node_get_attribute (node, "xmlns"), "jabber:iq:roster"))
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
-    
+
 	child = lm_message_node_get_child (node, "item");
 
 	while (child)
