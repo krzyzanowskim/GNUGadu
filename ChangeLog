@@ -1,3 +1,6 @@
+16.06.2003
+- proxy support for gadu-gadu protocol (gadu-gadu/krzak)
+
 15.06.2003
 - fix in gg2_core.h (core/krzak)
 - more fixes in gtkanimlabel.c (GUI/krzak)
