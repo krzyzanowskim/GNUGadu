@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.101 2004/01/03 16:23:42 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.102 2004/01/07 12:34:03 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -199,6 +199,7 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 		    p.server_port = g_strtod (serv_addr[1], NULL);
 		else
 		    p.server_port = GG_DEFAULT_PORT;
+		g_strfreev(serv_addr);
 	    }
       }
 
@@ -513,8 +514,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc, d);
 
 		g_free (idtmp);
-		g_free (addr_arr[0]);
-		g_free (addr_arr[1]);
+		g_strfreev(addr_arr);
 		break;
 	    }
 	  /* end of dcc part */
@@ -1362,14 +1362,13 @@ gpointer send_file_action (gpointer user_data)
 
     port = atoi (addr_arr[1]);
 
-    if (port < 1)
-      {
-	  g_free (addr_arr[0]);
-	  g_free (addr_arr[1]);
-	  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("You cannot send file to this person")),
+    g_strfreev(addr_arr);
+
+    if (port < 1) {
+	signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("You cannot send file to this person")),
 		       "main-gui");
-	  return NULL;
-      }
+	return NULL;
+    }
 
     d = ggadu_dialog_new ();
 
@@ -1713,9 +1712,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		    g_io_add_watch (dcc_channel_file, G_IO_OUT | G_IO_IN | G_IO_ERR, test_chan_dcc, dcc_file_session);
 	    }
 
-	  g_free (addr_arr[0]);
-	  g_free (addr_arr[1]);
-
+	  g_strfreev (addr_arr);
 	  return;
       }
 
