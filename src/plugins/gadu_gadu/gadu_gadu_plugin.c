@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.36 2003/04/14 20:35:59 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.37 2003/04/16 16:33:22 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -406,17 +406,18 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			    notify->id = g_strdup_printf("%d",n->uin);
 
 			    notify->status = n->status;
+
+			    set_userlist_status(notify, e->event.notify_descr.descr,userlist);
 			    
 			    while (l) {
 			      GGaduContact *k = (GGaduContact *)l->data;
 
-			      if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
+			      if (!g_strcasecmp(k->id, notify->id)) {
 				ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 			      }
 			      l = l->next;
 			    }
 			    
-			    set_userlist_status(notify, e->event.notify_descr.descr,userlist);
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
 			    n++;
@@ -429,6 +430,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			notify = g_new0(GGaduNotify,1);
 			notify->id = g_strdup_printf("%d",e->event.status.uin);
 			notify->status = e->event.status.status;
+			set_userlist_status(notify, e->event.status.descr,userlist);
     			while (l) {
 			  GGaduContact *k = (GGaduContact *)l->data;
 
@@ -437,7 +439,6 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			  }
 			  l = l->next;
 			}
-			set_userlist_status(notify, e->event.status.descr,userlist);
 			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 			break;
 
