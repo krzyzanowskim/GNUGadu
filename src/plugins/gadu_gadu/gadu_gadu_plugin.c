@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.160 2004/03/28 23:03:44 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.161 2004/03/29 18:05:20 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -481,14 +481,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	case GG_EVENT_MSG:
 
 		print_debug("GG_EVENT_MSG from: %d type: %d", e->event.msg.sender, e->event.msg.msgclass);
-exit(0);
 		if ((e->event.msg.msgclass & GG_CLASS_CTCP))
 		{		/* dcc part */
 			GGaduDialog *dialog = NULL;
 			gchar *tmp = NULL;
 				
 			print_debug("somebody want to send you a file");	/* ZONK */
-					exit(0);
 			tmp = g_strdup_printf(_("%d sending you a  file"), e->event.msg.sender);
 			dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, tmp, "get file", (gpointer) e->event.msg.sender);
 
