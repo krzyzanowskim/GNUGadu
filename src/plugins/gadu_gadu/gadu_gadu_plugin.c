@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.154 2004/02/17 16:12:24 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.155 2004/02/17 19:40:29 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -109,7 +109,7 @@ void ggadu_gadu_gadu_disconnect()
 	session = NULL;
 	connected = FALSE;
 
-	tmplist = ggadu_repo_get_as_slist("gadu-gadu",REPO_VALUE_CONTACT);
+	tmplist = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
 	while (tmplist)
 	{
 		GGaduContact *k = tmplist->data;
@@ -407,7 +407,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 	case GG_EVENT_CONN_SUCCESS:
 		{
-			GSList *list = ggadu_repo_get_as_slist("gadu-gadu",REPO_VALUE_CONTACT);
+			GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
 			print_debug("GG_EVENT_CONN_SUCCESS");
 
 			connected = TRUE;
@@ -425,13 +425,13 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			}
 			gg_notify(session, uins, i);
 			g_free(uins);
-			
+
 			/* pingpong */
 			g_timeout_add(100000, gadu_gadu_ping, NULL);
 
 			if (ggadu_config_var_get(handler, "sound_app_file") != NULL)
-			signal_emit(GGadu_PLUGIN_NAME, "sound play file",
-				    ggadu_config_var_get(handler, "sound_app_file"), "sound*");
+				signal_emit(GGadu_PLUGIN_NAME, "sound play file",
+					    ggadu_config_var_get(handler, "sound_app_file"), "sound*");
 
 			/* *INDENT-OFF* */
 			signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
@@ -439,8 +439,9 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			/* *INDENT-ON* */
 
 			ggadu_config_var_set(handler, "server",
-				     g_strdup_printf("%s:%d", inet_ntoa(*((struct in_addr *) &session->server_addr)),
-						     session->port));
+					     g_strdup_printf("%s:%d",
+							     inet_ntoa(*((struct in_addr *) &session->server_addr)),
+							     session->port));
 
 			ggadu_config_save(handler);
 			g_slist_free(list);
@@ -477,9 +478,9 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		break;
 	case GG_EVENT_MSG:
-		
+
 		print_debug("GG_EVENT_MSG from: %d type: %d", e->event.msg.sender, e->event.msg.msgclass);
-	
+
 		if ((e->event.msg.msgclass == GG_CLASS_CTCP))
 		{		/* dcc part */
 			struct gg_dcc *d = NULL;
@@ -488,9 +489,9 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			GGaduContact *k = NULL;
 			GIOChannel *ch = NULL;
 
-			print_debug("somebody want to send you a file"); /* ZONK */
-			
-			if (!(k = ggadu_repo_find_value("gadu-gadu",ggadu_repo_key_from_string(idtmp))))
+			print_debug("somebody want to send you a file");	/* ZONK */
+
+			if (!(k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(idtmp))))
 			{
 				g_free(idtmp);
 				return TRUE;
@@ -543,7 +544,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		ggadu_gg_save_history(msg->id, hist_line);
 		g_free(hist_line);
 
-		signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui",GGaduMsg_free);
+		signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui", GGaduMsg_free);
 
 		if (ggadu_config_var_get(handler, "sound_msg_file") != NULL)
 			signal_emit(GGadu_PLUGIN_NAME, "sound play file",
@@ -560,22 +561,30 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				gchar *strIP = NULL;
 				gchar *id = g_strdup_printf("%d", e->event.notify60[i].uin);
 				struct in_addr ip_addr;
-				GGaduContact *k = ggadu_repo_find_value("gadu-gadu",ggadu_repo_key_from_string(id));
+				GGaduContact *k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id));
 
-				ip_addr.s_addr = e->event.notify60[i].remote_ip;
-				strIP = inet_ntoa(ip_addr);	/* cannot be freed it's staically allocated memory */
-				
-				if (strIP && (ggadu_strcasecmp(strIP, "0.0.0.0")))
+				if (k)
 				{
-					g_free(k->ip);
-					k->ip = g_strdup_printf("%s:%d", strIP, e->event.notify60[i].remote_port);
+					ip_addr.s_addr = e->event.notify60[i].remote_ip;
+					strIP = inet_ntoa(ip_addr);	/* cannot be freed it's staically allocated memory */
+
+					if (strIP && (ggadu_strcasecmp(strIP, "0.0.0.0")))
+					{
+						g_free(k->ip);
+						k->ip = g_strdup_printf("%s:%d", strIP,e->event.notify60[i].remote_port);
+					}
+
+					k->status = e->event.notify60[i].status;
+					g_free(k->status_descr);
+					k->status_descr = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify60[i].descr));
+
+					ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(id), k, REPO_VALUE_DC);
 				}
-				
-				k->status = e->event.notify60[i].status;
-				g_free(k->status_descr);
-				k->status_descr = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify60[i].descr));
-				
-				ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(id), k, REPO_VALUE_DC);
+				else
+				{
+					print_debug("contact that is no in out list send us notify ?????");
+				}
+
 				g_free(id);
 			}
 		}
@@ -595,7 +604,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			while (n->uin)
 			{
 				gchar *id = g_strdup_printf("%d", n->uin);
-				GGaduContact *k = ggadu_repo_find_value("gadu-gadu",ggadu_repo_key_from_string(id));
+				GGaduContact *k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id));
 				struct in_addr ip_addr;
 				gchar *strIP = NULL;
 
@@ -606,15 +615,18 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 					g_free(k->ip);
 					k->ip = g_strdup_printf("%s:%d", strIP, n->remote_port);
 				}
-				
+
 				if (e->type == GG_EVENT_NOTIFY_DESCR)
 				{
 					g_free(k->status_descr);
-					k->status_descr = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify_descr.descr));
+					k->status_descr =
+						ggadu_convert("CP1250", "UTF-8",
+							      ggadu_strchomp(e->event.notify_descr.descr));
 				}
 
 				k->status = n->status;
-				ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
+				ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k,
+							REPO_VALUE_DC);
 				g_free(id);
 				n++;
 			}
@@ -623,10 +635,13 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	case GG_EVENT_STATUS60:
 	case GG_EVENT_STATUS:
 		{
-			gchar *id = g_strdup_printf("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
-			GGaduContact *k = ggadu_repo_find_value("gadu-gadu",ggadu_repo_key_from_string(id));
+			gchar *id =
+				g_strdup_printf("%d",
+						(e->type ==
+						 GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
+			GGaduContact *k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id));
 			gchar *tmp = NULL;
-			
+
 			print_debug("GG_EVENT_STATUS");
 
 			/* *INDENT-OFF* */
@@ -638,7 +653,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			k->status_descr = ggadu_strchomp(tmp);
 			
 			/* *INDENT-ON* */
-			
+
 			ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
 
 			g_free(id);
@@ -719,7 +734,7 @@ gpointer user_chat_action(gpointer user_data)
 
 	msg->message = NULL;
 
-	signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui",GGaduMsg_free);
+	signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui", GGaduMsg_free);
 
 	return NULL;
 }
@@ -838,29 +853,28 @@ gpointer user_preferences_action(gpointer user_data)
 	}
 
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, ggadu_config_var_get(handler, "uin"),
-				VAR_FLAG_NONE);
+			       VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PASSWORD, _("Password"), VAR_STR,
-				ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
+			       ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_SERVER, _("Server (optional)"), VAR_STR,
-				ggadu_config_var_get(handler, "server"), VAR_FLAG_NONE);
+			       ggadu_config_var_get(handler, "server"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PROXY,
-				_("Proxy server (optional)\n[user:pass@]host.com[:80]"), VAR_STR,
-				ggadu_config_var_get(handler, "proxy"), VAR_FLAG_NONE);
+			       _("Proxy server (optional)\n[user:pass@]host.com[:80]"), VAR_STR,
+			       ggadu_config_var_get(handler, "proxy"), VAR_FLAG_NONE);
 
 	utf = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf,
-				VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL,
-				ggadu_config_var_get(handler, "log"), VAR_FLAG_NONE);
+			       ggadu_config_var_get(handler, "log"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
-				ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+			       ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
-				statuslist_names, VAR_FLAG_NONE);
+			       statuslist_names, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"), VAR_BOOL,
-				ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
+			       ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_DCC, _("Enable DCC"), VAR_BOOL,
-				ggadu_config_var_get(handler, "dcc"), VAR_FLAG_NONE);
+			       ggadu_config_var_get(handler, "dcc"), VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	g_free(utf);
@@ -959,12 +973,12 @@ gpointer _register_account_action(gpointer user_data)
 	dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Register Gadu-Gadu account"), "register account", h);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_IMAGE, "", VAR_IMG, token_image_path, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_TOKEN, _("Registration code:\n(shown above)"), VAR_STR,
-				NULL, VAR_FLAG_NONE);
+			       NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_EMAIL, _("Email:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_PASSWORD, _("Password:"), VAR_STR, NULL,
-				VAR_FLAG_PASSWORD);
+			       VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_UPDATE_CONFIG, _("Update settings on success?"),
-				VAR_BOOL, FALSE, VAR_FLAG_NONE);
+			       VAR_BOOL, FALSE, VAR_FLAG_NONE);
 	signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	g_free(token_image_path);
@@ -1005,7 +1019,7 @@ gpointer search_action(gpointer user_data)
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("GG#"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ACTIVE, _("Search only for active users"), VAR_BOOL, NULL,
-				VAR_FLAG_NONE);
+			       VAR_FLAG_NONE);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	g_list_free(gender_list);
 	return NULL;
@@ -1013,7 +1027,7 @@ gpointer search_action(gpointer user_data)
 
 gchar *userlist_dump()
 {
-	GSList *list = ggadu_repo_get_as_slist("gadu-gadu",REPO_VALUE_CONTACT);
+	GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
 	GSList *us = list;
 	gchar *dump = NULL;
 
@@ -1026,8 +1040,8 @@ gchar *userlist_dump()
 		if (!dump)
 		{
 			dump = g_strdup(line);
-		} 
-		else 
+		}
+		else
 		{
 			gchar *tmp = dump;
 			dump = g_strjoin(NULL, dump, line, NULL);
@@ -1038,28 +1052,28 @@ gchar *userlist_dump()
 		us = us->next;
 	}
 	g_slist_free(list);
-	
+
 	print_debug("userlist_dump");
 	return dump;
 }
 
 gboolean user_exists(gchar * id)
 {
-	GGaduContact *k = ggadu_repo_find_value("gadu-gadu",ggadu_repo_key_from_string(id));
-	
+	GGaduContact *k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id));
+
 	if (k)
 		return TRUE;
-	
+
 	return FALSE;
 }
 
 gboolean import_userlist(gchar * list)
 {
 	gchar **all, **tmp;
-	
+
 	if (!list)
 		return FALSE;
-	
+
 	all = g_strsplit(list, "\r\n", 1000);
 	tmp = all;
 	while (*tmp)
@@ -1104,21 +1118,21 @@ gboolean import_userlist(gchar * list)
 		k->mobile = g_strdup(mobile);
 		k->group = g_strdup(group);
 		k->status = GG_STATUS_NOT_AVAIL;
-		
-		/*userlist = g_slist_append(userlist, k);*/
-		
+
+		/*userlist = g_slist_append(userlist, k); */
+
 		ggadu_repo_add_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_CONTACT);
-		
+
 		if (connected && session)
 			gg_add_notify(session, atoi(k->id));
-		
+
 		g_strfreev(l);
 	}
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
-	
+
 	save_addressbook_file();
-	
+
 	g_strfreev(all);
 	return TRUE;
 }
@@ -1405,7 +1419,7 @@ gpointer send_file_action(gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONTACT, NULL, VAR_NULL, k, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_SELECTED_FILE, _("Select File :"), VAR_FILE_CHOOSER, NULL,
-				VAR_FLAG_NONE);
+			       VAR_FLAG_NONE);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }
@@ -1685,11 +1699,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 		ip = inet_addr(addr_arr[0]);
 		port = atoi(addr_arr[1]);
-		
+
 		print_debug("SEND TO IP : %s %d\n", addr_arr[0], port);
-		
+
 		g_strfreev(addr_arr);
-		
+
 		if (port <= 10)
 		{
 			gg_dcc_request(session, (guint32) d->user_data);
@@ -1706,7 +1720,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				g_io_add_watch(dcc_channel_file, G_IO_OUT | G_IO_IN | G_IO_ERR, test_chan_dcc,
 					       dcc_file_session);
 		}
-		
+
 		GGaduDialog_free(d);
 		return;
 	}
@@ -1747,7 +1761,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			/* initial status for added person */
 			k->status = GG_STATUS_NOT_AVAIL;
 			ggadu_repo_add_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_CONTACT);
-			
+
 			if ((connected == TRUE) && (session != NULL) & (k != NULL) && (k->id != NULL))
 				gg_add_notify(session, atoi(k->id));
 
@@ -1782,7 +1796,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 
 			/* change if exist */
-			if ((k = ggadu_repo_find_value("gadu-gadu",ggadu_repo_key_from_string(id))))
+			if ((k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id))))
 			{
 				kvlist = ggadu_dialog_get_entries(dialog);
 				while (kvlist)
@@ -1809,8 +1823,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					}
 					kvlist = kvlist->next;
 				}
-				
-				ggadu_repo_change_value("gadu-gadu",ggadu_repo_key_from_string(id),k,REPO_VALUE_DC);
+
+				ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(id), k, REPO_VALUE_DC);
 				save_addressbook_file();
 				signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 			}
@@ -1828,20 +1842,20 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		ggadu_repo_add_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_CONTACT);
 		signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 		save_addressbook_file();
-		
+
 		if (connected && session)
 			gg_add_notify(session, atoi(k->id));
-		
+
 		return;
 	}
 
 	if (signal->name == CHANGE_STATUS_SIG)
 	{
 		GGaduStatusPrototype *sp = signal->data;
-		
+
 		if (!sp)
 			return;
-		
+
 		if (sp->status != GG_STATUS_NOT_AVAIL)
 		{
 			/* descriptions, call dialogbox */
@@ -1849,10 +1863,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			{
 				GGaduDialog *dialog = NULL;
 				gchar *reason_c = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
-				
-				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr", sp);
-				ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR,
-						       (gpointer) reason_c, VAR_FLAG_FOCUS);
+
+				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
+							       "change status descr", sp);
+				ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, (gpointer) reason_c,
+						       VAR_FLAG_FOCUS);
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 				g_free(reason_c);
 			}
@@ -1892,7 +1907,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == CHANGE_STATUS_DESCR_SIG)
 	{
 		GGaduDialog *dialog = signal->data;
-		
+
 		if (dialog->user_data)
 		{
 			GGaduStatusPrototype *sp = dialog->user_data;
@@ -1901,22 +1916,22 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			{
 				gchar *desc_utf = NULL, *desc_cp = NULL, *desc_iso = NULL;
 				gint _status = sp->status;
-				
+
 				if (ggadu_config_var_get(handler, "private"))
 					_status |= GG_STATUS_FRIENDS_MASK;
-				
+
 				kv = (GGaduKeyValue *) ggadu_dialog_get_entries(dialog)->data;
-				
+
 				print_debug(" %d %d\n ", GG_STATUS_INVISIBLE_DESCR, sp->status);
-				
+
 				desc_utf = kv->value;
 				/* do sesji */
 				desc_cp = from_utf8("CP1250", desc_utf);
 				/* do konfiga */
 				desc_iso = from_utf8("ISO-8859-2", desc_utf);
-				
+
 				ggadu_config_var_set(handler, "reason", desc_iso);
-				
+
 				if (!connected)
 				{
 					connect_count = 0;
@@ -1925,7 +1940,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				else if (!gg_change_status_descr(session, _status, desc_cp))
 					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status,
 						    "main-gui");
-				
+
 				g_free(desc_cp);
 				g_free(desc_iso);
 				ggadu_config_save(handler);
@@ -2102,7 +2117,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 			gg_pubdir50_t req;
 			GSList *tmplist = ggadu_dialog_get_entries(dialog);
-			
+
 			if (!(req = gg_pubdir50_new(GG_PUBDIR50_SEARCH)))
 			{
 				GGaduDialog_free(dialog);
@@ -2209,12 +2224,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		gchar *reg_token = NULL;
 		gboolean reg_update = FALSE;
 		gchar *token_image_path = g_build_filename(this_configdir, "register-token.tmp", NULL);
-		
+
 		if (g_file_test(token_image_path, G_FILE_TEST_IS_REGULAR))
 			unlink(token_image_path);
-			
+
 		g_free(token_image_path);
-		
+
 		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			while (tmplist)
@@ -2365,7 +2380,7 @@ void save_addressbook_file()
 {
 	GIOChannel *ch = NULL;
 	gchar *path = NULL;
-	
+
 	path = g_build_filename(this_configdir, "userlist", NULL);
 	print_debug("path is %s\n", path);
 	ch = g_io_channel_new_file(path, "w", NULL);
