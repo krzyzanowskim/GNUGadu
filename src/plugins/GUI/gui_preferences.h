@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.h,v 1.3 2004/01/28 23:40:29 shaster Exp $ */
+/* $Id: gui_preferences.h,v 1.4 2004/08/31 06:54:30 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -26,6 +26,7 @@ enum
 {
     PLUGINS_MGR_NAME,
     PLUGINS_MGR_ENABLE,
+    PLUGINS_MGR_DESC,
     PLUGINS_MGR_COUNT
 };
 

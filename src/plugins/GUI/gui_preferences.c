@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.74 2004/08/26 10:21:46 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.75 2004/08/31 06:54:30 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -134,7 +134,8 @@ GtkWidget *gui_plugins_mgr_tab()
 	plugins_updated = FALSE;
 
 	vbox = gtk_vbox_new(FALSE, 5);
-	store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
+//	store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
+	store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_STRING);
 	g_signal_connect(G_OBJECT(store), "row-changed", G_CALLBACK(row_changed), NULL);
 
 	/* zaladowane pluginy na poczzatku wedle kolejnosci zadanej w pliku modules.load */
@@ -143,13 +144,13 @@ GtkWidget *gui_plugins_mgr_tab()
 		gboolean tmpvar = FALSE;
 		GGaduPlugin *pl = (GGaduPlugin *) modules_load->data;
 
-		if (find_plugin_by_name((gchar *) pl->name))
+		if (pl && find_plugin_by_name((gchar *) pl->name))
 			tmpvar = TRUE;
 
 		print_debug("%s\n", pl->name);
 		gtk_tree_store_append(GTK_TREE_STORE(store), &iter, NULL);
 		gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME, (gchar *) pl->name,
-				   PLUGINS_MGR_ENABLE, tmpvar, -1);
+				   PLUGINS_MGR_ENABLE, tmpvar,PLUGINS_MGR_DESC,(gchar *) pl->description , -1);
 
 		modules_load = modules_load->next;
 	}
@@ -160,14 +161,14 @@ GtkWidget *gui_plugins_mgr_tab()
 		gboolean tmpvar = FALSE;
 		GGaduPluginFile *pf = (GGaduPluginFile *) plugins_list->data;
 
-		if (!find_plugin_by_name((gchar *) pf->name))
+		if (pf && !find_plugin_by_name((gchar *) pf->name))
 		{
 			tmpvar = FALSE;
 
 			print_debug("%s\n", pf->name);
 			gtk_tree_store_append(GTK_TREE_STORE(store), &iter, NULL);
 			gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME, (gchar *) pf->name,
-					   PLUGINS_MGR_ENABLE, tmpvar, -1);
+				   PLUGINS_MGR_ENABLE, tmpvar, -1);
 		}
 		plugins_list = plugins_list->next;
 	}
@@ -178,15 +179,17 @@ GtkWidget *gui_plugins_mgr_tab()
 	g_object_unref(G_OBJECT(store));
 
 	renderer = gtk_cell_renderer_toggle_new();
-	column = gtk_tree_view_column_new_with_attributes(_("Enable"), renderer, "active", PLUGINS_MGR_ENABLE, NULL);
-
+	column = gtk_tree_view_column_new_with_attributes(_("Enabled"), renderer, "active", PLUGINS_MGR_ENABLE, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
 
 	g_signal_connect(renderer, "toggled", G_CALLBACK(enable_toggled), store);
 
 	renderer = gtk_cell_renderer_text_new();
-	column = gtk_tree_view_column_new_with_attributes(_("Plugin name"), renderer, "text", PLUGINS_MGR_NAME, NULL);
+	column = gtk_tree_view_column_new_with_attributes(_("Name"), renderer, "text", PLUGINS_MGR_NAME, NULL);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
 
+	renderer = gtk_cell_renderer_text_new();
+	column = gtk_tree_view_column_new_with_attributes(_("Description"), renderer, "text", PLUGINS_MGR_DESC, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
 
 	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(list), TRUE, TRUE, 0);
