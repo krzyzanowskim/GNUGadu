@@ -1,4 +1,4 @@
-# $Revision: 1.16 $, $Date: 2004/08/04 22:48:12 $
+# $Revision: 1.17 $, $Date: 2004/08/22 17:25:55 $
 #
 # Conditional build:
 %bcond_with	arts
@@ -10,14 +10,13 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.0.4
+Version:	2.0.5
 Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}.tar.bz2
 # Source0-md5:	e8795ba49b9817a1db5e8628c9c9e30a
-Patch0:		%{name}-jabber_login.patch
 URL:		http://www.gnugadu.org/
 %{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
@@ -25,7 +24,7 @@ BuildRequires:	automake >= 1.7
 %{?with_esd:BuildRequires:	esound-devel >= 0.2.7}
 BuildRequires:	gettext-devel >= 0.11.0
 BuildRequires:	glib2-devel  >= 2.2.0
-BuildRequires:	gtk+2-devel  >= 2.2.0
+BuildRequires:	gtk+2-devel  >= 2.4.0
 BuildRequires:	libtlen-devel
 BuildRequires:	libtool
 BuildRequires:	loudmouth-devel >= 0.16-4
@@ -352,7 +351,6 @@ Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 rm -f missing
@@ -523,6 +521,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.17  2004/08/22 17:25:55  krzyzak
+- not much
+
 Revision 1.16  2004/08/04 22:48:12  krzyzak
 - up to 2.0.4
 

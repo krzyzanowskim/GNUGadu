@@ -1,4 +1,4 @@
-pixmapdir   = $(pkgdatadir)/pixmaps/icons/tlen-3d
+pixmapdir   = $(pkgdatadir)/pixmaps/icons/tlen-classic
 pixmap_DATA = \
     tlen-away.png \
     tlen-beback.png \
