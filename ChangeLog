@@ -1,3 +1,6 @@
+29.12.2003
+- read ~/.gg2/emoticons.def first, if this fails, read default one (GUI/shasta)
+
 28.12.2003
 - remove sound_* variables support with gadu-gadu separated config file (gadu-gadu/krzak)
 - UI improvements - nothing important (GUI/krzak)

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.40 2003/12/28 23:31:19 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.41 2003/12/29 20:26:00 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -781,14 +781,15 @@ void gui_config_emoticons ()
       {
 	  gchar *path;
 
-	  path = g_build_filename (PACKAGE_DATA_DIR, "pixmaps", G_DIR_SEPARATOR_S, "emoticons", "emoticons.def", NULL);
+	  // read from ~/.gg2/emoticons.def
+	  path = g_build_filename (config->configdir, "emoticons.def", NULL);
 	  emoticons = gui_read_emoticons (path);
 	  g_free (path);
 
-	  // read from .gg2/emoticons.def, delete after
+	  // if reading from ~/.gg2/emoticons.def failed, try default one
 	  if (!emoticons)
 	    {
-		path = g_build_filename (config->configdir, "emoticons.def", NULL);
+		path = g_build_filename (PACKAGE_DATA_DIR, "pixmaps", G_DIR_SEPARATOR_S, "emoticons", "emoticons.def", NULL);
 		emoticons = gui_read_emoticons (path);
 		g_free (path);
 	    }
