@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.6 2004/08/01 21:05:04 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.7 2004/08/02 11:13:59 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -593,7 +593,7 @@ gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc)
 	return TRUE;
 }
 
-gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick, GGaduMsg *msg, gchar *encoding)
+gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick, GGaduMsg *msg)
 {
 	gchar *line = NULL;
 	
@@ -611,5 +611,5 @@ gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick,
 	    break;
 	}
 	
-	return write_line_to_file(filepath, line, encoding);
+	return write_line_to_file(filepath, line, NULL);
 }

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.24 2004/08/02 00:09:10 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.25 2004/08/02 11:13:59 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -31,7 +31,7 @@
 	if (ggadu_config_var_get(handler, "log")) \
 	{ \
 	    gchar *path = g_build_filename(config->configdir, "history", _msg->id, NULL); \
-	    ggadu_save_history(_type, path, _nick, _msg, "CP1250"); \
+	    ggadu_save_history(_type, path, _nick, _msg); \
 	    g_free(path); \
 	}
 	

@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.5 2004/08/01 21:05:04 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.6 2004/08/02 11:13:59 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -87,7 +87,7 @@ gchar		*ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text);
 const char	*itoa(long int i);
 gboolean	str_has_suffix(const gchar * str, const gchar * suffix);
 
-gboolean	ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick, GGaduMsg *msg, gchar *encoding);
+gboolean	ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick, GGaduMsg *msg);
 gboolean	write_line_to_file(gchar * path, gchar * line, gchar * enc);
 /* This is an internally used function to check if a pixmap file exists. */
 gchar		*check_file_exists(const gchar * directory, const gchar * filename);
