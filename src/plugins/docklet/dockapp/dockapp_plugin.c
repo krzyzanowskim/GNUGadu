@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.5 2003/12/11 01:38:58 jarwyp Exp $ */
+/* $Id: dockapp_plugin.c,v 1.6 2003/12/11 04:25:26 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -231,6 +231,8 @@ gpointer dockapp_preferences_action()
   gchar *utf = NULL, *current_proto;
   GGaduProtocol *proto;
 
+  gint count=0;
+
   /* prepare list of protocol plugins */
   current_proto = config_var_get(handler, "dockapp_protocol");
   if (current_proto)
@@ -238,16 +240,20 @@ gpointer dockapp_preferences_action()
   index =
      ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL,
      (gpointer *) & key);
+
   while (index) {
     /* key == name but better find display_name */
     proto = ggadu_repo_find_value("_protocols_", key);
     to_utf8("ISO-8859-2", proto->display_name, utf);
-    if (!current_proto || ggadu_strcasecmp(utf, current_proto))
+    if (!current_proto || ggadu_strcasecmp(utf, current_proto)){
       pluginlist_names = g_slist_append(pluginlist_names, utf);
+      count++;
+    }
     index =
        ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL,
        (gpointer *) & key, index);
   }
+
 
   /* create dialog */
   GGaduDialog *d = ggadu_dialog_new();
@@ -255,8 +261,16 @@ gpointer dockapp_preferences_action()
   ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
   ggadu_dialog_callback_signal(d, "update config");
 
-  ggadu_dialog_add_entry(&(d->optlist), GGADU_DOCKAPP_CONFIG_PROTOCOL,
-     _("Protocol"), VAR_LIST, pluginlist_names, VAR_FLAG_NONE);
+//  plugin_visible=(int)*config_var_get(handler,"dockapp_visible");
+
+  ggadu_dialog_add_entry(&(d->optlist),GGADU_DOCKAPP_CONFIG_VISIBLE,
+    _("Visible"),VAR_BOOL,config_var_get(handler,"dockapp_visible"),VAR_FLAG_NONE);
+
+
+  if(count>0)
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_DOCKAPP_CONFIG_PROTOCOL,
+       _("Protocol"), VAR_LIST, pluginlist_names, VAR_FLAG_NONE);
+
 
   signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
@@ -281,8 +295,9 @@ void create_dockapp()
 {
   XWMHints wmhints;
   GdkGC *mask_gc;               //graphics context of mask
+  int *visible;
 
-  print_debug("%s : create_docapp\n", GGadu_PLUGIN_NAME);
+  print_debug("%s : create_dockapp\n", GGadu_PLUGIN_NAME);
 
   /* all colors used in dockapp must be here */
   cmap = gdk_colormap_get_system();
@@ -350,9 +365,15 @@ void create_dockapp()
   gdk_window_set_icon(status_dockapp->window, icon_dockapp->window, NULL,
      NULL);
   gdk_window_set_group(status_dockapp->window, status_dockapp->window);
-
+  
+  visible=(int *)config_var_get(NULL,"dockapp_visible");
+  
+  
   gtk_widget_show_all(icon_dockapp);
   gtk_widget_show_all(status_dockapp);
+  
+  if(visible==NULL || *visible==FALSE)  
+    gtk_widget_hide(status_dockapp);
 }
 
 /* do when user notify changed */
@@ -477,9 +498,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
       while (tmplist) {
         GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
         switch (kv->key) {
+        case GGADU_DOCKAPP_CONFIG_VISIBLE:{
+          print_debug("changing visible setting to %d\n",kv->value);
+          config_var_set(handler, "dockapp_visible", kv->value);
+          if(kv->value) gtk_widget_show_all(status_dockapp);
+          else gtk_widget_hide(status_dockapp);
+          break;
+        }
         case GGADU_DOCKAPP_CONFIG_PROTOCOL:{
             gchar *iso = NULL;
             int i;
+            
+            if(kv->value==NULL) break;
+            
             print_debug("changing var setting dockapp_protocol to %s\n",
                kv->value);
             from_utf8("ISO-8859-2", kv->value, iso);
@@ -523,9 +554,12 @@ void start_plugin()
 
   register_signal(handler, "update config");
 
+
   /* join to docklet signal */
   /* message received */
   register_signal(handler, "docklet set icon");
+
+
 
   ggadu_repo_watch_add(NULL, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT,
      notify_callback);
@@ -550,6 +584,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
   /* configure plugin */
   config_var_add(handler, "dockapp_protocol", VAR_STR);
+  config_var_add(handler, "dockapp_visible", VAR_BOOL);
 
   if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
     this_configdir =
