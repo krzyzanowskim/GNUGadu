@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.5 2003/04/03 08:07:17 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.6 2003/04/09 10:56:58 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -425,7 +425,7 @@ void gui_msg_receive(GGaduSignal *signal)
 	
 	if (gp != NULL) {
 	    gui_chat_session *session = NULL;
-	    gboolean showwindow = FALSE;
+	    gboolean showwindow = config_var_get(gui_handler, "chat_window_auto_show") ? TRUE:FALSE;
 
 	    	if (msg->class == GGADU_CLASS_CONFERENCE)
 		    session = gui_session_find_confer(gp, msg->recipients);
@@ -448,9 +448,8 @@ void gui_msg_receive(GGaduSignal *signal)
 		    sigdata = g_slist_append(sigdata, (gchar *) config_var_get(gui_handler, "icons"));
 		    sigdata = g_slist_append(sigdata, (gpointer)"new-msg.png");
 		    sigdata = g_slist_append(sigdata, _("You Have Message"));
-
-		    showwindow = config_var_get(gui_handler, "chat_window_auto_show") ? TRUE:FALSE;
-		    if (!showwindow) {
+		    
+		    if (showwindow == FALSE) {
 		        if (signal_emit_full("main-gui", "docklet set icon",sigdata, NULL, (gpointer)g_slist_free) == NULL) {
 		    	    showwindow = TRUE;
 			} else {
