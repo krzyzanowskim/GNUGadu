@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.168 2004/05/04 21:39:10 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.169 2004/05/05 19:42:35 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -931,7 +931,7 @@ gpointer _register_account_action(gpointer user_data)
 		return NULL;
 	}
 
-	token_image_path = g_build_filename(this_configdir, "register-token.tmp", NULL);
+	token_image_path = g_build_filename(g_get_tmp_dir(), "register-token.tmp", NULL);
 	print_debug("Gonna write token to %s\n", token_image_path);
 	ch = g_io_channel_new_file(token_image_path, "w", NULL);
 	if (!ch)
@@ -2279,7 +2279,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		gchar *reg_password = NULL;
 		gchar *reg_token = NULL;
 		gboolean reg_update = FALSE;
-		gchar *token_image_path = g_build_filename(this_configdir, "register-token.tmp", NULL);
+		gchar *token_image_path = g_build_filename(g_get_tmp_dir(), "register-token.tmp", NULL);
 
 		if (g_file_test(token_image_path, G_FILE_TEST_IS_REGULAR))
 			unlink(token_image_path);
