@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.80 2004/02/17 16:34:14 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.81 2004/02/19 22:52:23 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1193,9 +1193,11 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 
 		if (conference)
 			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), (k) ? k->nick : gmsg->id);
-		else
-			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, get_timestamp(0), get_timestamp(gmsg->time));
-			
+		else {
+			gchar *timestamp = g_strdup(get_timestamp(0));
+			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, timestamp, get_timestamp(gmsg->time));
+			g_free(timestamp);
+		}
 		text = g_strdup(gmsg->message);
 	}
 
