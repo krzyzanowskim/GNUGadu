@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.208 2004/12/02 12:02:10 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.209 2004/12/13 10:04:57 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -687,7 +687,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			/* Zapiszmy sobie zmiane opisu do pliku historii */
 
-			gchar *status = NULL;
+/*			gchar *status = NULL;
 			if ((k->status == GG_STATUS_AVAIL) || (k->status == GG_STATUS_AVAIL_DESCR))
 				status = g_strdup_printf("avail");
 			else if ((k->status == GG_STATUS_BUSY) || (k->status == GG_STATUS_BUSY_DESCR))
@@ -700,7 +700,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				status = g_strdup_printf("blocked");
 			else
 				status = g_strdup_printf("unknown");
-
+*/
 			/* Format kompatybilny z histori± Kadu ;)                       */
 			/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;) */
 
@@ -710,7 +710,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			ggadu_gg_save_history((gchar *) k->id, line);
 */
 //                      g_free(line);
-			g_free(status);
+//			g_free(status);
 
 			g_free(id);
 		}
