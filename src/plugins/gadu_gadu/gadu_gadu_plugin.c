@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.228 2004/12/29 16:17:48 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.229 2004/12/29 16:27:36 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2137,11 +2137,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				g_free(desc_cp);
 
 				print_debug("changed to %d",_status);
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _status, "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
+					(gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
+				
 			}
 			else if (gg_change_status(session, _status) != -1)
 			{
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _status, "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
+					(gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
 			} else {
 				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Unable to change status")), "main-gui");
 			}
