@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.21 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: signals.c,v 1.22 2004/09/29 13:22:17 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -224,7 +224,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 			if ((src != NULL) && (dest != NULL) && (dest->name != 0))
 			{
 
-				if (g_strcasecmp(src->name, dest->name))
+				if (ggadu_strcasecmp(src->name, dest->name))
 					dest->signal_receive_func((gpointer) tmpsignal->name, tmpsignal);
 
 				while (g_main_pending())

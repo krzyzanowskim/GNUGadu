@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.8 2004/09/07 14:59:18 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.9 2004/09/29 13:22:16 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -232,7 +232,7 @@ void print_debug_raw(const gchar * func, const char *format, ...)
 
 	va_start(ap, format);
 
-	if ((prev_func_name != NULL) && g_strcasecmp(prev_func_name, func))	/* if prev_func_name is NOT the same as func */
+	if ((prev_func_name != NULL) && ggadu_strcasecmp(prev_func_name, func))	/* if prev_func_name is NOT the same as func */
 		g_print("\e[2mFunction : \e[0;36m%s\e[0m\n", func);
 
 	g_free(prev_func_name);

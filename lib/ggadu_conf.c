@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.22 2004/09/27 07:51:30 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.23 2004/09/29 13:22:16 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -37,7 +37,7 @@ static GGaduVar *ggadu_find_variable(GGaduPlugin * plugin_handler, gchar * name)
 	while (tmp)
 	{
 		GGaduVar *v = (GGaduVar *) tmp->data;
-		if (!g_strcasecmp(name, v->name))
+		if (!ggadu_strcasecmp(name, v->name))
 			return v;
 		tmp = tmp->next;
 	}
@@ -55,7 +55,7 @@ gint ggadu_config_var_check(GGaduPlugin * handler, gchar * name)
 	while (tmp)
 	{
 		var = (GGaduVar *) tmp->data;
-		if (!g_strcasecmp(var->name, name))
+		if (!ggadu_strcasecmp(var->name, name))
 		{
 			if (var->ptr)
 				return 1;
@@ -82,7 +82,7 @@ gpointer ggadu_config_var_get(GGaduPlugin * handler, gchar * name)
 	{
 		var = (GGaduVar *) tmp->data;
 
-		if (var && (!g_strcasecmp(var->name, name)))
+		if (var && (!ggadu_strcasecmp(var->name, name)))
 		{
 			return var->ptr ? var->ptr : var->def;
 		}

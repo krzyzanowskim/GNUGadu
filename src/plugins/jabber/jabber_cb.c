@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.66 2004/09/28 14:03:14 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.67 2004/09/29 13:22:18 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -824,7 +824,7 @@ LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection
  	    while(roster)
  	    {
                 GGaduContact *k = (GGaduContact *) roster->data;
- 		if(!g_strcasecmp(jid, k->id) || lm_message_get_type(message)!=LM_MESSAGE_TYPE_MESSAGE)
+ 		if(!ggadu_strcasecmp(jid, k->id) || lm_message_get_type(message)!=LM_MESSAGE_TYPE_MESSAGE)
  		{
  		    handle_it=TRUE;
  		    break;

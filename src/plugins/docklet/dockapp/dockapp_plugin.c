@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.22 2004/05/30 19:29:13 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.23 2004/09/29 13:22:18 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -255,7 +255,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
             {
             gchar *plugin_name = g_strdup(g_slist_nth_data(sigdata, 0));
             /* stop if wrong protocol */
-            if (g_strcasecmp(plugin_name, "gadu-gadu"))  { g_free(plugin_name); return;}
+            if (ggadu_strcasecmp(plugin_name, "gadu-gadu"))  { g_free(plugin_name); return;}
             icon1_img = g_slist_nth_data(sigdata, 1);
             draw_pixmap();
             redraw();

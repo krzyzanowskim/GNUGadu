@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.20 2004/09/21 15:22:29 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.21 2004/09/29 13:22:16 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -294,7 +294,7 @@ gpointer config_var_get(GGaduPlugin * handler, gchar * name)
 	{
 		var = (GGaduVar *) tmp->data;
 
-		if ((var != NULL) && (!g_strcasecmp(var->name, name)))
+		if ((var != NULL) && (!ggadu_strcasecmp(var->name, name)))
 		{
 			return var->ptr;
 		}

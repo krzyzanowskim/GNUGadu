@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.20 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: main.c,v 1.21 2004/09/29 13:22:17 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -131,7 +131,7 @@ void start_plugins_ordered()
 	if (start_plugin)
 	    start_plugin();
 
-	if (!g_strcasecmp(plugin->name, "main-gui"))
+	if (!ggadu_strcasecmp(plugin->name, "main-gui"))
 	    main_gui_loaded = TRUE;
 
 	tmp = tmp->next;

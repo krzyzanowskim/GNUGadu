@@ -1,3 +1,7 @@
+29.09.2004
+- g_strcasecmp is deprecated and should not be used in newly-written code. 
+  Replaced with ggadu_strcasecmp() (krzak)
+
 28.09.2004
 - fixes relared to auto_away feature (GUI/krzak)
 - fixes related to empty messages and disconnect handling (Jabber/krzak)
