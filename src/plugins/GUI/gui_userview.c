@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.41 2004/05/01 08:49:52 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.42 2004/05/03 21:26:44 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -170,6 +170,10 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 	if ((!k1 || !k2))
 		return 0;
 
+	if (!gp)
+		gtk_tree_model_get(GTK_TREE_MODEL(model), a, 3, &gp, -1);
+
+
 	/* print_debug("SORTUJE\n"); */
 	/* maly trik, jesli statusy sa w tej samej grupie to trakuj je jako te same statusy przy sortowaniu */
 	if ((is_in_status(k1->status,gp->p->online_status) && is_in_status(k2->status,gp->p->online_status)) ||
@@ -180,9 +184,6 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 	/* je¶li status jest taki sam posortuj alfabetycznie wg. tego co wy¶wietla */
 	if ((k1->status == k2->status))
 		return ggadu_strcasecmp(d1, d2);
-
-	if (!gp)
-		gtk_tree_model_get(GTK_TREE_MODEL(model), a, 3, &gp, -1);
 
 	/* w innym przypadku sprawd¼ który status jest wy¿ej na li¶cie */
 	p1 = gui_get_status_pos(k1->status, gp);
@@ -751,7 +752,7 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 
 	if (tree)
 	{
-		gchar *tmp;
+		gchar *tmp = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(users_treestore), &parent_iter, 1, &tmp, -1);
 		gtk_tree_store_set(users_treestore, &parent_iter, 1,
 				   g_strdup_printf("%s (%d/%d)", gp->p->display_name, gui_get_active_users_count(gp),

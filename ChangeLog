@@ -1,3 +1,6 @@
+3.05.2004
+- fixed crash, introduced with last sort changes , after switch to tree mode,  (krzak)
+
 1.05.2004
 - do not show tabs if there is only one on the protocols list (krzak)
 - Poland join to UE
