@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.24 2003/08/23 19:52:49 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.25 2003/09/16 22:56:08 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -48,7 +48,7 @@ static gboolean save_selected_plugins (GtkTreeModel * model, GtkTreePath * path,
 	    {
 		GGaduPluginFile *pf = (GGaduPluginFile *) all_plugins->data;
 
-		if (!g_strcasecmp (pf->name, name) && (!find_plugin_by_name (name)))
+		if (!ggadu_strcasecmp (pf->name, name) && (!find_plugin_by_name (name)))
 		  {
 		      load_plugin (pf->path);
 		  }
@@ -59,7 +59,7 @@ static gboolean save_selected_plugins (GtkTreeModel * model, GtkTreePath * path,
       }
     else if (name != NULL)
       {
-	  if (!g_strcasecmp (name, "main-gui"))
+	  if (!ggadu_strcasecmp (name, "main-gui"))
 	    {
 		signal_emit_full ("main-gui", "gui show warning",
 				  g_strdup ("ZONK! Bo zaraz zdechne! Zrestartuj gada, by zmiany odniosly efekt."),
@@ -759,7 +759,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 		if (g_str_has_suffix (theme_name_file, ".theme"))
 		  {
 		      theme_name = g_strndup (theme_name_file, strlen (theme_name_file) - strlen (".theme"));
-		      if (!theme_current || g_strcasecmp (theme_name, theme_current))
+		      if (!theme_current || ggadu_strcasecmp (theme_name, theme_current))
 			  list_theme = g_list_append (list_theme, g_strdup (theme_name));
 		      g_free (theme_name);
 		  }
@@ -790,7 +790,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 		if (g_file_test (testdirname, G_FILE_TEST_IS_DIR))
 		  {
 		      print_debug ("%s\n", icons_dir);
-		      if (!icons_current || g_strcasecmp (icons_dir, icons_current))
+		      if (!icons_current || ggadu_strcasecmp (icons_dir, icons_current))
 			  list_icons = g_list_append (list_icons, g_strdup (icons_dir));
 		  }
 		g_free (testdirname);

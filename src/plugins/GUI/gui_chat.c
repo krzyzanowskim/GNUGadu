@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.48 2003/08/20 19:56:00 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.49 2003/09/16 22:56:08 shaster Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -373,7 +373,7 @@ static gboolean find_emoticon (gchar * name, GSList * here)
       {
 	  gui_emoticon *e = (gui_emoticon *) tmp->data;
 
-	  if (!g_strcasecmp (name, e->file))
+	  if (!ggadu_strcasecmp (name, e->file))
 	      return TRUE;
 
 	  tmp = tmp->next;

@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.3 2003/06/25 22:11:04 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.4 2003/09/16 22:56:08 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -96,7 +96,7 @@ gui_chat_session *gui_session_find_confer(gui_protocol *gp, GSList *recipients)
 	    sess_tmprec = session->recipients; /* session recipients list */
 	    while (sess_tmprec)	/* with that */
 	    {
-		if (!g_strcasecmp((gchar *)sess_tmprec->data, (gchar *)tmprec->data)) hit++;
+		if (!ggadu_strcasecmp((gchar *)sess_tmprec->data, (gchar *)tmprec->data)) hit++;
 		/* print_debug("COMPARE %s %s\n",(gchar *)sess_tmprec->data, (gchar *)tmprec->data); */
 		sess_tmprec = sess_tmprec->next;
 	    }
