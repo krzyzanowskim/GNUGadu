@@ -3,13 +3,15 @@
   "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
 <!ENTITY autor "Bartosz Zapałowski">
 <!ENTITY gad "GNU Gadu2">
+<!ENTITY dotconf SYSTEM "dotconf.sgml">
 ]>
 <book lang="pl">
 <bookinfo>
-<title>Podręcznik użytkownika &gad</title>
+<title>Podręcznik użytkownika &gad;</title>
 <author>
 	<firstname>Bartosz</firstname> 
 	<surname>Zapałowski</surname>
 </author>
 </bookinfo>
+&dotconf;
 </book>

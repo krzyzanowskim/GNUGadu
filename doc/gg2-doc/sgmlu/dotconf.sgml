@@ -1,0 +1,268 @@
+<?xml version='1.0'?>
+<chapter><title>Pliki konfiguracyjne</title>
+
+<sect1><title>Wprowadzenie</title>
+<para>Wszystkie pliki konfiguracyjne są umieszczone w katalogu domowym
+użytkownika w podkatalogu <filename>.gg2/</filename> (u mnie jest to
+<filename>/home/bartek/.gg2/</filename>). Na kolejnych stronach, gdy podam
+tylko nazwę pliku (np. <filename>gui</filename>), to znaczy, że jego miejsce
+jest w katalogu <filename>.gg2/</filename>.</para>
+
+</sect1>
+
+<sect1><title>Konfiguracja modułów - <filename>modules.load</filename></title>
+<para>Plik <filename>modules.load</filename> określa, które moduły zostaną
+załadowane podczas startu. Jeśli ten plik nie istnieje, to ładowane są
+wszystkie znalezione moduły.</para>
+
+<para>Kolejność występowania modułów w pliku <filename>modules.load</filename>
+jest kolejnością, w jakiej będą ładowane moduły.</para>
+
+</sect1>
+
+<sect1><title>Konfiguracja GUI - <filename>gui</filename></title>
+<para>Plik <filename>gui</filename> zawiera konfigurację dla modułu GUI.</para>
+
+<table frame='all'><title>Opcje konfiguracyjne GUI</title>
+<tgroup cols='4' align='center' colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colname='Opis' colnum='3'/>
+<thead><row>
+  <entry align='center'>Nazwa</entry>
+  <entry align='center'>Typ</entry>
+  <entry align='center'>Domyślna wartość</entry>
+  <entry align='center'>Opis</entry>
+</row></thead>
+
+<tbody>
+  <row>
+    <entry>auto_away_interval</entry>
+    <entry>VAR_INT</entry>
+    <entry>300000</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>auto_away</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>blink_interval</entry>
+    <entry>VAR_INT</entry>
+    <entry>500</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>chat_paned_size</entry>
+    <entry>VAR_INT</entry>
+    <entry>160</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>chat_type</entry>
+    <entry>VAR_INT</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>chat_window_auto_raise</entry>
+    <entry>VAR_BOOT</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>chat_window_auto_show</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>contact_list_contact_font</entry>
+    <entry>VAR_STR</entry>
+    <entry>normal</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>contact_list_protocol_font</entry>
+    <entry>VAR_STR</entry>
+    <entry>bold</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>emot</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>expand</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>height</entry>
+    <entry>VAR_INT</entry>
+    <entry>488</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>hide_on_start</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>icons</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>left</entry>
+    <entry>VAR_INT</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_body_color</entry>
+    <entry>VAR_STR</entry>
+    <entry>#000001</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_body_font</entry>
+    <entry>VAR_STR</entry>
+    <entry>Sans</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_header_color</entry>
+    <entry>VAR_STR</entry>
+    <entry>#000001</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_header_font</entry>
+    <entry>VAR_STR</entry>
+    <entry>Sans</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_out_body_color</entry>
+    <entry>VAR_STR</entry>
+    <entry>#000001</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_out_body_font</entry>
+    <entry>VAR_STR</entry>
+    <entry>Sans</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_out_header_color</entry>
+    <entry>VAR_STR</entry>
+    <entry>#000001</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>msg_out_header_font</entry>
+    <entry>VAR_STR</entry>
+    <entry>Sans</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>send_on_enter</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>show_active</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>sound_msg_in</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>sound_msg_out</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>theme</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>top</entry>
+    <entry>VAR_INT</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>tree</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>use_xosd_for_new_msgs</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>width</entry>
+    <entry>VAR_INT</entry>
+    <entry>160</entry>
+    <entry></entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+
+</sect1>
+
+</chapter>
