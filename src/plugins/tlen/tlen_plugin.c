@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.65 2004/05/17 11:46:44 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.66 2004/06/21 21:47:03 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -1080,6 +1080,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 					/* ustaw nowy opis w sesji */
 					tlen_presence(session, sp->status, description);
+					
+					/* uaktualnij GUI */
+					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
+						(gpointer) sp->status, "main-gui");
 				}
 			}
 		}
