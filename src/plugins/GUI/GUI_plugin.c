@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.59 2004/03/13 15:13:16 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.60 2004/03/14 18:49:13 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -640,6 +640,29 @@ gpointer show_hide_inactive(GtkWidget * widget, gpointer user_data)
 	return NULL;
 }
 
+gpointer show_hide_descriptions(GtkWidget * widget, gpointer user_data)
+{
+	gtk_widget_set_sensitive(toolbar_handle_box, FALSE);
+
+	if (ggadu_config_var_get(gui_handler, "descr_on_list"))
+	{
+		ggadu_config_var_set(gui_handler, "descr_on_list", (gpointer) FALSE);
+	}
+	else
+	{
+		ggadu_config_var_set(gui_handler, "descr_on_list", (gpointer) TRUE);
+	}
+
+	ggadu_config_save(gui_handler);
+
+	gui_user_view_refresh();
+
+	gtk_widget_set_sensitive(toolbar_handle_box, TRUE);
+
+	return NULL;
+}
+
+
 void gui_build_default_toolbar()
 {
 	toolbar_handle_box = gtk_handle_box_new();
@@ -658,6 +681,10 @@ void gui_build_default_toolbar()
 	gtk_toolbar_append_element(GTK_TOOLBAR(main_toolbar), GTK_TOOLBAR_CHILD_BUTTON, NULL, NULL,
 				   _("Show/hide inactive users"), NULL, create_image("show-hide-inactive.png"),
 				   (GtkSignalFunc) show_hide_inactive, NULL);
+
+	gtk_toolbar_append_element(GTK_TOOLBAR(main_toolbar), GTK_TOOLBAR_CHILD_BUTTON, NULL, NULL,
+				   _("Show/hide descriptions on userlist"), NULL, create_image("show-hide-descriptions.png"),
+				   (GtkSignalFunc) show_hide_descriptions, NULL);
 }
 
 /*
