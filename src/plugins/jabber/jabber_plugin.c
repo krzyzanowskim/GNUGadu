@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.138 2004/12/25 21:11:51 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.139 2004/12/27 09:05:08 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1425,16 +1425,18 @@ gpointer user_preferences_action(gpointer user_data)
 
 static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler *handler,LmConnection *connection,LmMessage *message,gpointer user_data)
 {
-	LmMessageNode* node = lm_message_get_node(message);
+	LmMessageNode* node;
 	LmMessageNode* nodes_service;
 	LmMessageNode* n_service;
 	GGaduDialog *dialog;
+	
+	
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber Services"), "");
 	ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
 	
 	/* add checking */
-	
+	node = lm_message_get_node(message);
 	nodes_service = lm_message_node_get_child(node,"service");
 	n_service = lm_message_node_get_child(nodes_service,"service");
 	while (n_service)
@@ -1460,7 +1462,11 @@ static gpointer jabber_services_discovery_action(gpointer user_data)
 	LmMessageNode *node;
 	LmMessageHandler *message_handler;
 	
-	/* dupa */
+	if(!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
+	{
+		signal_emit("jabber", "gui show warning", g_strdup(_("Not connected to server")), "main-gui");
+		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+	}
 	
         msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 	lm_message_node_set_attribute(msg->node, "to", lm_connection_get_server(jabber_data.connection));
