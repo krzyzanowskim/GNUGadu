@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.69 2004/10/18 15:50:48 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.70 2004/10/21 10:30:00 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -50,11 +50,8 @@ GGaduPlugin *handler;
 GGaduProtocol *p;
 
 static gchar *this_configdir = NULL;
-
 struct tlen_session *session = NULL;
-
 static GSList *userlist = NULL;
-
 static GSList *search_results = NULL;
 
 GIOChannel *source_chan = NULL;
@@ -270,14 +267,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			break;
 
 		case TLEN_ERROR_BADRESPONSE:
-			signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Bad response from server")),
-				    "main-gui");
+			signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Bad response from server")), "main-gui");
 			print_debug("libtlen error: Bad response from server\n");
 			break;
 
 		case TLEN_ERROR_MALLOC:
-			signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Memory allocation error")),
-				    "main-gui");
+			signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Memory allocation error")), "main-gui");
 			print_debug("libtlen error: Memory allocation error\n");
 			break;
 
@@ -320,8 +315,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			if (e->roster->jid == NULL)
 			{
 				print_debug("%s \t\t B£¡D PODCZAS GOTROSTERITEM!\n", GGadu_PLUGIN_NAME);
-				signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
-					    g_strdup(_("Error while GETROSTERITEM")), "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Error while GETROSTERITEM")), "main-gui");
 				break;
 			}
 
@@ -421,8 +415,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 						msg->id = g_strdup_printf("%s", e->notify->from);
 
-						msg->message =
-							to_utf8("ISO-8859-2", "Rozmówca wys³a³ Ci alert d¼wiêkowy!");
+						msg->message = to_utf8("ISO-8859-2", "Rozmówca wys³a³ Ci alert d¼wiêkowy!");
 
 						msg->class = TLEN_CHAT;
 						signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
@@ -460,9 +453,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			if (ggadu_config_var_get(handler, "log"))
 			{
-				gchar *line =
-					g_strdup_printf("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp(msg->time),
-							msg->message);
+				gchar *line = g_strdup_printf("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp(msg->time),
+							      msg->message);
 				ggadu_tlen_save_history(msg->id, line);
 				g_free(line);
 			}
@@ -509,8 +501,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				search_results = NULL;
 			}
 			else
-				signal_emit(GGadu_PLUGIN_NAME, "gui show message",
-					    g_strdup(_("No users have been found!")), "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("No users have been found!")), "main-gui");
 			break;
 		}
 		tlen_freeevent(e);
@@ -555,8 +546,7 @@ gpointer ggadu_tlen_login(gpointer data)
 	{
 		user_preferences_action(NULL);
 		/* warning pokazujemy pozniej, bo jest modalny! */
-		signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
-			    g_strdup(_("You have to enter your login and password first!")), "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("You have to enter your login and password first!")), "main-gui");
 		signal_emit(GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
 		return NULL;
 	}
@@ -681,7 +671,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "password", VAR_STR);
 	ggadu_config_var_add(handler, "log", VAR_BOOL);
 	ggadu_config_var_add(handler, "autoconnect", VAR_BOOL);
-	ggadu_config_var_add_with_default(handler, "autoconnect_status", VAR_INT,(gpointer)2);
+	ggadu_config_var_add_with_default(handler, "autoconnect_status", VAR_INT, (gpointer) 2);
 
 	ggadu_config_read(handler);
 
@@ -769,8 +759,7 @@ gpointer search_action(gpointer user_data)
 
 	if (!connected)
 	{
-		signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
-			    g_strdup(_("You have to be connected to perform searching!")), "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("You have to be connected to perform searching!")), "main-gui");
 		return NULL;
 	}
 
@@ -800,7 +789,7 @@ gpointer search_action(gpointer user_data)
 
 gpointer user_preferences_action(gpointer user_data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("Tlen plugin configuration"),"update config");
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Tlen plugin configuration"), "update config");
 	GSList *statuslist_names = NULL;
 	GSList *tmplist = p->statuslist;
 
@@ -816,16 +805,11 @@ gpointer user_preferences_action(gpointer user_data)
 		tmplist = tmplist->next;
 	}
 
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_UIN, _("Tlen login"), VAR_STR,
-			       ggadu_config_var_get(handler, "login"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_PASSWORD, _("Password"), VAR_STR,
-			       ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL,
-			       ggadu_config_var_get(handler, "log"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
-			       ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
-			       statuslist_names, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_UIN, _("Tlen login"), VAR_STR, ggadu_config_var_get(handler, "login"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_PASSWORD, _("Password"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -882,8 +866,7 @@ void start_plugin()
 
 	if (ggadu_config_var_get(handler, "autoconnect") && !connected)
 		ggadu_tlen_login(ggadu_config_var_get(handler, "autoconnect_status") ? (gpointer)
-				 ggadu_config_var_get(handler,
-						      "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
+				 ggadu_config_var_get(handler, "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr)
@@ -969,15 +952,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				/* end */
 
-				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr", _sp);
+				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr", _sp);
 				desc_utf = to_utf8("ISO-8859-2", ggadu_get_protocol_status_description(p));
-				ggadu_dialog_add_entry(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR,
-						       desc_utf, VAR_FLAG_NONE);
+				ggadu_dialog_add_entry(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
 				g_free(desc_utf);
 
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _sp->status,
-					    "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _sp->status, "main-gui");
 			}
 			else
 			{
@@ -1026,11 +1007,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 						while (statuslist_tmp)
 						{
-							GGaduStatusPrototype *sp =
-								(GGaduStatusPrototype *) statuslist_tmp->data;
-								
-							if (!ggadu_strcasecmp
-							    (sp->description, ((GSList *) kv->value)->data))
+							GGaduStatusPrototype *sp = (GGaduStatusPrototype *) statuslist_tmp->data;
+
+							if (!ggadu_strcasecmp(sp->description, ((GSList *) kv->value)->data))
 							{
 								val = sp->status;
 							}
@@ -1068,14 +1047,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					/* w kv->value jest opis, w utf8 */
 					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
 
-					ggadu_set_protocol_status_description(p,from_utf8("ISO-8859-2", kv->value));
+					ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
 
 					/* ustaw nowy opis w sesji */
 					tlen_presence(session, sp->status, ggadu_get_protocol_status_description(p));
-					
+
 					/* uaktualnij GUI */
-					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
-						(gpointer) sp->status, "main-gui");
+					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
 				}
 			}
 		}
@@ -1190,8 +1168,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		GSList *tmplist = ggadu_dialog_get_entries(dialog);
 		struct tlen_pubdir *req = NULL;
 
-		if ((ggadu_dialog_get_response(dialog) == GGADU_OK) ||
-		    (ggadu_dialog_get_response(dialog) == GGADU_NONE))
+		if ((ggadu_dialog_get_response(dialog) == GGADU_OK) || (ggadu_dialog_get_response(dialog) == GGADU_NONE))
 		{
 			if (!(req = tlen_new_pubdir()))
 			{
@@ -1241,8 +1218,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 
 			if (!(tlen_search(session, req)))
-				signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
-					    g_strdup(_("Error! Cannot perform search!")), "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Error! Cannot perform search!")), "main-gui");
 			tlen_free_pubdir(req);
 		}
 		GGaduDialog_free(dialog);
