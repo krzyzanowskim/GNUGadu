@@ -1,5 +1,5 @@
 22.07.2003
-- wm_class form chat window (kaneda/GUI)
+- wm_class form chat window (kaneda/GUI).
 
 05.07.2003
 - fallback to defaults if xosd_set_* fails for some reason (xosd/shasta)
