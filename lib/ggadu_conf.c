@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.16 2004/02/29 23:35:51 thrulliq Exp $ */
+/* $Id: ggadu_conf.c,v 1.17 2004/03/01 13:49:55 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -138,7 +138,7 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 
 				print_debug("VAR_STR %s\n", (gchar *) val);
 
-				if (*(gchar *) val == 1)
+				if (val && (*(gchar *) val == 1))
 					var->ptr = (gpointer) base64_decode(g_strstrip((gchar *) val + 1));
 				else
 					var->ptr = (gpointer) g_strdup(g_strstrip((gchar *) val));
