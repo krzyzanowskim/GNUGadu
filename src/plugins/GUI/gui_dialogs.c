@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.34 2004/02/08 23:01:59 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.35 2004/02/09 23:28:56 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -196,7 +196,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 		case VAR_STR:
 			entry = gtk_entry_new();
 			if (kv->value)
-				gtk_entry_set_text(GTK_ENTRY(entry), kv->value);
+				gtk_entry_set_text(GTK_ENTRY(entry), g_strdup(kv->value));
 
 			gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
 			break;
@@ -229,7 +229,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 
 			txt_entry = gtk_entry_new();
 			if (kv->value)
-				gtk_entry_set_text(GTK_ENTRY(txt_entry), kv->value);
+				gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
 
 			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
 			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
@@ -253,7 +253,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 
 			txt_entry = gtk_entry_new();
 			if (kv->value)
-				gtk_entry_set_text(GTK_ENTRY(txt_entry), kv->value);
+				gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
 
 			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
 			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
@@ -276,7 +276,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 
 			txt_entry = gtk_entry_new();
 			if (kv->value)
-				gtk_entry_set_text(GTK_ENTRY(txt_entry), kv->value);
+				gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
 
 			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
 			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
@@ -396,8 +396,12 @@ void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)
 			case VAR_STR:
 			{
 				gchar *tmp = (gchar *) g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
+
 				if (strlen(tmp) > 0)
+				{
+					g_free(kv->value);
 					kv->value = (gpointer) tmp;
+				}
 				else
 				{
 					kv->value = NULL;
@@ -420,6 +424,8 @@ void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)
 				GtkWidget *hbox = (GtkWidget *) kv->user_data;
 				GtkWidget *entry = (GtkWidget *) g_object_get_data(G_OBJECT(hbox), "txt_entry");
 
+//				g_free(kv->value);
+
 				tmp = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
 				if (strlen(tmp) > 0)
 					kv->value = (gpointer) tmp;
@@ -431,11 +437,25 @@ void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)
 			}
 				break;
 			case VAR_IMG:
+//				g_free(kv->value);
 				kv->value = NULL;
 				break;
 			case VAR_LIST:
+			{
+				/*GSList *ltmp = kv->value;   ZONK
+				 * while (ltmp)
+				 * {
+				 * g_free(ltmp->data);
+				 * ltmp = ltmp->next;
+				 * } */
+				g_slist_free(kv->value);
+
 				kv->value =
-					gtk_editable_get_chars(GTK_EDITABLE(GTK_COMBO(kv->user_data)->entry), 0, -1);
+					g_slist_append(NULL,
+						       gtk_editable_get_chars(GTK_EDITABLE
+									      (GTK_COMBO(kv->user_data)->entry), 0,
+									      -1));
+			}
 				break;
 			}
 			kvlist = kvlist->next;
@@ -462,9 +482,9 @@ void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)
 
 		signal_emit("main-gui", d->callback_signal, d, signal->source_plugin_name);
 	}
-	
-	GGaduSignal_free(signal);
+
 	gtk_widget_destroy(GTK_WIDGET(dialog));
+	GGaduSignal_free(signal);
 }
 
 void gui_show_message_box(gint type, gpointer signal)

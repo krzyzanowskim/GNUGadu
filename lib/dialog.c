@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.7 2004/02/08 23:46:28 krzyzak Exp $ */
+/* $Id: dialog.c,v 1.8 2004/02/09 23:28:51 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -45,29 +45,45 @@ GGaduDialog *ggadu_dialog_new1(guint type, gchar * title, gchar * callback_signa
 	return dialog;
 }
 
+/* DEPRECATED form !!!!!!!!!!!!!!!! ZONK */
 void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint type, gpointer value, gint flags)
 {
 	GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
 	kv->key = key;
 	kv->description = g_strdup(desc);
 	kv->type = type;
-	kv->value = value;
+
+
+	if (type == VAR_STR)
+		kv->value = g_strdup(value);
+	else if (type == VAR_LIST)
+		kv->value = g_slist_copy(value);
+	else
+		kv->value = value;	
+
 	kv->flag = flags;
 
 	*prefs = g_slist_append(*prefs, kv);
 }
 
 
-void ggadu_dialog_add_entry1(GGaduDialog * d, gint key, const gchar * desc, gint type, gpointer value, gint flags)
+void ggadu_dialog_add_entry1(GGaduDialog * d, gint key, gchar * desc, gint type, gpointer value, gint flags)
 {
 	GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
 	kv->key = key;
 	kv->description = g_strdup(desc);
-	kv->type = type;
-	kv->value = value;
 	kv->flag = flags;
+	
+	kv->type = type;
+	
+	if (type == VAR_STR)
+		kv->value = g_strdup(value);
+	else if (type == VAR_LIST)
+		kv->value = g_slist_copy(value);
+	else
+		kv->value = value;
 
-	d->optlist = g_slist_append(d->optlist, kv);
+	d->optlist = g_slist_append(ggadu_dialog_get_entries(d), kv);
 }
 
 GSList *ggadu_dialog_get_entries(GGaduDialog * dialog)
@@ -123,7 +139,7 @@ void GGaduDialog_free(GGaduDialog * d)
 		GGaduKeyValue_free(kv);
 		e = e->next;
 	}
-	
+
 	g_slist_free(d->optlist);
 	g_free(d);
 	return;

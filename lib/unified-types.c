@@ -1,4 +1,4 @@
-/* $Id: unified-types.c,v 1.6 2004/02/08 23:46:28 krzyzak Exp $ */
+/* $Id: unified-types.c,v 1.7 2004/02/09 23:28:56 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -96,11 +96,11 @@ void GGaduKeyValue_free(GGaduKeyValue * kv)
 	if (!kv)
 		return;
 	
-	if ((kv->type == VAR_STR) ||
-		(kv->type == VAR_LIST))
+	if (kv->type == VAR_STR)
 	{
 		g_free(kv->value);
-		kv->value = NULL;
+	} else if (kv->type == VAR_LIST) {
+		g_slist_free(kv->value);
 	}
 
 	/* ZONK add more */

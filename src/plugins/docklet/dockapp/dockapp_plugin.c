@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.15 2004/01/28 23:40:39 shaster Exp $ */
+/* $Id: dockapp_plugin.c,v 1.16 2004/02/09 23:28:57 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -526,13 +526,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				case GGADU_DOCKAPP_CONFIG_PROTOCOL:
 				{
 					gchar *iso = NULL;
+					gchar *val = ((GSList *)kv->value)->data;
 					int i;
 
-					if (kv->value == NULL)
+					if (!val)
 						break;
 
-					print_debug("changing var setting dockapp_protocol to %s\n", kv->value);
-					iso = from_utf8("ISO-8859-2", kv->value);
+					print_debug("changing var setting dockapp_protocol to %s\n", val);
+					iso = from_utf8("ISO-8859-2", val);
 					if (ggadu_config_var_get(handler, "dockapp_protocol"))
 					{
 						if (ggadu_strcasecmp

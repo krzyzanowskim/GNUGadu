@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.56 2004/01/28 23:42:03 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.57 2004/02/09 23:29:00 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -1040,7 +1040,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					{
 						GGaduStatusPrototype *sp =
 							(GGaduStatusPrototype *) statuslist_tmp->data;
-						if (!ggadu_strcasecmp(sp->description, kv->value))
+						if (!ggadu_strcasecmp(sp->description, ((GSList *)kv->value)->data ))
 						{
 							val = sp->status;
 						}
@@ -1233,11 +1233,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 						req->city = g_strdup(kv->value);
 					break;
 				case GGADU_SEARCH_GENDER:
-					if (kv->value)
+					if (((GSList *)kv->value)->data)
 					{
-						if (!ggadu_strcasecmp(kv->value, _("female")))
+						gchar *val = ((GSList *)kv->value)->data;
+						if (!ggadu_strcasecmp(val, _("female")))
 							req->gender = 2;
-						if (!ggadu_strcasecmp(kv->value, _("male")))
+						if (!ggadu_strcasecmp(val, _("male")))
 							req->gender = 1;
 					};
 					break;

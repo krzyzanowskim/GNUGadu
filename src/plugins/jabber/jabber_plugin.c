@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.63 2004/02/08 23:46:30 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.64 2004/02/09 23:28:59 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -468,12 +468,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				{
 				case GGADU_ID:
 					k->id = g_strdup((gchar *) kv->value);
-					/* g_free(kv->value); */
 					break;
 				case GGADU_NICK:
 					if (kv->value && (((gchar *) kv->value)[0] != '\0'))
 						k->nick = g_strdup((gchar *) kv->value);
-					/* g_free(kv->value); if you free it GGaduKeyValue_free will crash on next g_free(), shouldn't */
 					break;
 				}
 
@@ -541,10 +539,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 	else if (signal->name == SEARCH_SERVER_SIG)
 	{
 		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(d) == GGADU_OK)
 		{
+			GSList *tmplist = d->optlist;
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -585,16 +583,18 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				tmplist = tmplist->next;
 			}
 		}
+		GGaduDialog_free(d);
 	}
 	else if (signal->name == SEARCH_SIG)
 	{
 		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
 		LmMessage *message = NULL;
 		LmMessageNode *node = NULL;
 
 		if (ggadu_dialog_get_response(d) == GGADU_OK)
 		{
+			GSList *tmplist = d->optlist;
+			
 			message = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
 			lm_message_node_set_attributes(message->node, "to", d->user_data, "id", "search2", NULL);
 			node = lm_message_node_add_child(message->node, "query", NULL);

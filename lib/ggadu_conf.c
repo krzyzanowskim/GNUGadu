@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.9 2004/01/28 23:39:25 shaster Exp $ */
+/* $Id: ggadu_conf.c,v 1.10 2004/02/09 23:28:56 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -141,9 +141,10 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 			print_debug("VAR \"%s\" ", var->name);
 			switch (var->type)
 			{
+			case VAR_LIST:
+				val = ((GSList *)val)->data;  /* ZONK ugly */
 			case VAR_STR:
 			case VAR_IMG:	/* VAR_IMG is a path to image file */
-			case VAR_LIST:
 
 				print_debug("VAR_STR %s\n", (gchar *) val);
 
@@ -381,6 +382,7 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 	g_free(path);
 	g_free(path_dest);
 
+	print_debug("END");
 	return TRUE;
 }
 

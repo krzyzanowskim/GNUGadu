@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.23 2004/01/28 23:42:08 shaster Exp $ */
+/* $Id: plugin_xosd.c,v 1.24 2004/02/09 23:29:02 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -136,43 +136,33 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				switch (kv->key)
 				{
 				case GGADU_XOSD_CONFIG_COLOUR:
-					print_debug("changing var setting colour to %s\n", kv->value);
 					ggadu_config_var_set(handler, "colour", kv->value);
 					break;
 				case GGADU_XOSD_CONFIG_NUMLINES:
-					print_debug("changing var setting numlines to %d\n", kv->value);
 					ggadu_config_var_set(handler, "numlines", kv->value);
 					break;
 				case GGADU_XOSD_CONFIG_TIMEOUT:
-					print_debug("changing var setting timeout to %d\n", kv->value);
 					ggadu_config_var_set(handler, "timeout", kv->value);
 					break;
 				case GGADU_XOSD_CONFIG_TIMESTAMP:
-					print_debug("changing var setting timestamp to %d\n", kv->value);
 					ggadu_config_var_set(handler, "timestamp", kv->value);
 					break;
 				case GGADU_XOSD_CONFIG_ALIGN:
-					print_debug("changing var setting align to %s\n", kv->value);
-					ggadu_config_var_set(handler, "align", kv->value);
+					ggadu_config_var_set(handler, "align", ((GSList *)kv->value)->data);
 					break;
 				case GGADU_XOSD_CONFIG_POS:
-					print_debug("changing var setting pos to %s\n", kv->value);
-					ggadu_config_var_set(handler, "pos", kv->value);
+					ggadu_config_var_set(handler, "pos", ((GSList *)kv->value)->data);
 					break;
 				case GGADU_XOSD_CONFIG_FONT:
-					print_debug("changing var setting font to %s\n", kv->value);
 					ggadu_config_var_set(handler, "font", kv->value);
 					break;
 				case GGADU_XOSD_CONFIG_SHADOW_OFFSET:
-					print_debug("changing var setting shadow_offset to %d\n", kv->value);
 					ggadu_config_var_set(handler, "shadow_offset", kv->value);
 					break;
 				case GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET:
-					print_debug("changing var setting horizontal_offset to %d\n", kv->value);
 					ggadu_config_var_set(handler, "horizontal_offset", kv->value);
 					break;
 				case GGADU_XOSD_CONFIG_VERTICAL_OFFSET:
-					print_debug("changing var setting vertical_offset to %d\n", kv->value);
 					ggadu_config_var_set(handler, "vertical_offset", kv->value);
 					break;
 				}

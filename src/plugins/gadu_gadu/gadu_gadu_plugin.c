@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.142 2004/02/08 23:01:59 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.143 2004/02/09 23:28:58 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2155,13 +2155,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				{
 					/* change string description to int value depending on current locales so it cannot be hardcoded eh.. */
 					GSList *statuslist_tmp = p->statuslist;
+					gchar *value_txt = ((GSList *)kv->value)->data;
 					gint val = -1;
 
 					while (statuslist_tmp)
 					{
 						GGaduStatusPrototype *sp =
 							(GGaduStatusPrototype *) statuslist_tmp->data;
-						if (!ggadu_strcasecmp(sp->description, kv->value))
+						if (!ggadu_strcasecmp(sp->description, value_txt))
 						{
 							val = sp->status;
 						}
@@ -2331,12 +2332,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 						gg_pubdir50_add(req, GG_PUBDIR50_BIRTHYEAR, kv->value);
 					break;
 				case GGADU_SEARCH_GENDER:
-					if (kv->value)
+					if (((GSList *)kv->value)->data)
 					{
-						if (!ggadu_strcasecmp(kv->value, _("female")))
+						gchar *val_txt = ((GSList *)kv->value)->data;
+						if (!ggadu_strcasecmp(val_txt, _("female")))
 							gg_pubdir50_add(req, GG_PUBDIR50_GENDER,
 									GG_PUBDIR50_GENDER_FEMALE);
-						if (!ggadu_strcasecmp(kv->value, _("male")))
+						if (!ggadu_strcasecmp(val_txt, _("male")))
 							gg_pubdir50_add(req, GG_PUBDIR50_GENDER,
 									GG_PUBDIR50_GENDER_MALE);
 					};
