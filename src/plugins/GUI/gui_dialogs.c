@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.6 2003/03/23 17:58:30 thrulliq Exp $ */
+/* $Id: gui_dialogs.c,v 1.7 2003/03/25 16:23:18 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -160,8 +160,9 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
     	if ((kv->flag & VAR_FLAG_SENSITIVE) != 0)
 		gtk_editable_set_editable( GTK_EDITABLE(entry), TRUE);
 		
-    	if ((kv->flag & VAR_FLAG_INSENSITIVE) != 0)
-		gtk_widget_set_state( GTK_WIDGET(entry) , GTK_STATE_INSENSITIVE);
+		if ((kv->flag & VAR_FLAG_INSENSITIVE) != 0)
+			gtk_editable_set_editable( GTK_EDITABLE(entry), FALSE);
+//		gtk_widget_set_state( GTK_WIDGET(entry) , GTK_STATE_INSENSITIVE);
 
     	if ((kv->flag & VAR_FLAG_PASSWORD) != 0)
 		gtk_entry_set_visibility( GTK_ENTRY(entry), FALSE);
