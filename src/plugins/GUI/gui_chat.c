@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.65 2004/01/18 02:07:23 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.66 2004/01/20 22:08:06 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -16,7 +16,6 @@
 #include "gui_chat.h"
 #include "gui_handlers.h"
 
-extern GGaduConfig *config;
 extern GSList *protocols;
 extern GSList *emoticons;
 extern GSList *invisible_chats;

@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.14 2004/01/17 00:44:58 shaster Exp $ */
+/* $Id: gg-types.h,v 1.15 2004/01/20 22:08:05 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -201,6 +201,8 @@ typedef struct
 
     gpointer repos;
 } GGaduConfig;
+
+extern GGaduConfig *config;
 
 /*
  *  GGaduSignalHook

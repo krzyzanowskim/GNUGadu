@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.48 2004/01/18 12:55:36 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.49 2004/01/20 22:08:06 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -23,7 +23,6 @@
 #include "gui_preferences.h"
 #include "gtkanimlabel.h"
 
-extern GGaduConfig *config;
 extern GGaduPlugin *gui_handler;
 
 extern GSList *protocols;

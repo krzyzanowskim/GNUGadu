@@ -1,4 +1,4 @@
-/* $Id: repo.c,v 1.5 2004/01/17 17:20:53 krzyzak Exp $ */
+/* $Id: repo.c,v 1.6 2004/01/20 22:08:05 krzyzak Exp $ */
 
 #include <glib.h>
 
@@ -6,8 +6,6 @@
 #include "gg-types.h"
 #include "signals.h"
 #include "support.h"
-
-extern GGaduConfig *config;
 
 const gint REPO_mask = REPO_ACTION_NEW | REPO_ACTION_DEL | REPO_ACTION_CHANGE;
 const gint REPO_value_mask = REPO_ACTION_VALUE_NEW | REPO_ACTION_VALUE_DEL | REPO_ACTION_VALUE_CHANGE;

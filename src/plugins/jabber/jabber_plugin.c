@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.53 2004/01/17 11:25:07 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.54 2004/01/20 22:08:07 krzyzak Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -44,8 +44,6 @@ GGaduProtocol *p;
 GGaduMenu *jabbermenu;
 
 GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
-
-extern GGaduConfig *config;
 
 void ggadu_jabber_save_history(gchar * to, gchar * txt)
 {

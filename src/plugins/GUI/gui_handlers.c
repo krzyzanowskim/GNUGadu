@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.42 2004/01/17 19:54:35 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.43 2004/01/20 22:08:06 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -32,7 +32,6 @@ GtkTreeIter users_iter;
 GtkItemFactory *item_factory = NULL;
 
 extern GtkTreeStore *users_treestore;
-extern GGaduConfig *config;
 extern GGaduPlugin *gui_handler;
 extern GSList *protocols;
 extern GSList *emoticons;

@@ -1,4 +1,4 @@
-/* $Id: menu.c,v 1.3 2004/01/17 00:44:58 shaster Exp $ */
+/* $Id: menu.c,v 1.4 2004/01/20 22:08:05 krzyzak Exp $ */
 
 #include <sys/types.h>
 #include <stdlib.h>
@@ -9,7 +9,6 @@
 #include "support.h"
 #include "gg-types.h"
 
-extern GGaduConfig *config;
 
 void ggadu_menu_free(GGaduMenu * menu)
 {

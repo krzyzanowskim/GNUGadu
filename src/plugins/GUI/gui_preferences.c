@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.47 2004/01/18 12:14:05 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.48 2004/01/20 22:08:06 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -23,7 +23,6 @@ GtkWidget *list = NULL;
 
 extern GSList *protocols;
 extern GGaduPlugin *gui_handler;
-extern GGaduConfig *config;
 
 static gboolean plugins_updated = FALSE;
 

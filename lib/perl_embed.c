@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.12 2004/01/17 12:37:58 krzyzak Exp $ */
+/* $Id: perl_embed.c,v 1.13 2004/01/20 22:08:05 krzyzak Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -23,8 +23,6 @@
 #include "signals.h"
 #include "support.h"
 #include "repo.h"
-
-extern GGaduConfig *config;
 
 typedef struct
 {

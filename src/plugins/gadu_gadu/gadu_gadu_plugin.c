@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.128 2004/01/19 23:18:31 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.129 2004/01/20 22:08:07 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -31,8 +31,6 @@
 #include "dialog.h"
 #include "repo.h"
 #include "perl_embed.h"
-
-extern GGaduConfig *config;
 
 GGaduPlugin *handler;
 

@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.17 2004/01/17 21:09:51 krzyzak Exp $ */
+/* $Id: signals.c,v 1.18 2004/01/20 22:08:05 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -12,8 +12,6 @@
 #include "plugins.h"
 #include "support.h"
 #include "signals.h"
-
-extern GGaduConfig *config;
 
 static GMutex *thread_signal_mutex = NULL;
 static GAsyncQueue *thread_signal_queue = NULL;
