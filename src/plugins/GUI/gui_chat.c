@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.15 2003/04/13 22:03:11 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.16 2003/04/14 20:12:12 shaster Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -25,6 +25,7 @@ void gui_chat_notebook_switch(GtkWidget *notebook, GtkNotebookPage *page, guint 
 	GtkWidget *chat = NULL;
 	GtkWidget *lb = NULL;
 	gchar *txt = NULL;
+	gchar *txt2 = NULL;
 
 	if (chat_notebook)
 		chat = (GtkWidget *)gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),page_num);
@@ -32,12 +33,14 @@ void gui_chat_notebook_switch(GtkWidget *notebook, GtkNotebookPage *page, guint 
 	if (chat)
 		lb = g_object_get_data(G_OBJECT(chat),"tab_label_txt");
 	
-	if (lb)
+	if (lb) {
 		txt = (gchar *)g_object_get_data(G_OBJECT(chat),"tab_label_txt_char");
+		txt2 = (gchar *)g_object_get_data(G_OBJECT(chat),"tab_window_title_char");
+	}
 	
 	if ((txt != NULL) && (chat_window != NULL) && (lb != NULL)) {
 		gchar *markup = g_strdup_printf("<span foreground=\"black\">%s</span>",txt);
-		gtk_window_set_title(GTK_WINDOW(chat_window),txt);
+		gtk_window_set_title(GTK_WINDOW(chat_window),txt2);
 		gtk_label_set_markup(GTK_LABEL(lb),markup);
 		g_free(markup);
 	}
@@ -519,9 +522,13 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	GtkWidget *button_stick;
 	GtkTextBuffer *buf = NULL;
 	gchar *title = NULL;
+	gchar *wintitle = NULL;
 	gchar *confer_title = NULL;
 	gchar *colorstr, *fontstr;
+	gchar *st = NULL;
 	GGaduContact *k = gui_find_user(id,gui_find_protocol(plugin_name,protocols));	
+	gui_protocol *gp = NULL;
+	GGaduStatusPrototype *sp = NULL;
 
 	/* confer_topic create */
 	if (conference)	{
@@ -546,34 +553,37 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	session->chat = vbox_in_out;
 	g_object_set_data(G_OBJECT(session->chat),"gui_session",session);
 
+	/* find status description */
+	if (k) {
+		gp = gui_find_protocol(plugin_name, protocols);
+		sp = gui_find_status_prototype(gp->p,k->status);
+		st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
+	}
+
 	/* create approp. window style - tabbed or stand alone */
 	switch (chat_type) 
 	{
-	case CHAT_TYPE_CLASSIC: {
-			if (k) {
-					gui_protocol	*gp = gui_find_protocol(plugin_name, protocols);
-					GGaduStatusPrototype	*sp = gui_find_status_prototype(gp->p,k->status);
-					gchar	*st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
-					title = (conference) ? confer_title : g_strdup_printf(_("Talking to %s (%s) %s"),k->nick,id, (sp ? st : ""));
-					g_free(st);
-				} else 
-					title = (conference) ? confer_title : g_strdup_printf(_("Talking to %s"),id);
+		case CHAT_TYPE_CLASSIC: {
+			if (k)
+				wintitle = (conference) ? confer_title : g_strdup_printf(_("Talking to %s (%s) %s"),k->nick,id, (sp ? st : ""));
+			else 
+				wintitle = (conference) ? confer_title : g_strdup_printf(_("Talking to %s"),id);
 
 			chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-			gtk_window_set_title(GTK_WINDOW(chat_window), title);
+			gtk_window_set_title(GTK_WINDOW(chat_window), wintitle);
 		
 			gtk_box_pack_start(GTK_BOX(vbox), vbox_in_out, TRUE, TRUE, 0);
 			gtk_box_pack_end(GTK_BOX(vbox), hbox_buttons, FALSE, FALSE, 0);
 			gtk_container_add(GTK_CONTAINER(chat_window), vbox);
-			g_free(title);
-			}
+		}
 			break;
-	case CHAT_TYPE_TABBED: {
-	    GtkWidget *chat_notebook = NULL;
-	    GtkWidget *tab_label_hbox = NULL;
-	    GtkWidget *tab_label_txt = NULL;
-	    GtkWidget *tab_label_close = NULL;
-	    GtkWidget *tab_label_close_image = gtk_image_new_from_pixbuf(NULL); /* empty */
+
+		case CHAT_TYPE_TABBED: {
+		    GtkWidget *chat_notebook = NULL;
+		    GtkWidget *tab_label_hbox = NULL;
+		    GtkWidget *tab_label_txt = NULL;
+		    GtkWidget *tab_label_close = NULL;
+		    GtkWidget *tab_label_close_image = gtk_image_new_from_pixbuf(NULL); /* empty */
 	    
 			if (chat_window == NULL) {
 				gulong id_tmp;
@@ -603,7 +613,10 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 				chat_notebook = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
 			}
 
+			/* for labels */
 			title = (conference) ? confer_title : g_strdup_printf("%s",k ? k->nick : id);
+			/* for window title */
+			wintitle = (conference) ? confer_title : g_strdup_printf("%s %s",k ? k->nick : id, sp ? st : "");
 
 			tab_label_hbox  = gtk_hbox_new(FALSE,FALSE);
 			tab_label_txt   = gtk_label_new(title);
@@ -622,6 +635,7 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	    
 			g_object_set_data(G_OBJECT(session->chat),"tab_label_txt",tab_label_txt);
 			g_object_set_data_full(G_OBJECT(session->chat),"tab_label_txt_char",g_strdup(title),g_free);
+			g_object_set_data_full(G_OBJECT(session->chat),"tab_window_title_char",g_strdup(wintitle),g_free);
 
 			gtk_notebook_set_menu_label_text(GTK_NOTEBOOK(chat_notebook),session->chat,title);
 	
@@ -631,10 +645,11 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 
 			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(chat_notebook),(gtk_notebook_get_n_pages (GTK_NOTEBOOK(chat_notebook)) <= 1) ? FALSE : TRUE);
 	    
-	    gtk_widget_show_all(tab_label_hbox);
+			gtk_widget_show_all(tab_label_hbox);
 		}
 		break;
 	}
+
 
 	gtk_window_set_default_size(GTK_WINDOW(chat_window), 400, 300);
 	gtk_window_set_modal(GTK_WINDOW(chat_window), FALSE);
@@ -798,6 +813,10 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 
 	gtk_widget_grab_focus(GTK_WIDGET(input));
     
+	g_free(st);
+	g_free(title);
+	g_free(wintitle);
+
 	return vbox_in_out;
 }
 

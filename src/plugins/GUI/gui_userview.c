@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.6 2003/04/02 18:14:41 zapal Exp $ */
+/* $Id: gui_userview.c,v 1.7 2003/04/14 20:12:13 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -408,16 +408,17 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
     	    GdkPixbuf	     *image = NULL;
 	    gchar 	     *descr = NULL;
 	    gui_chat_session *session = gui_session_find(gp, k->id);
-	    found 	     = TRUE;
+	    gchar 	     *st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
+
+	    found = TRUE;
 	    
 	    if (session) {
 		gint chat_type = (gint)config_var_get(gui_handler,"chat_type");
+		GtkWidget *window = (GtkWidget *)g_object_get_data(G_OBJECT(session->chat),"top_window");
 		
 		if (chat_type == CHAT_TYPE_CLASSIC) {
-		    GtkWidget *window = (GtkWidget *)g_object_get_data(G_OBJECT(session->chat),"top_window");
-		    gchar *st = NULL;
 		    gchar *tmp = NULL;
-		    st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
+
 		    if (!g_strcasecmp(k->nick,k->id))
 			tmp = g_strdup_printf(_("Talking to %s %s"),k->id, (sp ? st : ""));
 		    else
@@ -425,7 +426,21 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
     		    
 		    gtk_window_set_title(GTK_WINDOW(window), tmp);
 		    g_free(tmp);
-		    g_free(st);
+		}
+
+		if (chat_type == CHAT_TYPE_TABBED) {
+		    GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(window),"chat_notebook");
+		    guint     curr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+		    guint     nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook), session->chat);
+		    gchar     *tmp = g_strdup_printf("%s %s", g_strcasecmp(k->nick, k->id) ? k->nick : k->id, (sp ? st : ""));
+
+		    g_object_set_data_full(G_OBJECT(session->chat),"tab_window_title_char",g_strdup(tmp),g_free);
+
+		    /* update top_window title if current notebook page == this session's page */
+		    if (nr == curr)
+			gtk_window_set_title(GTK_WINDOW(window), tmp);
+
+		    g_free(tmp);
 		}
 	    }
 	    
@@ -461,6 +476,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
    	    signal_emit("main-gui", "xosd show message", g_strdup_printf("%s - %s %s", k->nick, 
 									sp->description,(descr) ? descr : ""),"xosd");
 	    g_free(descr);
+	    g_free(st);
 	}
 
 	valid = gtk_tree_model_iter_next(model, &users_iter);

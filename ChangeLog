@@ -1,3 +1,7 @@
+14.04.2003
+- chat window title contains current status of chatter, now in both
+  tabbed and classic mode (GUI/shasta)
+
 13.04.2003
 - patch for emoticons window (GUI/Pawe³ Marchewka)
 - lame file sending possibility (gadu-gadu/krzak)
