@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.30 2003/12/01 22:43:12 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.31 2003/12/18 21:34:07 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -625,16 +625,18 @@ void load_smslist()
 
     while (fscanf(fp, "%[^;];%[^\n]\n", nick, mobile) != EOF)
     {
-	/* Cut-off prefixes. 'just-in-case' */
-	if (g_str_has_prefix(mobile, "+48"))
-	    mobile += 3;
+	gchar *number = mobile;
 
-	if (g_str_has_prefix(mobile, "0"))
-	    mobile++;
+	/* Cut-off prefixes. 'just-in-case' */
+	if (g_str_has_prefix(number, "+48"))
+	    number += 3;
+
+	if (g_str_has_prefix(number, "0"))
+	    number++;
 
 	k = g_new0(GGaduContact, 1);
 	k->nick = g_strdup(nick);
-	k->mobile = g_strdup(mobile);
+	k->mobile = g_strdup(number);
 	k->id = k->mobile;
 	k->status = 1;
 	print_debug("%s %s\n", k->nick, k->mobile);

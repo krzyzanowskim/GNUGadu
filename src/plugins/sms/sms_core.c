@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.23 2003/11/09 14:49:50 shaster Exp $ */
+/* $Id: sms_core.c,v 1.24 2003/12/18 21:34:07 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -637,12 +637,13 @@ int check_operator(const gchar * sms_number)
 }
 
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
-void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body,
+void send_sms(gboolean external, const gchar * sms_sender, const gchar *number, const gchar * sms_body,
 	      const gchar * era_login, const gchar * era_password)
 {
     gint result, gsm_oper;
     int era_left = 10;
     gchar *sms_body_iso = NULL;
+    gchar *sms_number = number;
 
     if (!sms_number)
     {
