@@ -1,10 +1,15 @@
-/* $Id: gui_handlers.c,v 1.12 2003/05/11 18:07:27 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.13 2003/05/12 09:29:05 thrulliq Exp $ */
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <gtk/gtk.h>
 #include <string.h>
 
+#ifdef PERL_EMBED
 #include <EXTERN.h>
 #include <perl.h>
+#endif
 
 #include "gg-types.h"
 #include "unified-types.h"
@@ -59,6 +64,7 @@ void handle_change_user_window(GGaduSignal *signal)
 	gui_user_data_window(signal,TRUE);
 }
 
+#ifdef PERL_EMBED
 void perl_gui_msg_receive (GGaduSignal *signal, gchar *perl_func, void *pperl)
 {
   int count, junk;
@@ -117,6 +123,7 @@ void perl_gui_msg_receive (GGaduSignal *signal, gchar *perl_func, void *pperl)
   FREETMPS;
   LEAVE;
 }
+#endif
 
 void handle_msg_receive(GGaduSignal *signal)
 {
