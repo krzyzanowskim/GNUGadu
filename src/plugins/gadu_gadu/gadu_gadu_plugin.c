@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.28 2003/04/13 02:05:38 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.29 2003/04/13 11:57:17 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -856,8 +856,6 @@ gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data
 	struct gg_event *e = NULL;
 	struct gg_dcc *d = data;
 
-	if (!d->established) return TRUE;
-	
 	if (!(e = gg_dcc_watch_fd(d))) {
 		return FALSE;
 	}
@@ -882,24 +880,28 @@ gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data
 		case GG_EVENT_DCC_DONE:
 				print_debug("GG_EVENT_DCC_DONE\n");
 				gg_dcc_free(d);
-//				return FALSE;
+				return FALSE;
 		break;
 		case GG_EVENT_DCC_ERROR:
 				print_debug("GG_EVENT_DCC_ERROR\n");
-		                        switch (e->event.dcc_error) {                                                                 
-                                case GG_ERROR_DCC_HANDSHAKE:                                                          
-                                        print_debug("dcc_error_handshake");
-                                        break;                                                                        
-                                case GG_ERROR_DCC_NET:                                                                
-                                        print_debug("dcc_error_network");
-                                        break;                                                                        
-                                case GG_ERROR_DCC_REFUSED:                                                            
-                                        print_debug("dcc_error_refused");                                              
-                                        break;                                                                        
-                                default:                                                                              
-                                        print_debug("dcc_error_unknown");                                              
-                        }                                                                                             
-
+				switch (e->event.dcc_error) {                                                                 
+					case GG_ERROR_DCC_HANDSHAKE:
+						print_debug("dcc_error_handshake");
+					break;
+					case GG_ERROR_DCC_NET:
+						print_debug("dcc_error_network");
+						gg_dcc_free(d);
+						return FALSE;
+					break;                                                                        
+					case GG_ERROR_DCC_REFUSED:
+						print_debug("dcc_error_refused");
+						gg_dcc_free(d);
+						return FALSE;
+					break;
+					default:
+					print_debug("dcc_error_unknown");
+					break;
+				}
 //				return FALSE;
 		break;
 	}
@@ -911,33 +913,19 @@ gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data
 gpointer send_file_action(gpointer user_data) {
 	GSList		*users	=	(GSList *)user_data;
 	GGaduContact *k = (GGaduContact *)users->data;
-	struct gg_dcc *socket = NULL;
-	gchar **tmp = NULL;
-	gint port = 0;
-	gint uin = (gint)config_var_get(handler,"uin");
-	struct in_addr addr;
-			
-	/* dopisac tu sprawdzanie wszystkiego */
-	tmp = g_strsplit(k->ip,":",2);
-	
-	inet_aton(tmp[0],&addr);
-	port = atoi(tmp[1]);
-	
-	print_debug("IP : %s %d %d\n",tmp[0],port);
-	
-	if (port <= 10) return NULL;
-			
-	socket = gg_dcc_send_file(addr.s_addr,port,uin,atoi(k->id));
-	
-	if (!socket) {
-		print_debug("spierdalaj chuju pierdolony nie mozna ustanowic polaczenia\n");
-		return NULL;
-	}
+	GGaduDialog *d = NULL;
 
-	gg_dcc_fill_file_info(socket,"/tmp/test");
-		
-	dcc_channel = g_io_channel_unix_new(socket->fd);
-  g_io_add_watch(dcc_channel, G_IO_OUT, test_chan_dcc,socket);
+	if (!k->ip || !g_strcasecmp(k->ip,"0.0.0.0:0"))
+				return NULL;
+
+	d = ggadu_dialog_new();
+    
+	ggadu_dialog_set_title(d,g_strdup_printf(_("Sending File to %s"),k->ip));
+	ggadu_dialog_callback_signal(d,"send file");
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONTACT, NULL, VAR_NULL, k, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_SELECTED_FILE, _("Select File :"), VAR_FILE_CHOOSER, NULL, VAR_FLAG_NONE);
+    
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
 	return NULL;
 }
@@ -1161,6 +1149,7 @@ void start_plugin()
 	register_signal(handler,"exit");
 	register_signal(handler,"add user search");
 	register_signal(handler,"get current status");
+	register_signal(handler,"send file");
 	
 	load_contacts("ISO-8859-2");
 
@@ -1189,7 +1178,63 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    //exit_signal_handler(); 
 	    return;
 	}
+
+	if (!ggadu_strcasecmp(signal->name,"send file")) { 
+		GGaduDialog *d = signal->data;
+		GSList *tmplist = d->optlist;
 	
+		gint uin = (gint)config_var_get(handler,"uin");
+		struct gg_dcc *socket = NULL;
+		gchar **addr_arr = NULL;
+		gint port = 0;
+		guint32 ip = 0;
+		gchar *filename = NULL;
+		GGaduContact *k = NULL;
+		
+		if (d->response != GGADU_OK) return;
+
+ 
+		while (tmplist) {
+		  GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+		
+			switch (kv->key) {
+				case GGADU_GADU_GADU_SELECTED_FILE:
+						filename = kv->value;
+				break;
+				case GGADU_GADU_GADU_CONTACT:
+						k = kv->value;
+				break;
+			}
+	
+			tmplist = tmplist->next;
+		}		
+
+		if (!filename || strlen(filename) <= 0) return;
+ 
+		addr_arr = g_strsplit(k->ip,":",2);
+
+		if (!addr_arr[0] || !addr_arr[1]) return;
+				
+		ip = inet_addr(addr_arr[0]);
+		port = atoi(addr_arr[1]);
+		
+		print_debug("SEND TO IP : %s %d\n",addr_arr[0],port);
+		
+		if (port <= 10) return;
+			
+		socket = gg_dcc_send_file(ip,port,uin,atoi(k->id));
+	
+		if (!socket)
+				return;
+
+		gg_dcc_fill_file_info(socket,filename);
+		
+		dcc_channel = g_io_channel_unix_new(socket->fd);
+  	g_io_add_watch(dcc_channel, G_IO_OUT | G_IO_ERR | G_IO_IN, test_chan_dcc,socket);
+		
+	}
+
+
 	if (!ggadu_strcasecmp(signal->name,"add user")) { 
 	    GGaduContact *k = g_new0(GGaduContact,1);
 	    GSList *kvlist = (GSList *)signal->data;

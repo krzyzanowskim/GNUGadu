@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.5 2003/04/10 18:11:51 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.6 2003/04/13 11:57:17 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -18,7 +18,9 @@ enum {
     GGADU_GADU_GADU_CONFIG_AUTOCONNECT,
     GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS,
     GGADU_GADU_GADU_CONFIG_REASON,
-    GGADU_GADU_GADU_CONFIG_FRIENDS_MASK
+    GGADU_GADU_GADU_CONFIG_FRIENDS_MASK,
+		GGADU_GADU_GADU_SELECTED_FILE,
+		GGADU_GADU_GADU_CONTACT
 };
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr);
