@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.92 2004/08/22 18:37:22 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.93 2004/08/22 19:12:27 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -343,10 +343,10 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 {
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Register Jabber account"), "register account");
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server : "), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERNAME, _("Username : "), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Password : "), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERNAME, _("Username:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Password:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success ?"), VAR_BOOL, FALSE,
 				VAR_FLAG_NONE);
 
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
