@@ -1,3 +1,9 @@
+01.07.2003
+- VAR_FONT_CHOOSER, VAR_COLOUR_CHOOSER (core/GUI/shasta)
+- allow setting xosd messages color via preferences dialog (xosd/shasta)
+- two new config variables: horizontal_offset, vertical_offset (xosd/shasta)
+- code cleanups (xosd/shasta)
+
 28.06.2003
 - added search by email (jabber/zapal)
 
