@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.75 2004/02/14 21:41:53 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.76 2004/02/15 15:41:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1133,28 +1133,32 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	gchar *header = NULL;
 	gchar *text = NULL;
 	gchar *tmp = NULL;
-	GGaduMsg *gmsg = NULL;
 	GtkTextMark *mark_start;
 	GtkTextIter istart;
 	GtkTextIter iend;
 	GtkWidget *widget = NULL;
 	GSList *emottmp = emoticons;
 	gchar *timestamp = NULL;
+	gui_chat_session * session = NULL;
+	gboolean conference = FALSE;
 
 	g_return_if_fail(history != NULL);
 
 	if (!chat || !msg)
 		return;
+	
+	session  = g_object_get_data(G_OBJECT(chat), "gui_session");
+	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
 
 	timestamp = get_timestamp(0);
 
-
 	if (self == TRUE)
 	{
-		if (ggadu_config_var_get(gui_handler, "use_username"))
-			header = g_strdup_printf("%s :: %s :: \n", g_get_user_name(), timestamp);
+		if (conference)
+			header = g_strdup_printf("%s :: %s :: ", timestamp, ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
 		else
-			header = g_strdup_printf(_("Me :: %s ::\n"), timestamp);
+			header = g_strdup_printf("%s :: %s :: ", ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"), timestamp);
+			
 
 		text = g_strdup(msg);
 	}
@@ -1163,10 +1167,9 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		gchar *timestamp_send = NULL;
 		gchar *plugin_name_ = NULL;
 		GGaduContact *k = NULL;
-
-		gmsg = (GGaduMsg *) msg;
-
-		if (!gmsg->message)
+		GGaduMsg *gmsg = (GGaduMsg *) msg;
+		
+		if (!gmsg || !gmsg->message)
 			return;
 
 		timestamp_send = get_timestamp(gmsg->time);
@@ -1192,7 +1195,11 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 			}
 		}
 
-		header = g_strdup_printf("%s :: %s (%s) ::\n", (k) ? k->nick : gmsg->id, timestamp, timestamp_send);
+		if (conference)
+			header = g_strdup_printf("%s :: %s (%s) :: ", timestamp, timestamp_send, (k) ? k->nick : gmsg->id);
+		else
+			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, timestamp, timestamp_send);
+			
 		text = g_strdup(gmsg->message);
 
 		g_free(timestamp_send);
@@ -1200,13 +1207,15 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(history));
 	gtk_text_buffer_get_end_iter(buf, &iter);
-	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, header, -1, self ? "outgoing_header" : "incoming_header",
-						 NULL);
+	
+	tmp = g_strconcat(header, (conference) ? "" : "\n" , NULL);
+	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_header" : "incoming_header", NULL);
+	g_free(tmp);
 
 	tmp = g_strconcat(text, "\n", NULL);
 	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text", NULL);
-	mark_start = gtk_text_buffer_get_insert(buf);
 	g_free(tmp);
+	mark_start = gtk_text_buffer_get_insert(buf);
 
 	/*
 	 * scroll only if we at the bottom of the history :) I'm genius 
@@ -1240,7 +1249,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		while (gtk_text_iter_backward_search
 		       (&istart, gemo->emoticon, GTK_TEXT_SEARCH_VISIBLE_ONLY, &istart, &iend, NULL))
 		{
-			GtkTextChildAnchor *anchor;
+			GtkTextChildAnchor *anchor = NULL;
 
 			widget = create_image(gemo->file);
 			if (widget)
@@ -1255,7 +1264,6 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 				gtk_widget_show(widget);
 			}
 		}
-
 		emottmp = emottmp->next;
 	}
 
