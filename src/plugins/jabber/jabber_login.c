@@ -48,7 +48,12 @@ void jabber_login (enum states status)
       return;
     }
     
-    server = strchr (jid, '@') + 1;
+    server = strchr (jid, '@');
+    if (!server++) {
+      signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
+      signal_emit ("jabber", "gui show warning", g_strdup (_("Invalid jid!")), "main-gui");
+      return;
+    }
     
     print_debug ("jabber: Connection to %s.\n", server);
 
