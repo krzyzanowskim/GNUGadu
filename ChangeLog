@@ -1,5 +1,8 @@
+26.10.2004
+- fix exit if set unavailable in jabber plugin (krzak/jabber)
+
 25.10.2004
-- initial DBUS plugin
+- initial DBUS plugin (krzak)
 
 22.10.2004
 - close chat window on ESC option (mkobierzycki/GUI)
