@@ -1,4 +1,4 @@
-/* $Id: gui_support.h,v 1.4 2004/01/18 12:14:05 krzyzak Exp $ */
+/* $Id: gui_support.h,v 1.5 2004/01/21 23:46:07 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_FIND_H
 #define GGadu_GUI_PLUGIN_FIND_H 1
@@ -7,6 +7,8 @@
 #include "gui_main.h"
 
 void gui_remove_all_chat_sessions(gpointer protocols_list);
+
+gint gui_count_visible_tabs(GtkNotebook * notebook);
 
 /* obsolete */
 gui_chat_session *gui_session_find_confer(gui_protocol * gp, GSList * recipients);

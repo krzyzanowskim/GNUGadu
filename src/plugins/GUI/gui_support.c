@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.8 2004/01/18 12:14:05 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.9 2004/01/21 23:46:07 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -13,6 +13,24 @@
 #include "gui_chat.h"
 
 extern GGaduPlugin *gui_handler;
+
+gint gui_count_visible_tabs(GtkNotebook * notebook)
+{
+	gint all_count,i;
+	gint count = 0;
+	
+	if (!G_IS_OBJECT(notebook) || !GTK_IS_WIDGET(notebook))
+		return count;
+
+	all_count = gtk_notebook_get_n_pages(notebook);
+	for (i = 0; i < all_count; i++)
+	{
+		if (GTK_WIDGET_VISIBLE(gtk_notebook_get_nth_page(notebook, i)))
+			count++;
+	}
+	return count;
+}
+
 
 void gui_remove_all_chat_sessions(gpointer protocols_list)
 {
