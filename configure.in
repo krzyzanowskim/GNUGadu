@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.108 2004/11/19 17:28:43 krzyzak Exp $
+dnl $Id: configure.in,v 1.109 2004/12/14 12:19:41 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.3])
 
@@ -472,7 +472,7 @@ AC_ARG_WITH(dbus-dir,[  --with-dbus-dir=PFX   Prefix where D-BUS services are in
 if test x$dbus_dir != x ; then
      DBUS_DIR="$dbus_dir/"
 else
-     DBUS_DIR="/usr/share/dbus-1.0/services/"
+     DBUS_DIR="/usr/share/dbus-1/services/"
 fi
 
 AC_SUBST(DBUS_DIR)
