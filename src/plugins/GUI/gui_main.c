@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.54 2004/06/11 01:25:33 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.55 2004/08/19 13:20:13 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -145,13 +145,13 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 #endif
 	ggadu_config_var_add(gui_handler, "chat_window_auto_show", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "chat_paned_size", VAR_INT);
-	ggadu_config_var_add(gui_handler, "expand", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "expand", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(gui_handler, "show_active", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "width", VAR_INT);
 	ggadu_config_var_add(gui_handler, "height", VAR_INT);
 	ggadu_config_var_add(gui_handler, "top", VAR_INT);
 	ggadu_config_var_add(gui_handler, "left", VAR_INT);
-	ggadu_config_var_add(gui_handler, "send_on_enter", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "send_on_enter", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "msg_header_color", VAR_STR, g_strdup("blue"));
 	ggadu_config_var_add_with_default(gui_handler, "msg_header_font", VAR_STR, g_strdup("bold"));
 	ggadu_config_var_add_with_default(gui_handler, "msg_out_header_color", VAR_STR, g_strdup("brown"));

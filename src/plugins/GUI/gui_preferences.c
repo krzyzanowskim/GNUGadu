@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.57 2004/08/19 11:57:11 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.58 2004/08/19 13:20:14 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -587,7 +587,6 @@ static GtkWidget *create_sound_tab()
 static GtkWidget *create_chat_tab()
 {
 	GtkWidget *chat_vbox;
-	GtkWidget *sound_vbox;
 	GtkWidget *vbox;
 	GtkWidget *image;
 	GtkWidget *label;
@@ -610,8 +609,6 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *label0_align, *label1_align, *label2_align;
 
 	chat_vbox = gtk_vbox_new(FALSE, 5);
-
-	sound_vbox = gtk_vbox_new(FALSE, 2);
 
 	hbox = gtk_hbox_new(FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(chat_vbox), hbox, FALSE, FALSE, 0);
@@ -718,6 +715,65 @@ static GtkWidget *create_chat_tab()
 	return chat_vbox;
 }
 
+static GtkWidget *create_advanced_tab()
+{
+	GtkWidget *blink_interval;
+	GtkWidget *blink;
+	GtkWidget *image;
+	GtkWidget *label;
+	GtkWidget *tabbox;
+	GtkWidget *label0_align;
+	GtkWidget *adv_vbox = gtk_vbox_new(FALSE, 5);
+	GtkWidget *hbox = gtk_hbox_new(FALSE, 5);
+
+	gtk_box_pack_start(GTK_BOX(adv_vbox), hbox, FALSE, FALSE, 0);
+
+	image = gtk_image_new();
+	gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-properties", GTK_ICON_SIZE_DND);
+	label = gtk_label_new(_("\nAdvanced GUI settings\n\n"));
+
+	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+
+	blink = gtk_check_button_new_with_label(_("Blink status"));
+	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
+	
+	gtk_box_pack_start(GTK_BOX(adv_vbox), blink, FALSE, FALSE, 0);
+
+	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
+
+	tabbox = gtk_table_new(8, 2, FALSE);
+	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
+	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
+
+	gtk_box_pack_start(GTK_BOX(adv_vbox), tabbox, FALSE, FALSE, 0);
+
+	label0_align = gtk_alignment_new(0, 0.5, 0, 0);
+
+	label = gtk_label_new(_("Blink interval"));
+	gtk_container_add(GTK_CONTAINER(label0_align), label);
+
+	if (ggadu_config_var_get(gui_handler, "blink"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(blink), TRUE);
+	else
+		gtk_widget_set_sensitive(blink_interval, FALSE);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 1, 2, 0, 1);
+
+	if (ggadu_config_var_get(gui_handler, "blink_interval"))
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(blink_interval),
+					  (gint) ggadu_config_var_get(gui_handler, "blink_interval"));
+
+	ggadu_config_var_set(gui_handler, "blink",
+				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(blink)));
+
+	ggadu_config_var_set(gui_handler, "blink_interval",
+				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(blink_interval)));
+	
+	return adv_vbox;
+}
+
 void gui_preferences(GtkWidget * widget, gpointer data)
 {
 	GtkWidget *preferences;
@@ -728,6 +784,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *sound_vbox;
 	GtkWidget *colors_vbox;
 	GtkWidget *fonts_vbox;
+	GtkWidget *adv_vbox;
 	GtkWidget *vbox;
 	GtkWidget *hbox;
 	GtkWidget *label;
@@ -738,13 +795,11 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *notify_status_changes = NULL;
 	GtkWidget *hide_on_start;
 	GtkWidget *show_toolbar;
-	GtkWidget *blink;
-	GtkWidget *blink_interval;
 	GtkWidget *auto_away;
 	GtkWidget *auto_away_interval;
 	GtkWidget *descr_on_list;
 	GtkWidget *tabbox;
-	GtkWidget *label0_align, *label1_align, *label2_align, *label3_align;
+	GtkWidget *label1_align, *label2_align, *label3_align;
 	GDir *dir;
 	GtkWidget *combo_theme;
 	GtkWidget *combo_icons;
@@ -768,7 +823,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gdk_pixbuf_unref(windowicon);
 	}
 
-	label0_align = gtk_alignment_new(0, 0.5, 0, 0);
 	label1_align = gtk_alignment_new(0, 0.5, 0, 0);
 	label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 	label3_align = gtk_alignment_new(0, 0.5, 0, 0);
@@ -791,6 +845,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	fonts_vbox = create_fonts_tab();
 	gtk_container_set_border_width(GTK_CONTAINER(fonts_vbox), 10);
 
+	adv_vbox = create_advanced_tab();
+	gtk_container_set_border_width(GTK_CONTAINER(adv_vbox), 10);
+
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), general_vbox, gtk_label_new(_("General")));
 
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), chat_vbox, gtk_label_new(_("Chat window")));
@@ -800,6 +857,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), colors_vbox, gtk_label_new(_("Colors")));
 
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), fonts_vbox, gtk_label_new(_("Fonts")));
+
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), adv_vbox, gtk_label_new(_("Advanced")));
 
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), gui_plugins_mgr_tab(), gtk_label_new(_("Plugins manager")));
 
@@ -847,8 +906,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on user list"));
 	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
 
-	blink = gtk_check_button_new_with_label(_("Blink status"));
-	gtk_box_pack_start(GTK_BOX(vbox), blink, FALSE, FALSE, 0);
+
 
 	auto_away = gtk_check_button_new_with_label(_("Auto away"));
 	gtk_box_pack_start(GTK_BOX(vbox), auto_away, FALSE, FALSE, 0);
@@ -860,13 +918,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox, FALSE, FALSE, 0);
 
-	label = gtk_label_new(_("Blink interval"));
-	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
-	gtk_container_add(GTK_CONTAINER(label0_align), label);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 1, 2, 0, 1);
-	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
 
 	label = gtk_label_new(_("Auto away interval (minutes)"));
 	auto_away_interval = gtk_spin_button_new_with_range(0, 1440, 1);
@@ -969,10 +1020,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	}
 #endif
 
-	if (ggadu_config_var_get(gui_handler, "blink"))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(blink), TRUE);
-	else
-		gtk_widget_set_sensitive(blink_interval, FALSE);
 
 	entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowwidth");
 	g_return_if_fail(entry != NULL);
@@ -988,9 +1035,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),
 					  (gint) ggadu_config_var_get(gui_handler, "chat_window_height"));
 
-	if (ggadu_config_var_get(gui_handler, "blink_interval"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(blink_interval),
-					  (gint) ggadu_config_var_get(gui_handler, "blink_interval"));
 
 	if (ggadu_config_var_get(gui_handler, "auto_away"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(auto_away), TRUE);
@@ -1184,8 +1228,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "chat_paned_size",
 				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
 
-		ggadu_config_var_set(gui_handler, "blink",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(blink)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowwidth");
 		g_return_if_fail(entry != NULL);
@@ -1205,8 +1247,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "use_username",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
-		ggadu_config_var_set(gui_handler, "blink_interval",
-				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(blink_interval)));
 
 		ggadu_config_var_set(gui_handler, "auto_away",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(auto_away)));
