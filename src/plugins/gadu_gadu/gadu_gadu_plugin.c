@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.121 2004/01/17 00:45:01 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.122 2004/01/17 15:37:21 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -66,6 +66,12 @@ GGadu_PLUGIN_INIT("gadu-gadu", GGADU_PLUGIN_TYPE_PROTOCOL);
  */
 void test()
 {
+}
+
+gint ggadu_is_status_descriptive(gint status)
+{
+    return (gint) (status == GG_STATUS_AVAIL_DESCR || status == GG_STATUS_BUSY_DESCR ||
+	status == GG_STATUS_NOT_AVAIL_DESCR || status == GG_STATUS_INVISIBLE_DESCR);
 }
 
 void ggadu_gadu_gadu_disconnect()
@@ -1799,8 +1805,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (sp->status != GG_STATUS_NOT_AVAIL)
 	{
 	    /* descriptions, call dialogbox */
-	    if (sp->status == GG_STATUS_AVAIL_DESCR || sp->status == GG_STATUS_BUSY_DESCR || sp->status == GG_STATUS_NOT_AVAIL_DESCR ||
-		sp->status == GG_STATUS_INVISIBLE_DESCR)
+	    if (ggadu_is_status_descriptive(sp->status))
 	    {
 		GGaduDialog *d = ggadu_dialog_new();
 		gchar *reason_c = NULL;
