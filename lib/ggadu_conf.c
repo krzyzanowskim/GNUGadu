@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.25 2004/10/19 10:51:23 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.26 2004/10/22 08:51:11 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -68,6 +68,7 @@ gint ggadu_config_var_check(GGaduPlugin * handler, gchar * name)
 }
 
 /* caution : can return NULL and it not mean that there is no such variable */
+/* return a newly-allocated string */
 gpointer ggadu_config_var_get(GGaduPlugin * handler, gchar * name)
 {
 	GGaduVar *var = NULL;
@@ -84,7 +85,18 @@ gpointer ggadu_config_var_get(GGaduPlugin * handler, gchar * name)
 
 		if (var && (!ggadu_strcasecmp(var->name, name)))
 		{
-			return var->ptr ? var->ptr : var->def;
+			/* unescape, and now it should be freed somewhere */
+			if ((var->type == VAR_STR) || (var->type == VAR_IMG))
+			{
+			    if (var->ptr)
+				return g_strcompress(var->ptr); 
+			    else if (var->def)
+				return g_strcompress(var->def); 
+			}
+			    else
+			{
+			    return var->ptr ? var->ptr : var->def;
+			}
 		}
 
 		tmp = tmp->next;
@@ -142,7 +154,7 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 				else if (*(gchar *) val == 1)
 				    var->ptr = (gpointer) base64_decode(g_strstrip((gchar *) val + 1));
 				else
-				    var->ptr = (gpointer) g_strdup(g_strstrip((gchar *) val));
+				    var->ptr = (gpointer) g_strescape(g_strstrip((gchar *) val),""); /* escape */
 
 				break;
 			case VAR_INT:
@@ -229,8 +241,8 @@ gboolean ggadu_config_read_from_file(GGaduPlugin * plugin_handler, gchar *file_p
 			if (v->type == VAR_INT || v->type == VAR_BOOL)
 				ggadu_config_var_set(plugin_handler, line, (gpointer) atoi(val));
 
-			if (v->type == VAR_STR || v->type == VAR_IMG)
-				ggadu_config_var_set(plugin_handler, line, val);
+			if ((v->type == VAR_STR || v->type == VAR_IMG) && (val != NULL))
+				ggadu_config_var_set(plugin_handler, line, g_strcompress(val));
 			
 			/* FIXME? Do we really need to have this? */
 		      /*if (v->type == VAR_BOOL)
@@ -272,6 +284,8 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 	GIOChannel *ch = NULL;
 	GIOChannel *ch_dest = NULL;
 
+	if (!plugin_handler)
+	    return FALSE;
 	
 	path = g_strdup(plugin_handler->config_file);
 	path_dest = g_strconcat(plugin_handler->config_file, ".tmp_", NULL);
@@ -300,21 +314,25 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 			if (var->type == VAR_STR || var->type == VAR_IMG)
 			{
 				if (g_strrstr(var->name, "password") != NULL)
+				{
 					line1 = g_strdup_printf("%s \x001%s\n", var->name,
-								base64_encode((gchar *) var->ptr));
+								base64_encode(
+									(gchar *)ggadu_config_var_get(plugin_handler,var->name)
+								));
+				}
 				else
 				{
 					if (strlen((gchar *) var->ptr) > 0)
-						line1 = g_strdup_printf("%s %s\n", var->name, (gchar *) var->ptr);
+						line1 = g_strdup_printf("%s %s\n", var->name, g_strescape((gchar *)ggadu_config_var_get(plugin_handler,var->name),""));
 				}
 			}
 
 			if (var->type == VAR_INT || var->type == VAR_BOOL)
-				line1 = g_strdup_printf("%s %d\n", var->name, (gint) var->ptr);
+				line1 = g_strdup_printf("%s %d\n", var->name, (gint) ggadu_config_var_get(plugin_handler,var->name));
 
 
 		} else if (var->type == VAR_BOOL || var->type == VAR_INT) {
-			line1 = g_strdup_printf("%s %d\n", var->name, (gint) var->ptr);
+			line1 = g_strdup_printf("%s %d\n", var->name, (gint) ggadu_config_var_get(plugin_handler,var->name));
 		}
 
 		if (line1) {
