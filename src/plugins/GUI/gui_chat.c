@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.92 2004/04/06 22:54:33 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.93 2004/04/08 21:28:53 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1119,7 +1119,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		if (chat_window != NULL)
 			gtk_widget_show_all(chat_window);
 
-		if (((gint) ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == FALSE)) {
+		if (ggadu_config_var_get(gui_handler, "chat_window_auto_raise")) {
 		    gtk_widget_grab_focus(GTK_WIDGET(input));
 		}    
 
