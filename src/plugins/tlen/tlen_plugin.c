@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.13 2003/04/07 21:08:54 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.14 2003/04/12 11:05:27 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -631,7 +631,7 @@ void start_plugin()
 
 	p = g_new0(GGaduProtocol, 1);
 	p->display_name = g_strdup("Tlen");
-	p->img_filename = g_strdup("Tlen.png");
+	p->img_filename = g_strdup("tlen.png");
 	p->statuslist = status_init();
 	p->offline_status = TLEN_STATUS_UNAVAILABLE;
 

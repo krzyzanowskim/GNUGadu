@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.25 2003/04/11 09:22:02 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.26 2003/04/12 11:05:26 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -964,63 +964,63 @@ GSList *status_init()
     
     sp->status = GG_STATUS_AVAIL;
     sp->description = g_strdup(_("Available"));
-    sp->image = g_strdup("online.png");
+    sp->image = g_strdup("gadu-gadu-online.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
 
     sp->status = GG_STATUS_AVAIL_DESCR;
     sp->description = g_strdup(_("Available with description"));
-    sp->image = g_strdup("online-descr.png");
+    sp->image = g_strdup("gadu-gadu-online-descr.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
     
     sp->status = GG_STATUS_BUSY;
     sp->description = g_strdup(_("Busy"));
-    sp->image = g_strdup("away.png");
+    sp->image = g_strdup("gadu-gadu-away.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
 
     sp->status = GG_STATUS_BUSY_DESCR;
     sp->description = g_strdup(_("Busy with description"));
-    sp->image = g_strdup("away-descr.png");
+    sp->image = g_strdup("gadu-gadu-away-descr.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
 
     sp->status = GG_STATUS_INVISIBLE;
     sp->description = g_strdup(_("Invisible"));
-    sp->image = g_strdup("invisible.png");
+    sp->image = g_strdup("gadu-gadu-invisible.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
 
     sp->status = GG_STATUS_INVISIBLE_DESCR;
     sp->description = g_strdup(_("Invisible with description"));
-    sp->image = g_strdup("invisible-descr.png");
+    sp->image = g_strdup("gadu-gadu-invisible-descr.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
 
     sp->status = GG_STATUS_NOT_AVAIL_DESCR;
     sp->description = g_strdup(_("Offline with description"));
-    sp->image = g_strdup("offline-descr.png");
+    sp->image = g_strdup("gadu-gadu-offline-descr.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
 
     sp->status = GG_STATUS_NOT_AVAIL;
     sp->description = g_strdup(_("Offline"));
-    sp->image = g_strdup("offline.png");
+    sp->image = g_strdup("gadu-gadu-offline.png");
     sp->receive_only = FALSE;
     list = g_slist_append(list, sp);
     sp++;
 
     sp->status = GG_STATUS_BLOCKED;
     sp->description = g_strdup(_("Blocked"));
-    sp->image = g_strdup("invisible.png");
+    sp->image = g_strdup("gadu-gadu-invisible.png");
     sp->receive_only = TRUE;
     list = g_slist_append(list, sp);
     sp++;
@@ -1035,7 +1035,7 @@ void start_plugin()
 
 	p = g_new0(GGaduProtocol, 1);
 	p->display_name = g_strdup("Gadu-Gadu");
-	p->img_filename = g_strdup("Gadu-Gadu.png");
+	p->img_filename = g_strdup("gadu-gadu.png");
 	p->statuslist = status_init();
 	p->offline_status = GG_STATUS_NOT_AVAIL;
 	

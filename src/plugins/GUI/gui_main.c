@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.7 2003/04/05 17:35:03 zapal Exp $ */
+/* $Id: gui_main.c,v 1.8 2003/04/12 11:05:23 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -75,15 +75,12 @@ void gui_signal_receive(gpointer name, gpointer signal_ptr)
 //	gdk_threads_leave();
 }
 
-
 GGaduPlugin *initialize_plugin(gpointer conf_ptr) 
 {
-//    gdk_threads_init();
-
     gchar *this_configdir = NULL;
 
     gtk_init(NULL, NULL);
-    
+
     GGadu_PLUGIN_ACTIVATE(conf_ptr);
 
     print_debug("%s : initialize\n", "main-gui");
@@ -250,7 +247,7 @@ void start_plugin()
     gui_config_emoticons();
     
     sigdata = g_slist_append(sigdata, (gchar *) config_var_get(gui_handler, "icons"));
-    sigdata = g_slist_append(sigdata, "online.png");
+    sigdata = g_slist_append(sigdata, "icon.png");
     sigdata = g_slist_append(sigdata, "GNU Gadu 2");
 
     signal_emit_full("main-gui", "docklet set default icon", sigdata, NULL, (gpointer)g_slist_free);
