@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.116 2004/01/14 19:32:30 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.117 2004/01/14 20:05:56 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -371,8 +371,9 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		if (++connect_count < 3)
 		{
+			gint _status = session->status;
 			ggadu_gadu_gadu_disconnect();
-			gadu_gadu_login(NULL, GG_STATUS_AVAIL);
+			gadu_gadu_login(NULL, _status);
 		}
 		else
 		{
@@ -443,10 +444,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		break;
 
 	case GG_EVENT_DISCONNECT:
+	{
+		gint _status = session->status;
 		ggadu_gadu_gadu_disconnect_msg(_("Disconnected"));
-		gadu_gadu_login(NULL, GG_STATUS_AVAIL);
+		gadu_gadu_login(NULL, _status);
 		break;
-
+	}
 	case GG_EVENT_USERLIST:
 
 		switch (e->event.userlist.type)
