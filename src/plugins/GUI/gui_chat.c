@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.47 2003/07/22 16:47:55 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.48 2003/08/20 19:56:00 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -1023,6 +1023,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	    }
 
 	  gtk_window_get_size (GTK_WINDOW (chat_window), &r.width, &r.height);
+	  gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
 
 	  position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
 
@@ -1030,7 +1031,6 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  g_object_set_data (G_OBJECT (session->chat), "hbox_buttons", hbox_buttons);
 
 	  gtk_paned_set_position (GTK_PANED (paned), (gint) position);
-	  gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
 
       }
 
