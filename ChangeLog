@@ -1,3 +1,6 @@
+28.08.2004
+- Fixed registration procedure; Now compliant with JEP-0077; Closes bugreport #3 (mkobierzycki/jabber)
+
 24.08.2004
 - fix show/hide toolbar (GUI/krzak)
 - Editing own vcard implemented. (jabber/mkobierzycki)
