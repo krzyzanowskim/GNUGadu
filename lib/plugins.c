@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.22 2004/10/18 09:59:55 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.23 2004/10/19 11:21:09 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -55,15 +55,12 @@ gboolean plugin_at_list(gchar * name)
 	}	
 	
 	filename = g_build_filename(config->configdir, "modules.load", NULL);
-
 	ch = g_io_channel_new_file(filename, "r", NULL);
-
 	g_free(filename);
-
 	if (!ch)
 	{
 		g_string_free(buffer, TRUE);
-		return FALSE;
+		return TRUE;
 	}
 	
 	while (g_io_channel_read_line_string(ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
@@ -540,8 +537,10 @@ GSList *get_list_modules_load()
 			while (tmp)
 			{
 				plugin = (GGaduPlugin *) tmp->data;
+				
 				if (!g_strncasecmp(buffer->str, plugin->name, buffer->len - 1))
 					ret = g_slist_append(ret, plugin);
+					
 				tmp = tmp->next;
 			}
 		}
