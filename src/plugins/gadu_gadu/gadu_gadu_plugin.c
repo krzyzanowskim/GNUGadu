@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.225 2004/12/29 15:09:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.226 2004/12/29 16:07:48 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2458,7 +2458,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			sp = ggadu_find_status_prototype(p, GG_STATUS_NOT_AVAIL);
 		}
 
-		if (session && reason && (strlen(reason) > 0) && ggadu_gadu_gadu_is_status_descriptive(sp))
+		if (session && sp && reason && (strlen(reason) > 0) && ggadu_gadu_gadu_is_status_descriptive(sp))
 		{
 			g_free(sp->status_description);
 			sp->status_description = ggadu_config_var_get(handler, "reason");
