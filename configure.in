@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.60 2004/04/06 21:52:46 krzyzak Exp $
+dnl $Id: configure.in,v 1.61 2004/04/22 09:26:02 krzyzak Exp $
 
 m4_define([gg2_version],[2.0])
 
@@ -150,7 +150,7 @@ if test x$with_all_plugins = xyes; then
     with_update=yes
     with_docklet_system_tray=yes
     with_docklet_dockapp=yes
-    with_perl=yes
+#    with_perl=yes
 fi
 
 AC_ARG_WITH(perl, [  --with-perl		  perl support			default=disabled])
@@ -212,33 +212,14 @@ fi
 AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
 if test "x$with_gadu" = "xyes"; then 
     want_gadu=yes
-    PKG_CHECK_MODULES(OSSL,openssl >= 0.9.7,[],AC_MSG_ERROR($OSSL_PKG_ERRORS))
-    AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
-    AC_SUBST(OSSL_LIBS)
-    AC_SUBST(OSSL_CFLAGS)
-dnl 
-dnl 	if test "$want_gadu" = "no"; then 
-dnl 	    PKG_CHECK_MODULES(GG,libgadu = CVS,want_gadu=yes,want_gadu=no)
-dnl 	    if test "$want_gadu" = "yes"; then
-dnl 	        AC_MSG_WARN(You are using CVS libgadu version! Hope you know what you are doing!)
-dnl 	    fi
-dnl 	fi
-dnl 	
-dnl     if test "$want_gadu" = "no"; then 
-dnl    	AC_MSG_WARN($GG_PKG_ERRORS)
-dnl 	echo 
-dnl 	echo "**********************************************************"
-dnl 	echo 
-dnl 	echo "Gadu-Gadu plugin has been disabled!"
-dnl 	echo "You don't have libgadu installed (or you have wrong version)"
-dnl 	echo "Please download ekg: http://dev.null.pl/ekg"
-dnl 	echo 
-dnl 	echo "**********************************************************"
-dnl 	echo
-dnl     fi
-    
-dnl    AC_SUBST(GG_LIBS)
-dnl    AC_SUBST(GG_CFLAGS)
+    AC_CHECK_OPENSSL
+    if test "x$have_openssl" = "xyes"; then
+	AC_SUBST(OPENSSL_LIBS)
+	AC_SUBST(OPENSSL_INCLUDES)
+	AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
+    else
+	AC_MSG_ERROR([unable to find openssl])
+    fi
 fi
 
 AC_ARG_WITH(tlen, [  --with-tlen		  Build tlen plugin		default=no])

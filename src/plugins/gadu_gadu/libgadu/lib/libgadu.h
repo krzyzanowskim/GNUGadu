@@ -1,4 +1,4 @@
-/* $Id: libgadu.h,v 1.1 2004/04/02 10:06:55 krzyzak Exp $ */
+/* $Id: libgadu.h,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -433,10 +433,9 @@ enum gg_failure_t {
 	GG_FAILURE_READING,		/* zerwano po³±czenie podczas odczytu */
 	GG_FAILURE_WRITING,		/* zerwano po³±czenie podczas zapisu */
 	GG_FAILURE_PASSWORD,		/* nieprawid³owe has³o */
-
 	GG_FAILURE_404, 		/* XXX nieu¿ywane */
-
-	GG_FAILURE_TLS			/* b³±d negocjacji TLS */
+	GG_FAILURE_TLS,			/* b³±d negocjacji TLS */
+	GG_FAILURE_NEED_EMAIL 		/* serwer roz³±czy³ nas z pro¶b± o zmianê emaila */
 };
 
 /*
@@ -866,6 +865,12 @@ extern char *gg_proxy_username;		/* okre¶la nazwê u¿ytkownika przy autoryzacji s
 extern char *gg_proxy_password;		/* okre¶la has³o u¿ytkownika przy autoryzacji serwera proxy */
 extern int gg_proxy_http_only;		/* w³±cza obs³ugê proxy wy³±cznie dla us³ug HTTP */
 
+
+/* 
+ * adres, z którego ¶lemy pakiety (np ³±czymy siê z serwerem)
+ * u¿ywany przy gg_connect()
+ */
+extern unsigned long gg_local_ip; 
 /*
  * -------------------------------------------------------------------------
  * poni¿ej znajduj± siê wewnêtrzne sprawy biblioteki. zwyk³y klient nie
@@ -934,7 +939,7 @@ int gg_image_queue_remove(struct gg_session *s, struct gg_image_queue *q, int fr
 #define GG_DEFAULT_PROTOCOL_VERSION 0x20
 #define GG_DEFAULT_TIMEOUT 30
 #define GG_HAS_AUDIO_MASK 0x40000000
-#define GG_LIBGADU_VERSION "1.4.20031117"
+#define GG_LIBGADU_VERSION "CVS"
 
 #define GG_DEFAULT_DCC_PORT 1550
 
@@ -944,6 +949,7 @@ struct gg_header {
 } GG_PACKED;
 
 #define GG_WELCOME 0x0001
+#define GG_NEED_EMAIL 0x0014
 
 struct gg_welcome {
 	uint32_t key;			/* klucz szyfrowania has³a */
@@ -1071,6 +1077,8 @@ struct gg_notify {
 #define GG_USER_OFFLINE 0x01	/* bêdziemy niewidoczni dla u¿ytkownika */
 #define GG_USER_NORMAL 0x03	/* zwyk³y u¿ytkownik */
 #define GG_USER_BLOCKED 0x04	/* zablokowany u¿ytkownik */
+
+#define GG_LIST_EMPTY 0x0012
 	
 #define GG_NOTIFY_REPLY 0x000c	/* tak, to samo co GG_LOGIN */
 	

@@ -1,4 +1,4 @@
-/* $Id: libgadu.c,v 1.1 2004/04/02 10:06:55 krzyzak Exp $ */
+/* $Id: libgadu.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -55,6 +55,7 @@ void (*gg_debug_handler)(int level, const char *format, va_list ap) = NULL;
 int gg_dcc_port = 0;
 unsigned long gg_dcc_ip = 0;
 
+unsigned long gg_local_ip = 0;
 /*
  * zmienne opisuj±ce parametry proxy http.
  */
@@ -70,7 +71,7 @@ static char rcsid[]
 #ifdef __GNUC__
 __attribute__ ((unused))
 #endif
-= "$Id: libgadu.c,v 1.1 2004/04/02 10:06:55 krzyzak Exp $";
+= "$Id: libgadu.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $";
 #endif 
 
 /*
@@ -895,7 +896,7 @@ void gg_free_session(struct gg_session *sess)
 	}
 #else
 	if (sess->pid != -1)
-		waitpid(sess->pid, NULL, 0);
+		waitpid(sess->pid, NULL, WNOHANG);
 #endif
 
 	if (sess->fd != -1)
@@ -1460,7 +1461,7 @@ int gg_notify_ex(struct gg_session *sess, uin_t *userlist, char *types, int coun
 	}
 
 	if (!userlist || !count)
-		return 0;
+		return gg_send_packet(sess, GG_LIST_EMPTY, NULL);
 	
 	if (!(n = (struct gg_notify*) malloc(sizeof(*n) * count)))
 		return -1;

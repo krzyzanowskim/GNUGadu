@@ -1,4 +1,4 @@
-/* $Id: events.c,v 1.1 2004/04/02 10:06:54 krzyzak Exp $ */
+/* $Id: events.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -1311,10 +1311,9 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 				sess->fd = -1;
 				break;
 			}
-	
+
 			if (h->type != GG_WELCOME) {
 				gg_debug(GG_DEBUG_MISC, "// gg_watch_fd() invalid packet received\n");
-
 				free(h);
 				close(sess->fd);
 				sess->fd = -1;
@@ -1418,6 +1417,10 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 			if (h->type == GG_LOGIN_FAILED) {
 				gg_debug(GG_DEBUG_MISC, "// gg_watch_fd() login failed\n");
 				e->event.failure = GG_FAILURE_PASSWORD;
+				errno = EACCES;
+			} else if (h->type == GG_NEED_EMAIL) {
+				gg_debug(GG_DEBUG_MISC, "// gg_watch_fd() email change needed\n");
+				e->event.failure = GG_FAILURE_NEED_EMAIL;
 				errno = EACCES;
 			} else {
 				gg_debug(GG_DEBUG_MISC, "// gg_watch_fd() invalid packet\n");

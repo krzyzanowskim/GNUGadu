@@ -86,7 +86,7 @@ echo "libtoolize"
 libtoolize --force --copy --automake || exit 1
 
 echo "aclocal"
-$ACLOCAL $ACPATH -I m4 || exit 1
+$ACLOCAL $ACPATH -I m4 -I src/plugins/gadu_gadu/libgadu/m4 || exit 1
 
 echo "automake"
 $AUTOMAKE --no-force --copy --add-missing || exit 1

@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.6 2004/04/06 22:12:10 krzyzak Exp $
+dnl $Id: configure.in,v 1.7 2004/04/22 09:26:03 krzyzak Exp $
 
 AC_INIT(lib/libgadu.h)
 AM_INIT_AUTOMAKE([libgadu],[1.4])
@@ -160,16 +160,16 @@ dnl
 dnl  Sprawdzamy OpenSSL
 dnl
 
-dnl AC_CHECK_OPENSSL
+AC_CHECK_OPENSSL
 
-dnl if test "x$have_openssl" = "xyes"; then
-dnl 	OBJS="$OBJS simlite.o"
-dnl 	LDFLAGS="$OPENSSL_LIBS $LDFLAGS"
-dnl 	LIBS_LIBGADU="$LIBS_LIBGADU $OPENSSL_LIBS"
-dnl 	CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
-dnl 	CFLAGS_LIBGADU="$CFLAGS_LIBGADU $OPENSSL_INCLUDES"
+if test "x$have_openssl" = "xyes"; then
+	OBJS="$OBJS simlite.o"
+ 	LDFLAGS="$OPENSSL_LIBS $LDFLAGS"
+ 	LIBS_LIBGADU="$LIBS_LIBGADU $OPENSSL_LIBS"
+ 	CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
+ 	CFLAGS_LIBGADU="$CFLAGS_LIBGADU $OPENSSL_INCLUDES"
 AC_LIBGADU_DEFINE([HAVE_OPENSSL])
-dnl fi
+fi
 
 dnl
 dnl  Zachowujemy opcje dla libgadu
