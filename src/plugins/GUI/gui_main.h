@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.15 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.16 2004/10/20 10:38:42 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -36,7 +36,7 @@
 
 /* default icon's filename */
 #define GGADU_DEFAULT_ICON_FILENAME "icon.png"
-#define GGADU_MSG_ICON_FILENAME "new-msg.png"
+#define GGADU_MSG_ICON_FILENAME "new-msg.gif"
 
 
 typedef struct

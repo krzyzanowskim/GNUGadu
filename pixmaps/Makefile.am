@@ -34,8 +34,7 @@ pixmap_DATA = \
     jabber-xa.png \
     jabber-noauth.png \
     jabber-auth-from.png \
-    new-msg.png \
-    new-msg-colored.png \
+    new-msg.gif \
     offline.png \
     online.png \
     send-im.png \

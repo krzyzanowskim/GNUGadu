@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.19 2004/10/14 08:45:58 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.20 2004/10/20 10:38:43 krzyzak Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -446,9 +446,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		image = (GtkImage *) docklet_create_image(directory, filename);
 
 		gtk_widget_ref(GTK_WIDGET(image));
-
-		gtk_image_set_from_pixbuf(GTK_IMAGE(pixmap), gtk_image_get_pixbuf(GTK_IMAGE(image)));
-
+		
+		if (gtk_image_get_storage_type(GTK_IMAGE(image)) == GTK_IMAGE_PIXBUF)
+		{
+		    gtk_image_set_from_pixbuf(GTK_IMAGE(pixmap), gtk_image_get_pixbuf(GTK_IMAGE(image)));
+		} 
+		    else if (gtk_image_get_storage_type(GTK_IMAGE(image)) == GTK_IMAGE_ANIMATION)
+		{
+		    gtk_image_set_from_animation(GTK_IMAGE(pixmap), gtk_image_get_animation(GTK_IMAGE(image)));
+		}
+		
 		gtk_widget_unref(GTK_WIDGET(image));
 
 		gtk_widget_show(pixmap);
