@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.2 2003/06/04 11:02:46 krzyzak Exp $ */
+/* $Id: support.c,v 1.3 2003/06/15 19:06:39 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -378,6 +378,20 @@ char **array_make(const char *string, const char *sep, int max, int trim, int qu
 
 	return result;
 }
+
+void array_free(char **array)
+{
+	char **tmp;
+
+	if (!array)
+		return;
+
+	for (tmp = array; *tmp; tmp++)
+		g_free(*tmp);
+
+	g_free(array);
+}
+
 
 const char *itoa(long int i)
 {

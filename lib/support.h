@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.1 2003/06/03 21:30:10 krzyzak Exp $ */
+/* $Id: support.h,v 1.2 2003/06/15 19:06:39 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -109,6 +109,8 @@ gchar *get_timestamp(time_t t);
 gchar *check_file_exists(const gchar * directory,const gchar * filename);
 
 char **array_make(const char *string, const char *sep, int max, int trim, int quotes);
+
+void array_free(char **array);
 
 const char *itoa(long int i);
 
