@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.17 2003/05/27 22:38:25 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.18 2003/05/28 09:52:43 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -632,7 +632,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	
 	/* ZONK - how to name it ? */
 	label = gtk_label_new(_("Chat window split size (%)"));
-	chat_paned_size = gtk_spin_button_new_with_range(0,3000,5);
+	chat_paned_size = gtk_spin_button_new_with_range(0,100,5);
 	
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 1, 2);
