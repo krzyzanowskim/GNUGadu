@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in. You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+   |-----handy-ruler------------------------------------------------------|
+gg2: GNU Gadu 2 - a modular, multiprotocol IM client with a GTK2 GUI.
+gg2: 
+gg2: GNU Gadu 2 is a modular instant messaging client with a GUI written
+gg2: in GTK2. It currently supports Gadu-Gadu, Tlen.pl, and Jabber. It is
+gg2: able to load Perl scripts, dock in several window managers, play
+gg2: sounds, talk to other programs via a UNIX socket, send SMS messages
+gg2: to Polish GSM operators, automatically check for updates, and use
+gg2: XOSD for displaying notices.
+gg2: 
+gg2: Project homepage: http://www.gnugadu.org/
+gg2: 
