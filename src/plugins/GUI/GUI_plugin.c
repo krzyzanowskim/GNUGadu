@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.32 2003/10/27 21:46:19 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.33 2003/10/31 19:44:21 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -345,7 +345,7 @@ void gui_quit (GtkWidget * widget, gpointer user_data)
 
 gboolean gui_main_window_delete (GtkWidget * window, GdkEvent * event, gpointer user_data)
 {
-    GGaduPlugin *p = find_plugin_by_name ("docklet");
+    GGaduPlugin *p = find_plugin_by_pattern ("docklet*");
     print_debug ("delete event\n");
     if (!p)
       {

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.23 2003/08/23 19:52:49 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.24 2003/10/31 19:44:22 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -237,7 +237,7 @@ void start_plugin()
     if (config_var_get(gui_handler, "tree"))
 	tree = TRUE;
 
-    if (config_var_get(gui_handler, "hide_on_start") && find_plugin_by_name("docklet"))
+    if (config_var_get(gui_handler, "hide_on_start") && find_plugin_by_pattern("docklet*"))
 	gui_main_window_create(FALSE);
     else
 	gui_main_window_create(TRUE);

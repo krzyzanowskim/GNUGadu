@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.9 2003/06/11 19:57:13 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.1 2003/10/31 19:44:23 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -30,7 +30,7 @@ gchar *tooltipstr = NULL;
 
 EggTrayIcon *egg;
 
-GGadu_PLUGIN_INIT("docklet",GGADU_PLUGIN_TYPE_MISC);
+GGadu_PLUGIN_INIT(DOCKLET_PLUGIN_NAME,GGADU_PLUGIN_TYPE_MISC);
 
 GtkWidget *docklet_create_image(const gchar * directory, const gchar * filename) {
 	GtkWidget 	*image		= NULL;
@@ -160,11 +160,11 @@ GtkWidget *ggadu_new_item_from_stock(GtkWidget *menu, const char *str, const cha
 }
 
 void docklet_about(GtkWidget *widget, gpointer user_data) {
-    signal_emit("docklet", "gui show about", NULL, "main-gui");
+    signal_emit(DOCKLET_PLUGIN_NAME, "gui show about", NULL, "main-gui");
 }
 
 void docklet_quit(GtkWidget *widget, gpointer user_data) {
-    signal_emit("docklet", "exit", NULL, NULL);
+    signal_emit(DOCKLET_PLUGIN_NAME, "exit", NULL, NULL);
     g_main_loop_quit(config->main_loop);
 }
 
@@ -188,14 +188,14 @@ void docklet_clicked_cb(GtkWidget * widget, GdkEventButton * ev, gpointer data)
 	gtk_tooltips_set_tip(tooltips,status_docklet,tooltipstr,NULL);
 	
 	signal_emit(GGadu_PLUGIN_NAME, "gui show invisible chats", NULL, "main-gui");
-	print_debug("%s : mouse clicked\n","docklet");
-        print_debug("%s : left button clicked\n", "docklet");
+	print_debug("%s : mouse clicked\n",DOCKLET_PLUGIN_NAME);
+        print_debug("%s : left button clicked\n", DOCKLET_PLUGIN_NAME);
 	break;
       case 2:
-        print_debug("%s : middle button clicked\n", "docklet");
+        print_debug("%s : middle button clicked\n", DOCKLET_PLUGIN_NAME);
 	break;
       case 3:
-        print_debug("%s : right button clicked\n", "docklet");
+        print_debug("%s : right button clicked\n", DOCKLET_PLUGIN_NAME);
         docklet_menu(ev);
 	break;
     }

@@ -1,3 +1,9 @@
+31.10.2003
+- NEW docklet-dockapp plugin (by emvi) 
+  (without this part of patch that change GUI plugin yet)
+- docklets plugins (like sound plugins) are separated in plugins with prefix "docklet"
+- "docklet" plugin change name to "docklet-system-tray"
+
 27.10.2003
 - do not load .gg/config_test if --disable-debug (gadu-gadu/krzak)
 

@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.31 2003/09/28 10:14:32 shaster Exp $
+dnl $Id: configure.in,v 1.32 2003/10/31 19:44:20 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -123,6 +123,8 @@ want_oss=no
 want_arts=no
 want_external=no
 want_update=no
+want_docklet_system_tray=no
+want_docklet_dockapp=no
 want_all=no
 
 AC_ARG_WITH(all_plugins, [  --with-all_plugins	  Build all plugins		default=no])
@@ -132,7 +134,6 @@ if test x$with_all_plugins = xyes; then
     with_tlen=yes
     with_jabber=yes
     with_xosd=yes
-    with_docklet=yes
     with_esd=yes
     with_oss=yes
     with_arts=yes
@@ -140,6 +141,8 @@ if test x$with_all_plugins = xyes; then
     with_remote=yes
     with_external=yes
     with_update=yes
+    with_docklet_system_tray=yes
+    with_docklet_dockapp=yes
 fi
 
 AC_ARG_ENABLE(perl, [  --enable-perl		  perl support			default=disabled],
@@ -272,14 +275,24 @@ if test "x$with_remote" = "xyes"; then
 fi
 
 
-AC_ARG_WITH(docklet, [  --with-docklet	  Build docklet plugin		default=no])
-if test "x$with_docklet" = "xyes"; then 
-    want_docklet=yes
+AC_ARG_WITH(docklet_system_tray, [  --with-docklet_system_tray	  Build docklet plugin		default=no])
+if test "x$with_docklet_system_tray" = "xyes"; then 
+    want_docklet_system_tray=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
     else
-    want_docklet=no
+    want_docklet_system_tray=no
+fi
+
+AC_ARG_WITH(docklet_dockapp, [  --with-docklet_dockapp	  Build dockapp plugin		default=no])
+if test "x$with_docklet_dockapp" = "xyes"; then 
+    want_docklet_dockapp=yes
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    AC_SUBST(GTK_CFLAGS)
+    AC_SUBST(GTK_LIBS)
+    else
+    want_docklet_dockapp=no
 fi
 
 AC_ARG_WITH(esd, [  --with-esd		  Build esd sound plugin	default=no])
@@ -356,7 +369,8 @@ AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")
 AM_CONDITIONAL(BUILD_TLEN, test "$want_tlen" = "yes")
 AM_CONDITIONAL(BUILD_JABBER, test "$want_jabber" = "yes")
 AM_CONDITIONAL(BUILD_XOSD, test "$want_xosd" = "yes")
-AM_CONDITIONAL(BUILD_DOCKLET, test "$want_docklet" = "yes")
+AM_CONDITIONAL(BUILD_DOCKLET_SYSTEM_TRAY, test "$want_docklet_system_tray" = "yes")
+AM_CONDITIONAL(BUILD_DOCKLET_DOCKAPP, test "$want_docklet_dockapp" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_ESD, test "$want_esd" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_ARTS, test "$want_arts" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_OSS, test "$want_oss" = "yes")
@@ -410,6 +424,8 @@ src/plugins/tlen/Makefile
 src/plugins/jabber/Makefile
 src/plugins/xosd/Makefile
 src/plugins/docklet/Makefile
+src/plugins/docklet/system-tray/Makefile
+src/plugins/docklet/dockapp/Makefile
 src/plugins/sound/Makefile
 src/plugins/sound/esd/Makefile
 src/plugins/sound/arts/Makefile
@@ -422,12 +438,13 @@ po/Makefile.in
 ])
 
 echo
+echo Build plugin docklet-system-tray........... : $want_docklet_system_tray
+echo Build plugin docklet-dockapp............... : $want_docklet_dockapp
 echo Build plugin GUI-GTK2.......... : $want_gui
 echo Build plugin Gadu-Gadu......... : $want_gadu
 echo Build plugin Tlen.pl........... : $want_tlen
 echo Build plugin Jabber............ : $want_jabber
 echo Build plugin XOSD.............. : $want_xosd
-echo Build plugin docklet........... : $want_docklet
 echo Build plugin sound ESD......... : $want_esd
 echo Build plugin sound aRts........ : $want_arts
 echo Build plugin sound OSS......... : $want_oss

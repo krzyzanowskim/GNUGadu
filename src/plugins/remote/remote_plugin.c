@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.9 2003/06/09 18:39:24 zapal Exp $ */
+/* $Id: remote_plugin.c,v 1.10 2003/10/31 19:44:23 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -357,7 +357,7 @@ void signal_recv(gpointer name, gpointer signal_ptr)
   }
 
   if ((signal->name == g_quark_from_static_string("docklet set icon")) ||
-      (signal->name == g_quark_from_static_string( "docklet set default icon")))
+      (signal->name == g_quark_from_static_string("docklet set default icon")))
   {
     GSList *sigdata   = (GSList *)signal->data;
     gchar  *directory = g_slist_nth_data (sigdata, 0);
