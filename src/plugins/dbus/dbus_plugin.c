@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.6 2004/10/27 14:16:46 thrulliq Exp $ */
+/* $Id: dbus_plugin.c,v 1.7 2004/10/28 09:00:56 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -38,22 +38,75 @@
 GGaduPlugin *plugin_handler = NULL;
 GGadu_PLUGIN_INIT("dbus", GGADU_PLUGIN_TYPE_MISC);
 
+static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+{
+	/* URI of the user which we have to return presence. ex.  gg://13245  */
+	gchar *contactURI = NULL;
+	DBusError error;
+	dbus_error_init(&error);
+
+	if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
+	{
+		print_debug("DBUS getPresence: search %s", contactURI);
+		dbus_free(contactURI);
+	}
+
+	dbus_error_free(&error);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+
+static DBusHandlerResult org_freedesktop_im_getProtocols(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+{
+	DBusError error;
+	dbus_error_init(&error);
+
+	print_debug("getProtocols");
+
+	GGaduProtocol *p = NULL;
+	gpointer key, index;
+	DBusMessage *return_message;
+
+	return_message = dbus_message_new_method_return(message);
+
+	if (ggadu_repo_exists("_protocols_"))
+	{
+		index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+
+		while (index)
+		{
+			p = ggadu_repo_find_value("_protocols_", key);
+
+			if (p)
+			{
+				print_debug("proto: %s", p->display_name);
+				dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->display_name, DBUS_TYPE_INVALID);
+			}
+
+			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+		}
+	}
+	/* not sure if it works that way, but just trying */
+	dbus_connection_send(connection, return_message, NULL);
+
+	dbus_error_free(&error);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+
 static void dbus_plugin_unregistered_func(DBusConnection * connection, gpointer user_data)
 {
 	print_debug("plumcium");
 }
 
 
-static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, DBusMessage * message,
-						  gpointer user_data)
+static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, DBusMessage * message, gpointer user_data)
 {
 	DBusError error;
 	dbus_error_init(&error);
 
 	print_debug("DBUS: member=%s path=%s interface=%s type=%d", dbus_message_get_member(message),
-		    dbus_message_get_path(message), 
-		    dbus_message_get_interface(message),
-		    dbus_message_get_type(message));
+		    dbus_message_get_path(message), dbus_message_get_interface(message), dbus_message_get_type(message));
 
 
 	if (dbus_message_is_signal(message, DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL, "Disconnected"))
@@ -64,51 +117,13 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 	}
 
 	/* getProtocols */
-	if (dbus_message_is_method_call
-	    (message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS))
+	if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS))
 	{
-		print_debug("getProtocols");
-		
-		GGaduProtocol *p = NULL;
-		gpointer key, index;
-		DBusMessage *return_message;
-		
-		return_message = dbus_message_new_method_return(message);
-
-		if (ggadu_repo_exists("_protocols_")) {
-		    index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
-		    
-		    while (index) {
-			p = ggadu_repo_find_value("_protocols_", key);
-			
-			if (p) {
-			    print_debug("proto: %s", p->display_name);
-			    dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->display_name, DBUS_TYPE_INVALID);
-			}
-			
-			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
-		    }
-		}
-		/* not sure if it works that way, but just trying */
-		dbus_connection_send(connection, return_message, NULL);   
-		
-		dbus_error_free(&error);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	} else
-
-	/* getPresence */
-	if (dbus_message_is_method_call
-	    (message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
+		return org_freedesktop_im_getProtocols(connection, message, user_data);
+	}
+	else if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
 	{
-		/* URI of the user which we have to return presence. ex.  gg://13245  */
-		gchar *contactURI = NULL;
-		if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
-		{
-			print_debug("DBUS getPresence: search %s", contactURI);
-			dbus_free(contactURI);
-		}
-		dbus_error_free(&error);
-		return DBUS_HANDLER_RESULT_HANDLED;
+		return org_freedesktop_im_getPresence(connection, message, user_data);
 	}
 
 	dbus_error_free(&error);
@@ -154,7 +169,7 @@ void start_plugin()
 	dbus_bus_acquire_service(bus, DBUS_ORG_FREEDESKTOP_IM_SERVICE, 0, &derror);
 	if (dbus_error_is_set(&derror))
 	{
-		g_warning("DBUS: Failed to acquire IM service. %s",derror.message);
+		g_warning("DBUS: Failed to acquire IM service. %s", derror.message);
 		dbus_error_free(&derror);
 		return;
 	}
