@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.11 2003/05/11 18:07:25 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.12 2003/05/11 19:07:25 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -22,6 +22,7 @@
 #include "perl_embed.h"
 #include "signals.h"
 #include "support.h"
+#include "repo.h"
 
 extern GGaduConfig *config;
 
@@ -31,10 +32,17 @@ typedef struct {
 } signal_hook;
 
 typedef struct {
+  char *name;
+  char *repo_name;
+  char *func;
+} repo_hook;
+
+typedef struct {
   char loaded;
   char *filename;
 
   GSList *hooks;
+  GSList *userlist_watch;
 
   PerlInterpreter *perl;
 } perlscript;
@@ -179,6 +187,61 @@ void hook_handler (GGaduSignal *signal, void (*perl_func) (GGaduSignal *, gchar 
   }
 }
 
+void userlist_handler (gchar *repo_name, gpointer key, gint actions)
+{
+  GGaduContact *k = NULL;
+  GSList *list_script, *list;
+  perlscript *script;
+  repo_hook *hook;
+
+  k = ggadu_repo_find_value (repo_name, key);
+
+  g_return_if_fail (k != NULL);
+
+  list_script = perlscripts;
+  while (list_script)
+  {
+    script = (perlscript *) list_script->data;
+    list = script->userlist_watch;
+    while (list)
+    {
+      hook = (repo_hook *) list->data;
+      if (hook->repo_name == NULL || !strcmp (hook->repo_name, repo_name))
+      {
+       	int count;
+	SV *sv_name;
+	SV *sv_action;
+	SV *sv_user_id;
+	
+	PERL_SET_CONTEXT (script->perl);
+	my_perl = script->perl;
+
+	dSP;
+
+      	ENTER;
+	SAVETMPS;
+
+      	sv_name   = sv_2mortal (newSVpv (repo_name, 0));
+	sv_action = sv_2mortal (newSViv (actions));
+	sv_user_id      = sv_2mortal (newSVpv (k->id, 0));
+
+      	PUSHMARK (SP);
+	XPUSHs (sv_name);
+	XPUSHs (sv_action);
+	XPUSHs (sv_user_id);
+	PUTBACK;
+
+      	count = call_pv (hook->func, G_DISCARD);
+
+      	FREETMPS;
+	LEAVE;
+      }
+      list = list->next;
+    }
+    list_script = list_script->next;
+  }
+}
+
 static XS (XS_GGadu_register_script)
 {
   char *name;
@@ -267,6 +330,41 @@ static XS (XS_GGadu_signal_hook)
   XSRETURN (0);
 }
 
+static XS (XS_GGadu_repo_watch_userlist)
+{
+  char *name;
+  char *protocol;
+  char *func;
+  int junk;
+  repo_hook *hook;
+  perlscript *script;
+  dXSARGS;
+
+  items = items;
+
+  name     = SvPV (ST(0), junk);
+  protocol = SvPV (ST(1), junk);
+  func     = SvPV (ST(2), junk);
+
+  print_debug ("watching userlist %s for %s, %s\n", protocol, name, func);
+
+  script = find_perl_script (name);
+  if (!script)
+    XSRETURN (1);
+
+  hook = g_new0 (repo_hook, 1);
+  hook->name = g_strdup (name);
+  hook->func = g_strdup (func);
+  if (protocol[0] == '*')
+    hook->repo_name = NULL;
+  else
+    hook->repo_name = g_strdup (protocol);
+  script->userlist_watch = g_slist_append (script->userlist_watch, hook);
+  ggadu_repo_watch_add (hook->repo_name, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT, userlist_handler);
+  
+  XSRETURN (0);
+}
+
 static void xs_init (pTHX)
 {
   char *file = __FILE__;
@@ -278,6 +376,7 @@ static void xs_init (pTHX)
   newXS ("GGadu::signal_emit", XS_GGadu_signal_emit, "GGadu");
   newXS ("GGadu::hello", XS_GGadu_hello, "GGadu");
   newXS ("GGadu::signal_hook", XS_GGadu_signal_hook, "GGadu");
+  newXS ("GGadu::repo_watch_userlist", XS_GGadu_repo_watch_userlist, "GGadu");
 }
 
 int perl_load_script (char *script_name)
