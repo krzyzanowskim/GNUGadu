@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.15 2004/01/17 00:45:01 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.16 2004/01/17 17:48:17 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -64,7 +64,7 @@ void wyjdz_signal_handler();
 
 void load_contacts(gchar * encoding);
 
-void import_userlist(gchar * list);
+gboolean import_userlist(gchar * list);
 
 void test();
 
