@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.99 2004/08/30 11:46:52 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.100 2004/08/31 11:16:52 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -56,6 +56,7 @@ static GQuark SEARCH_SIG;
 static GQuark GET_CURRENT_STATUS_SIG;
 static GQuark GET_USER_MENU_SIG;
 static GQuark REGISTER_ACCOUNT;
+static GQuark REMOVE_ACCOUNT;
 static GQuark REGISTER_GET_FIELDS;
 static GQuark USER_REMOVE_SIG;
 static GQuark USER_EDIT_VCARD_SIG;
@@ -289,7 +290,19 @@ static gpointer user_change_password_action(gpointer user_data)
 
 static gpointer user_remove_account_action(gpointer user_data)
 {
-	signal_emit("jabber", "gui show message", g_strdup("Not implemented yet."), "main-gui");
+	GGaduDialog *dialog;
+
+	if(!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
+	{
+		signal_emit("jabber", "gui show warning", g_strdup(_("Not connected to server")), "main-gui");
+		return NULL;
+	}
+
+	dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, _("Account removal confirmation"), "remove account");
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, g_strdup_printf("Do you really want to remove account: %s ?",
+			       (gchar *) ggadu_config_var_get(jabber_handler, "jid")), VAR_NULL, NULL, VAR_FLAG_NONE);
+	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
+
 	return NULL;
 }
 
@@ -601,6 +614,28 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 			lm_message_unref(msg);
 		}
+		GGaduDialog_free(dialog);
+	}
+	else if (signal->name == REMOVE_ACCOUNT)
+	{
+		GGaduDialog *dialog = (GGaduDialog *) signal->data;
+
+		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
+		{
+			LmMessage *msg;
+			LmMessageNode *node;
+
+			msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+			lm_message_node_set_attribute(msg->node, "to", lm_connection_get_server(jabber_data.connection));
+			lm_message_node_set_attribute(msg->node, "id", "unreg1");
+			node = lm_message_node_add_child(msg->node, "query", NULL);
+			lm_message_node_set_attribute(node, "xmlns", "jabber:iq:register");
+			lm_message_node_add_child(node, "remove", NULL);
+
+			lm_connection_send(jabber_data.connection, msg, NULL);
+			lm_message_unref(msg);
+		}
+
 		GGaduDialog_free(dialog);
 	}
 	else if (signal->name == CHANGE_STATUS_DESCR_SIG)
@@ -1288,7 +1323,7 @@ GGaduMenu *build_jabber_menu()
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	account=ggadu_menu_new_item(_("Account"), NULL, NULL);
 	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Register account"), jabber_register_account_dialog, NULL));
-	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Remove own account"), user_remove_account_action, NULL));
+	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Remove account"), user_remove_account_action, NULL));
 	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Change password"), user_change_password_action, NULL));
 	ggadu_menu_add_submenu(item, account);
 	
@@ -1322,6 +1357,7 @@ void start_plugin()
 	SEARCH_SIG = register_signal(jabber_handler, "search");
 	ADD_USER_SIG = register_signal(jabber_handler, "add user");
 	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
+	REMOVE_ACCOUNT =  register_signal(jabber_handler, "remove account");
 	REGISTER_GET_FIELDS = register_signal(jabber_handler, "register get fields");
 	USER_REMOVE_SIG = register_signal(jabber_handler, "user remove action");
 	USER_EDIT_VCARD_SIG = register_signal(jabber_handler, "user edit vcard");

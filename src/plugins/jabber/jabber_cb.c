@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.58 2004/08/31 06:32:50 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.59 2004/08/31 11:16:51 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -533,7 +533,7 @@ LmHandlerResult iq_account_data_cb(LmMessageHandler * handler, LmConnection * co
 					    g_strdup(_("Password change is not allowed by the server")), "main-gui");
 			if(lm_message_node_find_child(message->node, "unexpected-request"))
 				signal_emit("jabber", "gui show warning",
-					    g_strdup(_("User is not registered with the server")), "main-gui");
+					    g_strdup(_("You are not registered with the server")), "main-gui");
 
 			ggadu_config_read(jabber_handler);
 		}
@@ -541,6 +541,38 @@ LmHandlerResult iq_account_data_cb(LmMessageHandler * handler, LmConnection * co
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
 
+	if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "unreg1"))
+	{
+		if(lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_RESULT)
+		{
+			signal_emit("jabber", "gui show message", g_strdup(_("Account successfully removed")), "main-gui");
+			ggadu_config_var_set(jabber_handler, "jid", NULL);
+			ggadu_config_var_set(jabber_handler, "password", NULL);
+			ggadu_config_var_set(jabber_handler, "ignored", NULL);
+			ggadu_config_var_set(jabber_handler, "log", 0);
+			ggadu_config_var_set(jabber_handler, "only_friends", 0);
+			ggadu_config_var_set(jabber_handler, "autoconnect", 0);
+			ggadu_config_var_set(jabber_handler, "use_ssl", 0);
+			ggadu_config_save(jabber_handler);
+			
+			lm_connection_close(jabber_data.connection, NULL);
+		}
+
+		if(lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_ERROR)
+		{
+			if(lm_message_node_find_child(message->node, "forbidden"))
+				signal_emit("jabber", "gui show warning",
+					    g_strdup(_("You are not allowed to remove this account")), "main-gui");
+			if(lm_message_node_find_child(message->node, "registration-required"))
+				signal_emit("jabber", "gui show warning",
+					    g_strdup(_("This account was not registered")), "main-gui");
+			if(lm_message_node_find_child(message->node, "unexpected-request"))
+				signal_emit("jabber", "gui show warning",
+					    g_strdup(_("You are not registered with this server")), "main-gui");
+		}
+
+		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+	}
 	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
