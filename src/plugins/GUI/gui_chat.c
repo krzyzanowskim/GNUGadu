@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.31 2003/05/28 10:34:35 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.32 2003/05/28 19:13:40 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -587,26 +587,29 @@ gboolean window_resize_signal (GtkWidget *window,GdkEventConfigure *event, gpoin
           gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
 	  gui_chat_session *session = user_data;;
 	  GtkRequisition rb,r;
-	  GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (window), "chat_notebook");
 	  GtkWidget *paned = g_object_get_data(G_OBJECT(session->chat),"paned");
 	  GtkWidget *hbox_buttons = g_object_get_data(G_OBJECT(session->chat),"hbox_buttons");
 	  gint percent = (gint) config_var_get (gui_handler, "chat_paned_size");
 	  float position = 0;
 	  float tab_minus = 0;
 	  
-
-	  if ((chat_type == CHAT_TYPE_TABBED) && (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook))))
-	    {
-		GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook),
+	  if (chat_type == CHAT_TYPE_TABBED) 
+	  {
+	  	GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (window), "chat_notebook");
+	   	if  (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook)))
+		{
+			GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook),
 							       GTK_WIDGET (session->chat));
-		GtkRequisition rbnl;
+			GtkRequisition rbnl;
 
-		gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
+			gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
 
-		tab_minus = -rbnl.height;
-	    }
+			tab_minus = -rbnl.height;
+		}
+	  }
 
-	  gtk_window_get_size (GTK_WINDOW (chat_window), &r.width, &r.height);
+	  r.height = event->height;
+
 	  gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
 
 	  position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
