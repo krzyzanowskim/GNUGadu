@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.201 2004/10/28 14:04:11 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.202 2004/10/28 15:53:08 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -784,7 +784,6 @@ gpointer user_chat_action(gpointer user_data)
 
 	msg->message = NULL;
 
-	print_debug("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 	signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui", GGaduMsg_free);
 
 	return NULL;

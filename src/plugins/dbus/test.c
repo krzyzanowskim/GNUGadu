@@ -7,6 +7,7 @@
 
 static gboolean send_ping(DBusConnection * bus);
 static void get_protocols(DBusConnection *bus);
+static void open_chat(DBusConnection *bus);
 
 int main(int argc, char **argv)
 {
@@ -49,12 +50,13 @@ static gboolean send_ping(DBusConnection *bus)
 					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
 					       DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE);
 					       
-	dbus_message_append_args(message, DBUS_TYPE_STRING, "tlen://yachim@tlen.pl", DBUS_TYPE_INVALID);
+	dbus_message_append_args(message, DBUS_TYPE_STRING, "gg://5074881", DBUS_TYPE_INVALID);
 //	dbus_message_set_no_reply(message, TRUE);
 	/* Send the signal */
 	dbus_connection_send(bus, message, NULL);
 	/* Free the signal now we have finished with it */
 	dbus_message_unref(message);
+	open_chat(bus);
 	/* Tell the user we send a signal */
 	/* Return TRUE to tell the event loop we want to be called again */
 	return TRUE;
@@ -69,6 +71,21 @@ static void get_protocols(DBusConnection *bus)
 					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
 					       DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS);
 	
+	dbus_connection_send(bus, message, NULL);
+
+	dbus_message_unref(message);
+}
+
+static void open_chat(DBusConnection *bus)
+{
+	DBusMessage *message;
+
+	message = dbus_message_new_method_call(DBUS_ORG_FREEDESKTOP_IM_SERVICE, 
+					       DBUS_ORG_FREEDESKTOP_IM_OBJECT,
+					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
+					       DBUS_ORG_FREEDESKTOP_IM_OPEN_CHAT);
+	
+	dbus_message_append_args(message, DBUS_TYPE_STRING, "gg://5074881", DBUS_TYPE_INVALID);
 	dbus_connection_send(bus, message, NULL);
 
 	dbus_message_unref(message);

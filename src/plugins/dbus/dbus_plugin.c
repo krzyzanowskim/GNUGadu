@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.12 2004/10/28 14:04:10 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.13 2004/10/28 15:53:08 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -90,7 +90,7 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 					}
 					else if (is_in_status(k->status, plugin->protocol->away_status))
 					{
-						return_status = IM_PRESENCE_OFFLINE;
+						return_status = IM_PRESENCE_AWAY;
 					}
 
 					print_debug("FOUND %d",return_status);
@@ -160,6 +160,64 @@ static DBusHandlerResult org_freedesktop_im_getProtocols(DBusConnection * connec
 }
 
 
+static DBusHandlerResult org_freedesktop_im_openChat(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+{
+	/* URI of the user which we have to return presence. ex.  gg://13245  */
+	gchar *contactURI = NULL;
+	gchar *contactURIhandler = NULL;
+	gchar *contactURIdata = NULL;
+	DBusError error;
+	dbus_error_init(&error);
+
+	if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
+	{
+		gchar **URItab = NULL;
+		GSList *plugins = config->loaded_plugins;
+
+		/* get contactURIhandler from contactURI */
+		URItab = g_strsplit(contactURI, "://", 2);
+		if (URItab)
+		{
+			contactURIhandler = g_strconcat(URItab[0], "://", NULL);
+			contactURIdata = URItab[1];
+		}
+		else
+			return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+		print_debug("DBUS openChat: open for %s %s", contactURIhandler, contactURIdata);
+
+		while (plugins)
+		{
+			GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
+			if (plugin && plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
+			    !ggadu_strcasecmp(plugin->protocol->protocol_handler_str, contactURIhandler))
+			{
+				GGaduMsg *msg = g_new0(GGaduMsg, 1);
+				DBusMessage *return_message = dbus_message_new_method_return(message);
+
+				print_debug("DBUS openChat: open fo %s in protocol: %s", contactURIdata, contactURIhandler);
+				
+				msg->id = g_strdup_printf("%s", contactURIdata);
+				msg->message = NULL;
+				msg->class = GGADU_CLASS_CHAT;
+				signal_emit_full(plugin->name, "gui msg receive", msg, "main-gui", GGaduMsg_free);
+
+				dbus_message_append_args(return_message, DBUS_TYPE_BOOLEAN, TRUE, DBUS_TYPE_INVALID);
+				/* I can free here because signal return copy of GGaduContact */
+				dbus_connection_send(connection, return_message, NULL);
+				dbus_message_unref(return_message);
+			}
+			plugins = plugins->next;
+		}
+		dbus_free(contactURI);
+		g_strfreev(URItab);
+		g_free(contactURIhandler);
+	}
+	dbus_error_free(&error);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+
 static void dbus_plugin_unregistered_func(DBusConnection * connection, gpointer user_data)
 {
 	print_debug("plumcium");
@@ -185,6 +243,10 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 	else if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
 	{
 		return org_freedesktop_im_getPresence(connection, message, user_data);
+	}
+	else if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_OPEN_CHAT))
+	{
+		return org_freedesktop_im_openChat(connection, message, user_data);
 	}
 
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;

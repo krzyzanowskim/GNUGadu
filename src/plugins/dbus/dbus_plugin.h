@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.h,v 1.8 2004/10/28 14:04:10 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.9 2004/10/28 15:53:08 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -25,6 +25,7 @@
 #define DBUS_ORG_FREEDESKTOP_IM_OBJECT "/org/freedesktop/im/GNUGadu"
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE "getPresence"
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS "getProtocols"
+#define DBUS_ORG_FREEDESKTOP_IM_OPEN_CHAT "openChat"
 
 typedef enum
 {

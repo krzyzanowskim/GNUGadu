@@ -2,6 +2,7 @@
 - dbus plugin handle methods
   org.freedesktop.im.getPresence
   org.freedesktop.im.getProtocols
+  org.freedesktop.im.openChat
   (krzak/thrull/dbus)
 - GGaduProtocol->protocol_handler_str (krzak)
   (gg:// tlen:// jabber://)

@@ -54,3 +54,6 @@ EMAIL		email://
 	
 	status_description - may be empty string "" [not NULL]
 	icon_path - path to icon of this presence (optional, may be empty string "" [not NULL])
+
+[org.freedesktop.im.openChat( contactURI )]
+    RETURN: (DBUS_TYPE_BOOLEAN result)
