@@ -1,7 +1,7 @@
-/* $Id: ignore.h,v 1.4 2004/12/26 22:26:11 shaster Exp $ */
+/* $Id: ignore.h,v 1.5 2004/12/26 22:27:04 shaster Exp $ */
 
 /* 
- * Example: plugin code for GNU Gadu 2 
+ * Ignore plugin for GNU Gadu 2 
  * 
  * Copyright (C) 2001-2005 GNU Gadu Team 
  * 
