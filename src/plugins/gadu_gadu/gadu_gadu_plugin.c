@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.69 2003/06/16 20:20:21 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.70 2003/06/16 21:39:56 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -44,7 +44,7 @@ GIOChannel *source_chan = NULL;
 GIOChannel *dcc_channel_send = NULL;
 GIOChannel *dcc_channel_get = NULL;
 
-static gboolean connected = FALSE;
+gboolean connected = FALSE;
 
 GGaduProtocol *p;
 GGaduMenu *menu_pluginmenu;
@@ -153,7 +153,7 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	  gg_dcc_port = dcc_socket_get->port;
 
 	  dcc_channel_get = g_io_channel_unix_new (dcc_socket_get->fd);
-	  watch = g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_socket_get);
+	  watch = g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN | G_IO_HUP, test_chan_dcc, dcc_socket_get);
       }
 
     memset (&p, 0, sizeof (p));
@@ -336,7 +336,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
     static gint prev_check = GG_CHECK_READ;
 
     /* w przypadku b³êdu/utraty po³±czenia post±p tak jak w przypadku disconnect */
-    if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) || (condition & G_IO_HUP))
+    if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) || ((condition & G_IO_HUP) && session->state != GG_STATE_READING_KEY))
       {
 	  connected = FALSE;
 
@@ -347,7 +347,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	    }
 	  else
 	    {
-		gchar *txt = g_strdup (_("Disconnected"));
+		gchar *txt = g_strdup (_("Disconnected1"));
 		ggadu_gadu_gadu_disconnect_msg (txt);
 		connect_count = 0;
 		g_free (txt);
