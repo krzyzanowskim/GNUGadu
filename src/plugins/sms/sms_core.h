@@ -14,9 +14,15 @@
 
 #define IDEA_GFX "/tmp/idea_token.gfx"
 
+enum {
+    GGADU_SMS_TYPE_WARN = 1,
+    GGADU_SMS_TYPE_INFO
+};
+
 void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_body);
 
 void sms_message(gchar *sms_number, gchar *message);
+void sms_warning(gchar *sms_number, gchar *warning);
 
 int send_IDEA_stage2(gchar *pass, gpointer user_data);
 

@@ -256,7 +256,7 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
     print_debug("token %s, data %s\n", pass, user_data);
     
     if (!pass) {
-	sms_message(sms_number, _("Please enter token"));
+	sms_warning(sms_number, _("Please enter token"));
 	return FALSE;
     }
     
@@ -266,7 +266,7 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
 
     if (!sms_connect("IDEA","213.218.116.131")) 
     {
-	sms_message(sms_number, _("Cannot connect!"));
+	sms_warning(sms_number, _("Cannot connect!"));
 	return FALSE;
     }
 
@@ -287,7 +287,7 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
 
     if (!recv_buff)
     {
-	sms_message(sms_number, _("Cannot connect!"));
+	sms_warning(sms_number, _("Cannot connect!"));
 	return FALSE;
     }
 
@@ -301,35 +301,35 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
 
     if (g_strstr_len(recv_buff, i, "Object moved"))
     {
-	sms_message(sms_number, _("Bad token entered!"));
+	sms_warning(sms_number, _("Bad token entered!"));
 	g_free(recv_buff);
 	return FALSE;
     }
 
     if (g_strstr_len(recv_buff, i, "wyczerpany"))
     {
-	sms_message(sms_number, _("Daily limit exceeded!"));
+	sms_warning(sms_number, _("Daily limit exceeded!"));
 	g_free(recv_buff);
 	return FALSE;
     }
 
     if (g_strstr_len(recv_buff, i, "serwis chwilowo"))
     {
-	sms_message(sms_number, _("Gateway error!"));
+	sms_warning(sms_number, _("Gateway error!"));
 	g_free(recv_buff);
 	return FALSE;
     }
 
     if (g_strstr_len(recv_buff, i, "Odbiorca nie ma aktywnej"))
     {
-	sms_message(sms_number, _("Service not activated!"));
+	sms_warning(sms_number, _("Service not activated!"));
 	g_free(recv_buff);
 	return FALSE;
     }
 
     if (g_strstr_len(recv_buff, i, "adres odbiorcy wiadomosci jest nieprawid"))
     {
-	sms_message(sms_number, _("Invalid number"));
+	sms_warning(sms_number, _("Invalid number"));
 	g_free(recv_buff);
 	return FALSE;
     }
@@ -517,10 +517,14 @@ int check_operator(gchar *sms_number)
     return FALSE;
 }
 
-void sms_message(gchar *sms_number, gchar *message)
+void sms_dialog_box(gchar *sms_number, gchar *message, gint type)
 {
-    if (method == GGADU_SMS_METHOD_POPUP)
-	signal_emit("sms", "gui show warning", g_strdup_printf("%s", message), "main-gui");
+    if (method == GGADU_SMS_METHOD_POPUP) {
+	if (type == GGADU_SMS_TYPE_WARN)
+	    signal_emit("sms", "gui show warning", g_strdup_printf("%s", message), "main-gui");
+	else if (type == GGADU_SMS_TYPE_INFO)
+	    signal_emit("sms", "gui show message", g_strdup_printf("%s", message), "main-gui");
+    }
 
     if (method == GGADU_SMS_METHOD_CHAT) {
 	GGaduMsg *msg = g_new0(GGaduMsg,1);
@@ -531,6 +535,16 @@ void sms_message(gchar *sms_number, gchar *message)
     }
 }
 
+void sms_message(gchar *sms_number, gchar *message)
+{
+    sms_dialog_box(sms_number, message, GGADU_SMS_TYPE_INFO);
+}
+
+void sms_warning(gchar *sms_number, gchar *warning)
+{
+    sms_dialog_box(sms_number, warning, GGADU_SMS_TYPE_WARN);
+}
+
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
 void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_body)
 {
@@ -538,31 +552,27 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
     
     if (!sms_number) 
     {
-	sms_message(sms_number, _("Specify recipient number!"));
+	sms_warning(sms_number, _("Specify recipient number!"));
 	return;
     }
 
     if (!sms_sender) 
     {
-	sms_message(sms_number, _("Specify sender name!"));
+	sms_warning(sms_number, _("Specify sender name!"));
 	return;
     }
 
     if (!sms_body) 
     {
-	sms_message(sms_number, _("Message is empty!"));
+	sms_warning(sms_number, _("Message is empty!"));
 	return;
     }
     
-    if (*sms_number == '+') {
-	*sms_number++;
+    if (g_str_has_prefix(sms_number, "+48"))
+	sms_number += 3;
 
-	if (sms_number[0] == '4' && sms_number[1] == '8')
-            sms_number += 2;
-
-    } else if (sms_number[0] == '0')
-        *sms_number++;
-
+    if (g_str_has_prefix(sms_number, "0"))
+	sms_number++;
 
     gsm_oper = check_operator(sms_number);
     switch (gsm_oper)
@@ -570,7 +580,7 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	case SMS_IDEA:
 	    if (external) 
 	    {
-		sms_message(sms_number, _("IDEA does not work this way!"));
+		sms_warning(sms_number, _("IDEA does not work this way!"));
 		return;
 	    }
 	    else
@@ -601,13 +611,13 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	    break;
 
 	case FALSE:
-	    sms_message(sms_number, _("Invalid number!"));
+	    sms_warning(sms_number, _("Invalid number!"));
 	    return;	    
     }
 
     if (!result) 
     {
-	sms_message(sms_number, _("SMS not delivered!"));
+	sms_warning(sms_number, _("SMS not delivered!"));
 	return;
     }
 
@@ -620,16 +630,16 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
     switch (result)
     {
 	case ERR_READ_TOKEN:
-	    sms_message(sms_number, _("Token not found!"));
+	    sms_warning(sms_number, _("Token not found!"));
 	    break;
 	case ERR_LIMIT_EX:
-	    sms_message(sms_number, _("Daily limit exceeded!"));
+	    sms_warning(sms_number, _("Daily limit exceeded!"));
 	    break;
 	case ERR_GATEWAY:
-	    sms_message(sms_number, _("Gateway error!"));
+	    sms_warning(sms_number, _("Gateway error!"));
 	    break;
 	case ERR_SERVICE:
-	    sms_message(sms_number, _("Cannot connect!"));
+	    sms_warning(sms_number, _("Cannot connect!"));
 	    break;
     }
     
