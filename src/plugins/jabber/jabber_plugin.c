@@ -677,8 +677,8 @@ GGaduMenu *build_jabber_menu ()
 	item = ggadu_menu_add_item (root, "_Jabber", NULL, NULL);
 
 	ggadu_menu_add_submenu (item, ggadu_menu_new_item (_("Add Contact"), user_add_action, NULL));
-	ggadu_menu_add_submenu (item, ggadu_menu_new_item (_("Search for friends"), user_search_action, NULL));
 	ggadu_menu_add_submenu (item, ggadu_menu_new_item (_("Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu (item, ggadu_menu_new_item (_("Search for friends"), user_search_action, NULL));
 
 	return root;
 }
