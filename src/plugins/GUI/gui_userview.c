@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.38 2004/03/13 14:27:06 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.39 2004/04/02 14:14:03 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -217,6 +217,7 @@ void gui_list_add(gui_protocol * gp)
 	GtkWidget *label;
 	GtkWidget *eventbox;
 	GtkWidget *add_info_label_desc;
+	GtkTreeSelection *selection;
 	gchar *markup;
 	gint status;
 
@@ -244,6 +245,10 @@ void gui_list_add(gui_protocol * gp)
 	/* podwojne klikniecie na liscie na kolesia */
 	g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(nick_list_clicked), users_liststore);
 	g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(nick_list_clicked), users_liststore);
+	g_signal_connect(G_OBJECT(treeview), "row-activated", G_CALLBACK(nick_list_row_activated), users_liststore);
+
+	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+	gtk_tree_selection_set_select_function(selection, nick_list_row_changed, users_liststore, NULL);
 
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(treeview), FALSE);
 
@@ -361,7 +366,8 @@ void gui_create_tree()
 	GtkWidget *add_info_label_desc;
 	GtkWidget *eventbox;
 	GtkWidget *frame;
-
+	GtkTreeSelection *selection;
+	
 	vbox = gtk_vbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(view_container), vbox);
 
@@ -382,7 +388,11 @@ void gui_create_tree()
 	/* podwojne klikniecie na liscie na kolesia */
 	g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(nick_list_clicked), users_treestore);
 	g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(nick_list_clicked), users_treestore);
-
+	g_signal_connect(G_OBJECT(treeview), "row-activated", G_CALLBACK(nick_list_row_activated), users_treestore);
+	
+	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+	gtk_tree_selection_set_select_function(selection, nick_list_row_changed, users_treestore, NULL);
+	
 	scrolled_window = gtk_scrolled_window_new(NULL, NULL);
 	gtk_container_add(GTK_CONTAINER(scrolled_window), treeview);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC,

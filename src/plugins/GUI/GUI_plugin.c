@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.63 2004/03/23 23:02:51 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.64 2004/04/02 14:14:02 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -76,6 +76,191 @@ void set_selected_users_list(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 
 }
 
+gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean cur_sel, gpointer user_data)
+{
+    GtkTreeIter iter;
+    GtkTreePath *treepath = NULL;
+    gchar *markup_id = NULL;
+    gchar *markup_desc = NULL;
+    gboolean is_desc = FALSE;
+    gchar *desc_text = NULL;
+    gchar *ip = NULL;
+    GtkTooltips *tooltip = NULL;
+    GtkWidget *add_info_label_desc = NULL;
+    gui_protocol *gp = NULL;
+    gchar *plugin_name = NULL;
+    GGaduContact *k = NULL;
+        
+    gtk_tree_model_get_iter(model, &iter, path);
+
+    if (!tree)
+	{
+		plugin_name = g_object_get_data(G_OBJECT(user_data), "plugin_name");
+		gp = gui_find_protocol(plugin_name, protocols);
+	}
+	else
+	{
+		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
+	}
+
+	gtk_tree_model_get(model, &iter, 2, &k, -1);
+
+	if (!gp || !k)
+		return FALSE;
+
+	add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label), "add_info_label_desc");
+
+	tooltip = gtk_tooltips_new();
+
+	if (k)
+	{
+		if (k->ip)
+		{
+			gchar **strtab = g_strsplit(k->ip, ":", 2);
+
+			if (!strtab)
+				return TRUE;
+
+				switch (atoi(strtab[1]))
+				{
+				case 1:
+					ip = g_strdup_printf("\n[NAT %s]", strtab[0]);
+					break;
+				case 2:
+					ip = g_strdup_printf(_("\n[not in userlist]"));
+					break;
+				default:
+					ip = g_strdup_printf("\n[%s]", strtab[0]);
+				}
+				g_strfreev(strtab);
+			}
+
+
+			if (k->status_descr)
+			{
+				gchar *desc_esc = g_markup_escape_text(k->status_descr, strlen(k->status_descr));
+				desc_text = g_strdup_printf("%s", desc_esc);
+				is_desc = TRUE;
+				g_free(desc_esc);
+			}
+
+			markup_id =
+				g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s</span>", k->id, ip ? ip : "");
+			markup_desc =
+				(k->status_descr) ? g_strdup_printf("<span size=\"small\">%s</span>", desc_text) : NULL;
+
+			gtk_tooltips_set_tip(tooltip, gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX),
+					     k->status_descr, "caption");
+		}
+		else
+		{
+			GGaduStatusPrototype *sp;
+			gint status;
+
+			status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+			sp = gui_find_status_prototype(gp->p, (gint) status);
+
+			if (sp)
+			{
+				markup_id =
+					g_strdup_printf("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
+				markup_desc =
+					(sp) ? g_strdup_printf("<span size=\"small\"><b>%s</b></span>",
+							       sp->description) : _("(None)");
+				is_desc = TRUE;
+				gtk_tooltips_set_tip(tooltip,
+						     gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX),
+						     NULL, "caption");
+			}
+		}
+
+
+	gtk_tooltips_enable(tooltip);
+
+	gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup_id);
+
+	gtk_anim_label_set_text(GTK_ANIM_LABEL(add_info_label_desc), markup_desc);
+	gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc), TRUE);
+
+	if (!GTK_WIDGET_VISIBLE(gp->add_info_label))
+	{
+		gtk_widget_show(gp->add_info_label);
+	}
+
+	if (is_desc)
+	{
+		gtk_widget_show(add_info_label_desc);
+	}
+	else
+	{
+		gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc), FALSE);
+		gtk_widget_hide(add_info_label_desc);
+	}
+
+	g_free(markup_id);
+	g_free(markup_desc);
+	g_free(desc_text);
+	g_free(ip);
+	
+	return TRUE;
+}
+
+gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath *arg1, GtkTreeViewColumn *arg2, gpointer user_data)
+{
+	GtkTreeIter iter;
+	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+        gui_protocol *gp = NULL;
+	gchar *plugin_name = NULL;
+	GGaduContact *k = NULL;
+
+        print_debug("nick list select albercik");
+
+	gtk_tree_model_get_iter(model, &iter, arg1);
+	gtk_tree_model_get(model, &iter, 2, &k, -1);
+
+	g_return_val_if_fail(k != NULL, FALSE);
+
+	if (!tree)
+	{
+		plugin_name = g_object_get_data(G_OBJECT(user_data), "plugin_name");
+		gp = gui_find_protocol(plugin_name, protocols);
+	}
+	else
+	{
+		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
+	}
+
+	if (gp != NULL)
+	{
+		gui_chat_session *session = gui_session_find(gp, k->id);
+		if (!session)
+		{
+			session = g_new0(gui_chat_session, 1);
+			session->id = g_strdup(k->id);
+			gp->chat_sessions = g_slist_append(gp->chat_sessions, session);
+		}
+
+		if (!session->chat)
+			session->chat = create_chat(session, gp->plugin_name, k->id, TRUE);
+		else {
+		    GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
+		    if (!GTK_WIDGET_VISIBLE(window))
+			gtk_widget_show(window);
+		}
+
+		gui_chat_append(session->chat, NULL, TRUE);
+	}
+
+	print_debug("gui-main : clicked : %s : %s\n", k->id, plugin_name);
+
+        return FALSE;
+}
+
+gboolean nick_list_pressed(GtkWidget * widget, GdkEventKey * event, gpointer user_data)
+{
+    return FALSE;
+}
+
 gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 {
 	gui_protocol *gp = NULL;
@@ -141,139 +326,7 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 
 		gtk_tree_path_free(treepath);
 	}
-
-	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 1))
-	{
-		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-		GtkTreeIter iter;
-		GGaduContact *k = NULL;
-		gchar *markup_id = NULL;
-		gchar *markup_desc = NULL;
-		gboolean is_desc = FALSE;
-		gchar *desc_text = NULL;
-		gchar *ip = NULL;
-		GtkTooltips *tooltip = NULL;
-		GtkWidget *add_info_label_desc = NULL;
-
-		if (!gtk_tree_view_get_path_at_pos
-		    (GTK_TREE_VIEW(widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
-			return FALSE;
-
-		print_debug("GDK_BUTTON_PRESS");
-
-		gtk_tree_model_get_iter(model, &iter, treepath);
-
-		if (!tree)
-		{
-			plugin_name = g_object_get_data(G_OBJECT(user_data), "plugin_name");
-			gp = gui_find_protocol(plugin_name, protocols);
-		}
-		else
-		{
-			gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
-		}
-
-		gtk_tree_model_get(model, &iter, 2, &k, -1);
-
-		if (!gp || !k)
-			return FALSE;
-
-		add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label), "add_info_label_desc");
-
-		tooltip = gtk_tooltips_new();
-
-		if (k)
-		{
-			if (k->ip)
-			{
-				gchar **strtab = g_strsplit(k->ip, ":", 2);
-
-				if (!strtab)
-					return FALSE;
-
-				switch (atoi(strtab[1]))
-				{
-				case 1:
-					ip = g_strdup_printf("\n[NAT %s]", strtab[0]);
-					break;
-				case 2:
-					ip = g_strdup_printf(_("\n[not in userlist]"));
-					break;
-				default:
-					ip = g_strdup_printf("\n[%s]", strtab[0]);
-				}
-				g_strfreev(strtab);
-			}
-
-
-			if (k->status_descr)
-			{
-				gchar *desc_esc = g_markup_escape_text(k->status_descr, strlen(k->status_descr));
-				desc_text = g_strdup_printf("%s", desc_esc);
-				is_desc = TRUE;
-				g_free(desc_esc);
-			}
-
-			markup_id =
-				g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s</span>", k->id, ip ? ip : "");
-			markup_desc =
-				(k->status_descr) ? g_strdup_printf("<span size=\"small\">%s</span>", desc_text) : NULL;
-
-			gtk_tooltips_set_tip(tooltip, gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX),
-					     k->status_descr, "caption");
-		}
-		else
-		{
-			GGaduStatusPrototype *sp;
-			gint status;
-
-			status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-			sp = gui_find_status_prototype(gp->p, (gint) status);
-
-			if (sp)
-			{
-				markup_id =
-					g_strdup_printf("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
-				markup_desc =
-					(sp) ? g_strdup_printf("<span size=\"small\"><b>%s</b></span>",
-							       sp->description) : _("(None)");
-				is_desc = TRUE;
-				gtk_tooltips_set_tip(tooltip,
-						     gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX),
-						     NULL, "caption");
-			}
-		}
-
-
-		gtk_tooltips_enable(tooltip);
-
-		gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup_id);
-
-		gtk_anim_label_set_text(GTK_ANIM_LABEL(add_info_label_desc), markup_desc);
-		gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc), TRUE);
-
-		if (!GTK_WIDGET_VISIBLE(gp->add_info_label))
-		{
-			gtk_widget_show(gp->add_info_label);
-		}
-
-		if (is_desc)
-		{
-			gtk_widget_show(add_info_label_desc);
-		}
-		else
-		{
-			gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc), FALSE);
-			gtk_widget_hide(add_info_label_desc);
-		}
-
-		g_free(markup_id);
-		g_free(markup_desc);
-		g_free(desc_text);
-		g_free(ip);
-		return FALSE;
-	}
-
+	
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3))
 	{
 		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));

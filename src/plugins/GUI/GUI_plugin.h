@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.h,v 1.4 2004/01/28 23:40:02 shaster Exp $ */
+/* $Id: GUI_plugin.h,v 1.5 2004/04/02 14:14:03 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -29,6 +29,12 @@
 #include "unified-types.h"
 
 gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer user_data);
+
+gboolean nick_list_pressed(GtkWidget * widget, GdkEventKey * event, gpointer user_data);
+
+gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath *arg1, GtkTreeViewColumn *arg2, gpointer user_data);
+
+gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean cur_sel, gpointer user_data);
 
 GtkWidget *create_status_menu(gui_protocol * gp, GtkWidget * status_image);
 

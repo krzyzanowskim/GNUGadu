@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.89 2004/03/28 12:12:31 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.90 2004/04/02 14:14:03 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -737,6 +737,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	GtkWidget *button_emoticons;
 	GtkWidget *button_stick;
 	GtkWidget *bs_image = create_image("send-im.png");
+	GtkWidget *bas_image;
 	GtkWidget *bs_hbox = gtk_hbox_new(FALSE, 0);
 	GtkWidget *bs_label = gtk_label_new_with_mnemonic(_("_Send"));
 	GtkTextBuffer *buf = NULL;
@@ -749,8 +750,8 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 
 	if (!session || !plugin_name || !id)
 		return NULL;
-
-
+	
+	
 	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
 
 	gp = gui_find_protocol(plugin_name, protocols);
@@ -1068,24 +1069,32 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_box_pack_end(GTK_BOX(bs_hbox), bs_image, FALSE, FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(button_send), bs_hbox);
 
-
 	button_autosend = gtk_toggle_button_new();
 	gtk_container_add(GTK_CONTAINER(button_autosend), create_image("arrow.png"));
 
-	button_find = gtk_button_new_from_stock("gtk-find");
-	button_close = gtk_button_new_from_stock("gtk-close");
-	button_stick = gtk_toggle_button_new_with_mnemonic(_("S_tick"));
+	button_find = gtk_button_new();
+	bas_image = gtk_image_new();
+	gtk_image_set_from_stock(GTK_IMAGE(bas_image), "gtk-find", GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_container_add(GTK_CONTAINER(button_find), bas_image);
 
+	button_close = gtk_button_new_from_stock("gtk-close");
+	button_stick = gtk_toggle_button_new();
+	bas_image = gtk_image_new();
+	gtk_image_set_from_stock(GTK_IMAGE(bas_image), "gtk-close", GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_container_add(GTK_CONTAINER(button_stick), bas_image);
+
+	//_with_mnemonic(_("S_tick"));
+	
 	/* gtk_button_set_relief(GTK_BUTTON(button_autosend), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_send), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_close), GTK_RELIEF_NONE); */
 	gtk_button_set_relief(GTK_BUTTON(button_find), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_stick), GTK_RELIEF_NONE);
 
-	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_autosend, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_send, FALSE, FALSE, 0);
-	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_close, FALSE, FALSE, 0);
-	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 10);
+	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_autosend, FALSE, FALSE, 2);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_close, FALSE, FALSE, 2);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 0);
 
 
