@@ -15,3 +15,8 @@ WARNING: perl support and remote plugin will compile/work only on Linux!
 
 Read doc/problems and other documentation files BEFORE submitting ANY
 bugreports.
+
+Important :
+
+    If you accidentally will make something wrong with list of plugins to be loaded,
+    you can remove file $HOME/.gg2/modules.load and start GNU Gadu that will load all available plugins.
