@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.22 2003/05/11 23:18:28 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.23 2003/05/12 08:01:52 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -602,12 +602,12 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 /*				GtkAccelGroup *accgroup = gtk_accel_group_new();
 				GClosure *accgroupclosure = g_cclosure_new(G_CALLBACK(on_press_event_switching_tabs),NULL,NULL);
 		
-				chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 				
 				gtk_accel_group_connect(accgroup, GDK_s, GDK_CONTROL_MASK,GTK_ACCEL_VISIBLE, accgroupclosure);
 				
 				gtk_window_add_accel_group(GTK_WINDOW(chat_window),accgroup);
 */				
+				chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 				image = create_pixbuf("icon.png");
 				gtk_window_set_icon(GTK_WINDOW(chat_window), image);
 				gdk_pixbuf_unref(image);
