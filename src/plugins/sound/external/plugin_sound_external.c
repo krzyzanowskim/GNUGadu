@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.2 2003/04/04 15:17:37 thrulliq Exp $ */
+/* $Id: plugin_sound_external.c,v 1.3 2003/05/04 16:19:12 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -25,7 +25,10 @@ GGadu_PLUGIN_INIT("sound-external", GGADU_PLUGIN_TYPE_MISC);
 
 gpointer ggadu_play_file(gpointer user_data)
 {
-    gchar *cmd = g_strdup_printf("%s %s", (char *)config_var_get(handler, "player"), (gchar *)user_data);
+    gchar *cmd;
+    if (!config_var_get(handler, "player"))
+      return NULL;
+    cmd = g_strdup_printf("%s %s", (char *)config_var_get(handler, "player"), (gchar *)user_data);
     system(cmd);
     g_free(cmd);
     return NULL;
