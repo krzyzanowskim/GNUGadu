@@ -194,7 +194,7 @@ void gui_chat_sessions_create_visible_chat_window (GUIChatSession * gcs)
 	GtkWidget *chat_window = NULL;
 	gui_chat_sessions_create_chat_window (gcs);
 	
-	GtkWidget *chat_window = gtk_widget_get_ancestor(gcs->widget,GTK_WINDOW_TOPLEVEL);
+	chat_window = gtk_widget_get_ancestor(gcs->widget,GTK_WINDOW_TOPLEVEL);
 	
 	gtk_widget_show_all(chat_window);
 }
