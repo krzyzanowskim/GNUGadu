@@ -1,5 +1,6 @@
 23.12.2004
 - ignore list view added, it still sux but better than nothing (ignore/krzak)
+- fixed status and status description changing (jabber/mkobierzycki)
 
 22.12.2004
 - introduce "ignore-main" plugin, not finished yet (krzak)
