@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.49 2004/01/21 17:43:42 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.50 2004/01/21 23:42:39 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -772,7 +772,7 @@ gpointer search_action(gpointer user_data)
 	d = ggadu_dialog_new();
 
 	ggadu_dialog_callback_signal(d, "search");
-	gggadu_dialog_set_title(d, _("Tlen search"));
+	ggadu_dialog_set_title(d, _("Tlen search"));
 	
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
