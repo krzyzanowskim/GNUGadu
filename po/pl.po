@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.6 2003/04/03 08:24:07 zapal Exp $
+# $Id: pl.po,v 1.7 2003/04/03 08:44:20 shaster Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
@@ -198,11 +198,11 @@ msgid "Tabbed chat window style"
 msgstr "Zak³adki w oknie rozmowy"
 
 #: src/plugins/GUI/gui_preferences.c:459
-msgid "Automaticaly show chat window"
+msgid "Automatically show chat window"
 msgstr "Automatyczne otwieranie okna rozmowy"
 
 #: src/plugins/GUI/gui_preferences.c:462
-msgid "Automaticaly raise chat window"
+msgid "Automatically raise chat window"
 msgstr "Automatyczne wyskakiwanie okna rozmowy"
 
 #: src/plugins/GUI/gui_preferences.c:465

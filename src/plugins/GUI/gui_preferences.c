@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.5 2003/04/03 08:07:19 zapal Exp $ */
+/* $Id: gui_preferences.c,v 1.6 2003/04/03 08:44:21 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -456,10 +456,10 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	chatstyle = gtk_check_button_new_with_label(_("Tabbed chat window style"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatstyle, FALSE, FALSE, 0);
 
-	chatwindowshow = gtk_check_button_new_with_label(_("Automaticaly show chat window"));
+	chatwindowshow = gtk_check_button_new_with_label(_("Automatically show chat window"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatwindowshow, FALSE, FALSE, 0);
 
-	chatwindowraise = gtk_check_button_new_with_label(_("Automaticaly raise chat window"));
+	chatwindowraise = gtk_check_button_new_with_label(_("Automatically raise chat window"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatwindowraise, FALSE, FALSE, 0);
 
 	send_on_enter = gtk_check_button_new_with_label(_("Send messages after 'Enter' button pressed"));
