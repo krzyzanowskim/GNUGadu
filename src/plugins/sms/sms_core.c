@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.14 2003/09/21 16:38:14 shaster Exp $ */
+/* $Id: sms_core.c,v 1.15 2003/09/22 11:09:01 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -46,7 +46,7 @@ HTTPstruct HTTP;
 /* URLencoding code by Ahmad Baitalmal <ahmad@bitbuilder.com>
  * with tweaks by Jakub Jankowski <shasta@atn.pl>
  */
-gchar *ggadu_sms_formencode(gchar * source)
+gchar *ggadu_sms_urlencode(gchar * source)
 {
     gint length = strlen(source);
     gint i;
@@ -134,6 +134,31 @@ int sms_connect(gchar * sms_info, gchar * sms_host)
     return TRUE;
 }
 
+/* POST/GET handling */
+int HTTP_io(HTTPstruct hdata)
+{
+    gchar *io_buf = NULL;
+
+    /* *INDENT-OFF* */
+    if (!strcmp(hdata.method, "POST"))
+	io_buf = g_strdup_printf("POST %s%sHTTP/1.0\r\nHost: %s\r\n%s%s%s%s%s%s%s%d\r\n\r\n%s",
+			    hdata.url, hdata.url_params, hdata.host, USER_AGENT,
+			    ACCEPT, ACCEPT_LANG, ACCEPT_ENCODING, ACCEPT_CHARSET,
+			    POST_CONTENT_TYPE, CONTENT_LENGTH, hdata.post_length, hdata.post_data);
+    else if (!strcmp(hdata.method, "GET"))
+	io_buf = g_strdup_printf("GET %s%sHTTP/1.0\r\nHost: %s\r\n%s\r\n\r\n",
+			    hdata.url, hdata.url_params, hdata.host, USER_AGENT);
+    else
+	io_buf = g_strdup("GET /c-programming-howto.html HTTP/1.0\r\n\r\n");
+    /* *INDENT-ON* */
+
+    print_debug("Sending:\n%s", io_buf);
+    send(sock_s, io_buf, strlen(io_buf), MSG_WAITALL);
+    g_free(io_buf);
+
+    return TRUE;
+}
+
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
 gboolean IDEA_logo(gpointer user_data)
 {
@@ -150,68 +175,66 @@ gboolean IDEA_logo(gpointer user_data)
     return FALSE;
 }
 
-/* POST/GET handling */
-int HTTP_io(HTTPstruct hdata)
+/* This should get sms_number in the same form as in userlist.
+ * Otherwise, if GGADU_SMS_METHOD_CHAT, you'll get messages from different
+ * number than you've sent msgs. It's better to cut prefixes while loading userlist
+ * than here.
+ */
+void sms_dialog_box(gchar * sms_number, gchar * message, gint type)
 {
-    gint len, i;
-    char io_buf[GGADU_SMS_HTTP_HEADER_MAXLEN];
-
-    snprintf(io_buf, sizeof (io_buf), "%s %s%sHTTP/1.0\r\n%s\r\n%s", hdata.Command, hdata.Url, hdata.Url_Params,
-	     hdata.Host, USER_AGENT);
-    len = strlen(io_buf);
-
-    if (!strcmp(hdata.Command, "POST"))
+    if (method == GGADU_SMS_METHOD_POPUP)
     {
-	snprintf(io_buf + len, sizeof (io_buf) - len, "%s%s%s%s%s%s%d\r\n\r\n", ACCEPT, ACCEPT_LANG, ACCEPT_ENCODING,
-		 ACCEPT_CHARSET, POST_CONTENT_TYPE, CONTENT_LENGTH, hdata.Post_Length);
-
-	len = strlen(io_buf);
-	for (i = 0; i < hdata.Post_Length; i++)
-	    if (hdata.Post_Data[i] == ' ')
-		hdata.Post_Data[i] = '+';
-	memcpy(io_buf + len, hdata.Post_Data, hdata.Post_Length);
-	len += hdata.Post_Length;
-	io_buf[len] = 0;
-    }
-    if (!strcmp(hdata.Command, "GET"))
-    {
-	len = strlen(io_buf);
-	io_buf[len++] = 0x0D;
-	io_buf[len++] = 0x0A;
-	io_buf[len++] = 0x0D;
-	io_buf[len++] = 0x0A;
-	io_buf[len] = 0;
+	if (type == GGADU_SMS_TYPE_WARN)
+	    signal_emit("sms", "gui show warning", g_strdup(message), "main-gui");
+	else if (type == GGADU_SMS_TYPE_INFO)
+	    signal_emit("sms", "gui show message", g_strdup(message), "main-gui");
     }
 
-    send(sock_s, io_buf, len, MSG_WAITALL);
+    if (method == GGADU_SMS_METHOD_CHAT)
+    {
+	GGaduMsg *msg = g_new0(GGaduMsg, 1);
+	msg->id = (sms_number ? sms_number : g_strdup(_("None")));
+	msg->class = GGADU_CLASS_CHAT;
+	msg->message = g_strconcat(_("SMS plugin: "), message, NULL);
+	signal_emit("sms", "gui msg receive", msg, "main-gui");
+    }
+}
 
-    return TRUE;
+/* handy wrapper */
+void sms_message(gchar * sms_number, gchar * message)
+{
+    sms_dialog_box(sms_number, message, GGADU_SMS_TYPE_INFO);
+}
+
+/* handy wrapper */
+void sms_warning(gchar * sms_number, gchar * warning)
+{
+    sms_dialog_box(sms_number, warning, GGADU_SMS_TYPE_WARN);
 }
 
 /* wyslanie na idee */
-int send_IDEA(gchar * sms_sender, gchar * sms_number, gchar * sms_body)
+int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body)
 {
     gchar *token = NULL;
     gchar *temp = NULL;
     gchar *recv_buff = NULL;
-    gint i, j, k;
+    gint i = 0, j, k;
     FILE *idea_logo;
 
     /* pobranie adresu do obrazka */
-    if (!sms_connect("IDEA", "sms.idea.pl"))
+    if (!sms_connect("IDEA", GGADU_SMS_IDEA_HOST))
 	return ERR_SERVICE;
 
-    i = 0;
-    temp = g_malloc0(2);
-    recv_buff = g_malloc0(GGADU_SMS_RECV_BUFF_MAXLEN);
-
-    strcpy(HTTP.Command, "GET");
-    strcpy(HTTP.Host, "Host: sms.idea.pl");
-    strcpy(HTTP.Url, "/default.aspx");
-    strcpy(HTTP.Url_Params, " ");
+    strcpy(HTTP.method, "GET");
+    strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
+    strcpy(HTTP.url, GGADU_SMS_IDEA_URL_GET);
+    strcpy(HTTP.url_params, " ");
     HTTP_io(HTTP);
 
-    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECV_BUFF_MAXLEN)
+    temp = g_malloc0(2);
+    recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
+
+    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
     sms_disconnect();
@@ -238,19 +261,19 @@ int send_IDEA(gchar * sms_sender, gchar * sms_number, gchar * sms_body)
 
     recv_buff = g_strconcat("/", recv_buff, NULL);
 
-    if (!sms_connect("IDEA", "sms.idea.pl"))
+    if (!sms_connect("IDEA", GGADU_SMS_IDEA_HOST))
 	return ERR_SERVICE;
 
-    strcpy(HTTP.Command, "GET");
-    strcpy(HTTP.Host, "Host: sms.idea.pl");
-    strcpy(HTTP.Url, recv_buff);
-    strcpy(HTTP.Url_Params, " ");
+    strcpy(HTTP.method, "GET");
+    strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
+    strcpy(HTTP.url, recv_buff);
+    strcpy(HTTP.url_params, " ");
     HTTP_io(HTTP);
 
     i = 0;
-    recv_buff = g_malloc0(GGADU_SMS_RECV_BUFF_MAXLEN);
+    recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
 
-    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECV_BUFF_MAXLEN)
+    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
     sms_disconnect();
@@ -282,11 +305,11 @@ int send_IDEA(gchar * sms_sender, gchar * sms_number, gchar * sms_body)
     fclose(idea_logo);
 
     /* *INDENT-OFF* */
-    /* no need to formencode number, it's nothing but 9 digits */
+    /* no need to urlencode number, it's nothing but 9 digits */
     recv_buff =	g_strconcat("token=", token,
-			"&SENDER=", ggadu_sms_formencode(g_strdup(sms_sender)),
+			"&SENDER=", ggadu_sms_urlencode(g_strdup(sms_sender)),
 			"&RECIPIENT=", sms_number,
-			"&SHORT_MESSAGE=", ggadu_sms_formencode(g_strdup(sms_body)), NULL);
+			"&SHORT_MESSAGE=", ggadu_sms_urlencode(g_strdup(sms_body)), NULL);
     /* *INDENT-ON* */
 
     IDEA_logo(recv_buff);
@@ -299,7 +322,7 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     gchar *recv_buff;
     gchar *sms_number = g_malloc0(strlen(user_data));
     gchar temp[2];
-    gint i;
+    gint i = 0;
 
     sms_number = g_strstr_len(user_data, strlen(user_data), "&RECIPIENT=");
     sms_number = g_strndup(sms_number + 11, 9);
@@ -315,23 +338,22 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     /* is there any better place for this? */
     unlink(IDEA_GFX);
 
-    if (!sms_connect("IDEA", "sms.idea.pl"))
+    if (!sms_connect("IDEA", GGADU_SMS_IDEA_HOST))
     {
 	sms_warning(sms_number, _("Cannot connect!"));
 	return FALSE;
     }
 
-    strcpy(HTTP.Command, "POST");
-    strcpy(HTTP.Host, "Host: sms.idea.pl");
-    strcpy(HTTP.Url, "/sendsms.aspx");
-    strcpy(HTTP.Url_Params, " ");
-    strcpy(HTTP.Post_Data, recv_buff);
-    HTTP.Post_Length = strlen(recv_buff);
+    strcpy(HTTP.method, "POST");
+    strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
+    strcpy(HTTP.url, GGADU_SMS_IDEA_URL_SEND);
+    strcpy(HTTP.url_params, " ");
+    strcpy(HTTP.post_data, recv_buff);
+    HTTP.post_length = strlen(recv_buff);
     HTTP_io(HTTP);
 
-    i = 0;
-    recv_buff = g_malloc0(GGADU_SMS_RECV_BUFF_MAXLEN);
-    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECV_BUFF_MAXLEN)
+    recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
+    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
     sms_disconnect();
@@ -373,34 +395,36 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
 }
 
 /* wyslanie na plusa */
-int send_PLUS(gchar * sms_sender, gchar * sms_number, gchar * sms_body)
+int send_PLUS(const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body)
 {
     gchar *recv_buff = NULL;
     gchar tprefix[4];
     gchar temp[2];
-    int i, ret = ERR_UNKNOWN;
+    int i = 0, ret = ERR_UNKNOWN;
 
-    if (!sms_connect("PLUS", "www.text.plusgsm.pl"))
+    if (!sms_connect("PLUS", GGADU_SMS_PLUS_HOST))
 	return ERR_SERVICE;
 
     strncpy(tprefix, sms_number, 3);
     tprefix[3] = 0;
-    recv_buff =
-	g_strconcat("tprefix=", tprefix, "&numer=", (sms_number + 3), "&odkogo=", sms_sender, "&tekst=", sms_body,
-		    NULL);
 
-    strcpy(HTTP.Command, "POST");
-    strcpy(HTTP.Host, "Host: www.text.plusgsm.pl");
-    strcpy(HTTP.Url, "/sms/sendsms.php");
-    strcpy(HTTP.Url_Params, " ");
-    strcpy(HTTP.Post_Data, recv_buff);
-    HTTP.Post_Length = strlen(recv_buff);
+    /* *INDENT-OFF* */
+    recv_buff =	g_strconcat("tprefix=", tprefix, "&numer=", (sms_number + 3),
+		    "&odkogo=", ggadu_sms_urlencode(g_strdup(sms_sender)),
+		    "&tekst=", ggadu_sms_urlencode(g_strdup(sms_body)), NULL);
+    /* *INDENT-ON* */
+
+    strcpy(HTTP.method, "POST");
+    strcpy(HTTP.host, GGADU_SMS_PLUS_HOST);
+    strcpy(HTTP.url, GGADU_SMS_PLUS_URL);
+    strcpy(HTTP.url_params, " ");
+    strcpy(HTTP.post_data, recv_buff);
+    HTTP.post_length = strlen(recv_buff);
     HTTP_io(HTTP);
     g_free(recv_buff);
 
-    i = 0;
-    recv_buff = g_malloc0(GGADU_SMS_RECV_BUFF_MAXLEN);
-    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECV_BUFF_MAXLEN)
+    recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
+    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
     sms_disconnect();
@@ -420,38 +444,37 @@ int send_PLUS(gchar * sms_sender, gchar * sms_number, gchar * sms_body)
 }
 
 /* wyslanie na ere */
-int send_ERA(gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * era_login, gchar * era_password,
-	     int *era_left)
+int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body, const gchar * era_login,
+	     const gchar * era_password, int *era_left)
 {
     gchar *recv_buff = NULL;
     gchar *returncode = NULL;
     gchar temp[2];
-    int i;
+    int i = 0;
     int ret = ERR_UNKNOWN;
 
-    if (!sms_connect("ERA", "www.eraomnix.pl"))
+    if (!sms_connect("ERA", GGADU_SMS_ERA_HOST))
 	return ERR_SERVICE;
 
     /* *INDENT-OFF* */
-    recv_buff = g_strconcat ("?login=", ggadu_sms_formencode(g_strdup(era_login)),
-			"&password=", ggadu_sms_formencode(g_strdup(era_password)),
-			"&message=", ggadu_sms_formencode(g_strdup(sms_body)),
+    recv_buff = g_strconcat ("?login=", ggadu_sms_urlencode(g_strdup(era_login)),
+			"&password=", ggadu_sms_urlencode(g_strdup(era_password)),
+			"&message=", ggadu_sms_urlencode(g_strdup(sms_body)),
 			"&number=48", sms_number,
-			"&contact=", "&signature=", ggadu_sms_formencode(g_strdup(sms_sender)),
+			"&contact=", "&signature=", ggadu_sms_urlencode(g_strdup(sms_sender)),
 			"&success=OK", "&failure=FAIL", 
 			"&minute=", "&hour= ", NULL);
     /* *INDENT-ON* */
 
-    strcpy(HTTP.Command, "GET");
-    strcpy(HTTP.Host, "Host: www.eraomnix.pl");
-    strcpy(HTTP.Url, "/sms/do/extern/tinker/free/send");
-    strcpy(HTTP.Url_Params, recv_buff);
+    strcpy(HTTP.method, "GET");
+    strcpy(HTTP.host, GGADU_SMS_ERA_HOST);
+    strcpy(HTTP.url, GGADU_SMS_ERA_URL);
+    strcpy(HTTP.url_params, recv_buff);
     HTTP_io(HTTP);
     g_free(recv_buff);
 
-    i = 0;
-    recv_buff = g_malloc0(GGADU_SMS_RECV_BUFF_MAXLEN);
-    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECV_BUFF_MAXLEN)
+    recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
+    while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
     sms_disconnect();
@@ -499,7 +522,7 @@ int send_ERA(gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * e
 }
 
 /* sprawdzenie jaka siec */
-int check_operator(gchar * sms_number)
+int check_operator(const gchar * sms_number)
 {
     if (strlen(sms_number) != 9)
 	return FALSE;
@@ -518,46 +541,9 @@ int check_operator(gchar * sms_number)
     return FALSE;
 }
 
-/* This should get sms_number in the same form as in userlist.
- * Otherwise, if GGADU_SMS_METHOD_CHAT, you'll get messages from different
- * number than you've sent msgs. So you better cut prefixes while loading userlist,
- * not here.
- */
-void sms_dialog_box(gchar * sms_number, gchar * message, gint type)
-{
-    if (method == GGADU_SMS_METHOD_POPUP)
-    {
-	if (type == GGADU_SMS_TYPE_WARN)
-	    signal_emit("sms", "gui show warning", g_strdup(message), "main-gui");
-	else if (type == GGADU_SMS_TYPE_INFO)
-	    signal_emit("sms", "gui show message", g_strdup(message), "main-gui");
-    }
-
-    if (method == GGADU_SMS_METHOD_CHAT)
-    {
-	GGaduMsg *msg = g_new0(GGaduMsg, 1);
-	msg->id = (sms_number ? sms_number : g_strdup(_("None")));
-	msg->class = GGADU_CLASS_CHAT;
-	msg->message = g_strconcat(_("SMS plugin: "), message, NULL);
-	signal_emit("sms", "gui msg receive", msg, "main-gui");
-    }
-}
-
-/* handy wrapper */
-void sms_message(gchar * sms_number, gchar * message)
-{
-    sms_dialog_box(sms_number, message, GGADU_SMS_TYPE_INFO);
-}
-
-/* handy wrapper */
-void sms_warning(gchar * sms_number, gchar * warning)
-{
-    sms_dialog_box(sms_number, warning, GGADU_SMS_TYPE_WARN);
-}
-
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
-void send_sms(gboolean external, gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * era_login,
-	      gchar * era_password)
+void send_sms(gboolean external, const gchar * sms_sender, gchar * sms_number, const gchar * sms_body,
+	      const gchar * era_login, const gchar * era_password)
 {
     gint result, gsm_oper;
     int era_left = 10;
@@ -675,7 +661,7 @@ void send_sms(gboolean external, gchar * sms_sender, gchar * sms_number, gchar *
 	sms_warning(sms_number, _("Message too long!"));
 	break;
     case ERR_READ_TOKEN:
-	sms_warning(sms_number, _("Token not found!"));
+	sms_warning(sms_number, _("Error while reading token!"));
 	break;
     case ERR_WRITE_TOKEN:
 	sms_warning(sms_number, _("Cannot write token image to file!"));
