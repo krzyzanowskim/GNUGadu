@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.60 2004/12/20 09:15:14 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.61 2004/12/23 11:36:14 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -508,9 +508,17 @@ void gui_show_window_with_text(gpointer signal
 	GtkWidget *gtv = NULL;
 	GtkTextBuffer *buf = NULL;
 	GtkWidget *sw = NULL;
+	GdkPixbuf *windowicon = NULL;
 
 	dialog = gtk_dialog_new_with_buttons("", NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 	gtk_window_resize(GTK_WINDOW(dialog), 400, 400);
+	
+	if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL)
+	{
+		gtk_window_set_icon(GTK_WINDOW(dialog), windowicon);
+		gdk_pixbuf_unref(windowicon);
+	}
+	
 
 	buf = gtk_text_buffer_new(NULL);
 	gtk_text_buffer_set_text(buf, (gchar *) sig->data, -1);

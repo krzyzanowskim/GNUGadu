@@ -1,4 +1,4 @@
-/* $Id: ignore.c,v 1.2 2004/12/22 16:24:18 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.3 2004/12/23 11:36:15 krzyzak Exp $ */
 
 /* 
  * Ignore: plugin code for GNU Gadu 2 
@@ -83,6 +83,7 @@ static gchar *ggadu_remove_ignored_contact(gchar *ignored_list, GGaduContact *k)
 
 	        tab = g_strsplit(ignored_list, searchk, 2);
 		ret = g_strconcat(tab[0], tab[1], NULL);
+
 		g_strfreev(tab);
 	}
 	
@@ -131,10 +132,29 @@ static gpointer ignore_unignore_contact(gpointer selected_contacts)
     return NULL;
 }
 
+static gpointer ignore_show_list(gpointer user_data)
+{
+    gchar *ignored_list = ggadu_config_var_get(ignore_handler, "list");
+    gchar *p = NULL;
+    
+    if (!ignored_list) return NULL;
+
+    while((p = strchr(ignored_list,':')))
+    {
+	*p = '\n';
+    }
+    
+    signal_emit(GGadu_PLUGIN_NAME, "gui show window with text", ignored_list, "main-gui");
+    
+    return NULL;
+}
 
 /* MAIN */
 void start_plugin()
 {
+    GGaduMenu *root = ggadu_menu_create();
+    GGaduMenu *item_gg;
+    
     GGaduPluginExtension *ext_in, *ext_un;
     ext_in = g_new0(GGaduPluginExtension, 1);
     ext_in->type = GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE;
@@ -147,7 +167,11 @@ void start_plugin()
     ext_un->callback = ignore_unignore_contact;
     ext_un->txt = _("_UnIgnore");
     register_extension_for_plugin(ext_un,GGADU_PLUGIN_TYPE_PROTOCOL);
+    
+    item_gg = ggadu_menu_add_item(root, _("_Ignore"), NULL, NULL);
+    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_List"), ignore_show_list, NULL));
 
+    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", root, "main-gui");
 }
 
 /* PLUGIN INITIALISATION */
