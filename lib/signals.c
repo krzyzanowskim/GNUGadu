@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.12 2003/12/20 21:06:23 krzyzak Exp $ */
+/* $Id: signals.c,v 1.13 2004/01/10 15:56:37 thrulliq Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -393,7 +393,7 @@ static gboolean thread_signal_test_chan(GIOChannel *source, GIOCondition cond, g
 	
 	return FALSE;
     } else if (cond & G_IO_IN) {
-        if ((signal = g_async_queue_try_pop(thread_signal_queue)) != NULL) {
+        while ((signal = g_async_queue_try_pop(thread_signal_queue)) != NULL) {
 	    char c;
 	    gint bytes_read;
     	    print_debug("signal popped!\n");
