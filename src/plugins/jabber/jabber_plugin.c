@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.126 2004/12/15 17:51:43 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.127 2004/12/16 08:43:41 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1490,7 +1490,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(jabber_handler, "log", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(jabber_handler, "only_friends", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
-	ggadu_config_var_add(jabber_handler, "resource", VAR_STR);
+	ggadu_config_var_add_with_default(jabber_handler, "resource", VAR_STR, "GNU Gadu");
 	ggadu_config_var_add(jabber_handler, "proxy", VAR_STR);
 	ggadu_config_var_add_with_default(jabber_handler, "ignored", VAR_STR, "");
 
