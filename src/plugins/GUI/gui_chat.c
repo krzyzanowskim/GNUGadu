@@ -1,6 +1,7 @@
-/* $Id: gui_chat.c,v 1.21 2003/04/26 22:24:15 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.22 2003/05/11 23:18:28 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include "support.h"
 #include "signals.h"
@@ -127,12 +128,14 @@ void on_destroy_chat(GtkWidget *button, gpointer user_data)
 gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey *event, gpointer user_data)
 {
 	gint chat_type = (gint)config_var_get(gui_handler,"chat_type");
+	
+	print_debug("kuku\n");
 
 	if ((chat_type == CHAT_TYPE_TABBED) && (event->state & GDK_CONTROL_MASK)) {
 		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
 		gint act_tab_page = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
 
-		if (event->keyval == 65289) {
+		if (event->keyval == GDK_Tab) {
 			act_tab_page++;
 
 			if (act_tab_page >= gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook))) 
@@ -596,9 +599,15 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	    
 			if (chat_window == NULL) {
 				gulong id_tmp;
+/*				GtkAccelGroup *accgroup = gtk_accel_group_new();
+				GClosure *accgroupclosure = g_cclosure_new(G_CALLBACK(on_press_event_switching_tabs),NULL,NULL);
 		
 				chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 				
+				gtk_accel_group_connect(accgroup, GDK_s, GDK_CONTROL_MASK,GTK_ACCEL_VISIBLE, accgroupclosure);
+				
+				gtk_window_add_accel_group(GTK_WINDOW(chat_window),accgroup);
+*/				
 				image = create_pixbuf("icon.png");
 				gtk_window_set_icon(GTK_WINDOW(chat_window), image);
 				gdk_pixbuf_unref(image);
