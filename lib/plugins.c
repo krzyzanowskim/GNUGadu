@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.5 2003/08/23 19:52:48 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.6 2003/09/21 16:37:00 shaster Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -489,7 +489,7 @@ gboolean config_save (GGaduPlugin * plugin_handler)
 	    {
 		if (var->type == VAR_STR || var->type == VAR_IMG)
 		  {
-		      if (!g_strcasecmp (var->name, "password"))
+		      if (g_strrstr (var->name, "password") != NULL)
 			  line1 = g_strdup_printf ("%s \x001%s\n", var->name, base64_encode ((gchar *) var->ptr));
 		      else
 			{
