@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.204 2004/11/03 07:53:44 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.205 2004/11/03 12:42:45 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -665,7 +665,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			gchar *tmp = NULL;
 
 			print_debug("GG_EVENT_STATUS");
-
+			
+			if (!k) 
+			{
+			    g_free(id);
+			    break;
+			}
 			/* *INDENT-OFF* */
 			
 			k->status = (e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
