@@ -3,6 +3,7 @@ BEFORE 2.0:
  - userlist tree view doesn't expand/collapse rows while userlist changes (GUI)
  - applying theme should refresh everything (it's not doing that for menubar) (GUI)
  ? some kind of dcc get acknowledge dialog box (gadu-gadu)
+ - Jabber SSL (not working)
 
 Later:
 - current status description text somewhere
