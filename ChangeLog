@@ -1,6 +1,7 @@
 19.01.2004
 - am/ac stuff (krzak)
 - fixed segfault with gui_tree_add if no offline_status is declared (GUI/krzak)
+- gg2.png install to $(datadir)/pixmaps
 
 18.01.2004
 - reordered buttons in chat window (GUI/krzak)

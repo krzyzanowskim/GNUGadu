@@ -48,5 +48,8 @@ pixmap_DATA = \
     tlen-offline.png \
     tlen-online.png \
     tlen.png
+    
+icondir = $(datadir)/pixmaps
+icon_DATA = gg2.png
 
-EXTRA_DIST = $(pixmap_DATA)
+EXTRA_DIST = $(pixmap_DATA) $(icon_DATA)
