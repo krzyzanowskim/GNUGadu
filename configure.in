@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.98 2004/10/25 14:03:29 krzyzak Exp $
+dnl $Id: configure.in,v 1.99 2004/10/29 15:42:04 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.1])
 
@@ -215,6 +215,7 @@ if test x$with_all_plugins = xyes; then
     with_sms=yes
     with_remote=yes
     with_dbus=yes
+    with_mozilla=yes
     with_external=yes
     with_history_external_viewer=yes
     with_update=yes
@@ -430,6 +431,18 @@ else
 	AC_SUBST(DBUS_LIBS)
 fi
 
+AC_ARG_WITH(mozilla, [  --with-mozilla		  Build mozilla plugin])
+if test "x$with_mozilla" != "xyes"; then 
+	with_mozilla=no
+else
+	with_mozilla=yes
+	PKG_CHECK_MODULES(MOZILLA_PLUGIN,mozilla-plugin mozilla-nspr, [], with_mozilla=no)
+	if test "$with_mozilla" = "no"; then
+	    AC_MSG_ERROR(MOZILLA_PLUGIN_PKG_ERRORS)
+	fi
+	AC_SUBST(MOZILLA_PLUGIN_CFLAGS)
+	AC_SUBST(MOZILLA_PLUGIN_LIBS)
+fi
 
 AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build docklet plugin])
 if test "x$with_docklet_system_tray" != "xno"; then 
@@ -563,6 +576,7 @@ AM_CONDITIONAL(BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN, test "$with_history_externa
 AM_CONDITIONAL(BUILD_SMS, test "$with_sms" = "yes")
 AM_CONDITIONAL(BUILD_REMOTE, test "$with_remote" = "yes")
 AM_CONDITIONAL(BUILD_DBUS, test "$with_dbus" = "yes")
+AM_CONDITIONAL(BUILD_MOZILLA, test "$with_mozilla" = "yes")
 AM_CONDITIONAL(BUILD_UPDATE, test "$with_update" = "yes")
 
 dnl Set PACKAGE_DATA_DIR in config.h.
@@ -630,6 +644,7 @@ lib/gg2_core.pc
 lib/gg2_core.h
 contrib/Makefile
 contrib/gghist/Makefile
+contrib/mozilla-plugin/Makefile
 src/Makefile
 src/plugins/Makefile
 src/plugins/GUI/Makefile
@@ -686,6 +701,7 @@ echo Build plugin update.................... : $with_update
 echo Build plugin external history viewer... : $with_history_external_viewer
 echo Build plugin remote.................... : $with_remote
 echo Build plugin DBUS...................... : $with_dbus
+echo Build Mozilla plugin................... : $with_mozilla
 echo Build gghist - history viewer.......... : $with_gghist
 echo Build with perl support................ : $with_perl
 echo

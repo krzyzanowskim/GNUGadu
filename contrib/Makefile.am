@@ -2,4 +2,8 @@ if BUILD_GGHIST
 GGHIST=gghist
 endif
 
-SUBDIRS = $(GGHIST)
+if BUILD_MOZILLA
+MOZILLA=mozilla-plugin
+endif
+
+SUBDIRS = $(GGHIST) $(MOZILLA)
