@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.65 2004/02/13 20:04:58 thrulliq Exp $ */
+/* $Id: jabber_plugin.c,v 1.66 2004/02/14 01:56:41 thrulliq Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -371,6 +371,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			{
 				signal_emit("jabber", "gui show warning", g_strdup(_("Invalid data passed, try again")),
 					    "main-gui");
+				g_free(gjr);
 			}
 		}
 		GGaduDialog_free(d);
