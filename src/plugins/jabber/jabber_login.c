@@ -65,7 +65,7 @@ void jabber_login (enum states status)
 	LM_HANDLER_PRIORITY_NORMAL);
 
     if (!lm_connection_open (connection,
-	  (LmResultFunction) connection_open_result_cb, (gint *)status, g_free, NULL))
+	  (LmResultFunction) connection_open_result_cb, (gint *)status, NULL, NULL))
     {
       print_debug ("jabber: lm_connection_open() failed.\n");
       signal_emit ("jabber", "gui disconnected", NULL, "main-gui");

@@ -35,7 +35,7 @@ void connection_open_result_cb (LmConnection *connection, gboolean success, gint
   }
 
   connected = 1;
-  print_debug ("jabber: Connection succeeded. Authenticating...\n");
+  print_debug ("jabber: Connection succeeded. Authenticating... (%p)\n", status);
 
   jid = g_strdup (config_var_get (jabber_handler, "jid"));
   strchr (jid, '@')[0] = '\0';
