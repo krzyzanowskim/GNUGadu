@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.7 2003/05/10 08:04:36 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.8 2003/05/10 10:20:32 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -40,9 +40,9 @@ PerlInterpreter *my_perl;
 
 extern void boot_DynaLoader (pTHX_ CV* cv);
 
-int execute_perl (char *function, char *args)
+int execute_perl (char *function, char **perl_args)
 {
-  char *perl_args[2] = {args, NULL};
+//  char *perl_args[2] = {args, NULL};
   int count, ret_value = 1;
   SV *sv;
 
@@ -73,9 +73,15 @@ int execute_perl (char *function, char *args)
   return ret_value;
 }
 
-char *execute_perl_string (char *function, char *args)
+int execute_perl_one (char *function, char *args)
 {
   char *perl_args[2] = {args, NULL};
+  return execute_perl (function, perl_args);
+}
+
+char *execute_perl_string (char *function, char **perl_args)
+{
+//  char *perl_args[2] = {args, NULL};
   int count;
   char *ret_value = NULL;
   SV *sv;
@@ -107,6 +113,13 @@ char *execute_perl_string (char *function, char *args)
 
   return ret_value;
 }
+
+char *execute_perl_string_one (char *function, char *args)
+{
+  char *perl_args[2] = {args, NULL};
+  return execute_perl_string (function, perl_args);
+}
+
 static XS (XS_GGadu_register_script)
 {
   char *name;
@@ -227,7 +240,7 @@ int perl_load_script (char *script_name)
 
   perlscripts = g_slist_append (perlscripts, script);
 
-  execute_perl ("load_n_eval", script->filename);
+  execute_perl_one ("load_n_eval", script->filename);
 
   printf ("aaaa\n");
   
@@ -308,7 +321,7 @@ char *perl_action_on_msg_receive (char *uid, char *msg)
     {
       PERL_SET_CONTEXT (script->perl);
       my_perl = script->perl;
-      ret = execute_perl_string (script->on_msg_receive, ret);
+      ret = execute_perl_string_one (script->on_msg_receive, ret);
     }
     list = list->next;
   }
