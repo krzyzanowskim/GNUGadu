@@ -1,4 +1,4 @@
-/* $Id: sms_gui.h,v 1.4 2003/06/22 17:36:01 krzyzak Exp $ */
+/* $Id: sms_gui.h,v 1.5 2003/09/10 22:31:59 shaster Exp $ */
 
 #ifndef SMS_PLUGIN_H
 #define SMS_PLUGIN_H 1
@@ -13,6 +13,8 @@ enum
     GGADU_SMS_CONFIG_NUMBER,
     GGADU_SMS_CONFIG_BODY,
     GGADU_SMS_CONFIG_EXTERNAL,
+    GGADU_SMS_CONFIG_ERAOMNIX_LOGIN,
+    GGADU_SMS_CONFIG_ERAOMNIX_PASSWORD,
     GGADU_SMS_CONFIG_SHOW_IN_STATUS
 };
 

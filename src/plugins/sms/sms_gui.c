@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.24 2003/06/25 22:11:04 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.25 2003/09/10 22:31:59 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -55,13 +55,11 @@ gpointer sms_preferences (gpointer user_data)
     ggadu_dialog_callback_signal (d, "update config");
     ggadu_dialog_set_type (d, GGADU_DIALOG_CONFIG);
 
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL,
-			    (gpointer) config_var_get (sms_handler, "external"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR,
-			    (gpointer) config_var_get (sms_handler, "sender"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_SHOW_IN_STATUS,
-			    _("Show plugin in status list (needs reload)"), VAR_BOOL,
-			    (gpointer) config_var_get (sms_handler, "show_in_status"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer) config_var_get (sms_handler, "external"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) config_var_get (sms_handler, "sender"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_ERAOMNIX_LOGIN, _("EraOmnix login"), VAR_STR, (gpointer) config_var_get (sms_handler, "eraomnix_login"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_ERAOMNIX_PASSWORD, _("EraOmnix password"), VAR_STR, (gpointer) config_var_get (sms_handler, "eraomnix_password"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_SHOW_IN_STATUS, _("Show plugin in status list (needs reload)"), VAR_BOOL, (gpointer) config_var_get (sms_handler, "show_in_status"), VAR_FLAG_NONE);
 
     signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
@@ -77,8 +75,7 @@ gpointer sms_edit_contact (gpointer user_data)
 
     print_debug ("%s : Add Contact\n", GGadu_PLUGIN_NAME);
 
-    ggadu_dialog_add_entry (&optlist, GGADU_SMS_CONTACT_ID, _("Id"), VAR_STR,
-			    g_strconcat (k->nick, "@", k->mobile, NULL), VAR_FLAG_INSENSITIVE);
+    ggadu_dialog_add_entry (&optlist, GGADU_SMS_CONTACT_ID, _("Id"), VAR_STR, g_strconcat (k->nick, "@", k->mobile, NULL), VAR_FLAG_INSENSITIVE);
     ggadu_dialog_add_entry (&optlist, GGADU_SMS_CONTACT_NICK, _("Nick"), VAR_STR, k->nick, VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&optlist, GGADU_SMS_CONTACT_NUMBER, _("Number"), VAR_STR, k->mobile, VAR_FLAG_NONE);
 
@@ -143,6 +140,10 @@ gpointer sms_send_sms (gpointer user_data)
 			    (gpointer) config_var_get (sms_handler, "sender"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR,
 			    (gpointer) config_var_get (sms_handler, "body"), VAR_FLAG_FOCUS);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_ERAOMNIX_LOGIN, _("EraOmnix login"), VAR_STR,
+			    (gpointer) config_var_get (sms_handler, "eraomnix_login"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_ERAOMNIX_PASSWORD, _("EraOmnix password"), VAR_STR,
+			    (gpointer) config_var_get (sms_handler, "eraomnix_password"), VAR_FLAG_NONE);
     signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
     return NULL;
@@ -178,6 +179,8 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     config_var_add (sms_handler, "sender", VAR_STR);
     config_var_add (sms_handler, "number", VAR_STR);
     config_var_add (sms_handler, "body", VAR_STR);
+    config_var_add (sms_handler, "eraomnix_login", VAR_STR);
+    config_var_add (sms_handler, "eraomnix_password", VAR_STR);
     config_var_add (sms_handler, "external", VAR_BOOL);
     config_var_add (sms_handler, "show_in_status", VAR_BOOL);
 
@@ -233,6 +236,14 @@ void signal_receive (gpointer name, gpointer signal_ptr)
 			    print_debug ("change default sender to %s\n", kv->value);
 			    config_var_set (sms_handler, "sender", kv->value);
 			    break;
+			case GGADU_SMS_CONFIG_ERAOMNIX_LOGIN:
+			    print_debug ("change default eraomnix_login to %s\n", kv->value);
+			    config_var_set (sms_handler, "eraomnix_login", kv->value);
+			    break;
+			case GGADU_SMS_CONFIG_ERAOMNIX_PASSWORD:
+			    print_debug ("change default eraomnix_password to %s\n", kv->value);
+			    config_var_set (sms_handler, "eraomnix_password", kv->value);
+			    break;
 			case GGADU_SMS_CONFIG_EXTERNAL:
 			    print_debug ("change external program to %d\n", kv->value);
 			    config_var_set (sms_handler, "external", kv->value);
@@ -278,6 +289,10 @@ void signal_receive (gpointer name, gpointer signal_ptr)
 					(gpointer) config_var_get (sms_handler, "number"), VAR_FLAG_NONE);
 		ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR,
 					(gpointer) config_var_get (sms_handler, "body"), VAR_FLAG_FOCUS);
+		ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_ERAOMNIX_LOGIN, _("EraOmnix login"), VAR_STR,
+					(gpointer) config_var_get (sms_handler, "eraomnix_login"), VAR_FLAG_NONE);
+		ggadu_dialog_add_entry (&(d->optlist), GGADU_SMS_CONFIG_ERAOMNIX_PASSWORD, _("EraOmnix password"), VAR_STR,
+					(gpointer) config_var_get (sms_handler, "eraomnix_password"), VAR_FLAG_NONE);
 
 		signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 	    }
@@ -292,7 +307,8 @@ void signal_receive (gpointer name, gpointer signal_ptr)
 		method = GGADU_SMS_METHOD_CHAT;
 		if (config_var_get (sms_handler, "sender") != NULL)
 		    send_sms ((gboolean) config_var_get (sms_handler, "external"),
-			      config_var_get (sms_handler, "sender"), msg->id, msg->message);
+			      config_var_get (sms_handler, "sender"), msg->id, msg->message,
+			      config_var_get (sms_handler, "eraomnix_login"), config_var_get (sms_handler, "eraomnix_password"));
 		else
 		    sms_preferences (0);
 	    }
@@ -303,6 +319,8 @@ void signal_receive (gpointer name, gpointer signal_ptr)
 	  GGaduDialog *d = signal->data;
 	  GSList *tmplist = d->optlist;
 	  gboolean old_external = (gboolean) config_var_get (sms_handler, "external");
+	  gchar *old_eraomnix_login = (gchar *) config_var_get (sms_handler, "eraomnix_login");
+	  gchar *old_eraomnix_password = (gchar *) config_var_get (sms_handler, "eraomnix_password");
 	  gchar *sender_temp;
 
 	  if (d->response == GGADU_OK)
@@ -324,15 +342,24 @@ void signal_receive (gpointer name, gpointer signal_ptr)
 			case GGADU_SMS_CONFIG_BODY:
 			    config_var_set (sms_handler, "body", kv->value);
 			    break;
+			case GGADU_SMS_CONFIG_ERAOMNIX_LOGIN:
+			    config_var_set (sms_handler, "eraomnix_login", kv->value);
+			    break;
+			case GGADU_SMS_CONFIG_ERAOMNIX_PASSWORD:
+			    config_var_set (sms_handler, "eraomnix_password", kv->value);
+			    break;
 			}
 		      tmplist = tmplist->next;
 		  }
 		method = GGADU_SMS_METHOD_POPUP;
 		send_sms ((gboolean) config_var_get (sms_handler, "external"), sender_temp,
-			  config_var_get (sms_handler, "number"), config_var_get (sms_handler, "body"));
+			  config_var_get (sms_handler, "number"), config_var_get (sms_handler, "body"),
+			  config_var_get (sms_handler, "eraomnix_login"), config_var_get (sms_handler, "eraomnix_password"));
 
 //          g_free(sender_temp);
 		config_var_set (sms_handler, "external", (gpointer) old_external);
+		config_var_set (sms_handler, "eraomnix_login", (gpointer) old_eraomnix_login);
+		config_var_set (sms_handler, "eraomnix_password", (gpointer) old_eraomnix_password);
 		config_save (sms_handler);
 	    }
 
