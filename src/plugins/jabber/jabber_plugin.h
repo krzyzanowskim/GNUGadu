@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.39 2004/08/30 11:46:52 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.h,v 1.40 2004/09/12 21:02:47 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -102,6 +102,12 @@ enum vcard
     GGADU_JABBER_USERID
 };
 
+enum software
+{
+    GGADU_JABBER_CLIENT,
+    GGADU_JABBER_VERSION,
+    GGADU_JABBER_OS
+};
 typedef struct
 {
     gchar *id;

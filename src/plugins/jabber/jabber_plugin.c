@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.103 2004/09/07 15:10:38 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.104 2004/09/12 21:02:46 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -62,6 +62,7 @@ static GQuark USER_REMOVE_SIG;
 static GQuark USER_EDIT_VCARD_SIG;
 static GQuark USER_SHOW_VCARD_SIG;
 static GQuark USER_CHANGE_PASSWORD_SIG;
+static GQuark USER_GET_SOFTWARE_SIG;
 
 jabber_data_type jabber_data;
 
@@ -268,6 +269,43 @@ static gpointer user_vcard_action(gpointer user_data)
 }
 
 
+static gpointer user_get_software_action(gpointer user_data)
+{
+	LmMessage *m;
+	LmMessageNode *node;
+	GSList *user = (GSList *) user_data;
+	GGaduContact *k = (GGaduContact *) user->data;
+	GGaduContact *k0;
+        GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+	gchar *string0, *string1;
+
+	while(roster)
+	{
+		k0 = roster->data;
+		if(!strcmp(k->id, k0->id))
+			break;
+
+		roster = roster->next;
+	}
+	
+	string0 = g_strconcat(k0->id, "/", k0->resource, NULL);
+	m = lm_message_new_with_sub_type(string0, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+	string1 = g_strconcat(ggadu_config_var_get(jabber_handler, "jid"), "/",
+			      ggadu_config_var_get(jabber_handler, "resource"), NULL);
+	lm_message_node_set_attribute(m->node, "from", string1);
+	lm_message_node_set_attribute(m->node, "id", "version_1");
+	node = lm_message_node_add_child(m->node, "query", NULL);
+	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:version");
+	lm_connection_send(jabber_data.connection, m, NULL);
+	lm_message_unref(m);
+
+	g_free(string0);
+	g_free(string1);
+	g_slist_free(roster);
+
+	return NULL;
+}
+
 static gpointer user_change_password_action(gpointer user_data)
 {
 	GGaduDialog *dialog;
@@ -412,11 +450,15 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 static GGaduMenu *build_userlist_menu(void)
 {
 	GGaduMenu *menu = ggadu_menu_create();
-	GGaduMenu *listmenu,*ignoremenu;
+	GGaduMenu *listmenu,*ignoremenu,*infomenu;
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Show personal data"), user_vcard_action, NULL));
 	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
+
+	infomenu = ggadu_menu_new_item(_("Contact's info"), NULL, NULL);
+	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("Show personal data"), user_vcard_action, NULL));
+	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("Software"), user_get_software_action, NULL));
+	ggadu_menu_add_submenu(menu, infomenu);
 	
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
 	ggadu_menu_add_submenu(listmenu,
@@ -1018,6 +1060,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		GGaduDialog_free(dialog);
 	}
+	else if (signal->name == USER_GET_SOFTWARE_SIG)
+	{
+		GGaduDialog_free((GGaduDialog *) signal->data);
+	}
 	else if (signal->name == JABBER_SUBSCRIBE_SIG)
 	{
 
@@ -1363,6 +1409,7 @@ void start_plugin()
 	USER_EDIT_VCARD_SIG = register_signal(jabber_handler, "user edit vcard");
 	USER_SHOW_VCARD_SIG = register_signal(jabber_handler, "user show vcard");
 	USER_CHANGE_PASSWORD_SIG = register_signal(jabber_handler, "user change password");
+	USER_GET_SOFTWARE_SIG = register_signal(jabber_handler, "user get software");
 
 	jabbermenu = build_jabber_menu();
 

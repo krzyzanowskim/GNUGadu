@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.60 2004/08/31 11:28:07 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.61 2004/09/12 21:02:45 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -198,8 +198,12 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 	gchar *show;
 	LmMessageNode *node;
 	GSList *list;
+	gchar **tab;
+	gchar *res;
 
 	jid = (gchar *) lm_message_node_get_attribute(message->node, "from");
+	tab = g_strsplit(jid, "/", 2);
+	res = tab[1];
 
 	print_debug("%s", lm_message_node_to_string(message->node));
 
@@ -247,6 +251,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 				g_free(k->status_descr);
 
 			k->status_descr = NULL;
+			k->resource = g_strdup(res);
 
 			switch (lm_message_get_sub_type(message))
 			{
@@ -301,7 +306,9 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 		}
 		list = list->next;
 	}
+
 	g_slist_free(list);
+	g_strfreev(tab);
 	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
@@ -354,20 +361,47 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 
 	from = (gchar *) lm_message_node_get_attribute(message->node, "from");
 
-	m = lm_message_new_with_sub_type(from, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_RESULT);
+	if(lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_GET)
+	{
+		m = lm_message_new_with_sub_type(from, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_RESULT);
 
-	lm_message_node_set_attribute(m->node, "id", lm_message_node_get_attribute(message->node, "id"));
+		lm_message_node_set_attribute(m->node, "id", lm_message_node_get_attribute(message->node, "id"));
 
-	node = lm_message_node_add_child(m->node, "query", NULL);
-	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:version");
+		node = lm_message_node_add_child(m->node, "query", NULL);
+		lm_message_node_set_attribute(node, "xmlns", "jabber:iq:version");
 
-	lm_message_node_add_child(node, "name", "GNU Gadu");
-	lm_message_node_add_child(node, "version", VERSION);
+		lm_message_node_add_child(node, "name", "GNU Gadu");
+		lm_message_node_add_child(node, "version", VERSION);
 
-	lm_connection_send(connection, m, NULL);
+		lm_connection_send(connection, m, NULL);
 
-	lm_message_unref(m);
+		lm_message_unref(m);
+	}
 
+	if(lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_RESULT)
+	{
+		gchar *string = g_strdup_printf(_("Software used by %s:"),
+				                lm_message_node_get_attribute(message->node, "from"));
+		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user get software");
+		LmMessageNode *node;
+		
+		node = lm_message_node_find_child(message->node, "name");
+		ggadu_dialog_add_entry(dialog, GGADU_JABBER_CLIENT, _("Client"), VAR_STR,
+				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
+				       VAR_FLAG_INSENSITIVE);
+		node = lm_message_node_find_child(message->node, "version");
+		ggadu_dialog_add_entry(dialog, GGADU_JABBER_VERSION, _("Version"), VAR_STR,
+				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
+				       VAR_FLAG_INSENSITIVE);
+		node = lm_message_node_find_child(message->node, "os");
+		ggadu_dialog_add_entry(dialog, GGADU_JABBER_OS, _("Operating System"), VAR_STR,
+				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
+				       VAR_FLAG_INSENSITIVE);
+
+		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
+		g_free(string);
+	}
+	
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
 
