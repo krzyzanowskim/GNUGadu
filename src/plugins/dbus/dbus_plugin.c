@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.15 2004/11/03 07:53:43 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.16 2004/11/26 12:40:53 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -72,8 +72,9 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 		while (plugins)
 		{
 			GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
-			if (plugin && plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
-			    !ggadu_strcasecmp(plugin->protocol->protocol_uri, contactURIhandler))
+			GGaduProtocol *protocol = plugin->plugin_data;
+			if (plugin && protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
+			    !ggadu_strcasecmp(protocol->protocol_uri, contactURIhandler))
 			{
 				GGaduContact *k = NULL;
 				DBusMessage *return_message = dbus_message_new_method_return(message);
@@ -85,15 +86,15 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 					guint return_status = OFI_IM_PRESENCE_OFFLINE;
 					gchar *status_descr = NULL;
 
-					if (is_in_status(k->status, plugin->protocol->online_status))
+					if (ggadu_is_in_status(k->status, protocol->online_status))
 					{
 						return_status = OFI_IM_PRESENCE_AVAILABLE;
 					}
-					else if (is_in_status(k->status, plugin->protocol->offline_status))
+					else if (ggadu_is_in_status(k->status, protocol->offline_status))
 					{
 						return_status = OFI_IM_PRESENCE_OFFLINE;
 					}
-					else if (is_in_status(k->status, plugin->protocol->away_status))
+					else if (ggadu_is_in_status(k->status, protocol->away_status))
 					{
 						return_status = OFI_IM_PRESENCE_AWAY;
 					}
@@ -196,8 +197,9 @@ static DBusHandlerResult org_freedesktop_im_openChat(DBusConnection * connection
 		while (plugins)
 		{
 			GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
-			if (plugin && plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
-			    !ggadu_strcasecmp(plugin->protocol->protocol_uri, contactURIhandler))
+			GGaduProtocol *protocol = plugin->plugin_data;
+			if (plugin && protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
+			    !ggadu_strcasecmp(protocol->protocol_uri, contactURIhandler))
 			{
 				GGaduMsg *msg = g_new0(GGaduMsg, 1);
 
@@ -210,7 +212,7 @@ static DBusHandlerResult org_freedesktop_im_openChat(DBusConnection * connection
 				signal_emit_full(plugin->name, "gui msg receive", msg, "main-gui", GGaduMsg_free);
 				ret = TRUE;
 				break;
-			} else if (!plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL))
+			} else if (!protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL))
 			{
 				ret = FALSE;
 				/* debug */ /*signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf("no plugin->protocol %s",plugin->name), "main-gui");*/

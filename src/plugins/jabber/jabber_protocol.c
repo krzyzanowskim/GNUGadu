@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.33 2004/10/15 14:14:41 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.34 2004/11/26 12:40:55 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -131,8 +131,8 @@ void jabber_change_status(enum states status)
 	if (show)
 		lm_message_node_add_child(m->node, "show", show);
 
-	if (ggadu_get_protocol_status_description(p))
-		lm_message_node_add_child(m->node, "status", ggadu_get_protocol_status_description(p));
+	if (jabber_data.description)
+		lm_message_node_add_child(m->node, "status", jabber_data.description);
 
 	if (!lm_connection_send(jabber_data.connection, m, NULL))
 	{

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.118 2004/11/19 17:28:47 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.119 2004/11/26 12:40:55 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -698,13 +698,13 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				if (kv)
 				{
 				    desc_utf = kv->value;
-				    ggadu_set_protocol_status_description(p,desc_utf);
+				    jabber_data.description = desc_utf;
+//				    ggadu_set_protocol_status_description(p,desc_utf);
 				}
 				jabber_change_status(sp->status);
 			}
 			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
 				(gpointer) sp->status, "main-gui");
-			
 		}
 		GGaduDialog_free(dialog);
 	}
@@ -721,7 +721,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
 						       "change status descr", sp);
 
-			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, ggadu_get_protocol_status_description(p),VAR_FLAG_FOCUS);
+			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.description,VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 			return;
 		}
@@ -1404,7 +1404,7 @@ void start_plugin()
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_AWAY);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_DND);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_XA);
-	jabber_handler->protocol = p;
+	jabber_handler->plugin_data = p;
 	
 	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 

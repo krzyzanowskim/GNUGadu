@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.25 2004/11/17 11:14:49 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.26 2004/11/26 12:40:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -212,7 +212,7 @@ void unload_plugin(gchar * name)
 	GGaduPlugin *plugin_handler = find_plugin_by_name(name);
 	GSList *list_tmp = NULL;
 	GGaduVar *var_tmp = NULL;
-	GGaduSignalinfo *sig_tmp = NULL;
+	GGaduSignalInfo *sig_tmp = NULL;
 
 	if (plugin_handler == NULL)
 	{
@@ -261,7 +261,7 @@ void unload_plugin(gchar * name)
 
 	while (list_tmp)
 	{
-		sig_tmp = (GGaduSignalinfo *) list_tmp->data;
+		sig_tmp = (GGaduSignalInfo *) list_tmp->data;
 /*
 	g_free (sig_tmp->name);
 */

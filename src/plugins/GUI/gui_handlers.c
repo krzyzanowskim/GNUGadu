@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.62 2004/11/19 17:38:40 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.63 2004/11/26 12:40:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -346,7 +346,7 @@ void handle_disconnected(GGaduSignal * signal)
 			/* This shouldn'be be like this */
 			/* I expect that first entry in offline_status is offline without description */
 			/* only in such situation I can figure out which one is pure offline status */
-			/* if (!is_in_status (k->status, gp->p->offline_status)) */
+			/* if (!ggadu_is_in_status (k->status, gp->p->offline_status)) */
 /*
             print_debug("%d %d\n",k->status,*(gint *)&gp->p->offline_status->data);
 */

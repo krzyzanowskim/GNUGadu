@@ -1,4 +1,4 @@
-/* $Id: signals.h,v 1.10 2004/06/14 14:53:23 krzyzak Exp $ */
+/* $Id: signals.h,v 1.11 2004/11/26 12:40:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -34,7 +34,7 @@
 #define signal_emit_from_thread(src_name,name,data,dest_data) \
     signal_emit_from_thread_full(src_name,name,data,dest_data,NULL)
 
-GGaduSignalinfo *find_signal(gpointer signal_name);
+GGaduSignalInfo *find_signal(gpointer signal_name);
 
 void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer dest_name, void (*signal_free) (gpointer));
 

@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.15 2004/11/18 09:47:52 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.16 2004/11/26 12:40:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -21,6 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+/*! \file ggadu_support.h
+    \brief Commonly used functions
+*/
+
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -33,6 +38,12 @@
 #include <time.h>
 #include "ggadu_support.h"
 
+/*! \fn ggadu_strcasecmp(const gchar *s1,const gchar *s2)
+    \brief A case-insensitive string comparison
+    
+    corresponding to the standard strcasecmp() function on platforms which support it.
+    Best if arguments is in UTF-8 encoding, but work for ASCII as well.
+*/
 gint ggadu_strcasecmp(const gchar *s1,const gchar *s2)
 {
     gint ret = 0;
@@ -46,6 +57,14 @@ gint ggadu_strcasecmp(const gchar *s1,const gchar *s2)
     return ret;
 }
 
+/*! \fn ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
+    \brief Convert between various text encodings
+    
+    \param from_encoding Encoding code to convert from
+    \param to_encoding Encoding code to convert to
+    \param text Text to convert
+    @return Newly-allocated string
+*/
 gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
 {
 	gchar *out = NULL;
@@ -70,6 +89,12 @@ gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
 	return out;
 }
 
+/*! \fn ggadu_strchomp(gchar * str)
+    \brief Removes trailing whitespace from a string.
+    
+    \param str a string to remove the trailing whitespace from.
+    @return string
+*/
 gchar *ggadu_strchomp(gchar * str)
 {
 	gchar *string = str;
@@ -85,6 +110,13 @@ gchar *ggadu_strchomp(gchar * str)
 	return string;
 }
 
+/*! \fn ggadu_get_image_path(const gchar * directory, const gchar * filename)
+    \brief Search for images in GNU Gadu resources
+    
+    \param directory Icon Theme name
+    \param filename Requested graphics file name from Icon Theme
+    @return Full path to requested file
+*/
 gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename)
 {
 	gchar *found_filename, *iconsdir;
@@ -126,7 +158,14 @@ gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename)
 	return found_filename;
 }
 
-gboolean is_in_status(gint status, GSList * list)
+/*! \fn ggadu_is_in_status(gint status, GSList * list)
+    \brief Check if status code is at given status list
+    
+    \param status Status code
+    \param list Status list to look into
+    @return TRUE if \a status is at the \a list
+*/
+gboolean ggadu_is_in_status(gint status, GSList * list)
 {
 	GSList *tmp = list;
 	gint st = 0;
@@ -146,6 +185,10 @@ gboolean is_in_status(gint status, GSList * list)
 }
 
 /* DEPRECATED */
+/*! @ingroup DEPRECATED
+    \fn set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist)
+    \brief this function in DEPRECATED
+*/
 void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist)
 {
 	GSList *slistmp = userlist;
@@ -182,6 +225,10 @@ void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlis
 }
 
 /* DEPRECATED */
+/*! @ingroup DEPRECATED
+    \fn ggadu_userlist_remove_id(GSList * userlist, gchar * id)
+    \brief this function in DEPRECATED
+*/
 GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id)
 {
 
@@ -204,6 +251,10 @@ GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id)
 }
 
 /* DEPRECATED */
+/*! @ingroup DEPRECATED
+    \fn ggadu_find_contact_in_userlist(GSList * list, gchar * id)
+    \brief this function in DEPRECATED
+*/
 GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id)
 {
 	GSList *tmp = list;
@@ -221,23 +272,6 @@ GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id)
 	}
 
 	return NULL;
-}
-
-gboolean str_has_suffix(const gchar * str, const gchar * suffix)
-{
-	int str_len = 0;
-	int suffix_len = 0;
-
-	g_return_val_if_fail(str != NULL, FALSE);
-	g_return_val_if_fail(suffix != NULL, FALSE);
-
-	str_len = strlen(str);
-	suffix_len = strlen(suffix);
-
-	if (str_len < suffix_len)
-		return FALSE;
-
-	return strcmp(str + str_len - suffix_len, suffix) == 0;
 }
 
 void print_debug_raw(const gchar * func, const char *format, ...)
@@ -388,7 +422,11 @@ void show_error(gchar * errstr)
 	g_error(errstr);
 }
 
-/* This is an internally used function to check if a pixmap file exists. */
+/*! \fn check_file_exists(const gchar * directory, const gchar * filename)
+    \brief Check if a file exists.
+    
+    @return full path to file or NULL if not exists
+*/
 gchar *check_file_exists(const gchar * directory, const gchar * filename)
 {
 	gchar *full_filename = NULL;
@@ -575,12 +613,24 @@ const char *itoa(long int i)
 	return tmp;
 }
 
-gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc)
+/*! \fn ggadu_write_line_to_file(gchar * path, gchar * line, gchar * enc)
+    \brief Write a line to file
+    
+    \param path Path to file
+    \param line One line text
+    \param enc Encoding name used for this file
+    
+    @return TRUE on success
+*/
+gboolean ggadu_write_line_to_file(gchar * path, gchar * line, gchar * enc)
 {
 	GIOChannel *ch;
 	gchar *dir;
 
 	g_return_val_if_fail(path != NULL, FALSE);
+	
+	if (!path)
+	    return FALSE;
 
 	dir = g_path_get_dirname(path);
 	if (strcmp(dir, ".") && !g_file_test(dir, G_FILE_TEST_EXISTS) && !g_file_test(dir, G_FILE_TEST_IS_DIR))
@@ -601,8 +651,8 @@ gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc)
 		g_print("Unable to open requested file %s for write\n", path);
 		return FALSE;
 	}
-	g_io_channel_set_encoding(ch, enc, NULL);
 
+	g_io_channel_set_encoding(ch, enc, NULL);
 	g_io_channel_write_chars(ch, line, -1, NULL, NULL);
 	g_io_channel_shutdown(ch, TRUE, NULL);
 	g_io_channel_unref(ch);
@@ -639,12 +689,15 @@ gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick,
 	    break;
 	}
 	
-	ret = write_line_to_file(filepath, final_line, NULL);
+	ret = ggadu_write_line_to_file(filepath, final_line, NULL);
 	g_free(final_line);
 	return ret; 
 }
 
-
+/*!
+    aaaa
+    @see GGaduProtocol
+*/
 GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint status)
 {
 	GSList *tmp = NULL;
@@ -670,13 +723,3 @@ GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint statu
 }
 
 
-gchar *ggadu_get_protocol_status_description(GGaduProtocol *gp)
-{
-    return gp->status_description;
-}
-
-void ggadu_set_protocol_status_description(GGaduProtocol *gp,gchar *description)
-{
-    g_free(gp->status_description);
-    gp->status_description = g_strdup(description);
-}

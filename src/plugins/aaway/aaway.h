@@ -21,11 +21,6 @@
 #  include <config.h>
 #endif
 
-#define GGADU_AAWAY_CONFIG_DEFAULT_ENABLE_AUTOAWAY 0
-#define GGADU_AAWAY_CONFIG_DEFAULT_INTERVAL 5
-#define GGADU_AAWAY_CONFIG_DEFAULT_ENABLE_AWAY_MSG 0
-#define GGADU_AAWAY_CONFIG_DEFAULT_AWAY_MSG " Auto away ..."
-
 enum
 {
 	GGADU_AAWAY_CONFIG_ENABLE_AUTOAWAY,
@@ -33,9 +28,5 @@ enum
 	GGADU_AAWAY_CONFIG_ENABLE_AWAY_MSG,
 	GGADU_AAWAY_CONFIG_AWAY_MSG
 };
-
-#include "gg2_core.h"
-
-gint set_configuration(void);
 
 #endif /* PLUGIN_AAWAY_H */

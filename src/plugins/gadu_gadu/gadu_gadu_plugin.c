@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.206 2004/11/19 17:28:46 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.207 2004/11/26 12:40:54 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -55,6 +55,7 @@
 GGaduPlugin *handler;
 
 static struct gg_session *session;
+static char *session_description;
 static struct gg_dcc *dcc_session_get = NULL;
 
 static gchar *dcc_send_request_filename = NULL;	/* nazwa pliku do wyslania */
@@ -87,12 +88,12 @@ void test()
 {
 }
 
-gint ggadu_is_status_descriptive(gint status)
+static gint ggadu_gadu_gadu_is_status_descriptive(gint status)
 {
 	return (gint) (status == GG_STATUS_AVAIL_DESCR || status == GG_STATUS_BUSY_DESCR || status == GG_STATUS_NOT_AVAIL_DESCR || status == GG_STATUS_INVISIBLE_DESCR);
 }
 
-void ggadu_gadu_gadu_disconnect()
+static void ggadu_gadu_gadu_disconnect()
 {
 	GSList *tmplist = NULL;
 
@@ -1678,7 +1679,7 @@ void start_plugin()
 	p->away_status = g_slist_append(p->away_status, (gint *) GG_STATUS_BUSY_DESCR);
 	p->online_status = g_slist_append(p->online_status, (gint *) GG_STATUS_AVAIL);
 	p->online_status = g_slist_append(p->online_status, (gint *) GG_STATUS_AVAIL_DESCR);
-	handler->protocol = p;
+	handler->plugin_data = p; /* GGaduProtocol * */
 	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 	/* try to register menu for this plugin in GUI */
@@ -2009,14 +2010,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (sp->status != GG_STATUS_NOT_AVAIL)
 		{
 			/* descriptions, call dialogbox */
-			if (ggadu_is_status_descriptive(sp->status))
+			if (ggadu_gadu_gadu_is_status_descriptive(sp->status))
 			{
 				GGaduDialog *dialog = NULL;
 				gchar *reason_c = NULL;
 
-				if (ggadu_get_protocol_status_description(p))
+				if (session_description)
 				{
-					reason_c = g_strdup(ggadu_get_protocol_status_description(p));
+					reason_c = g_strdup(session_description);
 				}
 				else
 				{
@@ -2088,7 +2089,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    desc_iso = from_utf8("ISO-8859-2", desc_utf);
 
 				    ggadu_config_var_set(handler, "reason", desc_iso);
-				    ggadu_set_protocol_status_description(p, desc_utf);
+				    session_description = desc_utf;
 				}
 
 				if (!connected)

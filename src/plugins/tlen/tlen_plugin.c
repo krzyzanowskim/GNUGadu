@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.76 2004/11/19 17:28:47 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.77 2004/11/26 12:40:56 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -105,7 +105,7 @@ void ggadu_tlen_save_history(gchar * to, gchar * txt)
 	if (!g_file_test(dir, G_FILE_TEST_IS_DIR))
 		mkdir(dir, 0700);
 
-	write_line_to_file(path, txt, "ISO-8859-2");
+	ggadu_write_line_to_file(path, txt, "ISO-8859-2");
 
 	g_free(path);
 	g_free(dir);
@@ -846,7 +846,7 @@ void start_plugin()
 	p->offline_status = g_slist_append(p->offline_status, (gint *) TLEN_STATUS_UNAVAILABLE);
 	p->away_status = g_slist_append(p->away_status, (gint *) TLEN_STATUS_AWAY);
 	p->online_status = g_slist_append(p->online_status, (gint *) TLEN_STATUS_AVAILABLE);
-	handler->protocol = p;
+	handler->plugin_data = p;
 	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
@@ -922,12 +922,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			{
 				GGaduDialog *dialog = NULL;
 				GGaduStatusPrototype *_sp;
+				GGaduProtocol *prot = handler->plugin_data;
 				GSList *tmp = NULL;
 				gchar *desc_utf = NULL;
 
 				/* Wyszukiwanie StatusPrototype :-D */
 
-				tmp = handler->protocol->statuslist;
+				tmp = prot->statuslist;
 
 				if (tmp != NULL)
 				{
@@ -951,7 +952,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				/* end */
 
 				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr", _sp);
-				desc_utf = to_utf8("ISO-8859-2", ggadu_get_protocol_status_description(p));
+				desc_utf = to_utf8("ISO-8859-2", session->description);
 				ggadu_dialog_add_entry(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
 				g_free(desc_utf);
 
@@ -960,7 +961,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 			else
 			{
-				tlen_presence(session, sp->status, ggadu_get_protocol_status_description(p));
+				tlen_presence(session, sp->status, session->description);
 				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
 			}
 		}
@@ -1047,10 +1048,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 					if (kv)
 					{
-					    ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
+//					    ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
 
-					    /* ustaw nowy opis w sesji */
-					    tlen_presence(session, sp->status, ggadu_get_protocol_status_description(p));
+					    /* ustaw nowy opis w sesji  ZONK free */
+					    tlen_presence(session, sp->status, from_utf8("ISO-8859-2", kv->value));
 					}
 
 					/* uaktualnij GUI */
@@ -1139,14 +1140,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 			gchar *message = from_utf8("ISO-8859-2", msg->message);
 
-			if (msg->class == GGADU_CLASS_CHAT)
+/*			if (msg->class == GGADU_CLASS_CHAT)
 				msg->class = TLEN_CHAT;
 			else
 				msg->class = TLEN_MESSAGE;
-
+*/
 			switch (msg->class)
 			{
-			case TLEN_CHAT:
+			case GGADU_CLASS_CHAT:
 				if (!tlen_sendmsg(session, msg->id, message, TLEN_CHAT))
 					print_debug("zjebka podczas send message %s\n", msg->id, TLEN_CHAT);
 				else if (ggadu_config_var_get(handler, "log"))
@@ -1158,7 +1159,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 
 				break;
-			case TLEN_MESSAGE:
+			case GGADU_CLASS_MSG:
 				print_debug("Inside 'send message' handler: TLEN_MESSAGE!\n");
 				if (!tlen_sendmsg(session, msg->id, message, TLEN_MESSAGE))
 					print_debug("zjebka podczas send message %s\n", msg->id, TLEN_MESSAGE);
@@ -1170,6 +1171,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					g_free(line);
 				}
 
+				break;
+			default:
 				break;
 			}
 

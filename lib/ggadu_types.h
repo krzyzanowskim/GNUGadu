@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.16 2004/11/03 07:53:41 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.17 2004/11/26 12:40:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -21,6 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+/*! \file ggadu_types.h */
+
 #ifndef GGadu_TYPES_H
 #define GGadu_TYPES_H
 
@@ -32,16 +34,23 @@
 
 typedef gpointer(*function_ptr) (gpointer);
 typedef void (*signal_func_ptr) (gpointer, gpointer);
+
+/*! \brief Signal ID */
 typedef GQuark GGaduSigID;
 
+/*! \brief Plugin type used in GGadu_PLUGIN_INIT(x,type) 
+    @see GGaduPlugin
+    @see GGadu_PLUGIN_INIT
+*/
 typedef enum
 {
-    GGADU_PLUGIN_TYPE_UI = 1,
-    GGADU_PLUGIN_TYPE_PROTOCOL,
-    GGADU_PLUGIN_TYPE_MISC,
-    GGADU_PLUGIN_TYPE_ANY /* for internal use only */
+    GGADU_PLUGIN_TYPE_UI = 1,   /*!< User Interface type plugin */
+    GGADU_PLUGIN_TYPE_PROTOCOL, /*!< Protocol type plugin */
+    GGADU_PLUGIN_TYPE_MISC,     /*!< Misc. type plugin */
+    GGADU_PLUGIN_TYPE_ANY       /*!< for internal use only */
 } GGaduPluginType;
 
+/*! \brief Some kind of enum, don't know why it is here */
 enum
 {
     GGADU_ID = 1,
@@ -50,37 +59,40 @@ enum
     GGADU_LAST_NAME,
     GGADU_MOBILE,
     GGADU_PASSWORD
-};
+} GGaduContactFieldType;
 
+/*! \brief Type of variable
+    @see GGaduKeyValue
+*/
 typedef enum
 {
-    VAR_STR = 1,
-    VAR_INT,
-    VAR_INT_WITH_NEGATIVE,
-    VAR_BOOL,
-    VAR_IMG,
-    VAR_FILE_CHOOSER,
-    VAR_FONT_CHOOSER,
-    VAR_COLOUR_CHOOSER,
-    VAR_LIST,
-    VAR_NULL
+    VAR_STR = 1,		/*!< string  */
+    VAR_INT,			/*!< integer */
+    VAR_INT_WITH_NEGATIVE,	/*!< integer with negative values */
+    VAR_BOOL,			/*!< boolean value */
+    VAR_IMG,			/*!< image type */
+    VAR_FILE_CHOOSER,		/*!< file chooser type */
+    VAR_FONT_CHOOSER,		/*!< font chooser type */
+    VAR_COLOUR_CHOOSER,		/*!< colour chooser type */
+    VAR_LIST,			/*!< list type */
+    VAR_NULL			/*!< null - means nothing */
 } GGaduVarType;
 
-typedef enum
-{
-    GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE = 1
-} GGaduPluginExtensionType;
 
+/*! \brief Flags for GGaduKeyValue structure 
+    @see GGadyKeyValue
+*/
 typedef enum
 {
-    VAR_FLAG_NONE = 1,
-    VAR_FLAG_SENSITIVE = 1 << 2,
-    VAR_FLAG_INSENSITIVE = 1 << 4,
-    VAR_FLAG_PASSWORD = 1 << 5,
-    VAR_FLAG_SELECTED = 1 << 6,
-    VAR_FLAG_FOCUS = 1 << 8
+    VAR_FLAG_NONE = 1,			/*!< Empty, no flag */
+    VAR_FLAG_SENSITIVE = 1 << 2,	/*!< Widget is sensitive */
+    VAR_FLAG_INSENSITIVE = 1 << 4,	/*!< Widget is insensitive */
+    VAR_FLAG_PASSWORD = 1 << 5,		/*!< Password type input */
+    VAR_FLAG_SELECTED = 1 << 6,		/*!< Mark selected by default */
+    VAR_FLAG_FOCUS = 1 << 8		/*!< Grab focus */
 } GGaduKeyValueFlag;
 
+/*! common enums */
 enum
 {
     GGADU_NONE,
@@ -90,31 +102,49 @@ enum
     GGADU_NO
 };
 
+/*! \brief History entries */
 typedef enum
 {
-    GGADU_HISTORY_TYPE_RECEIVE,
-    GGADU_HISTORY_TYPE_SEND    
+    GGADU_HISTORY_TYPE_RECEIVE,	/*!< Input message */
+    GGADU_HISTORY_TYPE_SEND    	/*!< Output message */
 } GGaduHistoryType;
 
 
-/*
- * GGaduMenu
- */
+/*! \brief Root menu item 
+    @see GGaduMenuItem
+*/
 typedef GNode GGaduMenu;
+
+/*! \brief Menu item
+    @see GGaduMenu
+*/
 typedef struct
 {
-    gchar *label;
-    gpointer data;
-    gpointer callback;		/* function_ptr callback; */
+    gchar *label;		/*!< Label for menu item */
+    gpointer data;		/*!< data */
+    gpointer callback;		/*!< function_ptr callback for this menu item */
 } GGaduMenuItem;
 
-/* GGaduPluginExtension */
+/*! \brief Types of extensions 
+    @see GGaduPluginExtension
+*/
+typedef enum
+{
+    GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE = 1
+} GGaduPluginExtensionType;
+
+
+/*! \brief Plugins extensions
+    @see GGaduPluginExtensionType
+*/
 typedef struct
 {
-    const gchar *txt;
-    guint type;
-    gpointer(*callback) (gpointer user_data);
+    const gchar *txt;				/*!< extension label */
+    GGaduPluginExtensionType type;		/*!< extension type  */
+    gpointer(*callback) (gpointer user_data);	/*!< extension callback */
 } GGaduPluginExtension;
+
+
 
 /*
  * GGaduVar
@@ -128,62 +158,54 @@ typedef struct
     gpointer def;		/* default value */
 } GGaduVar;
 
-/* 
- * GGaduProtocol
- * specyficzne dla protokolu 
- */
+/*! \brief Protocol description data
+    GGaduPlugin ->plugin_data where type is  \a GGADU_PLUGIN_TYPE_PROTOCOL should point to this structure
+    @see GGaduPluginType
+    @see GGaduPlugin
+*/
 typedef struct
 {
-    gchar *display_name;
-    gchar *protocol_uri; 	/* URI for protocols eg.: gg://  icq:// tlen://  */
-    gchar *img_filename;	/* ¶cie¿ka do obrazka z etykiet± na zak³adkê */
-    gchar *status_description;	/* current description - description of current status */
-    GSList *statuslist;		/* lista dostêpnych statusów danego protoko³u */
-    GSList *offline_status;	/* ktory status oznacza offline */
-    GSList *away_status;	/* ktory status oznacza away (NULL = brak) */
-    GSList *online_status;	/* ktory status oznacza online */
+    gchar *display_name;	/*!< displayable name of protocol */
+    gchar *protocol_uri; 	/*!< URI for protocols eg.: gg://  icq:// tlen://  */
+    gchar *img_filename;	/*!< Path to picture with protocol label */
+    GSList *statuslist;		/*!< List of available status codes */
+    GSList *offline_status;	/*!< List of "offline" status codes */
+    GSList *away_status;	/*!< List of "away" status codes */
+    GSList *online_status;	/*!< List of "online" status codes */
 } GGaduProtocol;
 
-/* 
- * GGaduSignal 
- */
+/*! Internal SIGNAL structure used by core */
 typedef struct
 {
-    GQuark name;		/* GQuark */
-    gpointer source_plugin_name;
-    gpointer destination_plugin_name;
-    gpointer data;
-    gpointer data_return;	/* mozna to uzupelnic o jakies cos co ma byc zwrocone przez emit_signal */
-    gint error;			/* okresla czy jest jakis blad podczas wykonywania, -1 znaczy ze wszystko ok. */
-    gboolean free_me;
-    void (*free) (gpointer signal);
+    GGaduSigID name;		/*!< integer representation of signal name */
+    gchar *source_plugin_name;	/*!< source plugin name */
+    gchar *destination_plugin_name; /*!< destination plugin name */
+    gpointer data;		/*!< data send with this signal */
+    gpointer data_return;	/*!< data that should be returned by emit_sianal function */
+    gint error;			/*!< error flag, -1 mean no error */
+    gboolean free_me;		/*!< mark if signal sould be freed with given function, TRUE by default */
+    void (*free) (gpointer signal); /*!< callback to function which can free data send with signal */
 } GGaduSignal;
 
-/* 
- * GGaduSignalinfo
- */
+/*! GGaduSignalInfo */
 typedef struct
 {
-    GQuark name;
-} GGaduSignalinfo;
+    GGaduSigID name; 		/*!< integer representation of signal name */
+} GGaduSignalInfo;
 
-/*
- * GGaduPlugin
- * Ta struktura jest przechowuje wszystkie informacje o pluginie
- */
+/*! Structure of data specific for plugins */
 typedef struct
 {
-    guint type;
-    gchar *name;		/* nazwa zeby mozna bylo po niej znajdowac plugin */
-    gchar *description;		/* descriptive text about plugin */
-    gpointer ptr;		/* wskaznik na strukture charakterystyczna dla pluginu (np. protokolu) */
+    GGaduPluginType type;	/*!< type of plugin */
+    gchar *name;		/*!< plugin name */
+    gchar *description;		/*!< descriptive text about plugin */
+    gpointer plugin_data;	/*!< data specific for types of plugins, ex. protocols have GGaduProtocol* */
     void *plugin_so_handler;
 
     gchar *config_file;		/* plik konfiguracyjny dla tego pluginu */
     GSList *variables;		/* zmienne czytane z pliku */
     GSList *signals;		/* lista zarejestrowanych signali */
 
-    GGaduProtocol *protocol;	/* stuff specyficzna dla kazdego typu */
     GSList *extensions;		/* GGaduPluginExtension's */
 
     void (*signal_receive_func) (gpointer, gpointer);	/* wskaznik na receiver signali */
@@ -192,42 +214,33 @@ typedef struct
 } GGaduPlugin;
 
 
-/*
- * GGaduPluginFile
- */
+/*! \brief Represent data about plugin file */
 typedef struct
 {
-    gchar *name;
-    gchar *path;
+    gchar *name;	/*!< plugin name */
+    gchar *path;	/*!< plugin file path */
 } GGaduPluginFile;
 
-/*
- * GGaduConfig
- */
+/*! \brief Global configuration data accessible from any plugin */
 typedef struct
 {
-    /* globalnie niezalezne od protokolu */
-    gboolean send_on_enter;
-    guint main_on_start;	/* pokaÅ¼ g³ówne okno po uruchomieniu programu */
-    guint width;
-    guint height;
-    gint pos_x;
-    gint pos_y;
-
-    gboolean all_plugins_loaded;	/* TRUE if all plugins are loaded */
-    GSList *all_available_plugins;	/* wszystkie dostepne, zainstalowane w systemie pluginy */
-    GSList *loaded_plugins;			/* lista za³adowanych pluginow */
-
-    gchar *configdir;		/* katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2) */
-
-    GSList *waiting_signals;
-    GSList *signal_hooks;
-
-    GMainLoop *main_loop;
-
-    gpointer repos;
+    gboolean send_on_enter;	/*!< shuldn't be here */
+    guint main_on_start;	/*!< show main window on start ? (shouldn't be here) */
+    guint width;		/*!< shuldn't be here */
+    guint height;		/*!< shuldn't be here */
+    gint pos_x;			/*!< shuldn't be here */
+    gint pos_y;			/*!< shuldn't be here */
+    gboolean all_plugins_loaded;	/*!< TRUE if all plugins are loaded */
+    GSList *all_available_plugins;	/*!< All available plugins */
+    GSList *loaded_plugins;		/*!< All loaded plugins */
+    gchar *configdir;			/*!< Main configuration data directory reflecting HOME_ETC etc. (~/.gg2) */
+    gpointer repos;			/*!< Pointer to repos */
+    GMainLoop *main_loop;		/*!< GMainLoop used by GNU Gadu */
+    GSList *waiting_signals;		/*!< private used by internal core */
+    GSList *signal_hooks;		/*!< private used by core */
 } GGaduConfig;
 
+/*! \brief Main config available for any plugin */
 extern GGaduConfig *config;
 
 /*
@@ -235,54 +248,50 @@ extern GGaduConfig *config;
  */
 typedef struct
 {
-    GQuark name;
+    GGaduSigID name;
     GSList *hooks;
     void (*perl_handler) (GGaduSignal *, gchar *, void *);
 } GGaduSignalHook;
 
-/*
- *    GGaduContact
- *    struktura opisujaca kontakt z dowolnego protoko³u
- *    je¶li jakie¶ pole == NULL GUI powinno je zignorowaæ
- */
-
+/*! \brief Universal contact data structure
+    if some value is NULL then GUI should ignore such entry
+    @see GGaduContact_free
+*/
 typedef struct
 {
-    gchar *id;			/* unikalny identyfikator: numer GG, adres z tlen'u etc. */
-    gchar *first_name;		/* imiê */
-    gchar *last_name;		/* nazwisko */
-    gchar *nick;		/* pseudo */
-    gchar *mobile;		/* tel. komórkowy */
-    gchar *email;		/* adres e-mail */
-    gchar *gender;		/* p³eæ */
-    gchar *group;		/* grupa */
-    gchar *comment;		/* komentarz */
-    gchar *birthdate;		/* data urodzenia */
-    gchar *status_descr;	/* opis do statusu */
-    gchar *ip;			/* "IP:PORT" */
-    gchar *city;		/* miasto */
-    gchar *age;			/* wiek */
-    gchar *resource;		/* zasob */
-    gint status;		/* status w postaci liczbowej */
+    gchar *id;			/*!< unique id: GG number, Jabber jid, etc.. */
+    gchar *first_name;		/*!< Name */
+    gchar *last_name;		/*!< Surname */
+    gchar *nick;		/*!< Nick */
+    gchar *mobile;		/*!< Mobile */
+    gchar *email;		/*!< Email */
+    gchar *gender;		/*!< Gender */
+    gchar *group;		/*!< Group */
+    gchar *comment;		/*!< Comment */
+    gchar *birthdate;		/*!< Birth Date */
+    gchar *ip;			/*!< IP address "IP:PORT" */
+    gchar *city;		/*!< City */
+    gchar *age;			/*!< Age */
+    gchar *resource;		/*!< Resource (ex. Jabber) */
+    gint status;		/*!< Status code */
+    gchar *status_descr;	/*!< Status Description */
 } GGaduContact;
 
 void 	      GGaduContact_free(GGaduContact * k);
 GGaduContact *GGaduContact_copy(GGaduContact * k);
 
 
-/*
- *	Klasy wiadomo¶ci
- */
-
-enum
+/*! \brief Classes of message */
+typedef enum
 {
     GGADU_CLASS_CHAT,
     GGADU_CLASS_MSG,
     GGADU_CLASS_CONFERENCE,
     GGADU_MSG_SEND,
     GGADU_MSG_RECV
-};
+} GGaduMessageClass;
 
+/*! \brief some useful constants to search engine */
 enum
 {
     GGADU_SEARCH_FIRSTNAME,
@@ -297,21 +306,14 @@ enum
 };
 
 
-/*
- *	GGaduMsg
- *	opisuje przesylana wiadomosc
- */
-
+/*! \brief Structure to send message */
 typedef struct
 {
-    gchar *id;
-    gchar *message;
-    guint class;
-    guint time;
-
-    /* conference */
-    GSList *recipients;
-
+    gchar *id;		/*!< Recipient ID */
+    gchar *message;	/*!< Message in UTF-8 */
+    guint time;		/*!< Time of message */
+    GGaduMessageClass class;	/*!< Kind of message */
+    GSList *recipients;	/*!< Holds recipients of message if GGADU_CLASS_CONFERENCE */
 } GGaduMsg;
 
 void GGaduMsg_free(gpointer msg);
@@ -320,7 +322,6 @@ void GGaduMsg_free(gpointer msg);
  *	GGaduNotify
  *	opisuje pojawienie sie kogos, lub zmiane stanu
  */
-
 typedef struct
 {
     gchar *id;
@@ -330,33 +331,30 @@ typedef struct
 
 void GGaduNotify_free(GGaduNotify * n);
 
-/*
- *	GGaduStatusPrototype
- *	prototyp statusu uzytownika danego protoko³u
- *
- */
-
+/*! \brief Status prototype structure
+*/
 typedef struct
 {
-    gint status;		/* identyfikator statusu */
-    gchar *description;		/* wy¶wietlany opis np. "Dostêpny" */
-    gchar *image;		/* nazwa pliku obrazeku statusu */
-    gboolean receive_only;
+    gint status;		 /*!< Status code */
+    gchar *status_description;   /*!< Status description */
+    gchar *description;		 /*!< Status label np. "Available" */
+    gchar *image;		 /*!< Image name  */
+    gboolean receive_only;	 /*!< Identify if status is only received by other contacts */
 } GGaduStatusPrototype;
 
 void GGaduStatusPrototype_free(GGaduStatusPrototype * s);
 
+/*! \brief Key<->Value pair of data 
+    @see GGaduKeyValueFlag
+*/
 typedef struct
 {
-    gint key;
-    gpointer value;
-
-    GGaduVarType type;		/* GGaduVarType      */
-    guint flag;			/* GGaduKeyValueFlag */
-
-    gchar *description;
-
-    gpointer user_data;
+    gint key;			/*!< Key */
+    gpointer value;		/*!< Value for this key */
+    GGaduVarType type;		/*!< GGaduVarType      */
+    guint flag;			/*!< GGaduKeyValueFlag */
+    gchar *description;		/*!< Description assigned to this key */
+    gpointer user_data;		/*!< User data assigned to this structure */
 } GGaduKeyValue;
 
 void GGaduKeyValue_free(GGaduKeyValue * kv);

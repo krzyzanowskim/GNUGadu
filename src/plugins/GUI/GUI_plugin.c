@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.96 2004/11/19 17:36:23 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.97 2004/11/26 12:40:52 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -535,7 +535,7 @@ void change_status(GPtrArray * ptra)
 	 */
 
 	gp = gui_find_protocol(plugin_source, protocols);
-	if (gp && !is_in_status(sp->status, gp->p->offline_status) && ggadu_config_var_get(gui_handler, "blink"))
+	if (gp && !ggadu_is_in_status(sp->status, gp->p->offline_status) && ggadu_config_var_get(gui_handler, "blink"))
 	{
 		gint last_resort_status;
 
@@ -557,7 +557,7 @@ void change_status(GPtrArray * ptra)
 
 		sp1 = ggadu_find_status_prototype(gp->p, sp2 ? sp2->status : last_resort_status);
 
-		if (sp1 && sp2 && is_in_status(sp2->status, gp->p->offline_status))
+		if (sp1 && sp2 && ggadu_is_in_status(sp2->status, gp->p->offline_status))
 		{
 			/* *INDENT-OFF* */
 			gp->blinker_image1 = create_pixbuf(sp1->image);
@@ -569,7 +569,7 @@ void change_status(GPtrArray * ptra)
 			/* *INDENT-ON* */
 		}
 	}
-	else if (is_in_status(sp->status, gp->p->offline_status) && gp->blinker > 0)
+	else if (ggadu_is_in_status(sp->status, gp->p->offline_status) && gp->blinker > 0)
 	{
 		g_source_remove(gp->blinker);
 		gp->blinker = -1;

@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.c,v 1.4 2004/11/17 11:14:49 krzyzak Exp $ */
+/* $Id: ggadu_types.c,v 1.5 2004/11/26 12:40:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+/*! \file ggadu_types.h */
+
 #ifndef GGadu_UNIFIED_TYPES_FREE_H
 #define GGadu_UNIFIED_TYPES_FREE_H
 
@@ -31,6 +33,7 @@
 #include "ggadu_types.h"
 #include "ggadu_support.h"
 
+/*! \brief Free GGaduContact type variable */
 void GGaduContact_free(GGaduContact * k)
 {
 	if (k == NULL)
@@ -56,6 +59,9 @@ void GGaduContact_free(GGaduContact * k)
 	return;
 }
 
+/*! \brief Copy GGaduContact type variable
+    @return newly-allocated structure
+*/
 GGaduContact *GGaduContact_copy(GGaduContact * k)
 {
 	GGaduContact *kdest;
@@ -76,7 +82,7 @@ GGaduContact *GGaduContact_copy(GGaduContact * k)
 	kdest->comment = g_strdup(k->comment);
 	kdest->birthdate = g_strdup(k->birthdate);
 	kdest->status = k->status;
-	kdest->status_descr = g_strdup(k->status_descr);
+//	kdest->status_descr = g_strdup(k->status_descr);
 	kdest->city = g_strdup(k->city);
 	kdest->age = g_strdup(k->age);
 	kdest->resource = g_strdup(k->resource);

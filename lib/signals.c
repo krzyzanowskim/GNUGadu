@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.24 2004/10/28 11:33:36 krzyzak Exp $ */
+/* $Id: signals.c,v 1.25 2004/11/26 12:40:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -71,11 +71,11 @@ GGaduSigID register_signal(GGaduPlugin * plugin_handler, gpointer name)
 {
 	GQuark q_name = g_quark_from_string(name);
 	GGaduPlugin *tmplugin = (GGaduPlugin *) plugin_handler;
-	GGaduSignalinfo *signalinfo;
+	GGaduSignalInfo *signalinfo;
 
 	print_debug("%s : register_signal : %s %d\n", tmplugin->name, name, q_name);
 
-	signalinfo = g_new0(GGaduSignalinfo, 1);
+	signalinfo = g_new0(GGaduSignalInfo, 1);
 	signalinfo->name = q_name;
 /*
     signalinfo->signal_free = signal_free;
@@ -149,12 +149,12 @@ void hook_signal(GGaduSigID q_name,
 	config->signal_hooks = g_slist_append(config->signal_hooks, signalhook);
 }
 
-GGaduSignalinfo *find_signal(gpointer signal_name)
+GGaduSignalInfo *find_signal(gpointer signal_name)
 {
 	GSList *tmp = config->loaded_plugins;
 	GGaduPlugin *plugin_handler = NULL;
 	GSList *signals_list = NULL;
-	GGaduSignalinfo *signalinfo = NULL;
+	GGaduSignalInfo *signalinfo = NULL;
 
 	if (signal_name == 0)
 		return NULL;
@@ -169,7 +169,7 @@ GGaduSignalinfo *find_signal(gpointer signal_name)
 
 		while (signals_list)
 		{
-			signalinfo = (GGaduSignalinfo *) signals_list->data;
+			signalinfo = (GGaduSignalInfo *) signals_list->data;
 
 			if ((GQuark) signalinfo->name == (GQuark) signal_name)
 				return signalinfo;
@@ -184,7 +184,7 @@ GGaduSignalinfo *find_signal(gpointer signal_name)
 }
 
 
-gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
+gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalInfo * signalinfo)
 {
 	GGaduPlugin *dest = NULL;
 	GGaduPlugin *src = NULL;
@@ -297,7 +297,7 @@ void flush_queued_signals()
 	while (signals)
 	{
 		GGaduSignal *sig = (GGaduSignal *) signals->data;
-		GGaduSignalinfo *signalinfo = NULL;
+		GGaduSignalInfo *signalinfo = NULL;
 
 		if ((signalinfo = find_signal((gpointer) sig->name)) == NULL)
 		{
@@ -340,7 +340,7 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer
 {
 	GQuark q_name;
 	GGaduSignal *tmpsignal = NULL;
-	GGaduSignalinfo *signalinfo = NULL;
+	GGaduSignalInfo *signalinfo = NULL;
 	gpointer ret = NULL;
 
 	if (!(q_name = g_quark_try_string(name)))
