@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.h,v 1.3 2003/06/01 13:49:20 shaster Exp $ */
+/* $Id: tlen_plugin.h,v 1.4 2003/09/23 00:27:55 shaster Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -21,6 +21,7 @@ enum {
     GGADU_TLEN_NICK,
     GGADU_TLEN_GROUP,
     GGADU_TLEN_PASSWORD,
+    GGADU_TLEN_LOG,
     GGADU_TLEN_AUTOCONNECT,
     GGADU_TLEN_AUTOCONNECT_STATUS
 };

@@ -1,3 +1,7 @@
+23.09.2003
+- add basic history functionality, same as in gadu-gadu plugin (tlen/shasta)
+- fix(?) adding users from search results (tlen/shasta)
+
 22.09.2003
 - another bunch of fixes and code cleanups (sms/shasta)
 - fix for short final version numbers like "2.4" (update/shasta)
