@@ -5,6 +5,11 @@ pkgdir = $(libdir)/gg2
 pkg_LTLIBRARIES = libgadu_gadu_plugin.la
 noinst_LIBRARIES =
 
+if EXTERNAL_LIBGADU
+libgadu_gadu_plugin_la_SOURCES = \
+    gadu_gadu_plugin.c \
+    gadu_gadu_plugin.h
+else
 libgadu_gadu_plugin_la_SOURCES = \
     gadu_gadu_plugin.c \
     gadu_gadu_plugin.h \
@@ -16,12 +21,22 @@ libgadu_gadu_plugin_la_SOURCES = \
     libgadu/lib/obsolete.c \
     libgadu/lib/pubdir.c \
     libgadu/lib/pubdir50.c 
+endif
 
 libgadu_gadu_plugin_la_LIBADD =  \
 	    $(top_srcdir)/lib/libgg2_core.la 
     
+if EXTERNAL_LIBGADU
+libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(OPENSSL_LIBS) $(LIBGADU_LIBS)
+else
 libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(OPENSSL_LIBS)
+endif
+
+if EXTERNAL_LIBGADU
+libgadu_gadu_plugin_la_CFLAGS =  -I/usr/kerberos/include/ $(CFLAGS) $(OPENSSL_INCLUDES) $(LIBGADU_CFLAGS)
+else
 libgadu_gadu_plugin_la_CFLAGS =  -I./libgadu/lib -I/usr/kerberos/include/ $(CFLAGS) $(OPENSSL_INCLUDES)
+endif
 
 EXTRA_DIST = libgadu/autogen.sh \
 	libgadu/compat \

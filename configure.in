@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.64 2004/06/06 19:45:15 krzyzak Exp $
+dnl $Id: configure.in,v 1.65 2004/06/07 09:50:03 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.2])
 
@@ -51,10 +51,8 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memset mkdir strcasecmp strchr strlen])
 
 
-ALL_LINGUAS="pl nl"
-#GETTEXT_PACKAGE="$PACKAGE"
-#AC_SUBST(GETTEXT_PACKAGE)
 AC_CHECK_HEADERS(libintl.h)
+ALL_LINGUAS="pl nl"
 AM_GNU_GETTEXT([use-libtool])
 
 AM_PROG_LIBTOOL
@@ -210,15 +208,28 @@ if test "x$with_gtkspell" = "xyes"; then
 fi
 
 AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
+AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu (default=no)])
+
+want_external_libgadu=no
+if test "x$with_external_libgadu" = "xyes"; then 
+    PKG_CHECK_MODULES(LIBGADU,libgadu,want_external_libgadu=yes,AC_MSG_ERROR($GTK_PKG_ERRORS))
+    AC_SUBST(LIBGADU_CFLAGS)
+    AC_SUBST(LIBGADU_LIBS)
+fi
+
+AM_CONDITIONAL(EXTERNAL_LIBGADU, test "$want_external_libgadu" = "yes")
+
 if test "x$with_gadu" = "xyes"; then 
     want_gadu=yes
-    AC_CHECK_OPENSSL
-    if test "x$have_openssl" = "xyes"; then
-	AC_SUBST(OPENSSL_LIBS)
-	AC_SUBST(OPENSSL_INCLUDES)
-	AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
-    else
-	AC_MSG_ERROR([unable to find openssl])
+    if test "x$want_external_libgadu" = "xno"; then
+	AC_CHECK_OPENSSL
+	if test "x$have_openssl" = "xyes"; then
+	    AC_SUBST(OPENSSL_LIBS)
+	    AC_SUBST(OPENSSL_INCLUDES)
+	    AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
+	else
+	    AC_MSG_ERROR([unable to find openssl required for included libgadu])
+	fi
     fi
 fi
 

@@ -1,3 +1,6 @@
+07.06.2004
+- --with-external-libgadu       Build gadu-gadu plugin against external libgadu (krzak)
+
 06.06.2004
 - Dutch translation of GNU Gadu, thanks Sander Devrieze.
 
