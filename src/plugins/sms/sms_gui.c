@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.47 2004/02/14 16:46:58 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.48 2004/02/14 20:35:26 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -244,7 +244,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	{
 		GGaduDialog *dialog = signal->data;
 
-		if (ggadu_dialog_get_reponse(dialog) == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			GSList *tmplist = ggadu_dialog_get_entries(dialog);
 			while (tmplist)
