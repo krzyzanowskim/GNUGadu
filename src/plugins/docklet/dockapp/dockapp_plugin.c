@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.27 2005/01/19 21:02:14 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.28 2005/02/16 12:10:33 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -30,6 +30,7 @@
 #include <gdk/gdkx.h>
 #include <X11/Xlib.h>
 #include <gg2_core.h>
+#include "dockapp.xpm"
 #include "dockapp_plugin.h"
 
 
@@ -38,16 +39,18 @@ GGaduPlugin *handler;
 GdkGC *gc;
 GtkWidget *da = NULL;
 GdkPixmap *launch_pixmap;
+GdkPixmap *source_pixmap;
+GdkBitmap *source_mask;
 GtkWidget *status_dockapp = NULL;
 GtkTooltips *tips;
+PangoLayout * pText;
 char *tip;
-
+ 
 //kolory
 static GdkColor clUnk = { 0, 3000, 30000, 3000 };
 static GdkColor clred = { 0, 65535, 3000, 3000 };
 static GdkColor clAway = { 0, 65535, 3000, 65535 };
 static GdkColor clblack = { 0, 0, 0, 0 };
-static GdkColor clwhite = { 0, 65535, 65535, 65535 };
 static GdkColor clOnline = { 0, 3000, 3000, 65535 };
 static GdkColor clOffline = { 0, 65535, 3000, 3000 };
 
@@ -55,12 +58,13 @@ static GdkColor clOffline = { 0, 65535, 3000, 3000 };
 //Przyciski
 GdkPixbuf *icon1_img;
 GdkPixbuf *icon2_img;
-GdkRectangle icon1 = { 5, 4, 16, 16 };
-GdkRectangle icon2 = { 25, 4, 16, 16 };
+GdkRectangle icon1 = { 7, 6, 16, 16 };
+GdkRectangle icon2 = { 27, 6, 16, 16 };
 GdkRectangle btnred = { 42, 5, 13, 15 };
 
 #define NNICK 3
-gchar prev_nick[NNICK][10] = { "\0\0\0\0\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0" };
+#define NNICK_LEN 20
+gchar prev_nick[NNICK][NNICK_LEN];
 guint prev_status[NNICK] = { 0, 0, 0 };
 
 guint blinker_id = 0;		/* id of blinker timer */
@@ -93,7 +97,7 @@ int btn_clicked(GdkRectangle * btn, int x, int y)
 //Narysuj wszystko z launcz_pixmap na ekran
 void redraw()
 {
-	gdk_draw_pixmap(da->window, gc, launch_pixmap, 0, 0, 0, 0, 64, 64);
+	gdk_draw_drawable(da->window, gc, launch_pixmap, 0, 0, 0, 0, 64, 64);
 }
 
 
@@ -105,8 +109,7 @@ void draw_pixmap()
 {
 
 	//tlo ikony
-	gdk_gc_set_rgb_fg_color(gc, &clwhite);
-	gdk_draw_rectangle(launch_pixmap, gc, TRUE, 3, 3, 57, 57);
+	gdk_draw_pixmap(launch_pixmap, gc , source_pixmap , 0 , 0 , 0 , 0 , 64 ,64);
 
 	//Rysuje ikonki
 	if (icon1_img != NULL)
@@ -117,14 +120,8 @@ void draw_pixmap()
 		gdk_draw_pixbuf(launch_pixmap, gc, icon2_img, 0, 0, icon2.x, icon2.y, icon2.width, icon2.height, GDK_RGB_DITHER_NONE, 0, 0);
 
 	int i;
-	GdkFont *font;
 
-	//Wyswietl 3 nicki w kolorach zalenych od statusu
-	font = gdk_font_load("-misc-fixed-bold-r-normal-*-15-*-*-*-*-*-iso8859-2");
-	gdk_gc_set_rgb_fg_color(gc, &clred);
-	gdk_draw_text(launch_pixmap, font, gc, 42, 17, "X", 1);
-
-	font = gdk_font_load("-misc-fixed-medium-r-normal-*-10-*-*-*-*-*-iso8859-2");
+	//Wyswietl 3 nicki w kolorach zalenych od statusu	
 	for (i = 0; i < NNICK; i++)
 	{
 		switch (prev_status[i])
@@ -141,11 +138,11 @@ void draw_pixmap()
 		default:
 			gdk_gc_set_rgb_fg_color(gc, &clUnk);
 		}
-		gdk_draw_text(launch_pixmap, font, gc, 6, 34 + (i * 10), prev_nick[i], strlen(prev_nick[i]));
+			
+		pango_layout_set_text (pText,prev_nick[i],-1);
+		gdk_draw_layout(launch_pixmap,gc, 6, 24 + (i * 11), pText);
 	}
-
-
-	gdk_font_unref(font);
+	
 	gdk_gc_set_rgb_fg_color(gc, &clblack);
 }
 
@@ -269,11 +266,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 		gchar *plugin_name = g_strdup(g_slist_nth_data(sigdata, 0));
 		/* stop if wrong protocol */
-		if (ggadu_strcasecmp(plugin_name, "gadu-gadu"))
-		{
-			g_free(plugin_name);
-			return;
-		}
+//		if (ggadu_strcasecmp(plugin_name, "gadu-gadu"))
+//		{
+//			g_free(plugin_name);
+//			return;
+//		}
 		icon1_img = g_slist_nth_data(sigdata, 1);
 		draw_pixmap();
 		redraw();
@@ -290,27 +287,20 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 	GGaduProtocol *p = NULL;
 	gchar *dockapp_protocol, *utf;
 	gpointer key2 = NULL, index = NULL;
+	int user_status;
 
 	print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
 
 	/* stop if no dockapp_protocol set or notify from other protocol */
-	dockapp_protocol = ggadu_config_var_get(handler, "dockapp_protocol");
-	if (!dockapp_protocol || ggadu_strcasecmp(dockapp_protocol, repo_name))
-		return;
+	// skoro nie ma jeszcze konfiguracyjnego okienka
+//	dockapp_protocol = ggadu_config_var_get(handler, "dockapp_protocol");
+//	if (!dockapp_protocol || ggadu_strcasecmp(dockapp_protocol, repo_name))
+//		return;
 
 	/* stop if unknown contact */
 	if ((k = ggadu_repo_find_value(repo_name, key)) == NULL)
 		return;
 
-	/* shift existent notifies */
-	for (i = 0; i < NNICK - 1; i++)
-	{
-		g_strlcpy(prev_nick[i], prev_nick[i + 1], 9);
-		prev_status[i] = prev_status[i + 1];
-	}
-
-	/* add new notify */
-	g_strlcpy(prev_nick[NNICK - 1], (k->nick != NULL) ? k->nick : k->id, 9);
 
 	/* find protocol in repo */
 	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2);
@@ -328,16 +318,41 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 
 	/* search for status online */
 	if (g_slist_find(p->online_status, (gint *) k->status) != NULL)
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_ONLINE;
+		user_status = GGADU_DOCKAPP_STATUS_ONLINE;
 	/* search for status away */
 	else if (g_slist_find(p->away_status, (gint *) k->status) != NULL)
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_AWAY;
+		user_status = GGADU_DOCKAPP_STATUS_AWAY;
 	/* search for status offline */
 	else if (g_slist_find(p->offline_status, (gint *) k->status) != NULL)
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_OFFLINE;
+		user_status = GGADU_DOCKAPP_STATUS_OFFLINE;
 	/* not found? set unknown status */
 	else
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_UNKNOWN;
+		user_status = GGADU_DOCKAPP_STATUS_UNKNOWN;
+
+	/* check if last notify exists */
+	
+	for (i = NNICK - 1; i >= 0; i--)
+	{
+		if ( strncmp (prev_nick[i] , (k->nick != NULL) ? k->nick : k->id , NNICK_LEN - 1) == 0 )
+		{
+			if ( prev_status[i] == user_status )
+				return;
+			else
+				break;
+		}
+	}
+		
+	/* shift existent notifies */
+	for (i = 0; i < NNICK - 1; i++)
+	{
+		g_strlcpy(prev_nick[i], prev_nick[i + 1], NNICK_LEN - 1);
+		prev_status[i] = prev_status[i + 1];
+	}
+
+	/* add new notify */
+	g_strlcpy(prev_nick[NNICK - 1], (k->nick != NULL) ? k->nick : k->id, NNICK_LEN - 1);
+
+	prev_status[NNICK - 1] = user_status;
 
 	draw_pixmap();
 	redraw();
@@ -376,19 +391,28 @@ void start_plugin()
 	g_signal_connect(G_OBJECT(da), "expose_event", G_CALLBACK(redraw), NULL);
 	g_signal_connect(G_OBJECT(da), "button-press-event", G_CALLBACK(dockapp_clicked), NULL);
 	gtk_container_add(GTK_CONTAINER(status_dockapp), da);
-	gtk_tooltips_set_tip(GTK_TOOLTIPS(tips), da, "ppp", "ppp");
-
+	gtk_tooltips_set_tip(GTK_TOOLTIPS(tips), da, "ppp", "ppp");	
+	pText = gtk_widget_create_pango_layout(da,NULL);
 	gtk_widget_realize(da);
+
+
 
 	//Opcje graficzne okna
 	gc = gdk_gc_new(da->window);
+	
+	// pixmapa zawierajaca to z czego bedziemy kopiowac	oraz maske dockapp-a
+	source_pixmap = gdk_pixmap_create_from_xpm_d((status_dockapp->window), &(source_mask), NULL, dockapp_xpm); 		
+	gtk_widget_modify_font(da,pango_font_description_from_string("Sans bold 16"));			
+	pText = gtk_widget_create_pango_layout(da,"X");
+	pango_layout_set_text (pText,"X",-1);
+	gdk_gc_set_rgb_fg_color(gc, &clred);
+	gdk_draw_layout(source_pixmap,gc, btnred.x , btnred.y, pText);
+	gtk_widget_modify_font(da,pango_font_description_from_string("Sans 10"));	
+	
 	//Pixmapa - na niej nalezy wykonywac wszystkie rysunki
 	//A dopiero potem przerysowaæ za pomoc± redraw()
 	launch_pixmap = gdk_pixmap_new(da->window, 64, 64, -1);
 
-	//Rysuje tlo ikony
-	gdk_gc_set_rgb_fg_color(gc, &clblack);
-	gdk_draw_rectangle(launch_pixmap, gc, TRUE, 0, 0, -1, -1);
 
 
 	draw_pixmap();
@@ -397,14 +421,21 @@ void start_plugin()
 	//Windowmaker hints - tu sprowadza okno do ikony
 	XWMHints wmhints;
 	wmhints.initial_state = WithdrawnState;
-	wmhints.flags = StateHint;
-	XSetWMHints(GDK_DISPLAY(), GDK_WINDOW_XWINDOW(status_dockapp->window), &wmhints);
-	gdk_window_set_icon(status_dockapp->window, da->window, NULL, NULL);
-	gdk_window_set_group(status_dockapp->window, status_dockapp->window);
+	wmhints.flags = StateHint | IconWindowHint | IconPositionHint | WindowGroupHint;
+	wmhints.icon_x = 0;
+	wmhints.icon_y = 0;
+	wmhints.icon_window = GDK_WINDOW_XWINDOW(da->window);
+	wmhints.window_group = GDK_WINDOW_XWINDOW(status_dockapp->window);
 
-	//Pokaz widgety
+	// ustawienie maski dla dockapp-a
+	gdk_window_shape_combine_mask((status_dockapp->window), source_mask, 0, 0);
+	gdk_window_shape_combine_mask((da->window), source_mask, 0, 0);
+
+	//Pokaz widgety 
 	gtk_widget_show_all(da);
 	gtk_widget_show_all(status_dockapp);
+
+	XSetWMHints(GDK_DISPLAY(), GDK_WINDOW_XWINDOW(status_dockapp->window), &wmhints);
 
 	//rejestracja sygnalow
 	register_signal(handler, "update config");
@@ -433,5 +464,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	if (!ggadu_config_read(handler))
 		g_warning(_("Unable to read configuration file for plugin %s"), GGadu_PLUGIN_NAME);
 
+	memset(prev_nick,0,sizeof(prev_nick));		
 	return handler;
 }
