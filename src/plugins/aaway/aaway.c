@@ -89,7 +89,7 @@ static gboolean check_idle_time()
 {
 	gint local_idle = get_idle();
 	
-	print_debug("in");
+//	print_debug("in");
 	
 	if ((local_idle >= (gint) ggadu_config_var_get(handler, "interval")) 
 	    && (gint) ggadu_config_var_get(handler, "enable"))
@@ -191,7 +191,7 @@ static gboolean check_idle_time()
 		    plugins = plugins->next;
 		}
 	}
-	print_debug("out");
+//	print_debug("out");
 	return TRUE;
 }
 

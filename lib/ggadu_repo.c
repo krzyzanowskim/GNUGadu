@@ -1,4 +1,4 @@
-/* $Id: ggadu_repo.c,v 1.3 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: ggadu_repo.c,v 1.4 2005/01/19 19:39:01 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -67,7 +67,7 @@ GGaduRepo *ggadu_repo_find(gchar * repo_name)
 	{
 		tmp = (GGaduRepo *) list->data;
 
-		if (!ggadu_strcasecmp(repo_name, (gchar *) tmp->name))
+		if (tmp && !ggadu_strcasecmp(repo_name, (gchar *) tmp->name))
 			return tmp;
 
 		list = list->next;
