@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.169 2004/05/05 19:42:35 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.170 2004/05/07 13:20:05 thrulliq Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -761,6 +761,17 @@ gpointer user_view_history_action(gpointer user_data)
 	/* zwonic ten hist_buf */
 	g_string_free(hist_buf, TRUE);
 
+	return NULL;
+}
+
+gpointer user_ask_remove_user_action(gpointer user_data)
+{
+	GGaduDialog *dialog;
+	
+	dialog = ggadu_dialog_new_full(GGADU_DIALOG_YES_NO, _("Are You sure You want to delete selected user(s)?"),
+							       "user remove user action", user_data);
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
+	
 	return NULL;
 }
 
@@ -1618,6 +1629,8 @@ void start_plugin()
 	GET_FILE_SIG = register_signal(handler, "get file");
 	GET_USER_MENU_SIG = register_signal(handler, "get user menu");
 	REGISTER_ACCOUNT = register_signal(handler, "register account");
+	USER_REMOVE_USER_SIG = register_signal(handler, "user remove user action");
+	
 	load_contacts("ISO-8859-2");
 	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 	test();			/* ?! */
@@ -1655,7 +1668,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if ((gboolean) ggadu_config_var_get(handler, "dcc"))
 			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send File"), send_file_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), user_change_user_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_ask_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), user_add_user_action, NULL));
 		if ((ext = ggadu_find_extension(handler, GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE)))
 			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item((gpointer) ext->txt, ext->callback, NULL));
@@ -2347,6 +2360,17 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		GGaduDialog_free(dialog);
 		return;
 	}
+	
+	if (signal->name == USER_REMOVE_USER_SIG)
+	{
+		GGaduDialog *d = signal->data;
+		if (ggadu_dialog_get_response(d) == GGADU_OK) {
+			user_remove_user_action(d->user_data);
+		}
+		g_slist_free(d->user_data);
+		return;
+	}
+
 }
 
 void destroy_plugin()

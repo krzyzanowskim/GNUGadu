@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.74 2004/02/22 22:57:14 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.75 2004/05/07 13:20:07 thrulliq Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -55,6 +55,7 @@ static GQuark SEARCH_SIG;
 static GQuark GET_CURRENT_STATUS_SIG;
 static GQuark GET_USER_MENU_SIG;
 static GQuark REGISTER_ACCOUNT;
+static GQuark USER_REMOVE_SIG;
 
 jabber_data_type jabber_data;
 
@@ -175,6 +176,16 @@ gpointer user_edit_action(gpointer user_data)
 	return NULL;
 }
 
+gpointer user_ask_remove_action(gpointer user_data)
+{
+        GGaduDialog *dialog;
+	                                                                                                               
+	dialog = ggadu_dialog_new_full(GGADU_DIALOG_YES_NO, _("Are You sure You want to delete selected user(s)?"), 
+					"user remove action", user_data);
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
+	return NULL;
+}
+
 gpointer user_remove_action(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
@@ -278,7 +289,7 @@ GGaduMenu *build_userlist_menu(void)
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_remove_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_ask_remove_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add New"), user_add_action, NULL));
 
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
@@ -662,6 +673,15 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		}
 		GGaduDialog_free(dialog);
 	}
+	
+	if (signal->name == USER_REMOVE_SIG) {
+		GGaduDialog *d = signal->data;
+		if (ggadu_dialog_get_response(d) == GGADU_OK) {
+			user_remove_action(d->user_data);
+		}
+		g_slist_free(d->user_data);
+		return;
+	}																
 }
 
 static GSList *status_init()
@@ -825,6 +845,7 @@ void start_plugin()
 	SEARCH_SIG = register_signal(jabber_handler, "search");
 	ADD_USER_SIG = register_signal(jabber_handler, "add user");
 	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
+	USER_REMOVE_SIG = register_signal(jabber_handler, "user remove action");
 
 	jabbermenu = build_jabber_menu();
 
