@@ -1,4 +1,4 @@
-/* $Id: sound-arts.h,v 1.4 2004/08/24 14:20:31 krzyzak Exp $ */
+/* $Id: sound-arts.h,v 1.5 2004/08/24 14:21:46 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -29,5 +29,4 @@
 
 int arts_play_file(char *filename);
 
-}
 #endif
