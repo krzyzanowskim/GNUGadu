@@ -157,9 +157,9 @@ void sms_userlist_menu()
     ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send SMS"), sms_send_sms, NULL) );
 
     listmenu = ggadu_menu_new_item(_("Contact"), NULL, NULL);
-    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Edit"), sms_edit_contact, NULL) );
     ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"), sms_add_contact, NULL) );
     ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"), sms_remove_contact, NULL) );
+    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Edit"), sms_edit_contact, NULL) );
     ggadu_menu_add_submenu(umenu, listmenu);
 
 

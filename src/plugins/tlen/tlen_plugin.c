@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.11 2003/04/06 13:10:48 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.12 2003/04/06 20:56:56 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -583,8 +583,8 @@ void register_userlist_menu()
     ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"),user_chat_action,NULL));
 			                                                                                
     listmenu = ggadu_menu_new_item(_("List"),NULL,NULL);                        
-    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"),user_remove_user_action,NULL));
     ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"),user_add_user_action,NULL));
+    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"),user_remove_user_action,NULL));
 		                                                                                    
     ggadu_menu_add_submenu(umenu, listmenu );                                   
                                                         

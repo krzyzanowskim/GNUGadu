@@ -299,8 +299,8 @@ void register_userlist_menu() {
 	GGaduMenu *listmenu = NULL;                                                 
 
 	listmenu = ggadu_menu_new_item(_("List"),NULL,NULL);                        
-	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"),user_remove_user_action,NULL));
 	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"),user_add_action,NULL));
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"),user_remove_user_action,NULL));
 	ggadu_menu_add_submenu(umenu, listmenu );                                   
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register userlist menu", umenu, "main-gui");
