@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.20 2003/06/09 22:25:14 krzyzak Exp $
+dnl $Id: configure.in,v 1.21 2003/06/15 10:46:46 krzyzak Exp $
 
 m4_define([gg2_version],[2.0-pre3])
 
@@ -395,12 +395,13 @@ CFLAGS="$CFLAGS -I${packagesrcdir}/lib"
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
 
-echo "/* do not edit */" > ${packagesrcdir}/lib/gg2_core.h
+#echo "/* do not edit */" > ${packagesrcdir}/lib/gg2_core.h
 
 AC_OUTPUT([
 Makefile
 lib/Makefile
 lib/gg2_core.pc
+lib/gg2_core.h
 src/Makefile
 src/plugins/Makefile
 src/plugins/GUI/Makefile

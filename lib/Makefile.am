@@ -36,6 +36,7 @@ all:
 	@echo "#define GG2_CORE_H" >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/config.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/gg-types.h >> $(top_builddir)/lib/gg2_core.h
+	@cat $(top_builddir)/lib/unified-types.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/dialog.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/perl_embed.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/repo.h >> $(top_builddir)/lib/gg2_core.h
@@ -43,5 +44,7 @@ all:
 	@cat $(top_builddir)/lib/menu.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/plugins.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/signals.h >> $(top_builddir)/lib/gg2_core.h
-	@cat $(top_builddir)/lib/unified-types.h >> $(top_builddir)/lib/gg2_core.h
 	@echo "#endif" >> $(top_builddir)/lib/gg2_core.h
+	sed -e 's/#include \"unified-types.h\"//g' $(top_builddir)/lib/gg2_core.h > $(top_builddir)/lib/gg2_core.h-
+	sed -e 's/#include \"gg-types.h\"//g' $(top_builddir)/lib/gg2_core.h- > $(top_builddir)/lib/gg2_core.h
+	rm -f $(top_builddir)/lib/gg2_core.h-
