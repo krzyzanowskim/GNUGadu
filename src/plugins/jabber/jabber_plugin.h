@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.30 2004/06/16 12:12:27 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.31 2004/06/28 11:27:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -56,8 +56,10 @@ enum states
     JABBER_STATUS_AWAY,
     JABBER_STATUS_XA,
     JABBER_STATUS_DND,
+    JABBER_STATUS_DESCR,
     JABBER_STATUS_ERROR,
-    JABBER_STATUS_DESCR
+    JABBER_STATUS_NOAUTH,
+    JABBER_STATUS_AUTH_FROM
 };
 
 enum subscription

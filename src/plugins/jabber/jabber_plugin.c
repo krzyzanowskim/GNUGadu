@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.81 2004/06/21 21:47:02 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.82 2004/06/28 11:27:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -291,9 +291,9 @@ GGaduMenu *build_userlist_menu(void)
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
-	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Send authorization to"), user_resend_auth_to, NULL));
 	ggadu_menu_add_submenu(listmenu,
-			       ggadu_menu_new_item(_("Request authorization from"), user_rerequest_auth_from, NULL));
+			       ggadu_menu_new_item(_("Request presence subscription"), user_rerequest_auth_from, NULL));
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Send presence authorization"), user_resend_auth_to, NULL));
 	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(listmenu,
 			       ggadu_menu_new_item(_("Remove authorization"), user_remove_auth_from, NULL));
@@ -708,9 +708,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 static GSList *status_init()
 {
 	GSList *list = NULL;
-	GGaduStatusPrototype *sp = g_new0(GGaduStatusPrototype, 8);
+	GGaduStatusPrototype *sp = g_new0(GGaduStatusPrototype, 10);
 
-	if (!(sp = g_new0(GGaduStatusPrototype, 8)))
+	if (!(sp = g_new0(GGaduStatusPrototype, 10)))
 		return NULL;
 
 	sp->status = JABBER_STATUS_AVAILABLE;
@@ -736,6 +736,18 @@ static GSList *status_init()
 	sp->status = JABBER_STATUS_DND;
 	sp->description = g_strdup(_("DND"));
 	sp->image = g_strdup("jabber-dnd.png");
+	list = g_slist_append(list, sp++);
+
+	sp->status = JABBER_STATUS_AUTH_FROM;
+	sp->description = g_strdup(_("is subscribed to you presence"));
+	sp->image = g_strdup("jabber-auth-from.png");
+	sp->receive_only = TRUE;
+	list = g_slist_append(list, sp++);
+
+	sp->status = JABBER_STATUS_NOAUTH;
+	sp->description = g_strdup(_("No authorization"));
+	sp->image = g_strdup("jabber-noauth.png");
+	sp->receive_only = TRUE;
 	list = g_slist_append(list, sp++);
 
 	sp->status = JABBER_STATUS_UNAVAILABLE;

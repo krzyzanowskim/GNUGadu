@@ -1,5 +1,6 @@
 28.06.2004
 - fixed removing +48/0 prefixes from phone number [closes #55] (sms/shasta)
+- icons for subscriptions "from" and "none", and menu descriptions changed (jabber/krzak)
 
 27.06.2004
 - fixes build process with --with-included-gettext option (krzak)

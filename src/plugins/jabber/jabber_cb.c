@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.42 2004/05/21 08:58:38 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.43 2004/06/28 11:27:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -466,6 +466,12 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		/* show all */
 		if (first_seen)
 			k->status = JABBER_STATUS_UNAVAILABLE;
+			
+		if (!strcmp(subs,"from"))
+			k->status = JABBER_STATUS_AUTH_FROM;
+
+		if (!strcmp(subs,"none"))
+			k->status = JABBER_STATUS_NOAUTH;
 
 		if (!ggadu_repo_add_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_CONTACT))
 			ggadu_repo_change_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
