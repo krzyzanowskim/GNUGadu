@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.41 2003/12/29 20:26:00 shaster Exp $ */
+/* $Id: GUI_plugin.c,v 1.42 2004/01/03 14:54:08 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -577,6 +577,8 @@ void gui_build_default_menu ()
 
 gpointer show_hide_inactive(GtkWidget *widget, gpointer user_data)
 {
+    gtk_widget_set_sensitive (toolbar_handle_box, FALSE);
+
     if (ggadu_config_var_get (gui_handler, "show_active")) {
 	ggadu_config_var_set (gui_handler, "show_active", (gpointer)FALSE);
     } else {
@@ -586,6 +588,8 @@ gpointer show_hide_inactive(GtkWidget *widget, gpointer user_data)
     ggadu_config_save (gui_handler);
     
     gui_user_view_refresh();
+    
+    gtk_widget_set_sensitive (toolbar_handle_box, TRUE);
     
     return NULL;
 }
