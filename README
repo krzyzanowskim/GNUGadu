@@ -15,6 +15,7 @@ To compile all plugins you need:
 - aRts! (http://www.arts-project.org)
 - gtkspell - http://gtkspell.sourceforge.net
 - openssl (http://www.openssl.org)
+- dbus (http://www.freedesktop.org/software/dbus)
 
 WARNING: perl support and remote plugin will compile/work only on Linux!
 
