@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.7 2004/05/24 05:36:18 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.8 2004/09/17 09:19:17 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -37,7 +37,8 @@ typedef enum
 typedef enum
 {
 	GGADU_DIALOG_FLAG_NONE = 0,
-	GGADU_DIALOG_FLAG_PROGRESS = 1
+	GGADU_DIALOG_FLAG_PROGRESS = 1,
+	GGADU_DIALOG_FLAG_ONLY_OK = 2
 } GGaduDialogFlags;
 
 typedef struct

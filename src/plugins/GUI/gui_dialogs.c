@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.47 2004/08/22 16:39:04 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.48 2004/09/17 09:19:18 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -493,8 +493,12 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	if (!sig)
 		return;
 
-	dialog_widget = gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL,
-					     GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+	if((ggadu_dialog_get_flags(dialog) & GGADU_DIALOG_FLAG_ONLY_OK) == GGADU_DIALOG_FLAG_ONLY_OK)
+		dialog_widget = gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+	else
+		dialog_widget = gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
 	gtk_dialog_set_default_response(GTK_DIALOG(dialog_widget), GTK_RESPONSE_OK);
 	gtk_window_set_resizable(GTK_WINDOW(dialog_widget), FALSE);
