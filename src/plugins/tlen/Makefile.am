@@ -12,6 +12,7 @@ libtlen_plugin_la_LIBADD = ../../plugins.lo \
     ../../menu.lo \
     ../../unified-types.lo \
     ../../dialog.lo \
+    ../../repo.lo \
     $(TLEN_LIBS)
     
 libtlen_plugin_la_LDFLAGS = -module -avoid-version  

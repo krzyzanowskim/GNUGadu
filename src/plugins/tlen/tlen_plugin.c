@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.15 2003/04/12 19:11:39 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.16 2003/04/13 18:50:52 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -24,6 +24,7 @@
 #include "support.h"
 #include "tlen_plugin.h"
 #include "dialog.h"
+#include "repo.h"
 
 GGaduPlugin *handler;
 GGaduProtocol *p;
@@ -156,6 +157,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
     GGaduContact *k;
     GGaduNotify *notify;
     GGaduMsg *msg;
+    GSList *l;
     
 /*    if (condition & G_IO_ERR || condition & G_IO_HUP) {
 	connected = FALSE;
@@ -227,7 +229,10 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 		
 		k->status = TLEN_STATUS_UNAVAILABLE;
 		if (!user_in_userlist(userlist,k))
+		{
 		    userlist = g_slist_append(userlist, k);
+		    ggadu_repo_add_value ("tlen", k->id, k, REPO_VALUE_CONTACT);
+		}
 		break;
 	    
 	    case TLEN_EVENT_ENDROSTER:
@@ -283,7 +288,15 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 		notify->id = g_strdup_printf("%s",e->presence->from);
 		notify->status = e->presence->status;
 
-
+		while (l) {
+		  GGaduContact *k = (GGaduContact *)l->data;
+		  
+		  if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
+		    ggadu_repo_change_value ("tlen", k->id, k, REPO_VALUE_DC);
+		  }
+		  l = l->next;
+		}
+		
 		print_debug("STATUS IN EVENT: %d\n",e->presence->status);
 		set_userlist_status(notify, e->presence->description, userlist);
 		signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
@@ -399,6 +412,7 @@ gpointer user_remove_user_action(gpointer user_data)
 	GGaduContact *k = (GGaduContact *)users->data;
                                     
         userlist = g_slist_remove(userlist,k);
+	ggadu_repo_del_value ("tlen", k->id);
         tlen_request_unsubscribe (session, k->id);
         tlen_removecontact (session, k->id);
 
@@ -472,6 +486,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     config_var_add(handler, "autoconnect", VAR_BOOL);
     
     config_read(handler);
+
+    ggadu_repo_add ("tlen");
 
     return handler;
 }
@@ -636,6 +652,8 @@ void start_plugin()
 	p->offline_status = TLEN_STATUS_UNAVAILABLE;
 
 	handler->protocol = p;
+
+	ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 		
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
         
@@ -829,6 +847,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    g_slist_free(kvlist);
 	    
 	    userlist = g_slist_append(userlist,k);
+	    ggadu_repo_add_value ("tlen", k->id, k, REPO_VALUE_CONTACT);
 	    
             tlen_addcontact(session,k->nick,k->id,k->group);
 
@@ -936,6 +955,8 @@ void destroy_plugin() {
       signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_tlenmenu, "main-gui");
       ggadu_menu_free (menu_tlenmenu);
     }
+    ggadu_repo_del ("tlen");
+    ggadu_repo_del_value ("_protocols_", p->display_name);
     signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
     signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 }
