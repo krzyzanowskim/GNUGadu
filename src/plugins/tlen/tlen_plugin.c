@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.71 2004/10/22 09:22:29 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.72 2004/10/28 09:44:19 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -840,6 +840,7 @@ void start_plugin()
 
 	p = g_new0(GGaduProtocol, 1);
 	p->display_name = g_strdup("Tlen");
+	p->protocol_handler_str = g_strdup("tlen://");
 	p->img_filename = g_strdup("tlen.png");
 	p->statuslist = status_init();
 	p->offline_status = g_slist_append(p->offline_status, (gint *) TLEN_STATUS_UNAVAILABLE);

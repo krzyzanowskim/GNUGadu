@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.7 2004/10/28 09:00:56 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.8 2004/10/28 09:44:14 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -79,8 +79,8 @@ static DBusHandlerResult org_freedesktop_im_getProtocols(DBusConnection * connec
 
 			if (p)
 			{
-				print_debug("proto: %s", p->display_name);
-				dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->display_name, DBUS_TYPE_INVALID);
+				print_debug("proto: %s", p->protocol_handler_str);
+				dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->protocol_handler_str, DBUS_TYPE_INVALID);
 			}
 
 			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
