@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.75 2004/09/07 15:10:38 krzyzak Exp $
+# $Id: pl.po,v 1.76 2004/10/20 08:10:27 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
+"Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
 "POT-Creation-Date: 2004-09-07 17:04+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
-"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
+"Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
 "POT-Creation-Date: 2004-09-07 17:04+0200\n"
 "PO-Revision-Date: 04/06/04 21:02\n"
 "Last-Translator: Sander Devrieze <s.devrieze@pandora.be>\n"
