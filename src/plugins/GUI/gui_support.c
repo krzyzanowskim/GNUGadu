@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.13 2004/10/15 13:04:15 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.14 2004/10/19 10:51:27 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -36,9 +36,9 @@ extern GGaduPlugin *gui_handler;
 
 gint gui_count_visible_tabs(GtkNotebook * notebook)
 {
-	gint all_count,i;
+	gint all_count, i;
 	gint count = 0;
-	
+
 	if (!G_IS_OBJECT(notebook) || !GTK_IS_WIDGET(notebook))
 		return count;
 
@@ -92,7 +92,7 @@ gboolean gui_check_for_sessions(GSList * protocolsl)
 
 		if (gp && gp->chat_sessions && (g_slist_length(gp->chat_sessions) > 0))
 			return TRUE;
-		
+
 		tmp = tmp->next;
 	}
 
@@ -251,9 +251,7 @@ GtkWidget *create_image(const gchar * filename)
 #endif
 	if (ggadu_config_var_get(gui_handler, "icons"))
 	{
-		iconsdir =
-			g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons",
-					 ggadu_config_var_get(gui_handler, "icons"), NULL);
+		iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", ggadu_config_var_get(gui_handler, "icons"), NULL);
 		dir = g_slist_prepend(dir, iconsdir);
 	}
 
@@ -307,9 +305,7 @@ GdkPixbuf *create_pixbuf(const gchar * filename)
 #endif
 	if (ggadu_config_var_get(gui_handler, "icons"))
 	{
-		iconsdir =
-			g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons",
-					 ggadu_config_var_get(gui_handler, "icons"), NULL);
+		iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", ggadu_config_var_get(gui_handler, "icons"), NULL);
 		dir = g_slist_prepend(dir, iconsdir);
 	}
 

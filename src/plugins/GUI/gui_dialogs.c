@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.56 2004/10/18 15:59:35 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.57 2004/10/19 10:51:26 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -48,25 +48,24 @@ static GdkGC *gc;
 
 static gchar *about_text = NULL;
 
-void gui_dialog_show_filename(GtkWidget * txt_entry)
+void gui_dialog_show_filename(GtkWidget * txt_entry
+)
 {
 	GtkWidget *file_chooser = NULL;
 	GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data(G_OBJECT(txt_entry), "kv");
 	gchar *filename = NULL;
 	gint response;
 
-	file_chooser = gtk_file_chooser_dialog_new(_("Select file"),GTK_WINDOW(window),
-						    GTK_FILE_CHOOSER_ACTION_OPEN,
-						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						    GTK_STOCK_OK, GTK_RESPONSE_OK,
-						    NULL);
-							    
+	file_chooser =
+		gtk_file_chooser_dialog_new(_("Select file"), GTK_WINDOW(window), GTK_FILE_CHOOSER_ACTION_OPEN,
+					    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+
 	response = gtk_dialog_run(GTK_DIALOG(file_chooser));
 
 	if (response == GTK_RESPONSE_OK)
 	{
-		gsize r,w;
-		filename = g_filename_to_utf8( gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser)),-1,&r,&w,NULL);
+		gsize r, w;
+		filename = g_filename_to_utf8(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser)), -1, &r, &w, NULL);
 		gtk_entry_set_text(GTK_ENTRY(txt_entry), filename);
 		kv->value = (gpointer) filename;
 	}
@@ -76,7 +75,8 @@ void gui_dialog_show_filename(GtkWidget * txt_entry)
 
 /* Does not work as expected yet. Need to know how to make it
    return XLFD. */
-void gui_dialog_show_fontchooser(GtkWidget * txt_entry)
+void gui_dialog_show_fontchooser(GtkWidget * txt_entry
+)
 {
 	GtkWidget *font_selector = NULL;
 	GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data(G_OBJECT(txt_entry), "kv");
@@ -89,10 +89,8 @@ void gui_dialog_show_fontchooser(GtkWidget * txt_entry)
 
 	if (response == GTK_RESPONSE_OK)
 	{
-		font_name =
-			(gchar *)
-			gtk_font_selection_get_font_name(GTK_FONT_SELECTION
-							 (GTK_FONT_SELECTION_DIALOG(font_selector)->fontsel));
+		font_name = (gchar *) gtk_font_selection_get_font_name(GTK_FONT_SELECTION(GTK_FONT_SELECTION_DIALOG(font_selector)->fontsel));
+
 		gtk_entry_set_text(GTK_ENTRY(txt_entry), font_name);
 		kv->value = (gpointer) font_name;
 	}
@@ -100,18 +98,20 @@ void gui_dialog_show_fontchooser(GtkWidget * txt_entry)
 	gtk_widget_destroy(font_selector);
 }
 
-static void gui_dialog_show_colorchooser(GtkColorButton *color_button, gpointer entry)
+static void gui_dialog_show_colorchooser(GtkColorButton * color_button, gpointer entry
+)
 {
 	GdkColor color;
 	gchar *tmp = NULL;
-	
-	gtk_color_button_get_color(color_button,&color);
-	tmp = gtk_color_selection_palette_to_string(&color, 1);	
+
+	gtk_color_button_get_color(color_button, &color);
+	tmp = gtk_color_selection_palette_to_string(&color, 1);
 	gtk_entry_set_text(GTK_ENTRY(entry), tmp);
 	g_free(tmp);
 }
 
-GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_progress)
+GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_progress
+)
 {
 	GSList *listtmp = list;
 	gint ielements = g_slist_position(list, g_slist_last(list));
@@ -138,18 +138,18 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 			gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
 			break;
 		case VAR_INT:
-		{
-			entry = gtk_spin_button_new_with_range(0, 999999999, 1);
-			gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry), (gint) kv->value);
-			gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
-		}
+			{
+				entry = gtk_spin_button_new_with_range(0, 999999999, 1);
+				gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry), (gint) kv->value);
+				gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
+			}
 			break;
 		case VAR_INT_WITH_NEGATIVE:
-		{
-			entry = gtk_spin_button_new_with_range(-999999999, 999999999, 1);
-			gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry), (gint) kv->value);
-			gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
-		}
+			{
+				entry = gtk_spin_button_new_with_range(-999999999, 999999999, 1);
+				gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry), (gint) kv->value);
+				gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
+			}
 			break;
 		case VAR_BOOL:
 			need_label = FALSE;
@@ -158,75 +158,73 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 			break;
 		case VAR_FILE_CHOOSER:
-		{
-			GtkWidget *txt_entry = NULL;
-			GtkWidget *button_entry = NULL;
+			{
+				GtkWidget *txt_entry = NULL;
+				GtkWidget *button_entry = NULL;
 
-			entry = gtk_hbox_new(FALSE, 2);
+				entry = gtk_hbox_new(FALSE, 2);
 
-			txt_entry = gtk_entry_new();
-			if (kv->value)
-				gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
+				txt_entry = gtk_entry_new();
+				if (kv->value)
+					gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
 
-			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
-			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
+				g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
+				g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
 
-			button_entry = gtk_button_new_from_stock("gtk-open");
+				button_entry = gtk_button_new_from_stock("gtk-open");
 
-			gtk_box_pack_start_defaults(GTK_BOX(entry), txt_entry);
-			gtk_box_pack_start_defaults(GTK_BOX(entry), button_entry);
+				gtk_box_pack_start_defaults(GTK_BOX(entry), txt_entry);
+				gtk_box_pack_start_defaults(GTK_BOX(entry), button_entry);
 
-			g_signal_connect_swapped(button_entry, "clicked", G_CALLBACK(gui_dialog_show_filename),
-						 txt_entry);
-		}
+				g_signal_connect_swapped(button_entry, "clicked", G_CALLBACK(gui_dialog_show_filename), txt_entry);
+			}
 			break;
 		case VAR_FONT_CHOOSER:
-		{
-			GtkWidget *txt_entry = NULL;
-			GtkWidget *button_entry = NULL;
+			{
+				GtkWidget *txt_entry = NULL;
+				GtkWidget *button_entry = NULL;
 
-			entry = gtk_hbox_new(FALSE, 2);
+				entry = gtk_hbox_new(FALSE, 2);
 
-			txt_entry = gtk_entry_new();
-			if (kv->value)
-				gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
+				txt_entry = gtk_entry_new();
+				if (kv->value)
+					gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
 
-			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
-			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
+				g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
+				g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
 
-			button_entry = gtk_button_new_from_stock("gtk-select-font");
+				button_entry = gtk_button_new_from_stock("gtk-select-font");
 
-			gtk_box_pack_start_defaults(GTK_BOX(entry), txt_entry);
-			gtk_box_pack_start_defaults(GTK_BOX(entry), button_entry);
+				gtk_box_pack_start_defaults(GTK_BOX(entry), txt_entry);
+				gtk_box_pack_start_defaults(GTK_BOX(entry), button_entry);
 
-			g_signal_connect_swapped(button_entry, "clicked", G_CALLBACK(gui_dialog_show_fontchooser),
-						 txt_entry);
-		}
+				g_signal_connect_swapped(button_entry, "clicked", G_CALLBACK(gui_dialog_show_fontchooser), txt_entry);
+			}
 			break;
 		case VAR_COLOUR_CHOOSER:
-		{
-			GtkWidget *txt_entry = NULL;
-			GtkWidget *button_entry = NULL;
-			GdkColor color;
+			{
+				GtkWidget *txt_entry = NULL;
+				GtkWidget *button_entry = NULL;
+				GdkColor color;
 
-			entry = gtk_hbox_new(FALSE, 2);
+				entry = gtk_hbox_new(FALSE, 2);
 
-			txt_entry = gtk_entry_new();
-			if (kv->value)
-				gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
-			
-			gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(txt_entry)), &color);
-			
-			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
-			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
+				txt_entry = gtk_entry_new();
+				if (kv->value)
+					gtk_entry_set_text(GTK_ENTRY(txt_entry), g_strdup(kv->value));
 
-			button_entry = gtk_color_button_new_with_color(&color);
+				gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(txt_entry)), &color);
 
-			gtk_box_pack_start_defaults(GTK_BOX(entry), txt_entry);
-			gtk_box_pack_start_defaults(GTK_BOX(entry), button_entry);
+				g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
+				g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
 
-			g_signal_connect(G_OBJECT(button_entry), "color-set", G_CALLBACK(gui_dialog_show_colorchooser), txt_entry);
-		}
+				button_entry = gtk_color_button_new_with_color(&color);
+
+				gtk_box_pack_start_defaults(GTK_BOX(entry), txt_entry);
+				gtk_box_pack_start_defaults(GTK_BOX(entry), button_entry);
+
+				g_signal_connect(G_OBJECT(button_entry), "color-set", G_CALLBACK(gui_dialog_show_colorchooser), txt_entry);
+			}
 			break;
 		case VAR_IMG:
 			need_label = FALSE;
@@ -235,40 +233,41 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 			break;
 		case VAR_LIST:
 			{
-				GSList *selected = g_slist_nth ((GSList *)kv->value,0);
-				GSList *restlist = g_slist_nth ((GSList *)kv->value,1);
+				GSList *selected = g_slist_nth((GSList *) kv->value, 0);
+				GSList *restlist = g_slist_nth((GSList *) kv->value, 1);
 				gint selected_index = 0;
 				gint i = -1;
-				
+
 				entry = gtk_combo_box_new_text();
-				
-				g_object_set_data(G_OBJECT(entry),"options-list",restlist);
+
+				g_object_set_data(G_OBJECT(entry), "options-list", restlist);
 				while (restlist)
 				{
-				    i++;
-				    if (!g_strcasecmp(selected->data,restlist->data))
-				    {
-					selected_index = i;
-					print_debug("############# %d %s",selected_index,selected->data);
-				    } 
-				    gtk_combo_box_append_text(GTK_COMBO_BOX(entry),g_strdup(restlist->data));
-				    restlist = restlist->next;
+					i++;
+					if (!g_strcasecmp(selected->data, restlist->data))
+					{
+						selected_index = i;
+						print_debug("############# %d %s", selected_index, selected->data);
+					}
+					gtk_combo_box_append_text(GTK_COMBO_BOX(entry), g_strdup(restlist->data));
+					restlist = restlist->next;
 				}
-				gtk_combo_box_set_active(GTK_COMBO_BOX(entry),selected_index);
+				gtk_combo_box_set_active(GTK_COMBO_BOX(entry), selected_index);
 			}
-						
+			break;
+		default:
 			break;
 		}
 
 		if ((kv->flag & VAR_FLAG_SENSITIVE) != 0)
 		{
-			gtk_widget_set_sensitive (GTK_WIDGET(entry),TRUE);
+			gtk_widget_set_sensitive(GTK_WIDGET(entry), TRUE);
 			gtk_editable_set_editable(GTK_EDITABLE(entry), TRUE);
 		}
 
 		if ((kv->flag & VAR_FLAG_INSENSITIVE) != 0)
 		{
-			gtk_widget_set_sensitive (GTK_WIDGET(entry),FALSE);
+			gtk_widget_set_sensitive(GTK_WIDGET(entry), FALSE);
 			gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
 		}
 
@@ -307,11 +306,12 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 
 		listtmp = listtmp->next;
 	}
-	
+
 	/* progress stuff */
-	if (use_progress) {
-	    GtkWidget *progress = gtk_progress_bar_new();
-	    gtk_table_attach_defaults(GTK_TABLE(tab), progress, 0, rows, actR, actR+1);
+	if (use_progress)
+	{
+		GtkWidget *progress = gtk_progress_bar_new();
+		gtk_table_attach_defaults(GTK_TABLE(tab), progress, 0, rows, actR, actR + 1);
 	}
 
 	if (to_grab_focus)
@@ -320,7 +320,8 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 	return tab;
 }
 
-void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_data)
+void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_data
+)
 {
 	GGaduSignal *signal = (GGaduSignal *) user_data;
 	GGaduDialog *dialog = signal ? signal->data : NULL;
@@ -336,20 +337,20 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 			switch (kv->type)
 			{
 			case VAR_STR:
-			{
-				gchar *tmp = (gchar *) g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
+				{
+					gchar *tmp = (gchar *) g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
 
-				if (strlen(tmp) > 0)
-				{
-					g_free(kv->value);
-					kv->value = (gpointer) tmp;
+					if (strlen(tmp) > 0)
+					{
+						g_free(kv->value);
+						kv->value = (gpointer) tmp;
+					}
+					else
+					{
+						kv->value = NULL;
+						g_free(tmp);
+					}
 				}
-				else
-				{
-					kv->value = NULL;
-					g_free(tmp);
-				}
-			}
 				break;
 			case VAR_INT:
 			case VAR_INT_WITH_NEGATIVE:
@@ -361,40 +362,44 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 			case VAR_FILE_CHOOSER:
 			case VAR_FONT_CHOOSER:
 			case VAR_COLOUR_CHOOSER:
-			{
-				gchar *tmp = NULL;
-				GtkWidget *hbox = (GtkWidget *) kv->user_data;
-				GtkWidget *entry = (GtkWidget *) g_object_get_data(G_OBJECT(hbox), "txt_entry");
-
-				tmp = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
-				if (strlen(tmp) > 0)
-					kv->value = (gpointer) tmp;
-				else
 				{
-					kv->value = NULL;
-					g_free(tmp);
+					gchar *tmp = NULL;
+					GtkWidget *hbox = (GtkWidget *) kv->user_data;
+					GtkWidget *entry = (GtkWidget *) g_object_get_data(G_OBJECT(hbox), "txt_entry");
+
+					tmp = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
+					if (strlen(tmp) > 0)
+					{
+						kv->value = (gpointer) tmp;
+					}
+					else
+					{
+						kv->value = NULL;
+						g_free(tmp);
+					}
 				}
-			}
 				break;
 			case VAR_IMG:
 				kv->value = NULL;
 				break;
 			case VAR_LIST:
 				{
-				GSList *ltmp = NULL;
-				gchar *val = NULL;
-				/* KURWA co z tym zwalnianiem, bo do chuja nie wiem czy to zwolnione czy 
-				   nie zwolnione ma byc do chuja NOOOOOOOOOOOO 
-				   i czemu KURWA XOSD SIE WYPIERDALA 
-				   dobra, dziala, ale tu JEST SIECZKA JAKAS */
-				g_slist_free(kv->value);
+					GSList *ltmp = NULL;
+					gchar *val = NULL;
+					/* KURWA co z tym zwalnianiem, bo do chuja nie wiem czy to zwolnione czy 
+					   nie zwolnione ma byc do chuja NOOOOOOOOOOOO 
+					   i czemu KURWA XOSD SIE WYPIERDALA 
+					   dobra, dziala, ale tu JEST SIECZKA JAKAS */
+					g_slist_free(kv->value);
 
-				ltmp = g_object_get_data(G_OBJECT(kv->user_data),"options-list");
-				val  = g_slist_nth_data(ltmp,gtk_combo_box_get_active (GTK_COMBO_BOX(kv->user_data)));
-				kv->value = g_slist_append(NULL,g_strdup(val));
-			
-				break;
+					ltmp = g_object_get_data(G_OBJECT(kv->user_data), "options-list");
+					val = g_slist_nth_data(ltmp, gtk_combo_box_get_active(GTK_COMBO_BOX(kv->user_data)));
+					kv->value = g_slist_append(NULL, g_strdup(val));
+
 				}
+				break;
+			default:
+				break;
 			}
 			kvlist = kvlist->next;
 		}
@@ -420,23 +425,22 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 
 		signal_emit("main-gui", dialog->callback_signal, dialog, signal->source_plugin_name);
 	}
-	
+
 	gtk_widget_destroy(GTK_WIDGET(dialog_widget));
-	
-    	GGaduSignal_free(signal);
+
+	GGaduSignal_free(signal);
 
 }
 
-void gui_show_message_box(gint type, gpointer signal)
+void gui_show_message_box(gint type, gpointer signal
+)
 {
 	GtkWidget *warning = NULL;
 	gchar *txt = ((GGaduSignal *) signal)->data;
 	gchar *title;
 	gui_protocol *gp;
 
-	warning =
-		gtk_message_dialog_new(GTK_WINDOW(window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, type,
-				       GTK_BUTTONS_CLOSE, txt);
+	warning = gtk_message_dialog_new(GTK_WINDOW(window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, type, GTK_BUTTONS_CLOSE, txt);
 
 	gp = gui_find_protocol(((GGaduSignal *) signal)->source_plugin_name, protocols);
 
@@ -449,10 +453,11 @@ void gui_show_message_box(gint type, gpointer signal)
 	gtk_widget_show_all(warning);
 	g_signal_connect_swapped(GTK_OBJECT(warning), "response", G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(warning));
 	g_free(txt);		/* ZONK there shouldnt be free(txt) imho */
-//	g_free(title); 		because of void gtk_window_set_title (GtkWindow *window, const gchar *title);
+//      g_free(title);          because of void gtk_window_set_title (GtkWindow *window, const gchar *title);
 }
 
-void gui_show_window_with_text(gpointer signal)
+void gui_show_window_with_text(gpointer signal
+)
 {
 	GGaduSignal *sig = (GGaduSignal *) signal;
 	GtkWidget *dialog = NULL;
@@ -460,8 +465,7 @@ void gui_show_window_with_text(gpointer signal)
 	GtkTextBuffer *buf = NULL;
 	GtkWidget *sw = NULL;
 
-	dialog = gtk_dialog_new_with_buttons("", NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_OK,
-					     NULL);
+	dialog = gtk_dialog_new_with_buttons("", NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 	gtk_window_resize(GTK_WINDOW(dialog), 400, 400);
 
 	buf = gtk_text_buffer_new(NULL);
@@ -482,7 +486,8 @@ void gui_show_window_with_text(gpointer signal)
 
 }
 
-void gui_show_dialog(gpointer signal, gboolean change)
+void gui_show_dialog(gpointer signal, gboolean change
+)
 {
 	GGaduSignal *sig = (GGaduSignal *) signal;
 	GtkWidget *dialog_widget = NULL;
@@ -497,12 +502,12 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	if (!sig)
 		return;
 
-	if((ggadu_dialog_get_flags(dialog) & GGADU_DIALOG_FLAG_ONLY_OK) == GGADU_DIALOG_FLAG_ONLY_OK)
-		dialog_widget = gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
-				GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+	if ((ggadu_dialog_get_flags(dialog) & GGADU_DIALOG_FLAG_ONLY_OK) == GGADU_DIALOG_FLAG_ONLY_OK)
+		dialog_widget = gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 	else
-		dialog_widget = gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
-				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+		dialog_widget =
+			gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
 	gtk_dialog_set_default_response(GTK_DIALOG(dialog_widget), GTK_RESPONSE_OK);
 	gtk_window_set_resizable(GTK_WINDOW(dialog_widget), FALSE);
@@ -545,9 +550,9 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog_widget)->vbox), hbox, TRUE, TRUE, 10);
 
 	if (dialog->flags & GGADU_DIALOG_FLAG_PROGRESS)
-	    table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1, TRUE);
-	    else
-	    table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1, FALSE);
+		table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1, TRUE);
+	else
+		table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1, FALSE);
 
 	gtk_table_set_row_spacings(GTK_TABLE(table), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(table), 5);
@@ -555,7 +560,7 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog_widget)->vbox), table, TRUE, TRUE, 0);
 
 	g_signal_connect(G_OBJECT(dialog_widget), "response", G_CALLBACK(gui_dialog_response), signal_cpy(signal));
-	
+
 /*	if (ggadu_dialog_get_type(dialog) == GGADU_DIALOG_PROGRESS)
 	{
 		g_timeout_add(1000,dialog->watch_func,NULL);
@@ -564,7 +569,8 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	gtk_widget_show_all(dialog_widget);
 }
 
-static gint timeout(gpointer user_data)
+static gint timeout(gpointer user_data
+)
 {
 	GtkWidget *image = user_data;
 	PangoLayout *layout;
@@ -609,8 +615,7 @@ static gint timeout(gpointer user_data)
 
 	gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, image->allocation.width, image->allocation.height);
 
-	gtk_paint_layout(image->style, pixmap, GTK_WIDGET_STATE(image), FALSE, &area, image, "about",
-			 image->allocation.x + offset_x, about_y, layout);
+	gtk_paint_layout(image->style, pixmap, GTK_WIDGET_STATE(image), FALSE, &area, image, "about", image->allocation.x + offset_x, about_y, layout);
 
 	gdk_draw_drawable(image->window, gc, pixmap, 0, 0, 0, 0, image->allocation.width, image->allocation.height);
 
@@ -619,7 +624,8 @@ static gint timeout(gpointer user_data)
 	return TRUE;
 }
 
-static void about_response(GtkWidget * widget, gpointer user_data)
+static void about_response(GtkWidget * widget, gpointer user_data
+)
 {
 	g_source_remove(about_timeout);
 	about_timeout = -1;
@@ -629,7 +635,8 @@ static void about_response(GtkWidget * widget, gpointer user_data)
 	g_free(about_text);
 }
 
-static gboolean about_configure_event(GtkWidget * image, GdkEventConfigure * event, gpointer data)
+static gboolean about_configure_event(GtkWidget * image, GdkEventConfigure * event, gpointer data
+)
 {
 	if (pixmap)
 		return TRUE;
@@ -648,14 +655,15 @@ static gboolean about_configure_event(GtkWidget * image, GdkEventConfigure * eve
 	return TRUE;
 }
 
-static gboolean about_expose_event(GtkWidget * image, GdkEventExpose * event, gpointer data)
+static gboolean about_expose_event(GtkWidget * image, GdkEventExpose * event, gpointer data
+)
 {
-	gdk_draw_drawable(image->window, gc, pixmap, event->area.x, event->area.y, event->area.x, event->area.y,
-			  event->area.width, event->area.height);
+	gdk_draw_drawable(image->window, gc, pixmap, event->area.x, event->area.y, event->area.x, event->area.y, event->area.width, event->area.height);
 	return TRUE;
 }
 
-void gui_about(GtkWidget * widget, gpointer data)
+void gui_about(GtkWidget * widget, gpointer data
+)
 {
 	GtkWidget *about;
 	GtkWidget *table;
@@ -664,8 +672,7 @@ void gui_about(GtkWidget * widget, gpointer data)
 
 	print_debug("About\n");
 
-	about = gtk_dialog_new_with_buttons(_("About"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_STOCK_OK, GTK_RESPONSE_NONE, NULL);
+	about = gtk_dialog_new_with_buttons(_("About"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_NONE, NULL);
 	gtk_window_set_resizable(GTK_WINDOW(about), FALSE);
 	table = gtk_table_new(2, 2, FALSE);
 	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(about)->vbox), table);
@@ -700,14 +707,14 @@ void gui_about(GtkWidget * widget, gpointer data)
 				 "Igor Popik &lt;thrull@slackware.pl&gt;\n"
 				 "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n" "<b>Also:</b>\n"
 				 "Bartosz Zapalowski\n" "Mateusz Papiernik\n" "HelDoRe\n" "Jakub 'shasta' Jankowski\n"
-				 "Pawel Jan Maczewski\nMarcin P. Kobierzycki\n\n" "<b>Thanks to:</b>\n" "Aflinta\n" "GammaRay\n" "Plavi\n"
-				 "Dwuziu\nInfecto\n" "see AUTHORS file for details\n\n" "<i>Compile time:\n%s %s</i>"), VERSION,
-				__DATE__, __TIME__);
+				 "Pawel Jan Maczewski\nMarcin P. Kobierzycki\n\n" "<b>Thanks to:</b>\n" "Aflinta\n"
+				 "GammaRay\n" "Plavi\n" "Dwuziu\nInfecto\n" "see AUTHORS file for details\n\n" "<i>Compile time:\n%s %s</i>"), VERSION, __DATE__, __TIME__);
 
 	about_timeout = g_timeout_add(50, timeout, image);
 }
 
-void gui_show_about(gpointer signal)
+void gui_show_about(gpointer signal
+)
 {
 	gui_about(NULL, NULL);
 }

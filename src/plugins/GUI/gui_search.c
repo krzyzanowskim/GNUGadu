@@ -1,4 +1,4 @@
-/* $Id: gui_search.c,v 1.7 2004/10/15 13:04:15 krzyzak Exp $ */
+/* $Id: gui_search.c,v 1.8 2004/10/19 10:51:27 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -211,13 +211,12 @@ void gui_show_search_results(GSList * list, gchar * plugin_name)
 		gchar *dispcity;
 		gchar *dispage;
 		GdkPixbuf *image = create_pixbuf(sp->image);
-		display =
-		    g_strdup_printf("%s %s%s%s", (k->first_name) ? k->first_name : "", (k->nick) ? "(" : "", (k->nick) ? k->nick : "",
-				    (k->nick) ? ")" : "");
+		display = g_strdup_printf("%s %s%s%s", (k->first_name) ? k->first_name : "", (k->nick) ? "(" : "", (k->nick) ? k->nick : "", (k->nick) ? ")" : "");
 		dispcity = g_strdup_printf("%s", (k->city) ? k->city : "");
 		dispage = g_strdup_printf("%s", (k->age) ? k->age : "");
 		gtk_list_store_append(search_liststore, &search_iter);
 		gtk_list_store_set(search_liststore, &search_iter, 0, image, 1, k->id, 2, (gpointer) k, 3, display, 4, dispcity, 5, dispage, -1);
+		gdk_pixbuf_unref(image);
 	    }
 	    tmplist = tmplist->next;
 	}

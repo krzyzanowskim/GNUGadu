@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.24 2004/10/13 10:51:28 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.25 2004/10/19 10:51:23 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -93,7 +93,7 @@ gpointer ggadu_config_var_get(GGaduPlugin * handler, gchar * name)
 }
 
 
-gint ggadu_config_var_get_type(GGaduPlugin * handler, char *name)
+GGaduVarType ggadu_config_var_get_type(GGaduPlugin * handler, char *name)
 {
 	GGaduVar *var = NULL;
 	GSList *tmp = handler->variables;

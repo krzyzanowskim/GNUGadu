@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.79 2004/10/15 11:12:53 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.80 2004/10/19 10:51:26 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -49,7 +49,8 @@ extern GtkWidget *toolbar_handle_box;
 
 static gboolean plugins_updated = FALSE;
 
-static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer data)
+static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer data
+)
 {
 	gboolean enable;
 	gchar *name = NULL;
@@ -87,9 +88,7 @@ static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path, 
 		if (!ggadu_strcasecmp(name, "main-gui"))
 		{
 			signal_emit_full("main-gui", "gui show warning",
-					 g_strdup(_
-						  ("GUI is selected as DISABLED\nIf you are sure, you have to restart GNU Gadu to take effect")),
-					 "main-gui", NULL);
+					 g_strdup(_("GUI is selected as DISABLED\nIf you are sure, you have to restart GNU Gadu to take effect")), "main-gui", NULL);
 			return FALSE;
 		}
 		unload_plugin(name);
@@ -98,7 +97,8 @@ static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path, 
 	return FALSE;
 }
 
-static void enable_toggled(GtkCellRendererToggle * cell, gchar * path_str, gpointer data)
+static void enable_toggled(GtkCellRendererToggle * cell, gchar * path_str, gpointer data
+)
 {
 	GtkTreeIter iter;
 	gboolean enable;
@@ -117,12 +117,14 @@ static void enable_toggled(GtkCellRendererToggle * cell, gchar * path_str, gpoin
 	plugins_updated = TRUE;
 }
 
-static void row_changed(GtkTreeModel * treemodel, GtkTreePath * arg1, GtkTreeIter * arg2, gpointer user_data)
+static void row_changed(GtkTreeModel * treemodel, GtkTreePath * arg1, GtkTreeIter * arg2, gpointer user_data
+)
 {
 	plugins_updated = TRUE;
 }
 
-GtkWidget *gui_plugins_mgr_tab()
+GtkWidget *gui_plugins_mgr_tab(
+)
 {
 	GtkWidget *vbox;
 	GSList *plugins_list = (config) ? config->all_available_plugins : NULL;
@@ -134,7 +136,7 @@ GtkWidget *gui_plugins_mgr_tab()
 	plugins_updated = FALSE;
 
 	vbox = gtk_vbox_new(FALSE, 5);
-//	store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
+//      store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
 	store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_STRING);
 	g_signal_connect(G_OBJECT(store), "row-changed", G_CALLBACK(row_changed), NULL);
 
@@ -149,8 +151,7 @@ GtkWidget *gui_plugins_mgr_tab()
 
 		print_debug("%s\n", pl->name);
 		gtk_tree_store_append(GTK_TREE_STORE(store), &iter, NULL);
-		gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME, (gchar *) pl->name,
-				   PLUGINS_MGR_ENABLE, tmpvar,PLUGINS_MGR_DESC,(gchar *) pl->description , -1);
+		gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME, (gchar *) pl->name, PLUGINS_MGR_ENABLE, tmpvar, PLUGINS_MGR_DESC, (gchar *) pl->description, -1);
 
 		modules_load = modules_load->next;
 	}
@@ -167,8 +168,7 @@ GtkWidget *gui_plugins_mgr_tab()
 
 			print_debug("%s\n", pf->name);
 			gtk_tree_store_append(GTK_TREE_STORE(store), &iter, NULL);
-			gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME, (gchar *) pf->name,
-				   PLUGINS_MGR_ENABLE, tmpvar, -1);
+			gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME, (gchar *) pf->name, PLUGINS_MGR_ENABLE, tmpvar, -1);
 		}
 		plugins_list = plugins_list->next;
 	}
@@ -199,25 +199,28 @@ GtkWidget *gui_plugins_mgr_tab()
 	return vbox;
 }
 
-static void tree_toggled(GtkWidget * tree, gpointer data)
+static void tree_toggled(GtkWidget * tree, gpointer data
+)
 {
 	GtkWidget *expand = data;
 
 	gtk_widget_set_sensitive(expand, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tree)));
 }
 
-static void color_select_dialog(GtkColorButton *color_button, gpointer entry)
+static void color_select_dialog(GtkColorButton * color_button, gpointer entry
+)
 {
 	GdkColor color;
 	gchar *tmp = NULL;
-	
-	gtk_color_button_get_color(color_button,&color);
-	tmp = gtk_color_selection_palette_to_string(&color, 1);	
+
+	gtk_color_button_get_color(color_button, &color);
+	tmp = gtk_color_selection_palette_to_string(&color, 1);
 	gtk_entry_set_text(GTK_ENTRY(entry), tmp);
 	g_free(tmp);
 }
 
-static GtkWidget *create_colors_tab()
+static GtkWidget *create_colors_tab(
+)
 {
 	GtkWidget *colors_vbox;
 	GtkWidget *image;
@@ -227,7 +230,7 @@ static GtkWidget *create_colors_tab()
 	GtkWidget *entry;
 	GtkWidget *button;
 	GtkWidget *frame;
-	GdkColor color_msg_header,color_msg_body,color_out_msg_header,color_out_msg_body;
+	GdkColor color_msg_header, color_msg_body, color_out_msg_header, color_out_msg_body;
 
 	colors_vbox = gtk_vbox_new(FALSE, 2);
 
@@ -273,7 +276,7 @@ static GtkWidget *create_colors_tab()
 	if (ggadu_config_var_get(gui_handler, "msg_body_color"))
 		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_body_color"));
 	gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(entry)), &color_msg_body);
-	
+
 	button = gtk_color_button_new_with_color(&color_msg_body);
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
@@ -296,9 +299,8 @@ static GtkWidget *create_colors_tab()
 	entry = gtk_entry_new();
 
 	if (ggadu_config_var_get(gui_handler, "msg_out_header_color"))
-		gtk_entry_set_text(GTK_ENTRY(entry),
-				   (gchar *) ggadu_config_var_get(gui_handler, "msg_out_header_color"));
-				   
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_out_header_color"));
+
 	gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(entry)), &color_out_msg_header);
 
 	button = gtk_color_button_new_with_color(&color_out_msg_header);
@@ -314,8 +316,7 @@ static GtkWidget *create_colors_tab()
 	entry = gtk_entry_new();
 
 	if (ggadu_config_var_get(gui_handler, "msg_out_body_color"))
-		gtk_entry_set_text(GTK_ENTRY(entry),
-				   (gchar *) ggadu_config_var_get(gui_handler, "msg_out_body_color"));
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_out_body_color"));
 
 	gdk_color_parse(gtk_entry_get_text(GTK_ENTRY(entry)), &color_out_msg_body);
 	button = gtk_color_button_new_with_color(&color_out_msg_body);
@@ -330,7 +331,8 @@ static GtkWidget *create_colors_tab()
 	return colors_vbox;
 }
 
-static void show_fonts_select_dialog(GtkWidget * widget, gpointer user_data)
+static void show_fonts_select_dialog(GtkWidget * widget, gpointer user_data
+)
 {
 	GtkWidget *entry = (GtkWidget *) user_data;
 	GtkWidget *font_selector;
@@ -341,8 +343,7 @@ static void show_fonts_select_dialog(GtkWidget * widget, gpointer user_data)
 
 	font_txt = gtk_entry_get_text(GTK_ENTRY(entry));
 	if (font_txt && *font_txt)
-		gtk_font_selection_set_font_name(GTK_FONT_SELECTION(GTK_FONT_SELECTION_DIALOG(font_selector)->fontsel),
-						 font_txt);
+		gtk_font_selection_set_font_name(GTK_FONT_SELECTION(GTK_FONT_SELECTION_DIALOG(font_selector)->fontsel), font_txt);
 
 	response = gtk_dialog_run(GTK_DIALOG(font_selector));
 
@@ -350,8 +351,7 @@ static void show_fonts_select_dialog(GtkWidget * widget, gpointer user_data)
 	{
 		gchar *tmp;
 
-		tmp = gtk_font_selection_get_font_name(GTK_FONT_SELECTION
-						       (GTK_FONT_SELECTION_DIALOG(font_selector)->fontsel));
+		tmp = gtk_font_selection_get_font_name(GTK_FONT_SELECTION(GTK_FONT_SELECTION_DIALOG(font_selector)->fontsel));
 		gtk_entry_set_text(GTK_ENTRY(entry), tmp);
 		g_free(tmp);
 	}
@@ -359,7 +359,8 @@ static void show_fonts_select_dialog(GtkWidget * widget, gpointer user_data)
 	gtk_widget_destroy(font_selector);
 }
 
-static GtkWidget *create_fonts_tab()
+static GtkWidget *create_fonts_tab(
+)
 {
 	GtkWidget *fonts_vbox;
 	GtkWidget *image;
@@ -435,8 +436,7 @@ static GtkWidget *create_fonts_tab()
 	g_object_set_data(G_OBJECT(fonts_vbox), "msg_out_header_font", entry);
 
 	if (ggadu_config_var_get(gui_handler, "msg_out_header_font"))
-		gtk_entry_set_text(GTK_ENTRY(entry),
-				   (gchar *) ggadu_config_var_get(gui_handler, "msg_out_header_font"));
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "msg_out_header_font"));
 
 	label = gtk_label_new(_("Message body"));
 	entry = gtk_entry_new();
@@ -470,8 +470,7 @@ static GtkWidget *create_fonts_tab()
 	g_object_set_data(G_OBJECT(fonts_vbox), "contact_list_contact_font", entry);
 
 	if (ggadu_config_var_get(gui_handler, "contact_list_contact_font"))
-		gtk_entry_set_text(GTK_ENTRY(entry),
-				   (gchar *) ggadu_config_var_get(gui_handler, "contact_list_contact_font"));
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "contact_list_contact_font"));
 
 	label = gtk_label_new(_("Protocol\n(tree view)"));
 	entry = gtk_entry_new();
@@ -484,13 +483,13 @@ static GtkWidget *create_fonts_tab()
 	g_object_set_data(G_OBJECT(fonts_vbox), "contact_list_protocol_font", entry);
 
 	if (ggadu_config_var_get(gui_handler, "contact_list_protocol_font"))
-		gtk_entry_set_text(GTK_ENTRY(entry),
-				   (gchar *) ggadu_config_var_get(gui_handler, "contact_list_protocol_font"));
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "contact_list_protocol_font"));
 
 	return fonts_vbox;
 }
 
-static void show_file_select_dialog(GtkWidget * widget, gpointer user_data)
+static void show_file_select_dialog(GtkWidget * widget, gpointer user_data
+)
 {
 	GtkWidget *entry = (GtkWidget *) user_data;
 	GtkWidget *file_chooser = NULL;
@@ -498,21 +497,18 @@ static void show_file_select_dialog(GtkWidget * widget, gpointer user_data)
 	const gchar *_filename = NULL;
 	const gchar *filename = NULL;
 	gint response;
-	
-	file_chooser = gtk_file_chooser_dialog_new(_("Select file"),NULL,
-						   GTK_FILE_CHOOSER_ACTION_OPEN,
-						   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						   GTK_STOCK_OK, GTK_RESPONSE_OK,
-						   NULL);
-						   
+
+	file_chooser = gtk_file_chooser_dialog_new(_("Select file"), NULL,
+						   GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+
 	_filename = gtk_entry_get_text(GTK_ENTRY(entry));
-	
+
 	if (_filename && *_filename)
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(file_chooser), _filename);
-		
+
 	file_filter = gtk_file_filter_new();
-	gtk_file_filter_add_mime_type(file_filter,"audio/x-wav");
-	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(file_chooser),file_filter);
+	gtk_file_filter_add_mime_type(file_filter, "audio/x-wav");
+	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(file_chooser), file_filter);
 
 	response = gtk_dialog_run(GTK_DIALOG(file_chooser));
 
@@ -525,7 +521,8 @@ static void show_file_select_dialog(GtkWidget * widget, gpointer user_data)
 	gtk_widget_destroy(file_chooser);
 }
 
-static GtkWidget *create_sound_tab()
+static GtkWidget *create_sound_tab(
+)
 {
 	GtkWidget *sound_vbox;
 	GtkWidget *image;
@@ -568,7 +565,7 @@ static GtkWidget *create_sound_tab()
 
 	if (ggadu_config_var_get(gui_handler, "sound_msg_in"))
 		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "sound_msg_in"));
-	
+
 	label = gtk_label_new(_("Initial message:"));
 	entry = gtk_entry_new();
 	button = gtk_button_new_from_stock("gtk-open");
@@ -598,7 +595,8 @@ static GtkWidget *create_sound_tab()
 	return sound_vbox;
 }
 
-static GtkWidget *create_chat_tab()
+static GtkWidget *create_chat_tab(
+)
 {
 	GtkWidget *chat_vbox;
 	GtkWidget *vbox;
@@ -671,7 +669,7 @@ static GtkWidget *create_chat_tab()
 #ifdef USE_GTKSPELL
 	tabbox_spell = gtk_table_new(1, 3, FALSE);
 	gtk_box_pack_start(GTK_BOX(chat_vbox), tabbox_spell, FALSE, FALSE, 0);
-	
+
 	use_spell = gtk_check_button_new_with_label(_("Spell Checking"));
 
 	g_object_set_data(G_OBJECT(chat_vbox), "spell", use_spell);
@@ -721,7 +719,8 @@ static GtkWidget *create_chat_tab()
 	return chat_vbox;
 }
 
-static GtkWidget *create_advanced_tab()
+static GtkWidget *create_advanced_tab(
+)
 {
 	GtkWidget *hide_on_start;
 	GtkWidget *blink_interval = NULL;
@@ -768,7 +767,7 @@ static GtkWidget *create_advanced_tab()
 	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
 	g_object_set_data(G_OBJECT(adv_vbox), "blink", blink);
 	g_object_set_data(G_OBJECT(adv_vbox), "blink_interval", blink_interval);
-	
+
 	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
 
 	tabbox = gtk_table_new(3, 4, FALSE);
@@ -785,11 +784,11 @@ static GtkWidget *create_advanced_tab()
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(blink), TRUE);
 	else
 		gtk_widget_set_sensitive(blink_interval, FALSE);
-		
+
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink, 0, 1, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 1, 2, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 2, 3, 0, 1);
-		
+
 
 	/* chat_paned_size */
 	/* ZONK - how to name it ? */
@@ -812,12 +811,12 @@ static GtkWidget *create_advanced_tab()
 	/* themes */
 	combo_theme = gtk_combo_box_new_text();
 	g_object_set_data(G_OBJECT(adv_vbox), "combo_theme", combo_theme);
-	
+
 	label = gtk_label_new(_("Selected theme:"));
 	gtk_container_add(GTK_CONTAINER(label2_align), label);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 2, 3);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 3, 2, 3);
-	
+
 	dirname = g_build_filename(PACKAGE_DATA_DIR, "themes", NULL);
 	dir = g_dir_open(dirname, 0, NULL);
 	print_debug("tryin to read themes directory %s\n", dirname);
@@ -842,22 +841,22 @@ static GtkWidget *create_advanced_tab()
 				theme_name = g_strndup(theme_name_file, strlen(theme_name_file) - strlen(".theme"));
 
 				list_theme = g_list_append(list_theme, g_strdup(theme_name));
-				gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),g_strdup(theme_name));
-				
-				if (theme_current && !ggadu_strcasecmp(theme_name,theme_current))
-					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_theme),i);
-				
+				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_theme), g_strdup(theme_name));
+
+				if (theme_current && !ggadu_strcasecmp(theme_name, theme_current))
+					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_theme), i);
+
 				i++;
 				g_free(theme_name);
 			}
-			
+
 		}
 
 		g_dir_close(dir);
 		g_object_set_data(G_OBJECT(combo_theme), "combo_theme_slist", list_theme);
 
 	}
-	
+
 	/* iconset */
 	combo_icons = gtk_combo_box_new_text();
 	g_object_set_data(G_OBJECT(adv_vbox), "combo_icons", combo_icons);
@@ -877,7 +876,7 @@ static GtkWidget *create_advanced_tab()
 		GList *list_icons = NULL;
 		gchar *icons_current;
 		gchar *icons_dir;
-		gint  i = 0;
+		gint i = 0;
 
 		icons_current = ggadu_config_var_get(gui_handler, "icons");
 
@@ -889,11 +888,11 @@ static GtkWidget *create_advanced_tab()
 			{
 				print_debug("%s\n", icons_dir);
 				list_icons = g_list_append(list_icons, g_strdup(icons_dir));
-				gtk_combo_box_append_text (GTK_COMBO_BOX(combo_icons),g_strdup(icons_dir));
+				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_icons), g_strdup(icons_dir));
 
-				if (icons_dir && !ggadu_strcasecmp(icons_dir,icons_current))
-					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_icons),i);
-				
+				if (icons_dir && !ggadu_strcasecmp(icons_dir, icons_current))
+					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_icons), i);
+
 				i++;
 			}
 			g_free(testdirname);
@@ -903,19 +902,17 @@ static GtkWidget *create_advanced_tab()
 		g_object_set_data(G_OBJECT(combo_icons), "combo_icons_slist", list_icons);
 	}
 
-	
+
 	/* set */
-	
+
 	if (ggadu_config_var_get(gui_handler, "blink_interval"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(blink_interval),
-					  (gint) ggadu_config_var_get(gui_handler, "blink_interval"));
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(blink_interval), (gint) ggadu_config_var_get(gui_handler, "blink_interval"));
 
 	if (ggadu_config_var_get(gui_handler, "hide_on_start"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_on_start), TRUE);
 
 	if (ggadu_config_var_get(gui_handler, "chat_paned_size"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(chat_paned_size),
-					  (gint) ggadu_config_var_get(gui_handler, "chat_paned_size"));
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(chat_paned_size), (gint) ggadu_config_var_get(gui_handler, "chat_paned_size"));
 
 	if (ggadu_config_var_get(gui_handler, "notify_status_changes"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(notify_status_changes), TRUE);
@@ -924,7 +921,8 @@ static GtkWidget *create_advanced_tab()
 	return adv_vbox;
 }
 
-void gui_preferences(GtkWidget * widget, gpointer data)
+void gui_preferences(GtkWidget * widget, gpointer data
+)
 {
 	GtkWidget *preferences;
 	GtkWidget *notebook;
@@ -959,8 +957,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	preferences =
 		gtk_dialog_new_with_buttons(_("Preferences"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-					    NULL);
+					    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
 
 	gtk_window_set_resizable(GTK_WINDOW(preferences), FALSE);
 
@@ -1045,7 +1042,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
 
 	tabbox_auto_away = gtk_table_new(1, 3, FALSE);
-	
+
 	auto_away = gtk_check_button_new_with_label(_("Auto away set after:"));
 
 	label1_align = gtk_alignment_new(0.1, 0.5, 0, 0);
@@ -1057,9 +1054,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away, 0, 1, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away_interval, 1, 2, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), label1_align, 2, 3, 0, 1);
-	
+
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox_auto_away, FALSE, FALSE, 0);
-	
+
 
 	tabbox = gtk_table_new(6, 2, FALSE);
 
@@ -1077,7 +1074,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	print_debug("baaas? %d\n", ggadu_config_var_get(gui_handler, "show_toolbar"));
 	print_debug("baaas? active %d\n", ggadu_config_var_get(gui_handler, "show_active"));
-	
+
 	if (ggadu_config_var_get(gui_handler, "show_active"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_active), TRUE);
 
@@ -1105,46 +1102,46 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	g_return_if_fail(entry != NULL);
 
 	if (ggadu_config_var_get(gui_handler, "use_spell"))
-	   	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 	else
-	   	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), FALSE);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), FALSE);
 
 	{
-	   	GtkWidget *entry2 = g_object_get_data(G_OBJECT(chat_vbox), "combo_spell");
+		GtkWidget *entry2 = g_object_get_data(G_OBJECT(chat_vbox), "combo_spell");
 		gchar *cur_dict = ggadu_config_var_get(gui_handler, "dictionary");
 		GSList *dict_list = NULL;
 
-  		AspellConfig * config;
-  		AspellDictInfoList * dlist;
-  		AspellDictInfoEnumeration * dels;
-  		const AspellDictInfo * dict_entry;
+		AspellConfig *config;
+		AspellDictInfoList *dlist;
+		AspellDictInfoEnumeration *dels;
+		const AspellDictInfo *dict_entry;
 		gint i = 0;
 
 		g_return_if_fail(entry2 != NULL);
 
 		config = new_aspell_config();
 		/* the returned pointer should _not_ need to be deleted */
-  		dlist = get_aspell_dict_info_list(config);
+		dlist = get_aspell_dict_info_list(config);
 		/* config is no longer needed */
-  		delete_aspell_config(config);
+		delete_aspell_config(config);
 
-  		dels = aspell_dict_info_list_elements(dlist);
-		
-		while ( (dict_entry = aspell_dict_info_enumeration_next(dels)) != 0)
+		dels = aspell_dict_info_list_elements(dlist);
+
+		while ((dict_entry = aspell_dict_info_enumeration_next(dels)) != 0)
 		{
-			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),dict_entry->name);
-			dict_list = g_slist_append(dict_list,(gpointer)dict_entry->name);
-			
-			if (!ggadu_strcasecmp(cur_dict,dict_entry->name))
-			    gtk_combo_box_set_active(GTK_COMBO_BOX(entry2),i);
-			    
+			gtk_combo_box_append_text(GTK_COMBO_BOX(entry2), dict_entry->name);
+			dict_list = g_slist_append(dict_list, (gpointer) dict_entry->name);
+
+			if (!ggadu_strcasecmp(cur_dict, dict_entry->name))
+				gtk_combo_box_set_active(GTK_COMBO_BOX(entry2), i);
+
 			i++;
 		}
-		
-		if (i == 0) 
+
+		if (i == 0)
 		{
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), FALSE);
-			gtk_widget_set_sensitive(entry,FALSE);	
+			gtk_widget_set_sensitive(entry, FALSE);
 		}
 
 		delete_aspell_dict_info_enumeration(dels);
@@ -1157,15 +1154,13 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	g_return_if_fail(entry != NULL);
 
 	if (ggadu_config_var_get(gui_handler, "chat_window_width"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),
-					  (gint) ggadu_config_var_get(gui_handler, "chat_window_width"));
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry), (gint) ggadu_config_var_get(gui_handler, "chat_window_width"));
 
 	entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowheight");
 	g_return_if_fail(entry != NULL);
 
 	if (ggadu_config_var_get(gui_handler, "chat_window_height"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),
-					  (gint) ggadu_config_var_get(gui_handler, "chat_window_height"));
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry), (gint) ggadu_config_var_get(gui_handler, "chat_window_height"));
 
 
 	if (ggadu_config_var_get(gui_handler, "auto_away"))
@@ -1174,8 +1169,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_widget_set_sensitive(auto_away_interval, FALSE);
 
 	if (ggadu_config_var_get(gui_handler, "auto_away_interval"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(auto_away_interval),
-					  (gint) ggadu_config_var_get(gui_handler, "auto_away_interval"));
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(auto_away_interval), (gint) ggadu_config_var_get(gui_handler, "auto_away_interval"));
 
 	entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowshow");
 	g_return_if_fail(entry != NULL);
@@ -1215,7 +1209,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 
 
-//	gtk_window_set_default_size(GTK_WINDOW(preferences), 250, 200);
+//      gtk_window_set_default_size(GTK_WINDOW(preferences), 250, 200);
 
 	gtk_widget_show_all(preferences);
 
@@ -1225,9 +1219,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	{
 		if (plugins_updated)
 		{
-			GIOChannel *ch =
-				g_io_channel_new_file(g_build_filename(config->configdir, "modules.load", NULL), "w",
-						      NULL);
+			GIOChannel *ch = g_io_channel_new_file(g_build_filename(config->configdir, "modules.load", NULL), "w",
+							       NULL);
 			gtk_tree_model_foreach(GTK_TREE_MODEL(store), save_selected_plugins, ch);
 			g_io_channel_shutdown(ch, TRUE, NULL);
 			g_io_channel_unref(ch);
@@ -1235,98 +1228,77 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "emotic");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "emot",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
-
-		ggadu_config_var_set(gui_handler, "show_active",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_active)));
-
-		ggadu_config_var_set(gui_handler, "tree",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tree)));
-
-		ggadu_config_var_set(gui_handler, "expand",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(expand)));
+		ggadu_config_var_set(gui_handler, "emot", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "show_active", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_active)));
+		ggadu_config_var_set(gui_handler, "tree", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tree)));
+		ggadu_config_var_set(gui_handler, "expand", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(expand)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatstyle");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "chat_type",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "chat_type", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 #ifdef USE_GTKSPELL
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "spell");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "use_spell",
-		      		     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "use_spell", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "combo_spell");
-		GSList *dict_slist= g_object_get_data(G_OBJECT(entry), "dictionary_slist");
-		
+		GSList *dict_slist = g_object_get_data(G_OBJECT(entry), "dictionary_slist");
+
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "dictionary",
-				     (gpointer) g_strdup(g_slist_nth_data(dict_slist,gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) ));
+		ggadu_config_var_set(gui_handler, "dictionary", (gpointer) g_strdup(g_slist_nth_data(dict_slist, gtk_combo_box_get_active(GTK_COMBO_BOX(entry)))));
 
-		g_slist_free(dict_slist);				     
+		g_slist_free(dict_slist);
 #endif
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowshow");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "chat_window_auto_show",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "chat_window_auto_show", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowraise");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "chat_window_auto_raise",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "chat_window_auto_raise", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "chat_paned_size");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "chat_paned_size",
-				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "chat_paned_size", (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
 
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowwidth");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "chat_window_width",
-				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "chat_window_width", (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowheight");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "chat_window_height",
-				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "chat_window_height", (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "use_username");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "use_username",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "use_username", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "hide_on_start");
-		ggadu_config_var_set(gui_handler, "hide_on_start",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "hide_on_start", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "blink");
-		ggadu_config_var_set(gui_handler, "blink",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "blink", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "blink_interval");
-		ggadu_config_var_set(gui_handler, "blink_interval",
-				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "blink_interval", (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
 
 
-		ggadu_config_var_set(gui_handler, "auto_away",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(auto_away)));
+		ggadu_config_var_set(gui_handler, "auto_away", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(auto_away)));
 
-		ggadu_config_var_set(gui_handler, "auto_away_interval",
-				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(auto_away_interval)));
+		ggadu_config_var_set(gui_handler, "auto_away_interval", (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(auto_away_interval)));
 
 		{
 			GSList *list = protocols;
@@ -1341,124 +1313,106 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "send_on_enter");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "send_on_enter",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "send_on_enter", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "notify_status_changes");
 		g_return_if_fail(entry != NULL);
 
-		ggadu_config_var_set(gui_handler, "notify_status_changes",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		ggadu_config_var_set(gui_handler, "notify_status_changes", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		if (usexosdfornewmsgs)
-			ggadu_config_var_set(gui_handler, "use_xosd_for_new_msgs",
-					     (gpointer)
-					     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs)));
+			ggadu_config_var_set(gui_handler, "use_xosd_for_new_msgs", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs)));
 
 
-		ggadu_config_var_set(gui_handler, "show_toolbar",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_toolbar)));
+		ggadu_config_var_set(gui_handler, "show_toolbar", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_toolbar)));
 
-		ggadu_config_var_set(gui_handler, "descr_on_list", 
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));
+		ggadu_config_var_set(gui_handler, "descr_on_list", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));
 
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_theme");
 		g_return_if_fail(entry != NULL);
-		
-		GSList *combo_theme_slist= g_object_get_data(G_OBJECT(entry), "combo_theme_slist");
-		ggadu_config_var_set(gui_handler, "theme",
-				     (gpointer) g_strdup(g_slist_nth_data(combo_theme_slist,gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) ));
 
-		g_slist_foreach(combo_theme_slist,(GFunc)g_free,NULL);
-		g_slist_free(combo_theme_slist);				     
-				     
+		GSList *combo_theme_slist = g_object_get_data(G_OBJECT(entry), "combo_theme_slist");
+		ggadu_config_var_set(gui_handler, "theme", (gpointer) g_strdup(g_slist_nth_data(combo_theme_slist, gtk_combo_box_get_active(GTK_COMBO_BOX(entry)))));
+
+		g_slist_foreach(combo_theme_slist, (GFunc) g_free, NULL);
+		g_slist_free(combo_theme_slist);
+
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_icons");
 		g_return_if_fail(entry != NULL);
-		GSList *combo_icons_slist= g_object_get_data(G_OBJECT(entry), "combo_icons_slist");
-		ggadu_config_var_set(gui_handler, "icons",
-				     (gpointer) g_strdup(g_slist_nth_data(combo_icons_slist,gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) ));
+		GSList *combo_icons_slist = g_object_get_data(G_OBJECT(entry), "combo_icons_slist");
+		ggadu_config_var_set(gui_handler, "icons", (gpointer) g_strdup(g_slist_nth_data(combo_icons_slist, gtk_combo_box_get_active(GTK_COMBO_BOX(entry)))));
 		g_slist_free(combo_icons_slist);
 
 		entry = g_object_get_data(G_OBJECT(colors_vbox), "msg_header_color");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_header_color",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_header_color", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(colors_vbox), "msg_body_color");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_body_color",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_body_color", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "msg_header_font");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_header_font",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_header_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "msg_body_font");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_body_font",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_body_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(colors_vbox), "msg_out_header_color");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_out_header_color",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_out_header_color", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(colors_vbox), "msg_out_body_color");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_out_body_color",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_out_body_color", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "msg_out_header_font");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_out_header_font",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_out_header_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "msg_out_body_font");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "msg_out_body_font",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "msg_out_body_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_out");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "sound_msg_out",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "sound_msg_out", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_in");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "sound_msg_in",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
-		
+		ggadu_config_var_set(gui_handler, "sound_msg_in", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+
 		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_in_first");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "sound_msg_in_first",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "sound_msg_in_first", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "contact_list_contact_font");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "contact_list_contact_font",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "contact_list_contact_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "contact_list_protocol_font");
 		g_return_if_fail(entry != NULL);
-		ggadu_config_var_set(gui_handler, "contact_list_protocol_font",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		ggadu_config_var_set(gui_handler, "contact_list_protocol_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		ggadu_config_save(gui_handler);
-		
-		if (ggadu_strcasecmp(previous_theme,ggadu_config_var_get(gui_handler, "theme")))
-		    gui_load_theme(NULL);
-		    
-		gui_config_emoticons();
-		
-		if (ggadu_strcasecmp(previous_icons,ggadu_config_var_get(gui_handler, "icons")))
-		    gui_reload_images();
 
-		if (!ggadu_config_var_get(gui_handler, "show_toolbar")) {
-	    	    gtk_widget_hide(toolbar_handle_box);
-		} else {
-		    gtk_widget_show(toolbar_handle_box);
+		if (ggadu_strcasecmp(previous_theme, ggadu_config_var_get(gui_handler, "theme")))
+			gui_load_theme(NULL);
+
+		gui_config_emoticons();
+
+		if (ggadu_strcasecmp(previous_icons, ggadu_config_var_get(gui_handler, "icons")))
+			gui_reload_images();
+
+		if (!ggadu_config_var_get(gui_handler, "show_toolbar"))
+		{
+			gtk_widget_hide(toolbar_handle_box);
+		}
+		else
+		{
+			gtk_widget_show(toolbar_handle_box);
 		}
 
 		gui_user_view_refresh();

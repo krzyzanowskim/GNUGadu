@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.9 2004/10/18 15:03:15 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.10 2004/10/19 10:51:24 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -23,6 +23,7 @@
 #ifndef GGadu_DIALOG_H
 #define GGadu_DIALOG_H
 
+#include "ggadu_types.h"
 
 typedef gboolean(*watch_func) (gpointer);
 
@@ -59,9 +60,9 @@ typedef struct
 #define ggadu_dialog_new(type, title, callback_signal) \
 		ggadu_dialog_new_full(type, title, callback_signal, NULL)
 
-GGaduDialog*		ggadu_dialog_new_full			(guint type, gchar * title, gchar * callback_signal, gpointer user_data);
+GGaduDialog*		ggadu_dialog_new_full			(GGaduDialogType type, gchar * title, gchar * callback_signal, gpointer user_data);
 
-void 			ggadu_dialog_add_entry			(GGaduDialog * dialog, gint key, gchar * desc, gint type, gpointer value, gint flags);
+void 			ggadu_dialog_add_entry			(GGaduDialog * dialog, gint key, gchar * desc, GGaduVarType var_type, gpointer value, gint flags);
 
 GSList*			ggadu_dialog_get_entries		(GGaduDialog * dialog);
 
@@ -73,7 +74,7 @@ void			ggadu_dialog_set_title			(GGaduDialog * dialog, const gchar * title);
 
 const gchar*		ggadu_dialog_get_title			(GGaduDialog * dialog);
 
-void			ggadu_dialog_set_type			(GGaduDialog *, GGaduDialogType);
+void			ggadu_dialog_set_type			(GGaduDialog * dialog, GGaduDialogType dialog_type);
 
 GGaduDialogType		ggadu_dialog_get_type			(GGaduDialog * dialog);
 

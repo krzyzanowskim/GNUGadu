@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.90 2004/10/18 09:07:58 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.91 2004/10/19 10:51:25 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -74,56 +74,56 @@ void set_selected_users_list(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 
 }
 
-void nick_list_row_changed2(GtkTreeModel *model,GtkTreePath *path, GtkTreeIter *iter, gpointer user_data)
+void nick_list_row_changed2(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer user_data)
 {
-    GtkTreeView *treeview = g_object_get_data(G_OBJECT(user_data),"treeview");
-    
-    if (treeview)
-    {
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(treeview);
-	if (gtk_tree_selection_path_is_selected(selection,path))
+	GtkTreeView *treeview = g_object_get_data(G_OBJECT(user_data), "treeview");
+
+	if (treeview)
 	{
-	    print_debug("nick_list_row_changed2 selected and changed");
-	    nick_list_row_changed(NULL,model,path,FALSE,user_data);
+		GtkTreeSelection *selection = gtk_tree_view_get_selection(treeview);
+		if (gtk_tree_selection_path_is_selected(selection, path))
+		{
+			print_debug("nick_list_row_changed2 selected and changed");
+			nick_list_row_changed(NULL, model, path, FALSE, user_data);
+		}
 	}
-    }
 }
 
-gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean cur_sel, gpointer user_data)
+gboolean nick_list_row_changed(GtkTreeSelection * selection, GtkTreeModel * model, GtkTreePath * path, gboolean cur_sel, gpointer user_data)
 {
-    GtkTreeIter iter;
-    gchar *markup_id = NULL;
-    gchar *markup_desc = g_strdup("");
-    gboolean is_desc = FALSE;
-    gchar *desc_text = NULL;
-    gchar *ip = NULL;
-    GtkTooltips *tooltip = NULL;
-    GtkWidget *add_info_label_desc = NULL;
-    gui_protocol *gp = NULL;
-    gchar *plugin_name = NULL;
-    GGaduContact *k = NULL;
-        
-    print_debug("nick_list_row_changed");
-    
-    gtk_tree_model_get_iter(model, &iter, path);
+	GtkTreeIter iter;
+	gchar *markup_id = NULL;
+	gchar *markup_desc = g_strdup("");
+	gboolean is_desc = FALSE;
+	gchar *desc_text = NULL;
+	gchar *ip = NULL;
+	GtkTooltips *tooltip = NULL;
+	GtkWidget *add_info_label_desc = NULL;
+	gui_protocol *gp = NULL;
+	gchar *plugin_name = NULL;
+	GGaduContact *k = NULL;
 
-    if (!tree)
-    {
+	print_debug("nick_list_row_changed");
+
+	gtk_tree_model_get_iter(model, &iter, path);
+
+	if (!tree)
+	{
 		plugin_name = g_object_get_data(G_OBJECT(user_data), "plugin_name");
 		gp = gui_find_protocol(plugin_name, protocols);
-    }
-    else
-    {
+	}
+	else
+	{
 		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
-    }
+	}
 
 	gtk_tree_model_get(model, &iter, 2, &k, -1);
 
 	if (!gp || !k)
 		return FALSE;
-		
-	print_debug("oiuytrew %s",k->id);
-		
+
+	print_debug("oiuytrew %s", k->id);
+
 	add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label), "add_info_label_desc");
 
 	tooltip = gtk_tooltips_new();
@@ -141,7 +141,7 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 		    prev_id = g_strdup(k->id);
 		}
 		print_debug("duit");
-*/		
+*/
 		if (k->ip)
 		{
 			gchar **strtab = g_strsplit(k->ip, ":", 2);
@@ -149,69 +149,61 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 			if (!strtab)
 				return TRUE;
 
-				switch (atoi(strtab[1]))
-				{
-				case 1:
-					ip = g_strdup_printf("\n[NAT %s]", strtab[0]);
-					break;
-				case 2:
-					ip = g_strdup_printf(_("\n[not in userlist]"));
-					break;
-				default:
-					ip = g_strdup_printf("\n[%s]", strtab[0]);
-				}
-				g_strfreev(strtab);
-			}
-
-
-			if (k->status_descr)
+			switch (atoi(strtab[1]))
 			{
-				gchar *desc_esc = g_markup_escape_text(k->status_descr, strlen(k->status_descr));
-				desc_text = g_strdup_printf("%s", desc_esc);
-				is_desc = TRUE;
-				g_free(desc_esc);
+			case 1:
+				ip = g_strdup_printf("\n[NAT %s]", strtab[0]);
+				break;
+			case 2:
+				ip = g_strdup_printf(_("\n[not in userlist]"));
+				break;
+			default:
+				ip = g_strdup_printf("\n[%s]", strtab[0]);
 			}
-
-			markup_id =
-				g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s</span>", k->id, ip ? ip : "");
-			markup_desc =
-				(k->status_descr) ? g_strdup_printf("<span size=\"small\">%s</span>", desc_text) : NULL;
-
-			gtk_tooltips_set_tip(tooltip, gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX),
-					     k->status_descr, "caption");
+			g_strfreev(strtab);
 		}
-		else
+
+
+		if (k->status_descr)
 		{
-			GGaduStatusPrototype *sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-
-			print_debug("inside nick_list_row_changed");
-
-			if (sp)
-			{
-				markup_id =
-					g_strdup_printf("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
-				markup_desc =
-					(sp) ? g_strdup_printf("<span size=\"small\"><b>%s</b></span>",
-							       sp->description) : _("(None)");
-				is_desc = TRUE;
-				gtk_tooltips_set_tip(tooltip,
-						     gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX),
-						     NULL, "caption");
-			}
+			gchar *desc_esc = g_markup_escape_text(k->status_descr, strlen(k->status_descr));
+			desc_text = g_strdup_printf("%s", desc_esc);
+			is_desc = TRUE;
+			g_free(desc_esc);
 		}
+
+		markup_id = g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s</span>", k->id, ip ? ip : "");
+		markup_desc = (k->status_descr) ? g_strdup_printf("<span size=\"small\">%s</span>", desc_text) : NULL;
+
+		gtk_tooltips_set_tip(tooltip, gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX), k->status_descr, "caption");
+	}
+	else
+	{
+		GGaduStatusPrototype *sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+
+		print_debug("inside nick_list_row_changed");
+
+		if (sp)
+		{
+			markup_id = g_strdup_printf("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
+			markup_desc = (sp) ? g_strdup_printf("<span size=\"small\"><b>%s</b></span>", sp->description) : _("(None)");
+			is_desc = TRUE;
+			gtk_tooltips_set_tip(tooltip, gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX), NULL, "caption");
+		}
+	}
 
 
 	gtk_tooltips_enable(tooltip);
 
 	gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup_id);
 
-	print_debug("%s",markup_desc);
+	print_debug("%s", markup_desc);
 
 	if (!GTK_WIDGET_VISIBLE(gp->add_info_label))
 	{
 		gtk_widget_show(gp->add_info_label);
 	}
-	
+
 
 	if (is_desc)
 	{
@@ -229,25 +221,26 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 	g_free(markup_desc);
 	g_free(desc_text);
 	g_free(ip);
-	
+
 	return TRUE;
 }
 
-gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath *arg1, GtkTreeViewColumn *arg2, gpointer user_data)
+gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath * arg1, GtkTreeViewColumn * arg2, gpointer user_data)
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-        gui_protocol *gp = NULL;
+	gui_protocol *gp = NULL;
 	gchar *plugin_name = NULL;
 	GGaduContact *k = NULL;
 
-        print_debug("nick list select albercik");
+	print_debug("nick list select albercik");
 
 	gtk_tree_model_get_iter(model, &iter, arg1);
 	gtk_tree_model_get(model, &iter, 2, &k, -1);
 
 	g_return_val_if_fail(k != NULL, FALSE);
-	if (!k) return FALSE;
+	if (!k)
+		return FALSE;
 
 	if (!tree)
 	{
@@ -259,35 +252,23 @@ gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath *arg1, GtkTreeV
 		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
 	}
 
-	if (gp != NULL)
+	if (gp)
 	{
-		gui_chat_session *session = gui_session_find(gp, k->id);
-		if (!session)
-		{
-			session = g_new0(gui_chat_session, 1);
-			session->id = g_strdup(k->id);
-			gp->chat_sessions = g_slist_append(gp->chat_sessions, session);
-		}
-
-		if (!session->chat)
-			session->chat = create_chat(session, gp->plugin_name, k->id, TRUE);
-		else {
-		    GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
-		    if (!GTK_WIDGET_VISIBLE(window))
-			gtk_widget_show(window);
-		}
-
-		gui_chat_append(session->chat, NULL, TRUE, FALSE);
+		GGaduMsg *msg = g_new0(GGaduMsg, 1);
+		msg->class = GGADU_CLASS_CHAT;
+		msg->id = g_strdup(k->id);
+		msg->message = NULL;
+		signal_emit_full(gp->plugin_name, "gui msg receive", msg, "main-gui", GGaduMsg_free);
 	}
 
 	print_debug("gui-main : clicked : %s : %s\n", k->id, plugin_name);
 
-        return FALSE;
+	return FALSE;
 }
 
 gboolean nick_list_pressed(GtkWidget * widget, GdkEventKey * event, gpointer user_data)
 {
-    return FALSE;
+	return FALSE;
 }
 
 gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
@@ -298,60 +279,6 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 	GtkTreePath *treepath = NULL;
 	GSList *selectedusers = NULL;
 
-
-	if ((event->type == GDK_2BUTTON_PRESS) && (event->button == 1))
-	{
-		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-		GGaduContact *k = NULL;
-		GtkTreeIter iter;
-
-		if (!gtk_tree_view_get_path_at_pos
-		    (GTK_TREE_VIEW(widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
-			return FALSE;
-
-		print_debug("GDK_2BUTTON_PRESS");
-		gtk_tree_model_get_iter(model, &iter, treepath);
-		gtk_tree_model_get(model, &iter, 2, &k, -1);
-
-		g_return_val_if_fail(k != NULL, FALSE);
-
-		if (!tree)
-		{
-			plugin_name = g_object_get_data(G_OBJECT(user_data), "plugin_name");
-			gp = gui_find_protocol(plugin_name, protocols);
-		}
-		else
-		{
-			gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
-		}
-
-		if (gp != NULL)
-		{
-			gui_chat_session *session = gui_session_find(gp, k->id);
-
-			if (!session)
-			{
-				session = g_new0(gui_chat_session, 1);
-				session->id = g_strdup(k->id);
-				gp->chat_sessions = g_slist_append(gp->chat_sessions, session);
-			}
-
-			if (!session->chat)
-				session->chat = create_chat(session, gp->plugin_name, k->id, TRUE);
-			else {
-			    GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
-			    if (!GTK_WIDGET_VISIBLE(window))
-				gtk_widget_show(window);
-			}
-
-			gui_chat_append(session->chat, NULL, TRUE, FALSE);
-		}
-
-		print_debug("gui-main : clicked : %s : %s\n", k->id, plugin_name);
-
-		gtk_tree_path_free(treepath);
-	}
-	
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3))
 	{
 		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
@@ -360,21 +287,19 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 		GtkTreeIter iter;
 		GtkTreeSelection *selection;
 
-		print_debug("main-gui : wcisnieto prawy klawisz ? %s\n",
-			    g_object_get_data(G_OBJECT(user_data), "plugin_name"));
+		print_debug("main-gui : wcisnieto prawy klawisz ? %s\n", g_object_get_data(G_OBJECT(user_data), "plugin_name"));
 
 		print_debug("GDK_BUTTON_PRESS 3\n");
-		
-		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(widget));
-		
-		if (!gtk_tree_view_get_path_at_pos
-		    (GTK_TREE_VIEW(widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
-			return FALSE;
-		
-		if (!(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)))
-			gtk_tree_selection_unselect_all (selection);
 
-		gtk_tree_selection_select_path (selection, treepath);		
+		selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
+
+		if (!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
+			return FALSE;
+
+		if (!(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)))
+			gtk_tree_selection_unselect_all(selection);
+
+		gtk_tree_selection_select_path(selection, treepath);
 
 		if (!tree)
 		{
@@ -391,7 +316,7 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 			if (k)
 				gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
 		}
-		
+
 		/* count how many rows is selected and set list "selectedusers" */
 		gtk_tree_selection_selected_foreach(gtk_tree_view_get_selection(GTK_TREE_VIEW(widget)), set_selected_users_list, &selectedusers);
 
@@ -474,7 +399,7 @@ gboolean gui_main_window_delete(GtkWidget * window, GdkEvent * event, gpointer u
 	if (!p)
 	{
 		if (window)
-		gui_quit(window, NULL);
+			gui_quit(window, NULL);
 	}
 	else
 	{
@@ -616,21 +541,22 @@ void change_status(GPtrArray * ptra)
 
 		if (gp->blinker > 0)
 			g_source_remove(gp->blinker);
-		
+
 		gp->blinker = -1;
 
 		sp2 = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 		status = sp2->status;
-		
+
 		if (gp->p->offline_status)
-			last_resort_status = (gint)gp->p->offline_status->data;
-		else {
-			GGaduStatusPrototype *stmp = (GGaduStatusPrototype *)gp->p->statuslist->data;
+			last_resort_status = (gint) gp->p->offline_status->data;
+		else
+		{
+			GGaduStatusPrototype *stmp = (GGaduStatusPrototype *) gp->p->statuslist->data;
 			last_resort_status = stmp->status;
 		}
-		
+
 		print_debug("requested status ID : %d, last_resort_status : %d\n", status, last_resort_status);
-		
+
 		sp1 = ggadu_find_status_prototype(gp->p, status != 0 ? status : last_resort_status);
 
 		if (sp1 != NULL && is_in_status(status, gp->p->offline_status))
@@ -770,18 +696,14 @@ void gui_build_default_toolbar()
 	gtk_toolbar_set_style(GTK_TOOLBAR(main_toolbar), GTK_TOOLBAR_ICONS);
 	gtk_toolbar_set_icon_size(GTK_TOOLBAR(main_toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 
-	gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_PREFERENCES, _("Open preferences window"), NULL,
-				 (GtkSignalFunc) gui_preferences, NULL, 0);
-	gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_QUIT, _("Exit program"), NULL,
-				 (GtkSignalFunc) gui_quit, NULL, 0);
+	gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_PREFERENCES, _("Open preferences window"), NULL, (GtkSignalFunc) gui_preferences, NULL, 0);
+	gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_QUIT, _("Exit program"), NULL, (GtkSignalFunc) gui_quit, NULL, 0);
 
 	gtk_toolbar_append_element(GTK_TOOLBAR(main_toolbar), GTK_TOOLBAR_CHILD_BUTTON, NULL, NULL,
-				   _("Show/hide inactive users"), NULL, create_image("show-hide-inactive.png"),
-				   (GtkSignalFunc) show_hide_inactive, NULL);
+				   _("Show/hide inactive users"), NULL, create_image("show-hide-inactive.png"), (GtkSignalFunc) show_hide_inactive, NULL);
 
 	gtk_toolbar_append_element(GTK_TOOLBAR(main_toolbar), GTK_TOOLBAR_CHILD_BUTTON, NULL, NULL,
-				   _("Show/hide descriptions on userlist"), NULL, create_image("show-hide-descriptions.png"),
-				   (GtkSignalFunc) show_hide_descriptions, NULL);
+				   _("Show/hide descriptions on userlist"), NULL, create_image("show-hide-descriptions.png"), (GtkSignalFunc) show_hide_descriptions, NULL);
 }
 
 /*
@@ -803,11 +725,12 @@ void gui_msg_receive(GGaduSignal * signal)
 
 	print_debug("%s : %s -> %s | %s", "gui-main", msg->id, msg->message, signal->source_plugin_name);
 
-	if (gp != NULL)
+	if (gp)
 	{
 		gui_chat_session *session = NULL;
-		gboolean showwindow = ggadu_config_var_get(gui_handler, "chat_window_auto_show") ? TRUE : FALSE;
 		GSList *sigdata = NULL;
+		gchar  *sigdata_desc = NULL;
+		gboolean showwindow = ggadu_config_var_get(gui_handler, "chat_window_auto_show") ? TRUE : FALSE;
 		GGaduContact *k = gui_find_user(msg->id, gp);
 
 		if (msg->class == GGADU_CLASS_CONFERENCE)
@@ -828,59 +751,78 @@ void gui_msg_receive(GGaduSignal * signal)
 		/* shasta: new "docklet set [default] icon" approach */
 		sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
 		sigdata = g_slist_append(sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
-		sigdata = g_slist_append(sigdata, g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)));
-		
+		sigdata_desc = g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id));
+		sigdata = g_slist_append(sigdata, sigdata_desc);
+
 		if (!session->chat)
 		{
 			if ((showwindow == FALSE) && (find_plugin_by_pattern("docklet-*")))
 			{
 				signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
-			} else {
+			}
+			else
+			{
 				g_slist_free(sigdata);
 				showwindow = TRUE;
 			}
-	        
-        		if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in_first")))
-		    		signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
+
+			if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in_first")))
+				signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
 
 			session->recipients = g_slist_copy(msg->recipients);
 			session->chat = create_chat(session, gp->plugin_name, msg->id, showwindow);
-		} else {
-			GtkWidget *window1;
-            
-	    		if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in")))
-		    		signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
-            
+		}
+		else
+		{
+			GtkWidget *window1 = NULL;
+
+			if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in")))
+				signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
+
 			window1 = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
-			
-		        if (!GTK_WIDGET_VISIBLE(window1))
+
+			if (!GTK_WIDGET_VISIBLE(window1))
 			{
-				if (showwindow) 
+				if (showwindow)
 				{
-				    gtk_widget_show_all(window1);
+					/* TODO: find this session in invisible_chats and remove */
+					invisible_chats = g_slist_remove(invisible_chats, session->chat);
+					if (g_slist_length(invisible_chats) < 1)
+					{
+						GSList *icondatalist = NULL;
+						icondatalist = g_slist_append(icondatalist, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
+						icondatalist = g_slist_append(icondatalist, (gpointer) GGADU_DEFAULT_ICON_FILENAME);
+						icondatalist = g_slist_append(icondatalist, _("GNU Gadu"));
+						signal_emit_full("main-gui", "docklet set icon", icondatalist, NULL, (gpointer) g_slist_free);
+					}
+					gtk_widget_show_all(window1);
+
+					print_debug("showwindow");
 				}
-				 else if (msg->message && find_plugin_by_pattern("docklet-*")) 
+				else if (msg->message && find_plugin_by_pattern("docklet-*"))
 				{
-    				    invisible_chats = g_slist_append(invisible_chats, session->chat);
-				    signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
+					invisible_chats = g_slist_append(invisible_chats, session->chat);
+					signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
 				}
-				 else if (msg->message)
+				else if (msg->message)
 				{
-				    gtk_widget_show_all(window1);
+					gtk_widget_show_all(window1);
+					print_debug("msg->message");
 				}
-				
-			} else {
+
+			}
+			else
+			{
 				g_slist_free(sigdata);
 			}
 		}
 
-		if ((gint) ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs") == TRUE &&
-		    find_plugin_by_name("xosd") && msg->message)
+		if ((gint) ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs") == TRUE && find_plugin_by_name("xosd") && msg->message)
 		{
-			signal_emit("main-gui", "xosd show message",
-				    g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)), "xosd");
+			signal_emit("main-gui", "xosd show message", g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)), "xosd");
 		}
 
+		g_free(sigdata_desc);
 		gui_chat_append(session->chat, msg, FALSE, FALSE);
 	}
 }
@@ -910,7 +852,7 @@ void gui_produce_menu_for_factory(GGaduMenu * menu, GtkItemFactory * item_factor
 		{
 			e->item_type = g_strdup("<Item>");
 			e->callback = it->callback;	/* to sa rozne callbacki ale function_ptr dobrze sie sprawuje jako it->callback */
-			e->extra_data = it->data; /* bezsensu */
+			e->extra_data = it->data;	/* bezsensu */
 		}
 
 		prev_root = root;
@@ -993,8 +935,7 @@ void gui_config_emoticons()
 		/* if reading from ~/.gg2/emoticons.def failed, try default one */
 		if (!emoticons)
 		{
-			path = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", G_DIR_SEPARATOR_S, "emoticons",
-						"emoticons.def", NULL);
+			path = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", G_DIR_SEPARATOR_S, "emoticons", "emoticons.def", NULL);
 			emoticons = gui_read_emoticons(path);
 			g_free(path);
 		}
@@ -1026,16 +967,18 @@ void gui_load_theme()
 	themepath = g_build_filename(PACKAGE_DATA_DIR, "themes", themefilename, NULL);
 
 	print_debug("%s : Loading theme from %s\n", "main-gui", themepath);
-	
-	if (ggadu_strcasecmp(ggadu_config_var_get(gui_handler, "theme"),"default"))
+
+	if (ggadu_strcasecmp(ggadu_config_var_get(gui_handler, "theme"), "default"))
 	{
-    	    gtk_rc_parse(themepath);
-	    gtk_rc_reset_styles(gtk_settings_get_default());
-	} else {
-    	    gtk_rc_parse(themepath);
-	    gtk_rc_reset_styles(gtk_settings_get_default());
+		gtk_rc_parse(themepath);
+		gtk_rc_reset_styles(gtk_settings_get_default());
 	}
-	
+	else
+	{
+		gtk_rc_parse(themepath);
+		gtk_rc_reset_styles(gtk_settings_get_default());
+	}
+
 	g_free(themepath);
 	g_free(themefilename);
 }
@@ -1050,7 +993,7 @@ void gui_reload_images()
 
 	sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
 	sigdata = g_slist_append(sigdata, GGADU_DEFAULT_ICON_FILENAME);
-	sigdata = g_slist_append(sigdata, "GNU Gadu");
+	sigdata = g_slist_append(sigdata, _("GNU Gadu"));
 
 	signal_emit_full("main-gui", "docklet set default icon", sigdata, NULL, (gpointer) g_slist_free);
 }

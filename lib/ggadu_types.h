@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.10 2004/10/15 14:14:38 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.11 2004/10/19 10:51:24 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -34,12 +34,12 @@ typedef gpointer(*function_ptr) (gpointer);
 typedef void (*signal_func_ptr) (gpointer, gpointer);
 typedef GQuark GGaduSigID;
 
-enum
+typedef enum
 {
     GGADU_PLUGIN_TYPE_UI = 1,
     GGADU_PLUGIN_TYPE_PROTOCOL,
     GGADU_PLUGIN_TYPE_MISC
-};
+} GGaduPluginType;
 
 enum
 {
@@ -51,7 +51,7 @@ enum
     GGADU_PASSWORD
 };
 
-enum
+typedef enum
 {
     VAR_STR = 1,
     VAR_INT,
@@ -63,21 +63,22 @@ enum
     VAR_COLOUR_CHOOSER,
     VAR_LIST,
     VAR_NULL
-};
+} GGaduVarType;
 
-enum
+typedef enum
 {
     GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE = 1
-};
+} GGaduPluginExtensionType;
 
-enum
+typedef enum
 {
     VAR_FLAG_NONE = 1,
     VAR_FLAG_SENSITIVE = 1 << 2,
     VAR_FLAG_INSENSITIVE = 1 << 4,
     VAR_FLAG_PASSWORD = 1 << 5,
+    VAR_FLAG_SELECTED = 1 << 6,
     VAR_FLAG_FOCUS = 1 << 8
-};
+} GGaduKeyValueFlag;
 
 enum
 {
@@ -121,7 +122,7 @@ typedef struct
 typedef struct
 {
     gchar *name;		/* nazwa zmiennej */
-    gint type;			/* typ */
+    GGaduVarType type;		/* typ */
     gpointer ptr;		/* wskaznik gdzie bedzie przechowywana */
     gpointer def;		/* default value */
 } GGaduVar;
@@ -346,8 +347,8 @@ typedef struct
     gint key;
     gpointer value;
 
-    guint type;			/* VAR_STR, VAR_INT, VAR_BOOL */
-    guint flag;			/* GGADU_INSENSITIVE, GGADU_SENSITIVE (default) */
+    GGaduVarType type;		/* GGaduVarType      */
+    guint flag;			/* GGaduKeyValueFlag */
 
     gchar *description;
 

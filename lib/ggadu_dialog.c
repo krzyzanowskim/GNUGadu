@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.c,v 1.8 2004/10/18 15:03:14 krzyzak Exp $ */
+/* $Id: ggadu_dialog.c,v 1.9 2004/10/19 10:51:24 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -30,7 +30,7 @@
 #include "ggadu_support.h"
 #include "ggadu_types.h"
 
-GGaduDialog *ggadu_dialog_new_full(guint type, gchar * title, gchar * callback_signal, gpointer user_data)
+GGaduDialog *ggadu_dialog_new_full(GGaduDialogType type, gchar * title, gchar * callback_signal, gpointer user_data)
 {
 	GGaduDialog *dialog = g_new0(GGaduDialog, 1);
 	ggadu_dialog_set_callback_signal(dialog, callback_signal);
@@ -43,18 +43,20 @@ GGaduDialog *ggadu_dialog_new_full(guint type, gchar * title, gchar * callback_s
 }
 
 /* preselected option have to be added at the top of list in VAR_LIST */
-void ggadu_dialog_add_entry(GGaduDialog * dialog, gint key, gchar * desc, gint type, gpointer value, gint flags)
+void ggadu_dialog_add_entry(GGaduDialog * dialog, gint key, gchar * desc, GGaduVarType var_type, gpointer value, gint flags)
 {
 	GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
 	kv->key = key;
 	kv->description = g_strdup(desc);
 	kv->flag = flags;
+
+	if (!dialog) return;
 	
-	kv->type = type;
+	kv->type = var_type;
 	
-	if ((type == VAR_STR) || (type == VAR_IMG))
+	if ((var_type == VAR_STR) || (var_type == VAR_IMG))
 		kv->value = g_strdup(value);
-	else if (type == VAR_LIST)
+	else if (var_type == VAR_LIST)
 		kv->value = g_slist_copy(value);
 	else
 		kv->value = value;
@@ -66,61 +68,68 @@ void ggadu_dialog_add_entry(GGaduDialog * dialog, gint key, gchar * desc, gint t
 GSList *ggadu_dialog_get_entries(GGaduDialog * dialog)
 {
 	g_return_val_if_fail(dialog != NULL, NULL);
+	if (!dialog) return NULL;
 	return dialog->optlist;
 }
 
 GGaduDialogType ggadu_dialog_get_type(GGaduDialog * dialog)
 {
 	g_return_val_if_fail(dialog != NULL, -1);
+	if (!dialog) return -1;
 	return dialog->type;
 }
 
 gint ggadu_dialog_get_response(GGaduDialog * dialog)
 {
 	g_return_val_if_fail(dialog != NULL, -1);
+	if (!dialog) return -1;
 	return dialog->response;
 }
 
 void ggadu_dialog_set_callback_signal(GGaduDialog * dialog, const gchar * title)
 {
 	g_return_if_fail(dialog != NULL);
+	if (!dialog) return;
 	dialog->callback_signal = g_strdup(title);
 }
 
 void ggadu_dialog_set_progress_watch (GGaduDialog * dialog, watch_func watch)
 {
 	g_return_if_fail(dialog != NULL);
+	if (!dialog) return;
 	dialog->watch_func = watch;
 }
 
 void ggadu_dialog_set_flags(GGaduDialog * dialog, guint flags)
 {
 	g_return_if_fail(dialog != NULL);
+	if (!dialog) return;
 	dialog->flags = flags;
 }
 
 guint ggadu_dialog_get_flags(GGaduDialog * dialog)
 {
 	g_return_val_if_fail(dialog != NULL,0);
+	if (!dialog) return 0;
 	return dialog->flags;
 }
 
 void ggadu_dialog_set_title(GGaduDialog * dialog, const gchar * title)
 {
-	g_return_if_fail(dialog != NULL);
+	if (!dialog) return;
 	dialog->title = g_strdup(title);
 }
 
 const gchar *ggadu_dialog_get_title(GGaduDialog * dialog)
 {
-	g_return_val_if_fail(dialog != NULL,NULL);
+	if (!dialog) return NULL;
 	return dialog->title;
 }
 
-void ggadu_dialog_set_type(GGaduDialog * dialog, GGaduDialogType type)
+void ggadu_dialog_set_type(GGaduDialog * dialog, GGaduDialogType dialog_type)
 {
-	g_return_if_fail(dialog != NULL);
-	dialog->type = type;
+	if (!dialog) return;
+	dialog->type = dialog_type;
 }
 
 void GGaduDialog_free(GGaduDialog * dialog)
