@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.39 2003/12/23 05:01:23 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.40 2003/12/28 23:31:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -743,7 +743,7 @@ GSList *gui_read_emoticons (gchar * path)
     gchar *stmp = NULL;
     gchar **emot = NULL;
 
-    print_debug ("%s\n", path);
+    print_debug ("read emoticons from %s", path);
     ch = g_io_channel_new_file (path, "r", NULL);
 
     if (!ch)

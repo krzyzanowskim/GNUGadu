@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.25 2003/08/24 01:36:20 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.26 2003/12/28 23:31:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -157,6 +157,8 @@ GtkWidget *gui_build_dialog_gtk_table (GSList * list, gint cols)
     GtkWidget *tab = gtk_table_new (rows, cols, FALSE);
     gint actC = 0, actR = 0;
     GtkWidget *to_grab_focus = NULL;
+
+    gtk_container_set_border_width (GTK_CONTAINER ( tab ), 15);
 
     while (listtmp)
       {
@@ -328,16 +330,18 @@ void gui_user_data_window (gpointer signal, gboolean change)
     GGaduSignal *sig = (GGaduSignal *) signal;
     GtkWidget *adduserwindow = NULL;
     GtkWidget *table;
+
     adduserwindow =
-	gtk_dialog_new_with_buttons ((change) ? _("Change User") : _("Add User"), GTK_WINDOW (window),
+	gtk_dialog_new_with_buttons ((change) ? _("Change User") : _("Add User"), NULL,
 				     GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				     GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
     gtk_window_set_resizable (GTK_WINDOW (adduserwindow), FALSE);
+
     table = gui_build_dialog_gtk_table ((GSList *) sig->data, 1);
 
-    gtk_table_set_row_spacings (GTK_TABLE (table), 5);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 3);
+    gtk_table_set_row_spacings (GTK_TABLE (table), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (table), 5);
 
     gtk_container_add (GTK_CONTAINER (GTK_DIALOG (adduserwindow)->vbox), table);
 
@@ -466,7 +470,7 @@ void gui_show_window_with_text (gpointer signal)
     GtkWidget *sw = NULL;
 
     dialog =
-	gtk_dialog_new_with_buttons ("", GTK_WINDOW (window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
+	gtk_dialog_new_with_buttons ("", NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
 				     GTK_RESPONSE_OK, NULL);
     gtk_window_resize (GTK_WINDOW (dialog), 400, 400);
 
@@ -506,7 +510,7 @@ void gui_show_dialog (gpointer signal, gboolean change)
 	return;
 
     dialog =
-	gtk_dialog_new_with_buttons (d->title, GTK_WINDOW (window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL,
+	gtk_dialog_new_with_buttons (d->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL,
 				     GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
@@ -550,8 +554,8 @@ void gui_show_dialog (gpointer signal, gboolean change)
 
     table = gui_build_dialog_gtk_table (d->optlist, 1);
 
-    gtk_table_set_row_spacings (GTK_TABLE (table), 5);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 3);
+    gtk_table_set_row_spacings (GTK_TABLE (table), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (table), 5);
 
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), table, TRUE, TRUE, 0);
 
@@ -661,7 +665,7 @@ void gui_about (GtkWidget * widget, gpointer data)
     print_debug ("About\n");
 
     about =
-	gtk_dialog_new_with_buttons (_("About"), GTK_WINDOW (window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+	gtk_dialog_new_with_buttons (_("About"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 				     GTK_STOCK_OK, GTK_RESPONSE_NONE, NULL);
     gtk_window_set_resizable (GTK_WINDOW (about), FALSE);
     table = gtk_table_new (2, 2, FALSE);

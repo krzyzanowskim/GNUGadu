@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.98 2003/12/20 23:17:20 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.99 2003/12/28 23:31:20 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -910,13 +910,6 @@ gpointer user_preferences_action (gpointer user_data)
 			    VAR_BOOL, ggadu_config_var_get (handler, "private"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_DCC, _("Enable DCC"), VAR_BOOL,
 			    ggadu_config_var_get (handler, "dcc"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE, _("Sound file (app)"),
-			    VAR_FILE_CHOOSER, ggadu_config_var_get (handler, "sound_app_file"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE, _("Sound file (chat)"),
-			    VAR_FILE_CHOOSER, ggadu_config_var_get (handler, "sound_chat_file"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_MSG_FILE, _("Sound file (msg)"),
-			    VAR_FILE_CHOOSER, ggadu_config_var_get (handler, "sound_msg_file"), VAR_FLAG_NONE);
-
     signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
     return NULL;
@@ -1447,9 +1440,9 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     ggadu_config_var_add (handler, "password", VAR_STR);
     ggadu_config_var_add (handler, "proxy", VAR_STR);
     ggadu_config_var_add (handler, "server", VAR_STR);
-    ggadu_config_var_add (handler, "sound_msg_file", VAR_STR);
+/*  ggadu_config_var_add (handler, "sound_msg_file", VAR_STR);
     ggadu_config_var_add (handler, "sound_chat_file", VAR_STR);
-    ggadu_config_var_add (handler, "sound_app_file", VAR_STR);
+    ggadu_config_var_add (handler, "sound_app_file", VAR_STR); */
     ggadu_config_var_add (handler, "log", VAR_BOOL);
     ggadu_config_var_add (handler, "autoconnect", VAR_BOOL);
     ggadu_config_var_add (handler, "status", VAR_INT);
@@ -2011,18 +2004,6 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			case GGADU_GADU_GADU_CONFIG_PROXY:
 			    print_debug ("changing var setting proxy to %s\n", kv->value);
 			    ggadu_config_var_set (handler, "proxy", kv->value);
-			    break;
-			case GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE:
-			    print_debug ("changing var setting sound_chat_file to %s\n", kv->value);
-			    ggadu_config_var_set (handler, "sound_chat_file", kv->value);
-			    break;
-			case GGADU_GADU_GADU_CONFIG_SOUND_MSG_FILE:
-			    print_debug ("changing var setting sound_msg_file to %s\n", kv->value);
-			    ggadu_config_var_set (handler, "sound_msg_file", kv->value);
-			    break;
-			case GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE:
-			    print_debug ("changing var setting sound_app_file to %s\n", kv->value);
-			    ggadu_config_var_set (handler, "sound_app_file", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_HISTORY:
 			    print_debug ("changing var setting log to %d\n", kv->value);

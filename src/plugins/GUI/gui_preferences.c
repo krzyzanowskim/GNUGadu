@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.27 2003/12/20 23:17:19 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.28 2003/12/28 23:31:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -228,6 +228,8 @@ static GtkWidget *create_colors_tab ()
 
     tabbox = gtk_table_new (3, 3, FALSE);
     gtk_container_add (GTK_CONTAINER (frame), tabbox);
+    gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
 
     label = gtk_label_new (_("Message header"));
     entry = gtk_entry_new ();
@@ -260,6 +262,8 @@ static GtkWidget *create_colors_tab ()
 
     tabbox = gtk_table_new (3, 3, FALSE);
     gtk_container_add (GTK_CONTAINER (frame), tabbox);
+    gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
 
     label = gtk_label_new (_("Message header"));
     entry = gtk_entry_new ();
@@ -348,6 +352,8 @@ static GtkWidget *create_fonts_tab ()
 
     tabbox = gtk_table_new (3, 3, FALSE);
     gtk_container_add (GTK_CONTAINER (frame), tabbox);
+    gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
 
     label = gtk_label_new (_("Message header"));
     entry = gtk_entry_new ();
@@ -380,6 +386,8 @@ static GtkWidget *create_fonts_tab ()
 
     tabbox = gtk_table_new (3, 3, FALSE);
     gtk_container_add (GTK_CONTAINER (frame), tabbox);
+    gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
 
     label = gtk_label_new (_("Message header"));
     entry = gtk_entry_new ();
@@ -412,6 +420,8 @@ static GtkWidget *create_fonts_tab ()
 
     tabbox = gtk_table_new (3, 3, FALSE);
     gtk_container_add (GTK_CONTAINER (frame), tabbox);
+    gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
 
     label = gtk_label_new (_("Contact"));
     entry = gtk_entry_new ();
@@ -426,7 +436,7 @@ static GtkWidget *create_fonts_tab ()
     if (ggadu_config_var_get (gui_handler, "contact_list_contact_font"))
 	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "contact_list_contact_font"));
 
-    label = gtk_label_new (_("Protocol (tree view)"));
+    label = gtk_label_new (_("Protocol\n(tree view)"));
     entry = gtk_entry_new ();
     button = gtk_button_new_from_stock ("gtk-select-font");
 
@@ -494,6 +504,8 @@ static GtkWidget *create_sound_tab ()
 
     tabbox = gtk_table_new (3, 3, FALSE);
     gtk_container_add (GTK_CONTAINER (frame), tabbox);
+    gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
 
     label = gtk_label_new (_("Incoming message:"));
     entry = gtk_entry_new ();
@@ -578,9 +590,16 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_container_add (GTK_CONTAINER (GTK_DIALOG (preferences)->vbox), notebook);
 
     general_vbox = gtk_vbox_new (FALSE, 4);
+    gtk_container_set_border_width (GTK_CONTAINER ( general_vbox ), 10);
+
     sound_vbox = create_sound_tab ();
+    gtk_container_set_border_width (GTK_CONTAINER ( sound_vbox ), 10);
+
     colors_vbox = create_colors_tab ();
+    gtk_container_set_border_width (GTK_CONTAINER ( colors_vbox ), 10);
+
     fonts_vbox = create_fonts_tab ();
+    gtk_container_set_border_width (GTK_CONTAINER ( fonts_vbox ), 10);
 
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), general_vbox, gtk_label_new (_("General")));
 
@@ -637,7 +656,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     hide_on_start = gtk_check_button_new_with_label (_("Auto hide on start"));
     gtk_box_pack_start (GTK_BOX (vbox), hide_on_start, FALSE, FALSE, 0);
 
-    hide_toolbar = gtk_check_button_new_with_label (_("Hide toolbar"));
+    hide_toolbar = gtk_check_button_new_with_label (_("Show toolbar"));
     gtk_box_pack_start (GTK_BOX (vbox), hide_toolbar, FALSE, FALSE, 0);
 
     blink = gtk_check_button_new_with_label (_("Blink status"));
@@ -647,6 +666,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_box_pack_start (GTK_BOX (vbox), auto_away, FALSE, FALSE, 0);
 
     tabbox = gtk_table_new (5, 2, FALSE);
+    gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
     gtk_box_pack_start (GTK_BOX (general_vbox), tabbox, FALSE, FALSE, 0);
 
     label = gtk_label_new (_("Blink interval"));
@@ -656,31 +676,31 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_table_attach_defaults (GTK_TABLE (tabbox), blink_interval, 1, 2, 0, 1);
     g_signal_connect (blink, "toggled", G_CALLBACK (tree_toggled), blink_interval);
 
+    label = gtk_label_new (_("Auto away interval (minutes)"));
+    auto_away_interval = gtk_spin_button_new_with_range (0, 1440, 1);
+
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label, 0, 1, 1, 2);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), auto_away_interval, 1, 2, 1, 2);
+    g_signal_connect (auto_away, "toggled", G_CALLBACK (tree_toggled), auto_away_interval);
+
     /* ZONK - how to name it ? */
     label = gtk_label_new (_("Chat window split size (%)"));
     chat_paned_size = gtk_spin_button_new_with_range (0, 100, 5);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label, 0, 1, 1, 2);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chat_paned_size, 1, 2, 1, 2);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label, 0, 1, 2, 3);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), chat_paned_size, 1, 2, 2, 3);
 
     combo_theme = gtk_combo_new ();
     label = gtk_label_new (_("Select Theme"));
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label, 0, 1, 2, 3);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_theme, 1, 2, 2, 3);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label, 0, 1, 3, 4);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_theme, 1, 2, 3, 4);
 
     combo_icons = gtk_combo_new ();
     label = gtk_label_new (_("Select icon set"));
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label, 0, 1, 3, 4);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_icons, 1, 2, 3, 4);
-
-    label = gtk_label_new (_("Auto away interval (minutes)"));
-    auto_away_interval = gtk_spin_button_new_with_range (0, 1440, 1);
-
     gtk_table_attach_defaults (GTK_TABLE (tabbox), label, 0, 1, 4, 5);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), auto_away_interval, 1, 2, 4, 5);
-    g_signal_connect (auto_away, "toggled", G_CALLBACK (tree_toggled), auto_away_interval);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_icons, 1, 2, 4, 5);
 
     if (ggadu_config_var_get (gui_handler, "emot"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (emotic), TRUE);
@@ -743,7 +763,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     if (ggadu_config_var_get (gui_handler, "hide_on_start"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (hide_on_start), TRUE);
 
-    if (ggadu_config_var_get (gui_handler, "hide_toolbar"))
+    if (!ggadu_config_var_get (gui_handler, "hide_toolbar"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (hide_toolbar), TRUE);
 
     /* read available themes */
@@ -878,7 +898,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (hide_on_start)));
 
 	  ggadu_config_var_set (gui_handler, "hide_toolbar",
-			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (hide_toolbar)));
+			  (gpointer) !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (hide_toolbar)));
 
 	  ggadu_config_var_set (gui_handler, "theme",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_theme)->entry))));
