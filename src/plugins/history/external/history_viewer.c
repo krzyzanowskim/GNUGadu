@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.5 2004/08/26 12:35:54 krzyzak Exp $ */
+/* $Id: history_viewer.c,v 1.6 2004/10/13 18:12:24 thrulliq Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -144,7 +144,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "history-external", NULL));
     g_free(this_configdir);
 
-    ggadu_config_var_add_with_default(handler, "viewer", VAR_STR,g_build_filename(BINDIR,"gghist"));
+    ggadu_config_var_add_with_default(handler, "viewer", VAR_STR, g_build_filename(BINDIR,"gghist", NULL));
 
     if (!ggadu_config_read(handler))
 	g_warning(_("Unable to read configuration file for plugin %s"), "");
