@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.98 2004/05/27 19:37:41 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.99 2004/06/02 07:23:27 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -217,6 +217,11 @@ static gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey * eve
 	}
 
 	return FALSE;
+}
+void on_clear_clicked(GtkWidget * button, gpointer textview)
+{
+    GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
+    gtk_text_buffer_set_text(buf,"",-1);
 }
 
 void on_autosend_clicked(GtkWidget * button, gpointer user_data)
@@ -736,6 +741,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	GtkWidget *button_close;
 	GtkWidget *button_emoticons;
 	GtkWidget *button_stick;
+	GtkWidget *button_clear;
 	GtkWidget *bs_image = create_image("send-im.png");
 	GtkWidget *bas_image;
 	GtkWidget *bs_hbox = gtk_hbox_new(FALSE, 0);
@@ -1082,19 +1088,26 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	bas_image = create_image("push-pin.png");
 	gtk_container_add(GTK_CONTAINER(button_stick), bas_image);
 
+	button_clear = gtk_button_new();
+	bas_image = gtk_image_new();
+	gtk_image_set_from_stock(GTK_IMAGE(bas_image), "gtk-clear", GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_container_add(GTK_CONTAINER(button_clear), bas_image);
+
 	//_with_mnemonic(_("S_tick"));
 	
 	/* gtk_button_set_relief(GTK_BUTTON(button_autosend), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_send), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_close), GTK_RELIEF_NONE); */
 	gtk_button_set_relief(GTK_BUTTON(button_find), GTK_RELIEF_NONE);
+	gtk_button_set_relief(GTK_BUTTON(button_clear), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_stick), GTK_RELIEF_NONE);
 
 	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_send, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_autosend, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_close, FALSE, FALSE, 2);
-	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 2);
-	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_clear, FALSE, FALSE, 2);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 2);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 0);
 
 
 	g_object_set_data(G_OBJECT(session->chat), "autosend_button", button_autosend);
@@ -1166,6 +1179,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	g_signal_connect(button_send, "clicked", G_CALLBACK(on_send_clicked), session);
 	g_signal_connect(button_stick, "toggled", G_CALLBACK(on_stick_clicked), session);
 	g_signal_connect(button_find, "clicked", G_CALLBACK(on_chat_find_clicked), session);
+	g_signal_connect(button_clear, "clicked", G_CALLBACK(on_clear_clicked), history);
 
 	switch (chat_type)
 	{
