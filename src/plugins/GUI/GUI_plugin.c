@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.36 2003/11/07 20:56:45 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.37 2003/11/09 10:34:28 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -573,6 +573,21 @@ void gui_build_default_menu ()
     main_menu_bar = gtk_item_factory_get_widget (item_factory, "<main>");
 }
 
+gpointer show_hide_inactive(GtkWidget *widget, gpointer user_data)
+{
+    if (config_var_get (gui_handler, "show_active")) {
+	config_var_set (gui_handler, "show_active", (gpointer)FALSE);
+    } else {
+	config_var_set (gui_handler, "show_active", (gpointer)TRUE);
+    }
+    
+    config_save (gui_handler);
+    
+    gui_user_view_refresh();
+    
+    return NULL;
+}
+
 void gui_build_default_toolbar ()
 {
     toolbar_handle_box = gtk_handle_box_new();
@@ -583,8 +598,10 @@ void gui_build_default_toolbar ()
     gtk_toolbar_set_style(GTK_TOOLBAR(main_toolbar), GTK_TOOLBAR_ICONS);
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(main_toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
     
-    gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_PREFERENCES, NULL, NULL,  (GtkSignalFunc)gui_preferences, NULL, 0);
-    gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_QUIT, NULL, NULL, (GtkSignalFunc)gui_quit, NULL, 0);
+    gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_PREFERENCES, _("Open preferences window"), NULL,  (GtkSignalFunc)gui_preferences, NULL, 0);
+    gtk_toolbar_insert_stock(GTK_TOOLBAR(main_toolbar), GTK_STOCK_QUIT, _("Exit program"), NULL, (GtkSignalFunc)gui_quit, NULL, 0);
+
+    gtk_toolbar_append_element(GTK_TOOLBAR(main_toolbar), GTK_TOOLBAR_CHILD_BUTTON, NULL, NULL, _("Show/hide inactive users"), NULL, create_image("show-hide-inactive.png"), (GtkSignalFunc)show_hide_inactive, NULL);
 }
 
 /*
