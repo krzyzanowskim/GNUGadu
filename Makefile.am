@@ -23,9 +23,6 @@ EXTRA_DIST = autogen.sh ANNOUNCE AUTHORS ChangeLog COPYING \
 		intltool-update.in
 		
 
-##install-data-local:
-##	@$(NORMAL_INSTALL)
-
 dist-hook:
 	if test -d doc/gg2-doc; then \
 	  mkdir $(distdir)/doc/gg2-doc; \
