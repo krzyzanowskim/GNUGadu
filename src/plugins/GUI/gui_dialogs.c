@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.4 2003/03/23 16:52:15 thrulliq Exp $ */
+/* $Id: gui_dialogs.c,v 1.5 2003/03/23 17:07:10 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -191,6 +191,7 @@ void gui_user_data_window(gpointer signal, gboolean change)
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 						GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
+    gtk_window_set_resizable(GTK_WINDOW(adduserwindow), FALSE);
     table = gui_build_dialog_gtk_table((GSList *)sig->data, 1);
     
     gtk_table_set_row_spacings(GTK_TABLE(table),5);
