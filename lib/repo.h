@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.2 2004/01/17 00:44:58 shaster Exp $ */
+/* $Id: repo.h,v 1.3 2004/01/17 11:57:01 krzyzak Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
@@ -58,6 +58,7 @@ gboolean ggadu_repo_del(gchar * repo_name);
 
 gpointer ggadu_repo_value_first(gchar * repo_name, gint type, gpointer * data);
 gpointer ggadu_repo_value_next(gchar * repo_name, gint type, gpointer * data, gpointer index);
+GSList*  ggadu_repo_get_as_slist(gchar * repo_name, gint type);
 
 enum
 {
