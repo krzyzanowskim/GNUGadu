@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.2 2003/03/23 00:00:36 thrulliq Exp $ */
+/* $Id: gui_dialogs.c,v 1.3 2003/03/23 15:10:58 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -24,51 +24,50 @@ static GdkPixmap *pixmap = NULL;
 static GdkGC *gc;
 
 void gui_add_user_window_response(GtkDialog *dialog, int resid, gpointer user_data) {
-    GGaduSignal *signal = (GGaduSignal *)user_data;
-    GSList *kvlist = (GSList *)signal->data;
+	GGaduSignal *signal = (GGaduSignal *)user_data;
+	GSList *kvlist = (GSList *)signal->data;
 
-    if (resid == GTK_RESPONSE_OK) {
+	if (resid == GTK_RESPONSE_OK) {
 
 		while (kvlist) 
 		{
-	    	GGaduKeyValue *kv = (GGaduKeyValue *)kvlist->data;
-	    
-		if ((kv != NULL) && (kv->user_data != NULL))
-	        	kv->value = (gpointer)g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
-	    	/* gtk_widget_unref(GTK_WIDGET(kv->user_data)); */
+		GGaduKeyValue *kv = (GGaduKeyValue *)kvlist->data;
 
-	    	kvlist = kvlist->next;
+		if ((kv != NULL) && (kv->user_data != NULL))
+			kv->value = (gpointer)g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
+			/* gtk_widget_unref(GTK_WIDGET(kv->user_data)); */
+
+		kvlist = kvlist->next;
 		}
 
 	signal_emit("main-gui", "add user", signal->data, signal->source_plugin_name);
-    }
+	}
 
-    GGaduSignal_free(signal);
-    gtk_widget_destroy(GTK_WIDGET(dialog));
+	GGaduSignal_free(signal);
+	gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 void gui_change_user_window_response(GtkDialog *dialog, int resid, gpointer user_data) {
-    GGaduSignal *signal = (GGaduSignal *)user_data;
-    GSList *kvlist = (GSList *)signal->data;
+	GGaduSignal *signal = (GGaduSignal *)user_data;
+	GSList *kvlist = (GSList *)signal->data;
 
-    if (resid == GTK_RESPONSE_OK) {
+	if (resid == GTK_RESPONSE_OK) {
 
-	while (kvlist) 
-	{
-	    GGaduKeyValue *kv = (GGaduKeyValue *)kvlist->data;
-	    
-	    kv->value = (gpointer)g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
-	    /* gtk_widget_unref(GTK_WIDGET(kv->user_data)); */
+		while (kvlist) {
+		GGaduKeyValue *kv = (GGaduKeyValue *)kvlist->data;
 
-	    kvlist = kvlist->next;
-	}
+			kv->value = (gpointer)g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
+			/* gtk_widget_unref(GTK_WIDGET(kv->user_data)); */
+
+			kvlist = kvlist->next;
+		}
 
 	signal_emit("main-gui", "change user", signal->data, signal->source_plugin_name);
-    }
+	}
 
-    GGaduSignal_free(signal);
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-	
+	GGaduSignal_free(signal);
+	gtk_widget_destroy(GTK_WIDGET(dialog));
+
 }
 
 void gui_dialog_show_filename(GtkWidget *txt_entry)

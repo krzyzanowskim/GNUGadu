@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.2 2003/03/23 11:18:49 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.3 2003/03/23 15:10:57 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -268,47 +268,47 @@ void on_emoticons_clicked(GtkWidget *button, gpointer user_data)
     gtk_container_add(GTK_CONTAINER(emoticons_window), vbox);
 
 	if (emoticons) {
-        GSList *emotlist = NULL; 
-        GSList *emottmp = emoticons;
-        GtkWidget *widget;
-        GtkWidget *hbox;
-        GtkWidget *event_box;
-        gint count = 0;
-	    	    
-        hbox = gtk_hbox_new(TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
-	    
-        while (emottmp) 
-        {
-	    gui_emoticon *gemo = (gui_emoticon *)emottmp->data;
-	    
-	    if (!find_emoticon(gemo->file,emotlist))
+		GSList *emotlist = NULL; 
+		GSList *emottmp = emoticons;
+		GtkWidget *widget;
+		GtkWidget *hbox;
+		GtkWidget *event_box;
+		gint count = 0;
+
+		hbox = gtk_hbox_new(TRUE, 0);
+		gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+
+		while (emottmp) 
+		{
+		gui_emoticon *gemo = (gui_emoticon *)emottmp->data;
+
+		if (!find_emoticon(gemo->file,emotlist))
 		emotlist = g_slist_append(emotlist,gemo);
 		
 		emottmp = emottmp->next;
 	}
-	    	    
-        emottmp = emotlist;
-	
-        while (emottmp) 
-	{
-	    gui_emoticon *gemo = (gui_emoticon *)emottmp->data;
-	    widget = GTK_WIDGET(create_image(gemo->file));
-	    event_box = gtk_event_box_new();
 
-	    if (count >= MAX_EMOTICONS_IN_ROW) {
-	        hbox = gtk_hbox_new(TRUE, 0);
-	        gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
-	        count = 0;
-	    }
-	
-	    gtk_container_add (GTK_CONTAINER (event_box), widget);
-	    gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);
-	    g_signal_connect(event_box, "button_press_event", G_CALLBACK(on_emoticon_press_event), gemo);
-	    emottmp = emottmp->next;
-	    count++;
+		emottmp = emotlist;
+
+	while (emottmp) 
+	{
+		gui_emoticon *gemo = (gui_emoticon *)emottmp->data;
+		widget = GTK_WIDGET(create_image(gemo->file));
+		event_box = gtk_event_box_new();
+
+		if (count >= MAX_EMOTICONS_IN_ROW) {
+			hbox = gtk_hbox_new(TRUE, 0);
+			gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+			count = 0;
+		}
+
+		gtk_container_add (GTK_CONTAINER (event_box), widget);
+		gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);
+		g_signal_connect(event_box, "button_press_event", G_CALLBACK(on_emoticon_press_event), gemo);
+		emottmp = emottmp->next;
+		count++;
 	}
-	    
+
 	g_slist_free(emotlist);
 	}
 
