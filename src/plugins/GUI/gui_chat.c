@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.24 2003/05/15 14:19:01 shaster Exp $ */
+/* $Id: gui_chat.c,v 1.25 2003/05/21 17:30:53 zapal Exp $ */
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -240,6 +240,7 @@ void on_send_clicked(GtkWidget *button, gpointer user_data)
 	tmpmsg = g_strchug(g_strchomp(tmpmsg)); //obciete puste spacje z obu stron
 
 	if (strlen(tmpmsg) > 0) { 
+	  	gchar *soundfile;
 		msg = g_new0(GGaduMsg, 1);
 		msg->id = session->id;
 		msg->message = tmpmsg; 
@@ -248,6 +249,10 @@ void on_send_clicked(GtkWidget *button, gpointer user_data)
 		msg->recipients = session->recipients;
 
 		gui_chat_append(session->chat, msg->message, TRUE);
+		if ((soundfile = config_var_get (gui_handler, "sound_msg_out")))
+		{
+		      signal_emit_full ("main-gui", "sound play file", soundfile, "sound*", NULL);
+		}
 		signal_emit("main-gui", "send message", msg, plugin_name);
 	} else 
 		g_free(tmpmsg);
