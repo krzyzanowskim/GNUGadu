@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.156 2005/01/31 13:26:13 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.157 2005/02/19 19:54:09 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -449,6 +449,24 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_JABBER_AUTOCONNECT:
 					ggadu_config_var_set(jabber_handler, "autoconnect", kv->value);
 					break;
+				case GGADU_JABBER_AUTOSTATUS:
+					{
+						GSList *tmplist = p->statuslist;
+
+						while(tmplist)
+						{
+						    GGaduStatusPrototype *sp = (GGaduStatusPrototype *) tmplist->data;
+						    
+						    if(!strcmp(((GSList *) kv->value)->data, sp->description))
+						    {
+						        ggadu_config_var_set(jabber_handler, "auto_status", (gpointer) sp->status);
+							break;
+						    }
+
+						    tmplist = tmplist->next;
+						}
+					}
+					break;
 				case GGADU_JABBER_USESSL:
 					ggadu_config_var_set(jabber_handler, "use_ssl", kv->value);
 					break;
@@ -488,6 +506,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				}
 				tmplist = tmplist->next;
 			}
+
 			ggadu_config_save(jabber_handler);
 			if (reconn && jabber_data.status != JABBER_STATUS_UNAVAILABLE)
 			{
@@ -1216,7 +1235,7 @@ static GSList *status_init()
 	list = g_slist_append(list, sp++);
 
 	sp->status = JABBER_STATUS_AUTH_FROM;
-	sp->description = g_strdup(_("is subscribed to you presence"));
+	sp->description = g_strdup(_("is subscribed to your presence"));
 	sp->image = g_strdup("jabber-auth-from.png");
 	sp->receive_only = TRUE;
 	list = g_slist_append(list, sp++);
@@ -1284,18 +1303,40 @@ gpointer user_search_action(gpointer user_data)
 gpointer user_preferences_action(gpointer user_data)
 {
 	GGaduDialog *dialog;
+	GSList *tmplist = p->statuslist;
+	GSList *statuslist = NULL;
+
+	while(tmplist)
+	{
+	    GGaduStatusPrototype *sp = tmplist->data;
+
+	    if (!sp->receive_only && (g_slist_find(p->online_status, (gpointer) sp->status) ||
+				      g_slist_find(p->away_status, (gpointer) sp->status)))
+	        statuslist = g_slist_append(statuslist, sp->description);
+
+	    if (sp->status == (gint) ggadu_config_var_get(jabber_handler, "auto_status"))
+	        statuslist = g_slist_prepend(statuslist, sp->description);
+					    
+	    tmplist = tmplist->next;
+	}
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber plugin configuration"), "update config");
+
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, _("_Jabber ID:"), VAR_STR, ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
+
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("_Password:"), VAR_STR, ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
+
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_ONLY_FRIENDS, _("_Receive messages from friends only"), VAR_BOOL,
 			       ggadu_config_var_get(jabber_handler, "only_friends"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("_Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
 	if (lm_ssl_is_supported())
 	{
 		ggadu_dialog_add_entry(dialog, GGADU_JABBER_USESSL, _("Use _encrypted connection (SSL)"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
 	}
+
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("_Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
+
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOSTATUS, _("A_utoconnect status"), VAR_LIST, statuslist, VAR_FLAG_NONE);
 
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_ADVANCED);
 
@@ -1307,6 +1348,8 @@ gpointer user_preferences_action(gpointer user_data)
 			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
+	g_slist_free(statuslist);
+
 	return NULL;
 }
 
@@ -1413,6 +1456,7 @@ void start_plugin()
 	p->offline_status = g_slist_append(p->offline_status, (gint *) JABBER_STATUS_UNAVAILABLE);
 	p->offline_status = g_slist_append(p->offline_status, (gint *) JABBER_STATUS_ERROR);
 	p->online_status = g_slist_append(p->online_status, (gint *) JABBER_STATUS_AVAILABLE);
+	p->online_status = g_slist_append(p->online_status, (gint *) JABBER_STATUS_CHAT);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_AWAY);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_DND);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_XA);
@@ -1448,8 +1492,9 @@ void start_plugin()
 
 	if (ggadu_config_var_get(jabber_handler, "autoconnect"))
 	{
+		gint auto_status = (gint) ggadu_config_var_get(jabber_handler, "auto_status");
 		print_debug("jabber: autoconneting");
-		GGaduStatusPrototype *sp = ggadu_find_status_prototype(p,JABBER_STATUS_AVAILABLE);
+		GGaduStatusPrototype *sp = ggadu_find_status_prototype(p, auto_status ? auto_status : JABBER_STATUS_AVAILABLE);
 		jabber_change_status(sp, FALSE);
 		GGaduStatusPrototype_free(sp);
 	}
@@ -1479,6 +1524,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(jabber_handler, "log", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(jabber_handler, "only_friends", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
+	ggadu_config_var_add_with_default(jabber_handler, "auto_status", VAR_INT, (gpointer) JABBER_STATUS_AVAILABLE);
 	ggadu_config_var_add_with_default(jabber_handler, "resource", VAR_STR, JABBER_DEFAULT_RESOURCE);
 	ggadu_config_var_add(jabber_handler, "proxy", VAR_STR);
 

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.46 2005/02/17 22:28:34 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.h,v 1.47 2005/02/19 19:54:10 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -51,6 +51,7 @@ enum
     GGADU_JABBER_LOG,
     GGADU_JABBER_ONLY_FRIENDS,
     GGADU_JABBER_AUTOCONNECT,
+    GGADU_JABBER_AUTOSTATUS,
     GGADU_JABBER_USESSL,
     GGADU_JABBER_RESOURCE,
     GGADU_JABBER_SERVER,
