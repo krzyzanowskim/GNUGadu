@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.70 2004/12/27 13:20:26 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.71 2005/01/02 04:01:28 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -184,6 +184,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "blink_interval", VAR_INT, (gpointer) 200);
 	ggadu_config_var_add_with_default(gui_handler, "use_username", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "descr_on_list", VAR_BOOL, (gpointer) TRUE);
+	ggadu_config_var_add_with_default(gui_handler, "browser_exec", VAR_STR, "mozilla");
 
 	if (!ggadu_config_read(gui_handler))
 		g_warning(_("Unable to read configuration file for plugin GUI, don't worry"));

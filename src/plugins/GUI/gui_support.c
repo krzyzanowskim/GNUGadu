@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.16 2004/12/26 00:23:30 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.17 2005/01/02 04:01:28 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -360,4 +360,37 @@ GtkWidget *lookup_widget(GtkWidget * widget, const gchar * widget_name)
 		g_warning("Widget not found: %s", widget_name);
 
 	return found_widget;
+}
+
+gchar * 
+ggadu_escape_html(const char *html) {
+	const char *c = html;
+	GString *ret;
+
+	if (html == NULL)
+		return NULL;
+
+	ret = g_string_new("");
+
+	while (*c) {
+		switch (*c) {
+			case '&':
+				ret = g_string_append(ret, "&amp;");
+				break;
+			case '<':
+				ret = g_string_append(ret, "&lt;");
+				break;
+			case '>':
+				ret = g_string_append(ret, "&gt;");
+				break;
+			case '"':
+				ret = g_string_append(ret, "&quot;");
+				break;
+			default:
+				ret = g_string_append_c(ret, *c);
+		}
+		c++;
+	}
+
+	return g_string_free(ret, FALSE);
 }

@@ -1,4 +1,4 @@
-/* $Id: gui_chat_session.c,v 1.13 2004/12/20 09:15:14 krzyzak Exp $ */
+/* $Id: gui_chat_session.c,v 1.14 2005/01/02 04:01:28 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -295,25 +295,25 @@ GtkWidget *gui_chat_session_create_gtk_widget(GUIChatSession * gcs)
     colorstr = ggadu_config_var_get(gui_handler, "msg_header_color");
     fontstr = ggadu_config_var_get(gui_handler, "msg_header_font");
 
-    gtk_text_buffer_create_tag(buf, "incoming_header", "foreground", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
+    gtk_text_buffer_create_tag(buf, "incoming_header", "foreground incoming header", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 			       (fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
     colorstr = ggadu_config_var_get(gui_handler, "msg_body_color");
     fontstr = ggadu_config_var_get(gui_handler, "msg_body_font");
 
-    gtk_text_buffer_create_tag(buf, "incoming_text", "foreground", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
+    gtk_text_buffer_create_tag(buf, "incoming_text", "foreground incoming body", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 			       (fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
     colorstr = ggadu_config_var_get(gui_handler, "msg_out_header_color");
     fontstr = ggadu_config_var_get(gui_handler, "msg_out_header_font");
 
-    gtk_text_buffer_create_tag(buf, "outgoing_header", "foreground", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
+    gtk_text_buffer_create_tag(buf, "outgoing_header", "foreground outgoing header", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 			       (fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
     colorstr = ggadu_config_var_get(gui_handler, "msg_out_body_color");
     fontstr = ggadu_config_var_get(gui_handler, "msg_out_body_font");
 
-    gtk_text_buffer_create_tag(buf, "outgoing_text", "foreground", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
+    gtk_text_buffer_create_tag(buf, "outgoing_text", "foreground outgoing body", (colorstr && (strlen(colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 			       (fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
     /*

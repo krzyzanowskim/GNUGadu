@@ -32,7 +32,9 @@ libGUI_plugin_la_SOURCES = gui_main.c \
     gtkanimlabel.c \
     gtkanimlabel.h \
     gui_chat_session.c \
-    gui_chat_session.h
+    gui_chat_session.h \
+    gtkimhtml.c \
+    gtkimhtml.h
 
     
 if USE_GTKSPELL

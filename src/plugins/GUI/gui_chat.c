@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.135 2004/12/27 21:11:05 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.136 2005/01/02 04:01:27 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#include <stdlib.h>
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
@@ -31,6 +33,8 @@
 #include <gtk/gtk.h>
 
 #include <string.h>
+
+#include "gtkimhtml.h"
 
 #include "ggadu_support.h"
 #include "signals.h"
@@ -796,6 +800,15 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 	return FALSE;
 }
 
+static void
+url_clicked_cb(GtkWidget *w, const char *uri)
+{
+//	g_idle_add(url_clicked_idle_cb, g_strdup(uri));
+	gchar *browser_exec = ggadu_config_var_get(gui_handler, "browser_exec");
+	gchar *command = g_strdup_printf("\"%s\" \"%s\"",browser_exec ? browser_exec : "mozilla" ,uri);
+	system(command);
+}
+
 
 GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * id, gboolean visible)
 {
@@ -1026,8 +1039,12 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	/*
 	 * history 
 	 */
-	history = gtk_text_view_new();
+/*	 dupa */
+/*	history = gtk_text_view_new(); */
+	history = gtk_imhtml_new(NULL, NULL);
 	gtk_widget_set_name(GTK_WIDGET(history), "GGHistory");
+	
+	g_signal_connect(G_OBJECT(history), "url_clicked",G_CALLBACK(url_clicked_cb), NULL);
 
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(history), FALSE);
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(history), GTK_WRAP_WORD_CHAR);
@@ -1333,6 +1350,8 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	GSList *emottmp = NULL;
 	gui_chat_session *session = NULL;
 	gboolean conference = FALSE;
+	gchar *colorstr;
+	gchar *escaped_txt;
 
 	print_debug("gui_chat_append");
 
@@ -1443,8 +1462,13 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	g_free(tmp);
 
 	tmp = g_strconcat(text, (notice_message) ? "" : "\n", NULL);
-	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text", NULL);
+//	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text", NULL);
+	colorstr = self ? ggadu_config_var_get(gui_handler, "msg_out_body_color") : ggadu_config_var_get(gui_handler, "msg_body_color");
+	gtk_imhtml_toggle_forecolor(GTK_IMHTML(history),colorstr);
+	escaped_txt = ggadu_escape_html(tmp);
+	gtk_imhtml_append_text(GTK_IMHTML(history),escaped_txt,0);
 	g_free(tmp);
+	g_free(escaped_txt);
 
 	if (notice_message)
 	{
@@ -1485,7 +1509,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	while (emottmp)
 	{
 		gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
-
+		
 		while (gtk_text_iter_backward_search(&istart, gemo->emoticon, GTK_TEXT_SEARCH_VISIBLE_ONLY, &istart, &iend, &iter))
 		{
 			GtkTextChildAnchor *anchor = NULL;

@@ -1,4 +1,4 @@
-/* $Id: gui_support.h,v 1.9 2004/12/20 09:15:15 krzyzak Exp $ */
+/* $Id: gui_support.h,v 1.10 2005/01/02 04:01:28 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -51,5 +51,7 @@ GtkWidget *create_image(const gchar * filename);
 GdkPixbuf *create_pixbuf(const gchar * filename);
 
 GtkWidget *lookup_widget(GtkWidget * widget, const gchar * widget_name);
+
+gchar *ggadu_escape_html(const char *html);
 
 #endif
