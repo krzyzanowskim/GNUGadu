@@ -105,7 +105,7 @@ cd src/plugins/gadu_gadu/libgadu
 ./autogen.sh
 
 cd $prev
-./configure $*
+#./configure $*
 
 #cd po
 #make update-po

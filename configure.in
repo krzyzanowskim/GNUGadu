@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.117 2005/01/31 11:19:34 krzyzak Exp $
+dnl $Id: configure.in,v 1.118 2005/02/01 12:23:18 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.4])
 
@@ -17,7 +17,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 
 if test `uname -s` = "Darwin"; then
- 	AC_DEFINE_UNQUOTED(LIB_SUFFIX,"dynlib")
+ 	AC_DEFINE_UNQUOTED(LIB_SUFFIX,"")
 else
 	AC_DEFINE_UNQUOTED(LIB_SUFFIX,"so")
 fi

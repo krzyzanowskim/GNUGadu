@@ -1,5 +1,6 @@
 01.02.2005
 - patch from Andrzej Kurzeja andyx(at)budorex.com.pl for Tlen.pl status (Tlen)
+- build core and gadu-gadu plugin on MacOSX (krzak)
 
 31.01.2005
 - patch from Mateusz Papiernik: Do not show contacts with status `JABBER_STATUS_ERROR'

@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.28 2004/12/26 22:23:17 shaster Exp $ */
+/* $Id: main.c,v 1.29 2005/02/01 12:23:19 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -80,7 +80,7 @@ void load_available_modules()
     {
 	gchar *fullfilename = g_build_filename(dirpath, namepl, NULL);
 
-	if ((!g_file_test(fullfilename, G_FILE_TEST_IS_DIR)) && (g_str_has_suffix(namepl, ".so")))
+	if ((!g_file_test(fullfilename, G_FILE_TEST_IS_DIR)) && (g_str_has_suffix(namepl, LIB_SUFFIX)))
 	{
 	    print_debug("core : load_avilable_modules : %s\n", namepl);
 
