@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.74 2004/08/09 20:06:33 krzyzak Exp $
+dnl $Id: configure.in,v 1.75 2004/08/17 14:30:20 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.4])
 
@@ -84,56 +84,57 @@ PKG_CHECK_MODULES(GTHREAD,gthread-2.0 >= 2.2.0,[
 
 AC_ARG_ENABLE(debug, [  --enable-debug	  debug mode			default=disabled],
     if test x$enableval = xyes; then
-	 want_debug=yes
+	 with_debug=yes
     else
 	if test "x$enableval" = xno; then
-		want_debug=no
+		with_debug=no
 	else
-		want_debug=yes
+		with_debug=yes
 	fi
     fi,
-    want_debug=no)
+    with_debug=no)
 
-if test x$want_debug = xyes; then
+if test x$with_debug = xyes; then
   AC_DEFINE(GGADU_DEBUG)
 fi
 
 
 AC_ARG_ENABLE(gdb, [  --enable-gdb		  gdb support			default=disabled],
     if test x$enableval = xyes; then
-	 want_gdb=yes
+	 with_gdb=yes
     else
 	if test "x$enableval" = xno; then
-		want_gdb=no
+		with_gdb=no
 	else
-		want_gdb=yes
+		with_gdb=yes
 	fi
     fi,
-    want_gdb=no)
+    with_gdb=no)
 
 
-if test x$want_gdb = xyes; then
+if test x$with_gdb = xyes; then
  CFLAGS="$CFLAGS -ggdb"
 fi
 
-want_gui=no
-want_gghist=no
-want_gtkspell=no
-want_gadu=no
-want_tlen=no
-want_jabber=no
-want_xosd=no
-want_sms=no
-want_remote=no
-want_esd=no
-want_oss=no
-want_arts=no
-want_external=no
-want_history_external_viewer=no
-want_update=no
-want_docklet_system_tray=no
-want_docklet_dockapp=no
-want_perl=no
+with_gui=yes
+with_gghist=yes
+with_gtkspell=yes
+with_gadu=yes
+with_tlen=yes
+with_jabber=yes
+with_xosd=yes
+with_sms=yes
+with_remote=yes
+with_esd=yes
+with_oss=yes
+with_arts=no
+with_external=yes
+with_external_libgadu=no
+with_history_external_viewer=yes
+with_update=yes
+with_docklet_system_tray=yes
+with_docklet_dockapp=yes
+with_perl=no
 
 AC_ARG_WITH(all_plugins, [  --with-all-plugins	  Build all plugins with all features		default=no])
 if test x$with_all_plugins = xyes; then
@@ -159,14 +160,13 @@ fi
 
 AC_ARG_WITH(perl, [  --with-perl		  perl support			default=disabled])
 if test x$with_perl = xyes; then
-    want_perl=yes
     AC_PATH_PROG(perlpath, perl)
     AC_PATH_PROG(sedpath, sed)
     AC_MSG_CHECKING(for Perl compile flags)
     PERL_CFLAGS=`$perlpath -MExtUtils::Embed -e ccopts 2>/dev/null`
     if test "_$PERL_CFLAGS" = "_"; then
         AC_MSG_RESULT([not found, building without perl.])
-	want_perl=no
+	with_perl=no
     else
 	PERL_LDFLAGS=`$perlpath -MExtUtils::Embed -e ldopts`
 	AC_MSG_RESULT(ok)
@@ -196,48 +196,49 @@ dnl fi
 
 AC_ARG_WITH(gghist, [  --with-gghist		  Build gghist		default=no])
 if test "x$with_gghist" = "xyes"; then 
-    want_gghist=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
+else
+    with_gghist=no
 fi
 
 AC_ARG_WITH(gui, [  --with-gui		  Build gtk2 GUI plugin		default=no])
 if test "x$with_gui" = "xyes"; then 
-    want_gui=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
+else
+    with_gui=no
 fi
 
 AC_ARG_WITH(gtkspell, [  --with-gtkspell	  Build GUI plugin with gtkspell support 	default=no])
 if test "x$with_gtkspell" = "xyes"; then 
-    want_gtkspell=yes
-    PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],want_gtkspell=no)
-    if test "$want_gtkspell" = "no"; then 
+    PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],with_gtkspell=no)
+    if test "$with_gtkspell" = "no"; then 
     	AC_MSG_WARN([*** gtkspell support has been disabled ***])
     fi
     AC_SUBST(GTKSPELL_CFLAGS)
     AC_SUBST(GTKSPELL_LIBS)
+else
+    with_gtkspell=no
 fi
 
 AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
 AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu default=no])
 
-want_external_libgadu=no
 if test "x$with_external_libgadu" = "xyes"; then 
-    PKG_CHECK_MODULES(LIBGADU,libgadu,want_external_libgadu=yes,AC_MSG_ERROR($GTK_PKG_ERRORS))
+    PKG_CHECK_MODULES(LIBGADU,libgadu,with_external_libgadu=yes,AC_MSG_ERROR($GTK_PKG_ERRORS))
     AC_SUBST(LIBGADU_CFLAGS)
     AC_SUBST(LIBGADU_LIBS)
+else
+    with_external_libgadu=no
 fi
 
-AM_CONDITIONAL(EXTERNAL_LIBGADU, test "$want_external_libgadu" = "yes")
+AM_CONDITIONAL(EXTERNAL_LIBGADU, test "$with_external_libgadu" = "yes")
 
 if test "x$with_gadu" = "xyes"; then 
-    want_gadu=yes
-    if test "x$want_external_libgadu" = "xno"; then
-    
-	
+    if test "x$with_external_libgadu" = "xno"; then
 	if test "x$without_openssl" != "xyes"; then
 	
 	    AC_CHECK_OPENSSL
@@ -252,23 +253,26 @@ if test "x$with_gadu" = "xyes"; then
 	AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
 	
     fi
+else
+    with_gadu=no
 fi
 
 AC_ARG_WITH(tlen, [  --with-tlen		  Build tlen plugin		default=no])
 if test "x$with_tlen" = "xyes"; then 
-    AC_CHECK_LIB([tlen], [tlen_set_hub_blocking], want_tlen=yes, want_tlen=no)
-    if test "x$want_tlen" != "xno"; then
+    AC_CHECK_LIB([tlen], [tlen_set_hub_blocking], with_tlen=yes, with_tlen=no)
+    if test "x$with_tlen" != "xno"; then
 	AC_CHECK_HEADERS(libtlen/libtlen.h)
 	TLEN_LIBS="-ltlen -lm"
 	AC_SUBST(TLEN_LIBS)
     fi
+else
+    with_tlen=no
 fi
 
 AC_ARG_WITH(jabber, [  --with-jabber		  Build jabber plugin		default=no])
 if test "x$with_jabber" = "xyes"; then 
-    want_jabber=yes
-    PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.16, [],want_jabber=no)
-    if test "$want_jabber" = "no"; then 
+    PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.16, [],with_jabber=no)
+    if test "$with_jabber" = "no"; then 
     	AC_MSG_WARN($JABBER_PKG_ERRORS)
 	echo
 	echo "**********************************************************"
@@ -285,6 +289,8 @@ if test "x$with_jabber" = "xyes"; then
     AC_DEFINE(BUILD_WITH_NEW_LOUDMOUTH)
     AC_SUBST(JABBER_LIBS)
     AC_SUBST(JABBER_CFLAGS)
+else
+    with_jabber=no
 fi
 
 AC_ARG_WITH(xosd, [  --with-xosd		  Build XOSD plugin		default=no])
@@ -292,9 +298,9 @@ if test "x$with_xosd" = "xyes"; then
     AC_PATH_PROG(xosd_config_script, xosd-config, "none")
     
     if test "x$xosd_config_script" != "xnone"; then
-	AC_CHECK_LIB([xosd], [xosd_display], want_xosd=yes, want_xosd=no, `$xosd_config_script --libs`)
+	AC_CHECK_LIB([xosd], [xosd_display], with_xosd=yes, with_xosd=no, `$xosd_config_script --libs`)
 
-	if test "x$want_xosd" != "xno"; then
+	if test "x$with_xosd" != "xno"; then
 
 	    XOSD_CFLAGS=`$xosd_config_script --cflags`
 	    XOSD_LIBS=`$xosd_config_script --libs`
@@ -305,49 +311,51 @@ if test "x$with_xosd" = "xyes"; then
 	    AC_SUBST(XOSD_CFLAGS)
 	fi
     else
-	want_xosd=no
+	with_xosd=no
     fi
+else
+    with_xosd=no
 fi
 
 AC_ARG_WITH(sms, [  --with-sms		  Build sms plugin		default=no])
 if test "x$with_sms" = "xyes"; then 
-	want_sms=yes
+	with_sms=yes
     else
-	want_sms=no
+	with_sms=no
 fi
 
 AC_ARG_WITH(remote, [  --with-remote		  Build remote plugin		default=no])
 if test "x$with_remote" = "xyes"; then 
-	want_remote=yes
+	with_remote=yes
 	else
-	want_remote=no
+	with_remote=no
 fi
 
 
 AC_ARG_WITH(docklet_system_tray, [  --with-docklet-system-tray	  Build docklet plugin		default=no])
 if test "x$with_docklet_system_tray" = "xyes"; then 
-    want_docklet_system_tray=yes
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], want_docklet_system_tray=no)
-    if test "$want_docklet_system_tray" = "no"; then 
+    with_docklet_system_tray=yes
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_system_tray=no)
+    if test "$with_docklet_system_tray" = "no"; then 
     	AC_MSG_WARN($GTK_PKG_ERRORS)
     fi
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
 else
-    want_docklet_system_tray=no
+    with_docklet_system_tray=no
 fi
 
 AC_ARG_WITH(docklet_dockapp, [  --with-docklet-dockapp	  Build dockapp plugin		default=no])
 if test "x$with_docklet_dockapp" = "xyes"; then 
-    want_docklet_dockapp=yes
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], want_docklet_dockapp=no)
-    if test "$want_docklet_dockapp" = "no"; then 
+    with_docklet_dockapp=yes
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_dockapp=no)
+    if test "$with_docklet_dockapp" = "no"; then 
     	AC_MSG_WARN($GTK_PKG_ERRORS)
     fi
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
 else
-    want_docklet_dockapp=no
+    with_docklet_dockapp=no
 fi
 
 AC_ARG_WITH(esd, [  --with-esd		  Build esd sound plugin	default=no])
@@ -359,10 +367,12 @@ if test "x$with_esd" = "xyes"; then
     if test "$have_libesd" = yes; then
 	AC_SUBST(ESD_CFLAGS)
 	AC_SUBST(ESD_LIBS)
-	want_esd=yes
+	with_esd=yes
     else
-	want_esd=no
+	with_esd=no
     fi
+else
+    with_esd=no
 fi
 
 AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
@@ -387,11 +397,10 @@ if test "x$with_arts" = "xyes"; then
 	AC_SUBST(ARTS_CXXFLAGS)
 	AC_SUBST(CXX, $CC)
 	AC_SUBST(CXXFLAGS)
-	want_arts=yes
     fi
 else
-    AM_CONDITIONAL(am__fastdepCXX, test yes = "$want_arts")
-    want_arts=no
+    AM_CONDITIONAL(am__fastdepCXX, test yes = "$with_arts")
+    with_arts=no
 fi
 
 AC_ARG_WITH(oss, [  --with-oss		  Build OSS sound plugin	default=no])
@@ -399,46 +408,52 @@ if test "x$with_oss" = "xyes"; then
     have_soundcardh=no
     AC_CHECK_HEADERS(sys/soundcard.h, have_soundcardh=yes, have_soundcardh=no)
     if test "$have_soundcardh" = yes; then
-	want_oss=yes
+	with_oss=yes
     else
-	want_oss=no
+	with_oss=no
     fi
+else
+    with_oss=no
 fi
 
 AC_ARG_WITH(external, [  --with-external	  Build external player sound plugin	default=no])
 if test "x$with_external" = "xyes"; then
-    want_external=yes
+    with_external=yes
+else
+    with_external=no
 fi
 
 AC_ARG_WITH(history_external_viewer, [  --with-history-external-viewer	  Build external history plugin	default=no])
 if test "x$with_history_external_viewer" = "xyes"; then
-    want_history_external_viewer=yes
+    with_history_external_viewer=yes
+else
+    with_history_external_viewer=no
 fi
 
 AC_ARG_WITH(update, [  --with-update		  Build update plugin		default=no])
 if test "x$with_update" = "xyes"; then 
-	want_update=yes
-	else
-	want_update=no
+	with_update=yes
+else
+	with_update=no
 fi
 
-AM_CONDITIONAL(BUILD_GGHIST, test "$want_gghist" = "yes")
-AM_CONDITIONAL(BUILD_GUI, test "$want_gui" = "yes")
-AM_CONDITIONAL(USE_GTKSPELL, test "$want_gtkspell" = "yes")
-AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")
-AM_CONDITIONAL(BUILD_TLEN, test "$want_tlen" = "yes")
-AM_CONDITIONAL(BUILD_JABBER, test "$want_jabber" = "yes")
-AM_CONDITIONAL(BUILD_XOSD, test "$want_xosd" = "yes")
-AM_CONDITIONAL(BUILD_DOCKLET_SYSTEM_TRAY, test "$want_docklet_system_tray" = "yes")
-AM_CONDITIONAL(BUILD_DOCKLET_DOCKAPP, test "$want_docklet_dockapp" = "yes")
-AM_CONDITIONAL(BUILD_SOUND_ESD, test "$want_esd" = "yes")
-AM_CONDITIONAL(BUILD_SOUND_ARTS, test "$want_arts" = "yes")
-AM_CONDITIONAL(BUILD_SOUND_OSS, test "$want_oss" = "yes")
-AM_CONDITIONAL(BUILD_SOUND_EXTERNAL, test "$want_external" = "yes")
-AM_CONDITIONAL(BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN, test "$want_history_external_viewer" = "yes")
-AM_CONDITIONAL(BUILD_SMS, test "$want_sms" = "yes")
-AM_CONDITIONAL(BUILD_REMOTE, test "$want_remote" = "yes")
-AM_CONDITIONAL(BUILD_UPDATE, test "$want_update" = "yes")
+AM_CONDITIONAL(BUILD_GGHIST, test "$with_gghist" = "yes")
+AM_CONDITIONAL(BUILD_GUI, test "$with_gui" = "yes")
+AM_CONDITIONAL(USE_GTKSPELL, test "$with_gtkspell" = "yes")
+AM_CONDITIONAL(BUILD_GG, test "$with_gadu" = "yes")
+AM_CONDITIONAL(BUILD_TLEN, test "$with_tlen" = "yes")
+AM_CONDITIONAL(BUILD_JABBER, test "$with_jabber" = "yes")
+AM_CONDITIONAL(BUILD_XOSD, test "$with_xosd" = "yes")
+AM_CONDITIONAL(BUILD_DOCKLET_SYSTEM_TRAY, test "$with_docklet_system_tray" = "yes")
+AM_CONDITIONAL(BUILD_DOCKLET_DOCKAPP, test "$with_docklet_dockapp" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_ESD, test "$with_esd" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_ARTS, test "$with_arts" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_OSS, test "$with_oss" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_EXTERNAL, test "$with_external" = "yes")
+AM_CONDITIONAL(BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN, test "$with_history_external_viewer" = "yes")
+AM_CONDITIONAL(BUILD_SMS, test "$with_sms" = "yes")
+AM_CONDITIONAL(BUILD_REMOTE, test "$with_remote" = "yes")
+AM_CONDITIONAL(BUILD_UPDATE, test "$with_update" = "yes")
 
 dnl Set PACKAGE_DATA_DIR in config.h.
 if test "x${datadir}" = 'x${prefix}/share'; then
@@ -543,24 +558,24 @@ themes/Makefile
 
 
 echo
-echo Build plugin GUI-GTK2.................. : $want_gui
-echo Build plugin GUI with gtkspell support. : $want_gtkspell
-echo Build plugin Gadu-Gadu................. : $want_gadu
-echo Build plugin Tlen.pl................... : $want_tlen
-echo Build plugin Jabber.................... : $want_jabber
-echo Build plugin docklet-system-tray....... : $want_docklet_system_tray
-echo Build plugin docklet-dockapp........... : $want_docklet_dockapp
-echo Build plugin XOSD...................... : $want_xosd
-echo Build plugin sound ESD................. : $want_esd
-echo Build plugin sound aRts................ : $want_arts
-echo Build plugin sound OSS................. : $want_oss
-echo Build plugin sound external............ : $want_external
-echo Build plugin sms....................... : $want_sms
-echo Build plugin remote.................... : $want_remote
-echo Build plugin update.................... : $want_update
-echo Build plugin external history viewer... : $want_history_external_viewer
-echo Build gghist - history viewer.......... : $want_gghist
-echo Build with perl support................ : $want_perl
+echo Build plugin GUI-GTK2.................. : $with_gui
+echo Build plugin GUI with gtkspell support. : $with_gtkspell
+echo Build plugin Gadu-Gadu................. : $with_gadu
+echo Build plugin Tlen.pl................... : $with_tlen
+echo Build plugin Jabber.................... : $with_jabber
+echo Build plugin XOSD...................... : $with_xosd
+echo Build plugin docklet-system-tray....... : $with_docklet_system_tray
+echo Build plugin docklet-dockapp........... : $with_docklet_dockapp
+echo Build plugin sound ESD................. : $with_esd
+echo Build plugin sound aRts................ : $with_arts
+echo Build plugin sound OSS................. : $with_oss
+echo Build plugin sound external............ : $with_external
+echo Build plugin sms....................... : $with_sms
+echo Build plugin remote.................... : $with_remote
+echo Build plugin update.................... : $with_update
+echo Build plugin external history viewer... : $with_history_external_viewer
+echo Build gghist - history viewer.......... : $with_gghist
+echo Build with perl support................ : $with_perl
 echo
 echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 
