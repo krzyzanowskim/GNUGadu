@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.2 2003/03/23 00:00:36 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -191,9 +191,9 @@ void gui_user_data_window(gpointer signal, gboolean change)
     GtkWidget *frame = NULL;
     
     if (change)
-	adduserwindow = gtk_dialog_new_with_buttons(_("Change User"),GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_OK,GTK_RESPONSE_OK,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,NULL);
+	adduserwindow = gtk_dialog_new_with_buttons(_("Change User"),GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
     else
-	adduserwindow = gtk_dialog_new_with_buttons(_("Add User"),GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_OK,GTK_RESPONSE_OK,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,NULL);
+	adduserwindow = gtk_dialog_new_with_buttons(_("Add User"),GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
     
     frame = gtk_frame_new(NULL);
 
@@ -345,7 +345,7 @@ void gui_show_dialog(gpointer signal, gboolean change)
     GtkWidget *frame = NULL;
     GGaduDialog *d = sig->data;
     
-    dialog = gtk_dialog_new_with_buttons(d->title,GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_OK,GTK_RESPONSE_OK,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,NULL);
+    dialog = gtk_dialog_new_with_buttons(d->title,GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
     
     frame = gtk_frame_new(d->title);
 
