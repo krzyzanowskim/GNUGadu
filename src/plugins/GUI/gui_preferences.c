@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.58 2004/08/19 13:20:14 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.59 2004/08/19 23:05:45 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -592,6 +592,7 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *label;
 	GtkWidget *hbox;
 	GtkWidget *tabbox;
+	GtkWidget *tabbox_spell;
 	GtkWidget *emotic;
 	GtkWidget *send_on_enter;
 	GtkWidget *chatstyle;
@@ -655,12 +656,24 @@ static GtkWidget *create_chat_tab()
 	g_object_set_data(G_OBJECT(chat_vbox), "use_username", use_username);
 
 #ifdef USE_GTKSPELL
-	use_spell = gtk_check_button_new_with_label(_("Use spell check in chat window"));
-	gtk_box_pack_start(GTK_BOX(vbox), use_spell, FALSE, FALSE, 0);
+	tabbox_spell = gtk_table_new(1, 3, FALSE);
+	gtk_box_pack_start(GTK_BOX(chat_vbox), tabbox_spell, FALSE, FALSE, 0);
+	
+	use_spell = gtk_check_button_new_with_label(_("Spell Checking"));
 
 	g_object_set_data(G_OBJECT(chat_vbox), "spell", use_spell);
 
-	label3_align = gtk_alignment_new(0, 0.5, 0, 0);
+	label = gtk_label_new(_("language"));
+	combo_spell = gtk_combo_box_new_text();
+//	combo_spell = gtk_combo_new();
+	label3_align = gtk_alignment_new(0.9, 0.5, 0, 0);
+	gtk_container_add(GTK_CONTAINER(label3_align), label);
+
+	g_object_set_data(G_OBJECT(chat_vbox), "combospell", combo_spell);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_spell), use_spell, 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_spell), label3_align, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_spell), combo_spell, 2, 3, 0, 1);
 #endif
 
 	label0_align = gtk_alignment_new(0, 0.5, 0, 0);
@@ -701,24 +714,14 @@ static GtkWidget *create_chat_tab()
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 2, 3);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 2, 3);
 
-#ifdef USE_GTKSPELL
-	label = gtk_label_new(_("Dictionary"));
-	combo_spell = gtk_combo_new();
-	gtk_container_add(GTK_CONTAINER(label3_align), label);
-
-	g_object_set_data(G_OBJECT(chat_vbox), "combospell", combo_spell);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 3, 4);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_spell, 1, 2, 3, 4);
-#endif
 
 	return chat_vbox;
 }
 
 static GtkWidget *create_advanced_tab()
 {
-	GtkWidget *blink_interval;
-	GtkWidget *blink;
+	GtkWidget *blink_interval = NULL;
+	GtkWidget *blink = NULL;
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *tabbox;
@@ -738,17 +741,15 @@ static GtkWidget *create_advanced_tab()
 	blink = gtk_check_button_new_with_label(_("Blink status"));
 	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
 	
-	gtk_box_pack_start(GTK_BOX(adv_vbox), blink, FALSE, FALSE, 0);
-
 	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
 
-	tabbox = gtk_table_new(8, 2, FALSE);
+	tabbox = gtk_table_new(8, 3, FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 
 	gtk_box_pack_start(GTK_BOX(adv_vbox), tabbox, FALSE, FALSE, 0);
 
-	label0_align = gtk_alignment_new(0, 0.5, 0, 0);
+	label0_align = gtk_alignment_new(0.9, 0.5, 0, 0);
 
 	label = gtk_label_new(_("Blink interval"));
 	gtk_container_add(GTK_CONTAINER(label0_align), label);
@@ -758,8 +759,9 @@ static GtkWidget *create_advanced_tab()
 	else
 		gtk_widget_set_sensitive(blink_interval, FALSE);
 
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink, 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 2, 3, 0, 1);
 
 	if (ggadu_config_var_get(gui_handler, "blink_interval"))
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(blink_interval),
@@ -799,6 +801,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *auto_away_interval;
 	GtkWidget *descr_on_list;
 	GtkWidget *tabbox;
+	GtkWidget *tabbox_auto_away;
 	GtkWidget *label1_align, *label2_align, *label3_align;
 	GDir *dir;
 	GtkWidget *combo_theme;
@@ -823,7 +826,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gdk_pixbuf_unref(windowicon);
 	}
 
-	label1_align = gtk_alignment_new(0, 0.5, 0, 0);
 	label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 	label3_align = gtk_alignment_new(0, 0.5, 0, 0);
 
@@ -906,26 +908,29 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on user list"));
 	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
 
-
-
+	tabbox_auto_away = gtk_table_new(1, 3, FALSE);
+	
 	auto_away = gtk_check_button_new_with_label(_("Auto away"));
-	gtk_box_pack_start(GTK_BOX(vbox), auto_away, FALSE, FALSE, 0);
+//	gtk_box_pack_start(GTK_BOX(vbox), auto_away, FALSE, FALSE, 0);
 
+	label1_align = gtk_alignment_new(0.9, 0.5, 0, 0);
+	label = gtk_label_new(_("interval (minutes)"));
+	auto_away_interval = gtk_spin_button_new_with_range(0, 1440, 1);
+	g_signal_connect(auto_away, "toggled", G_CALLBACK(tree_toggled), auto_away_interval);
+	gtk_container_add(GTK_CONTAINER(label1_align), label);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away, 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), label1_align, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away_interval, 2, 3, 0, 1);
+	
+	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox_auto_away, FALSE, FALSE, 0);
+	
 
 	tabbox = gtk_table_new(8, 2, FALSE);
 
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox, FALSE, FALSE, 0);
-
-
-	label = gtk_label_new(_("Auto away interval (minutes)"));
-	auto_away_interval = gtk_spin_button_new_with_range(0, 1440, 1);
-	gtk_container_add(GTK_CONTAINER(label1_align), label);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label1_align, 0, 1, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), auto_away_interval, 1, 2, 1, 2);
-	g_signal_connect(auto_away, "toggled", G_CALLBACK(tree_toggled), auto_away_interval);
 
 	combo_theme = gtk_combo_new();
 	label = gtk_label_new(_("Select theme"));
@@ -983,7 +988,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	{
 	   	GtkWidget *entry2 = g_object_get_data(G_OBJECT(chat_vbox), "combospell");
-		GList *list_dict = NULL;
 		gchar *cur_dict = ggadu_config_var_get(gui_handler, "dictionary");
 
   		AspellConfig * config;
@@ -993,6 +997,13 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 		g_return_if_fail(entry2 != NULL);
 
+
+		if ((cur_dict != NULL) && (cur_dict[0] != '\0')) 
+			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),cur_dict);
+		else
+			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),"default");
+
+
 		config = new_aspell_config();
 		/* the returned pointer should _not_ need to be deleted */
   		dlist = get_aspell_dict_info_list(config);
@@ -1001,16 +1012,15 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
   		dels = aspell_dict_info_list_elements(dlist);
 		
-		if ((cur_dict != NULL) && (cur_dict[0] != '\0')) 
-			list_dict = g_list_append(list_dict, cur_dict);
-		list_dict = g_list_append(list_dict, g_strdup("default"));
-
 		while ( (dict_entry = aspell_dict_info_enumeration_next(dels)) != 0)
-			list_dict = g_list_append(list_dict, g_strdup(dict_entry->name));
+		{
+			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),dict_entry->name);
+		}
+		
 
 		delete_aspell_dict_info_enumeration(dels);
-
-		gtk_combo_set_popdown_strings(GTK_COMBO(entry2), list_dict);
+		
+		gtk_combo_box_set_active(GTK_COMBO_BOX(entry2),0);
 
 		if (gui_check_for_sessions(protocols))
 		{

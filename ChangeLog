@@ -1,6 +1,9 @@
 19.08.2004
 - fixed prev button (gghist/krzak)
 - a little changes in preferences tabs (GUI/krzak)
+- fixed segfault if gui compiled with gtkspell but no dictionary was set (GUI/krzak)
+- some changes in preferences gtk_combo -> gtk_combo_box (GUI/krzak)
+- GUI require gtk >= 2.4.0 now (GUI/krzak)
 
 18.08.2004
 - building plugins and other features is enabled now by default (not all)

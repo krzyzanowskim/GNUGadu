@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.77 2004/08/17 19:25:55 krzyzak Exp $
+dnl $Id: configure.in,v 1.78 2004/08/19 23:05:43 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.4])
 
@@ -211,7 +211,7 @@ fi
 AC_ARG_WITH(gui, [  --without-gui		  Build gtk2 GUI plugin		default=yes])
 if test "x$with_gui" != "xno"; then 
     with_gui=yes
-    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
 else
