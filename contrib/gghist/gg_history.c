@@ -164,7 +164,7 @@ gchar *gg_hist_time(int timestamp,gboolean date)
 	gchar gtmp[32];
 	gchar *gtmp2 = NULL;
 
-	struct tm *ptm = (struct tm *) localtime((time_t *) & timestamp);
+	struct tm *ptm = (struct tm *) localtime((const time_t *) &timestamp);
 	if (date)
 	    strftime(gtmp, sizeof (gtmp), "%H:%M:%S (%Y-%m-%d)", ptm);
 	else

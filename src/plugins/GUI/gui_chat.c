@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.116 2004/09/28 14:01:32 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.117 2004/10/08 10:22:38 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -689,18 +689,20 @@ void gui_chat_update_tags()
 	}
 }
 
-static gboolean window_notify_event_signal(GtkWidget *widget, GdkEventCrossing *event, gpointer user_data)
+static gboolean window_event_signal(GtkWidget *window, GdkEvent *event, gpointer user_data)
 {
-	//dupa
-	
-        if ((event->detail != GDK_NOTIFY_INFERIOR) && g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(widget)),WINDOW_CHAT_NOTIFY_PREFIX))
-        {
-	    print_debug("window_notify_event_signal");
-	    const gchar *old_title = gtk_window_get_title(GTK_WINDOW(widget));
-	    gchar *new_title = g_strdup(old_title + 2);
-	    gtk_window_set_title(GTK_WINDOW(widget),new_title);
+	if  (((event->type == GDK_WINDOW_STATE) || (event->type == GDK_FOCUS_CHANGE)) 
+	    && g_object_get_data(G_OBJECT(window),"new-message-mark"))
+	{
+	    GdkPixbuf *image = NULL;
+
+	    print_debug("chat_window : GDK_WINDOW_STATE || GDK_FOCUS_CHANGE");
+	    g_object_set_data(G_OBJECT(window),"new-message-mark",(gpointer) FALSE);
+	    image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
+	    gtk_window_set_icon(GTK_WINDOW(chat_window), image);
+	    gdk_pixbuf_unref(image);
 	}
-	
+	    
 	return FALSE;
 }
 
@@ -1260,9 +1262,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	
 
 	g_signal_connect(chat_window, "configure-event", G_CALLBACK(window_resize_signal), session);
-	g_signal_connect(chat_window, "enter-notify-event", G_CALLBACK(window_notify_event_signal), session);
-	g_signal_connect(chat_window, "leave-notify-event", G_CALLBACK(window_notify_event_signal), session);
-	g_signal_connect(chat_window, "key-press-event", G_CALLBACK(window_notify_event_signal), session);
+	g_signal_connect(chat_window, "event", G_CALLBACK(window_event_signal), session);
 	g_signal_connect(button_autosend, "clicked", G_CALLBACK(on_autosend_clicked), session);
 	g_signal_connect(button_send, "clicked", G_CALLBACK(on_send_clicked), session);
 	g_signal_connect(button_stick, "toggled", G_CALLBACK(on_stick_clicked), session);
@@ -1333,14 +1333,19 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	    gboolean is_active = FALSE;
 	    GtkWidget *window = gtk_widget_get_ancestor(chat, GTK_TYPE_WINDOW);
 	    g_object_get(G_OBJECT(window),"is-active",&is_active,NULL);
-//dupa	    if (GTK_WIDGET_VISIBLE(window) && !is_active)
+
 	    if (!is_active)
 	    {
-		if (!g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(window)),WINDOW_CHAT_NOTIFY_PREFIX))
+		if (!g_object_get_data(G_OBJECT(window),"new-message-mark"))
 		{
-		    const gchar *old_title = gtk_window_get_title(GTK_WINDOW(window));
-		    gchar *new_title = g_strconcat(WINDOW_CHAT_NOTIFY_PREFIX,old_title,NULL);
-		    gtk_window_set_title(GTK_WINDOW(window),new_title);
+		    GdkPixbuf *image = NULL;
+		    g_object_set_data(G_OBJECT(window),"new-message-mark",(gpointer) TRUE);
+		    
+		    image = create_pixbuf(GGADU_MSG_ICON_FILENAME);
+		    gtk_window_set_icon(GTK_WINDOW(chat_window), image);
+		    gdk_pixbuf_unref(image);
+		    
+		    
 		}
 	    }
 	}
