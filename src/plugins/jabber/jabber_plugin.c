@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.136 2004/12/22 16:54:34 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.137 2004/12/23 15:30:02 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -754,18 +754,15 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			
 			if (ggadu_dialog_get_entries(dialog))
 			{
-				gchar *desc_utf = NULL;
 				kv = (GGaduKeyValue *) ggadu_dialog_get_entries(dialog)->data;
-				
-				if (kv)
+
+				if(kv)
 				{
-				    desc_utf = kv->value;
-				    jabber_data.description = desc_utf;
+				    if(jabber_data.description) g_free(jabber_data.description);
+				    jabber_data.description = g_strdup(kv->value);
 				}
 				jabber_change_status(sp->status);
 			}
-			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
-				(gpointer) sp->status, "main-gui");
 		}
 		GGaduDialog_free(dialog);
 	}
@@ -782,12 +779,11 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
 						       "change status descr", sp);
 
-			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.description,VAR_FLAG_FOCUS);
+			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.description, VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 			return;
-		}
-		
-		jabber_change_status(sp->status);
+		} else
+			jabber_change_status(sp->status);
 
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)

@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.36 2004/12/20 09:15:20 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.37 2004/12/23 15:30:02 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -90,12 +90,17 @@ void jabber_change_status(enum states status)
 	}
 
 	/* connect if switched to any other than unavailable */	
-	if ((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status != JABBER_STATUS_UNAVAILABLE) && 
-	    (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection) || !lm_connection_is_authenticated(jabber_data.connection)))
+	if ((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status != JABBER_STATUS_UNAVAILABLE) &&
+	    (status != JABBER_STATUS_DESCR) && (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection)
+	    || !lm_connection_is_authenticated(jabber_data.connection)))
 	{
 		g_thread_create(jabber_login_connect, (gpointer) status, FALSE, NULL);
 		return;
 	}
+
+	/* Just a simple esthetic functionality */
+	if((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status == JABBER_STATUS_DESCR))
+		signal_emit("jabber", "gui status changed", (gpointer) JABBER_STATUS_UNAVAILABLE, "main-gui");
 	
 	if (jabber_data.connection && !lm_connection_is_authenticated(jabber_data.connection))
 	{
@@ -107,7 +112,7 @@ void jabber_change_status(enum states status)
 					 (status == JABBER_STATUS_UNAVAILABLE) ? 
 					 LM_MESSAGE_SUB_TYPE_UNAVAILABLE : LM_MESSAGE_SUB_TYPE_AVAILABLE);
 
-	switch (status)
+	switch (status == JABBER_STATUS_DESCR ? jabber_data.status : status)
 	{
 	case JABBER_STATUS_AWAY:
 		show = show_away;
@@ -140,8 +145,11 @@ void jabber_change_status(enum states status)
 	}
 	else
 	{
-		jabber_data.status = status;
-		signal_emit("jabber", "gui status changed", (gpointer) status, "main-gui");
+		if(status != JABBER_STATUS_DESCR)
+		{
+			jabber_data.status = status;
+			signal_emit("jabber", "gui status changed", (gpointer) status, "main-gui");
+		}
 	}
 	lm_message_unref(m);
 	print_debug("jabber_change_status end");
