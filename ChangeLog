@@ -1,3 +1,11 @@
+07.09.2004 (aflinta)
+- Updated po/pl.po translation. If anyone is creating GUI, please remeber to:
+  1) Use Capital Letter For Every Word In Window Title!
+  2) Use ":" for ending labels of input fields
+  3) It will be good idea to add underscores for every option in config dialogs,
+     so user will be able to change them using keyboard, not only fucking mouse
+  4) Does any one heard about HiG?
+     
 06.09.2004
 - gg2-select.patch for userlist right click by madej@afn.no-ip.org (GUI/Madej)
 
