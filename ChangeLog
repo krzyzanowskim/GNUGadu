@@ -1,3 +1,6 @@
+16.06.2004
+- proxy support for jabber plugin (patch by jakub.ambrozewicz gazeta.pl)
+
 12.06.2004
 - added gg2-devel.SlackBuild, script for building Slackware binary
   packages directly from CVS sources (shasta)

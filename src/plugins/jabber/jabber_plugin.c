@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.79 2004/05/21 07:54:40 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.80 2004/06/16 12:12:26 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -347,6 +347,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_SERVER:
 					ggadu_config_var_set(jabber_handler, "server", kv->value);
+					break;
+				case GGADU_JABBER_PROXY:
+			       		ggadu_config_var_set(jabber_handler, "proxy", kv->value);
 					break;
 				}
 				tmplist = tmplist->next;
@@ -801,6 +804,10 @@ gpointer user_preferences_action(gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server\n(optional)"), VAR_STR,
 				ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_NONE);
+	
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PROXY,
+			       _("Proxy server (optional)\n[user:pass@]host.com[:8080]"), VAR_STR,
+			       ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
@@ -886,6 +893,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(jabber_handler, "log", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "resource", VAR_STR);
+	ggadu_config_var_add(jabber_handler, "proxy", VAR_STR);
 
 	if (lm_ssl_is_supported())
 		ggadu_config_var_add(jabber_handler, "use_ssl", VAR_BOOL);

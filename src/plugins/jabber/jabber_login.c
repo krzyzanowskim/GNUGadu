@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.30 2004/05/18 14:55:57 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.31 2004/06/16 12:12:26 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -21,6 +21,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "ggadu_conf.h"
 #include "jabber_login.h"
@@ -127,6 +128,47 @@ gpointer jabber_login_connect(gpointer status)
 	{
 		print_debug("jabber: Connecting to %s with %s", server,jid);
 		jabber_data.connection = lm_connection_new(server);
+
+		/* proxy setting taken from EKG project */
+		gint jabber_proxy_enabled = 0;
+		gchar *jabber_proxy_host = NULL;
+		gint jabber_proxy_port;
+
+		if (ggadu_config_var_check(jabber_handler, "proxy"))
+		{
+			gchar **auth = array_make((gchar *) ggadu_config_var_get(jabber_handler, "proxy"), "@", 0, 0, 0);
+			gchar **proxy_userpass = NULL;
+			gchar **proxy_hostport = NULL;
+
+			jabber_proxy_enabled = 1;
+
+			if (auth[0] && auth[1])
+			{
+				proxy_userpass = array_make(auth[0], ":", 0, 0, 0);
+				proxy_hostport = array_make(auth[1], ":", 0, 0, 0);
+			}
+			else
+			{
+				proxy_hostport = array_make(auth[0], ":", 0, 0, 0);
+			}
+
+			jabber_proxy_host = g_strdup(proxy_hostport[0]);
+			jabber_proxy_port = proxy_hostport[1] ? atoi(proxy_hostport[1]) : 8080;
+
+			array_free(proxy_hostport);
+			array_free(proxy_userpass);
+			array_free(auth);
+
+			print_debug("proxy : %s %d", jabber_proxy_host, jabber_proxy_port);
+		}
+		
+		if (jabber_proxy_enabled == 1) {
+			jabber_data.proxy = lm_proxy_new_with_server (LM_PROXY_TYPE_HTTP,
+				jabber_proxy_host, jabber_proxy_port);
+
+			lm_connection_set_proxy(jabber_data.connection, jabber_data.proxy);
+		}
+
 	}
 	else if (ggadu_strcasecmp(lm_connection_get_server(jabber_data.connection), server))
 	{
@@ -135,6 +177,7 @@ gpointer jabber_login_connect(gpointer status)
 		lm_connection_set_server(jabber_data.connection, server);
 		lm_connection_set_port(jabber_data.connection,LM_CONNECTION_DEFAULT_PORT);
 		/* lm_connection_unref(connection); */
+		lm_proxy_unref(jabber_data.proxy);
 	}
 
 	if (ggadu_config_var_get(jabber_handler, "use_ssl"))
