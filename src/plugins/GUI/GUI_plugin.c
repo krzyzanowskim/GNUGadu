@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.10 2003/04/28 14:46:11 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.11 2003/05/01 20:19:14 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -153,7 +153,7 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		status = (gint)signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 		sp = gui_find_status_prototype(gp->p, status);
 
-		markup = g_strdup_printf("<span size=\"small\"><b>%s</b>\nStatus: <b>%s</b></span>", gp->p->display_name, (sp) ? sp->description : _("(none)"));
+		markup = g_strdup_printf("<span size=\"small\"><b>%s</b>\nStatus: <b>%s</b></span>", gp->p->display_name, (sp) ? sp->description : _("(None)"));
 		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),NULL,"caption");
 	    }
 	    
