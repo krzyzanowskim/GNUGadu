@@ -36,36 +36,6 @@ enum
 
 #include "gg2_core.h"
 
-#define TLEN_STATUS_AVAILABLE   2
-#define TLEN_STATUS_EXT_AWAY    3
-#define TLEN_STATUS_AWAY        4
-#define TLEN_STATUS_DND         5
-#define TLEN_STATUS_CHATTY      6
-#define TLEN_STATUS_INVISIBLE   7
-#define TLEN_STATUS_UNAVAILABLE 8
-#define TLEN_STATUS_DESC		9
-
-#define GG_STATUS_NOT_AVAIL 	  0x0001
-#define GG_STATUS_NOT_AVAIL_DESCR 0x0015
-#define GG_STATUS_AVAIL 	  		0x0002
-#define GG_STATUS_AVAIL_DESCR 	  0x0004
-#define GG_STATUS_BUSY 		  		0x0003
-#define GG_STATUS_BUSY_DESCR 	  0x0005
-#define GG_STATUS_INVISIBLE 	  0x0014
-#define GG_STATUS_INVISIBLE_DESCR 0x0016
-#define GG_STATUS_BLOCKED 	0x0006
-
-
-#define JABBER_STATUS_UNAVAILABLE 0
-#define JABBER_STATUS_AVAILABLE   1
-#define JABBER_STATUS_CHAT	  2
-#define JABBER_STATUS_AWAY	  3
-#define JABBER_STATUS_XA	  4
-#define JABBER_STATUS_DND	  5
-#define JABBER_STATUS_ERROR   6
-#define JABBER_STATUS_DESCR   7
-
-
 gint set_configuration(void);
 
 #endif /* PLUGIN_AAWAY_H */
