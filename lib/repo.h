@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.1 2003/06/03 21:30:09 krzyzak Exp $ */
+/* $Id: repo.h,v 1.2 2004/01/17 00:44:58 shaster Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
@@ -8,60 +8,65 @@
 
 #include "gg-types.h"
 
-typedef void (*watch_ptr)(gchar *, gpointer, gint);
+typedef void (*watch_ptr) (gchar *, gpointer, gint);
 
-typedef struct {
-  gpointer key;
-  gpointer value;
-  gint     type;
-  GSList  *watches;
+typedef struct
+{
+    gpointer key;
+    gpointer value;
+    gint type;
+    GSList *watches;
 } GGaduRepoValue;
 
-typedef struct {
-  gchar  *name;
-  GSList *values;
-  GSList *watches;
+typedef struct
+{
+    gchar *name;
+    GSList *values;
+    GSList *watches;
 } GGaduRepo;
 
-typedef struct {
-  gint      actions;
-  gint      types;
-  watch_ptr callback;
+typedef struct
+{
+    gint actions;
+    gint types;
+    watch_ptr callback;
 } GGaduRepoWatch;
 
-gboolean ggadu_repo_check_value (gchar *repo_name, gpointer key);
-gpointer ggadu_repo_find_value (gchar *repo_name, gpointer key);
-gboolean ggadu_repo_exists (gchar *repo_name);
+gboolean ggadu_repo_check_value(gchar * repo_name, gpointer key);
+gpointer ggadu_repo_find_value(gchar * repo_name, gpointer key);
+gboolean ggadu_repo_exists(gchar * repo_name);
 
-enum {
-  REPO_VALUE_DC      = 0, /* don't change */
-  REPO_VALUE_CONTACT = 1,
-  REPO_VALUE_SETTING = 2,
-  REPO_VALUE_PROTOCOL= 4,
-  REPO_VALUE_OTHER   = 8,
-  
-  REPO_VALUE_ANY     = INT_MAX
+enum
+{
+    REPO_VALUE_DC = 0,		/* don't change */
+    REPO_VALUE_CONTACT = 1,
+    REPO_VALUE_SETTING = 2,
+    REPO_VALUE_PROTOCOL = 4,
+    REPO_VALUE_OTHER = 8,
+
+    REPO_VALUE_ANY = INT_MAX
 };
 
-void ggadu_repo_disable_notification ();
-void ggadu_repo_enable_notification ();
+void ggadu_repo_disable_notification();
+void ggadu_repo_enable_notification();
 
-gboolean ggadu_repo_add (gchar *repo_name);
-gboolean ggadu_repo_add_value (gchar *repo_name, gpointer key, gpointer value, gint type);
-gboolean ggadu_repo_change_value (gchar *repo_name,gpointer key,gpointer value, gint type);
-gboolean ggadu_repo_del_value (gchar *repo_name, gpointer key);
-gboolean ggadu_repo_del (gchar *repo_name);
+gboolean ggadu_repo_add(gchar * repo_name);
+gboolean ggadu_repo_add_value(gchar * repo_name, gpointer key, gpointer value, gint type);
+gboolean ggadu_repo_change_value(gchar * repo_name, gpointer key, gpointer value, gint type);
+gboolean ggadu_repo_del_value(gchar * repo_name, gpointer key);
+gboolean ggadu_repo_del(gchar * repo_name);
 
-gpointer ggadu_repo_value_first (gchar *repo_name, gint type, gpointer *data);
-gpointer ggadu_repo_value_next (gchar *repo_name, gint type, gpointer *data, gpointer index);
+gpointer ggadu_repo_value_first(gchar * repo_name, gint type, gpointer * data);
+gpointer ggadu_repo_value_next(gchar * repo_name, gint type, gpointer * data, gpointer index);
 
-enum {
-  REPO_ACTION_NEW          = 1,  /* dodanie nowego repo */
-  REPO_ACTION_DEL          = 2,  /* usuniêcie danego repo */
-  REPO_ACTION_CHANGE       = 4,  /* zmiana w danym repo (warto¶ci) */
-  REPO_ACTION_VALUE_NEW    = 8,  /* nowa warto¶æ w repo */
-  REPO_ACTION_VALUE_DEL    = 16, /* usuniêcie warto¶ci*/
-  REPO_ACTION_VALUE_CHANGE = 32  /* zmiana warto¶ci */
+enum
+{
+    REPO_ACTION_NEW = 1,	/* dodanie nowego repo */
+    REPO_ACTION_DEL = 2,	/* usuniêcie danego repo */
+    REPO_ACTION_CHANGE = 4,	/* zmiana w danym repo (warto¶ci) */
+    REPO_ACTION_VALUE_NEW = 8,	/* nowa warto¶æ w repo */
+    REPO_ACTION_VALUE_DEL = 16,	/* usuniêcie warto¶ci */
+    REPO_ACTION_VALUE_CHANGE = 32	/* zmiana warto¶ci */
 };
 
 extern const gint REPO_mask;
@@ -105,12 +110,12 @@ extern const gint REPO_value_mask;
  * funkcji
  * GGaduRepo_watch_add(), to watch jest ca³kowicie usuwany.
  */
-gboolean ggadu_repo_watch_add (gchar *repo_name, gint actions, gint types, watch_ptr callback);
-gboolean ggadu_repo_watch_del (gchar *repo_name, gint actions, gint types, watch_ptr callback);
+gboolean ggadu_repo_watch_add(gchar * repo_name, gint actions, gint types, watch_ptr callback);
+gboolean ggadu_repo_watch_del(gchar * repo_name, gint actions, gint types, watch_ptr callback);
 
-gboolean ggadu_repo_watch_value_add (gchar *repo_name, gpointer key, gint actions, watch_ptr callback);
-gboolean ggadu_repo_watch_value_del (gchar *repo_name, gpointer key, gint actions, watch_ptr callback);
+gboolean ggadu_repo_watch_value_add(gchar * repo_name, gpointer key, gint actions, watch_ptr callback);
+gboolean ggadu_repo_watch_value_del(gchar * repo_name, gpointer key, gint actions, watch_ptr callback);
 
-gboolean ggadu_repo_watch_clear_callback (watch_ptr callback);
+gboolean ggadu_repo_watch_clear_callback(watch_ptr callback);
 
 #endif

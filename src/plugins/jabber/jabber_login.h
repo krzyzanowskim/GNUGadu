@@ -1,11 +1,11 @@
-/* $Id: jabber_login.h,v 1.5 2004/01/13 22:22:44 krzyzak Exp $ */
+/* $Id: jabber_login.h,v 1.6 2004/01/17 00:45:01 shaster Exp $ */
 
 #ifndef GGADU_JABBER_LOGIN_H
 #define GGADU_JABBER_LOGIN_H 1
 
 #include "jabber_plugin.h"
 
-void jabber_login (enum states status);
+void jabber_login(enum states status);
 
 gpointer jabber_login_connect(gpointer status);
 

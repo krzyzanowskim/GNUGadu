@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.6 2004/01/09 22:07:48 krzyzak Exp $ */
+/* $Id: support.h,v 1.7 2004/01/17 00:44:58 shaster Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -91,30 +91,30 @@
 
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
 
-gchar *ggadu_get_image_path(const gchar * directory, const gchar *filename);
+gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename);
 
-gboolean is_in_status (gint status, GSList *list);
+gboolean is_in_status(gint status, GSList * list);
 
-void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist);
+void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist);
 
-GSList *ggadu_userlist_remove_id(GSList *userlist, gchar *id);
+GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id);
 
-GGaduContact *ggadu_find_contact_in_userlist (GSList * list,gchar * id);
+GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id);
 
-gboolean str_has_suffix (const gchar  *str, const gchar  *suffix);
+gboolean str_has_suffix(const gchar * str, const gchar * suffix);
 
-void print_debug_raw(const gchar *func, const char *format, ...);
+void print_debug_raw(const gchar * func, const char *format, ...);
 
 char *base64_decode(char *);
 
 char *base64_encode(const char *buf);
 
-void show_error(gchar *errstr);
+void show_error(gchar * errstr);
 
 gchar *get_timestamp(time_t t);
 
 /* This is an internally used function to check if a pixmap file exists. */
-gchar *check_file_exists(const gchar * directory,const gchar * filename);
+gchar *check_file_exists(const gchar * directory, const gchar * filename);
 
 char **array_make(const char *string, const char *sep, int max, int trim, int quotes);
 
@@ -122,8 +122,8 @@ void array_free(char **array);
 
 const char *itoa(long int i);
 
-gboolean write_line_to_file(gchar *path,gchar *line,gchar *enc);
+gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc);
 
-gpointer ggadu_find_extension(GGaduPlugin *handler,gint type);
+gpointer ggadu_find_extension(GGaduPlugin * handler, gint type);
 
 #endif

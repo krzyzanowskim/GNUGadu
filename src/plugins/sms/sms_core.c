@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.30 2004/01/11 01:01:13 shaster Exp $ */
+/* $Id: sms_core.c,v 1.31 2004/01/17 00:45:02 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -118,7 +118,7 @@ int sms_connect(gchar * sms_info, gchar * sms_host, int *sock_s)
 }
 
 /* POST/GET handling */
-int HTTP_io(HTTPstruct *hdata, int sock_s)
+int HTTP_io(HTTPstruct * hdata, int sock_s)
 {
     gchar *io_buf = NULL;
 
@@ -150,12 +150,12 @@ HTTPstruct *httpstruct_new(void)
     HTTPstruct *h = g_new0(HTTPstruct, 1);
     return h;
 }
-                                                                                                    
-void httpstruct_free(HTTPstruct *h)
+
+void httpstruct_free(HTTPstruct * h)
 {
     if (h == NULL)
-        return;
-                                                                                                    
+	return;
+
     g_free(h->method);
     g_free(h->host);
     g_free(h->url);
@@ -164,7 +164,7 @@ void httpstruct_free(HTTPstruct *h)
     g_free(h);
 }
 
-void SMS_free(SMS *message)
+void SMS_free(SMS * message)
 {
     if (!message)
 	return;
@@ -180,7 +180,7 @@ void SMS_free(SMS *message)
 }
 
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
-gboolean IDEA_logo(SMS *user_data)
+gboolean IDEA_logo(SMS * user_data)
 {
     GGaduDialog *d = ggadu_dialog_new();
     ggadu_dialog_set_title(d, _("IDEA token"));
@@ -233,7 +233,7 @@ void sms_warning(const gchar * sms_number, const gchar * warning)
 }
 
 /* wyslanie na idee */
-int send_IDEA(SMS *message)
+int send_IDEA(SMS * message)
 {
     gchar *token = NULL;
     gchar temp[2];
@@ -252,7 +252,7 @@ int send_IDEA(SMS *message)
     HTTP->url = g_strdup(GGADU_SMS_IDEA_URL_GET);
     HTTP->url_params = g_strdup(" ");
 
-get_mainpage:
+  get_mainpage:
     /* pobranie adresu do obrazka */
     if (sms_connect("IDEA", "213.218.116.131", &sock_s))
     {
@@ -270,7 +270,7 @@ get_mainpage:
 
     close(sock_s);
 
-    print_debug("\n=======retries left: %d=====\nIDEA RECVBUFF1: %s\n\n", retries-1, recv_buff);
+    print_debug("\n=======retries left: %d=====\nIDEA RECVBUFF1: %s\n\n", retries - 1, recv_buff);
 
     if (!g_strstr_len(recv_buff, i, "200 OK"))
     {
@@ -282,7 +282,8 @@ get_mainpage:
 	    httpstruct_free(HTTP);
 	    return ERR_GATEWAY;
 	}
-    } else
+    }
+    else
 	retries = 3;
 
     httpstruct_free(HTTP);
@@ -293,7 +294,7 @@ get_mainpage:
 	return ERR_READ_TOKEN;
     }
 
-    if (!(token = g_strndup(buf+24, GGADU_SMS_IDEA_TOKENLEN)))
+    if (!(token = g_strndup(buf + 24, GGADU_SMS_IDEA_TOKENLEN)))
     {
 	g_free(recv_buff);
 	return ERR_READ_TOKEN;
@@ -315,7 +316,7 @@ get_mainpage:
     HTTP->url = g_strdup(gettoken);
     HTTP->url_params = g_strdup(" ");
 
-get_token:
+  get_token:
     if (sms_connect("IDEA", GGADU_SMS_IDEA_HOST, &sock_s))
     {
 	httpstruct_free(HTTP);
@@ -389,7 +390,7 @@ get_token:
     message2 = (SMS *) g_new0(SMS, 1);
     message2->number = g_strdup(message->number);
     message2->sender = g_strdup(message->sender);
-    message2->body   = g_strdup(message->body);
+    message2->body = g_strdup(message->body);
 
     message2->idea_token = token;
     message2->idea_pass = NULL;
@@ -399,7 +400,7 @@ get_token:
     return TRUE;
 }
 
-gpointer send_IDEA_stage2(SMS *message)
+gpointer send_IDEA_stage2(SMS * message)
 {
     gchar *recv_buff = NULL;
     gchar *post = NULL;
@@ -423,7 +424,7 @@ gpointer send_IDEA_stage2(SMS *message)
     if (!message->idea_pass)
     {
 	sms_warning(message->number, _("Please enter token"));
-        goto out;
+	goto out;
     }
 
     /* Cut-off prefixes. 'just-in-case' */
@@ -439,11 +440,9 @@ gpointer send_IDEA_stage2(SMS *message)
     sender = ggadu_sms_urlencode(g_strdup(message->sender));
     body = ggadu_sms_urlencode(g_strdup(message->body));
 
-    post = g_strconcat("token=", message->idea_token,
-			"&SENDER=", sender,
-			"&RECIPIENT=", sms_number,
-			"&SHORT_MESSAGE=", body,
-			 "&pass=", message->idea_pass, "&respInfo=2", NULL);
+    post =
+	g_strconcat("token=", message->idea_token, "&SENDER=", sender, "&RECIPIENT=", sms_number, "&SHORT_MESSAGE=", body, "&pass=",
+		    message->idea_pass, "&respInfo=2", NULL);
 
     g_free(sender);
     g_free(body);
@@ -459,7 +458,7 @@ gpointer send_IDEA_stage2(SMS *message)
     HTTP->post_length = strlen(post);
     g_free(post);
 
-send_sms:
+  send_sms:
     if (sms_connect("IDEA", "213.218.116.131", &sock_s))
     {
 	sms_warning(message->number, _("Cannot connect!"));
@@ -517,7 +516,7 @@ send_sms:
 
     g_free(recv_buff);
 
-out:
+  out:
     SMS_free(message);
 
     g_thread_exit(NULL);
@@ -525,7 +524,7 @@ out:
 }
 
 /* wyslanie na plusa */
-int send_PLUS(SMS *message)
+int send_PLUS(SMS * message)
 {
     gchar *recv_buff = NULL;
     gchar *post = NULL;
@@ -596,12 +595,12 @@ int send_PLUS(SMS *message)
 
     g_free(recv_buff);
 
-out:
+  out:
     return ret;
 }
 
 /* wyslanie na ere */
-int send_ERA(SMS *message, int *era_left)
+int send_ERA(SMS * message, int *era_left)
 {
     gchar *recv_buff = NULL;
     gchar *returncode = NULL;
@@ -701,7 +700,7 @@ int send_ERA(SMS *message, int *era_left)
 	    ret = ERR_UNKNOWN;
     }
 
-out:
+  out:
     g_free(recv_buff);
     g_free(returncode);
 
@@ -741,7 +740,7 @@ int check_operator(gchar * number)
 }
 
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
-gpointer send_sms(SMS *message)
+gpointer send_sms(SMS * message)
 {
     gint result, gsm_oper;
     int era_left = 10;
@@ -835,7 +834,8 @@ gpointer send_sms(SMS *message)
 	   send_idea*() eventually notifies about success itself. */
 	if (gsm_oper == SMS_PLUS)
 	    sms_message(message->number, _("SMS has been sent"));
-	else if (gsm_oper == SMS_ERA) {
+	else if (gsm_oper == SMS_ERA)
+	{
 	    gchar *tmp = g_strdup_printf(_("SMS has been sent. Left: %d"), era_left);
 	    sms_message(message->number, tmp);
 	    g_free(tmp);
@@ -886,9 +886,8 @@ gpointer send_sms(SMS *message)
 	break;
     }
 
-out:
+  out:
     SMS_free(message);
     g_thread_exit(NULL);
     return NULL;
 }
-

@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.2 2003/06/21 03:57:35 krzyzak Exp $ */
+/* $Id: dialog.c,v 1.3 2004/01/17 00:44:58 shaster Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,63 +10,63 @@
 #include "gg-types.h"
 #include "unified-types.h"
 
-GGaduDialog *ggadu_dialog_new() {
-    return g_new0(GGaduDialog,1);
+GGaduDialog *ggadu_dialog_new()
+{
+    return g_new0(GGaduDialog, 1);
 }
 
-void ggadu_dialog_add_entry(
-		      GSList **prefs, 
-		      gint key, 
-		      const gchar *desc, 
-		      gint type, 
-		      gpointer value, 
-		      gint flags)
+void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint type, gpointer value, gint flags)
 {
-    GGaduKeyValue *kv = g_new0(GGaduKeyValue,1);
-    kv->key		= key;
-    kv->description	= g_strdup(desc);
-    kv->type		= type;
-    kv->value		= value;
-    kv->flag		= flags;
-    
+    GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
+    kv->key = key;
+    kv->description = g_strdup(desc);
+    kv->type = type;
+    kv->value = value;
+    kv->flag = flags;
+
     *prefs = g_slist_append(*prefs, kv);
 }
 
-void ggadu_dialog_callback_signal(GGaduDialog *d,const gchar *t)
+void ggadu_dialog_callback_signal(GGaduDialog * d, const gchar * t)
 {
     g_return_if_fail(d != NULL);
-    d->callback_signal = (gchar *)t;
+    d->callback_signal = (gchar *) t;
 }
 
-void ggadu_dialog_set_title(GGaduDialog *d,const gchar *t)
+void ggadu_dialog_set_title(GGaduDialog * d, const gchar * t)
 {
     g_return_if_fail(d != NULL);
-    d->title = (gchar *)t; 
+    d->title = (gchar *) t;
 }
 
-void ggadu_dialog_set_type(GGaduDialog *d, gint type) 
+void ggadu_dialog_set_type(GGaduDialog * d, gint type)
 {
     g_return_if_fail(d != NULL);
     d->type = type;
 }
 
-void GGaduDialog_free(GGaduDialog *d)
+void GGaduDialog_free(GGaduDialog * d)
 {
     GSList *e = NULL;
-    
-    if (!d) return;
+
+    if (!d)
+	return;
     return;
     g_free(d->title);
     g_free(d->callback_signal);
-    
+
     e = d->optlist;
-    while (e) 
+    while (e)
     {
-	GGaduKeyValue *kv = (GGaduKeyValue *)e->data;
-//	g_free(kv->value);
+	GGaduKeyValue *kv = (GGaduKeyValue *) e->data;
+/*
+	g_free(kv->value);
+*/
 	g_free(kv->description);
 	g_free(e->data);
-//	GGaduKeyValue_free(kv);
+/*
+	GGaduKeyValue_free(kv);
+*/
 	e = e->next;
     }
     g_slist_free(d->optlist);

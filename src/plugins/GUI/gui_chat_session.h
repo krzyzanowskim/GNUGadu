@@ -1,3 +1,4 @@
+/* $Id: gui_chat_session.h,v 1.5 2004/01/17 00:44:59 shaster Exp $ */
 #ifndef __GTK_CHAT_SESSION_H__
 #define __GTK_CHAT_SESSION_H__
 
@@ -19,7 +20,7 @@ typedef struct _GUIChatSessionClass GUIChatSessionClass;
 #define GUI_CHAT_SESSION_IS_SESSION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GUI_CHAT_SESSION_TYPE))
 #define GUI_CHAT_SESSION_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), GUI_CHAT_SESSION_TYPE, GUIChatSessionClass))
 
-GType gui_chat_session_get_type (void);
+GType gui_chat_session_get_type(void);
 
 enum
 {
@@ -55,19 +56,19 @@ struct _GUIChatSessionClass
 };
 
 /* public */
-GUIChatSession *gui_chat_session_new (gui_protocol * gp);
+GUIChatSession *gui_chat_session_new(gui_protocol * gp);
 
-void gui_chat_session_add_recipient (GUIChatSession * gsc, gchar * id);
+void gui_chat_session_add_recipient(GUIChatSession * gsc, gchar * id);
 
-GList *gui_chat_session_get_recipients_list (GUIChatSession * gsc);
+GList *gui_chat_session_get_recipients_list(GUIChatSession * gsc);
 
-guint gui_chat_session_get_session_type (GUIChatSession * gsc);
+guint gui_chat_session_get_session_type(GUIChatSession * gsc);
 
-GUIChatSession *gui_chat_session_find (gui_protocol * gp, GList *recipients_arg);
+GUIChatSession *gui_chat_session_find(gui_protocol * gp, GList * recipients_arg);
 
-GtkWidget *gui_chat_session_get_widget (GUIChatSession * gcs);
+GtkWidget *gui_chat_session_get_widget(GUIChatSession * gcs);
 
-GtkWidget *gui_chat_session_create_gtk_widget (GUIChatSession *gcs);
+GtkWidget *gui_chat_session_create_gtk_widget(GUIChatSession * gcs);
 
 void gui_chat_sessions_create_visible_chat_window(GUIChatSession * gcs);
 

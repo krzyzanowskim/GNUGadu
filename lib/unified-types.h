@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.7 2003/11/25 23:52:30 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.8 2004/01/17 00:44:58 shaster Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -13,32 +13,34 @@
  *    struktura opisujaca kontakt z dowolnego protoko³u
  *    je¶li jakie¶ pole == NULL GUI powinno je zignorowaæ
  */
- 
-typedef struct {
-    gchar *id;		// unikalny identyfikator: numer GG, adres z tlen'u etc.
-    gchar *first_name;	// imiê
-    gchar *last_name;	// nazwisko
-    gchar *nick;	// pseudo
-    gchar *mobile;	// tel. komórkowy
-    gchar *email;	// adres e-mail
-    gchar *gender;	// p³eæ
-    gchar *group;	// grupa
-    gchar *comment;	// komentarz
-    gchar *birthdate;	// data urodzenia
-    gchar *status_descr;// opis do statusu
-    gchar *ip; 	// "IP:PORT"
-    gchar *city;	// miasto
-    gchar *age;	//wiek
-    gint status;	// status w postaci liczbowej
+
+typedef struct
+{
+    gchar *id;			/* unikalny identyfikator: numer GG, adres z tlen'u etc. */
+    gchar *first_name;		/* imiê */
+    gchar *last_name;		/* nazwisko */
+    gchar *nick;		/* pseudo */
+    gchar *mobile;		/* tel. komórkowy */
+    gchar *email;		/* adres e-mail */
+    gchar *gender;		/* p³eæ */
+    gchar *group;		/* grupa */
+    gchar *comment;		/* komentarz */
+    gchar *birthdate;		/* data urodzenia */
+    gchar *status_descr;	/* opis do statusu */
+    gchar *ip;			/* "IP:PORT" */
+    gchar *city;		/* miasto */
+    gchar *age;			/* wiek */
+    gint status;		/* status w postaci liczbowej */
 } GGaduContact;
 
-void GGaduContact_free(GGaduContact *k);
+void GGaduContact_free(GGaduContact * k);
 
 /*
  *	Klasy wiadomo¶ci
  */
- 
-enum {
+
+enum
+{
     GGADU_CLASS_CHAT,
     GGADU_CLASS_MSG,
     GGADU_CLASS_CONFERENCE,
@@ -46,7 +48,8 @@ enum {
     GGADU_MSG_RECV
 };
 
-enum {
+enum
+{
     GGADU_SEARCH_FIRSTNAME,
     GGADU_SEARCH_LASTNAME,
     GGADU_SEARCH_NICKNAME,
@@ -64,59 +67,63 @@ enum {
  *	opisuje przesylana wiadomosc
  */
 
-typedef struct {
+typedef struct
+{
     gchar *id;
     gchar *message;
     guint class;
     guint time;
-   
+
     /* conference */
     GSList *recipients;
-    
+
 } GGaduMsg;
 
-void GGaduMsg_free(GGaduMsg *m);
+void GGaduMsg_free(GGaduMsg * m);
 
 /*
  *	GGaduNotify
  *	opisuje pojawienie sie kogos, lub zmiane stanu
  */
 
-typedef struct {
+typedef struct
+{
     gchar *id;
     unsigned long status;
-		gchar *ip; /* adres ip, nie musi byc ustawiony */
+    gchar *ip;			/* adres ip, nie musi byc ustawiony */
 } GGaduNotify;
 
-void GGaduNotify_free(GGaduNotify *n);
+void GGaduNotify_free(GGaduNotify * n);
 
 /*
  *	GGaduStatusPrototype
  *	prototyp statusu uzytownika danego protoko³u
  *
- */ 
- 
-typedef struct {
-    gint status;		// identyfikator statusu
-    gchar *description;		// wy¶wietlany opis np. "Dostêpny"
-    gchar *image;		// nazwa pliku obrazeku statusu 
+ */
+
+typedef struct
+{
+    gint status;		/* identyfikator statusu */
+    gchar *description;		/* wy¶wietlany opis np. "Dostêpny" */
+    gchar *image;		/* nazwa pliku obrazeku statusu */
     gboolean receive_only;
 } GGaduStatusPrototype;
 
-void GGaduStatusPrototype_free(GGaduStatusPrototype *s);
+void GGaduStatusPrototype_free(GGaduStatusPrototype * s);
 
-typedef struct {
-    gint	key;
-    gpointer	value;
+typedef struct
+{
+    gint key;
+    gpointer value;
 
-    guint	type; // VAR_STR, VAR_INT, VAR_BOOL
-    guint	flag; // GGADU_INSENSITIVE, GGADU_SENSITIVE (default)
-    
-    gchar	*description;
-    
-    gpointer 	user_data;
+    guint type;			/* VAR_STR, VAR_INT, VAR_BOOL */
+    guint flag;			/* GGADU_INSENSITIVE, GGADU_SENSITIVE (default) */
+
+    gchar *description;
+
+    gpointer user_data;
 } GGaduKeyValue;
 
-void GGaduKeyValue_free(GGaduKeyValue *kv);
+void GGaduKeyValue_free(GGaduKeyValue * kv);
 
 #endif

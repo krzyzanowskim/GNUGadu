@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.13 2004/01/10 11:00:03 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.14 2004/01/17 00:44:58 shaster Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -13,17 +13,19 @@
 #include <config.h>
 #endif
 
-typedef gpointer (*function_ptr)(gpointer);
-typedef void (*signal_func_ptr)(gpointer,gpointer);
+typedef gpointer(*function_ptr) (gpointer);
+typedef void (*signal_func_ptr) (gpointer, gpointer);
 typedef GQuark GGaduSigID;
 
-enum {
+enum
+{
     GGADU_PLUGIN_TYPE_UI = 1,
     GGADU_PLUGIN_TYPE_PROTOCOL,
     GGADU_PLUGIN_TYPE_MISC
 };
 
-enum {
+enum
+{
     GGADU_ID = 1,
     GGADU_NICK,
     GGADU_FIRST_NAME,
@@ -33,7 +35,8 @@ enum {
 };
 
 
-enum {
+enum
+{
     VAR_STR = 1,
     VAR_INT,
     VAR_INT_WITH_NEGATIVE,
@@ -46,19 +49,22 @@ enum {
     VAR_NULL
 };
 
-enum {
+enum
+{
     GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE = 1
 };
 
-enum {
-    VAR_FLAG_NONE         = 1,
-    VAR_FLAG_SENSITIVE    = 1 << 2,
-    VAR_FLAG_INSENSITIVE  = 1 << 4,
-    VAR_FLAG_PASSWORD     = 1 << 5,
-    VAR_FLAG_FOCUS        = 1 << 8
+enum
+{
+    VAR_FLAG_NONE = 1,
+    VAR_FLAG_SENSITIVE = 1 << 2,
+    VAR_FLAG_INSENSITIVE = 1 << 4,
+    VAR_FLAG_PASSWORD = 1 << 5,
+    VAR_FLAG_FOCUS = 1 << 8
 };
 
-enum {
+enum
+{
     GGADU_NONE,
     GGADU_OK,
     GGADU_CANCEL,
@@ -71,61 +77,67 @@ enum {
  * GGaduMenu
  */
 typedef GNode GGaduMenu;
-typedef struct {
-    gchar	*label;
-    gpointer 	 data;
-    gpointer     callback; //    function_ptr callback;
+typedef struct
+{
+    gchar *label;
+    gpointer data;
+    gpointer callback;		/* function_ptr callback; */
 } GGaduMenuItem;
 
 /* GGaduPluginExtension */
-typedef struct {
+typedef struct
+{
     const gchar *txt;
     guint type;
-    gpointer (*callback)(gpointer user_data);
+      gpointer(*callback) (gpointer user_data);
 } GGaduPluginExtension;
 
 /*
  * GGaduVar
  * Zmienne dla protokolu
  */
-typedef struct {
-    gchar *name; 			// nazwa zmiennej
-    gint type;				// typ
-    gpointer ptr;			// wskaznik gdzie bedzie przechowywana 
-    gpointer def;			// default value
+typedef struct
+{
+    gchar *name;		/* nazwa zmiennej */
+    gint type;			/* typ */
+    gpointer ptr;		/* wskaznik gdzie bedzie przechowywana */
+    gpointer def;		/* default value */
 } GGaduVar;
 
 /* 
  * GGaduProtocol
  * specyficzne dla protokolu 
- */ 
-typedef struct {
+ */
+typedef struct
+{
     gchar *display_name;
-    gchar *img_filename;	//Å›cieÅ¼ka do obrazka z etykietÄ… na zakÅ‚adkÄ™
-    GSList *statuslist;		// lista dostÄ™pnych statusÃ³w danego protokoÅ‚u
-    GSList *offline_status;	// ktory status oznacza offline
-    GSList *away_status;	// ktory status oznacza away (NULL = brak)
-    GSList *online_status;	// ktory status oznacza online
+    gchar *img_filename;	/* ¶cie¿ka do obrazka z etykiet± na zak³adkê */
+    GSList *statuslist;		/* lista dostêpnych statusÃ³w danego protoko³u */
+    GSList *offline_status;	/* ktory status oznacza offline */
+    GSList *away_status;	/* ktory status oznacza away (NULL = brak) */
+    GSList *online_status;	/* ktory status oznacza online */
 } GGaduProtocol;
 
 /* 
  * GGaduSignal 
  */
-typedef struct {
-    GQuark name;	/* GQuark */
+typedef struct
+{
+    GQuark name;		/* GQuark */
     gpointer source_plugin_name;
     gpointer destination_plugin_name;
     gpointer data;
-    gpointer data_return;	// mozna to uzupelnic o jakies cos co ma byc zwrocone przez emit_signal
-    gint     error;		// okresla czy jest jakis blad podczas wykonywania, -1 znaczy ze wszystko ok.
+    gpointer data_return;	/* mozna to uzupelnic o jakies cos co ma byc zwrocone przez emit_signal */
+    gint error;			/* okresla czy jest jakis blad podczas wykonywania, -1 znaczy ze wszystko ok. */
     gboolean free_me;
-    void (*free)(gpointer signal);
+    void (*free) (gpointer signal);
 } GGaduSignal;
 
 /* 
  * GGaduSignalinfo
  */
-typedef struct {
+typedef struct
+{
     GQuark name;
 } GGaduSignalinfo;
 
@@ -133,30 +145,32 @@ typedef struct {
  * GGaduPlugin
  * Ta struktura jest przechowuje wszystkie informacje o pluginie
  */
-typedef struct {
-    guint  type;
-    gchar  *name;			// nazwa zeby mozna bylo po niej znajdowac plugin
-    gchar  *description;
-    gpointer ptr;			// wskaznik na strukture charakterystyczna dla pluginu (np. protokolu)
+typedef struct
+{
+    guint type;
+    gchar *name;		/* nazwa zeby mozna bylo po niej znajdowac plugin */
+    gchar *description;
+    gpointer ptr;		/* wskaznik na strukture charakterystyczna dla pluginu (np. protokolu) */
     void *plugin_so_handler;
 
-    gchar  *config_file;		// plik konfiguracyjny dla tego pluginu
-    GSList *variables;  		// zmienne czytane z pliku
-    GSList *signals;			// lista zarejestrowanych signali
-    
-    GGaduProtocol *protocol; 		/* stuff specyficzna dla kazdego typu */
-    GSList *extensions;			/* GGaduPluginExtension's */
-    
-    void (*signal_receive_func)(gpointer,gpointer); // wskaznik na receiver signali
-    void (*destroy_plugin)();			// wskaznik na zwalniacza plugina
-    void (*start_plugin)();			// wskaznik na funkcjÄ™ startujÄ…cÄ… plugina
+    gchar *config_file;		/* plik konfiguracyjny dla tego pluginu */
+    GSList *variables;		/* zmienne czytane z pliku */
+    GSList *signals;		/* lista zarejestrowanych signali */
+
+    GGaduProtocol *protocol;	/* stuff specyficzna dla kazdego typu */
+    GSList *extensions;		/* GGaduPluginExtension's */
+
+    void (*signal_receive_func) (gpointer, gpointer);	/* wskaznik na receiver signali */
+    void (*destroy_plugin) ();	/* wskaznik na zwalniacza plugina */
+    void (*start_plugin) ();	/* wskaznik na funkcjê startuj±c± plugina */
 } GGaduPlugin;
 
 
 /*
  * GGaduPluginFile
  */
-typedef struct {
+typedef struct
+{
     gchar *name;
     gchar *path;
 } GGaduPluginFile;
@@ -164,36 +178,38 @@ typedef struct {
 /*
  * GGaduConfig
  */
-typedef struct {
-	/* globalnie niezalezne od protokolu */
-	gboolean send_on_enter;
-	guint main_on_start;		// pokaÅ¼ gÅ‚Ã³wne okno po uruchomieniu programu
-	guint width;
-	guint height;
-	gint pos_x;
-	gint pos_y;
-	
-	gboolean all_plugins_loaded;	/* TRUE if all plugins are loaded */
-	GSList *all_available_plugins;	// wszystkie dostepne, zainstalowane w systemie pluginy
-	GSList *plugins;		// lista pluginow
+typedef struct
+{
+    /* globalnie niezalezne od protokolu */
+    gboolean send_on_enter;
+    guint main_on_start;	/* pokaÅ¼ g³ówne okno po uruchomieniu programu */
+    guint width;
+    guint height;
+    gint pos_x;
+    gint pos_y;
 
-	gchar  *configdir;		// katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2)
-	
-	GSList *waiting_signals;
-	GSList *signal_hooks;
-	
-	GMainLoop *main_loop;
+    gboolean all_plugins_loaded;	/* TRUE if all plugins are loaded */
+    GSList *all_available_plugins;	/* wszystkie dostepne, zainstalowane w systemie pluginy */
+    GSList *plugins;		/* lista pluginow */
 
-	gpointer repos;
+    gchar *configdir;		/* katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2) */
+
+    GSList *waiting_signals;
+    GSList *signal_hooks;
+
+    GMainLoop *main_loop;
+
+    gpointer repos;
 } GGaduConfig;
 
 /*
  *  GGaduSignalHook
  */
-typedef struct {
-  GQuark name;
-  GSList *hooks;
-  void (*perl_handler) (GGaduSignal *, gchar *, void *);
+typedef struct
+{
+    GQuark name;
+    GSList *hooks;
+    void (*perl_handler) (GGaduSignal *, gchar *, void *);
 } GGaduSignalHook;
 
 #endif

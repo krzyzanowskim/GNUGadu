@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.17 2003/12/20 23:17:23 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.18 2004/01/17 00:45:06 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -28,7 +28,9 @@
 #include "dialog.h"
 #include "plugin_xosd.h"
 
-//static gchar *font = "-adobe-helvetica-bold-r-normal--24-240-75-75-p-138,-*-*-*-R-Normal--*-180-100-100-*-*,-*-*-*-*-*--*-*-*-*-*-*";
+/*
+static gchar *font = "-adobe-helvetica-bold-r-normal--24-240-75-75-p-138,-*-*-*-R-Normal--*-180-100-100-*-*,-*-*-*-*-*--*-*-*-*-*-*";
+*/
 gint NUMLINES;
 gchar *FONT;
 gchar *COLOUR;
@@ -328,8 +330,8 @@ gpointer osd_show_messages(gpointer user_data)
     xosd_show(osd);
 
     timer =
-	g_timeout_add((ggadu_config_var_get(handler, "timeout") ? (guint) ggadu_config_var_get(handler, "timeout") * 1000 : 3000),
-		      osd_hide_window, NULL);
+	g_timeout_add((ggadu_config_var_get(handler, "timeout") ? (guint) ggadu_config_var_get(handler, "timeout") * 1000 : 3000), osd_hide_window,
+		      NULL);
 
     return NULL;
 }
@@ -376,7 +378,9 @@ gpointer osd_preferences(gpointer user_data)
     /* *INDENT-OFF* */
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) ggadu_config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_COLOUR_CHOOSER, (gpointer) COLOUR, VAR_FLAG_NONE);
-//    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
+/*
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
+*/
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer) NUMLINES, VAR_FLAG_NONE);
@@ -493,10 +497,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     ggadu_config_var_add(handler, "pos", VAR_STR);
     ggadu_config_var_add(handler, "numlines", VAR_INT);
 
-    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
-	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg2", NULL);
+    if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
+	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2", NULL);
     else
-	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
+	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
     ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "xosd", NULL));
 

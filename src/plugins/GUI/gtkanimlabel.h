@@ -41,18 +41,18 @@ extern "C"
 	GtkMiscClass parent_class;
     };
 
-    GtkType gtk_anim_label_get_type (void);
-    
-    GtkWidget	*gtk_anim_label_new (void);
-    GtkWidget	*gtk_anim_label_new_with_text (const gchar * txt);
-    void	gtk_anim_label_set_text (GtkAnimLabel * anim_label, const gchar * txt);
-    void	gtk_anim_label_animate (GtkAnimLabel * anim_label, gboolean state);
-    void	gtk_anim_label_set_timeout (GtkAnimLabel * anim_label, gint timeout);
-    gint	gtk_anim_label_get_timeout (GtkAnimLabel * anim_label);
-    void	gtk_anim_label_set_delay (GtkAnimLabel * anim_label, guint delay);
-    gint	gtk_anim_label_get_delay (GtkAnimLabel * anim_label);
-    void	gtk_anim_label_auto_reset_position (GtkAnimLabel * anim_label, gboolean state);	/* default TRUE */
-    void	gtk_anim_label_set_alignment (GtkAnimLabel * anim_label, gint alignment);	/* default LEFT */
+    GtkType gtk_anim_label_get_type(void);
+
+    GtkWidget *gtk_anim_label_new(void);
+    GtkWidget *gtk_anim_label_new_with_text(const gchar * txt);
+    void gtk_anim_label_set_text(GtkAnimLabel * anim_label, const gchar * txt);
+    void gtk_anim_label_animate(GtkAnimLabel * anim_label, gboolean state);
+    void gtk_anim_label_set_timeout(GtkAnimLabel * anim_label, gint timeout);
+    gint gtk_anim_label_get_timeout(GtkAnimLabel * anim_label);
+    void gtk_anim_label_set_delay(GtkAnimLabel * anim_label, guint delay);
+    gint gtk_anim_label_get_delay(GtkAnimLabel * anim_label);
+    void gtk_anim_label_auto_reset_position(GtkAnimLabel * anim_label, gboolean state);	/* default TRUE */
+    void gtk_anim_label_set_alignment(GtkAnimLabel * anim_label, gint alignment);	/* default LEFT */
 
 
 

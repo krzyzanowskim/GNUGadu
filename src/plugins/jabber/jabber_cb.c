@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.26 2004/01/13 22:22:44 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.27 2004/01/17 00:45:01 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -13,7 +13,8 @@ extern jabber_data_type jabber_data;
 
 void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, gpointer user_data)
 {
-    if (reason != LM_DISCONNECT_REASON_OK) {
+    if (reason != LM_DISCONNECT_REASON_OK)
+    {
 	signal_emit("jabber", "gui show message", g_strdup(_("Jabber connection failed")), "main-gui");
 	return;
     }
@@ -44,7 +45,9 @@ void connection_auth_cb(LmConnection * connection, gboolean success, gpointer st
 
     jabber_data.connected = 2;
     print_debug("jabber: Authentication succeeded. Changing status...\n");
-//  jabber_change_status((gint) status);
+/*
+    jabber_change_status((gint) status);
+*/
     jabber_fetch_roster(status);
 }
 
@@ -69,8 +72,7 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
 
     if (!lm_connection_authenticate
 	(connection, jid, ggadu_config_var_get(jabber_handler, "password"),
-	 ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler,
-										 "resource") : "GNU Gadu 2",
+	 ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler, "resource") : "GNU Gadu 2",
 	 (LmResultFunction) connection_auth_cb, status, NULL, NULL))
     {
 	print_debug("jabber: lm_connection_authenticate() failed.\n");
@@ -80,8 +82,7 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
     g_free(jid);
 }
 
-LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
-			    gpointer user_data)
+LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
 {
     gchar *jid;
     GSList *list = jabber_data.userlist;
@@ -124,13 +125,14 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 	signal_emit("jabber", "gui show message", msg, "main-gui");
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
     }
-/*	else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_UNSUBSCRIBE)
-	{
-		gchar *msg = g_strdup_printf (_("%s unsubscribed you from presence"), jid);
-		signal_emit ("jabber", "gui show message", msg, "main-gui");
-		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
-	} */
-
+/*
+    else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_UNSUBSCRIBE)
+    {
+	gchar *msg = g_strdup_printf (_("%s unsubscribed you from presence"), jid);
+	signal_emit ("jabber", "gui show message", msg, "main-gui");
+	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+    }
+*/
 
     status = lm_message_node_get_child(message->node, "status");
     if (status)
@@ -180,8 +182,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 		break;
 	    case LM_MESSAGE_SUB_TYPE_ERROR:
 		k->status = JABBER_STATUS_ERROR;
-		k->status_descr =
-		    g_strdup(lm_message_node_get_value(lm_message_node_get_child(message->node, "error")));
+		k->status_descr = g_strdup(lm_message_node_get_value(lm_message_node_get_child(message->node, "error")));
 		break;
 	    case LM_MESSAGE_SUB_TYPE_UNAVAILABLE:
 		k->status = JABBER_STATUS_UNAVAILABLE;
@@ -232,8 +233,7 @@ LmHandlerResult iq_cb(LmMessageHandler * handler, LmConnection * connection, LmM
     return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
-LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
-			      gpointer user_data)
+LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
 {
     LmMessageNode *node;
     LmMessage *m;
@@ -290,14 +290,13 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 	    return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 	signal_emit("jabber", "gui show warning",
-		    g_strdup_printf(_("Error: %s (code %s)"), lm_message_node_get_value(node),
-				    lm_message_node_get_attribute(node, "code")), "main-gui");
+		    g_strdup_printf(_("Error: %s (code %s)"), lm_message_node_get_value(node), lm_message_node_get_attribute(node, "code")),
+		    "main-gui");
 	lm_message_node_unref(node);
 	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
     }
 
-    if (lm_message_get_sub_type(message) != LM_MESSAGE_SUB_TYPE_SET &&
-	lm_message_get_sub_type(message) != LM_MESSAGE_SUB_TYPE_RESULT)
+    if (lm_message_get_sub_type(message) != LM_MESSAGE_SUB_TYPE_SET && lm_message_get_sub_type(message) != LM_MESSAGE_SUB_TYPE_RESULT)
     {
 	print_debug("%s", lm_message_node_get_attribute(message->node, "type"));
 	print_debug("xml: %s", lm_message_node_to_string(message->node));
@@ -408,8 +407,7 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
     return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
 
-LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
-			   gpointer user_data)
+LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
 {
     gchar *jid;
     GGaduMsg *msg;

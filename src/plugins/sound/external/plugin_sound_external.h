@@ -1,6 +1,6 @@
-/* $Id: plugin_sound_external.h,v 1.1 2003/04/03 09:12:18 thrulliq Exp $ */
+/* $Id: plugin_sound_external.h,v 1.2 2004/01/17 00:45:04 shaster Exp $ */
 
-enum {
+enum
+{
     GGADU_SE_CONFIG_PLAYER
 };
-

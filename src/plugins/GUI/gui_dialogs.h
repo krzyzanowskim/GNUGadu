@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.h,v 1.2 2003/05/01 20:18:09 shaster Exp $ */
+/* $Id: gui_dialogs.h,v 1.3 2004/01/17 00:44:59 shaster Exp $ */
 
 #ifndef GGadu_GUI_DIALOGS_H
 #define GGadu_GUI_DIALOGS_H 1
@@ -13,7 +13,7 @@ void gui_show_message_box(gint type, gpointer signal);
 
 void gui_show_window_with_text(gpointer signal);
 
-GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols);
+GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols);
 
 void gui_about();
 

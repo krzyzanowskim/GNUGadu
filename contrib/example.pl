@@ -1,5 +1,7 @@
 #! /usr/bin/perl -w
 
+# $Id: example.pl,v 1.4 2004/01/17 00:44:56 shaster Exp $
+
 sub on_xosd {
 # $_[0] - signal name
 # $_[1] - signal source

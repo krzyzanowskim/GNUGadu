@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.51 2004/01/13 22:22:44 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.52 2004/01/17 00:45:01 shaster Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -232,8 +232,7 @@ GGaduMenu *build_userlist_menu(void)
 
     listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
     ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Resend authorization to"), user_resend_auth_to, NULL));
-    ggadu_menu_add_submenu(listmenu,
-			   ggadu_menu_new_item(_("Rerequest authorization from"), user_rerequest_auth_from, NULL));
+    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Rerequest authorization from"), user_rerequest_auth_from, NULL));
     ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove authorization from"), user_remove_auth_from, NULL));
 
     ggadu_menu_add_submenu(menu, listmenu);
@@ -314,8 +313,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 	    ggadu_dialog_set_title(d, _("Enter status description"));
 	    ggadu_dialog_callback_signal(d, "change status descr");
-	    ggadu_dialog_add_entry(&d->optlist, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
-				   VAR_FLAG_FOCUS);
+	    ggadu_dialog_add_entry(&d->optlist, 0, _("Description:"), VAR_STR, jabber_data.status_descr, VAR_FLAG_FOCUS);
 	    d->user_data = sp;
 	    signal_emit("jabber", "gui show dialog", d, "main-gui");
 	    jabber_login(jabber_data.status);
@@ -590,8 +588,7 @@ gpointer user_search_action(gpointer user_data)
 
     if (jabber_data.connected != 2)
     {
-	signal_emit("jabber", "gui show warning", g_strdup(_("You have to be connected to perform searching!")),
-		    "main-gui");
+	signal_emit("jabber", "gui show warning", g_strdup(_("You have to be connected to perform searching!")), "main-gui");
 	return NULL;
     }
 
@@ -630,26 +627,25 @@ gpointer user_preferences_action(gpointer user_data)
     d->callback_signal = g_strdup("update config");
 
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_JID, _("Jabber ID"), VAR_STR,
-			   ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_PASSWORD, _("Password"), VAR_STR,
-			   ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
-			   ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_JID, _("Jabber ID"), VAR_STR, ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_PASSWORD, _("Password"), VAR_STR, ggadu_config_var_get(jabber_handler, "password"),
+			   VAR_FLAG_PASSWORD);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "log"),
+			   VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 			   ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
     if (lm_connection_supports_ssl())
     {
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
-			       ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL, ggadu_config_var_get(jabber_handler, "use_ssl"),
+			       VAR_FLAG_NONE);
     }
 
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
-			   ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR, ggadu_config_var_get(jabber_handler, "resource"),
+			   VAR_FLAG_NONE);
 
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_SERVER, _("Server\n(optional)"), VAR_STR,
-			   ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_SERVER, _("Server\n(optional)"), VAR_STR, ggadu_config_var_get(jabber_handler, "server"),
+			   VAR_FLAG_NONE);
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
     return NULL;

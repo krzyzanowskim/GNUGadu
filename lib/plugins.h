@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.4 2003/12/20 23:17:18 krzyzak Exp $ */
+/* $Id: plugins.h,v 1.5 2004/01/17 00:44:58 shaster Exp $ */
 #ifndef GGadu_PROTOCOLS_H
 #define GGadu_PROTOCOLS_H 1
 
@@ -18,24 +18,24 @@
 
 #define GGadu_PLUGIN_NAME ggadu_plugin_name()
 #define GGadu_PLUGIN_ACTIVATE(x) config = x;
-    
+
 #define GGadu_MAX_PLUGIN_NAME 100
 
-gboolean load_plugin(gchar *path);
+gboolean load_plugin(gchar * path);
 
-void unload_plugin(gchar *name);
+void unload_plugin(gchar * name);
 
-GGaduPlugin *register_plugin(gchar *name, gchar *desc);
+GGaduPlugin *register_plugin(gchar * name, gchar * desc);
 
-void register_signal_receiver(GGaduPlugin *plugin_handler,void (*sgr)(gpointer,gpointer));
+void register_signal_receiver(GGaduPlugin * plugin_handler, void (*sgr) (gpointer, gpointer));
 
-void register_extension_for_plugins(GGaduPluginExtension *ext);
+void register_extension_for_plugins(GGaduPluginExtension * ext);
 
-void unregister_extension_for_plugins(GGaduPluginExtension *ext);
+void unregister_extension_for_plugins(GGaduPluginExtension * ext);
 
-GGaduPlugin *find_plugin_by_name(gchar *name);
+GGaduPlugin *find_plugin_by_name(gchar * name);
 
-GSList *find_plugin_by_pattern(gchar *pattern);
+GSList *find_plugin_by_pattern(gchar * pattern);
 
 GSList *get_list_modules_load();
 

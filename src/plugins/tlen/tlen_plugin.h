@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.h,v 1.4 2003/09/23 00:27:55 shaster Exp $ */
+/* $Id: tlen_plugin.h,v 1.5 2004/01/17 00:45:05 shaster Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -10,13 +10,15 @@
 /* meta status for "Set description" function */
 #define TLEN_STATUS_DESC 666
 
-typedef struct {
-    guint    uin;
+typedef struct
+{
+    guint uin;
     gpointer password;
-    guint    dummy;
+    guint dummy;
 } dummy_config;
 
-enum {
+enum
+{
     GGADU_TLEN_UIN,
     GGADU_TLEN_NICK,
     GGADU_TLEN_GROUP,
@@ -26,7 +28,8 @@ enum {
     GGADU_TLEN_AUTOCONNECT_STATUS
 };
 
-enum {
+enum
+{
     GGADU_TLEN_SEARCH_FIRSTNAME,
     GGADU_TLEN_SEARCH_LASTNAME,
     GGADU_TLEN_SEARCH_NICKNAME,
@@ -37,9 +40,9 @@ enum {
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr);
 
-gpointer config_init_plugin(GGaduPlugin *plugin_handler);
+gpointer config_init_plugin(GGaduPlugin * plugin_handler);
 
-gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data);
+gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data);
 
 void my_signal_receive(gpointer name, gpointer signal_ptr);
 
@@ -55,7 +58,7 @@ void wyjdz_signal_handler();
 
 void load_contacts();
 
-void setup_watch(GIOChannel *source);
+void setup_watch(GIOChannel * source);
 
 gpointer user_preferences_action(gpointer user_data);
 

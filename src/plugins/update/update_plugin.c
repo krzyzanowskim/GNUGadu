@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.13 2004/01/13 00:05:39 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.14 2004/01/17 00:45:06 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -98,11 +98,9 @@ gchar *update_get_current_version(gboolean show)
 	if (show)
 	{
 	    if (update_use_xosd())
-		signal_emit(GGadu_PLUGIN_NAME, "xosd show message",
-			    g_strdup_printf(_("Error while connecting to %s"), server), "xosd");
+		signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Error while connecting to %s"), server), "xosd");
 	    else
-		signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
-			    g_strdup_printf(_("Error while connecting to %s"), server), "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf(_("Error while connecting to %s"), server), "main-gui");
 	}
 	return NULL;
     }
@@ -131,11 +129,9 @@ gchar *update_get_current_version(gboolean show)
 	if (show)
 	{
 	    if (update_use_xosd())
-		signal_emit(GGadu_PLUGIN_NAME, "xosd show message",
-			    g_strdup(_("Server-side error during update check")), "xosd");
+		signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup(_("Server-side error during update check")), "xosd");
 	    else
-		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", 
-			    g_strdup(_("Server-side error during update check")), "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Server-side error during update check")), "main-gui");
 	}
 	g_free(recv_buff);
 	return NULL;
@@ -232,9 +228,9 @@ int update_compare(const gchar * servers, const gchar * ours)
 gpointer update_check_real(gboolean show)
 {
     gchar *reply = update_get_current_version(show);
-    gchar *version; 
+    gchar *version;
     int i;
-    
+
     if (reply == NULL)
 	return NULL;
 
@@ -247,12 +243,14 @@ gpointer update_check_real(gboolean show)
     /* compare, notice if something new was found */
     if (update_compare(reply, version) > 0)
     {
-        if (update_use_xosd())
-		signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Update available: %s"), reply), "xosd");
-	    else
-		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("Update available: %s"), reply), "main-gui");
-    } else if (show) {
-    	if (update_use_xosd())
+	if (update_use_xosd())
+	    signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Update available: %s"), reply), "xosd");
+	else
+	    signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("Update available: %s"), reply), "main-gui");
+    }
+    else if (show)
+    {
+	if (update_use_xosd())
 	    signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup(_("No updates available")), "xosd");
 	else
 	    signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("No updates available")), "main-gui");
@@ -265,16 +263,16 @@ gpointer update_check_real(gboolean show)
     return NULL;
 }
 
-void _update_check_real(gboolean show) 
+void _update_check_real(gboolean show)
 {
-    g_thread_create((gpointer (*)()) update_check_real, (gpointer) show, FALSE, NULL);
+    g_thread_create((gpointer(*)())update_check_real, (gpointer) show, FALSE, NULL);
 }
 
 /* for g_timeout_add */
 gboolean update_check(gpointer data)
 {
     /* don't notify about 'no updates found' unless we're using xosd */
-    _update_check_real(update_use_xosd() ? TRUE : FALSE);
+    _update_check_real(update_use_xosd()? TRUE : FALSE);
 
     /* never ending story ;) */
     return TRUE;
@@ -405,10 +403,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     update_handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Update checker"));
 
     print_debug("%s : read configuration\n", GGadu_PLUGIN_NAME);
-    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
-	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg2", NULL);
+    if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
+	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2", NULL);
     else
-	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
+	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
     ggadu_config_set_filename((GGaduPlugin *) update_handler, g_build_filename(this_configdir, "update", NULL));
 

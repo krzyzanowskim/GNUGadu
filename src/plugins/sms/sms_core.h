@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.15 2004/01/09 02:39:40 shaster Exp $ */
+/* $Id: sms_core.h,v 1.16 2004/01/17 00:45:03 shaster Exp $ */
 
 #ifndef SMS_CORE_PLUGIN_H
 #define SMS_CORE_PLUGIN_H 1
@@ -82,17 +82,17 @@ typedef struct
 typedef struct
 {
     gboolean external;
-    gchar *number;	/* free() me */
-    gchar *body;	/* free() me */
-    gchar *sender;	/* free() me */
+    gchar *number;		/* free() me */
+    gchar *body;		/* free() me */
+    gchar *sender;		/* free() me */
     gchar *era_login;
     gchar *era_password;
-    gchar *idea_token;	/* free() me */
-    gchar *idea_pass;	/* free() me */
+    gchar *idea_token;		/* free() me */
+    gchar *idea_pass;		/* free() me */
 } SMS;
 
-gpointer send_sms(SMS *message);
-gpointer send_IDEA_stage2(SMS *message);
+gpointer send_sms(SMS * message);
+gpointer send_IDEA_stage2(SMS * message);
 
 void sms_message(const gchar * sms_number, const gchar * message);
 void sms_warning(const gchar * sms_number, const gchar * warning);

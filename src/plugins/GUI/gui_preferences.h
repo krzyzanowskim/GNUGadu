@@ -1,11 +1,11 @@
-/* $Id: gui_preferences.h,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_preferences.h,v 1.2 2004/01/17 00:44:59 shaster Exp $ */
 #include <gtk/gtk.h>
 
-enum 
+enum
 {
     PLUGINS_MGR_NAME,
     PLUGINS_MGR_ENABLE,
     PLUGINS_MGR_COUNT
 };
 
-void gui_preferences(GtkWidget *widget, gpointer data);
+void gui_preferences(GtkWidget * widget, gpointer data);

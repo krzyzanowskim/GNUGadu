@@ -20,3 +20,5 @@ przy wywolaniu ./configure opcji --enable-shared. Potem make i make install
 zainstaluje ci najnowsza werjse libgadu, ktora obsluguje juz nowy katalog
 publiczny.
 
+
+$Id: problems,v 1.3 2004/01/17 00:44:58 shaster Exp $

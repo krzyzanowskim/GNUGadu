@@ -1,4 +1,4 @@
-/* $Id: unified-types.c,v 1.2 2003/06/21 03:57:35 krzyzak Exp $ */
+/* $Id: unified-types.c,v 1.3 2004/01/17 00:44:58 shaster Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_FREE_H
 #define GGadu_UNIFIED_TYPES_FREE_H
 
@@ -9,10 +9,11 @@
 #include <glib.h>
 #include "unified-types.h"
 
-void GGaduContact_free(GGaduContact *k)
+void GGaduContact_free(GGaduContact * k)
 {
-    if (k == NULL) return;
-    
+    if (k == NULL)
+	return;
+
     g_free(k->id);
     g_free(k->first_name);
     g_free(k->last_name);
@@ -27,47 +28,51 @@ void GGaduContact_free(GGaduContact *k)
     g_free(k->city);
     g_free(k->age);
     g_free(k->gender);
-    
+
     g_free(k);
     return;
 }
 
-void GGaduMsg_free(GGaduMsg *m)
+void GGaduMsg_free(GGaduMsg * m)
 {
-    if (!m) return;
-    
+    if (!m)
+	return;
+
     g_free(m->id);
     g_free(m->message);
-    
+
     g_free(m);
     return;
 }
 
-void GGaduNotify_free(GGaduNotify *n)
+void GGaduNotify_free(GGaduNotify * n)
 {
-    if (!n) return;
+    if (!n)
+	return;
 
     g_free(n->id);
-    
+
     g_free(n);
     return;
 }
 
 
-void GGaduStatusPrototype_free(GGaduStatusPrototype *s)
+void GGaduStatusPrototype_free(GGaduStatusPrototype * s)
 {
-    if (!s) return;
-    
+    if (!s)
+	return;
+
     g_free(s->description);
     g_free(s->image);
-    
+
     g_free(s);
     return;
 }
 
-void GGaduKeyValue_free(GGaduKeyValue *kv)
+void GGaduKeyValue_free(GGaduKeyValue * kv)
 {
-    if (!kv) return;
+    if (!kv)
+	return;
     g_free(kv->value);
     g_free(kv->description);
     g_free(kv);

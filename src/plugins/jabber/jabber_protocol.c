@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.18 2004/01/13 22:22:44 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.19 2004/01/17 00:45:02 shaster Exp $ */
 
 #include <loudmouth/loudmouth.h>
 #include <string.h>
@@ -41,7 +41,7 @@ void action_roster_add_result(LmConnection * connection, LmMessage * message, gp
 void action_roster_fetch_result(LmConnection * connection, LmMessage * message, gpointer user_data)
 {
     iq_roster_cb(NULL, connection, message, user_data);
-    jabber_change_status((gint)user_data);
+    jabber_change_status((gint) user_data);
 }
 
 void action_roster_remove_result(LmConnection * connection, LmMessage * message, gpointer data)
@@ -50,7 +50,9 @@ void action_roster_remove_result(LmConnection * connection, LmMessage * message,
 
     jabber_data.userlist = ggadu_userlist_remove_id(jabber_data.userlist, id);
     ggadu_repo_del_value("jabber", id);
-    //GGaduContact_free(k);
+/*
+    GGaduContact_free(k);
+*/
     signal_emit("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
     signal_emit("jabber", "gui show message", g_strdup(_("Contact removed from roster")), "main-gui");
 }
@@ -68,8 +70,7 @@ void jabber_change_status(enum states status)
 	return;
 
     m = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_PRESENCE,
-				     status == JABBER_STATUS_UNAVAILABLE ? LM_MESSAGE_SUB_TYPE_UNAVAILABLE :
-				     LM_MESSAGE_SUB_TYPE_AVAILABLE);
+				     status == JABBER_STATUS_UNAVAILABLE ? LM_MESSAGE_SUB_TYPE_UNAVAILABLE : LM_MESSAGE_SUB_TYPE_AVAILABLE);
 
     switch (status)
     {
@@ -123,12 +124,12 @@ void jabber_fetch_roster(gpointer user_data)
     lm_message_node_set_attribute(node, "xmlns", "jabber:iq:roster");
 
     lm_message_node_set_attribute(m->node, "id", "fetch_roster");
-    
+
     if (!lm_connection_send(connection, m, NULL))
 	print_debug("jabber: Can't fetch roster (lm_connection_send() failed).\n");
     else
 	action_queue_add("fetch_roster", "result", action_roster_fetch_result, user_data, FALSE);
-	
+
     lm_message_unref(m);
 }
 
@@ -152,8 +153,7 @@ void action_search_form(LmConnection * connection, LmMessage * message, gpointer
 	child_instr = lm_message_node_get_child(node, "instructions");
 
 	if (child_first)
-	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL,
-				   VAR_FLAG_NONE);
+	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	if (child_last)
 	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	if (child_nick)

@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.34 2004/01/09 22:43:43 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.35 2004/01/17 00:45:03 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -173,10 +173,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
     print_debug("%s : read configuration\n", GGadu_PLUGIN_NAME);
 
-    if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
-	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg2", NULL);
+    if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
+	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2", NULL);
     else
-	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
+	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
     ggadu_config_set_filename((GGaduPlugin *) sms_handler, g_build_filename(this_configdir, "sms", NULL));
     ggadu_config_var_add(sms_handler, "sender", VAR_STR);
@@ -307,13 +307,13 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	    {
 		SMS *message = (SMS *) g_new0(SMS, 1);
 		message->external = (gboolean) ggadu_config_var_get(sms_handler, "external");
-		message->sender = g_strdup(ggadu_config_var_get(sms_handler, "sender"));  /* due to sender_temp somewhere below */
+		message->sender = g_strdup(ggadu_config_var_get(sms_handler, "sender"));	/* due to sender_temp somewhere below */
 		message->number = g_strdup(msg->id);
 		from_utf8("ISO-8859-2", msg->message, message->body);
 		message->era_login = ggadu_config_var_get(sms_handler, "era_login");
 		message->era_password = ggadu_config_var_get(sms_handler, "era_password");
 
-		g_thread_create((gpointer (*)()) send_sms, (gpointer) message, FALSE, NULL);
+		g_thread_create((gpointer(*)())send_sms, (gpointer) message, FALSE, NULL);
 	    }
 	    else
 		sms_preferences(0);
@@ -359,7 +359,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	    message->era_login = ggadu_config_var_get(sms_handler, "era_login");
 	    message->era_password = ggadu_config_var_get(sms_handler, "era_password");
 
-	    g_thread_create((gpointer (*)()) send_sms, message, FALSE, NULL);
+	    g_thread_create((gpointer(*)())send_sms, message, FALSE, NULL);
 
 	    ggadu_config_var_set(sms_handler, "external", (gpointer) old_external);
 	    ggadu_config_save(sms_handler);
@@ -439,7 +439,9 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	    }
 	    uslist = uslist->next;
 	}
-	//smslist = g_slist_append(smslist,k);
+/*
+	smslist = g_slist_append(smslist,k);
+*/
 	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", smslist, "main-gui");
 	save_smslist();
 
@@ -461,7 +463,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		    message->idea_pass = kv->value;
 		tmplist = tmplist->next;
 	    }
-	    g_thread_create((gpointer (*)()) send_IDEA_stage2, message, FALSE, NULL);
+	    g_thread_create((gpointer(*)())send_IDEA_stage2, message, FALSE, NULL);
 	}
 	GGaduDialog_free(d);
     }
@@ -499,9 +501,7 @@ void start_plugin()
     p->img_filename = g_strdup("sms.png");
 
     p->statuslist = button_send();
-    p->offline_status =
-	g_slist_append(p->offline_status,
-		       (gint *) ggadu_config_var_get(sms_handler, "show_in_status") ? (gpointer) 2 : (gpointer) 3);
+    p->offline_status = g_slist_append(p->offline_status, (gint *) ggadu_config_var_get(sms_handler, "show_in_status") ? (gpointer) 2 : (gpointer) 3);
 
     print_debug("%s : start_plugin\n", GGadu_PLUGIN_NAME);
     register_signal(sms_handler, "update config");
@@ -545,7 +545,9 @@ void destroy_plugin()
 
     g_free(idea_token_path);
 
-//    signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+/*
+    signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+*/
     signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 }
 
@@ -560,7 +562,7 @@ void save_smslist()
 
     /* open temporary file */
     path_tmp = g_build_filename(this_configdir, GGADU_SMS_USERLIST_TMPFILE, NULL);
-    ch_tmp = g_io_channel_new_file (path_tmp, "w", NULL);
+    ch_tmp = g_io_channel_new_file(path_tmp, "w", NULL);
 
     if (!ch_tmp)
     {
@@ -571,7 +573,7 @@ void save_smslist()
     }
 
     /* set encoding to utf-8 */
-    g_io_channel_set_encoding (ch_tmp, NULL, NULL);
+    g_io_channel_set_encoding(ch_tmp, NULL, NULL);
 
     /* write smslist */
     while (smu)
@@ -591,7 +593,7 @@ void save_smslist()
 	smu = smu->next;
     }
 
-    if (g_io_channel_shutdown (ch_tmp, TRUE, NULL) != G_IO_STATUS_NORMAL)
+    if (g_io_channel_shutdown(ch_tmp, TRUE, NULL) != G_IO_STATUS_NORMAL)
     {
 	print_debug("error writing temporary smslist file\n");
 	signal_emit("sms", "gui show warning", g_strdup(_("Writing userlist failed!")), "main-gui");
@@ -601,7 +603,7 @@ void save_smslist()
 
     /* mv temporary_file destination_file */
     path = g_build_filename(this_configdir, GGADU_SMS_USERLIST_FILENAME, NULL);
-    if (rename (path_tmp, path) != 0)
+    if (rename(path_tmp, path) != 0)
     {
 	print_debug("error renaming %s to %s\n", path_tmp, path);
 	signal_emit("sms", "gui show warning", g_strdup(_("Writing userlist failed!")), "main-gui");

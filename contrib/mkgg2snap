@@ -1,5 +1,7 @@
 #! /bin/sh
 
+# $Id: mkgg2snap,v 1.4 2004/01/17 00:44:56 shaster Exp $
+
 cd /tmp
 cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/ggadu co gg2
 cd gg2
