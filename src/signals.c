@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.4 2003/05/10 18:21:00 zapal Exp $ */
+/* $Id: signals.c,v 1.5 2003/05/11 14:13:41 zapal Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -52,15 +52,60 @@ void register_signal(GGaduPlugin * plugin_handler, gpointer name)
 //	signalinfo->signal_free = signal_free;
 
 	tmplugin->signals = g_slist_append(tmplugin->signals, signalinfo);
+
+	register_signal_perl (name, NULL);	
 }
 
-void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal))
+void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, gchar *, void *))
+{
+  GSList *list;
+  GGaduSignalHook *hook;
+
+  list = config->signal_hooks;
+  while (list)
+  {
+    hook = (GGaduSignalHook *) list->data;
+    if (!ggadu_strcasecmp (hook->name, name))
+    {
+      hook->perl_handler = perl_handler;
+      return;
+    }
+    list = list->next;
+  }
+
+  hook = g_new0 (GGaduSignalHook, 1);
+  hook->name = g_strdup (name);
+  hook->perl_handler = perl_handler;
+  hook->hooks = NULL;
+
+  config->signal_hooks = g_slist_append (config->signal_hooks, hook);
+}
+
+void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal, void (*perl_handler) (GGaduSignal *, gchar *, void *)))
 {
   GGaduSignalHook *signalhook;
+  GSList *list = config->signal_hooks;
 
+  while (list)
+  {
+    signalhook = (GGaduSignalHook *) list->data;
+    if (!ggadu_strcasecmp (signalhook->name, name))
+    {
+      signalhook->hooks = g_slist_append (signalhook->hooks, (void *) hook);
+      return;
+    }
+    list = list->next;
+  }
+
+  /* unfortunately we didn't find existing signal
+   * however, the perlscripts can try to register themselves before
+   * we have any signals, so we just create one here
+   */
   signalhook = g_new0 (GGaduSignalHook, 1);
   signalhook->name = g_strdup (name);
-  signalhook->hook = hook;
+  signalhook->perl_handler = NULL;
+  signalhook->hooks = g_slist_append (signalhook->hooks, (void *) hook);
+
   config->signal_hooks = g_slist_append (config->signal_hooks, signalhook);
 }
 
@@ -103,6 +148,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	GGaduPlugin *src  = NULL;
 	GSList      *tmp  = config->plugins;
 	GSList      *hooks = config->signal_hooks;
+	void (*hook_func) (GGaduSignal *, void (*) (GGaduSignal *, gchar *, void *perl)) = NULL;
 
 	while (hooks)
 	{
@@ -110,8 +156,16 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	  print_debug ("hook: %s, %s\n", tmpsignal->name, hook->name);
 	  if (!g_strcasecmp (tmpsignal->name, hook->name))
 	  {
-	    print_debug ("Hooked %s\n", hook->name);
-	    hook->hook (tmpsignal);
+	    GSList *list = hook->hooks;
+	    print_debug ("Hooked %s, %p\n", hook->name, list);
+	    
+	    while (list)
+	    {
+	      (void *) hook_func = (void *) list->data;
+	      hook_func (tmpsignal, hook->perl_handler);
+	      list = list->next;
+	    }
+	    break;
 	  }
 	  hooks = hooks->next;
 	}

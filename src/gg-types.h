@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.8 2003/05/10 10:20:32 zapal Exp $ */
+/* $Id: gg-types.h,v 1.9 2003/05/11 14:13:41 zapal Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -170,7 +170,8 @@ typedef struct {
 
 typedef struct {
   gpointer name;
-  void (*hook)(GGaduSignal *signal);
+  void (*perl_handler) (GGaduSignal *, gchar *, void *);
+  GSList *hooks;
 } GGaduSignalHook;
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.9 2003/05/10 18:20:59 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.10 2003/05/11 14:13:41 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -251,38 +251,12 @@ void sig_gui_msg_receive (GGaduSignal *signal, gchar *perl_func)
   LEAVE;
 }
 
-struct {
-  gchar *signame;
-  void (*func) (GGaduSignal *signal, gchar *perl_func);
-} SIGNAL_HOOKS[] = 
-{
-  {"xosd show message", sig_xosd_show_message},
-  {"gui msg receive",   sig_gui_msg_receive},
-  {NULL, NULL}
-};
-
-void for_each_hook (gchar *name, gpointer data)
+void hook_handler (GGaduSignal *signal, void (*perl_func) (GGaduSignal *, gchar *, void *))
 {
   GSList *list_script;
   GSList *list_hooks;
   perlscript *script;
   signal_hook *hook;
-  void (*func) (GGaduSignal *signal, gchar *perl_func);
-  int q;
-
-  func = NULL;
-
-  for (q = 0; SIGNAL_HOOKS[q].signame != NULL; q++)
-  {
-    if (!ggadu_strcasecmp (name, SIGNAL_HOOKS[q].signame))
-    {
-      func = SIGNAL_HOOKS[q].func;
-      break;
-    }
-  }
-
-  if (func == NULL)
-    return;
 
   list_script = perlscripts;
   while (list_script)
@@ -294,11 +268,11 @@ void for_each_hook (gchar *name, gpointer data)
     {
       hook = (signal_hook *) list_hooks->data;
 
-      if (!ggadu_strcasecmp (name, hook->name))
+      if (!ggadu_strcasecmp (signal->name, hook->name))
       {
 	PERL_SET_CONTEXT (script->perl);
 	my_perl = script->perl;
-	func (data, hook->func);
+	perl_func (signal, hook->func, (void *) script->perl);
       }
       
       list_hooks = list_hooks->next;
@@ -306,11 +280,6 @@ void for_each_hook (gchar *name, gpointer data)
     
     list_script = list_script->next;
   }
-}
-
-void sig_handle (GGaduSignal *signal)
-{
-  for_each_hook (signal->name, signal);
 }
 
 static XS (XS_GGadu_register_script)
@@ -396,7 +365,7 @@ static XS (XS_GGadu_signal_hook)
   hook->name = g_strdup (signame);
   hook->func = g_strdup (func);
   script->hooks = g_slist_append (script->hooks, hook);
-  hook_signal (signame, sig_handle);
+  hook_signal (signame, hook_handler);
   
   XSRETURN (0);
 }

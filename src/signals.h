@@ -1,4 +1,4 @@
-/* $Id: signals.h,v 1.2 2003/05/10 10:20:32 zapal Exp $ */
+/* $Id: signals.h,v 1.3 2003/05/11 14:13:41 zapal Exp $ */
 #ifndef GGadu_SIGNALS_H
 #define GGadu_SIGNALS_H 1
 
@@ -14,8 +14,9 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer
 
 //void register_signal(GGaduPlugin *plugin_handler,gpointer name, void (*signal_free)());
 void register_signal(GGaduPlugin *plugin_handler,gpointer name);
+void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, gchar *, void *));
 
-void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal));
+void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal, void (*perl_handler) (GGaduSignal *, gchar *, void *)));
 
 void flush_queued_signals();
 

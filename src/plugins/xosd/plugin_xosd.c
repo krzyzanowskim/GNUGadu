@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.7 2003/04/04 15:17:40 thrulliq Exp $ */
+/* $Id: plugin_xosd.c,v 1.8 2003/05/11 14:13:42 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -12,6 +12,9 @@
 #include <sys/stat.h>
 
 #include <xosd.h>
+
+#include <EXTERN.h>
+#include <perl.h>
 
 #include "gg-types.h"
 #include "unified-types.h"
@@ -305,7 +308,51 @@ void start_plugin() {
     xosd_display(osd,0,XOSD_string,"GNU Gadu 2");
 }
 
+void perl_xosd_show_message (GGaduSignal *signal, gchar *perl_func, void *pperl)
+{
+  int count, junk;
+  SV *sv_name;
+  SV *sv_src;
+  SV *sv_dst;
+  SV *sv_data;
+  PerlInterpreter *my_perl = (PerlInterpreter *) pperl;
+    
+  dSP;
+ 
+  ENTER;
+  SAVETMPS;
 
+  sv_name = sv_2mortal (newSVpv (signal->name, 0));
+  sv_src  = sv_2mortal (newSVpv (signal->source_plugin_name, 0));
+  if (signal->destination_plugin_name)
+    sv_dst  = sv_2mortal (newSVpv (signal->destination_plugin_name, 0));
+  else
+    sv_dst  = sv_2mortal (newSVpv ("", 0));
+  sv_data = sv_2mortal (newSVpv (signal->data, 0));
+
+  PUSHMARK (SP);
+  XPUSHs (sv_name);
+  XPUSHs (sv_src);
+  XPUSHs (sv_dst);
+  XPUSHs (sv_data);
+  PUTBACK;
+
+  count = call_pv (perl_func, G_DISCARD);
+
+  if (count == 0)
+  {
+    gchar *dst;
+    signal->name = g_strdup (SvPV (sv_name, junk));
+    signal->source_plugin_name = g_strdup (SvPV (sv_src, junk));
+    dst = SvPV (sv_dst, junk);
+    if (dst[0] != '\0')
+      signal->destination_plugin_name = g_strdup (dst);
+    signal->data = g_strdup (SvPV (sv_data, junk));
+  }
+
+  FREETMPS;
+  LEAVE;
+}
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     gchar *this_configdir = NULL;
@@ -317,6 +364,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,_("On Screen Display"));
     
     register_signal(handler,"xosd show message");
+    register_signal_perl ("xosd show message", perl_xosd_show_message);
     register_signal(handler,"update config");
     
     print_debug("%s : READ CONFIGURATION\n", GGadu_PLUGIN_NAME);
