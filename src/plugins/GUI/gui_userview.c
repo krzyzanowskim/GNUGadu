@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.56 2004/11/26 12:40:52 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.57 2004/12/06 15:01:27 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -708,6 +708,8 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 	GSList *tmplist = NULL;
 	gboolean row_expanded = FALSE;
 	GtkTreePath *path = NULL;
+	GtkWidget *add_info_label_desc = NULL;
+	GtkTooltipsData *tool_data = NULL;
 	
 	g_return_if_fail(gp != NULL);
 
@@ -722,6 +724,19 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 	gui_user_view_clear(gp);
 
 	tmplist = gp->userlist;
+
+	add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label), "add_info_label_desc");
+
+	if(!tmplist && GTK_WIDGET_VISIBLE(gp->add_info_label))
+	    gtk_widget_hide(GTK_WIDGET(gp->add_info_label));
+
+	if(!tmplist && GTK_WIDGET_VISIBLE(add_info_label_desc))
+	{
+	    tool_data = gtk_tooltips_data_get(gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX));
+	    gtk_tooltips_disable(tool_data->tooltips);
+	    gtk_widget_hide(GTK_WIDGET(add_info_label_desc));
+	}
+	
 	while (tmplist)
 	{
 		GGaduContact *k = tmplist->data;
