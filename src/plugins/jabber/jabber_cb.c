@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.23 2004/01/09 10:44:30 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.24 2004/01/10 16:43:30 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -46,6 +46,7 @@ void connection_auth_cb (LmConnection * connection, gboolean success, gpointer s
 void connection_open_result_cb (LmConnection * connection, gboolean success, gint * status)
 {
 	gchar *jid = NULL;
+	gchar *tmp = NULL;
 
 	if (!success)
 	{
@@ -58,7 +59,8 @@ void connection_open_result_cb (LmConnection * connection, gboolean success, gin
 	print_debug ("jabber: Connection succeeded. Authenticating... (%p)\n", status);
 
 	jid = g_strdup (ggadu_config_var_get (jabber_handler, "jid"));
-	strchr (jid, '@')[0] = '\0';
+	if ((tmp = g_strstr_len(jid, strlen(jid), "@")) != NULL)
+		tmp[0] = '\0';
 
 	if (!lm_connection_authenticate
 	    (connection, jid, ggadu_config_var_get (jabber_handler, "password"),

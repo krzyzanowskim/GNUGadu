@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.19 2004/01/09 09:33:08 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.20 2004/01/10 16:43:30 shaster Exp $ */
 
 #include <string.h>
 
@@ -70,10 +70,11 @@ gpointer jabber_login_connect (gpointer status)
 		return NULL;
 	}
 
+    /* no 'server' variable, get server from JID */
     if (!(server = ggadu_config_var_get (jabber_handler, "server")))
-        server = strchr (jid, '@') + 1;
-    
-	if (!server)
+    {
+	/* look for '@' in JID */
+	if (!(server = g_strstr_len (jid, strlen(jid), "@")))
 	{
 		signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
 		signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("Invalid jid!")), "main-gui");
@@ -83,13 +84,26 @@ gpointer jabber_login_connect (gpointer status)
 		return NULL;
 	}
 
+	/* if '@' in JID was found, increase server ptr to point to hostname */
+	server++;
+    }
+
+    if (!server || !*server)
+    {
+	signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
+	signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("Invalid jid!")), "main-gui");
+	g_static_mutex_unlock (&connect_mutex);
+    	g_free(jid);
+	g_thread_exit (0);
+	return NULL;
+    }
     
     if (!connection || !lm_connection_is_open(connection))
     {
 	print_debug ("jabber: Connecting to %s", server);
         connection = lm_connection_new (server);
     } 
-    else if (strcmp(lm_connection_get_server(connection),server))
+    else if (ggadu_strcasecmp(lm_connection_get_server(connection),server))
     {
 	print_debug ("jabber: Changing server to %s", server);
 	lm_connection_close(connection,NULL);
