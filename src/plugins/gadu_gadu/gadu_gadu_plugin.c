@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.158 2004/03/27 08:23:23 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.159 2004/03/28 12:12:31 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1477,6 +1477,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "reason", VAR_STR);
 	ggadu_config_var_add(handler, "private", VAR_BOOL);
 	ggadu_config_var_add(handler, "dcc", VAR_BOOL);
+	/* todo */
+	ggadu_config_var_add(handler, "dcc_dir", VAR_STR);
+	ggadu_config_var_add(handler, "ignore_unknown_sender", VAR_BOOL);
+	
 	if (g_getenv("HOME_ETC"))
 		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg", NULL);
 	else

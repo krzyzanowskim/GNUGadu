@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.50 2004/03/27 08:23:22 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.51 2004/03/28 12:12:31 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -181,7 +181,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "descr_on_list", VAR_BOOL, (gpointer) TRUE);
 
 	if (!ggadu_config_read(gui_handler))
-		g_warning(_("Unable to read configuration file for plugin GUI"));
+		g_warning(_("Unable to read configuration file for plugin GUI, don't worry"));
 
 	/* 
 	 * SIGNAL : gui register menu
@@ -240,7 +240,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	/* przede wszystkim zmienia ikonki ;) */
 	GUI_STATUS_CHANGED_SIG = register_signal(gui_handler, "gui status changed");
-
+	
 	ggadu_repo_watch_add(NULL, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT, notify_callback);
 
 	return gui_handler;

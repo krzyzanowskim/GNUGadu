@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.88 2004/03/23 23:02:11 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.89 2004/03/28 12:12:31 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -899,7 +899,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 					   (gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook)) <= 1) ? FALSE : TRUE);
 
 		gtk_widget_show_all(tab_label_hbox);
-
+		
 		g_free(title);
 	}
 		break;
@@ -1195,6 +1195,8 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	GSList *emottmp = NULL;
 	gui_chat_session * session = NULL;
 	gboolean conference = FALSE;
+	
+	print_debug("gui_chat_append");
 
 	g_return_if_fail(history != NULL);
 
@@ -1322,16 +1324,19 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	if (((gint) ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
 	    (GTK_WIDGET_VISIBLE(chat)))
 	    {
-/*		GdkDisplay *display;
-		GtkWidget *gwindow = GTK_WIDGET(g_object_get_data(G_OBJECT(chat), "top_window"));
-		display = gdk_screen_get_display(gtk_window_get_screen GTK_WINDOW(gwindow));
-		XRaiseWindow (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (gwindow->window));
-*/
 		/* will not bring window to actually active screen */
 		gtk_window_deiconify(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window"))); 
-/*		gtk_window_present(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window"))); */
-/*		gtk_widget_show_all(GTK_WIDGET(g_object_get_data(G_OBJECT(chat), "top_window"))); */
-	    }
+	    } 
+	else if (chat_type == CHAT_TYPE_TABBED)
+		{
+			GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),
+								     "chat_notebook");
+			guint nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+			GtkWidget *curr_page_widget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),nr);
+			
+			gtk_widget_grab_focus(g_object_get_data(G_OBJECT(curr_page_widget), "input"));
+			print_debug("current_page = %d",nr);
+		}
 
 	g_free(header);
 	g_free(text);

@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.2 2004/02/15 14:11:18 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.3 2004/03/28 12:12:31 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -29,7 +29,8 @@ typedef enum
 {
 	GGADU_DIALOG_GENERIC,
 	GGADU_DIALOG_CONFIG,
-	GGADU_DIALOG_YES_NO
+	GGADU_DIALOG_YES_NO,
+	GGADU_DIALOG_PROGRESS
 } GGaduDialogType;
 
 typedef struct
@@ -40,6 +41,8 @@ typedef struct
 	GSList *optlist;	/* List of GGaduKeyValue's */
 	gpointer user_data;
 	gint type;
+	
+	
 } GGaduDialog;
 
 #define ggadu_dialog_new(type, title, callback_signal) \
