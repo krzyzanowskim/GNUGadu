@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.9 2004/01/05 00:05:31 krzyzak Exp $ */
+/* $Id: support.c,v 1.10 2004/01/09 22:07:48 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -16,6 +16,50 @@
 #include <time.h>
 #include "support.h"
 #include "unified-types.h"
+
+
+gchar *ggadu_get_image_path(const gchar * directory, const gchar *filename)
+{
+	gchar 		*found_filename, *iconsdir;
+	GSList		*dir		= NULL;
+		
+	/* We first try any pixmaps directories set by the application. */
+	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
+	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
+#ifdef GGADU_DEBUG
+	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
+	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
+#endif
+    if (directory) {
+	    iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", directory, NULL);
+	    dir = g_slist_prepend(dir, iconsdir);
+	}
+
+	while (dir) 
+	{
+		found_filename = check_file_exists((gchar *) dir->data, filename);
+		
+		if (found_filename)
+			break;
+			
+		dir = dir->next;
+	}
+
+	/* If we haven't found the pixmap, try the source directory. */
+	if (!found_filename) 
+		found_filename = check_file_exists("../pixmaps", filename);
+
+	if (!found_filename) 
+	{
+		g_warning(_("Couldn't find pixmap file: %s"), filename);
+        g_slist_free(dir);
+		return NULL;
+	}
+
+	g_slist_free(dir);
+	
+	return found_filename;
+}
 
 gboolean is_in_status (gint status, GSList *list)
 {

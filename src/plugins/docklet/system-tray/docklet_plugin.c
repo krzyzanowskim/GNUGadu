@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.8 2004/01/09 11:41:12 thrulliq Exp $ */
+/* $Id: docklet_plugin.c,v 1.9 2004/01/09 22:07:50 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -38,101 +38,32 @@ static void create_docklet();
 GtkWidget *docklet_create_image(const gchar * directory, const gchar * filename) {
 	GtkWidget 	*image		= NULL;
 	gchar 		*found_filename = NULL;
-	GSList		*dir		= NULL;
-	gchar 		*iconsdir	= NULL;
 
-	if (!filename)
-	    return NULL;
-		
-	/* We first try any pixmaps directories set by the application. */
-	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
-	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef GGADU_DEBUG
-	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
-	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
-#endif
-	if (directory) {
-	    iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", directory, NULL);
-	    dir = g_slist_prepend(dir, iconsdir);
-	}
-	
-	while (dir) 
-	{
-		found_filename = check_file_exists((gchar *) dir->data, filename);
-		
-		if (found_filename)
-			break;
-			
-		dir = dir->next;
-	}
+    if ((found_filename = ggadu_get_image_path(directory, filename)))
+    {
+        image = gtk_image_new_from_file(found_filename);
+	    g_free(found_filename);
+    }
 
-	/* If we haven't found the pixmap, try the source directory. */
-	if (!found_filename) 
-		found_filename = check_file_exists("../pixmaps", filename);
-
-	if (!found_filename) 
-	{
-		g_warning(_("Couldn't find pixmap file: %s"), filename);
-		return NULL;
-	}
-
-	image = gtk_image_new_from_file(found_filename);
-
-	g_slist_free(dir);
-	g_free(iconsdir);
-	
-	return image;
+	return image ? image : NULL;
 }
 
 GdkPixbuf *docklet_create_pixbuf(const gchar * directory, const gchar * filename) {
 	gchar 		*found_filename = NULL;
 	GdkPixbuf 	*pixbuf		= NULL;
-	GSList		*dir		= NULL;
-	gchar 		*iconsdir	= NULL;
 
 	print_debug("%s %s\n",directory,filename);
 
 	if (!filename || !filename[0])
 		return NULL;
 
-	/* We first try any pixmaps directories set by the application. */
-	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
-	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef GGADU_DEBUG
-	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
-	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
-#endif
-	if (directory) {
-	    iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", directory, NULL);
-	    dir = g_slist_prepend(dir, iconsdir);
-	}
+    if ((found_filename = ggadu_get_image_path(directory, filename)))
+    {
+        pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
+	    g_free(found_filename);
+    }
 	
-	while (dir) 
-	{
-		found_filename = check_file_exists((gchar *) dir->data, filename);
-		
-		if (found_filename)
-			break;
-			
-		dir = dir->next;
-	}
-
-	/* If we haven't found the pixmap, try the source directory. */
-	if (!found_filename) 
-		found_filename = check_file_exists("../pixmaps", filename);
-
-	if (!found_filename) 
-	{
-		g_warning(_("Couldn't find pixmap file: %s"), filename);
-		return NULL;
-	}
-
-	pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
-	
-	g_slist_free(dir);
-	g_free(iconsdir);	
-	
-	return pixbuf;
+	return pixbuf ? pixbuf : NULL;
 }
 
 
@@ -307,13 +238,30 @@ void docklet_menu(GdkEventButton *event) {
 	GGaduProtocol *p = NULL;
 	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
 
+    menuitem = ggadu_new_item_from_image(NULL, _("Go Online (all)"), "online.png", NULL, NULL, 0, 0, 0);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+        g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_online), NULL);	
+
+    menuitem = ggadu_new_item_from_image(NULL, _("Go Away (all)"), "away.png", NULL, NULL, 0, 0, 0);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+	g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_away), NULL);
+
+	
+    menuitem = ggadu_new_item_from_image(NULL, _("Go Offline (all)"), "offline.png", NULL, NULL, 0, 0, 0);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+	g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_offline), NULL);
+
+	/* separator */
+        menuitem = gtk_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
 	while (index) {
 	    GGaduStatusPrototype *sp;
 	    p = ggadu_repo_find_value("_protocols_", key);
 	    sp = p->statuslist->data;
 	    menuitem = ggadu_new_item_from_image(menu, p->display_name, sp->image, NULL, NULL, 0, 0, 0);
 	    
-	    if (p->statuslist) {
+        if (p->statuslist) {
 		GSList *tmp = p->statuslist;
 		GtkWidget *submenu = gtk_menu_new();
 		GtkWidget *subitem;
@@ -330,23 +278,7 @@ void docklet_menu(GdkEventButton *event) {
 	    }
 	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
 	}
-	/* separator */
-        menuitem = gtk_menu_item_new();
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-        menuitem = gtk_menu_item_new_with_label(_("Go online (all)"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-        g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_online), NULL);	
-
-	menuitem = gtk_menu_item_new_with_label(_("Go away (all)"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-	g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_away), NULL);
-
-	
-	menuitem = gtk_menu_item_new_with_label(_("Go offline (all)"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-	g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_offline), NULL);
-	
 	/* separator */
         menuitem = gtk_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);

@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.5 2003/12/20 23:17:19 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.6 2004/01/09 22:07:49 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -211,15 +211,18 @@ GtkWidget *create_image(const gchar * filename) {
 	if (!found_filename) 
 	{
 		g_warning(_("Couldn't find pixmap file: %s"), filename);
+    	g_slist_free(dir);
+        g_free(iconsdir);
 		return NULL;
 	}
 
 	image = gtk_image_new_from_file(found_filename);
 
 	g_slist_free(dir);
-	g_free(iconsdir);	
+	g_free(iconsdir);
+    g_free(found_filename);
 	
-	return image;
+	return image ? image : NULL;
 }
 
 GdkPixbuf *create_pixbuf(const gchar * filename) {

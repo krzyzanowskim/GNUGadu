@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.5 2004/01/05 00:05:33 krzyzak Exp $ */
+/* $Id: support.h,v 1.6 2004/01/09 22:07:48 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -90,6 +90,8 @@
 #define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1,-1) , g_utf8_casefold(s2,-1))
 
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
+
+gchar *ggadu_get_image_path(const gchar * directory, const gchar *filename);
 
 gboolean is_in_status (gint status, GSList *list);
 
