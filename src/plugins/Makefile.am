@@ -54,9 +54,9 @@ if BUILD_IGNORE
 IGNORE=ignore
 endif
 
-if BUILD_REMOTE
-REMOTE=remote
-endif
+#if BUILD_REMOTE
+#REMOTE=remote
+#endif
 
 if BUILD_DBUS
 DBUS=dbus

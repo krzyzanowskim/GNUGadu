@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.119 2005/02/04 10:18:08 krzyzak Exp $
+dnl $Id: configure.in,v 1.120 2005/03/02 09:15:21 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.4])
 
@@ -241,7 +241,7 @@ if test x$with_all_plugins = xyes; then
     with_oss=yes
     with_arts=yes
     with_sms=yes
-    with_remote=yes
+#    with_remote=yes
     with_dbus=yes
     with_aaway=yes
     with_ignore=yes
@@ -477,12 +477,12 @@ if test "x$with_ignore" != "xno"; then
 	with_ignore=no
 fi
 
-AC_ARG_WITH(remote, [  --with-remote		  Build with remote plugin (deprecated)])
-if test "x$with_remote" != "xyes"; then 
-	with_remote=no
-else
-	with_remote=yes
-fi
+#AC_ARG_WITH(remote, [  --with-remote		  Build with remote plugin (deprecated)])
+#if test "x$with_remote" != "xyes"; then 
+#	with_remote=no
+#else
+#	with_remote=yes
+#fi
 
 AC_ARG_WITH(dbus, [  --with-dbus		  Build with DBUS plugin])
 if test "x$with_dbus" != "xyes"; then 
@@ -640,7 +640,7 @@ AM_CONDITIONAL(BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN, test "$with_history_externa
 AM_CONDITIONAL(BUILD_SMS, test "$with_sms" = "yes")
 AM_CONDITIONAL(BUILD_AAWAY, test "$with_aaway" = "yes")
 AM_CONDITIONAL(BUILD_IGNORE, test "$with_ignore" = "yes")
-AM_CONDITIONAL(BUILD_REMOTE, test "$with_remote" = "yes")
+#AM_CONDITIONAL(BUILD_REMOTE, test "$with_remote" = "yes")
 AM_CONDITIONAL(BUILD_DBUS, test "$with_dbus" = "yes")
 AM_CONDITIONAL(BUILD_UPDATE, test "$with_update" = "yes")
 
@@ -726,7 +726,6 @@ src/plugins/sound/arts/Makefile
 src/plugins/sound/oss/Makefile
 src/plugins/sound/external/Makefile
 src/plugins/sms/Makefile
-src/plugins/remote/Makefile
 src/plugins/dbus/Makefile
 src/plugins/dbus/org.freedesktop.im.GG.service
 src/plugins/update/Makefile
@@ -744,6 +743,7 @@ pixmaps/icons/tlen-classic/Makefile
 sounds/Makefile
 themes/Makefile
 ])
+#src/plugins/remote/Makefile
 
 # sed -e 's/#include \"ggadu_types.h\"//g' $srcdir/lib/gg2_core.h > $srcdir/lib/gg2_core.h-
 # mv -f $srcdir/lib/gg2_core.h- $srcdir/lib/gg2_core.h
@@ -767,7 +767,7 @@ echo Build plugin Auto Away................. : $with_aaway
 echo Build plugin Ignore.................... : $with_ignore
 echo Build plugin update.................... : $with_update
 echo Build plugin external history viewer... : $with_history_external_viewer
-echo Build plugin remote - deprecated....... : $with_remote
+#echo Build plugin remote - deprecated....... : $with_remote
 echo Build plugin DBUS...................... : $with_dbus
 echo Build gghist - history viewer.......... : $with_gghist
 echo Build with experimental perl support... : $with_perl
