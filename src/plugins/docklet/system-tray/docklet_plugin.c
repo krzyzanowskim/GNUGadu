@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.3 2003/11/25 23:41:59 thrulliq Exp $ */
+/* $Id: docklet_plugin.c,v 1.4 2003/11/26 22:00:36 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -22,15 +22,17 @@
 
 GGaduPlugin *handler;
 
-GtkWidget *status_docklet = NULL;
+//GtkWidget *status_docklet = NULL;
 GtkWidget *pixmap = NULL;
 GdkPixbuf *logopix = NULL;
 GtkTooltips *tooltips = NULL;
 gchar *tooltipstr = NULL;
 
-EggTrayIcon *egg;
+EggTrayIcon *docklet = NULL;
 
 GGadu_PLUGIN_INIT(DOCKLET_PLUGIN_NAME,GGADU_PLUGIN_TYPE_MISC);
+
+static void create_docklet();
 
 GtkWidget *docklet_create_image(const gchar * directory, const gchar * filename) {
 	GtkWidget 	*image		= NULL;
@@ -185,7 +187,7 @@ void docklet_clicked_cb(GtkWidget * widget, GdkEventButton * ev, gpointer data)
       case 1:
 	gtk_image_set_from_pixbuf(GTK_IMAGE(pixmap),logopix);
 	gtk_widget_show(pixmap);
-	gtk_tooltips_set_tip(tooltips,status_docklet,tooltipstr,NULL);
+	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(docklet), tooltipstr, NULL);
 	
 	signal_emit(GGadu_PLUGIN_NAME, "gui show invisible chats", NULL, "main-gui");
 	print_debug("%s : mouse clicked\n",DOCKLET_PLUGIN_NAME);
@@ -201,85 +203,62 @@ void docklet_clicked_cb(GtkWidget * widget, GdkEventButton * ev, gpointer data)
     }
 }
 
+
+static gboolean
+docklet_create_cb(gpointer data)
+{
+    print_debug("re-create docklet\n");
+
+    create_docklet();
+    
+    gtk_image_set_from_pixbuf(GTK_IMAGE(pixmap), logopix);
+
+    return FALSE;
+}
+
 static void
-docklet_destroyed_cb(GtkWidget *widget, void *data)
+docklet_destroyed_cb(GtkWidget *widget, gpointer data)
 {
 	print_debug("tray icon destroyed\n");
 
-	g_object_unref(G_OBJECT(widget));
+	g_object_unref(G_OBJECT(data));
+	
+	docklet = NULL;
+	
+	g_idle_add((GSourceFunc)docklet_create_cb, NULL);
 }
 
-
-GtkWidget *create_docklet()
+static void
+docklet_embedded_cb(GtkWidget *widget, gpointer data)
 {
-	GtkWidget *docklet = NULL;
+	print_debug("tray icon embedded\n");
+}
+
+static
+void create_docklet()
+{
 	GtkWidget *eventbox;
-	GdkAtom kwm_dockwindow_atom			= gdk_atom_intern("KWM_DOCKWINDOW", FALSE);
-	GdkAtom kde_net_system_tray_window_for_atom	= gdk_atom_intern("_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR", FALSE);
-	glong data[1];
 
-	egg = egg_tray_icon_new("GNU Gadu 2");
+	docklet = egg_tray_icon_new("GNU Gadu 2");
 
-	if (!egg) return NULL;
-	
-	if (egg->manager_window == None) {
-
-	    docklet = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	    
-	    if (docklet == NULL) return NULL;
-	    
-	    gtk_window_set_title(GTK_WINDOW(docklet), "GNU Gadu 2");
-	    gtk_window_set_wmclass(GTK_WINDOW(docklet), "GM_Statusdocklet", "gg2");
-	    gtk_window_set_decorated(GTK_WINDOW(docklet), 0);
-	    gtk_window_set_type_hint (GTK_WINDOW(docklet), GDK_WINDOW_TYPE_HINT_DOCK);
-	    
-	    gtk_widget_set_usize(GTK_WIDGET(docklet), 22, 22);
-	}  else {
-	    docklet = GTK_WIDGET(egg);
-	}	
-
-	gtk_widget_realize(GTK_WIDGET(docklet));
-	
-	    /* kde 1 & gnome 1.2 */
- 	    data[0] = TRUE;
-    	    gdk_property_change( docklet->window, 
-				 kwm_dockwindow_atom, 
-				 kwm_dockwindow_atom, 
-				 32,
-				 GDK_PROP_MODE_REPLACE, 
-				 (guchar *)&data,  
-				 1 );
-
-	    /* kde 2 */
-    	    data[0] = 0;
-	    gdk_property_change( docklet->window, 
-				 kde_net_system_tray_window_for_atom, 
-				 (GdkAtom)XA_WINDOW,
-				 32,
-				 GDK_PROP_MODE_REPLACE,
-				 (guchar *)&data, 
-				 1 );
-
-
-	/* tooltip */
 	tooltips = gtk_tooltips_new();
 	tooltipstr = g_strdup("GNU Gadu 2");
 	gtk_tooltips_enable(tooltips);
-	gtk_tooltips_set_tip(tooltips,docklet,tooltipstr,NULL);
-
+	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(docklet), tooltipstr, NULL);
+	
 	pixmap = gtk_image_new();
 	
 	eventbox = gtk_event_box_new();
 	
 	gtk_container_add(GTK_CONTAINER(eventbox), pixmap);
 	gtk_container_add(GTK_CONTAINER(docklet), eventbox);
+	gtk_widget_show_all(GTK_WIDGET(docklet));
 	
+	g_signal_connect(G_OBJECT(docklet),"embedded",G_CALLBACK(docklet_embedded_cb),docklet);
+	g_signal_connect(G_OBJECT(docklet),"destroy",G_CALLBACK(docklet_destroyed_cb),docklet);
 	g_signal_connect(G_OBJECT(docklet),"button_press_event",G_CALLBACK(docklet_clicked_cb),pixmap);
-
-	gtk_widget_show_all(docklet);
 	
-	return docklet;
-
+	g_object_ref(G_OBJECT(docklet));
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr) {
@@ -308,7 +287,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 
 	    gtk_widget_show(pixmap);
 	    
-	    gtk_tooltips_set_tip(tooltips, status_docklet, g_strdup(tooltip ? tooltip : "GNU Gadu 2"), NULL);
+	    gtk_tooltips_set_tip(tooltips, GTK_WIDGET(docklet), g_strdup(tooltip ? tooltip : "GNU Gadu 2"), NULL);
 	    
 	    signal->data_return = pixmap;
 	    
@@ -335,7 +314,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    g_free(tooltipstr);
 
 	    tooltipstr = (tooltip ? g_strdup(tooltip) : "GNU Gadu 2");
-	    gtk_tooltips_set_tip(tooltips, status_docklet, tooltipstr, NULL);
+	    gtk_tooltips_set_tip(tooltips, GTK_WIDGET(docklet), tooltipstr, NULL);
 
 	    gtk_widget_show(pixmap);
 
@@ -350,7 +329,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 
 void start_plugin() 
 {
-    status_docklet = create_docklet();
+    create_docklet();
 
     register_signal(handler,"docklet set icon");
     register_signal(handler,"docklet set default icon");
@@ -376,6 +355,5 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
 
 void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
-    gtk_widget_destroy (GTK_WIDGET(status_docklet));
-    gtk_widget_destroy (GTK_WIDGET(egg));
+    gtk_widget_destroy (GTK_WIDGET(docklet));
 }
