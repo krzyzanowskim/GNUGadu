@@ -1,6 +1,7 @@
 15.10.2004
 - fixed registration procedure, close #86 (gadu-gadu/krzak)
 - use GtkFileChooser instead deprecated GtkFileSelection (GUI/krzak)
+- sound plugins fixes.. more messages about errors (sound-*/krzak)
 
 13.10.2004
 - try to reconnect jabber connection three times before disconnect (jabber/krzak)
