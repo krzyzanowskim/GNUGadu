@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.67 2003/06/16 00:25:01 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.68 2003/06/16 09:30:14 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -133,15 +133,15 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	  return FALSE;
       }
 
-    if (!dcc_socket_get) 
-    {
- 	   dcc_socket_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
-	    gg_dcc_ip = inet_addr ("255.255.255.255");
-	    gg_dcc_port = dcc_socket_get->port;
+    if (!dcc_socket_get)
+      {
+	  dcc_socket_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
+	  gg_dcc_ip = inet_addr ("255.255.255.255");
+	  gg_dcc_port = dcc_socket_get->port;
 
-	    dcc_channel_get = g_io_channel_unix_new (dcc_socket_get->fd);
-	    g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_socket_get);
-    }
+	  dcc_channel_get = g_io_channel_unix_new (dcc_socket_get->fd);
+	  g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_socket_get);
+      }
 
     memset (&p, 0, sizeof (p));
 
@@ -162,29 +162,31 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	    }
       }
 
-    /* jesli jest proxy */
-    if (config_var_check (handler, "proxy")) 
-    {
-    	char **auth = array_make( (gchar *)config_var_get (handler, "proxy"), "@",0,0,0);
-	char **proxy_userpass = NULL;
-	char **proxy_hostport = NULL;
-	
-	gg_proxy_enabled = 1;
-	
-	if (auth[0] && auth[1]) {
-		proxy_userpass = array_make(auth[0], ":", 0, 0, 0);
-		proxy_hostport = array_make(auth[1], ":", 0, 0, 0);
-	} else
-		proxy_hostport = array_make(auth[0], ":", 0, 0, 0);
-	
-	gg_proxy_host = g_strdup( proxy_hostport[0] );
-	gg_proxy_port = (proxy_hostport[1]) ? atoi(proxy_hostport[1]) : 8080;
-	
-	array_free(proxy_hostport);
-	array_free(proxy_userpass);
-	array_free(auth);
-  
-    }
+    /* jesli jest proxy zerzniete z ekg */
+    if (config_var_check (handler, "proxy"))
+      {
+	  char **auth = array_make ((gchar *) config_var_get (handler, "proxy"), "@", 0, 0, 0);
+	  char **proxy_userpass = NULL;
+	  char **proxy_hostport = NULL;
+
+	  gg_proxy_enabled = 1;
+
+	  if (auth[0] && auth[1])
+	    {
+		proxy_userpass = array_make (auth[0], ":", 0, 0, 0);
+		proxy_hostport = array_make (auth[1], ":", 0, 0, 0);
+	    }
+	  else
+	      proxy_hostport = array_make (auth[0], ":", 0, 0, 0);
+
+	  gg_proxy_host = g_strdup (proxy_hostport[0]);
+	  gg_proxy_port = (proxy_hostport[1]) ? atoi (proxy_hostport[1]) : 8080;
+
+	  array_free (proxy_hostport);
+	  array_free (proxy_userpass);
+	  array_free (auth);
+
+      }
 
     p.uin = (int) config_var_get (handler, "uin");
     p.password = (gchar *) config_var_get (handler, "password");
