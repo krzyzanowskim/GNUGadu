@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.100 2004/08/31 11:16:52 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.101 2004/09/07 10:01:38 aflinta Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -279,9 +279,9 @@ static gpointer user_change_password_action(gpointer user_data)
 	}
 	
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Change password"), "user change password");
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Old password"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_NEW, _("New Password"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_RETYPE, _("New Password"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Old password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_NEW, _("New password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_RETYPE, _("Retype password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
 
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
