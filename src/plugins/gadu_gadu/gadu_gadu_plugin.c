@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.43 2003/05/03 08:02:35 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.44 2003/05/06 13:30:45 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -119,7 +119,6 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
     gchar *serveraddr = (gchar *)config_var_get(handler,"server");
     gchar **serv_addr = NULL;
 
-
     if (connected) {
     	gg_logoff(session);
 	gg_free_session(session);
@@ -152,7 +151,6 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 	}
     }
     
-    print_debug("loguje sie GG# %d do serwera %s %d\n",(gint)config_var_get(handler,"uin"),serveraddr,p.server_port);
 
     p.uin	= (int) config_var_get(handler,"uin");
     p.password	= (gchar *)config_var_get(handler,"password");
@@ -160,7 +158,7 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
     p.status	= status;
 		p.status_descr = desc;
 
-    if (config_var_get(handler, "private"))
+    if ((gint)config_var_get(handler, "private") == 1)
 	p.status |= GG_STATUS_FRIENDS_MASK;
     
     if (serveraddr != NULL)
@@ -173,6 +171,9 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 	return NULL;
     }
     
+    
+    print_debug("loguje sie GG# %d do serwera %s %d, status %d\n",(gint)config_var_get(handler,"uin"),serveraddr,p.server_port,status);
+
     g_free(serveraddr);
     
     if (!(session = gg_login(&p))) {

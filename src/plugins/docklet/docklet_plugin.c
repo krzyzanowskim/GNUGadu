@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.5 2003/05/01 20:18:05 shaster Exp $ */
+/* $Id: docklet_plugin.c,v 1.6 2003/05/06 13:30:44 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -37,8 +37,6 @@ GtkWidget *docklet_create_image(const gchar * directory, const gchar * filename)
 	gchar 		*found_filename = NULL;
 	GSList		*dir		= NULL;
 	gchar 		*iconsdir	= NULL;
-
-	print_debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %s %s\n",directory,filename);
 
 	if (!filename)
 	    return NULL;
