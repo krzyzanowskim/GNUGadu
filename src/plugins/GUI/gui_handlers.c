@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.56 2004/10/15 13:04:15 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.57 2004/10/19 10:54:34 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -482,7 +482,7 @@ void auto_away_start(gui_protocol * gp)
 
 	if (!gp || auto_away_enabled) return;
 	
-	sp = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+	sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 	
 	print_debug("auto_away_start 2");
 	
