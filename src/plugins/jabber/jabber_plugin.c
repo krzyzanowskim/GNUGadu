@@ -299,7 +299,19 @@ gpointer user_chat_action (gpointer user_data)
   if (!users)
     return NULL;
 
-  /* TODO: do this, when conference is being handled */
+  if (g_slist_length (users) > 1) {
+    /* TODO: do this, when conference is being handled */
+    print_debug ("Conferences are not supported yet! Shot zapal for this ;>.\n");
+    return NULL;
+  } else {
+    GGaduContact *k = (GGaduContact *) users->data;
+    msg->class = GGADU_CLASS_CHAT;
+    msg->id = k->id;
+  }
+
+  msg->message = NULL;
+
+  signal_emit ("jabber", "gui msg receive", msg, "main-gui");
 
   return NULL;
 }
