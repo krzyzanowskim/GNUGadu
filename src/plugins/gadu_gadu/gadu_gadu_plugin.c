@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.27 2003/04/12 19:11:37 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.28 2003/04/13 02:05:38 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -38,6 +38,8 @@ gint http_watch = 0;
 
 GSList *userlist = NULL;
 GIOChannel *source_chan = NULL;
+struct gg_dcc *dcc_socket = NULL;
+GIOChannel *dcc_channel = NULL;
 
 gboolean connected = FALSE;
 gchar *this_configdir = NULL;
@@ -114,12 +116,17 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
     gchar *serveraddr = (gchar *)config_var_get(handler,"server");
     gchar **serv_addr = NULL;
 
+
     if (connected) {
     	gg_logoff(session);
 	gg_free_session(session);
 	connected = FALSE;
 	return FALSE;
     }
+
+		dcc_socket = gg_dcc_socket_create((int)config_var_get(handler,"uin"),0);
+		gg_dcc_ip = inet_addr("255.255.255.255");
+		gg_dcc_port = dcc_socket->port;
     
     memset(&p, 0, sizeof(p));
 
@@ -145,6 +152,7 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
     p.async	= 1;
     p.status	= status;
 		p.status_descr = desc;
+
     if (config_var_get(handler, "private"))
 	p.status |= GG_STATUS_FRIENDS_MASK;
     
@@ -844,6 +852,96 @@ gpointer delete_userlist_action(gpointer user_data)
     return NULL;
 }
 
+gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data) {
+	struct gg_event *e = NULL;
+	struct gg_dcc *d = data;
+
+	if (!d->established) return TRUE;
+	
+	if (!(e = gg_dcc_watch_fd(d))) {
+		return FALSE;
+	}
+	
+	switch (e->type) {
+		case GG_EVENT_DCC_NEW:
+				print_debug("GG_EVENT_DCC_NEW\n");
+//				return FALSE;
+		break;
+		case GG_EVENT_DCC_CLIENT_ACCEPT:
+				print_debug("GG_EVENT_DCC_CLIENT_ACCEPT\n");
+//				return FALSE;
+		break;
+		case GG_EVENT_DCC_NEED_FILE_INFO:
+				print_debug("GG_EVENT_DCC_NEED_FILE_INFO\n");
+//				return FALSE;
+		break;
+		case GG_EVENT_DCC_NEED_FILE_ACK:
+				print_debug("GG_EVENT_DCC_NEED_FILE_ACK\n");
+//				return FALSE;
+		break;
+		case GG_EVENT_DCC_DONE:
+				print_debug("GG_EVENT_DCC_DONE\n");
+				gg_dcc_free(d);
+//				return FALSE;
+		break;
+		case GG_EVENT_DCC_ERROR:
+				print_debug("GG_EVENT_DCC_ERROR\n");
+		                        switch (e->event.dcc_error) {                                                                 
+                                case GG_ERROR_DCC_HANDSHAKE:                                                          
+                                        print_debug("dcc_error_handshake");
+                                        break;                                                                        
+                                case GG_ERROR_DCC_NET:                                                                
+                                        print_debug("dcc_error_network");
+                                        break;                                                                        
+                                case GG_ERROR_DCC_REFUSED:                                                            
+                                        print_debug("dcc_error_refused");                                              
+                                        break;                                                                        
+                                default:                                                                              
+                                        print_debug("dcc_error_unknown");                                              
+                        }                                                                                             
+
+//				return FALSE;
+		break;
+	}
+	
+	gg_event_free(d->event);
+	return TRUE;
+}
+
+gpointer send_file_action(gpointer user_data) {
+	GSList		*users	=	(GSList *)user_data;
+	GGaduContact *k = (GGaduContact *)users->data;
+	struct gg_dcc *socket = NULL;
+	gchar **tmp = NULL;
+	gint port = 0;
+	gint uin = (gint)config_var_get(handler,"uin");
+	struct in_addr addr;
+			
+	/* dopisac tu sprawdzanie wszystkiego */
+	tmp = g_strsplit(k->ip,":",2);
+	
+	inet_aton(tmp[0],&addr);
+	port = atoi(tmp[1]);
+	
+	print_debug("IP : %s %d %d\n",tmp[0],port);
+	
+	if (port <= 10) return NULL;
+			
+	socket = gg_dcc_send_file(addr.s_addr,port,uin,atoi(k->id));
+	
+	if (!socket) {
+		print_debug("spierdalaj chuju pierdolony nie mozna ustanowic polaczenia\n");
+		return NULL;
+	}
+
+	gg_dcc_fill_file_info(socket,"/tmp/test");
+		
+	dcc_channel = g_io_channel_unix_new(socket->fd);
+  g_io_add_watch(dcc_channel, G_IO_OUT, test_chan_dcc,socket);
+
+	return NULL;
+}
+
 
 void register_userlist_menu() 
 {
@@ -852,6 +950,7 @@ void register_userlist_menu()
 
 	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"),user_chat_action,NULL)   );
 	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"),user_view_history_action,NULL)   );
+	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send File"),send_file_action,NULL)   );
     
 	listmenu = ggadu_menu_new_item(_("Contact"),NULL,NULL);
 	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"),user_add_user_action,NULL)   );
