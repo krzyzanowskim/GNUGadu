@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.91 2005/01/04 09:16:06 aflinta Exp $ */
+/* $Id: gui_preferences.c,v 1.92 2005/01/07 20:39:18 aflinta Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -673,7 +673,7 @@ static GtkWidget *create_chat_tab()
 
 	g_object_set_data(G_OBJECT(chat_vbox), "spell", use_spell);
 
-	label = gtk_label_new(_("Dictionary"));
+	label = gtk_label_new(_("Dictionary:"));
 	combo_spell = gtk_combo_box_new_text();
 	label3_align = gtk_alignment_new(0.9, 0.5, 0, 0);
 	gtk_container_add(GTK_CONTAINER(label3_align), label);
