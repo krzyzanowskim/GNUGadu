@@ -1,5 +1,6 @@
 08.10.2004
 - chat window change icon to notify about new message (GUI/krzak)
+- fixed begin conference chat using ctrl or shift modifier (GUI/krzak)
 
 29.09.2004
 - g_strcasecmp is deprecated and should not be used in newly-written code. 

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.81 2004/10/04 07:56:57 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.82 2004/10/08 12:22:05 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -339,8 +339,9 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 		    (GTK_TREE_VIEW(widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
 			return FALSE;
 		
-		if (!((event->state == 1) || (event->state == 4)))
+		if (!(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)))
 			gtk_tree_selection_unselect_all (selection);
+
 		gtk_tree_selection_select_path (selection, treepath);		
 
 		if (!tree)
@@ -364,6 +365,7 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 
 		if (gp && gp->plugin_name && selectedusers)
 			umenu = signal_emit("main-gui", "get user menu", selectedusers, gp->plugin_name);
+
 
 		if (!umenu)
 			return FALSE;

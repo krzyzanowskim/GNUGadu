@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.117 2004/10/08 10:22:38 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.118 2004/10/08 12:22:05 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -33,8 +33,6 @@
 #include "gui_support.h"
 #include "gui_chat.h"
 #include "gui_handlers.h"
-
-#define WINDOW_CHAT_NOTIFY_PREFIX "* "
 
 extern GSList *protocols;
 extern GSList *emoticons;
