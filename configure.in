@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.10 2003/05/07 11:14:34 krzyzak Exp $
+dnl $Id: configure.in,v 1.11 2003/05/07 14:51:09 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -175,6 +175,7 @@ if test "x$want_perl" = "xyes"; then
       AC_SUBST(PERL_OPTION_LIBS)
       AC_SUBST(PERL_OPTION_CFLAGS)
       AC_SUBST(PERL_OPTION_LDFLAGS)
+      CFLAGS="$CFLAGS $PERL_OPTION_CFLAGS"
     fi
 fi
 
