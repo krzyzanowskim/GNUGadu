@@ -2,7 +2,9 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
   "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
 <!ENTITY autor "Bartosz Zapałowski">
-<!ENTITY gad "GNU Gadu2">
+<!ENTITY gad "GNU Gadu 2">
+<!ENTITY gadwww "http://ggadu.sourceforge.net/">
+<!ENTITY install SYSTEM "install.sgml">
 <!ENTITY dotconf SYSTEM "dotconf.sgml">
 ]>
 <book lang="pl">
@@ -13,5 +15,6 @@
 	<surname>Zapałowski</surname>
 </author>
 </bookinfo>
+&install;
 &dotconf;
 </book>

@@ -326,14 +326,17 @@ Remote.</para>
     <entry>same_gid</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Przyjmuje połączenia od procesów, których identyfikator grupy
+    jest identyczny z identyfikatorem grupy, pod którą działa program.</entry>
   </row>
 
   <row>
     <entry>same_uid</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Przyjmuje połączenia od procesów, których identyfikator użytkownika
+    jest identyczny z identyfikatorem użytkownika, pod którym działa
+    program.</entry>
   </row>
 </tbody>
 </tgroup>
@@ -361,28 +364,32 @@ SMS.</para>
     <entry>body</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Treść wiadomości. Jest to ostatnia treść wysłanego SMSa.</entry>
   </row>
 
   <row>
     <entry>external</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Korzystaj z zewnętrznego programu 'sms' do wysyłania SMSów.
+    Po ustawieniu tej opcji, dzięki wspaniałomyślności operoatora sieci Idea,
+    SMSy nie dochodzą.</entry>
   </row>
 
   <row>
     <entry>number</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Numer, pod który ma być wysłany SMS. Jest to ostatni numer, pod
+    który było coś wysyłane.</entry>
   </row>
 
   <row>
     <entry>sender</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Domyślna wartość pola "Nadawca". Warto ustawić dla oszczędzenia
+    klepania w klawiaturę.</entry>
   </row>
 </tbody>
 </tgroup>
@@ -411,7 +418,10 @@ SMS.</para>
     <entry>player</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Pełna ścieżka do programu odtwarzającego podany w lini poleceń
+    plik dźwiękowy. Przykład: "player=<filename>/usr/bin/play</filename>" -
+    dla pliku <filename>/tmp/plik.wav</filename>, zostanie uruchomione
+    polecenia <filename>/usr/bin/play /tmp/plik.wav</filename>.</entry>
   </row>
 </tbody>
 </tgroup>
@@ -439,21 +449,22 @@ Tlen.</para>
     <entry>autoconnect</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Automatyczne łączenie przy starcie modułu.</entry>
   </row>
   
   <row>
     <entry>login</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Loguj się jako ten użytkownik.</entry>
   </row>
   
   <row>
     <entry>password</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Loguj się podając to hasło. W pliku konfiguracyjnym jest ono
+    zakodowane przy użyciu kodowania Base64.</entry>
   </row>
 </tbody>
 </tgroup>
@@ -481,35 +492,42 @@ XOSD.</para>
     <entry>align</entry>
     <entry>VAR_STR</entry>
     <entry>center</entry>
-    <entry></entry>
+    <entry>Wyrównanie wyświetlanego tekstu. Możliwe wartości, to
+    <userinput>left</userinput> (do lewej),
+    <userinput>center</userinput> (wyśrodkowane),
+    <userinput>right</userinput> (do prawej).</entry>
   </row>
   
   <row>
     <entry>colour</entry>
     <entry>VAR_STR</entry>
     <entry>yellow</entry>
-    <entry></entry>
+    <entry>Angielska nazwa koloru tekstu - ta wartość jest przekazywana
+    funkcji <function>xosd_set_colour()</function> z biblioteki xosd.</entry>
   </row>
   
   <row>
     <entry>font</entry>
     <entry>VAR_STR</entry>
     <entry>-misc-fixed-bold-r-*-*-15-*-*-*-*-*-*-2</entry>
-    <entry></entry>
+    <entry>Wyświetlaj tekst przy użyciu tej czcionki.</entry>
   </row>
   
   <row>
     <entry>numlines</entry>
     <entry>VAR_INT</entry>
     <entry>5</entry>
-    <entry></entry>
+    <entry>Wyświetlaj maksymalnie podaną ilość linii.</entry>
   </row>
   
   <row>
     <entry>pos</entry>
     <entry>VAR_STR</entry>
     <entry>top</entry>
-    <entry></entry>
+    <entry>Miejsce, w którym wyświetlać tekst. Możliwe wartości:
+    <userinput>top</userinput> (u góry),
+    <userinput>middle</userinput> (na środku),
+    <userinput>bottom</userinput> (na dole).</entry>
   </row>
   
   <row>
@@ -523,21 +541,21 @@ XOSD.</para>
     <entry>shadow_offset</entry>
     <entry>VAR_INT</entry>
     <entry>1</entry>
-    <entry></entry>
+    <entry>Przesunięcie cienia.</entry>
   </row>
   
   <row>
     <entry>timestamp</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Wyświetlaj znacznik czasowy pojawienia się tekstu.</entry>
   </row>
   
   <row>
     <entry>timeout</entry>
     <entry>VAR_INT</entry>
     <entry>2</entry>
-    <entry></entry>
+    <entry>Czas pokazywania tekstu w sekundach.</entry>
   </row>
 </tbody>
 </tgroup>
