@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.88 2003/11/14 20:02:04 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.89 2003/11/16 09:16:55 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -354,7 +354,6 @@ void ggadu_gg_save_history (gchar * to, gchar * txt)
 gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 {
     struct gg_event *e = NULL;
-    struct gg_notify_reply *n = NULL;
     GSList *slistmp = NULL;
     uint32_t *uins;
     GGaduNotify *notify = NULL;
@@ -532,13 +531,67 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	      signal_emit (GGadu_PLUGIN_NAME, "sound play file", config_var_get (handler, "sound_msg_file"), "sound*");
 	  break;
 
+      case GG_EVENT_NOTIFY60:
+      	  {
+      	  int i;
+	  
+	  print_debug("GG_EVENT_NOTIFY60\n");
+	  
+          for (i = 0; e->event.notify60[i].uin; i++)
+		{
+		gchar *strIP = NULL;
+		gchar *desc_utf8 = NULL;
+		struct in_addr ip_addr;
+		
+		ip_addr.s_addr = e->event.notify60[i].remote_ip;
+
+		notify = g_new0 (GGaduNotify, 1);
+		notify->id = g_strdup_printf ("%d", e->event.notify60[i].uin);
+		notify->status = e->event.notify60[i].status;
+
+		strIP = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
+		
+		if (strIP && (ggadu_strcasecmp (strIP, "0.0.0.0")))
+		    notify->ip = g_strdup_printf ("%s:%d", strIP, e->event.notify60[i].remote_port);
+
+		ggadu_convert ("CP1250", "UTF-8", e->event.notify60[i].descr, desc_utf8);
+
+		set_userlist_status (notify, desc_utf8, userlist);
+
+		l = userlist;
+
+		while (l)
+		  {
+		      GGaduContact *k = (GGaduContact *) l->data;
+
+		      if (!ggadu_strcasecmp (k->id, notify->id))
+			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+
+		      l = l->next;
+		  }
+
+
+		}
+		
+      	  }
+      	  break;
+	  
       case GG_EVENT_NOTIFY:
-	  n = e->event.notify;
+      case GG_EVENT_NOTIFY_DESCR:
+          {
+	  print_debug("GG_EVENT_NOTIFY\n");
+	  struct gg_notify_reply *n = NULL;
+	  
+	  if (e->type == GG_EVENT_NOTIFY)
+	  	n = e->event.notify;
+	  else if (e->type == GG_EVENT_NOTIFY_DESCR)
+	  	n = e->event.notify_descr.notify;
 
 	  while (n->uin)
 	    {
 		struct in_addr ip_addr;
-		gchar *tmpip = NULL;
+		gchar *strIP = NULL;
+		gchar *desc_utf8 = NULL;
 
 		ip_addr.s_addr = n->remote_ip;
 
@@ -546,15 +599,15 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		notify->id = g_strdup_printf ("%d", n->uin);
 		notify->status = n->status;
 
-		tmpip = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
+		strIP = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
 
-		if (tmpip && (ggadu_strcasecmp (tmpip, "0.0.0.0")))
-		    notify->ip = g_strdup_printf ("%s:%d", tmpip, n->remote_port);
+		if (strIP && (ggadu_strcasecmp (strIP, "0.0.0.0")))
+		    notify->ip = g_strdup_printf ("%s:%d", strIP, n->remote_port);
 
-
-		print_debug ("%s : GG_EVENT_NOTIFY : %d  %d  %s\n", GGadu_PLUGIN_NAME, n->uin, n->status, notify->ip);
-
-		set_userlist_status (notify, NULL, userlist);
+		if (e->type == GG_EVENT_NOTIFY_DESCR)
+			ggadu_convert ("CP1250", "UTF-8", e->event.notify_descr.descr, desc_utf8);
+		
+		set_userlist_status (notify, desc_utf8, userlist);
 
 		l = userlist;
 
@@ -570,47 +623,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
 		n++;
 	    }
-
-	  break;
-
-      case GG_EVENT_NOTIFY_DESCR:
-	  n = e->event.notify_descr.notify;
-
-	  while (n->uin)
-	    {
-		gchar *desc_utf8 = NULL;
-		gchar *tmpip = NULL;
-		struct in_addr ip_addr;
-
-		ip_addr.s_addr = n->remote_ip;
-		print_debug ("%s : GG_EVENT_NOTIFY_DESCR : %d  %d\n", GGadu_PLUGIN_NAME, n->uin, n->status);
-
-		notify = g_new0 (GGaduNotify, 1);
-		notify->id = g_strdup_printf ("%d", n->uin);
-
-		notify->status = n->status;
-
-		tmpip = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
-		if (tmpip && (ggadu_strcasecmp (tmpip, "0.0.0.0")))
-		    notify->ip = g_strdup_printf ("%s:%d", tmpip, n->remote_port);
-
-
-		ggadu_convert ("CP1250", "UTF-8", e->event.notify_descr.descr, desc_utf8);
-
-		set_userlist_status (notify, desc_utf8, userlist);
-
-		while (l)
-		  {
-		      GGaduContact *k = (GGaduContact *) l->data;
-
-		      if (!ggadu_strcasecmp (k->id, notify->id))
-			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
-
-		      l = l->next;
-		  }
-
-		n++;
-	    }
+ 	  }
 	  break;
 
       case GG_EVENT_STATUS:
