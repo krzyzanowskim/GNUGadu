@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.210 2004/12/15 17:15:27 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.211 2004/12/15 17:44:30 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -836,10 +836,10 @@ gpointer user_change_user_action(gpointer user_data)
 	GGaduContact *k = (GGaduContact *) users->data;
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Change contact informations"), "change user");
 	ggadu_dialog_add_entry(dialog, GGADU_ID, "GG#", VAR_STR, k->id ? k->id : "", VAR_FLAG_INSENSITIVE);
-	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nick"), VAR_STR, k->nick ? k->nick : "", VAR_FLAG_SENSITIVE);
-	ggadu_dialog_add_entry(dialog, GGADU_FIRST_NAME, _("First Name"), VAR_STR, k->first_name ? k->first_name : "", VAR_FLAG_SENSITIVE | VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_LAST_NAME, _("Last Name"), VAR_STR, k->last_name ? k->last_name : "", VAR_FLAG_SENSITIVE | VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_MOBILE, _("Phone"), VAR_STR, k->mobile ? k->mobile : "", VAR_FLAG_SENSITIVE | VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("_Nick:"), VAR_STR, k->nick ? k->nick : "", VAR_FLAG_SENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_FIRST_NAME, _("_First Name:"), VAR_STR, k->first_name ? k->first_name : "", VAR_FLAG_SENSITIVE | VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_LAST_NAME, _("_Last Name:"), VAR_STR, k->last_name ? k->last_name : "", VAR_FLAG_SENSITIVE | VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_MOBILE, _("_Phone:"), VAR_STR, k->mobile ? k->mobile : "", VAR_FLAG_SENSITIVE | VAR_FLAG_ADVANCED);
 	/* wywoluje okienko zmiany usera */
 	/*ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_PROGRESS); */
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -850,10 +850,10 @@ gpointer user_add_user_action(gpointer user_data)
 {
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
 	ggadu_dialog_add_entry(dialog, GGADU_ID, "GG#", VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_FIRST_NAME, _("First Name"), VAR_STR, NULL, VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_LAST_NAME, _("Last Name"), VAR_STR, NULL, VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_MOBILE, _("Phone"), VAR_STR, NULL, VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("_Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_FIRST_NAME, _("_First Name:"), VAR_STR, NULL, VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_LAST_NAME, _("_Last Name:"), VAR_STR, NULL, VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_MOBILE, _("_Phone:"), VAR_STR, NULL, VAR_FLAG_ADVANCED);
 	/* wywoluje okienko dodawania usera */
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
@@ -881,18 +881,18 @@ gpointer user_preferences_action(gpointer user_data)
 
 	utf = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, ggadu_config_var_get(handler, "uin"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PASSWORD, _("Password"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"), VAR_BOOL, ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PASSWORD, _("_Password:"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, utf, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for _friends"), VAR_BOOL, ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
 
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("A_utoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Au_toconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
 
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_DCC, _("Enable DCC"), VAR_BOOL, ggadu_config_var_get(handler, "dcc"), VAR_FLAG_ADVANCED);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_SERVER, _("Server"), VAR_STR, ggadu_config_var_get(handler, "server"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_HISTORY, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_DCC, _("E_nable DCC"), VAR_BOOL, ggadu_config_var_get(handler, "dcc"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_SERVER, _("Ser_ver address:"), VAR_STR, ggadu_config_var_get(handler, "server"), VAR_FLAG_ADVANCED);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PROXY,
-			       _("Proxy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(handler, "proxy"), VAR_FLAG_ADVANCED);
+			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(handler, "proxy"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	g_free(utf);
@@ -981,12 +981,12 @@ gpointer _register_account_action(gpointer user_data)
 	g_io_channel_shutdown(ch, TRUE, NULL);
 	g_io_channel_unref(ch);
 
-	dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Register Gadu-Gadu account"), "register account", h);
+	dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("_Register Gadu-Gadu account"), "register account", h);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_IMAGE, "", VAR_IMG, token_image_path, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_TOKEN, _("Registration code:\n(shown above)"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_EMAIL, _("Email:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_PASSWORD, _("Password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_TOKEN, _("Registration _code:\n(shown above)"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_EMAIL, _("_Email:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_PASSWORD, _("_Password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_UPDATE_CONFIG, _("_Update settings on success?"), VAR_BOOL, FALSE, VAR_FLAG_NONE);
 	signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	g_free(token_image_path);
@@ -1018,14 +1018,14 @@ gpointer search_action(gpointer user_data)
 	gender_list = g_list_append(gender_list, _("male"));
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Gadu-Gadu search"), "search");
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_BIRTHYEAR, _("Birthyear:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("GG#"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ACTIVE, _("Search only for active users"), VAR_BOOL, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_FIRSTNAME, _("_First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("_Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("_Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_CITY, _("_City:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_BIRTHYEAR, _("_Birthyear:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("_GG#"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("G_ender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ACTIVE, _("_Search only for active users"), VAR_BOOL, NULL, VAR_FLAG_NONE);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	g_list_free(gender_list);
 	return NULL;
@@ -1454,7 +1454,7 @@ gpointer send_file_action(gpointer user_data)
 	g_free(tmp);
 
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONTACT, NULL, VAR_NULL, k, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_SELECTED_FILE, _("Select File :"), VAR_FILE_CHOOSER, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_SELECTED_FILE, _("_Select File:"), VAR_FILE_CHOOSER, NULL, VAR_FLAG_NONE);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }
@@ -1464,16 +1464,16 @@ GGaduMenu *build_plugin_menu()
 {
 	GGaduMenu *root = ggadu_menu_create();
 	GGaduMenu *item_gg = ggadu_menu_add_item(root, "Gadu-Gadu", NULL, NULL);
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Add Contact"), user_add_user_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_Add Contact"), user_add_user_action, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Search for friends"), search_action, NULL));
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_Search for friends"), search_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_Preferences"), user_preferences_action, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Import userlist"), import_userlist_action, NULL));
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Export userlist"), export_userlist_action, NULL));
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Delete userlist"), delete_userlist_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_Import userlist"), import_userlist_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_Export userlist"), export_userlist_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_Delete userlist"), delete_userlist_action, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Register account"), register_account_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_Register account"), register_account_action, NULL));
 	return root;
 }
 
@@ -1733,15 +1733,15 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 		GGaduMenu *umenu = ggadu_menu_create();
 
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
 		if ((gboolean) ggadu_config_var_get(handler, "dcc"))
-			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send File"), send_file_action, NULL));
+			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Send File"), send_file_action, NULL));
 
 		ggadu_menu_add_user_menu_extensions(umenu, handler);
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), user_change_user_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_ask_remove_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Edit"), user_change_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Remove"), user_ask_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), user_add_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Add New"), user_add_user_action, NULL));
 		ggadu_menu_print(umenu, NULL);
 		signal->data_return = umenu;
 	}
@@ -2025,7 +2025,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 
 				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr", sp);
-				ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, (gpointer) reason_c, VAR_FLAG_FOCUS);
+				ggadu_dialog_add_entry(dialog, 0, _("_Description:"), VAR_STR, (gpointer) reason_c, VAR_FLAG_FOCUS);
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 				g_free(reason_c);
 			}

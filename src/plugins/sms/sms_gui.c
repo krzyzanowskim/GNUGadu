@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.63 2004/12/15 17:15:45 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.64 2004/12/15 17:44:42 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -153,9 +153,9 @@ gpointer sms_send_sms(gpointer user_data)
 	ggadu_config_var_set(sms_handler, "number", k->mobile);
 
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_EXTERNAL, _("Use external program"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_EXTERNAL, _("Use _external program"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SENDER, _("_Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_BODY, _("_Message"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
 	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");

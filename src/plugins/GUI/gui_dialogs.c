@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.58 2004/12/15 17:15:24 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.59 2004/12/15 17:44:28 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -161,7 +161,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 			break;
 		case VAR_BOOL:
 			need_label = FALSE;
-			entry = gtk_check_button_new_with_label(kv->description);
+			entry = gtk_check_button_new_with_mnemonic(kv->description);
 			if (kv->value)
 				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 			break;
@@ -302,7 +302,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 		    if (need_label)
 		    {
 			align = gtk_alignment_new(0, 0.5, 0, 0);
-			label = gtk_label_new(kv->description);
+			label = gtk_label_new_with_mnemonic(kv->description);
 			gtk_container_add(GTK_CONTAINER(align), label);
 			gtk_box_pack_end_defaults(GTK_BOX(hbox),align);
 		    }
@@ -313,7 +313,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 		if (need_label && !is_advanced)
 		{
 			GtkWidget *align = gtk_alignment_new(0, 0.5, 0, 0);
-			GtkWidget *label = gtk_label_new(kv->description);
+			GtkWidget *label = gtk_label_new_with_mnemonic(kv->description);
 
 			gtk_container_add(GTK_CONTAINER(align), label);
 			gtk_table_attach_defaults(GTK_TABLE(tab), align, 0, 1, actR, actR + 1);

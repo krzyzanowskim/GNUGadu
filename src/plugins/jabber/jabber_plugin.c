@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.124 2004/12/15 17:15:43 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.125 2004/12/15 17:44:31 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -108,8 +108,8 @@ static gpointer user_add_action(gpointer user_data)
 	}
 	
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
-	ggadu_dialog_add_entry(dialog, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nickname"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_ID, _("Jabber ID:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nickname:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_REQUEST_AUTH_FROM, _("Request authorization from"), VAR_BOOL, (gpointer)TRUE, VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -127,8 +127,8 @@ static gpointer user_edit_action(gpointer user_data)
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Edit contact"), "add user");
 	k = (GGaduContact *) user->data;
-	ggadu_dialog_add_entry(dialog, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, k->id, VAR_FLAG_INSENSITIVE);
-	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nickname"), VAR_STR, k->nick, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_ID, _("Jabber ID:"), VAR_STR, k->id, VAR_FLAG_INSENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nickname:"), VAR_STR, k->nick, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
@@ -321,9 +321,9 @@ static gpointer user_change_password_action(gpointer user_data)
 	}
 	
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Change password"), "user change password");
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Old password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_NEW, _("New password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_RETYPE, _("Retype password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("_Old password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_NEW, _("_New password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD_RETYPE, _("_Retype password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
 
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
@@ -445,7 +445,7 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber server for account registration"),
 					       "register get fields");
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("_Server:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
@@ -456,35 +456,35 @@ static GGaduMenu *build_userlist_menu(void)
 	GGaduMenu *menu = ggadu_menu_create();
 	GGaduMenu *listmenu,*ignoremenu,*infomenu;
 
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
 	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
 
 	infomenu = ggadu_menu_new_item(_("Contact info"), NULL, NULL);
-	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("Personal data"), user_vcard_action, NULL));
-	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("Software"), user_get_software_action, NULL));
+	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("_Personal data"), user_vcard_action, NULL));
+	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("_Software"), user_get_software_action, NULL));
 	ggadu_menu_add_submenu(menu, infomenu);
 	
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
 	ggadu_menu_add_submenu(listmenu,
-			       ggadu_menu_new_item(_("Request presence subscription"), user_rerequest_auth_from, NULL));
-	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Send presence authorization"), user_resend_auth_to, NULL));
+			       ggadu_menu_new_item(_("_Request presence subscription"), user_rerequest_auth_from, NULL));
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("S_end presence authorization"), user_resend_auth_to, NULL));
 	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(listmenu,
-			       ggadu_menu_new_item(_("Remove authorization"), user_remove_auth_from, NULL));
+			       ggadu_menu_new_item(_("Re_move authorization"), user_remove_auth_from, NULL));
 	ggadu_menu_add_submenu(menu, listmenu);
 
 	ignoremenu = ggadu_menu_new_item(_("Ignore"), NULL, NULL);
-	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("Ignore contact"), user_ignore_action, NULL));
-	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("Unignore contact"), user_unignore_action, NULL));
+	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("_Ignore contact"), user_ignore_action, NULL));
+	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("_Unignore contact"), user_unignore_action, NULL));
 	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
 	ggadu_menu_add_submenu(menu, ignoremenu);
 	
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_ask_remove_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("E_dit"), user_edit_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Rem_ove"), user_ask_remove_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add New"), user_add_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add _New"), user_add_action, NULL));
 
 
 	return menu;
@@ -1346,9 +1346,9 @@ gpointer user_search_action(gpointer user_data)
 	if (!server || !*server)
 		server = NULL;
 
-	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Jabber search: server"), "search-server");
+	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Jabber search server"), "search-server");
 
-	ggadu_dialog_add_entry(dialog, 0, _("Server"), VAR_STR, server, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, 0, _("_Server"), VAR_STR, server, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
@@ -1359,32 +1359,32 @@ gpointer user_preferences_action(gpointer user_data)
 	GGaduDialog *dialog;
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber plugin configuration"), "update config");
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, _("Jabber ID"), VAR_STR,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, _("_Jabber ID:"), VAR_STR,
 				ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Password"), VAR_STR,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("_Password:"), VAR_STR,
 				ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_ONLY_FRIENDS, _("Receive messages from friends only"), VAR_BOOL,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_ONLY_FRIENDS, _("_Receive messages from friends only"), VAR_BOOL,
 				ggadu_config_var_get(jabber_handler, "only_friends"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("_Autoconnect on startup"), VAR_BOOL,
 				ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
 	if (lm_ssl_is_supported())
 	{
-		ggadu_dialog_add_entry(dialog, GGADU_JABBER_USESSL, _("Use encrypted connection (SSL)"), VAR_BOOL,
+		ggadu_dialog_add_entry(dialog, GGADU_JABBER_USESSL, _("Use _encrypted connection (SSL)"), VAR_BOOL,
 					ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
 	}
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("_Log chats to history file"), VAR_BOOL,
 				ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_ADVANCED);
 				
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Re_source"), VAR_STR,
 				ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_ADVANCED);
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server address"), VAR_STR,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server a_ddress"), VAR_STR,
 				ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
 	
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PROXY,
-			       _("Proxy server\n[user:pass@]host.com[:port]"), VAR_STR,
+			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR,
 			       ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
