@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.16 2004/01/08 20:46:57 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.17 2004/01/09 09:33:08 krzyzak Exp $ */
 
 #include <loudmouth/loudmouth.h>
 #include <string.h>
@@ -93,7 +93,7 @@ void jabber_fetch_roster (void)
   LmMessage *m;
   LmMessageNode *node;
 
-  print_debug ("jabber: Fetching roster.\n");
+  print_debug ("jabber: Fetching roster. %s",lm_connection_get_server(connection));
 
   m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
   node = lm_message_node_add_child (m->node, "query", NULL);

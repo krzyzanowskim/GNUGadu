@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.21 2004/01/08 20:46:57 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.22 2004/01/09 09:33:08 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -11,13 +11,30 @@
 
 extern jabber_data_type jabber_data;
 
+void jabber_disconnect_cb (LmConnection * connection, LmDisconnectReason reason, gpointer user_data)
+{
+        lm_connection_unregister_message_handler (connection, iq_handler, LM_MESSAGE_TYPE_IQ);
+	iq_handler = NULL;
+        lm_connection_unregister_message_handler (connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ);
+	iq_roster_handler = NULL;
+        lm_connection_unregister_message_handler (connection, iq_version_handler, LM_MESSAGE_TYPE_IQ);
+	iq_version_handler = NULL;
+        lm_connection_unregister_message_handler (connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE);
+	presence_handler = NULL;
+	lm_connection_unregister_message_handler (connection, message_handler, LM_MESSAGE_TYPE_MESSAGE);
+	message_handler = NULL;
+}
+
+
 void connection_auth_cb (LmConnection * connection, gboolean success, gint * status)
 {
 	if (!success)
 	{
-        signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
-		signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
-		return;
+	    signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
+	    signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
+	    lm_connection_close(connection,NULL);
+	    jabber_data.connected = 0;
+	    return;
 	}
 
 	jabber_data.connected = 2;

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.h,v 1.4 2004/01/07 23:49:16 thrulliq Exp $ */
+/* $Id: jabber_cb.h,v 1.5 2004/01/09 09:33:08 krzyzak Exp $ */
 
 #ifndef JABBER_CB_H
 #define JABBER_CB_H 1
@@ -17,5 +17,7 @@ LmHandlerResult iq_version_cb (LmMessageHandler * handler, LmConnection * connec
 			      gpointer user_data);
 LmHandlerResult message_cb (LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			    gpointer user_data);
+			    
+void		jabber_disconnect_cb (LmConnection * connection, LmDisconnectReason reason, gpointer user_data); 
 
 #endif

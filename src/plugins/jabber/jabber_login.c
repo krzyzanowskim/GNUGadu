@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.18 2004/01/08 20:46:57 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.19 2004/01/09 09:33:08 krzyzak Exp $ */
 
 #include <string.h>
 
@@ -16,17 +16,18 @@ void jabber_login (enum states status)
 
 	if (jabber_data.connected == 1)
 	{
-		print_debug ("jabber: Slow down, please");
-	} else if (jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE) {
+	    print_debug ("jabber: Slow down, please");
+	} 
+	else if (jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE) 
+	{
     
-        GSList *list = jabber_data.userlist;
-
-		jabber_data.status = status;
+	    GSList *list = jabber_data.userlist;
+	    jabber_data.status = status;
     
-		if (lm_connection_close (connection, NULL)) {
-            signal_emit ("jabber", "gui status changed", (gpointer) status, "main-gui");
-            signal_emit ("jabber", "gui send userlist", NULL, "main-gui");
-        }
+	    if (lm_connection_close (connection, NULL)) {
+        	signal_emit ("jabber", "gui status changed", (gpointer) status, "main-gui");
+        	signal_emit ("jabber", "gui send userlist", NULL, "main-gui");
+    	    }
 
 		while (list)
 		{
@@ -38,10 +39,10 @@ void jabber_login (enum states status)
 			list = list->next;
 		}
     
-		g_slist_free (jabber_data.userlist);
+	    g_slist_free (jabber_data.userlist);
     
-		jabber_data.userlist = NULL;
-		jabber_data.connected = 0;
+	    jabber_data.userlist = NULL;
+	    jabber_data.connected = 0;
 	}
 	else if (jabber_data.connected == 2)
 	{
@@ -77,73 +78,84 @@ gpointer jabber_login_connect (gpointer status)
 		signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
 		signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("Invalid jid!")), "main-gui");
 		g_static_mutex_unlock (&connect_mutex);
-        g_free(jid);
+    		g_free(jid);
 		g_thread_exit (0);
 		return NULL;
 	}
 
-	print_debug ("jabber: Connecting to %s", server);
     
-    if (!connection)
+    if (!connection || !lm_connection_is_open(connection))
+    {
+	print_debug ("jabber: Connecting to %s", server);
         connection = lm_connection_new (server);
+    } 
+    else if (strcmp(lm_connection_get_server(connection),server))
+    {
+	print_debug ("jabber: Changing server to %s", server);
+	lm_connection_close(connection,NULL);
+	lm_connection_set_server(connection,server);
+	/* lm_connection_unref(connection); */
+    }
 
-	if (ggadu_config_var_get (jabber_handler, "use_ssl"))
+    lm_connection_set_disconnect_function(connection,jabber_disconnect_cb,NULL,NULL);
+    
+    if (ggadu_config_var_get (jabber_handler, "use_ssl"))
+    {
+	if (lm_connection_supports_ssl ())
 	{
-		if (lm_connection_supports_ssl ())
-		{
-			lm_connection_set_use_ssl (connection, 1);
-			lm_connection_set_port (connection, LM_CONNECTION_DEFAULT_PORT_SSL);
-		}
-		else
-		{
-			signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
-            signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("SSL not supported by loudmouth")), "main-gui");
-		}
+		lm_connection_set_use_ssl (connection, 1);
+		lm_connection_set_port (connection, LM_CONNECTION_DEFAULT_PORT_SSL);
 	}
+	else
+	{
+		signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
+    		signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("SSL not supported by loudmouth")), "main-gui");
+	}
+    }
 
-	if (!iq_handler) {
-		iq_handler = lm_message_handler_new (iq_cb, NULL, NULL);
+    if (!iq_handler) {
+	iq_handler = lm_message_handler_new (iq_cb, NULL, NULL);
         lm_connection_register_message_handler (connection, iq_handler, LM_MESSAGE_TYPE_IQ, LM_HANDLER_PRIORITY_FIRST);
     }
 	
     if (!iq_roster_handler) {
-		iq_roster_handler = lm_message_handler_new (iq_roster_cb, NULL, NULL);
+	iq_roster_handler = lm_message_handler_new (iq_roster_cb, NULL, NULL);
         lm_connection_register_message_handler (connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ,
 						LM_HANDLER_PRIORITY_NORMAL);
     }
     
-	if (!iq_version_handler) {
-		iq_version_handler = lm_message_handler_new (iq_version_cb, NULL, NULL);
+    if (!iq_version_handler) {
+	iq_version_handler = lm_message_handler_new (iq_version_cb, NULL, NULL);
         lm_connection_register_message_handler (connection, iq_version_handler, LM_MESSAGE_TYPE_IQ,
-						LM_HANDLER_PRIORITY_NORMAL);
+    					LM_HANDLER_PRIORITY_NORMAL);
     }
 
 
-	if (!presence_handler) {
-		presence_handler = lm_message_handler_new (presence_cb, NULL, NULL);
+    if (!presence_handler) {
+	presence_handler = lm_message_handler_new (presence_cb, NULL, NULL);
         lm_connection_register_message_handler (connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE,
 							LM_HANDLER_PRIORITY_NORMAL);
     }
    
     
-	if (!message_handler) {
-		message_handler = lm_message_handler_new (message_cb, NULL, NULL);
-		lm_connection_register_message_handler (connection, message_handler, LM_MESSAGE_TYPE_MESSAGE,
+    if (!message_handler) {
+	message_handler = lm_message_handler_new (message_cb, NULL, NULL);
+	lm_connection_register_message_handler (connection, message_handler, LM_MESSAGE_TYPE_MESSAGE,
 							LM_HANDLER_PRIORITY_NORMAL);
      }
 
     
 
-	if (!lm_connection_open (connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
-	{
-		print_debug ("jabber: lm_connection_open() failed.\n");
-		signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
+    if (!lm_connection_open (connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
+    {
+	print_debug ("jabber: lm_connection_open() failed.\n");
+	signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
         signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("Connection failed")), "main-gui");
-	}
+    }
 
-	g_free (jid);
-	g_static_mutex_unlock (&connect_mutex);
-	g_thread_exit (0);
+    g_free (jid);
+    g_static_mutex_unlock (&connect_mutex);
+    g_thread_exit (0);
 
-	return NULL;
+    return NULL;
 }
