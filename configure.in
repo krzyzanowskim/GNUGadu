@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.93 2004/10/06 08:07:51 krzyzak Exp $
+dnl $Id: configure.in,v 1.94 2004/10/14 09:23:32 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.6])
 
@@ -117,8 +117,7 @@ AC_CHECK_HEADERS(libintl.h)
 ALL_LINGUAS="pl nl"
 AM_GNU_GETTEXT([use-libtool])
 
-AM_PROG_LIBTOOL
-AM_MAINTAINER_MODE
+dnl AM_MAINTAINER_MODE
 
 if test "x$GCC" = "xyes"; then
    CFLAGS="$CFLAGS -Wall -Wno-uninitialized -Wchar-subscripts -Wnested-externs -Wpointer-arith -Wno-sign-compare"
