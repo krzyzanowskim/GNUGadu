@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.4 2003/04/02 18:40:40 zapal Exp $ */
+/* $Id: plugin_xosd.c,v 1.5 2003/04/03 09:22:43 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -226,17 +226,6 @@ gint set_configuration () {
     return 1;
 }
 
-void start_plugin() {
-    register_signal(handler,"xosd show message");
-    register_signal(handler,"update config");
-    print_debug("%s : start_plugin\n",GGadu_PLUGIN_NAME);
-
-    if ( set_configuration() == 0 ) {
-        return;
-    }
-    xosd_display(osd,0,XOSD_string,"GNU Gadu 2");
-}
-
 gpointer osd_preferences (gpointer user_data)
 {
     GGaduDialog *d = NULL;
@@ -267,6 +256,22 @@ GGaduMenu *build_plugin_menu ()
     return root;   
 }
 
+void start_plugin() {
+    print_debug("%s : start_plugin\n",GGadu_PLUGIN_NAME);
+
+    /* Menu stuff */
+    print_debug ("%s : Create Menu\n", GGadu_PLUGIN_NAME);
+    menu_pluginmenu = build_plugin_menu();
+    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_pluginmenu, "main-gui");
+
+    if (!set_configuration()) {
+        return;
+    }
+    xosd_display(osd,0,XOSD_string,"GNU Gadu 2");
+}
+
+
+
 GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     gchar *this_configdir = NULL;
 
@@ -276,11 +281,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
 
     handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,_("On Screen Display"));
     
-    /* Menu stuff */
-    print_debug ("%s : Create Menu\n", GGadu_PLUGIN_NAME);
-    menu_pluginmenu = build_plugin_menu();
-    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_pluginmenu, "main-gui");
-    
+    register_signal(handler,"xosd show message");
+    register_signal(handler,"update config");
     
     print_debug("%s : READ CONFIGURATION\n", GGadu_PLUGIN_NAME);
     
@@ -300,9 +302,11 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
         this_configdir = g_build_filename(g_get_home_dir(),".gg2",NULL);
     
     set_config_file_name((GGaduPlugin *)handler, g_build_filename(this_configdir,"xosd",NULL));
-                     
+    
+    g_free(this_configdir);
+             
     if (!config_read(handler))
-            g_warning(_("Unable to read configuration file for plugin %s"),"xosd");
+	g_warning(_("Unable to read configuration file for plugin %s"),"xosd");
 	    
     register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
     
