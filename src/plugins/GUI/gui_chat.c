@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.38 2003/06/06 13:42:10 zapal Exp $ 
+ * $Id: gui_chat.c,v 1.39 2003/06/07 10:47:09 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -980,6 +980,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
     if (visible)
       {
 	  gtk_widget_show_all (vbox);
+          gtk_widget_grab_focus (GTK_WIDGET (input));
 
 	  if (chat_window != NULL)
 	      gtk_widget_show_all (chat_window);
@@ -1044,7 +1045,6 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  break;
       }
 
-    gtk_widget_grab_focus (GTK_WIDGET (input));
 
     g_free (st);
     g_free (title);

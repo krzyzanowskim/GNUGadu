@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.24 2003/06/06 13:42:10 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.25 2003/06/07 10:47:09 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -473,6 +473,7 @@ void auto_away_start (gui_protocol *gp)
 	config_var_get (gui_handler, "auto_away_interval") ?
 	((gint) config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000, auto_away_func, gp);
   }
+
 }
 
 void auto_away_stop (gui_protocol *gp)

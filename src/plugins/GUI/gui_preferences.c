@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.22 2003/06/06 13:47:33 zapal Exp $ */
+/* $Id: gui_preferences.c,v 1.23 2003/06/07 10:47:09 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -859,7 +859,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		  GSList *list = protocols;
 		  while (list)
 		  {
-		    gui_protocol *gp = (gui_protocol *) protocols;
+		    gui_protocol *gp = (gui_protocol *) list->data;
 		    auto_away_start (gp);
 		    list = list->next;
 		  }
