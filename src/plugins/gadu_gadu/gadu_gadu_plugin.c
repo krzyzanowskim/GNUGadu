@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.114 2004/01/13 20:35:46 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.115 2004/01/13 22:38:29 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -264,12 +264,7 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 	return NULL;
     }
 
-    /* do tego chyba przydal by sie jakis nasz wrapper choc tak naprawde nie jest potrzebny */
     source_chan = g_io_channel_unix_new(session->fd);
-
-//    if (!p.server_addr)
-//        watch = g_io_add_watch (source_chan, G_IO_IN | G_IO_ERR | G_IO_HUP | G_IO_OUT, test_chan, NULL);
-//    else
     watch = g_io_add_watch(source_chan, G_IO_IN | G_IO_ERR | G_IO_HUP, test_chan, NULL);
 
     return NULL;
@@ -1607,6 +1602,8 @@ void start_plugin()
 
     if (ggadu_config_var_get(handler, "autoconnect") && !connected)
     {
+	gchar *cp = NULL;
+	
 	gint status =
 	    (ggadu_config_var_check(handler, "status") ? (gint) ggadu_config_var_get(handler, "status") :
 	     GG_STATUS_AVAIL);
@@ -1614,7 +1611,9 @@ void start_plugin()
 	if (ggadu_config_var_get(handler, "private"))
 	    status |= GG_STATUS_FRIENDS_MASK;
 
-	gadu_gadu_login((ggadu_config_var_check(handler, "reason")) ? ggadu_config_var_get(handler, "reason") :
+	to_cp("ISO-8859-2", ggadu_config_var_get(handler, "reason"), cp);
+
+	gadu_gadu_login((ggadu_config_var_check(handler, "reason")) ? cp :
 			_("no reason"), status);
     }
 }
