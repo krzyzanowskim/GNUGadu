@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.34 2003/11/03 20:01:42 krzyzak Exp $
+dnl $Id: configure.in,v 1.35 2003/11/03 21:06:59 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -479,6 +479,7 @@ echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 
 echo especially without gui plugin is probably useless for you!
 echo Check \"./configure --help\" to see how to enable some plugins
+echo
 echo You may enable all plugins with:
 echo \"./configure --with-all_plugins\"
 echo "*************************************************************"
