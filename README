@@ -10,6 +10,7 @@ To compile all plugins you need:
 - Loudmouth 0.15.1 or newer (http://www.imendio.com/projects/loudmouth/) - Jabber
 - xosd (http://ignavus.net/software.html) - XOSD
 - esound (http://www.tux.org/~ricdude/EsounD.html - sound-esd
+- gtkspell - http://gtkspell.sourceforge.net/
 
 WARNING: perl support and remote plugin will compile/work only on Linux!
 
