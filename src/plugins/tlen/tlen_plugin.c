@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.39 2003/09/23 00:27:55 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.40 2003/09/23 00:32:03 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -363,7 +363,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
 		if (config_var_get(handler, "log"))
 		{
-		  gchar *line = g_strdup_printf ("\n:: %s (%s)::\n%s\n", msg->id, get_timestamp (msg->time), msg->message);
+		  gchar *line = g_strdup_printf ("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp (msg->time), msg->message);
 		  ggadu_tlen_save_history (msg->id, line);
 		  g_free (line);
 		}
