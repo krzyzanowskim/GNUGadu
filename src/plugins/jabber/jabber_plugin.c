@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.64 2004/02/09 23:28:59 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.65 2004/02/13 20:04:58 thrulliq Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -89,16 +89,20 @@ gpointer user_view_history_action(gpointer user_data)
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
 
-	if (!k)
+	if (!k) {
+		g_string_free(hist_buf, TRUE);
 		return NULL;
-
+	}
+	
 	path = g_build_filename(config->configdir, "jabber_history", k->id, NULL);
 	ch = g_io_channel_new_file(path, "r", NULL);
 	g_free(path);
 
-	if (!ch)
+	if (!ch) {
+		g_string_free(hist_buf, TRUE);
 		return NULL;
-
+	}
+	
 	g_io_channel_set_encoding(ch, "ISO-8859-2", NULL);
 
 	while (g_io_channel_read_line(ch, &line, &length, &terminator, NULL) != G_IO_STATUS_EOF)
@@ -118,27 +122,20 @@ gpointer user_view_history_action(gpointer user_data)
 gpointer user_chat_action(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
-	GGaduMsg *msg = g_new0(GGaduMsg, 1);
 
 	if (!users)
 		return NULL;
 
-	if (g_slist_length(users) > 1)
-	{
+	if (g_slist_length(users) > 1) {
 		/* TODO: do this, when conference is being handled */
 		print_debug("Conferences are not supported yet! Shot zapal for this ;>.\n");
-		return NULL;
-	}
-	else
-	{
+	} else {	
+		GGaduMsg *msg = g_new0(GGaduMsg, 1);
 		GGaduContact *k = (GGaduContact *) users->data;
 		msg->class = GGADU_CLASS_CHAT;
 		msg->id = k->id;
+		signal_emit("jabber", "gui msg receive", msg, "main-gui");
 	}
-
-	msg->message = NULL;
-
-	signal_emit("jabber", "gui msg receive", msg, "main-gui");
 
 	return NULL;
 }
