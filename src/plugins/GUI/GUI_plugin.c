@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.24 2003/06/19 18:04:56 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.25 2003/06/20 01:09:03 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -139,6 +139,8 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 	    if (!gp)
 		return FALSE;
 
+	    add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label),"add_info_label_desc");
+	    
 	    tooltip = gtk_tooltips_new();
 
 	    if (k) {
@@ -165,7 +167,7 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		markup_id = g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s</span>", k->id, ip?ip:"");
 		markup_desc = (k->status_descr) ? g_strdup_printf("<span size=\"small\">%s</span>",desc_text) : NULL;
 
-		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),k->status_descr,"caption");
+		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(add_info_label_desc,GTK_TYPE_EVENT_BOX),k->status_descr,"caption");
 	    } else {
 		GGaduStatusPrototype *sp;
 		gint status;
@@ -176,14 +178,13 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		markup_id = g_strdup_printf("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
 		markup_desc = (sp) ? g_strdup_printf("<span size=\"small\"><b>%s</b></span>",sp->description) : _("(None)");
 		is_desc = TRUE;
-		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),NULL,"caption");
+		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(add_info_label_desc,GTK_TYPE_EVENT_BOX),NULL,"caption");
 	    }
 	    
 	    gtk_tooltips_enable(tooltip);
 
 	    gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup_id);
 	    
-	    add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label),"add_info_label_desc");
 	    gtk_anim_label_set_text(GTK_ANIM_LABEL(add_info_label_desc),markup_desc);
 	    gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc),TRUE);
 	    	    

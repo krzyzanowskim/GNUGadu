@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.30 2003/06/19 18:04:56 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.31 2003/06/20 01:09:03 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -468,7 +468,7 @@ void notify_callback (gchar * repo_name, gpointer key, gint actions)
     gp = gui_find_protocol (repo_name, protocols);
     k = ggadu_repo_find_value (repo_name, key);
 
-    g_return_if_fail (gp != NULL);
+    if (!gp) return;
     g_return_if_fail (k != NULL);
 
     n = g_new0 (GGaduNotify, 1);

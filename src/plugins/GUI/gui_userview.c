@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.15 2003/06/19 18:04:56 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.16 2003/06/20 01:09:03 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -212,7 +212,7 @@ void gui_list_add(gui_protocol *gp)
 	label = create_image(gp->p->img_filename);
     } else {
 	label = gtk_label_new(NULL);
-	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
+	gtk_label_set_selectable(GTK_LABEL(label), FALSE);
 	markup = g_strdup_printf("<small>%s</small>", gp->p->display_name);
 	gtk_label_set_markup(GTK_LABEL(label), markup);
 	g_free(markup);
@@ -242,13 +242,13 @@ void gui_list_add(gui_protocol *gp)
     gtk_misc_set_padding(GTK_MISC(gp->add_info_label), 3, 0);
 
     add_info_label_desc = gtk_anim_label_new();
-    /* gtk_anim_label_set_alignment(GTK_ANIM_LABEL(add_info_label_desc), PANGO_ALIGN_CENTER); */
+    gtk_anim_label_set_delay(GTK_ANIM_LABEL(add_info_label_desc),2);
     
     eventbox = gtk_event_box_new();
-    gtk_container_add(GTK_CONTAINER(eventbox),gp->add_info_label);
-
+    gtk_container_add(GTK_CONTAINER(eventbox),add_info_label_desc);
+    
+    gtk_box_pack_start(GTK_BOX(vbox), gp->add_info_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), eventbox, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), add_info_label_desc, FALSE, FALSE, 0);
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, label);
     
@@ -339,12 +339,13 @@ void gui_create_tree()
     gtk_misc_set_padding(GTK_MISC(add_info_label), 3, 0);
 
     add_info_label_desc = gtk_anim_label_new();
+    gtk_anim_label_set_delay(GTK_ANIM_LABEL(add_info_label_desc),2);
 	
     eventbox = gtk_event_box_new();
-    gtk_container_add(GTK_CONTAINER(eventbox),add_info_label);
+    gtk_container_add(GTK_CONTAINER(eventbox),add_info_label_desc);
 
+    gtk_box_pack_start(GTK_BOX(vbox), add_info_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), eventbox, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), add_info_label_desc, FALSE, FALSE, 0);
     
     gtk_widget_show_all(window);
     

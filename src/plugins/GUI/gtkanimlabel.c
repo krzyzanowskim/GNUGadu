@@ -16,11 +16,21 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+ /*
+    GObject
+    +----GtkObject
+    +----GtkWidget
+    +----GtkMisc
+    +----GtkAnimLabel
+  */
+
 #include <stdio.h>
 #include <string.h>
 
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
+#include <gtk/gtkclipboard.h>
+#include <gtk/gtkmisc.h>
 #include <pango/pango.h>
 
 #include "gtkanimlabel.h"
@@ -33,11 +43,12 @@ static void gtk_anim_label_realize (GtkWidget * widget);
 static gint gtk_anim_label_expose (GtkWidget * widget, GdkEventExpose * event);
 static void gtk_anim_label_size_request (GtkWidget * widget, GtkRequisition * requisition);
 static void gtk_anim_label_size_allocate (GtkWidget * widget, GtkAllocation * allocation);
+static gint gtk_anim_label_button_press (GtkWidget * widget, GdkEventButton * event);
 /* private */
 static void anim_label_create_layout (GtkAnimLabel * anim_label, const gchar * txt);
 static void anim_label_create_pixmap (GtkAnimLabel * anim_label);
 
-static GtkWidgetClass *parent_class = NULL;
+static GtkMiscClass *parent_class = NULL;
 
 GType gtk_anim_label_get_type ()
 {
@@ -57,7 +68,7 @@ GType gtk_anim_label_get_type ()
 	      (GInstanceInitFunc) gtk_anim_label_init,
 	  };
 
-	  anim_label_type = g_type_register_static (GTK_TYPE_WIDGET, "GtkAnimLabel", &anim_label_info, 0);
+	  anim_label_type = g_type_register_static (GTK_TYPE_MISC, "GtkAnimLabel", &anim_label_info, 0);
       }
 
     return anim_label_type;
@@ -69,7 +80,7 @@ static void gtk_anim_label_class_init (GtkAnimLabelClass * klass)
     GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-    parent_class = gtk_type_class (gtk_widget_get_type ());
+    parent_class = g_type_class_peek_parent (klass);
 
     object_class->destroy = gtk_anim_label_destroy;
     gobject_class->finalize = gtk_anim_label_finalize;
@@ -78,6 +89,8 @@ static void gtk_anim_label_class_init (GtkAnimLabelClass * klass)
     widget_class->expose_event = gtk_anim_label_expose;
     widget_class->size_request = gtk_anim_label_size_request;
     widget_class->size_allocate = gtk_anim_label_size_allocate;
+    widget_class->button_press_event = gtk_anim_label_button_press;
+
 }
 
 
@@ -92,6 +105,8 @@ static void gtk_anim_label_init (GtkAnimLabel * anim_label)
     anim_label->auto_animate = TRUE;
     anim_label->animate = FALSE;
     anim_label->pixmap = NULL;
+    anim_label->timer = NULL;
+    anim_label->delay_sec = 0;
 }
 
 
@@ -105,6 +120,9 @@ static void gtk_anim_label_destroy (GtkObject * object)
     anim_label = GTK_ANIM_LABEL (object);
 
     gtk_anim_label_animate (anim_label, FALSE);
+
+    if (anim_label->timer)
+	g_timer_destroy (anim_label->timer);
 
     if (GTK_OBJECT_CLASS (parent_class)->destroy)
 	(*GTK_OBJECT_CLASS (parent_class)->destroy) (object);
@@ -127,6 +145,9 @@ static void gtk_anim_label_finalize (GObject * object)
 
     if (anim_label->pixmap)
 	g_object_unref (anim_label->pixmap);
+
+    if (anim_label->timer)
+	g_object_unref (anim_label->timer);
 
     G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -163,15 +184,19 @@ void gtk_anim_label_set_text (GtkAnimLabel * anim_label, const gchar * txt)
       }
 
     if ((txt == NULL) || (strlen (txt) <= 0))
-      {
-	  return;
-      }
+	return;
 
     if (txt != NULL)
 	anim_label->txt = g_strdup (txt);
 
     if (anim_label->auto_reset)
 	anim_label->pos_x = 0;
+
+    if ((!anim_label->timer) && (anim_label->delay_sec > 0))
+	anim_label->timer = g_timer_new ();
+    else if (anim_label->delay_sec > 0)
+	g_timer_start (anim_label->timer);
+
 
     if (anim_label->layout)
       {
@@ -213,7 +238,7 @@ static void gtk_anim_label_realize (GtkWidget * widget)
     attributes.height = widget->allocation.height;
     attributes.wclass = GDK_INPUT_OUTPUT;
     attributes.window_type = GDK_WINDOW_CHILD;
-    attributes.event_mask = gtk_widget_get_events (widget) | GDK_EXPOSURE_MASK;
+    attributes.event_mask = gtk_widget_get_events (widget) | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK;
 /*    attributes.event_mask =
 	gtk_widget_get_events (widget) | GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
 	GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK;
@@ -320,6 +345,20 @@ static gint anim_label_timeout_callback (gpointer user_data)
 
     if (anim_label->animate == FALSE)
 	return FALSE;
+
+
+    if (anim_label->delay_sec > 0)
+      {
+	  gint sec;
+	  gulong msec;
+
+	  sec = (gint) g_timer_elapsed (anim_label->timer, &msec);
+
+	  if (sec >= anim_label->delay_sec)
+	      g_timer_stop (anim_label->timer);
+	  else
+	      return TRUE;
+      }
 
     widget = GTK_WIDGET (anim_label);
 
@@ -440,4 +479,45 @@ static void anim_label_create_pixmap (GtkAnimLabel * anim_label)
     /* maluje na niej tekst */
     gdk_draw_layout (anim_label->pixmap, widget->style->fg_gc[widget->state], 0, 0, anim_label->layout);
 
+}
+
+
+void gtk_anim_label_set_delay (GtkAnimLabel * anim_label, guint delay)
+{
+    g_return_if_fail (anim_label != NULL);
+    g_return_if_fail (GTK_IS_ANIM_LABEL (anim_label));
+    g_return_if_fail (delay >= 0);
+
+    anim_label->delay_sec = delay - 1;
+}
+
+gint gtk_anim_label_get_delay (GtkAnimLabel * anim_label)
+{
+    g_return_val_if_fail (anim_label != NULL, 0);
+    g_return_val_if_fail (GTK_IS_ANIM_LABEL (anim_label), 0);
+
+    return anim_label->delay_sec;
+}
+
+static gint gtk_anim_label_button_press (GtkWidget * widget, GdkEventButton * event)
+{
+    GtkAnimLabel *anim_label;
+
+    g_return_val_if_fail (widget != NULL, FALSE);
+    g_return_val_if_fail (GTK_IS_ANIM_LABEL (widget), FALSE);
+    g_return_val_if_fail (event != NULL, FALSE);
+
+    anim_label = GTK_ANIM_LABEL (widget);
+
+    if (anim_label->txt)
+      {
+
+	  char *plain = (char *) pango_layout_get_text (anim_label->layout);
+	  gtk_clipboard_set_text (gtk_widget_get_clipboard (GTK_WIDGET (anim_label), GDK_SELECTION_CLIPBOARD), plain,
+				  -1);
+
+	  g_print ("BUTTON PRESS %s\n", plain);
+      }
+
+    return FALSE;
 }
