@@ -56,6 +56,114 @@ GGaduContact *user_in_list (gchar *jid, GSList *list)
   return NULL;
 }
 
+gpointer user_chat_action (gpointer user_data)
+{
+  GSList *users = (GSList *)user_data;
+  GGaduMsg *msg = g_new0 (GGaduMsg, 1);
+
+  if (!users)
+    return NULL;
+
+  if (g_slist_length (users) > 1) {
+    /* TODO: do this, when conference is being handled */
+    print_debug ("Conferences are not supported yet! Shot zapal for this ;>.\n");
+    return NULL;
+  } else {
+    GGaduContact *k = (GGaduContact *) users->data;
+    msg->class = GGADU_CLASS_CHAT;
+    msg->id = k->id;
+  }
+
+  msg->message = NULL;
+
+  signal_emit ("jabber", "gui msg receive", msg, "main-gui");
+
+  return NULL;
+}
+
+gpointer user_add_action (gpointer user_data)
+{
+  GSList *optlist = NULL;
+
+  ggadu_dialog_add_entry (&optlist, GGADU_ID, _("Jabber ID (jid)"), VAR_STR,
+      NULL, VAR_FLAG_NONE);
+  signal_emit (GGadu_PLUGIN_NAME, "gui add user window", optlist, "main-gui");
+
+  return NULL;
+}
+
+gpointer user_edit_action (gpointer user_data)
+{
+  GSList *optlist = NULL;
+  GSList *user = (GSList *) user_data;
+  GGaduContact *k;
+
+  if (!user)
+    return NULL;
+
+  k = (GGaduContact *) user->data;
+  ggadu_dialog_add_entry (&optlist, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, k->id, VAR_FLAG_NONE);
+  ggadu_dialog_add_entry (&optlist, GGADU_NICK, _("Nickname"), VAR_STR, k->nick, VAR_FLAG_NONE);
+
+  signal_emit (GGadu_PLUGIN_NAME, "gui add user window", optlist, "main-gui");
+  return NULL;
+}
+
+gpointer user_remove_action (gpointer user_data)
+{
+  GSList *users = (GSList *) user_data;
+
+  while (users)
+  {
+    GGaduContact *k = (GGaduContact *) users->data;
+
+    if (k)
+    {
+      if (connected == 2)
+      {
+        LmMessage *m;
+        gboolean result;
+        LmMessageNode *node;
+
+        m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ,
+            LM_MESSAGE_SUB_TYPE_SET);
+        node = lm_message_node_add_child (m->node, "query", NULL);
+        lm_message_node_set_attributes (node, "xmlns", "jabber:iq:roster",
+            NULL);
+        node = lm_message_node_add_child (node, "item", NULL);
+        lm_message_node_set_attributes (node, "jid", g_strdup (k->id),
+            "subscription", "remove", NULL);
+
+	rosterlist = g_slist_remove (rosterlist, k);
+	userlist = g_slist_remove (userlist, k);
+	ggadu_repo_del_value ("jabber", k->id);
+	signal_emit ("jabber", "gui send userlist", userlist, "main-gui");
+	GGaduContact_free (k);
+        result = lm_connection_send (connection, m, NULL);
+        if (!result)
+          print_debug ("jabber: Can't send!\n");
+        lm_message_unref (m);
+      }
+    }
+
+    users = users->next;
+  }
+
+  return NULL;
+}
+
+GGaduMenu *build_userlist_menu (void)
+{
+  GGaduMenu *menu = ggadu_menu_create ();
+
+  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Chat"),   user_chat_action, NULL));
+  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Add"),    user_add_action, NULL));
+  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Edit"),   user_edit_action, NULL));
+  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Remove"), user_remove_action, NULL));
+
+  return menu;
+}
+
 void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 {
   GGaduSignal *signal = (GGaduSignal *) signal_ptr;
@@ -219,6 +327,9 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
       g_free (jid);
 
     GGaduDialog_free (d);
+  } else if (signal->name == g_quark_from_static_string ("get user menu")) {
+    GGaduMenu *menu = build_userlist_menu ();
+    signal->data_return = menu;
   }
 }
 
@@ -298,102 +409,6 @@ gpointer user_preferences_action (gpointer user_data)
   return NULL;
 }
 
-gpointer user_chat_action (gpointer user_data)
-{
-  GSList *users = (GSList *)user_data;
-  GGaduMsg *msg = g_new0 (GGaduMsg, 1);
-
-  if (!users)
-    return NULL;
-
-  if (g_slist_length (users) > 1) {
-    /* TODO: do this, when conference is being handled */
-    print_debug ("Conferences are not supported yet! Shot zapal for this ;>.\n");
-    return NULL;
-  } else {
-    GGaduContact *k = (GGaduContact *) users->data;
-    msg->class = GGADU_CLASS_CHAT;
-    msg->id = k->id;
-  }
-
-  msg->message = NULL;
-
-  signal_emit ("jabber", "gui msg receive", msg, "main-gui");
-
-  return NULL;
-}
-
-gpointer user_add_action (gpointer user_data)
-{
-  GSList *optlist = NULL;
-
-  ggadu_dialog_add_entry (&optlist, GGADU_ID, _("Jabber ID (jid)"), VAR_STR,
-      NULL, VAR_FLAG_NONE);
-  signal_emit (GGadu_PLUGIN_NAME, "gui add user window", optlist, "main-gui");
-
-  return NULL;
-}
-
-gpointer user_edit_action (gpointer user_data)
-{
-  GSList *optlist = NULL;
-  GSList *user = (GSList *) user_data;
-  GGaduContact *k;
-
-  if (!user)
-    return NULL;
-
-  k = (GGaduContact *) user->data;
-  ggadu_dialog_add_entry (&optlist, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, k->id, VAR_FLAG_NONE);
-  ggadu_dialog_add_entry (&optlist, GGADU_NICK, _("Nickname"), VAR_STR, k->nick, VAR_FLAG_NONE);
-
-  signal_emit (GGadu_PLUGIN_NAME, "gui add user window", optlist, "main-gui");
-  return NULL;
-}
-
-gpointer user_remove_action (gpointer user_data)
-{
-  GSList *users = (GSList *) user_data;
-
-  while (users)
-  {
-    GGaduContact *k = (GGaduContact *) users->data;
-
-    if (k)
-    {
-      if (connected == 2)
-      {
-        LmMessage *m;
-        gboolean result;
-        LmMessageNode *node;
-
-        m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ,
-            LM_MESSAGE_SUB_TYPE_SET);
-        node = lm_message_node_add_child (m->node, "query", NULL);
-        lm_message_node_set_attributes (node, "xmlns", "jabber:iq:roster",
-            NULL);
-        node = lm_message_node_add_child (node, "item", NULL);
-        lm_message_node_set_attributes (node, "jid", g_strdup (k->id),
-            "subscription", "remove", NULL);
-
-	rosterlist = g_slist_remove (rosterlist, k);
-	userlist = g_slist_remove (userlist, k);
-	ggadu_repo_del_value ("jabber", k->id);
-	signal_emit ("jabber", "gui send userlist", userlist, "main-gui");
-	GGaduContact_free (k);
-        result = lm_connection_send (connection, m, NULL);
-        if (!result)
-          print_debug ("jabber: Can't send!\n");
-        lm_message_unref (m);
-      }
-    }
-
-    users = users->next;
-  }
-
-  return NULL;
-}
-
 GGaduMenu *build_jabber_menu ()
 {
   GGaduMenu *root;
@@ -408,18 +423,6 @@ GGaduMenu *build_jabber_menu ()
       user_preferences_action, NULL));
 
   return root;
-}
-
-void register_userlist_menu (void)
-{
-  GGaduMenu *menu = ggadu_menu_create ();
-
-  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Chat"),   user_chat_action, NULL));
-  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Add"),    user_add_action, NULL));
-  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Edit"),   user_edit_action, NULL));
-  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Remove"), user_remove_action, NULL));
-
-  signal_emit (GGadu_PLUGIN_NAME, "gui register userlist menu", menu, "main-gui");
 }
 
 void start_plugin ()
@@ -444,11 +447,10 @@ void start_plugin ()
   register_signal (jabber_handler, "send message");
   register_signal (jabber_handler, "add user");
   register_signal (jabber_handler, "jabber subscribe");
+  register_signal (jabber_handler, "get user menu");
 
   jabbermenu = build_jabber_menu ();
   signal_emit (GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
-
-  register_userlist_menu ();
 
   if (config_var_get (jabber_handler, "autoconnect") && !connected)
   {
@@ -499,7 +501,6 @@ void destroy_plugin ()
 
   ggadu_repo_del_value ("_protocols", p->display_name);
 
-  signal_emit(GGadu_PLUGIN_NAME,"gui unregister userlist menu",NULL,"main-gui");
   signal_emit(GGadu_PLUGIN_NAME,"gui unregister protocol", p, "main-gui");
 }
 
