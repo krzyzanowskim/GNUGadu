@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.1 2003/06/03 21:30:07 krzyzak Exp $ */
+/* $Id: my_plugin.c,v 1.2 2003/06/09 01:01:20 krzyzak Exp $ */
 /*
 
 	This is example plugin based on sound-external plugin
@@ -58,9 +58,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 	
-        print_debug("%s : receive signal %s\n",GGadu_PLUGIN_NAME,(gchar *)signal->name);
+        print_debug("%s : receive signal %d\n",GGadu_PLUGIN_NAME,signal->name);
 
-	if (!ggadu_strcasecmp(signal->name,"sound play file")) 
+	if (signal->name == g_quark_from_static_string("sound play file")) 
 	{
 	    gchar *filename = signal->data;
 	    
@@ -68,7 +68,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		g_thread_create(ggadu_play_file, filename, FALSE, NULL);
 	}
 
-	if (!ggadu_strcasecmp(signal->name,"update config"))
+	if (signal->name == g_quark_from_static_string("update config"))
 	{
             GGaduDialog *d = signal->data;
             GSList *tmplist = d->optlist;
