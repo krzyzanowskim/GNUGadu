@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.79 2004/12/27 13:20:28 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.80 2004/12/27 14:21:03 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -679,14 +679,18 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 			g_slist_free(list);
 			return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 		}
+/*
 		signal_emit("jabber", "gui show warning",
 			    g_strdup_printf(_("Error: %s (code %s)"), lm_message_node_get_value(node),
 					    lm_message_node_get_attribute(node, "code")), "main-gui");
+*/
+		print_debug("Error: %s (code %s)",lm_message_node_get_value(node),lm_message_node_get_attribute(node, "code"));
 		lm_message_node_unref(node);
 		g_slist_free(list);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
+	
 	if (lm_message_get_sub_type(message) != LM_MESSAGE_SUB_TYPE_SET &&
 	    lm_message_get_sub_type(message) != LM_MESSAGE_SUB_TYPE_RESULT)
 	{
