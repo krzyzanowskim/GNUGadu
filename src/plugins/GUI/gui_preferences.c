@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.64 2004/08/20 21:15:05 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.65 2004/08/20 21:32:00 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -741,6 +741,12 @@ static GtkWidget *create_advanced_tab()
 	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
+	/* hide_on_start */
+	hide_on_start = gtk_check_button_new_with_label(_("Auto hide window on start"));
+	gtk_box_pack_start(GTK_BOX(adv_vbox), hide_on_start, FALSE, FALSE, 0);
+	g_object_set_data(G_OBJECT(adv_vbox), "hide_on_start", hide_on_start);
+
+
 	/* blink */
 	blink = gtk_check_button_new_with_label(_("Blink status icon"));
 	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
@@ -768,10 +774,6 @@ static GtkWidget *create_advanced_tab()
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 1, 2, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 2, 3, 0, 1);
 		
-	/* hide_on_start */
-	hide_on_start = gtk_check_button_new_with_label(_("Auto hide window on start"));
-	gtk_box_pack_start(GTK_BOX(adv_vbox), hide_on_start, FALSE, FALSE, 0);
-	g_object_set_data(G_OBJECT(adv_vbox), "hide_on_start", hide_on_start);
 
 
 	/* themes */
