@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.69 2004/10/13 10:51:29 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.70 2004/10/13 13:34:30 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -37,6 +37,7 @@ void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason,
 {
 	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
 	static gint reconnect_count = 0;
+	static gchar *error_message;
 	g_static_mutex_lock(&connect_mutex);
 	
 	if (iq_handler)
@@ -74,6 +75,8 @@ void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason,
 
 	message_handler = NULL;
 
+	signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
+	
 	if (reconnect_count < 3)
 	{	
 	    reconnect_count++;
@@ -85,21 +88,21 @@ void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason,
 	
 	reconnect_count = 0;
 	jabber_data.status = JABBER_STATUS_UNAVAILABLE;
-	signal_emit("jabber", "gui disconnected", NULL, "main-gui");
 
 	if (reason == LM_DISCONNECT_REASON_OK)
 	{
-		signal_emit("jabber", "gui show message", g_strdup(_("Jabber disconnected")), "main-gui");
+		error_message = _("Jabber disconnected");
 	} else if (reason == LM_DISCONNECT_REASON_PING_TIME_OUT) {
-		signal_emit("jabber", "gui show message", g_strdup(_("Connection to the Jabber server timed out")), "main-gui");
+		error_message = _("Connection to the Jabber server timed out");
 	} else if (reason == LM_DISCONNECT_REASON_HUP) {
-		signal_emit("jabber", "gui show message", g_strdup(_("Connection hung up")), "main-gui");
+		error_message = _("Connection hung up");
 	} else if (reason == LM_DISCONNECT_REASON_ERROR) {
-		signal_emit("jabber", "gui show message", g_strdup(_("Generic error somewhere in the transport layer")), "main-gui");
+		error_message = _("Generic error somewhere in the transport layer");
 	} else if (reason == LM_DISCONNECT_REASON_UNKNOWN) {
-		signal_emit("jabber", "gui show message", g_strdup(_("An unknown Jabber error")), "main-gui");
+		error_message = _("An unknown Jabber error");
 	}
 	
+	signal_emit_from_thread("jabber", "gui show message", g_strdup(error_message), "main-gui");
 	lm_connection_close(connection,NULL);
 
 	print_debug("jabber_disconnect_cb 10");

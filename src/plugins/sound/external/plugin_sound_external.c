@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.19 2004/08/26 12:35:55 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.20 2004/10/13 13:34:31 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -44,12 +44,29 @@ GGadu_PLUGIN_INIT("sound-external", GGADU_PLUGIN_TYPE_MISC);
 
 gpointer ggadu_play_file(gpointer user_data)
 {
-    gchar *cmd;
+    static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
+    gchar *cmd_native = NULL;
+    gchar *cmd = NULL;
+    gsize r,w;
+    
+    g_static_mutex_lock(&play_mutex);
+    
     if (!ggadu_config_var_get(handler, "player"))
+    {
+	g_static_mutex_unlock(&play_mutex);
+	g_thread_exit(0);
 	return NULL;
-    cmd = g_strdup_printf("%s %s", (char *) ggadu_config_var_get(handler, "player"), (gchar *) user_data);
-    system(cmd);
+    }
+    
+    cmd = g_strdup_printf("\"%s\" \"%s\"", (gchar *) ggadu_config_var_get(handler, "player"), (gchar *)user_data);
+    cmd_native = g_filename_from_utf8(cmd,-1,&r,&w,NULL);
+    system(cmd_native);
+    g_free(cmd_native);
     g_free(cmd);
+    
+    g_static_mutex_unlock(&play_mutex);
+    g_thread_exit(0);
+    
     return NULL;
 }
 
@@ -99,7 +116,7 @@ gpointer se_preferences(gpointer user_data)
 
     print_debug("%s: Preferences\n", "Sound external");
 
-    ggadu_dialog_add_entry(dialog, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, ggadu_config_var_get(handler, "player"),
+    ggadu_dialog_add_entry(dialog, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_FILE_CHOOSER, ggadu_config_var_get(handler, "player"),
 			   VAR_FLAG_NONE);
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -141,9 +158,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
-	path = g_build_filename(this_configdir, "sound-external", NULL);
+    path = g_build_filename(this_configdir, "sound-external", NULL);
     ggadu_config_set_filename((GGaduPlugin *) handler, path);
-	g_free(path);
+    g_free(path);
 
     g_free(this_configdir);
 

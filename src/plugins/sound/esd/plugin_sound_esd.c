@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_esd.c,v 1.12 2004/08/26 12:35:55 krzyzak Exp $ */
+/* $Id: plugin_sound_esd.c,v 1.13 2004/10/13 13:34:31 krzyzak Exp $ */
 
 /* 
  * sound-ESD plugin for GNU Gadu 2 
@@ -42,10 +42,21 @@ static GQuark SOUND_PLAY_FILE_SIG;
 
 gpointer ggadu_play_file(gpointer filename)
 {
-    if (!esd_play_file(g_get_prgname(), filename, TRUE))
+    static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
+    gchar *filename_native = NULL;
+    gsize r,w;
+    
+    g_static_mutex_lock(&play_mutex);
+
+    filename_native = g_filename_from_utf8(filename,-1,&r,&w,NULL);
+    if (!esd_play_file(g_get_prgname(), filename_native, TRUE))
     {
 	signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("Unable to play file")), "main-gui");
     }
+
+    g_free(filename_native);
+    g_static_mutex_unlock(&play_mutex);
+    g_thread_exit(0);
     return NULL;
 }
 

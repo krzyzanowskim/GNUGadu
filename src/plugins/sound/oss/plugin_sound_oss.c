@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.11 2004/09/22 22:30:49 krzyzak Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.12 2004/10/13 13:34:31 krzyzak Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
@@ -95,22 +95,6 @@ static gint oss_play_file(gchar *filename)
     bytes_per_frame = ( in_width  * in_channels ) / 8;
     buf_frames = MAX_BUF_SIZE / bytes_per_frame;
     
-/*    if (ioctl(dspfile, SNDCTL_DSP_CHANNELS, in_channels) < 0)
-	perror("ioctl(SNDCTL_DSP_CHANNELS)");
-	
-    if (ioctl(dspfile, SNDCTL_DSP_SPEED,in_rate) < 0)
-	perror("ioctl(SNDCTL_DSP_SPEED)");
-
-    defaultSampleWidth = afQueryLong(AF_QUERYTYPE_FILEFMT,
-	AF_QUERY_SAMPLE_SIZES, AF_QUERY_DEFAULT, in_format, 0);
-
-    if (ioctl(dspfile, SNDCTL_DSP_SAMPLESIZE, defaultSampleWidth) < 0)
-	perror("ioctl(SNDCTL_DSP_SAMPLESIZE)");
-	
-    if (ioctl(dspfile, SNDCTL_DSP_SETFMT, in_format) < 0)
-	perror("ioctl(SNDCTL_DSP_SETFMT)");
-*/
-
     /* play a stream */    
     while ( ( frames_read = afReadFrames( in_file, AF_DEFAULT_TRACK, buf, buf_frames ) ) )
     {
@@ -131,9 +115,20 @@ static gint oss_play_file(gchar *filename)
 }
 
 
-gpointer ggadu_play_file(gpointer user_data)
+gpointer ggadu_play_file(gpointer filename)
 {
-    oss_play_file(user_data);
+    static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
+    gsize r,w;
+    gchar *filename_native = NULL;
+    
+    g_static_mutex_lock(&play_mutex);
+
+    filename_native = g_filename_from_utf8(filename,-1,&r,&w,NULL);
+    oss_play_file(filename_native);
+    g_free(filename);
+
+    g_static_mutex_unlock(&play_mutex);
+    g_thread_exit(0);
     return NULL;
 }
 

@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_arts.c,v 1.9 2004/08/26 12:35:54 krzyzak Exp $ */
+/* $Id: plugin_sound_arts.c,v 1.10 2004/10/13 13:34:30 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -41,7 +41,18 @@ GGadu_PLUGIN_INIT("sound-arts", GGADU_PLUGIN_TYPE_MISC);
 
 static gpointer ggadu_play_file(gpointer filename)
 {
-    arts_play_file(filename);
+    static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
+    gchar *filename_native = NULL;
+    gsize r,w;
+
+    g_static_mutex_lock(&play_mutex);
+
+    filename_native = g_filename_from_utf8(filename,-1,&r,&w,NULL);
+    arts_play_file(filename_native);
+    g_free(filename_native);
+
+    g_static_mutex_unlock(&play_mutex);
+    g_thread_exit(0);
     return NULL;
 }
 

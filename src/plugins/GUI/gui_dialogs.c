@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.50 2004/10/09 13:30:48 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.51 2004/10/13 13:34:29 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -61,7 +61,8 @@ void gui_dialog_show_filename(GtkWidget * txt_entry)
 
 	if (response == GTK_RESPONSE_OK)
 	{
-		filename = (gchar *) gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selector));
+		gsize r,w;
+		filename = g_filename_to_utf8( gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selector)),-1,&r,&w,NULL);
 		gtk_entry_set_text(GTK_ENTRY(txt_entry), filename);
 		kv->value = (gpointer) filename;
 	}
@@ -183,7 +184,6 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 
 			g_object_set_data(G_OBJECT(txt_entry), "kv", kv);
 			g_object_set_data(G_OBJECT(entry), "txt_entry", txt_entry);
-
 
 			button_entry = gtk_button_new_from_stock("gtk-open");
 
