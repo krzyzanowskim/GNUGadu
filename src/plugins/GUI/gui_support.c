@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.15 2004/12/20 09:15:15 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.16 2004/12/26 00:23:30 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -271,7 +271,7 @@ GtkWidget *create_image(const gchar * filename)
 
 	if (!found_filename)
 	{
-		g_warning(_("Couldn't find pixmap file: %s"), filename);
+		print_debug("Couldn't find pixmap file: %s", filename);
 		g_slist_free(dir);
 		g_free(iconsdir);
 		return NULL;
@@ -325,7 +325,7 @@ GdkPixbuf *create_pixbuf(const gchar * filename)
 
 	if (!found_filename)
 	{
-		g_warning(_("Couldn't find pixmap file: %s"), filename);
+	 print_debug("Couldn't find pixmap file: %s", filename);
 		return NULL;
 	}
 
