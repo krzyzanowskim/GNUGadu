@@ -1,5 +1,6 @@
-/* $Id: icq_plugin.c,v 1.2 2003/04/09 17:01:02 thrulliq Exp $ */
+/* $Id: icq_plugin.c,v 1.3 2003/04/09 17:03:39 thrulliq Exp $ */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
