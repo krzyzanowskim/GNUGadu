@@ -1,4 +1,4 @@
-/* $Id: jabber_login.h,v 1.7 2004/01/28 23:41:17 shaster Exp $ */
+/* $Id: jabber_login.h,v 1.8 2004/05/18 14:55:57 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -25,7 +25,7 @@
 
 #include "jabber_plugin.h"
 
-void jabber_login(enum states status);
+/*void jabber_login(enum states status);*/
 
 gpointer jabber_login_connect(gpointer status);
 

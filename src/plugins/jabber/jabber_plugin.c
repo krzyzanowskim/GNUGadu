@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.77 2004/05/17 11:46:43 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.78 2004/05/18 14:55:57 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -409,7 +409,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				g_free(jabber_data.status_descr);
 
 			jabber_data.status_descr = g_strdup(((GGaduKeyValue *) (d->optlist->data))->value);
-			jabber_login(jabber_data.status);
+			/*jabber_login(jabber_data.status);*/
+			jabber_change_status(jabber_data.status);
 		}
 	}
 	else if (signal->name == CHANGE_STATUS_SIG)
@@ -428,11 +429,13 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
 						VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
-			jabber_login(jabber_data.status);
+			/*jabber_login(jabber_data.status);*/
+			jabber_change_status(jabber_data.status);
 			return;
 		}
 
-		jabber_login(sp->status);
+		/*jabber_login(sp->status);*/
+		jabber_change_status(sp->status);
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
 	{
@@ -858,7 +861,8 @@ void start_plugin()
 	if (ggadu_config_var_get(jabber_handler, "autoconnect") && !jabber_data.connected)
 	{
 		print_debug("jabber: autoconneting");
-		jabber_login(JABBER_STATUS_AVAILABLE);
+		jabber_change_status(JABBER_STATUS_AVAILABLE);
+		/*jabber_login(JABBER_STATUS_AVAILABLE);*/
 	}
 
 }

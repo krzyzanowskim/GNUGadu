@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.29 2004/05/17 11:24:28 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.30 2004/05/18 14:55:57 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -29,7 +29,7 @@
 
 extern jabber_data_type jabber_data;
 
-void jabber_login(enum states status)
+/*void jabber_login(enum states status)
 {
 	GSList *list;
 
@@ -71,11 +71,10 @@ void jabber_login(enum states status)
 	}
 	else
 	{
-		/* we haven't connected yet */
 		g_thread_create(jabber_login_connect, (gpointer) status, FALSE, NULL);
 	}
 }
-
+*/
 static LmSSLResponse jabber_connection_ssl_func (LmSSL *ssl, LmSSLStatus status, gpointer data)
  {
 	 return LM_SSL_RESPONSE_CONTINUE;
@@ -84,8 +83,8 @@ static LmSSLResponse jabber_connection_ssl_func (LmSSL *ssl, LmSSLStatus status,
 gpointer jabber_login_connect(gpointer status)
 {
 	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
-	gchar *jid;
-	gchar *server;
+	gchar *jid = NULL;
+	gchar *server = NULL;
 
 	g_static_mutex_lock(&connect_mutex);
 	if (!(jid = g_strdup(ggadu_config_var_get(jabber_handler, "jid"))))
@@ -192,15 +191,11 @@ gpointer jabber_login_connect(gpointer status)
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
-
-
 	lm_connection_set_disconnect_function(jabber_data.connection, jabber_disconnect_cb, NULL, NULL);
-	
+
 	if (!lm_connection_open(jabber_data.connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
 	{
-		print_debug("jabber: lm_connection_open() failed.\n");
-		signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
-		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Connection failed")), "main-gui");
+		jabber_disconnect_cb(jabber_data.connection,LM_DISCONNECT_REASON_OK, NULL);
 	}
 
 

@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.27 2004/05/17 11:24:29 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.28 2004/05/18 14:55:57 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -25,6 +25,7 @@
 
 #include "jabber_protocol.h"
 #include "jabber_plugin.h"
+#include "jabber_login.h"
 #include "jabber_cb.h"
 
 extern jabber_data_type jabber_data;
@@ -79,7 +80,27 @@ void jabber_change_status(enum states status)
 
 	if ((status == jabber_data.status) && (!jabber_data.status_descr))
 		return;
-
+		
+	/* connect if switched to any other than unavailable */	
+	if ((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status != JABBER_STATUS_UNAVAILABLE) && 
+	    (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection) || !lm_connection_is_authenticated(jabber_data.connection)))
+	{
+		g_thread_create(jabber_login_connect, (gpointer) status, FALSE, NULL);
+		return;
+	}
+	
+	if ((status == JABBER_STATUS_UNAVAILABLE) && lm_connection_close(jabber_data.connection, NULL))
+	{
+		signal_emit("jabber", "gui disconnected", NULL, "main-gui");
+		return;
+	}
+	
+	if (jabber_data.connection && !lm_connection_is_authenticated(jabber_data.connection))
+	{
+		print_debug("You are not yet authenticated!");
+		return;
+	}
+	
 	m = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_PRESENCE,
 					 status ==
 					 JABBER_STATUS_UNAVAILABLE ? LM_MESSAGE_SUB_TYPE_UNAVAILABLE :
