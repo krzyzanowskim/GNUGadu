@@ -153,6 +153,7 @@ void gtk_anim_label_set_text (GtkAnimLabel * anim_label, const gchar * txt)
 
     if (anim_label->txt) {
 	g_free (anim_label->txt);
+	anim_label->txt = NULL;
     }
 
     if ((txt == NULL) || (strlen(txt) <= 0)) {
