@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.21 2003/04/26 23:01:51 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.22 2003/04/28 09:10:34 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -446,7 +446,7 @@ gpointer user_add_user_action(gpointer user_data)
     kv = g_new0(GGaduKeyValue,1);
     kv->key		= TLEN_TLEN_UIN;
     kv->description	= g_strdup("Tlen ID");
-    kv->type		= VAR_INT;
+    kv->type		= VAR_STR;
     
     optlist = g_slist_append(optlist,kv);
 
