@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.9 2003/06/02 09:49:44 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>

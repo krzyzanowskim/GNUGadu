@@ -10,6 +10,6 @@ libsms_plugin_la_SOURCES = sms_gui.c \
     sms_core.c \
     sms_core.h
 
-libsms_plugin_la_LIBADD =
+libsms_plugin_la_LIBADD = $(top_builddir)/lib/libgg2_core.la
     
-libsms_plugin_la_LDFLAGS = -module -avoid-version  
+libsms_plugin_la_LDFLAGS = -avoid-version  

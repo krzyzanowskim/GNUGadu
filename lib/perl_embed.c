@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.12 2003/05/11 19:07:25 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat

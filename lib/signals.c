@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.6 2003/05/11 18:07:25 zapal Exp $ */
+/* $Id: signals.c,v 1.1 2003/06/03 21:30:09 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>

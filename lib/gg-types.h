@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.12 2003/05/31 09:49:48 shaster Exp $ */
+/* $Id: gg-types.h,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.

@@ -11,6 +11,6 @@ libdocklet_plugin_la_SOURCES = docklet_plugin.c \
     eggtrayicon.h
     
 
-libdocklet_plugin_la_LIBADD = $(GTK_LIBS) 
-libdocklet_plugin_la_LDFLAGS = -module -avoid-version  
+libdocklet_plugin_la_LIBADD = $(GTK_LIBS) $(top_builddir)/lib/libgg2_core.la
+libdocklet_plugin_la_LDFLAGS = -avoid-version  
 

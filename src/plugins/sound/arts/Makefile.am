@@ -8,8 +8,8 @@ libsound_arts_plugin_la_CXXFLAGS = $(ARTS_CXXFLAGS)
 
 libsound_arts_plugin_la_SOURCES = plugin_sound_arts.c sound-arts.cpp sound-arts.h
 
-libsound_arts_plugin_la_LIBADD = $(ARTS_LIBS)
+libsound_arts_plugin_la_LIBADD = $(ARTS_LIBS) $(top_builddir)/lib/libgg2_core.la
 
-libsound_arts_plugin_la_LDFLAGS = -module -avoid-version  
+libsound_arts_plugin_la_LDFLAGS = -avoid-version  
 
 

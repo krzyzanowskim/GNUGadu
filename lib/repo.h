@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.6 2003/05/10 11:44:32 zapal Exp $ */
+/* $Id: repo.h,v 1.1 2003/06/03 21:30:09 krzyzak Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1

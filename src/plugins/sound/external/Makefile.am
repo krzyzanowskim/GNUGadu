@@ -5,7 +5,7 @@ noinst_LIBRARIES =
 
 libsound_external_plugin_la_SOURCES = plugin_sound_external.c plugin_sound_external.h
 
-libsound_external_plugin_la_LIBADD =
-libsound_external_plugin_la_LDFLAGS = -module -avoid-version  
+libsound_external_plugin_la_LIBADD = $(top_builddir)/lib/libgg2_core.la
+libsound_external_plugin_la_LDFLAGS = -avoid-version  
 
 

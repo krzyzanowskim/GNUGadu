@@ -4,6 +4,7 @@
 - gg2.spec update (krzak)
 - libgg2_core.h autogenerate (krzak)
 - libgg2_core.pc added for pkgconfig (krzak)
+- revolution, new directory "lib", fuck automake (krzak)
 
 02.06.2003
 - autoaway in minutes, not miliseconds (GUI/shasta)

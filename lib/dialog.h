@@ -1,4 +1,4 @@
-/* $Id: dialog.h,v 1.4 2003/04/04 15:17:30 thrulliq Exp $ */
+/* $Id: dialog.h,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
 
 #ifndef GGadu_DIALOG_H
 #define GGadu_DIALOG_H

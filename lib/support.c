@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.7 2003/05/28 07:42:57 zapal Exp $ */
+/* $Id: support.c,v 1.1 2003/06/03 21:30:10 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.

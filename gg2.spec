@@ -1,4 +1,4 @@
-# $Revision: 1.4 $, $Date: 2003/06/03 11:30:54 $
+# $Revision: 1.5 $, $Date: 2003/06/03 21:30:04 $
 
 %define		snap	snap
 
@@ -262,6 +262,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gg2
 %{_datadir}/%{name}/sounds
 %{_libdir}/libgg2_core.so*
+%{_libdir}/pkgconfig/gg2_core.pc
 
 %files gui-gtk+2
 %defattr(644,root,root,755)
@@ -347,6 +348,12 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.5  2003/06/03 21:30:04  krzyzak
+- revolution
+- libgg2_core.so in "lib" directory
+- example plugin that can be build out the main tree in "contrib" directory
+- fuck automake
+
 Revision 1.4  2003/06/03 11:30:54  krzyzak
 SPEC file update
 

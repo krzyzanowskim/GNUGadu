@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: plugins.h,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
 #ifndef GGadu_PROTOCOLS_H
 #define GGadu_PROTOCOLS_H 1
 

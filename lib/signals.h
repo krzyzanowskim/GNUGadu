@@ -1,4 +1,4 @@
-/* $Id: signals.h,v 1.3 2003/05/11 14:13:41 zapal Exp $ */
+/* $Id: signals.h,v 1.1 2003/06/03 21:30:10 krzyzak Exp $ */
 #ifndef GGadu_SIGNALS_H
 #define GGadu_SIGNALS_H 1
 

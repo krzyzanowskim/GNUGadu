@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.4 2003/05/28 07:42:57 zapal Exp $ */
+/* $Id: support.h,v 1.1 2003/06/03 21:30:10 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1

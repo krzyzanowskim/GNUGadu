@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.3 2003/04/04 15:17:30 thrulliq Exp $ */
+/* $Id: dialog.c,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
