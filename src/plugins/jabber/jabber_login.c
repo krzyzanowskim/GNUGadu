@@ -101,13 +101,13 @@ gpointer jabber_login_connect (gpointer status)
 
 	if (!iq_handler) {
 		iq_handler = lm_message_handler_new (iq_cb, NULL, NULL);
-        lm_connection_register_message_handler (connection, iq_handler, LM_MESSAGE_TYPE_IQ, LM_HANDLER_PRIORITY_NORMAL);
+        lm_connection_register_message_handler (connection, iq_handler, LM_MESSAGE_TYPE_IQ, LM_HANDLER_PRIORITY_FIRST);
     }
 	
     if (!iq_roster_handler) {
 		iq_roster_handler = lm_message_handler_new (iq_roster_cb, NULL, NULL);
         lm_connection_register_message_handler (connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ,
-						LM_HANDLER_PRIORITY_FIRST);
+						LM_HANDLER_PRIORITY_NORMAL);
     }
     
 	if (!iq_version_handler) {

@@ -187,7 +187,6 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 LmHandlerResult iq_cb (LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
 {
 	GSList *list = jabber_data.actions;
-	waiting_action *action;
 	gchar *type;
 	gchar *id;
 
@@ -200,7 +199,7 @@ LmHandlerResult iq_cb (LmMessageHandler * handler, LmConnection * connection, Lm
 
 	while (list)
 	{
-		action = (waiting_action *) list->data;
+		waiting_action *action = (waiting_action *) list->data;
 		if (!strcmp (type, action->type) && !strcmp (id, action->id))
 		{
 			action->func (connection, message, action->data);
@@ -264,21 +263,21 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
 	print_debug ("%s", lm_message_node_to_string (message->node));
 
+	if (lm_message_get_sub_type (message) != LM_MESSAGE_SUB_TYPE_SET &&
+	    lm_message_get_sub_type (message) != LM_MESSAGE_SUB_TYPE_RESULT)
+	{
+		print_debug ("%s", lm_message_node_get_attribute (message->node, "type"));
+		print_debug ("xml: %s", lm_message_node_to_string (message->node));
+		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+	}
+
 	if (!(node = lm_message_node_get_child (message->node, "query")))
 	{
-		print_debug ("jabber: weird roster.\n%s", lm_message_node_to_string (message->node));
+		print_debug ("jabber: weird roster.");
         lm_message_node_unref(node);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
-	if (lm_message_get_sub_type (message) != LM_MESSAGE_SUB_TYPE_SET &&
-	    lm_message_get_sub_type (message) != LM_MESSAGE_SUB_TYPE_RESULT)
-	{
-		print_debug ("%s\n", lm_message_node_get_attribute (message->node, "type"));
-		print_debug ("xml:\n%s", lm_message_node_to_string (message->node));
-        lm_message_node_unref(node);
-		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
-	}
 
 	if (strcmp (lm_message_node_get_attribute (node, "xmlns"), "jabber:iq:roster")) {
         lm_message_node_unref(node);
@@ -359,8 +358,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
     
 		k->nick = g_strdup (name ? name : jid);
 
-		if (strcmp (subs, "none") && strcmp (subs, "from"))
-		{
+         /* pokazuj wszystkie */
 			if (first_seen)
 			{
 				if (!strcmp (subs, "to"))
@@ -374,7 +372,6 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
 			if (!ggadu_repo_add_value ("jabber", k->id, k, REPO_VALUE_CONTACT))
 				ggadu_repo_change_value ("jabber", k->id, k, REPO_VALUE_DC);
-		}
 
 		child = child->next;
 	}

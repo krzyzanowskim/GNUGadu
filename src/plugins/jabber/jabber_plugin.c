@@ -342,54 +342,60 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 		{
 			GGaduKeyValue *kv = (GGaduKeyValue *) kvlist->data;
 
-			if ((gint) kv->key == GGADU_ID)
-			{
-				k->id = g_strdup ((gchar *) kv->value);
-				g_free (kv->value);
-			}
-			else if ((gint) kv->key == GGADU_NICK)
-			{
-				if (kv->value && ((gchar *) kv->value)[0] != '\0')
-					k->nick = g_strdup ((gchar *) kv->value);
-			}
+            switch ((gint) kv->key) {
+                case GGADU_ID:
+                    k->id = g_strdup ((gchar *) kv->value);
+                    g_free (kv->value);
+                break;
+                case GGADU_NICK:
+                    if (kv->value && (((gchar *) kv->value)[0] != '\0'))
+                        k->nick = g_strdup ((gchar *) kv->value);
+                break;
+            }
 			kvlist = kvlist->next;
 		}
 
-		g_slist_free (kvlist);
+        g_slist_free((GSList *) signal->data);
+		//g_slist_free (kvlist);
 
 		m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
-		lm_message_node_set_attribute (m->node, "id", "roster_2");
+		lm_message_node_set_attribute (m->node, "id", "roster_add");
 
 		node = lm_message_node_add_child (m->node, "query", NULL);
 		lm_message_node_set_attribute (node, "xmlns", "jabber:iq:roster");
 
 		node = lm_message_node_add_child (node, "item", NULL);
-		print_debug ("%s\n", k->id);
+		print_debug ("Add : %s", k->id);
+    
 		lm_message_node_set_attribute (node, "jid", k->id);
 
 		if (k->nick)
-		{
 			lm_message_node_set_attribute (node, "name", k->nick);
-		}
-		else
+    
+/*	    else
 		{
-			action = g_new0 (waiting_action, 1);
-			action->id = g_strdup ("roster_2");
-			action->type = g_strdup ("result");
-			action->data = g_strdup (k->id);
-			action->func = action_subscribe;
-			jabber_data.actions = g_slist_append (jabber_data.actions, action);
+            action = action_queue_add("roster_add","result",action_subscribe,k->id);
 		}
-
-		result = lm_connection_send (connection, m, NULL);
+*/
+        if (lm_connection_send (connection, m, NULL)) {
+            action_queue_add("roster_add","result",action_roster_add_result,k->id);
+        } else {
+			print_debug ("jabber: Couldn't send.\n");
+        }
+    
 		lm_message_unref (m);
+
+/*
+        action = action_queue_add("roster_add","result",action_subscribe,k->id);
+        result = lm_connection_send (connection, m, NULL);
+		lm_message_unref (m);
+    
 		if (!result)
 		{
-			jabber_data.actions = g_slist_remove (jabber_data.actions, action);
-			g_free (action);
+            action_queue_del(action);
 			print_debug ("jabber: Couldn't send.\n");
 		}
-
+*/
 		g_free (k->id);
 		g_free (k);
 	}
@@ -439,7 +445,6 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 						LmMessage *message;
 						LmMessageNode *node;
 						gboolean result;
-						waiting_action *action;
 
 						message =
 							lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ,
@@ -451,12 +456,7 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 						node = lm_message_node_add_child (message->node, "query", NULL);
 						lm_message_node_set_attribute (node, "xmlns", "jabber:iq:search");
 
-						action = g_new0 (waiting_action, 1);
-						action->id = g_strdup ("search1");
-						action->type = g_strdup ("result");
-						action->data = NULL;
-						action->func = action_search_form;
-						jabber_data.actions = g_slist_append (jabber_data.actions, action);
+                        action_queue_add("search1","result",action_search_form,NULL);
 
 						result = lm_connection_send (connection, message, NULL);
 						lm_message_unref (message);
@@ -482,7 +482,7 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 		LmMessage *message;
 		LmMessageNode *node;
 		gboolean result;
-		waiting_action *action;
+		//waiting_action *action;
 
 		if (d->response == GGADU_OK)
 		{
@@ -527,12 +527,7 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 				tmplist = tmplist->next;
 			}
 
-			action = g_new0 (waiting_action, 1);
-			action->id = g_strdup ("search2");
-			action->type = g_strdup ("result");
-			action->data = NULL;
-			action->func = action_search_result;
-			jabber_data.actions = g_slist_append (jabber_data.actions, action);
+            action_queue_add("search2","result",action_search_result,NULL);
 
 			print_debug ("\n%s", lm_message_node_to_string (message->node));
 			result = lm_connection_send (connection, message, NULL);

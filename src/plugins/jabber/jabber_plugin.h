@@ -43,7 +43,7 @@ typedef struct {
   gchar *id;
   gchar *type;
   gpointer data;
-  void (*func) (LmConnection *connection, LmMessage *message, gpointer data);
+  void (*func) (LmConnection *, LmMessage *, gpointer);
 } waiting_action;
 
 extern GGaduPlugin *jabber_handler;

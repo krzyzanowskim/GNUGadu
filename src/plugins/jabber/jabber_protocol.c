@@ -6,6 +6,30 @@
 
 extern jabber_data_type jabber_data;
 
+waiting_action* action_queue_add (gchar *id, gchar *type, gpointer action_callback, gchar *data)
+{
+  waiting_action *action;
+  action = g_new0 (waiting_action, 1);
+  action->id   = g_strdup (id);
+  action->type = g_strdup (type);
+  action->func = action_callback;
+  action->data = data ? g_strdup (data) : NULL;
+
+  jabber_data.actions = g_slist_append (jabber_data.actions, action);
+  return action;
+}
+
+void action_queue_del (waiting_action *action)
+{
+  jabber_data.actions = g_slist_remove (jabber_data.actions, action);
+  g_free (action);
+}
+
+void action_roster_add_result (LmConnection *connection, LmMessage *message, gpointer data)
+{
+    signal_emit ("jabber", "gui show message", g_strdup (_("Contact added")), "main-gui");
+}
+
 void action_subscribe (LmConnection *connection, LmMessage *message, gpointer data)
 {
   LmMessage *m;
@@ -22,19 +46,13 @@ void action_subscribe (LmConnection *connection, LmMessage *message, gpointer da
   node = lm_message_node_add_child (node, "item", NULL);
   lm_message_node_set_attribute (node, "jid", data);
 
-  action = g_new0 (waiting_action, 1);
-  action->id   = g_strdup ("subscribe");
-  action->type = g_strdup ("result");
-  action->data = g_strdup (data);
-  action->func = action_subscribe_result;
-  jabber_data.actions = g_slist_append (jabber_data.actions, action);
-
+  action = action_queue_add("subscribe","result",action_subscribe_result,data);
   result = lm_connection_send (connection, m, NULL);
   lm_message_unref (m);
-  if (!result)
+
+if (!result)
   {
-    jabber_data.actions = g_slist_remove (jabber_data.actions, action);
-    g_free (action);
+    action_queue_del(action);
     print_debug ("jabber: Can't send.\n");
   }
 }
@@ -101,22 +119,18 @@ void jabber_change_status (enum states status)
 void jabber_fetch_roster (void)
 {
   LmMessage *m;
-  gboolean result;
   LmMessageNode *node;
+  gboolean result;
 
   m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
-  lm_message_node_set_attribute (m->node, "id", "roster_1");
-  
   node = lm_message_node_add_child (m->node, "query", NULL);
   lm_message_node_set_attribute (node, "xmlns", "jabber:iq:roster");
-  
-  print_debug ("Sending:\n%s", lm_message_node_to_string (m->node));
-  
   result = lm_connection_send (connection, m, NULL);
   lm_message_unref (m);
 
   if (!result)
     print_debug ("jabber: Can't fetch roster (lm_connection_send() failed).\n");
+  
 }
 
 void action_search_form (LmConnection *connection, LmMessage *message, gpointer data)
