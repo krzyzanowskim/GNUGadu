@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.231 2005/01/02 15:23:50 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.232 2005/01/03 22:16:05 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1760,6 +1760,8 @@ void start_plugin()
 	p->offline_status = g_slist_append(p->offline_status, (gint *) GG_STATUS_NOT_AVAIL_DESCR);
 	p->away_status = g_slist_append(p->away_status, (gint *) GG_STATUS_BUSY);
 	p->away_status = g_slist_append(p->away_status, (gint *) GG_STATUS_BUSY_DESCR);
+	p->away_status = g_slist_append(p->away_status, (gint *) GG_STATUS_INVISIBLE);
+	p->away_status = g_slist_append(p->away_status, (gint *) GG_STATUS_INVISIBLE_DESCR);
 	p->online_status = g_slist_append(p->online_status, (gint *) GG_STATUS_AVAIL);
 	p->online_status = g_slist_append(p->online_status, (gint *) GG_STATUS_AVAIL_DESCR);
 	handler->plugin_data = p;	/* GGaduProtocol * */
