@@ -1,4 +1,4 @@
-/* $Id: icq_plugin.c,v 1.1 2003/04/09 16:07:22 thrulliq Exp $ */
+/* $Id: icq_plugin.c,v 1.2 2003/04/09 17:01:02 thrulliq Exp $ */
 
 #include <stdio.h>
 #include <string.h>
@@ -385,7 +385,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		    switch (kv->key) 
 		    {
 			case ICQ_UIN:
-				    print_debug("changing var setting uin to %s\n", kv->value);
+				    print_debug("changing var setting uin to %d\n", kv->value);
 				    config_var_set(handler, "uin", kv->value);
 				    break;
 			case ICQ_PASSWORD:
@@ -393,7 +393,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    config_var_set(handler, "password", kv->value);
 				    break;
 			case ICQ_NICK:
-				    print_debug("changing var setting nick to %d\n", kv->value);
+				    print_debug("changing var setting nick to %s\n", kv->value);
 				    config_var_set(handler, "nick", kv->value);
 				    break;
 		    }
