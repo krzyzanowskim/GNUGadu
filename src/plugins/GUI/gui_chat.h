@@ -1,4 +1,4 @@
-/* $Id: gui_chat.h,v 1.8 2004/03/13 07:44:19 krzyzak Exp $ */
+/* $Id: gui_chat.h,v 1.9 2004/06/11 01:25:33 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -36,7 +36,7 @@
 
 GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * id, gboolean visible);
 
-void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self);
+void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean notice_message);
 
 void gui_chat_update_tags();
 

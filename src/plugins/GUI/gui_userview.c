@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.45 2004/05/18 12:09:12 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.46 2004/06/11 01:25:33 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -551,6 +551,19 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 				gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 				GtkWidget *window =
 					(GtkWidget *) g_object_get_data(G_OBJECT(session->chat), "top_window");
+
+				if (ggadu_config_var_get(gui_handler, "notify_status_changes"))
+				{
+					GGaduMsg *msg = g_new0(GGaduMsg, 1);
+					msg->id = g_strdup(session->id);
+					if (k->status_descr)
+						msg->message = g_strdup_printf("%s (%s)", sp ? sp->description : "", k->status_descr);
+					else
+						msg->message = g_strdup_printf("%s", sp ? sp->description : "");
+					msg->class = (g_slist_length(session->recipients) > 1) ? GGADU_CLASS_CONFERENCE : GGADU_CLASS_CHAT;
+					msg->recipients = g_slist_copy(session->recipients);
+					gui_chat_append(session->chat, msg, FALSE, TRUE);
+				}
 
 				if (chat_type == CHAT_TYPE_CLASSIC)
 				{

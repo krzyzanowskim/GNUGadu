@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.72 2004/05/06 10:27:47 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.73 2004/06/11 01:25:33 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -246,7 +246,7 @@ gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath *arg1, GtkTreeV
 			gtk_widget_show(window);
 		}
 
-		gui_chat_append(session->chat, NULL, TRUE);
+		gui_chat_append(session->chat, NULL, TRUE, FALSE);
 	}
 
 	print_debug("gui-main : clicked : %s : %s\n", k->id, plugin_name);
@@ -317,7 +317,7 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 				gtk_widget_show(window);
 			}
 
-			gui_chat_append(session->chat, NULL, TRUE);
+			gui_chat_append(session->chat, NULL, TRUE, FALSE);
 		}
 
 		print_debug("gui-main : clicked : %s : %s\n", k->id, plugin_name);
@@ -839,7 +839,7 @@ void gui_msg_receive(GGaduSignal * signal)
 				    g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)), "xosd");
 		}
 
-		gui_chat_append(session->chat, msg, FALSE);
+		gui_chat_append(session->chat, msg, FALSE, FALSE);
 	}
 }
 

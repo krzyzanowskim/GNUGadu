@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.55 2004/05/06 10:27:48 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.56 2004/06/11 01:25:33 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -595,6 +595,7 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *tabbox;
 	GtkWidget *emotic;
 	GtkWidget *send_on_enter;
+	GtkWidget *notify_status_changes;
 	GtkWidget *chatstyle;
 	GtkWidget *chatwindowwidth;
 	GtkWidget *chatwindowheight;
@@ -640,6 +641,11 @@ static GtkWidget *create_chat_tab()
 	gtk_box_pack_start(GTK_BOX(vbox), send_on_enter, FALSE, FALSE, 0);
 
 	g_object_set_data(G_OBJECT(chat_vbox), "send_on_enter", send_on_enter);
+
+	notify_status_changes = gtk_check_button_new_with_label(_("Notify about status changes"));
+	gtk_box_pack_start(GTK_BOX(vbox), notify_status_changes, FALSE, FALSE, 0);
+
+	g_object_set_data(G_OBJECT(chat_vbox), "notify_status_changes", notify_status_changes);
 
 	chatwindowshow = gtk_check_button_new_with_label(_("Automatically show chat window"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatwindowshow, FALSE, FALSE, 0);
@@ -1025,6 +1031,12 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "send_on_enter"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 
+	entry = g_object_get_data(G_OBJECT(chat_vbox), "notify_status_changes");
+	g_return_if_fail(entry != NULL);
+
+	if (ggadu_config_var_get(gui_handler, "notify_status_changes"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
+
 	if (usexosdfornewmsgs)
 		if (ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs"))
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs), TRUE);
@@ -1215,6 +1227,12 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		g_return_if_fail(entry != NULL);
 
 		ggadu_config_var_set(gui_handler, "send_on_enter",
+				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+
+		entry = g_object_get_data(G_OBJECT(chat_vbox), "notify_status_changes");
+		g_return_if_fail(entry != NULL);
+
+		ggadu_config_var_set(gui_handler, "notify_status_changes",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		if (usexosdfornewmsgs)

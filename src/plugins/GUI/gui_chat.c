@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.100 2004/06/08 11:34:18 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.101 2004/06/11 01:25:33 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -313,7 +313,7 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 		msg->class = (g_slist_length(session->recipients) > 1) ? GGADU_CLASS_CONFERENCE : GGADU_CLASS_CHAT;
 		msg->recipients = g_slist_copy(session->recipients);
 
-		gui_chat_append(session->chat, msg->message, TRUE);
+		gui_chat_append(session->chat, msg->message, TRUE, FALSE);
 		if ((soundfile = ggadu_config_var_get(gui_handler, "sound_msg_out")))
 		{
 			signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
@@ -1235,7 +1235,8 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	return session->chat;
 }
 
-void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
+/* self mean that this is my message, not my opponent :) */
+void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean notice_message)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	GtkWidget *history = g_object_get_data(G_OBJECT(chat), "history");
@@ -1244,6 +1245,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	gchar *header = NULL;
 	gchar *text = NULL;
 	gchar *tmp = NULL;
+	gchar *notice_message_txt = NULL;
 	GtkTextMark *mark_start;
 	GtkTextMark *mark_append;
 	GtkTextIter istart;
@@ -1335,14 +1337,34 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	gtk_text_buffer_get_end_iter(buf, &iter);
 	mark_append = gtk_text_buffer_create_mark(buf, NULL, &iter, TRUE);
 
-	tmp = g_strconcat(header, (conference) ? "" : "\n", NULL);
-	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_header" : "incoming_header",
+	if (!notice_message)
+	{
+		tmp = g_strconcat(header, (conference) ? "" : "\n", NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_header" : "incoming_header",
 						 NULL);
+	}
+	 else
+	{
+		notice_message_txt = g_strdup_printf("*** ");
+		gtk_text_buffer_insert_with_tags_by_name(buf, &iter, notice_message_txt, -1, self ? "outgoing_header" : "incoming_header",
+						 NULL);
+		g_free(notice_message_txt);
+	}
 	g_free(tmp);
 
-	tmp = g_strconcat(text, "\n", NULL);
+	tmp = g_strconcat(text, (notice_message) ? "" : "\n", NULL);
 	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text", NULL);
 	g_free(tmp);
+	
+	if (notice_message)
+	{
+		gtk_text_buffer_get_end_iter(buf, &iter);
+		notice_message_txt = g_strdup_printf(" ***\n");
+		gtk_text_buffer_insert_with_tags_by_name(buf, &iter, notice_message_txt, -1, self ? "outgoing_header" : "incoming_header",
+						 NULL);
+		g_free(notice_message_txt);
+	}
+	
 	mark_start = gtk_text_buffer_get_insert(buf);
 
 	/*
