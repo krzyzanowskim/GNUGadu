@@ -25,22 +25,14 @@ LmMessageHandler *iq_version_handler;
 LmMessageHandler *presence_handler;
 LmMessageHandler *message_handler;
 
-GSList *userlist;
-GSList *rosterlist;
+jabber_data_type jabber_data;
 
-GSList *actions;
-
-gint connected = 0;
-
-gint jabber_status = JABBER_STATUS_UNAVAILABLE;
-
-gchar *status_descr = NULL;
-
-extern GGaduConfig *config;
 GGaduProtocol *p;
 GGaduMenu *jabbermenu;
 
 GGadu_PLUGIN_INIT ("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
+
+extern GGaduConfig *config;
 
 GGaduContact *user_in_list (gchar * jid, GSList * list)
 {
@@ -177,7 +169,7 @@ gpointer user_remove_action (gpointer user_data)
 
 		if (k)
 		{
-			if (connected == 2)
+			if (jabber_data.connected == 2)
 			{
 				LmMessage *m;
 				gboolean result;
@@ -190,10 +182,10 @@ gpointer user_remove_action (gpointer user_data)
 				lm_message_node_set_attributes (node, "jid", g_strdup (k->id), "subscription", "remove",
 								NULL);
 
-				rosterlist = g_slist_remove (rosterlist, k);
-				userlist = g_slist_remove (userlist, k);
+				jabber_data.rosterlist = g_slist_remove (jabber_data.rosterlist, k);
+				jabber_data.userlist = g_slist_remove (jabber_data.userlist, k);
 				ggadu_repo_del_value ("jabber", k->id);
-				signal_emit ("jabber", "gui send userlist", userlist, "main-gui");
+				signal_emit ("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
 				GGaduContact_free (k);
 				result = lm_connection_send (connection, m, NULL);
 				if (!result)
@@ -277,11 +269,11 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 		if (d->response == GGADU_OK)
 		{
 			
-            if (status_descr)
-				g_free (status_descr);
+            if (jabber_data.status_descr)
+				g_free (jabber_data.status_descr);
             
-			status_descr = g_strdup (((GGaduKeyValue *) (d->optlist->data))->value);
-			jabber_login (jabber_status);
+			jabber_data.status_descr = g_strdup (((GGaduKeyValue *) (d->optlist->data))->value);
+			jabber_login (jabber_data.status);
 		}
 	}
 	else if (signal->name == g_quark_from_static_string ("change status"))
@@ -297,11 +289,11 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 
 			ggadu_dialog_set_title (d, _("Enter status description"));
 			ggadu_dialog_callback_signal (d, "change status descr");
-			ggadu_dialog_add_entry (&d->optlist, 0, _("Description:"), VAR_STR, status_descr,
+			ggadu_dialog_add_entry (&d->optlist, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
 						VAR_FLAG_FOCUS);
 			d->user_data = sp;
 			signal_emit ("jabber", "gui show dialog", d, "main-gui");
-            jabber_login(jabber_status);
+            jabber_login(jabber_data.status);
             return;
 		}
 
@@ -309,13 +301,13 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 	}
 	else if (signal->name == g_quark_from_static_string ("get current status"))
 	{
-		signal->data_return = (gpointer) jabber_status;
+		signal->data_return = (gpointer) jabber_data.status;
 	}
 	else if (signal->name == g_quark_from_static_string ("send message"))
 	{
 		GGaduMsg *msg = signal->data;
 
-		if (msg && connected == 2)
+		if (msg && jabber_data.connected == 2)
 		{
 			LmMessage *m;
 			gboolean result;
@@ -386,14 +378,14 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 			action->type = g_strdup ("result");
 			action->data = g_strdup (k->id);
 			action->func = action_subscribe;
-			actions = g_slist_append (actions, action);
+			jabber_data.actions = g_slist_append (jabber_data.actions, action);
 		}
 
 		result = lm_connection_send (connection, m, NULL);
 		lm_message_unref (m);
 		if (!result)
 		{
-			actions = g_slist_remove (actions, action);
+			jabber_data.actions = g_slist_remove (jabber_data.actions, action);
 			g_free (action);
 			print_debug ("jabber: Couldn't send.\n");
 		}
@@ -464,7 +456,7 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 						action->type = g_strdup ("result");
 						action->data = NULL;
 						action->func = action_search_form;
-						actions = g_slist_append (actions, action);
+						jabber_data.actions = g_slist_append (jabber_data.actions, action);
 
 						result = lm_connection_send (connection, message, NULL);
 						lm_message_unref (message);
@@ -540,7 +532,7 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 			action->type = g_strdup ("result");
 			action->data = NULL;
 			action->func = action_search_result;
-			actions = g_slist_append (actions, action);
+			jabber_data.actions = g_slist_append (jabber_data.actions, action);
 
 			print_debug ("\n%s", lm_message_node_to_string (message->node));
 			result = lm_connection_send (connection, message, NULL);
@@ -611,7 +603,7 @@ gpointer user_search_action (gpointer user_data)
 	GGaduDialog *d;
 	gchar *server;
 
-	if (connected != 2)
+	if (jabber_data.connected != 2)
 	{
 		signal_emit ("jabber", "gui show warning",
 			     g_strdup (_("You have to be connected to perform searching!")), "main-gui");
@@ -713,7 +705,7 @@ void start_plugin ()
     
 	signal_emit (GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
 
-	if (ggadu_config_var_get (jabber_handler, "autoconnect") && !connected)
+	if (ggadu_config_var_get (jabber_handler, "autoconnect") && !jabber_data.connected)
 	{
 		print_debug ("jabber: autoconneting\n");
 		jabber_login (JABBER_STATUS_AVAILABLE);
@@ -725,7 +717,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 {
 	GGadu_PLUGIN_ACTIVATE (conf_ptr);
 
-	print_debug ("%s: initialize\n", GGadu_PLUGIN_NAME);
+	print_debug ("%s: initialize", GGadu_PLUGIN_NAME);
 
 	jabber_handler = (GGaduPlugin *) register_plugin (GGadu_PLUGIN_NAME, _("Jabber protocol"));
 
@@ -741,19 +733,22 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 	ggadu_config_var_add (jabber_handler, "resource", VAR_STR);
 	ggadu_config_var_add (jabber_handler, "search_server", VAR_STR);
     
-    if (lm_connection_supports_ssl ()) ggadu_config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
+    if (lm_connection_supports_ssl ()) 
+        ggadu_config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
 
 	if (!ggadu_config_read (jabber_handler))
 		g_warning (_("Unable to read configuration file for plugin jabber"));
 
 	ggadu_repo_add ("jabber");
 
+    jabber_data.status = JABBER_STATUS_UNAVAILABLE;
+
 	return jabber_handler;
 }
 
 void destroy_plugin ()
 {
-	print_debug ("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+	print_debug ("destroy_plugin %s", GGadu_PLUGIN_NAME);
 
 	if (jabbermenu)
 	{

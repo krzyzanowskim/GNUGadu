@@ -2,6 +2,9 @@
 #include <string.h>
 
 #include "jabber_protocol.h"
+#include "jabber_plugin.h"
+
+extern jabber_data_type jabber_data;
 
 void action_subscribe (LmConnection *connection, LmMessage *message, gpointer data)
 {
@@ -24,13 +27,13 @@ void action_subscribe (LmConnection *connection, LmMessage *message, gpointer da
   action->type = g_strdup ("result");
   action->data = g_strdup (data);
   action->func = action_subscribe_result;
-  actions = g_slist_append (actions, action);
+  jabber_data.actions = g_slist_append (jabber_data.actions, action);
 
   result = lm_connection_send (connection, m, NULL);
   lm_message_unref (m);
   if (!result)
   {
-    actions = g_slist_remove (actions, action);
+    jabber_data.actions = g_slist_remove (jabber_data.actions, action);
     g_free (action);
     print_debug ("jabber: Can't send.\n");
   }
@@ -78,8 +81,8 @@ void jabber_change_status (enum states status)
 
   if (show)
     lm_message_node_add_child (m->node, "show", show);
-  if (status_descr)
-    lm_message_node_add_child (m->node, "status", status_descr);
+  if (jabber_data.status_descr)
+    lm_message_node_add_child (m->node, "status", jabber_data.status_descr);
   
   print_debug ("STATUS - %d\n", status);
   
@@ -88,7 +91,7 @@ void jabber_change_status (enum states status)
   if (!result)
     print_debug ("jabber: Couldn't change status!\n");
   else {
-    jabber_status = status;
+    jabber_data.status = status;
     signal_emit ("jabber", "gui status changed", (gpointer) status, "main-gui");
   }
 }
@@ -189,4 +192,3 @@ void action_search_result (LmConnection *connection, LmMessage *message, gpointe
     signal_emit ("jabber", "gui show search results", list, "main-gui");
   }
 }
-

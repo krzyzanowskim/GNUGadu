@@ -5,20 +5,22 @@
 #include "jabber_cb.h"
 #include "jabber_protocol.h"
 
+extern jabber_data_type jabber_data;
+
 void jabber_login (enum states status)
 {
-	if (!connected && status == JABBER_STATUS_UNAVAILABLE)
+	if (!jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE)
 		return;
 
-	if (connected == 1)
+	if (jabber_data.connected == 1)
 	{
 		print_debug ("jabber: Slow down, please.\n");
 	}
-	else if (connected && status == JABBER_STATUS_UNAVAILABLE)
+	else if (jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE)
 	{
-		GSList *list = rosterlist;
+		GSList *list = jabber_data.rosterlist;
 
-		jabber_status = status;
+		jabber_data.status = status;
 		lm_connection_close (connection, NULL);
 
 		signal_emit ("jabber", "gui status changed", (gpointer) status, "main-gui");
@@ -33,12 +35,12 @@ void jabber_login (enum states status)
 			g_free (k);
 			list = list->next;
 		}
-		g_slist_free (userlist);
-		g_slist_free (rosterlist);
-		userlist = rosterlist = NULL;
-		connected = 0;
+		g_slist_free (jabber_data.userlist);
+		g_slist_free (jabber_data.rosterlist);
+		jabber_data.userlist = jabber_data.rosterlist = NULL;
+		jabber_data.connected = 0;
 	}
-	else if (connected == 2)
+	else if (jabber_data.connected == 2)
 	{
 		jabber_change_status (status);
 	}

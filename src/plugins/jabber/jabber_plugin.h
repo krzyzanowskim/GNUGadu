@@ -55,15 +55,15 @@ extern LmMessageHandler *iq_version_handler;
 extern LmMessageHandler *presence_handler;
 extern LmMessageHandler *message_handler;
 
-extern GSList *userlist;
-extern GSList *rosterlist;
+typedef struct {
+    gint status;
+    gchar *status_descr;
+    GSList *userlist;
+    GSList *rosterlist;
+    GSList *actions;
+    gint connected;
+} jabber_data_type;
 
-extern GSList *actions;
-
-extern gint connected;
-
-extern gint jabber_status;
-extern gchar *status_descr;
 
 void ggadu_jabber_save_history (gchar *to, gchar *txt);
 

@@ -8,6 +8,8 @@
 #include "jabber_cb.h"
 #include "jabber_protocol.h"
 
+extern jabber_data_type jabber_data;
+
 void connection_auth_cb (LmConnection * connection, gboolean success, gint * status)
 {
 	if (!success)
@@ -17,7 +19,7 @@ void connection_auth_cb (LmConnection * connection, gboolean success, gint * sta
 		return;
 	}
 
-	connected = 2;
+	jabber_data.connected = 2;
 
 	print_debug ("jabber: Authentication succeeded. Changing status...\n");
 
@@ -39,7 +41,7 @@ void connection_open_result_cb (LmConnection * connection, gboolean success, gin
 		return;
 	}
 
-	connected = 1;
+	jabber_data.connected = 1;
 	print_debug ("jabber: Connection succeeded. Authenticating... (%p)\n", status);
 
 	jid = g_strdup (ggadu_config_var_get (jabber_handler, "jid"));
@@ -59,7 +61,7 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 			     gpointer user_data)
 {
 	gchar *jid;
-	GSList *list = rosterlist;
+	GSList *list = jabber_data.rosterlist;
 	GGaduContact *k = NULL;
 	LmMessageNode *status;
 	gchar *descr = NULL;
@@ -181,7 +183,7 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 
 LmHandlerResult iq_cb (LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
 {
-	GSList *list = actions;
+	GSList *list = jabber_data.actions;
 	waiting_action *action;
 	gchar *type;
 	gchar *id;
@@ -199,7 +201,7 @@ LmHandlerResult iq_cb (LmMessageHandler * handler, LmConnection * connection, Lm
 		if (!strcmp (type, action->type) && !strcmp (id, action->id))
 		{
 			action->func (connection, message, action->data);
-			actions = g_slist_remove (actions, action);
+			jabber_data.actions = g_slist_remove (jabber_data.actions, action);
 			g_free (action->id);
 			g_free (action->type);
 			g_free (action);
@@ -254,7 +256,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 	int first_time = 0;
 	int first_seen = 1;
 
-	if (!rosterlist)
+	if (!jabber_data.rosterlist)
 		first_time = 1;
 
 	print_debug ("%s", lm_message_node_to_string (message->node));
@@ -299,7 +301,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
 		if (!strcmp (subs, "remove"))
 		{
-			GSList *list = rosterlist;
+			GSList *list = jabber_data.rosterlist;
 			while (list)
 			{
 				k = (GGaduContact *) list->data;
@@ -308,8 +310,8 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 				{
 					if (k->nick)
 						g_free (k->nick);
-					rosterlist = g_slist_remove (rosterlist, k);
-					userlist = g_slist_remove (userlist, k);
+					jabber_data.rosterlist = g_slist_remove (jabber_data.rosterlist, k);
+					jabber_data.userlist = g_slist_remove (jabber_data.userlist, k);
 					ggadu_repo_del_value ("jabber", k->id);
 					g_free (k->id);
 					g_free (k);
@@ -320,9 +322,9 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 			return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 		}
 
-		if (rosterlist)
+		if (jabber_data.rosterlist)
 		{
-			GSList *list = rosterlist;
+			GSList *list = jabber_data.rosterlist;
 			while (list)
 			{
 				k = (GGaduContact *) list->data;
@@ -342,7 +344,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		{
 			k = g_new0 (GGaduContact, 1);
 			k->id = g_strdup (jid);
-			rosterlist = g_slist_append (rosterlist, k);
+			jabber_data.rosterlist = g_slist_append (jabber_data.rosterlist, k);
 		}
 		k->nick = g_strdup (name ? name : jid);
 
@@ -356,8 +358,8 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 					k->status = JABBER_STATUS_UNAVAILABLE;
 			}
 
-			if (!g_slist_find (userlist, k))
-				userlist = g_slist_append (userlist, k);
+			if (!g_slist_find (jabber_data.userlist, k))
+				jabber_data.userlist = g_slist_append (jabber_data.userlist, k);
 
 			if (!ggadu_repo_add_value ("jabber", k->id, k, REPO_VALUE_CONTACT))
 				ggadu_repo_change_value ("jabber", k->id, k, REPO_VALUE_DC);
@@ -366,7 +368,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		child = child->next;
 	}
 
-	signal_emit ("jabber", "gui send userlist", userlist, "main-gui");
+	signal_emit ("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
 
 	if (first_time)
 	{
@@ -377,7 +379,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		lm_connection_register_message_handler (connection, message_handler, LM_MESSAGE_TYPE_MESSAGE,
 							LM_HANDLER_PRIORITY_NORMAL);
 
-		list = userlist;
+		list = jabber_data.userlist;
 		while (list)
 		{
 			LmMessage *m;
