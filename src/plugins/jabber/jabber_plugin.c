@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.128 2004/12/16 10:06:26 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.129 2004/12/16 13:31:10 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1405,8 +1405,8 @@ static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler *handl
 	n_service = lm_message_node_get_child(nodes_service,"service");
 	while (n_service)
 	{
-	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, _("Service:"), VAR_STR,
-				(char *)lm_message_node_get_attribute(n_service,"name"), VAR_FLAG_INSENSITIVE);
+	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, lm_message_node_get_attribute(n_service,"name"), VAR_STR,
+				    lm_message_node_get_attribute(n_service,"jid"), VAR_FLAG_INSENSITIVE);
 	    
 	    print_debug(lm_message_node_to_string(n_service));
 	    n_service = n_service->next;
