@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.6 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: support.c,v 1.7 2003/11/16 14:06:06 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -87,20 +87,26 @@ gboolean str_has_suffix (const gchar  *str, const gchar  *suffix) {
 void print_debug_raw(const gchar *func, const char *format, ...)
 {
 #ifdef GGADU_DEBUG
-	static char *func_name;
+	static char *prev_func_name = NULL;
+	gchar *message = NULL;
 	va_list ap;
+	
 	va_start(ap, format);
 	
-	if (func_name == NULL) func_name = g_strdup(func);
+	if ((prev_func_name != NULL) && g_strcasecmp(prev_func_name,func)) /* if prev_func_name is NOT the same as func */
+	  g_print("\e[2mFunction : \e[0;36m%s\e[0m\n",func);
+        
+	g_free(prev_func_name);
+	prev_func_name = g_strdup(func);
 	
-	if (strcmp(func_name,func))
-	{
-	    printf("%s()\n",func);
-	    g_free(func_name);
-	    func_name = NULL;
-	}
-	printf("\t");
-	vprintf(format, ap);
+	message = g_strdup_vprintf(format, ap);
+	
+	g_print("  %s", message );
+	
+	if (message[strlen(message)-1] != '\n')
+	  g_print("\n");
+		
+	g_free(message);
 	va_end(ap);
 #endif
 }
@@ -117,7 +123,7 @@ static char base64_charset[] =
 /*
  * base64_encode()
  *
- * zapisuje ci±g znaków w base64. alokuje pamiêæ. 
+ * zapisuje ciÄ…g znakÃ³w w base64. alokuje pamiÄ™Ä‡. 
  */
 char *base64_encode(const char *buf)
 {
@@ -170,7 +176,7 @@ char *base64_encode(const char *buf)
 /*
  * base64_decode()
  *
- * wczytuje ci±g znaków base64, zwraca zaalokowany buforek.
+ * wczytuje ciÄ…g znakÃ³w base64, zwraca zaalokowany buforek.
  */
 char *base64_decode(char *buf)
 {
@@ -274,19 +280,19 @@ gchar *get_timestamp(time_t t)
 /* From EKG project
  * array_make()
  *
- * tworzy tablicê tekstów z jednego, rozdzielonego podanymi znakami.
+ * tworzy tablicÄ™ tekstÃ³w z jednego, rozdzielonego podanymi znakami.
  *
- *  - string - tekst wej¶ciowy,
- *  - sep - lista elementów oddzielaj±cych,
- *  - max - maksymalna ilo¶æ elementów tablicy. je¶li równe 0, nie ma
- *          ograniczeñ rozmiaru tablicy.
- *  - trim - czy wiêksz± ilo¶æ elementów oddzielaj±cych traktowaæ jako
- *           jeden (na przyk³ad spacje, tabulacja itp.)
- *  - quotes - czy pola mog± byæ zapisywane w cudzys³owiach lub
+ *  - string - tekst wejÅ›ciowy,
+ *  - sep - lista elementÃ³w oddzielajÄ…cych,
+ *  - max - maksymalna iloÅ›Ä‡ elementÃ³w tablicy. jeÅ›li rÃ³wne 0, nie ma
+ *          ograniczeÅ„ rozmiaru tablicy.
+ *  - trim - czy wiÄ™kszÄ… iloÅ›Ä‡ elementÃ³w oddzielajÄ…cych traktowaÄ‡ jako
+ *           jeden (na przykÅ‚ad spacje, tabulacja itp.)
+ *  - quotes - czy pola mogÄ… byÄ‡ zapisywane w cudzysÅ‚owiach lub
  *             apostrofach z escapowanymi znakami.
  *
- * zaalokowan± tablicê z zaalokowanymi ci±gami znaków, któr± nale¿y
- * zwolniæ funkcj± array_free()
+ * zaalokowanÄ… tablicÄ™ z zaalokowanymi ciÄ…gami znakÃ³w, ktÃ³rÄ… naleÅ¼y
+ * zwolniÄ‡ funkcjÄ… array_free()
  */
 char **array_make(const char *string, const char *sep, int max, int trim, int quotes)
 {
