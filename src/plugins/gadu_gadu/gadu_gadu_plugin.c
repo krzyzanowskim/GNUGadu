@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.171 2004/05/17 11:46:42 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.172 2004/05/25 14:45:14 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -811,6 +811,7 @@ gpointer user_change_user_action(gpointer user_data)
 	ggadu_dialog_add_entry(dialog, GGADU_LAST_NAME, _("Last Name"), VAR_STR, k->last_name ? k->last_name : "", VAR_FLAG_SENSITIVE);
 	ggadu_dialog_add_entry(dialog, GGADU_MOBILE, _("Phone"), VAR_STR, k->mobile ? k->mobile : "", VAR_FLAG_SENSITIVE);
 	/* wywoluje okienko zmiany usera */
+	/*ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_PROGRESS);*/
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.45 2004/05/24 14:28:15 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.46 2004/05/25 14:45:10 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -315,7 +315,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_data)
 {
 	GGaduSignal *signal = (GGaduSignal *) user_data;
-	GGaduDialog *dialog = signal->data;
+	GGaduDialog *dialog = signal ? signal->data : NULL;
 
 	if (dialog)
 	{
@@ -416,9 +416,11 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 
 		signal_emit("main-gui", dialog->callback_signal, dialog, signal->source_plugin_name);
 	}
-
+	
 	gtk_widget_destroy(GTK_WIDGET(dialog_widget));
-	GGaduSignal_free(signal);
+	
+    	GGaduSignal_free(signal);
+
 }
 
 void gui_show_message_box(gint type, gpointer signal)
