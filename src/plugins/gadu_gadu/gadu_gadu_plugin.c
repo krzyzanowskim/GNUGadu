@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.54 2003/05/23 19:19:22 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.55 2003/05/23 20:18:12 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -225,16 +225,16 @@ void handle_search_event(struct gg_event *e)
 	const gchar * status = gg_pubdir50_get(res, i, GG_PUBDIR50_STATUS);
 	const gchar * city = gg_pubdir50_get(res, i, GG_PUBDIR50_CITY);
 	const gchar * birthyear = gg_pubdir50_get(res, i, GG_PUBDIR50_BIRTHYEAR);
-	      gint * b_year;
+	gint b_year;
 	
 	k->id = g_strdup((uin) ? uin : "?");
 	
-//	k->age = (birthyear) ? g_strdup_printf("%d", ((cur_date->year) - atoi(birthyear))) : NULL;
+/*	ak->age = (birthyear) ? g_strdup_printf("%d", ((cur_date->year) - atoi(birthyear))) : NULL; */
 	if (birthyear != NULL) {
-				b_year = ((cur_date->year) - atoi(birthyear));
-				k->age = (b_year <= 99) ? g_strdup_printf("%d", (b_year)) : NULL;
-				}
-				else k->age =  NULL;
+	    b_year = ((cur_date->year) - atoi(birthyear));
+	    k->age = (b_year <= 99) ? g_strdup_printf("%d", b_year) : NULL;
+	} else
+	    k->age =  NULL;
 
 	if (first_name != NULL) to_utf8("CP1250", first_name, k->first_name);
 
