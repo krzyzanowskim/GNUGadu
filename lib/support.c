@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.1 2003/06/03 21:30:10 krzyzak Exp $ */
+/* $Id: support.c,v 1.2 2003/06/04 11:02:46 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -98,7 +98,7 @@ void print_debug_raw(const gchar *func, const char *format, ...)
 	{
 	    printf("%s()\n",func);
 	    g_free(func_name);
-	    func_name = g_strdup(func);
+	    func_name = NULL;
 	}
 	printf("\t");
 	vprintf(format, ap);
@@ -125,7 +125,7 @@ char *base64_encode(const char *buf)
 	char *out, *res;
 	int i = 0, j = 0, k = 0, len = strlen(buf);
 	
-	res = out = g_malloc0((len / 3 + 1) * 4 + 2);
+	res = out = malloc((len / 3 + 1) * 4 + 2);
 
 	if (!res)
 		return NULL;
@@ -175,13 +175,17 @@ char *base64_encode(const char *buf)
  */
 char *base64_decode(char *buf)
 {
-	char *res, *save, *end, *foo, val;
+	char *res, *save, *foo, val;
+	const char *end;
 	int index = 0;
-	
-	if (!(save = res = calloc(1, (strlen(buf) / 4 + 1) * 3 + 2))) {
-		g_print("// base64_decode() not enough memory\n");
+
+	if (!buf)
 		return NULL;
-	}
+	
+	save = res = calloc(1, (strlen(buf) / 4 + 1) * 3 + 2);
+
+	if (!save)
+		return NULL;
 
 	end = buf + strlen(buf);
 
@@ -192,8 +196,7 @@ char *base64_decode(char *buf)
 		}
 		if (!(foo = strchr(base64_charset, *buf)))
 			foo = base64_charset;
-		val = (int)foo - (int)base64_charset;
-		*buf = 0;
+		val = (int)(foo - base64_charset);
 		buf++;
 		switch (index) {
 			case 0:
@@ -218,6 +221,8 @@ char *base64_decode(char *buf)
 	
 	return save;
 }
+ 
+
 
 void show_error(gchar *errstr) 
 {
