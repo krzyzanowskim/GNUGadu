@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.3 2003/03/25 17:53:37 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.4 2003/04/02 18:04:35 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -572,6 +572,26 @@ void gui_user_view_add_userlist(gui_protocol *gp)
     }
 }
 
+static void gui_user_view_rescan_paths (gui_protocol *gp)
+{
+
+  gboolean valid;
+  GtkTreeIter iter;
+  GtkTreeModel *model = GTK_TREE_MODEL(users_treestore);
+
+  for (valid = gtk_tree_model_get_iter_first (model, &iter); valid;
+       valid = gtk_tree_model_iter_next (model, &iter))
+  {
+    gui_protocol *lgp;
+
+    gtk_tree_model_get (model, &iter, 3, &lgp, -1);
+    if (lgp == gp)
+      continue;
+    g_free (lgp->tree_path);
+    lgp->tree_path = g_strdup(gtk_tree_model_get_string_from_iter(model,&iter));
+  }
+}
+
 void gui_user_view_unregister(gui_protocol *gp)
 {
     GtkTreeIter users_iter;
@@ -592,6 +612,8 @@ void gui_user_view_unregister(gui_protocol *gp)
 
     if (gp->statuslist_eventbox)
         gtk_widget_destroy(gp->statuslist_eventbox);
+
+    gui_user_view_rescan_paths (gp);
 }
 
 void gui_user_view_register(gui_protocol *gp)
