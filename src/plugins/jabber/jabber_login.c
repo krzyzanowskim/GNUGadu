@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.39 2004/09/26 18:34:59 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.40 2004/09/27 15:01:20 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -84,7 +84,7 @@ gpointer jabber_login_connect(gpointer status)
 	{
 		print_debug("jabber: Connecting to %s with %s", server,jid);
 		jabber_data.connection = lm_connection_new(server);
-		lm_connection_set_keep_alive_rate(jabber_data.connection,60);
+		lm_connection_set_keep_alive_rate(jabber_data.connection,30);
 
 		/* proxy setting taken from EKG project */
 		gint jabber_proxy_enabled = 0;
