@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.h,v 1.10 2004/08/22 18:37:22 krzyzak Exp $ */
+/* $Id: jabber_cb.h,v 1.11 2004/08/27 14:37:55 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -40,7 +40,9 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 			      gpointer user_data);
 LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			   gpointer user_data);
+LmHandlerResult register_register_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * msg,
+					  GGaduJabberRegister *data);
 
 void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, gpointer user_data);
-void jabber_register_account_cb(LmConnection * connection, gboolean result, GGaduJabberRegister * gjr);
+void jabber_register_account_cb(LmConnection * connection, gboolean result, gpointer data);
 #endif

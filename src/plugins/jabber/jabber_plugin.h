@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.37 2004/08/24 12:39:49 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.h,v 1.38 2004/08/27 14:37:55 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -133,7 +133,6 @@ typedef struct
     LmConnection *connection;
     LmProxy *proxy;
 } jabber_data_type;
-
 
 gpointer jabber_register_account_dialog(gpointer user_data);
 

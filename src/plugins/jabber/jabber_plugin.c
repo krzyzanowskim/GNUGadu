@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.97 2004/08/26 10:58:05 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.98 2004/08/27 14:37:55 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -55,6 +55,7 @@ static GQuark SEARCH_SIG;
 static GQuark GET_CURRENT_STATUS_SIG;
 static GQuark GET_USER_MENU_SIG;
 static GQuark REGISTER_ACCOUNT;
+static GQuark REGISTER_GET_FIELDS;
 static GQuark USER_REMOVE_SIG;
 static GQuark USER_EDIT_VCARD_SIG;
 static GQuark USER_SHOW_VCARD_SIG;
@@ -342,14 +343,10 @@ static gpointer user_remove_auth_from(gpointer user_data)
 
 gpointer jabber_register_account_dialog(gpointer user_data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Register Jabber account"), "register account");
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber server for account registration"),
+					       "register get fields");
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERNAME, _("Username:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Password:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE,
-				VAR_FLAG_NONE);
-
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server"), VAR_STR, NULL, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
@@ -445,6 +442,24 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		}
 		GGaduDialog_free(dialog);
 	}
+	else if (signal->name == REGISTER_GET_FIELDS)
+	{
+		GGaduDialog *dialog = signal->data;
+
+		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
+		{
+			GSList *list = ggadu_dialog_get_entries(dialog);
+			GGaduKeyValue *kv = (GGaduKeyValue *) list->data;
+			LmConnection *conn;
+
+			conn=lm_connection_new(kv->value);
+			if(!lm_connection_open(conn, (LmResultFunction) jabber_register_account_cb, NULL, NULL, NULL))
+				signal_emit("jabber", "gui show warning",
+					    g_strdup(_("Couldn't open connection for account registration.")), "main-gui");
+		}
+
+		GGaduDialog_free(dialog);
+	}
 	else if (signal->name == REGISTER_ACCOUNT)
 	{
 		GGaduDialog *dialog = signal->data;
@@ -453,39 +468,94 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		{
 			GGaduJabberRegister *gjr = g_new0(GGaduJabberRegister, 1);
 			GSList *tmplist = ggadu_dialog_get_entries(dialog);
-
+			LmMessage *msg;
+			LmMessageNode *node;
+			LmMessageHandler *handler;
+			gboolean error = FALSE;
+			
+			msg=lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+			lm_message_node_set_attribute(msg->node, "id", "reg2");
+			node=lm_message_node_add_child(msg->node, "query", NULL);
+			lm_message_node_set_attribute(node, "xmlns", "jabber:iq:register");
+			
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
 				switch (kv->key)
 				{
-				case GGADU_JABBER_SERVER:
-					gjr->server = kv->value;
+				case GGADU_JABBER_USERNAME:
+					{
+						if(!kv->value)
+						{
+							error = TRUE;
+							break;
+						} else
+						{
+							lm_message_node_add_child(node, "username", kv->value);
+							gjr->username = g_strdup(kv->value);
+						}
+					}
 					break;
 				case GGADU_JABBER_PASSWORD:
-					gjr->password = kv->value;
+					{
+						if(!kv->value)
+						{
+							error = TRUE;
+							break;
+						} else
+						{
+							lm_message_node_add_child(node, "password", kv->value);
+							gjr->password = g_strdup(kv->value);
+						}
+					}
 					break;
-				case GGADU_JABBER_USERNAME:
-					gjr->username = kv->value;
+				case GGADU_JABBER_FN:
+					{
+						if(!kv->value)
+						{
+							error = TRUE;
+							break;
+						} else
+						{
+							lm_message_node_add_child(node, "name", kv->value);
+						}
+					}
+					break;
+				case GGADU_JABBER_USERID:
+					{
+						if(!kv->value)
+						{
+							error = TRUE;
+							break;
+						} else
+						{
+							lm_message_node_add_child(node, "email", kv->value);
+						}
+					}
 					break;
 				case GGADU_JABBER_UPDATE_CONFIG:
-					gjr->update_config = (gboolean) kv->value;
+					{
+						gjr->update_config = (gboolean) kv->value;
+						gjr->server = g_strdup(lm_connection_get_server((LmConnection *)
+								       dialog->user_data));
+					}
 					break;
 				}
 				tmplist = tmplist->next;
 			}
 
-			if (gjr->server && gjr->password && gjr->username)
-			{
-				LmConnection *con = lm_connection_new(gjr->server);
-				lm_connection_open(con, (LmResultFunction) jabber_register_account_cb, gjr, NULL, NULL);
-			}
-			else
+			if(error)
 			{
 				signal_emit("jabber", "gui show warning", g_strdup(_("Invalid data passed, try again")),
 					    "main-gui");
-				g_free(gjr);
+			} else
+			{
+				handler=lm_message_handler_new((LmHandleMessageFunction) register_register_handler,
+							       (gpointer) gjr, NULL);
+				lm_connection_send_with_reply((LmConnection *) dialog->user_data, msg, handler, NULL);
 			}
+
+			lm_message_unref(msg);
 		}
 		GGaduDialog_free(dialog);
 	}
@@ -1098,6 +1168,7 @@ void start_plugin()
 	SEARCH_SIG = register_signal(jabber_handler, "search");
 	ADD_USER_SIG = register_signal(jabber_handler, "add user");
 	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
+	REGISTER_GET_FIELDS = register_signal(jabber_handler, "register get fields");
 	USER_REMOVE_SIG = register_signal(jabber_handler, "user remove action");
 	USER_EDIT_VCARD_SIG = register_signal(jabber_handler, "user edit vcard");
 	USER_SHOW_VCARD_SIG = register_signal(jabber_handler, "user show vcard");

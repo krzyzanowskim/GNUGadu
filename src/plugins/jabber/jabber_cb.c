@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.54 2004/08/27 08:53:48 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.55 2004/08/27 14:37:55 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -65,11 +65,10 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 
 }
 
-static LmHandlerResult register_register_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * msg,
-						GGaduJabberRegister * data)
+LmHandlerResult register_register_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * msg,
+					  GGaduJabberRegister *data)
 {
 	LmMessageSubType sub_type;
-	LmMessageNode *node;
 
 	sub_type = lm_message_get_sub_type(msg);
 	switch (sub_type)
@@ -85,35 +84,56 @@ static LmHandlerResult register_register_handler(LmMessageHandler * handler, LmC
 		break;
 	case LM_MESSAGE_SUB_TYPE_ERROR:
 	default:
-		node = lm_message_node_find_child(msg->node, "error");
-		signal_emit("jabber", "gui show warning", g_strdup(lm_message_node_get_value(node)), "main-gui");
+		signal_emit("jabber", "gui show warning", g_strdup(_("Username not available")), "main-gui");
 		break;
 	}
 	g_free(data->username);
 	g_free(data->password);
 	g_free(data->server);
+	g_free(data);
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
 
-void jabber_register_account_cb(LmConnection * connection, gboolean result, GGaduJabberRegister * gjr)
+static LmHandlerResult register_get_fields_handler(LmMessageHandler *handler, LmConnection * connection, LmMessage *msg,
+						   gpointer *data)
 {
-	LmMessage *msg = NULL;
-	LmMessageNode *node = NULL;
-	LmMessageHandler *handler = NULL;
-	gchar *jid = g_strdup_printf("%s@%s", gjr->username, gjr->server);
+    LmMessageNode *node;
+    GGaduDialog *dialog = ggadu_dialog_new_full(GGADU_DIALOG_CONFIG, _("Register Jabber account"), "register account",
+		                                (gpointer) connection);
 
-	msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
-	node = lm_message_node_add_child(msg->node, "query", NULL);
+    node=lm_message_node_find_child(msg->node, "query");
+    if(lm_message_node_find_child(node, "username"))
+	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERNAME, _("Username"), VAR_STR, NULL, VAR_FLAG_NONE);
+    if(lm_message_node_find_child(node, "password"))
+	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Password"), VAR_STR, NULL, VAR_FLAG_NONE);
+    if(lm_message_node_find_child(node, "name"))
+	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_FN, _("Full name"), VAR_STR, NULL, VAR_FLAG_NONE);
+    if(lm_message_node_find_child(node, "email"))
+	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERID, _("E-mail"), VAR_STR, NULL, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(dialog, GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE,
+		   	   VAR_FLAG_NONE);
+	    
+    signal_emit("jabber", "gui show dialog", dialog, "main-gui");
+    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+}
 
-	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:register");
-	lm_message_node_add_child(node, "username", gjr->username);
-	lm_message_node_add_child(node, "password", gjr->password);
+void jabber_register_account_cb(LmConnection * connection, gboolean result, gpointer data)
+{
+    LmMessage *msg;
+    LmMessageNode *node;
+    LmMessageHandler *handler;
 
-	handler = lm_message_handler_new((LmHandleMessageFunction) register_register_handler, gjr, NULL);
-	lm_connection_send_with_reply(connection, msg, handler, NULL);
+    msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+    lm_message_node_set_attribute(msg->node, "id", "reg1");
+    node = lm_message_node_add_child(msg->node, "query", NULL);
+    lm_message_node_set_attribute(node, "xmlns", "jabber:iq:register");
 
-	lm_message_unref(msg);
-	g_free(jid);
+    handler = lm_message_handler_new((LmHandleMessageFunction) register_get_fields_handler, NULL, NULL);
+    lm_connection_send_with_reply(connection, msg, handler, NULL);
+    lm_message_unref(msg);
+
+
+    return;
 }
 
 static gboolean jabber_ping(gpointer data)
@@ -492,7 +512,7 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
 		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
-		
+
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
 
@@ -500,8 +520,8 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 	    !strcmp(lm_message_node_get_attribute(message->node, "id"), "v3")) &&
 	    !lm_message_node_find_child(message->node, "vCard"))
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
-		else
-        	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+	        else
+		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
 LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer data)
