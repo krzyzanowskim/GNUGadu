@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.59 2004/01/12 08:38:48 thrulliq Exp $ 
+ * $Id: gui_chat.c,v 1.60 2004/01/12 19:03:32 thrulliq Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -615,7 +615,16 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
 	    session = user_data;
 	    chat = session->chat;
 	  } else {
-	    return FALSE;
+	    GtkWidget *chat_notebook;
+	    guint page_num;
+	    
+	    if (chat_window)
+		chat_notebook = g_object_get_data (G_OBJECT (chat_window), "chat_notebook");
+	    
+	    if ((chat_notebook) && (chat_window)) {
+		page_num = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+	    	chat = (GtkWidget *) gtk_notebook_get_nth_page (GTK_NOTEBOOK (chat_notebook), page_num);
+	    }
 	  }
 	  
 	  paned = g_object_get_data (G_OBJECT (chat), "paned");
