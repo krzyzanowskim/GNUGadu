@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.7 2003/11/16 14:06:06 krzyzak Exp $ */
+/* $Id: support.c,v 1.8 2003/11/25 23:52:30 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -123,7 +123,7 @@ static char base64_charset[] =
 /*
  * base64_encode()
  *
- * zapisuje ciÄ…g znakÃ³w w base64. alokuje pamiÄ™Ä‡. 
+ * zapisuje ci±g znaków w base64. alokuje pamiêæ. 
  */
 char *base64_encode(const char *buf)
 {
@@ -176,7 +176,7 @@ char *base64_encode(const char *buf)
 /*
  * base64_decode()
  *
- * wczytuje ciÄ…g znakÃ³w base64, zwraca zaalokowany buforek.
+ * wczytuje ci±g znaków base64, zwraca zaalokowany buforek.
  */
 char *base64_decode(char *buf)
 {
@@ -280,19 +280,19 @@ gchar *get_timestamp(time_t t)
 /* From EKG project
  * array_make()
  *
- * tworzy tablicÄ™ tekstÃ³w z jednego, rozdzielonego podanymi znakami.
+ * tworzy tablicê tekstów z jednego, rozdzielonego podanymi znakami.
  *
- *  - string - tekst wejÅ›ciowy,
- *  - sep - lista elementÃ³w oddzielajÄ…cych,
- *  - max - maksymalna iloÅ›Ä‡ elementÃ³w tablicy. jeÅ›li rÃ³wne 0, nie ma
- *          ograniczeÅ„ rozmiaru tablicy.
- *  - trim - czy wiÄ™kszÄ… iloÅ›Ä‡ elementÃ³w oddzielajÄ…cych traktowaÄ‡ jako
- *           jeden (na przykÅ‚ad spacje, tabulacja itp.)
- *  - quotes - czy pola mogÄ… byÄ‡ zapisywane w cudzysÅ‚owiach lub
+ *  - string - tekst wej¶ciowy,
+ *  - sep - lista elementów oddzielaj±cych,
+ *  - max - maksymalna ilo¶æ elementów tablicy. je¶li równe 0, nie ma
+ *          ograniczeñ rozmiaru tablicy.
+ *  - trim - czy wiêksz± ilo¶æ elementów oddzielaj±cych traktowaæ jako
+ *           jeden (na przyk³ad spacje, tabulacja itp.)
+ *  - quotes - czy pola mog± byæ zapisywane w cudzys³owiach lub
  *             apostrofach z escapowanymi znakami.
  *
- * zaalokowanÄ… tablicÄ™ z zaalokowanymi ciÄ…gami znakÃ³w, ktÃ³rÄ… naleÅ¼y
- * zwolniÄ‡ funkcjÄ… array_free()
+ * zaalokowan± tablicê z zaalokowanymi ci±gami znaków, któr± nale¿y
+ * zwolniæ funkcj± array_free()
  */
 char **array_make(const char *string, const char *sep, int max, int trim, int quotes)
 {

@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.6 2003/10/27 21:46:17 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.7 2003/11/25 23:52:30 krzyzak Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -10,18 +10,18 @@
 
 /*
  *    GGaduContact
- *    struktura opisujaca kontakt z dowolnego protokoÅ‚u
- *    jeÅ›li jakieÅ› pole == NULL GUI powinno je zignorowaÄ‡
+ *    struktura opisujaca kontakt z dowolnego protoko³u
+ *    je¶li jakie¶ pole == NULL GUI powinno je zignorowaæ
  */
  
 typedef struct {
     gchar *id;		// unikalny identyfikator: numer GG, adres z tlen'u etc.
-    gchar *first_name;	// imiÄ™
+    gchar *first_name;	// imiê
     gchar *last_name;	// nazwisko
     gchar *nick;	// pseudo
-    gchar *mobile;	// tel. komÃ³rkowy
+    gchar *mobile;	// tel. komórkowy
     gchar *email;	// adres e-mail
-    gchar *gender;	// pÅ‚eÄ‡
+    gchar *gender;	// p³eæ
     gchar *group;	// grupa
     gchar *comment;	// komentarz
     gchar *birthdate;	// data urodzenia
@@ -35,7 +35,7 @@ typedef struct {
 void GGaduContact_free(GGaduContact *k);
 
 /*
- *	Klasy wiadomoÅ›ci
+ *	Klasy wiadomo¶ci
  */
  
 enum {
@@ -92,13 +92,13 @@ void GGaduNotify_free(GGaduNotify *n);
 
 /*
  *	GGaduStatusPrototype
- *	prototyp statusu uzytownika danego protokoÅ‚u
+ *	prototyp statusu uzytownika danego protoko³u
  *
  */ 
  
 typedef struct {
     gint status;		// identyfikator statusu
-    gchar *description;		// wyÅ›wietlany opis np. "DostÄ™pny"
+    gchar *description;		// wy¶wietlany opis np. "Dostêpny"
     gchar *image;		// nazwa pliku obrazeku statusu 
     gboolean receive_only;
 } GGaduStatusPrototype;
