@@ -40,6 +40,11 @@ static gboolean send_ping(DBusConnection * bus)
 {
 	DBusMessage *message;
 
+/*	message = dbus_message_new_method_call(DBUS_ORG_FREEDESKTOP_IM_SERVICE, 
+					       DBUS_ORG_FREEDESKTOP_IM_OBJECT,
+					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
+					       DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE);
+*/					       
 	message = dbus_message_new_method_call(DBUS_ORG_FREEDESKTOP_IM_SERVICE, 
 					       DBUS_ORG_FREEDESKTOP_IM_OBJECT,
 					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,

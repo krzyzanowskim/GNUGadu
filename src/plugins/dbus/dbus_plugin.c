@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.4 2004/10/25 22:26:40 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.5 2004/10/26 16:26:05 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -132,6 +132,7 @@ void start_plugin()
 		return;
 	}
 
+	print_debug("dbus stared");
 	return;
 }
 
