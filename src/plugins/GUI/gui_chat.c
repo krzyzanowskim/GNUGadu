@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.56 2004/01/11 13:15:22 thrulliq Exp $ 
+ * $Id: gui_chat.c,v 1.57 2004/01/11 15:31:05 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -1010,7 +1010,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  invisible_chats = g_slist_append (invisible_chats, session->chat);
       }
 
-    if ((ggadu_config_var_get (gui_handler, "chat_paned_size") == NULL || 0))
+    if (ggadu_config_var_get (gui_handler, "chat_paned_size") == NULL)
 	gtk_paned_set_position (GTK_PANED (paned), 160);
     else
       {
