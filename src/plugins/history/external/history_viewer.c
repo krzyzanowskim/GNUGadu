@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.12 2005/01/03 15:51:03 krzyzak Exp $ */
+/* $Id: history_viewer.c,v 1.13 2005/01/07 20:57:29 aflinta Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -39,7 +39,7 @@ gpointer history_external_preferences(gpointer user_data)
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("External History Viewer Preferences"), "update config");
 
 	print_debug("%s: Preferences\n", "External history viewer");
-	ggadu_dialog_add_entry(dialog, GGADU_HISTORY_CONFIG_VIEWER, _("_Path to external viewer"), VAR_FILE_CHOOSER, ggadu_config_var_get(handler, "viewer"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_HISTORY_CONFIG_VIEWER, _("_Path to external viewer:"), VAR_FILE_CHOOSER, ggadu_config_var_get(handler, "viewer"), VAR_FLAG_NONE);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	return NULL;
