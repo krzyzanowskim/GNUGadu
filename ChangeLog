@@ -1,3 +1,6 @@
+21.05.2004
+- filter out transports entries from the list (jabber/krzak)
+
 18.05.2004
 - replace description and status message on chat window (gui/krzak)
 
