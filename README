@@ -3,8 +3,8 @@ To compile all plugins you need:
 - automake 1.7 or better
 - libtool 1.4e or better
 
-- glib 2.2.0 
-- gtk+ 2.2.0 (http://gtk.org.pl/) - GUI
+- glib 2.2.0 (http://www.gtk.org/)
+- gtk+ 2.2.0 (http://www.gtk.org/) - GUI
 - libgadu (http://dev.null.pl/ekg/) - Gadu-Gadu
 - libtlen (http://www.libtlen.eu.org) - Tlen
 - Loudmouth (http://www.imendio.com/projects/loudmouth/) - Jabber
