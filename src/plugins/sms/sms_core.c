@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.15 2003/09/22 11:09:01 shaster Exp $ */
+/* $Id: sms_core.c,v 1.16 2003/09/24 14:19:31 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -152,7 +152,7 @@ int HTTP_io(HTTPstruct hdata)
 	io_buf = g_strdup("GET /c-programming-howto.html HTTP/1.0\r\n\r\n");
     /* *INDENT-ON* */
 
-    print_debug("Sending:\n%s", io_buf);
+    print_debug("Sending:\n%s\n", io_buf);
     send(sock_s, io_buf, strlen(io_buf), MSG_WAITALL);
     g_free(io_buf);
 
@@ -216,13 +216,15 @@ void sms_warning(gchar * sms_number, gchar * warning)
 int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body)
 {
     gchar *token = NULL;
-    gchar *temp = NULL;
+    gchar temp[2];
+    gchar *gettoken = NULL;
     gchar *recv_buff = NULL;
-    gint i = 0, j, k;
+    gint i = 0, j, k, retries = 3;
     FILE *idea_logo;
 
+get_mainpage:
     /* pobranie adresu do obrazka */
-    if (!sms_connect("IDEA", GGADU_SMS_IDEA_HOST))
+    if (!sms_connect("IDEA", "213.218.116.131"))
 	return ERR_SERVICE;
 
     strcpy(HTTP.method, "GET");
@@ -231,42 +233,47 @@ int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * 
     strcpy(HTTP.url_params, " ");
     HTTP_io(HTTP);
 
-    temp = g_malloc0(2);
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
 
+    i = 0;
     while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
     sms_disconnect();
 
-    recv_buff = g_strstr_len(recv_buff, i, "rotate_token.aspx?token");
-    if (!recv_buff)
-	return ERR_READ_TOKEN;
+    print_debug("\n=======retries left: %d=====\nIDEA RECVBUFF1: %s\n\n", retries-1, recv_buff);
 
-    temp = g_strstr_len(recv_buff, strlen(recv_buff), "\"");
-    if (!temp)
+    if (!g_strrstr(recv_buff, "200 OK"))
     {
 	g_free(recv_buff);
+	if (--retries > 0)
+	    goto get_mainpage;
+	else
+	    return ERR_GATEWAY;
+    } else
+	retries = 3;
+
+    if (!(recv_buff = g_strstr_len(recv_buff, i, "rotate_token.aspx?token=")))
+	return ERR_READ_TOKEN;
+
+    if (!(token = g_strndup(recv_buff+24, GGADU_SMS_IDEA_TOKENLEN)))
+	return ERR_READ_TOKEN;
+
+    if (strlen(token) < GGADU_SMS_IDEA_TOKENLEN)
+    {
+	g_free(token);
 	return ERR_READ_TOKEN;
     }
 
-    recv_buff = g_strndup(recv_buff, strlen(recv_buff) - strlen(temp));
+    gettoken = g_strconcat("/", "rotate_token.aspx?token=", token, NULL);
 
-    /* pobranie i zapis obazka */
-    token = g_strdup(recv_buff);
-    token = g_strstr_len(token, strlen(token), "=");
-    if (!token)
-	return ERR_READ_TOKEN;
-    token++;
-
-    recv_buff = g_strconcat("/", recv_buff, NULL);
-
+get_token:
     if (!sms_connect("IDEA", GGADU_SMS_IDEA_HOST))
 	return ERR_SERVICE;
 
     strcpy(HTTP.method, "GET");
     strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
-    strcpy(HTTP.url, recv_buff);
+    strcpy(HTTP.url, gettoken);
     strcpy(HTTP.url_params, " ");
     HTTP_io(HTTP);
 
@@ -278,6 +285,22 @@ int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * 
 
     sms_disconnect();
 
+    print_debug("\n============retries left: %d=================\nIDEA RECVBUFF2: %s\n\n", retries, recv_buff);
+
+    if (!g_strrstr(recv_buff, "200 OK"))
+    {
+	g_free(recv_buff);
+	if (--retries > 0)
+	    goto get_token;
+	else
+	{
+	    g_free(gettoken);
+	    g_free(token);
+	    return ERR_GATEWAY;
+	}
+    } else
+	g_free(gettoken);
+
     for (j = 0; j < i; j++)
     {
 	if (recv_buff[j] == '\r' && recv_buff[j + 1] == '\n' && recv_buff[j + 2] == '\r' && recv_buff[j + 3] == '\n')
@@ -287,10 +310,10 @@ int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * 
 
     if (j >= i)
     {
+	g_free(token);
 	g_free(recv_buff);
 	return ERR_READ_TOKEN;
     }
-
 
     for (k = 0; k < i - j; k++)
 	recv_buff[k] = recv_buff[k + j];
@@ -298,7 +321,10 @@ int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * 
 
     /* oops, bail out if IDEA_GFX cannot be written. */
     if (!(idea_logo = fopen(IDEA_GFX, "w")))
+    {
+	g_free(token);
 	return ERR_WRITE_TOKEN;
+    }
 
     /* write token image to file, close fd */
     fwrite(recv_buff, 1, i - j, idea_logo);
@@ -322,7 +348,7 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     gchar *recv_buff;
     gchar *sms_number = g_malloc0(strlen(user_data));
     gchar temp[2];
-    gint i = 0;
+    gint i = 0, retries = 3;
 
     sms_number = g_strstr_len(user_data, strlen(user_data), "&RECIPIENT=");
     sms_number = g_strndup(sms_number + 11, 9);
@@ -338,7 +364,8 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     /* is there any better place for this? */
     unlink(IDEA_GFX);
 
-    if (!sms_connect("IDEA", GGADU_SMS_IDEA_HOST))
+send_sms:
+    if (!sms_connect("IDEA", "213.218.116.131"))
     {
 	sms_warning(sms_number, _("Cannot connect!"));
 	return FALSE;
@@ -358,10 +385,15 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
 
     sms_disconnect();
 
-    if (!recv_buff)
+    print_debug("\n============retries left: %d===================\nIDEA RECVBUFF3: %s\n\n", retries, recv_buff);
+
+    if (!g_strrstr(recv_buff, "200 OK"))
     {
-	sms_warning(sms_number, _("Cannot connect!"));
-	return FALSE;
+	g_free(recv_buff);
+	if (--retries > 0)
+	    goto send_sms;
+	else
+	    return ERR_GATEWAY;
     }
 
     if (g_strstr_len(recv_buff, i, "SMS zosta³ wys³any"))
@@ -390,6 +422,7 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     else if (g_strstr_len(recv_buff, i, "adres odbiorcy wiadomosci jest nieprawid"))
 	sms_warning(sms_number, _("Invalid number"));
 
+    g_free(sms_number);
     g_free(recv_buff);
     return FALSE;
 }

@@ -1,14 +1,14 @@
-/* $Id: sms_core.h,v 1.9 2003/09/24 05:30:25 shaster Exp $ */
+/* $Id: sms_core.h,v 1.10 2003/09/24 14:19:31 shaster Exp $ */
 
 #ifndef SMS_CORE_PLUGIN_H
 #define SMS_CORE_PLUGIN_H 1
 
-#define GGADU_SMS_PLUS_HOST 	"www.text.plusgsm.pl"
-#define GGADU_SMS_PLUS_URL 	"/sms/sendsms.php"
+#define GGADU_SMS_PLUS_HOST 		"www.text.plusgsm.pl"
+#define GGADU_SMS_PLUS_URL 		"/sms/sendsms.php"
 
-#define GGADU_SMS_IDEA_HOST 	"sms.idea.pl"
-#define GGADU_SMS_IDEA_URL_GET 	"/"
-#define GGADU_SMS_IDEA_URL_SEND	"/sendsms.aspx"
+#define GGADU_SMS_IDEA_HOST 		"sms.idea.pl"
+#define GGADU_SMS_IDEA_URL_GET 		"/"
+#define GGADU_SMS_IDEA_URL_SEND		"/sendsms.aspx"
 
 #define GGADU_SMS_ERA_HOST 	"www.eraomnix.pl"
 #define GGADU_SMS_ERA_URL 	"/sms/do/extern/tinker/free/send"
@@ -24,6 +24,7 @@
 #define GGADU_SMS_RECVBUFF_LEN 32768
 
 #define IDEA_GFX "/tmp/idea_token.gfx"
+#define GGADU_SMS_IDEA_TOKENLEN 36
 #define RESERVED_CHARS	"!\"'()*+-.<>[]\\^_`{}|~\t#;/?:&=+,$% \r\n\v\x7f"
 
 enum

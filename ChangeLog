@@ -1,3 +1,7 @@
+24.09.2003
+- workaround IDEA's gateway problems, we were getting 404/302 all the time.
+  Retry 3 times before giving up, then return ERR_GATEWAY (sms/shasta)
+
 23.09.2003
 - add basic history functionality, same as in gadu-gadu plugin (tlen/shasta)
 - fix(?) adding users from search results (tlen/shasta)
