@@ -1,4 +1,4 @@
-/* $Id: ignore.c,v 1.10 2004/12/27 09:43:43 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.11 2004/12/27 09:44:34 krzyzak Exp $ */
 
 /* 
  * Ignore plugin code for GNU Gadu 2 
@@ -250,7 +250,7 @@ static gpointer ignore_remove_list_action(gpointer user_data)
 {
 	GGaduDialog *dialog;
 
-	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Removed from ignored"), "ignore dialog remove id");
+	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Remove from ignored"), "ignore dialog remove id");
 	ggadu_dialog_add_entry(dialog, GGADU_IGNORE_REMOVE_ID, _("ID to remove:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
