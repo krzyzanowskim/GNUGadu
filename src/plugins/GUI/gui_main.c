@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.32 2004/01/11 13:06:21 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.33 2004/01/14 17:14:46 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -116,7 +116,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     ggadu_config_var_add_with_default(gui_handler, "msg_out_header_color", VAR_STR,g_strdup("brown"));
     ggadu_config_var_add_with_default(gui_handler, "msg_out_header_font", VAR_STR,g_strdup("bold"));
     ggadu_config_var_add(gui_handler, "msg_body_font", VAR_STR);
-    ggadu_config_var_add(gui_handler, "msg_body_font", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_body_color", VAR_STR);
     ggadu_config_var_add(gui_handler, "msg_out_body_color", VAR_STR);
     ggadu_config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
     ggadu_config_var_add(gui_handler, "hide_on_start", VAR_BOOL);

@@ -1,3 +1,6 @@
+14.01.2004
+- fixed msg_body_color variable saving (GUI/THrull)
+
 13.01.2004
 - fixed connecting using HUB server to get Gadu-Gadu server IP address (gadu-gadu/krzak)
 - fixed description encoding when autoconnect if used (gadu-gadu/krzak)
