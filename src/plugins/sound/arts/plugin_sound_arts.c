@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_arts.c,v 1.10 2004/10/13 13:34:30 krzyzak Exp $ */
+/* $Id: plugin_sound_arts.c,v 1.11 2004/10/15 09:48:04 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -36,6 +36,8 @@
 #include "sound-arts.h"
 
 GGaduPlugin *handler;
+static gboolean arts_initialized = FALSE;
+static gint arts_err = 0;
 
 GGadu_PLUGIN_INIT("sound-arts", GGADU_PLUGIN_TYPE_MISC);
 
@@ -48,7 +50,15 @@ static gpointer ggadu_play_file(gpointer filename)
     g_static_mutex_lock(&play_mutex);
 
     filename_native = g_filename_from_utf8(filename,-1,&r,&w,NULL);
-    arts_play_file(filename_native);
+
+    if (!arts_initialized)
+    {    
+	signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup(arts_error_text(arts_err)), "main-gui");
+    } else if (!arts_play_file(filename_native))
+    {
+	signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", _("aRts plugin: Error while playing file"), "main-gui");
+    }
+	
     g_free(filename_native);
 
     g_static_mutex_unlock(&play_mutex);
@@ -73,11 +83,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 void start_plugin()
 {
-    int err = arts_init();
+    arts_err = arts_init();
     
-    if (err != 0)
+    if (arts_err != 0)
     {
-	signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(arts_error_text(err)), "main-gui");
+	arts_initialized = FALSE;
+    } else {
+	arts_initialized = TRUE;
     }
 	
 }

@@ -1,4 +1,4 @@
-/* $Id: sound-arts.c,v 1.2 2004/08/26 12:35:54 krzyzak Exp $ */
+/* $Id: sound-arts.c,v 1.3 2004/10/15 09:48:04 krzyzak Exp $ */
     /*
 
        Copyright (C) 2004 Marcin Krzy¿anowski krzak@hakore.com
@@ -42,7 +42,7 @@
 
 #define MAX_BUF_SIZE (4 * 1024)
 
-gint arts_play_file(gchar *filename)
+gboolean arts_play_file(gchar *filename)
 {
     /* input from libaudiofile... */
     AFfilehandle in_file;
@@ -57,7 +57,7 @@ gint arts_play_file(gchar *filename)
     /* open the audio file */
     in_file = afOpenFile( filename, "rb", NULL );
     if ( !in_file )
-	return 0;
+	return FALSE;
 
     /* get audio file parameters */
     frame_count = afGetFrameCount( in_file, AF_DEFAULT_TRACK );
@@ -74,13 +74,13 @@ gint arts_play_file(gchar *filename)
     while ( ( frames_read = afReadFrames( in_file, AF_DEFAULT_TRACK, buf, buf_frames ) ) )
     {
         if (arts_write(a_stream,buf,frames_read * bytes_per_frame) <= 0)
-	    return 1;
+	    return TRUE;
     }
     
     arts_close_stream(a_stream);
 
-    if ( afCloseFile ( in_file ) )
-	return 0;
+    if ( afCloseFile ( in_file ) != 0)
+	return FALSE;
 
-    return 1;
+    return TRUE;
 }
