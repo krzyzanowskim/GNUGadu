@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.2 2003/04/08 21:37:10 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -13,7 +13,6 @@
 typedef struct  {
     gchar *id;
     GtkWidget *chat;
-    gulong autosend_id;
     GSList *recipients;
 } gui_chat_session;
 
