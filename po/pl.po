@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.51 2004/03/09 10:31:39 krzyzak Exp $
+# $Id: pl.po,v 1.52 2004/03/14 07:47:09 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2004-03-01 00:44+0100\n"
+"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
+"POT-Creation-Date: 2004-03-13 17:33+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -73,60 +73,68 @@ msgstr ""
 "\n"
 "[nie ma Ciê w kontaktach]"
 
-#: src/plugins/GUI/GUI_plugin.c:232 src/plugins/GUI/gui_userview.c:699
+#: src/plugins/GUI/GUI_plugin.c:232 src/plugins/GUI/gui_userview.c:705
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/GUI_plugin.c:591
+#: src/plugins/GUI/GUI_plugin.c:604
 msgid "/GNU Gadu/_Preferences"
 msgstr "/GNU Gadu/_Ustawienia"
 
-#: src/plugins/GUI/GUI_plugin.c:592
+#: src/plugins/GUI/GUI_plugin.c:605
 msgid "/GNU Gadu/"
 msgstr "/GNU Gadu/"
 
-#: src/plugins/GUI/GUI_plugin.c:593
+#: src/plugins/GUI/GUI_plugin.c:606
 msgid "/GNU Gadu/_About"
 msgstr "/GNU Gadu/_Informacje o"
 
-#: src/plugins/GUI/GUI_plugin.c:594
+#: src/plugins/GUI/GUI_plugin.c:607
 msgid "/GNU Gadu/_Quit"
 msgstr "/GNU Gadu/Za_koñcz"
 
-#: src/plugins/GUI/GUI_plugin.c:640
+#: src/plugins/GUI/GUI_plugin.c:653
 msgid "Open preferences window"
 msgstr "Otwórz okno ustawieñ"
 
-#: src/plugins/GUI/GUI_plugin.c:642
+#: src/plugins/GUI/GUI_plugin.c:655
 msgid "Exit program"
 msgstr "Wyj¶cie z programu"
 
-#: src/plugins/GUI/GUI_plugin.c:646
+#: src/plugins/GUI/GUI_plugin.c:659
 msgid "Show/hide inactive users"
 msgstr "Poka¿/ukryj nieaktywnych u¿ytkowników"
 
-#: src/plugins/GUI/GUI_plugin.c:702 src/plugins/GUI/GUI_plugin.c:721
+#: src/plugins/GUI/GUI_plugin.c:715 src/plugins/GUI/GUI_plugin.c:734
 #, c-format
 msgid "New message from %s"
 msgstr "Nowa wiadomo¶æ od %s"
 
-#: src/plugins/GUI/gui_chat.c:510 src/plugins/GUI/gui_search.c:189
+#: src/plugins/GUI/gui_chat.c:532 src/plugins/GUI/gui_search.c:189
 msgid "_Close"
 msgstr "Za_mknij"
 
-#: src/plugins/GUI/gui_chat.c:719
+#: src/plugins/GUI/gui_chat.c:741
 msgid "_Send"
 msgstr "_Wy¶lij"
 
-#: src/plugins/GUI/gui_chat.c:813
+#: src/plugins/GUI/gui_chat.c:835
 msgid "Chat Window"
 msgstr "Okno rozmowy"
 
-#: src/plugins/GUI/gui_chat.c:1027
+#: src/plugins/GUI/gui_chat.c:1017
+#, c-format
+msgid ""
+"Error initializing spell checking: \n"
+"%s\n"
+"Try install appropriate language support with aspell"
+msgstr ""
+
+#: src/plugins/GUI/gui_chat.c:1077
 msgid "S_tick"
 msgstr "P_rzypnij"
 
-#: src/plugins/GUI/gui_chat.c:1159 src/plugins/GUI/gui_chat.c:1161
+#: src/plugins/GUI/gui_chat.c:1209 src/plugins/GUI/gui_chat.c:1211
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2078
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2100
 msgid "Me"
@@ -138,7 +146,7 @@ msgid ""
 "If you are sure, you have to restart GNU Gadu to take effect"
 msgstr ""
 "GUI zosta³o zaznaczone jako WY£¡CZONE\n"
-"Je¶li jeste¶ pewien, musisz ponownie uruchomiæ GNU Gadu aby zmiany odnios³y "
+"Je¶li jeste¶ pewien, musisz ponownie uruchomiæ GNU Gadu aby zmiany odnios³y\n"
 "skutek"
 
 #: src/plugins/GUI/gui_preferences.c:179
@@ -237,7 +245,7 @@ msgstr "Wiadomo¶æ przychodz±ca:"
 msgid "Outgoing message:"
 msgstr "Wiadomo¶æ wychodz±ca:"
 
-#: src/plugins/GUI/gui_preferences.c:603
+#: src/plugins/GUI/gui_preferences.c:608
 msgid ""
 "\n"
 "Chat window settings\n"
@@ -247,45 +255,53 @@ msgstr ""
 "Ustawienia okna rozmowy\n"
 "\n"
 
-#: src/plugins/GUI/gui_preferences.c:611
+#: src/plugins/GUI/gui_preferences.c:616
 msgid "Tabbed chat window style"
 msgstr "Zak³adki w oknie rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:616
+#: src/plugins/GUI/gui_preferences.c:621
 msgid "Enable emoticons"
 msgstr "U¿ycie emotikonów"
 
-#: src/plugins/GUI/gui_preferences.c:621
+#: src/plugins/GUI/gui_preferences.c:626
 msgid "'Enter' - send message"
 msgstr "Wysy³anie wiadomo¶ci po wci¶niêciu Enter"
 
-#: src/plugins/GUI/gui_preferences.c:626
+#: src/plugins/GUI/gui_preferences.c:631
 msgid "Automatically show chat window"
 msgstr "Automatyczne otwieranie okna rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:631
+#: src/plugins/GUI/gui_preferences.c:636
 msgid "Automatically raise chat window"
 msgstr "Automatyczne wyskakiwanie okna rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:636
+#: src/plugins/GUI/gui_preferences.c:641
 msgid "Use username instead of \"Me\" in chat window"
 msgstr "U¿yj nazwy u¿ytkownika zamiast \"Ja\" w oknie rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:652
+#: src/plugins/GUI/gui_preferences.c:647
+msgid "Use spell check in chat window"
+msgstr "U¿yj sprawdzania pisowni w oknie rozmowy"
+
+#: src/plugins/GUI/gui_preferences.c:665
 msgid "Chat window width"
 msgstr "Szeroko¶æ okna rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:661
+#: src/plugins/GUI/gui_preferences.c:674
 msgid "Chat window height"
 msgstr "Wysoko¶æ okna rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:671
+#: src/plugins/GUI/gui_preferences.c:684
 msgid "Chat window split size (percent)"
 msgstr ""
 "Rozmiar obszaru wiadomo¶ci przychodz±cych\n"
 "(w procentach)"
 
-#: src/plugins/GUI/gui_preferences.c:720
+#: src/plugins/GUI/gui_preferences.c:694
+msgid "Dictionary"
+msgstr "S³ownik"
+
+#: src/plugins/GUI/gui_preferences.c:744
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:300
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1432
 #: src/plugins/tlen/tlen_plugin.c:850 src/plugins/xosd/plugin_xosd.c:408
@@ -295,31 +311,31 @@ msgstr ""
 msgid "Preferences"
 msgstr "Ustawienia"
 
-#: src/plugins/GUI/gui_preferences.c:755
+#: src/plugins/GUI/gui_preferences.c:779
 msgid "General"
 msgstr "Ogólne"
 
-#: src/plugins/GUI/gui_preferences.c:757
+#: src/plugins/GUI/gui_preferences.c:781
 msgid "Chat window"
 msgstr "Okno rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:759
+#: src/plugins/GUI/gui_preferences.c:783
 msgid "Sound"
 msgstr "D¼wiêk"
 
-#: src/plugins/GUI/gui_preferences.c:761
+#: src/plugins/GUI/gui_preferences.c:785
 msgid "Colors"
 msgstr "Kolory"
 
-#: src/plugins/GUI/gui_preferences.c:763
+#: src/plugins/GUI/gui_preferences.c:787
 msgid "Fonts"
 msgstr "Czcionki"
 
-#: src/plugins/GUI/gui_preferences.c:765
+#: src/plugins/GUI/gui_preferences.c:789
 msgid "Plugins manager"
 msgstr "Zarz±dzanie wtyczkami"
 
-#: src/plugins/GUI/gui_preferences.c:772
+#: src/plugins/GUI/gui_preferences.c:796
 msgid ""
 "\n"
 "GUI plugin preferences\n"
@@ -329,61 +345,61 @@ msgstr ""
 "Ustawienia wtyczki GUI\n"
 "\n"
 
-#: src/plugins/GUI/gui_preferences.c:780
+#: src/plugins/GUI/gui_preferences.c:804
 msgid "Show only active users"
 msgstr "Tylko aktywni u¿ytkownicy"
 
-#: src/plugins/GUI/gui_preferences.c:783
+#: src/plugins/GUI/gui_preferences.c:807
 msgid "Tree user list"
 msgstr "Lista kontaktów w postaci drzewa"
 
-#: src/plugins/GUI/gui_preferences.c:786
+#: src/plugins/GUI/gui_preferences.c:810
 msgid "Expand Tree by default"
 msgstr "Domy¶lne rozwijanie drzewa"
 
-#: src/plugins/GUI/gui_preferences.c:793
+#: src/plugins/GUI/gui_preferences.c:817
 msgid "Notify about new messages via XOSD"
 msgstr "Powiadamianie o nowych wiadomo¶ciach poprzez XOSD"
 
-#: src/plugins/GUI/gui_preferences.c:797
+#: src/plugins/GUI/gui_preferences.c:821
 msgid "Auto hide on start"
 msgstr "Automatyczne ukrywanie po uruchomieniu"
 
-#: src/plugins/GUI/gui_preferences.c:800
+#: src/plugins/GUI/gui_preferences.c:824
 msgid "Show toolbar"
 msgstr "Poka¿ pasek narzêdziowy"
 
-#: src/plugins/GUI/gui_preferences.c:803
+#: src/plugins/GUI/gui_preferences.c:827
 msgid "Display contacts descriptions on user list"
 msgstr "Poka¿ opisy na li¶cie kontaktów"
 
-#: src/plugins/GUI/gui_preferences.c:806
+#: src/plugins/GUI/gui_preferences.c:830
 msgid "Blink status"
 msgstr "Mruganie statusem podczas ³±czenia"
 
-#: src/plugins/GUI/gui_preferences.c:809
+#: src/plugins/GUI/gui_preferences.c:833
 msgid "Auto away"
 msgstr "Automatyczna zmiana stanu na zajêty"
 
-#: src/plugins/GUI/gui_preferences.c:819
+#: src/plugins/GUI/gui_preferences.c:843
 msgid "Blink interval"
 msgstr "Odstêp miêdzy mrugniêciami w ms"
 
-#: src/plugins/GUI/gui_preferences.c:827
+#: src/plugins/GUI/gui_preferences.c:851
 msgid "Auto away interval (minutes)"
 msgstr ""
 "Zmieniaj stan na zajêty po up³ywie\n"
 "(minuty)"
 
-#: src/plugins/GUI/gui_preferences.c:836
+#: src/plugins/GUI/gui_preferences.c:860
 msgid "Select theme"
 msgstr "Motyw:"
 
-#: src/plugins/GUI/gui_preferences.c:843
+#: src/plugins/GUI/gui_preferences.c:867
 msgid "Select icon set"
 msgstr "Zestaw ikon:"
 
-#: src/plugins/GUI/gui_main.c:183
+#: src/plugins/GUI/gui_main.c:187
 msgid "Unable to read configuration file for plugin GUI"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki GUI"
 
@@ -416,7 +432,7 @@ msgid "Search results"
 msgstr "Wyniki wyszukiwania"
 
 #: src/plugins/GUI/gui_dialogs.c:644
-#: src/plugins/docklet/system-tray/docklet_plugin.c:306
+#: src/plugins/docklet/system-tray/docklet_plugin.c:333
 msgid "About"
 msgstr "Informacje o"
 
@@ -452,7 +468,7 @@ msgstr ""
 "<b>GNU Gadu %s</b>\n"
 "Copyright (C) 2001-2004 GNU Gadu Team\n"
 "Licencja: GPL\n"
-"Strona domowa: http://www.gnugadu.org\n"
+"Strona domowa: http://www.gnugadu.org/\n"
 "\n"
 "<b>G³ówni programi¶ci:</b>\n"
 "Igor Popik &lt;thrull@slackware.pl&gt;\n"
@@ -510,11 +526,11 @@ msgstr "Zajêty (wszystkie)"
 msgid "Go Offline (all)"
 msgstr "Niedostêpny (wszystkie)"
 
-#: src/plugins/docklet/system-tray/docklet_plugin.c:307
+#: src/plugins/docklet/system-tray/docklet_plugin.c:334
 msgid "Quit"
 msgstr "Zakoñcz"
 
-#: src/plugins/docklet/system-tray/docklet_plugin.c:488
+#: src/plugins/docklet/system-tray/docklet_plugin.c:515
 msgid "Dockable icon"
 msgstr "Dokowalna ikona"
 
@@ -1082,15 +1098,15 @@ msgstr "Zarejestruj konto Jabbera"
 
 #: src/plugins/jabber/jabber_plugin.c:263
 msgid "Server : "
-msgstr "Serwer:"
+msgstr "Serwer : "
 
 #: src/plugins/jabber/jabber_plugin.c:264
 msgid "Username : "
-msgstr "Nazwa u¿ytkownika :"
+msgstr "Nazwa u¿ytkownika : "
 
 #: src/plugins/jabber/jabber_plugin.c:265
 msgid "Password : "
-msgstr "Has³o:"
+msgstr "Has³o : "
 
 #: src/plugins/jabber/jabber_plugin.c:284
 msgid "Authorization"
@@ -1394,7 +1410,7 @@ msgid "Use \"SMS\" program to send"
 msgstr "U¿yj programu \"SMS\" do wysy³ania"
 
 #: src/plugins/sms/sms_gui.c:66 src/plugins/sms/sms_gui.c:158
-#: src/plugins/sms/sms_gui.c:304
+#: src/plugins/sms/sms_gui.c:305
 msgid "Sender"
 msgstr "Nadawca"
 
@@ -1411,7 +1427,7 @@ msgid "Show plugin in status list (needs reload)"
 msgstr "Pokazuj modu³ na li¶cie stanów (wymaga prze³adowania)"
 
 #: src/plugins/sms/sms_gui.c:90 src/plugins/sms/sms_gui.c:108
-#: src/plugins/sms/sms_gui.c:305
+#: src/plugins/sms/sms_gui.c:306
 msgid "Number"
 msgstr "Numer"
 
@@ -1427,7 +1443,7 @@ msgstr "Wy¶lij do : "
 msgid "Use external program"
 msgstr "U¿yj zewnêtrznego programu"
 
-#: src/plugins/sms/sms_gui.c:159 src/plugins/sms/sms_gui.c:306
+#: src/plugins/sms/sms_gui.c:159 src/plugins/sms/sms_gui.c:307
 msgid "Message"
 msgstr "Wiadomo¶æ"
 
@@ -1443,15 +1459,15 @@ msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki sms"
 msgid "Send SMS"
 msgstr "Wy¶lij SMS"
 
-#: src/plugins/sms/sms_gui.c:294
+#: src/plugins/sms/sms_gui.c:295
 msgid "SMS Send"
 msgstr "Wysy³anie SMS"
 
-#: src/plugins/sms/sms_gui.c:509
+#: src/plugins/sms/sms_gui.c:511
 msgid "Send SMS (internal)"
 msgstr "Wy¶lij SMS (wewnêtrznie)"
 
-#: src/plugins/sms/sms_gui.c:515
+#: src/plugins/sms/sms_gui.c:518
 msgid "Send SMS (external)"
 msgstr "Wy¶lij SMS (zewnêtrznie)"
 
@@ -1526,12 +1542,6 @@ msgstr "Sprawdzanie aktualizacji"
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki update"
 
-#~ msgid "/GnuGadu/"
-#~ msgstr "/GnuGadu/"
-
-#~ msgid "Me :: %s ::\n"
-#~ msgstr "Ja :: %s ::\n"
-
 #~ msgid "Change User"
 #~ msgstr "Modyfikacja danych kontaktu"
 
@@ -1547,12 +1557,3 @@ msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki update"
 
 #~ msgid "Talking to %s %s"
 #~ msgstr "Rozmowa z %s %s"
-
-#~ msgid ""
-#~ ":: Me (%s)::\n"
-#~ "%s\n"
-#~ "\n"
-#~ msgstr ""
-#~ ":: Ja (%s)::\n"
-#~ "%s\n"
-#~ "\n"

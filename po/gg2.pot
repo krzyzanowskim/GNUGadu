@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2004-03-01 00:44+0100\n"
+"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
+"POT-Creation-Date: 2004-03-13 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,60 +67,68 @@ msgid ""
 "[not in userlist]"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:232 src/plugins/GUI/gui_userview.c:699
+#: src/plugins/GUI/GUI_plugin.c:232 src/plugins/GUI/gui_userview.c:705
 msgid "(None)"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:591
+#: src/plugins/GUI/GUI_plugin.c:604
 msgid "/GNU Gadu/_Preferences"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:592
+#: src/plugins/GUI/GUI_plugin.c:605
 msgid "/GNU Gadu/"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:593
+#: src/plugins/GUI/GUI_plugin.c:606
 msgid "/GNU Gadu/_About"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:594
+#: src/plugins/GUI/GUI_plugin.c:607
 msgid "/GNU Gadu/_Quit"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:640
+#: src/plugins/GUI/GUI_plugin.c:653
 msgid "Open preferences window"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:642
+#: src/plugins/GUI/GUI_plugin.c:655
 msgid "Exit program"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:646
+#: src/plugins/GUI/GUI_plugin.c:659
 msgid "Show/hide inactive users"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:702 src/plugins/GUI/GUI_plugin.c:721
+#: src/plugins/GUI/GUI_plugin.c:715 src/plugins/GUI/GUI_plugin.c:734
 #, c-format
 msgid "New message from %s"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:510 src/plugins/GUI/gui_search.c:189
+#: src/plugins/GUI/gui_chat.c:532 src/plugins/GUI/gui_search.c:189
 msgid "_Close"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:719
+#: src/plugins/GUI/gui_chat.c:741
 msgid "_Send"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:813
+#: src/plugins/GUI/gui_chat.c:835
 msgid "Chat Window"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1027
+#: src/plugins/GUI/gui_chat.c:1017
+#, c-format
+msgid ""
+"Error initializing spell checking: \n"
+"%s\n"
+"Try install appropriate language support with aspell"
+msgstr ""
+
+#: src/plugins/GUI/gui_chat.c:1077
 msgid "S_tick"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1159 src/plugins/GUI/gui_chat.c:1161
+#: src/plugins/GUI/gui_chat.c:1209 src/plugins/GUI/gui_chat.c:1211
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2078
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2100
 msgid "Me"
@@ -217,50 +225,58 @@ msgstr ""
 msgid "Outgoing message:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:603
+#: src/plugins/GUI/gui_preferences.c:608
 msgid ""
 "\n"
 "Chat window settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:611
+#: src/plugins/GUI/gui_preferences.c:616
 msgid "Tabbed chat window style"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:616
+#: src/plugins/GUI/gui_preferences.c:621
 msgid "Enable emoticons"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:621
+#: src/plugins/GUI/gui_preferences.c:626
 msgid "'Enter' - send message"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:626
+#: src/plugins/GUI/gui_preferences.c:631
 msgid "Automatically show chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:631
+#: src/plugins/GUI/gui_preferences.c:636
 msgid "Automatically raise chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:636
+#: src/plugins/GUI/gui_preferences.c:641
 msgid "Use username instead of \"Me\" in chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:652
+#: src/plugins/GUI/gui_preferences.c:647
+msgid "Use spell check in chat window"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:665
 msgid "Chat window width"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:661
+#: src/plugins/GUI/gui_preferences.c:674
 msgid "Chat window height"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:671
+#: src/plugins/GUI/gui_preferences.c:684
 msgid "Chat window split size (percent)"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:720
+#: src/plugins/GUI/gui_preferences.c:694
+msgid "Dictionary"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:744
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:300
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1432
 #: src/plugins/tlen/tlen_plugin.c:850 src/plugins/xosd/plugin_xosd.c:408
@@ -270,90 +286,90 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:755
+#: src/plugins/GUI/gui_preferences.c:779
 msgid "General"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:757
+#: src/plugins/GUI/gui_preferences.c:781
 msgid "Chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:759
+#: src/plugins/GUI/gui_preferences.c:783
 msgid "Sound"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:761
+#: src/plugins/GUI/gui_preferences.c:785
 msgid "Colors"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:763
+#: src/plugins/GUI/gui_preferences.c:787
 msgid "Fonts"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:765
+#: src/plugins/GUI/gui_preferences.c:789
 msgid "Plugins manager"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:772
+#: src/plugins/GUI/gui_preferences.c:796
 msgid ""
 "\n"
 "GUI plugin preferences\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:780
+#: src/plugins/GUI/gui_preferences.c:804
 msgid "Show only active users"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:783
+#: src/plugins/GUI/gui_preferences.c:807
 msgid "Tree user list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:786
+#: src/plugins/GUI/gui_preferences.c:810
 msgid "Expand Tree by default"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:793
+#: src/plugins/GUI/gui_preferences.c:817
 msgid "Notify about new messages via XOSD"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:797
+#: src/plugins/GUI/gui_preferences.c:821
 msgid "Auto hide on start"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:800
+#: src/plugins/GUI/gui_preferences.c:824
 msgid "Show toolbar"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:803
+#: src/plugins/GUI/gui_preferences.c:827
 msgid "Display contacts descriptions on user list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:806
+#: src/plugins/GUI/gui_preferences.c:830
 msgid "Blink status"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:809
+#: src/plugins/GUI/gui_preferences.c:833
 msgid "Auto away"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:819
+#: src/plugins/GUI/gui_preferences.c:843
 msgid "Blink interval"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:827
+#: src/plugins/GUI/gui_preferences.c:851
 msgid "Auto away interval (minutes)"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:836
+#: src/plugins/GUI/gui_preferences.c:860
 msgid "Select theme"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:843
+#: src/plugins/GUI/gui_preferences.c:867
 msgid "Select icon set"
 msgstr ""
 
-#: src/plugins/GUI/gui_main.c:183
+#: src/plugins/GUI/gui_main.c:187
 msgid "Unable to read configuration file for plugin GUI"
 msgstr ""
 
@@ -386,7 +402,7 @@ msgid "Search results"
 msgstr ""
 
 #: src/plugins/GUI/gui_dialogs.c:644
-#: src/plugins/docklet/system-tray/docklet_plugin.c:306
+#: src/plugins/docklet/system-tray/docklet_plugin.c:333
 msgid "About"
 msgstr ""
 
@@ -455,11 +471,11 @@ msgstr ""
 msgid "Go Offline (all)"
 msgstr ""
 
-#: src/plugins/docklet/system-tray/docklet_plugin.c:307
+#: src/plugins/docklet/system-tray/docklet_plugin.c:334
 msgid "Quit"
 msgstr ""
 
-#: src/plugins/docklet/system-tray/docklet_plugin.c:488
+#: src/plugins/docklet/system-tray/docklet_plugin.c:515
 msgid "Dockable icon"
 msgstr ""
 
@@ -1315,7 +1331,7 @@ msgid "Use \"SMS\" program to send"
 msgstr ""
 
 #: src/plugins/sms/sms_gui.c:66 src/plugins/sms/sms_gui.c:158
-#: src/plugins/sms/sms_gui.c:304
+#: src/plugins/sms/sms_gui.c:305
 msgid "Sender"
 msgstr ""
 
@@ -1332,7 +1348,7 @@ msgid "Show plugin in status list (needs reload)"
 msgstr ""
 
 #: src/plugins/sms/sms_gui.c:90 src/plugins/sms/sms_gui.c:108
-#: src/plugins/sms/sms_gui.c:305
+#: src/plugins/sms/sms_gui.c:306
 msgid "Number"
 msgstr ""
 
@@ -1348,7 +1364,7 @@ msgstr ""
 msgid "Use external program"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:159 src/plugins/sms/sms_gui.c:306
+#: src/plugins/sms/sms_gui.c:159 src/plugins/sms/sms_gui.c:307
 msgid "Message"
 msgstr ""
 
@@ -1364,15 +1380,15 @@ msgstr ""
 msgid "Send SMS"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:294
+#: src/plugins/sms/sms_gui.c:295
 msgid "SMS Send"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:509
+#: src/plugins/sms/sms_gui.c:511
 msgid "Send SMS (internal)"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:515
+#: src/plugins/sms/sms_gui.c:518
 msgid "Send SMS (external)"
 msgstr ""
 
