@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.17 2004/05/04 21:39:10 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.18 2004/10/06 07:45:08 krzyzak Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -393,6 +393,12 @@ static void create_docklet()
 	GtkWidget *eventbox;
 
 	docklet = egg_tray_icon_new("GNU Gadu 2");
+	
+	if (!docklet)
+	{
+	    g_warning(_("Unable to create system-tray docklet"));
+	    return NULL;
+	}
 
 	tooltips = gtk_tooltips_new();
 	tooltipstr = g_strdup("GNU Gadu 2");

@@ -204,7 +204,14 @@ EggTrayIcon *egg_tray_icon_new_for_xscreen(Screen * xscreen, const char *name)
 	gtk_window_set_title(GTK_WINDOW(icon), name);
 
 	display = gdk_x11_lookup_xdisplay(DisplayOfScreen(xscreen));
+	
+	if (!display)
+	    return NULL;
+	
 	screen = gdk_display_get_screen(display, XScreenNumberOfScreen(xscreen));
+	
+	if (!screen)
+	    return NULL;
 
 	gtk_plug_construct_for_display(GTK_PLUG(icon), display, 0);
 
@@ -224,6 +231,9 @@ EggTrayIcon *egg_tray_icon_new_for_xscreen(Screen * xscreen, const char *name)
 	egg_tray_icon_update_manager_window(icon);
 
 	root_window = gdk_screen_get_root_window(gtk_widget_get_screen(GTK_WIDGET(icon)));
+	
+	if (!root_window)
+	    return NULL;
 
 	/* Add a root window filter so that we get changes on MANAGER */
 	gdk_window_add_filter(root_window, egg_tray_icon_manager_filter, icon);
