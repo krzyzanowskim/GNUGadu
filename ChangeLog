@@ -5,8 +5,8 @@
 - use GtkColorButton for color selection (GUI/krzak)
 - "get current status" signal now return GGaduSignalPrototype value instead just status id. (krzak)
 - new functions in ggadu_support.c (protocols are adaptarized to use it) (krzak):
-   gchar *ggadu_get_protocol_status_description(GGaduProtocol *gp);
-   void   ggadu_set_protocol_status_description(GGaduProtocol *gp,gchar *description);
+  gchar *ggadu_get_protocol_status_description(GGaduProtocol *gp)
+  void   ggadu_set_protocol_status_description(GGaduProtocol *gp,gchar *description)
 - small fix realted to icons on chat window (krzak)
 
 
