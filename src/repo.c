@@ -1,4 +1,4 @@
-/* $Id: repo.c,v 1.3 2003/04/12 19:59:27 zapal Exp $ */
+/* $Id: repo.c,v 1.4 2003/04/16 16:41:17 zapal Exp $ */
 
 #include <glib.h>
 
@@ -24,14 +24,12 @@ GGaduRepo *ggadu_repo_find (gchar *repo_name)
   GGaduRepo      *tmp;
   GSList         *list;
 
-  print_debug ("find %s\n", repo_name);
   list = REPOS->values;
   print_debug ("%p\n", REPOS->values);
   while (list)
   {
     tmp = (GGaduRepo *) list->data;
 
-    print_debug ("? %s\n", tmp->name);
     if (!ggadu_strcasecmp (repo_name, (gchar *)tmp->name))
       return tmp;
     
@@ -129,7 +127,8 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
     while (list)
     {
       watch = (GGaduRepoWatch *) list->data;
-      if ((watch->types & types) && !g_slist_find (completed, watch->callback))
+      if ((watch->types & types) && !g_slist_find (completed, watch->callback)
+	  && ((actions & watch->actions) || (watch->actions & REPO_mask && actions & REPO_value_mask)))
       {
        	print_debug ("WaTcH->actions: %d\n", watch->actions);
 	print_debug ("       actions: %d\n", actions);
@@ -258,15 +257,10 @@ gboolean ggadu_repo_add_value (gchar *repo_name, gpointer key, gpointer value, g
 
 gboolean ggadu_repo_change_value (gchar *repo_name, gpointer key, gpointer value, gint type)
 {
-  GGaduRepo      *tmp;
   GGaduRepoValue *tmpv;
   
   print_debug ("repo: repo_name = '%s', key = '%p', value = '%p', type = '%d'\n", repo_name, key, value, type);
  
-  tmp = ggadu_repo_find (repo_name);
-  if (!tmp)
-    return FALSE;
-
   tmpv = ggadu_repo_ptr_value (repo_name, key);
   if (!tmpv)
   {
@@ -275,11 +269,11 @@ gboolean ggadu_repo_change_value (gchar *repo_name, gpointer key, gpointer value
   }
   
   tmpv->value = value;
-
+  
   if (type != REPO_VALUE_DC)
     tmpv->type  = type;
   
-  ggadu_repo_watch_notify (repo_name, key, REPO_ACTION_CHANGE | REPO_ACTION_VALUE_CHANGE, type);
+  ggadu_repo_watch_notify (repo_name, key, REPO_ACTION_CHANGE | REPO_ACTION_VALUE_CHANGE, tmpv->type);
   return TRUE;
 }
 
