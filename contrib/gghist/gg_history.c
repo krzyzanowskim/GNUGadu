@@ -1,3 +1,6 @@
+/* Kazik <kazik.cz@interia.pl> */
+/* License : GPL */
+
 #ifndef GG_HISTORY_SUPPORT
 #define GG_HISTORY_SUPPORT
 

@@ -1,3 +1,6 @@
+/* Kazik <kazik.cz@interia.pl> */
+/* License : GPL */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
