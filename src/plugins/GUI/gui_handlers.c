@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.46 2004/01/25 22:51:54 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.47 2004/01/27 18:09:40 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -385,6 +385,8 @@ void handle_disconnected(GGaduSignal * signal)
 
 	gp->blinker_image1 = NULL;
 	gp->blinker_image2 = NULL;
+	
+	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, sp->description, NULL);
 }
 
 void handle_show_search_results(GGaduSignal * signal)
@@ -429,6 +431,8 @@ void handle_status_changed(GGaduSignal * signal)
 	gp->blinker_image2 = NULL;
 
 	auto_away_start(gp);
+	
+	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, sp->description, NULL);
 }
 
 void notify_callback(gchar * repo_name, gpointer key, gint actions)

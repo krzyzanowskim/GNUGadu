@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.12 2004/01/17 21:10:55 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.13 2004/01/27 18:09:40 thrulliq Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -41,6 +41,7 @@ typedef struct
 	GdkPixbuf *blinker_image2;
 	guint aaway_timer;
 	GGaduProtocol *p;
+	GtkTooltips *tooltips;
 } gui_protocol;
 
 typedef struct

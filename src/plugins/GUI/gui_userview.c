@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.30 2004/01/27 01:08:03 shaster Exp $ */
+/* $Id: gui_userview.c,v 1.31 2004/01/27 18:09:40 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -35,6 +35,7 @@ GtkWidget *notebook;
 GtkWidget *tree_scrolled_window;
 GtkWidget *treeview = NULL;
 GtkTreeStore *users_treestore = NULL;
+GtkTooltips *tooltips = NULL;
 
 void status_clicked(GtkWidget * widget, GdkEventButton * ev, gpointer user_data)
 {
@@ -165,6 +166,20 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 	return 0;
 }
 
+static void create_protocol_icon(gui_protocol *gp, GGaduStatusPrototype *sp)
+{
+	if (!gp->tooltips) {
+	    gp->tooltips = gtk_tooltips_new();
+	    gtk_tooltips_enable(gp->tooltips);
+	}
+	gp->statuslist_eventbox = gtk_event_box_new();
+	gtk_container_add(GTK_CONTAINER(gp->statuslist_eventbox), create_image(sp->image));
+	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, sp->description, NULL);
+	g_signal_connect(G_OBJECT(gp->statuslist_eventbox), "button-press-event", G_CALLBACK(status_clicked), gp);
+	gtk_box_pack_start(GTK_BOX(status_hbox), gp->statuslist_eventbox, FALSE, FALSE, 2);
+	gtk_widget_show_all(gp->statuslist_eventbox);
+}
+
 void gui_list_add(gui_protocol * gp)
 {
 	GGaduStatusPrototype *sp;
@@ -240,14 +255,7 @@ void gui_list_add(gui_protocol * gp)
 	}
 
 	if (sp)
-	{
-		gp->statuslist_eventbox = gtk_event_box_new();
-		gtk_container_add(GTK_CONTAINER(gp->statuslist_eventbox), create_image(sp->image));
-		g_signal_connect(G_OBJECT(gp->statuslist_eventbox), "button-press-event", G_CALLBACK(status_clicked),
-				 gp);
-		gtk_box_pack_start(GTK_BOX(status_hbox), gp->statuslist_eventbox, FALSE, FALSE, 2);
-		gtk_widget_show_all(gp->statuslist_eventbox);
-	}
+	    create_protocol_icon(gp, sp);
 
 	vbox = gtk_vbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
@@ -307,14 +315,7 @@ void gui_tree_add(gui_protocol * gp)
 	}
 
 	if (sp)
-	{
-		gp->statuslist_eventbox = gtk_event_box_new();
-		gtk_container_add(GTK_CONTAINER(gp->statuslist_eventbox), create_image(sp->image));
-		g_signal_connect(G_OBJECT(gp->statuslist_eventbox), "button-press-event", G_CALLBACK(status_clicked),
-				 gp);
-		gtk_box_pack_start(GTK_BOX(status_hbox), gp->statuslist_eventbox, FALSE, FALSE, 2);
-		gtk_widget_show_all(gp->statuslist_eventbox);
-	}
+	    create_protocol_icon(gp, sp);
 
 	gp->add_info_label = g_object_get_data(G_OBJECT(treeview), "add_info_label");
 
