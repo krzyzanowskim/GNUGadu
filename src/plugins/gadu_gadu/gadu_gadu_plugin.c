@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.37 2003/04/16 16:33:22 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.38 2003/04/21 15:15:06 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -400,14 +400,17 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			
 			while (n->uin) 
 			{
+			    gchar *desc_utf8 = NULL;
 //			    print_debug("%s : GG_EVENT_NOTIFY_DESCR : %d  %d %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,e->event.notify_descr.descr);
 			
 			    notify = g_new0(GGaduNotify,1);
 			    notify->id = g_strdup_printf("%d",n->uin);
 
 			    notify->status = n->status;
+			    
+			    ggadu_convert("CP1250","UTF-8",e->event.notify_descr.descr,desc_utf8);
 
-			    set_userlist_status(notify, e->event.notify_descr.descr,userlist);
+			    set_userlist_status(notify, desc_utf8,userlist);
 			    
 			    while (l) {
 			      GGaduContact *k = (GGaduContact *)l->data;
@@ -425,12 +428,20 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			break;
 
 		case GG_EVENT_STATUS:
+			{
+			gchar *desc_utf8 = NULL;
+			
 			print_debug("%s : GG_EVENT_STATUS : %d %s\n",GGadu_PLUGIN_NAME,e->event.status.uin,
 											   e->event.status.descr);
+											   
+			ggadu_convert("CP1250","UTF-8",e->event.status.descr,desc_utf8);
+
 			notify = g_new0(GGaduNotify,1);
 			notify->id = g_strdup_printf("%d",e->event.status.uin);
 			notify->status = e->event.status.status;
-			set_userlist_status(notify, e->event.status.descr,userlist);
+
+			set_userlist_status(notify, desc_utf8,userlist);
+
     			while (l) {
 			  GGaduContact *k = (GGaduContact *)l->data;
 
@@ -440,6 +451,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			  l = l->next;
 			}
 			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
+			}
 			break;
 
 		case GG_EVENT_ACK:

@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.3 2003/04/12 19:11:34 krzyzak Exp $ */
+/* $Id: support.c,v 1.4 2003/04/21 15:15:02 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -40,7 +40,7 @@ void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist)
 			}
 	    
 			if (status_descr)
-				ggadu_convert("CP1250","UTF-8",status_descr,k->status_descr);
+				k->status_descr = status_descr;
 
 	    break;
 		}

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.18 2003/04/18 16:01:17 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.19 2003/04/21 15:15:08 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -298,7 +298,14 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 		}
 		
 		print_debug("STATUS IN EVENT: %d\n",e->presence->status);
-		set_userlist_status(notify, e->presence->description, userlist);
+		
+		{
+			gchar *desc_utf8 = NULL;
+			ggadu_convert("ISO-8859-2","UTF-8",e->presence->description,desc_utf8);
+			set_userlist_status(notify, desc_utf8, userlist);
+		}
+		
+		
 		signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 		break;
 		
