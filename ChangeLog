@@ -1,3 +1,6 @@
+01.05.2003
+- made ,,About'' dialog available by docklet menu. (docklet/GUI/shasta)
+
 28.04.2003
 - font selection for userlist (GUI/THrull)
 - toplevel sound file selection not fully working ;-) (GUI/THrull)
