@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.119 2004/01/15 22:07:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.120 2004/01/15 23:34:13 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -765,7 +765,7 @@ gpointer user_remove_user_action(gpointer user_data)
 
 	if (user_data)
 	{
-		signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 		save_addressbook_file(userlist);
 	}
 

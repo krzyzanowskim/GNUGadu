@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.33 2004/01/14 17:14:46 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.34 2004/01/15 23:34:13 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -47,10 +47,12 @@ gui_signal_handler handlers[] = {
 	{"gui register menu", handle_register_menu},
 	{"gui unregister menu", handle_unregister_menu},
 	{"gui send userlist", handle_send_userlist},
+	/* ZONK do wywalenia te sygnaly sa chyba tlen ich uzywa tylko  */
 	{"auth request", handle_auth_request},
 	{"auth request accepted", handle_null},
 	{"unauth request", handle_null},
 	{"unauth request accepted", handle_null},
+	/* */
 	{"gui show warning", handle_show_warning},
 	{"gui show message", handle_show_message},
 	{"gui disconnected", handle_disconnected},

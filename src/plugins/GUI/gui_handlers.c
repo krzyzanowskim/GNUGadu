@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.37 2003/12/20 23:17:19 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.38 2004/01/15 23:34:13 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -238,24 +238,41 @@ void handle_unregister_menu (GGaduSignal * signal)
 
 	  path = g_strdup_printf ("/Menu/%s", label);
 	  g_free (label);
-	  print_debug ("aaaaa: %s\n", path);
 
 	  gtk_item_factory_delete_item (item_factory, path);
 	  g_free (path);
       }
 }
 
+/* remember about repo, repo is more important than userlist send as a signal argument */
 void handle_send_userlist (GGaduSignal * signal)
 {
+	gpointer index,key;
+	GGaduContact *ktmp = NULL;
+	GSList *userlist_from_repo = NULL;
+	
     gui_protocol *gp = gui_find_protocol (signal->source_plugin_name, protocols);
+
+	/* repo support hmmm */
+	index = ggadu_repo_value_first(gp->plugin_name, REPO_VALUE_CONTACT, (gpointer *) & key);
+	while (index)
+	{
+		ktmp = ggadu_repo_find_value(gp->plugin_name, key);
+
+		print_debug("Add from repo: %s",ktmp->id);
+		userlist_from_repo = g_slist_append(userlist_from_repo,ktmp);
+		
+		index = ggadu_repo_value_next(gp->plugin_name, REPO_VALUE_CONTACT, (gpointer *) & key,index);
+	}
 
     if (gp && (gp->users_liststore || users_treestore))
       {
-	  gp->userlist = (GSList *) signal->data;
+	  gp->userlist = userlist_from_repo;
 	  gui_user_view_add_userlist (gp);
       }
 }
 
+/* ZONK do wywalenia te sygnaly sa  */
 void handle_auth_request (GGaduSignal * signal)
 {
     GGaduContact *k = signal->data;
@@ -279,7 +296,7 @@ void handle_unauth_request_accepted (GGaduSignal * signal)
     GGaduContact *k = signal->data;
     print_debug ("%s zgodzil sie, zebysmy go usuneli ze swojej ksiazki!!", k->id);
 }
-
+/* */
 
 void handle_show_warning (GGaduSignal * signal)
 {

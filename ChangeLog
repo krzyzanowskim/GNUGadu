@@ -1,3 +1,6 @@
+16.01.2004
+- "gui send userlist" signal relay on Repo values, not userlist signal parameter (GUI/krzak)
+
 15.01.2004
 - code cleanup (gadu-gadu/core/krzak)
 - write_line_to_file() try to create directory before creating file (core/krzak)

@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.21 2003/12/20 23:17:19 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.22 2004/01/15 23:34:13 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -39,16 +39,16 @@ GtkTreeStore *users_treestore = NULL;
 void status_clicked(GtkWidget *widget, GdkEventButton *ev, gpointer user_data) 
 {
     gui_protocol *gp = user_data;
-//    GGaduStatusPrototype *sp;
-//    gint status;
+    /* GGaduStatusPrototype *sp;
+    gint status; */
 
     GtkWidget *popupmenu = create_status_menu(gp, gtk_bin_get_child(GTK_BIN(widget)));
     
     gtk_menu_popup(GTK_MENU(popupmenu), NULL, NULL, NULL, NULL, ev->button, ev->time);
     print_debug("status clicked\n");
 
-//  status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-//  sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status);
+	/* status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+	sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status); */
 }
 
 static
