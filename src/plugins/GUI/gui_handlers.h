@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.h,v 1.9 2003/05/24 14:30:18 zapal Exp $ */
+/* $Id: gui_handlers.h,v 1.10 2003/06/04 21:07:06 shaster Exp $ */
 
 #include "signals.h"
 
@@ -31,6 +31,7 @@ void handle_disconnected(GGaduSignal *signal);
 void handle_change_icon(GGaduSignal *signal);
 void handle_show_search_results(GGaduSignal *signal);
 void handle_status_changed(GGaduSignal *signal);
+void handle_null(GGaduSignal *signal);
 
 void notify_callback (gchar *repo_name, gpointer key, gint actions);
 

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.17 2003/05/24 14:30:18 zapal Exp $ */
+/* $Id: gui_main.c,v 1.18 2003/06/04 21:07:06 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -49,9 +49,9 @@ gui_signal_handler handlers[] = {
 	{"gui unregister userlist menu", handle_unregister_userlist_menu},
 	{"gui send userlist", handle_send_userlist},
 	{"auth request", handle_auth_request},
-	{"auth request accepted", NULL},
-	{"unauth request", NULL},
-	{"unauth request accepted", NULL},
+	{"auth request accepted", handle_null},
+	{"unauth request", handle_null},
+	{"unauth request accepted", handle_null},
 	{"gui show warning", handle_show_warning},
 	{"gui show message", handle_show_message},
 //	{"gui notify", handle_notify},

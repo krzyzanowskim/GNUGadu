@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.21 2003/06/01 22:44:40 shaster Exp $ */
+/* $Id: gui_handlers.c,v 1.22 2003/06/04 21:07:06 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -399,6 +399,12 @@ void handle_show_search_results(GGaduSignal *signal)
 {
     GSList *list = signal->data;
     gui_show_search_results(list, signal->source_plugin_name);
+}
+
+void handle_null(GGaduSignal *signal)
+{
+    print_debug("Doing NULL for %s\n", signal ? signal->source_plugin_name : "[error]");
+    return;
 }
 
 void handle_status_changed(GGaduSignal *signal)
