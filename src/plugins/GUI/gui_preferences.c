@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.8 2003/04/03 21:28:07 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.9 2003/04/04 08:58:35 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -51,6 +51,12 @@ static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path, 
 		}
 
 	} else if (name != NULL) {
+		if (!g_strcasecmp(name, "main-gui"))
+		{
+		  signal_emit_full ("main-gui", "gui show warning",
+		      g_strdup ("ZONK! Bo zaraz zdechne! Zrestartuj gada, by zmiany odniosly efekt."), "main-gui", NULL);
+		  return FALSE;
+		}
 		unload_plugin(name);
 	}
 
