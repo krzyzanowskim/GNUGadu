@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.11 2004/10/15 14:14:22 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.12 2004/10/22 09:22:28 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -642,7 +642,9 @@ GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint statu
 		GGaduStatusPrototype *sp = tmp->data;
 
 		if ((sp) && (sp->status == status))
+		{
 			return sp;
+		}
 
 		tmp = tmp->next;
 	}

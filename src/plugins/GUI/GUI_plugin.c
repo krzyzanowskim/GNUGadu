@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.92 2004/10/22 07:47:52 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.93 2004/10/22 09:22:29 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -525,7 +525,7 @@ void change_status(GPtrArray * ptra)
 	gchar *plugin_source = g_ptr_array_index(ptra, 1);
 	gui_protocol *gp = NULL;
 
-	gint status = 0;
+//	gint status = 0;
 	/*    
 	 * GtkWidget *status_image = g_ptr_array_index(ptra, 2);
 	 * GtkWidget *image = create_image(sp->image);
@@ -545,7 +545,7 @@ void change_status(GPtrArray * ptra)
 		gp->blinker = -1;
 
 		sp2 = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-		status = sp2->status;
+/*		status = sp2->status; */
 
 		if (gp->p->offline_status)
 			last_resort_status = (gint) gp->p->offline_status->data;
@@ -555,11 +555,11 @@ void change_status(GPtrArray * ptra)
 			last_resort_status = stmp->status;
 		}
 
-		print_debug("requested status ID : %d, last_resort_status : %d\n", status, last_resort_status);
+/*		print_debug("requested status ID : %d, last_resort_status : %d\n", status, last_resort_status);*/
 
-		sp1 = ggadu_find_status_prototype(gp->p, status != 0 ? status : last_resort_status);
+		sp1 = ggadu_find_status_prototype(gp->p, sp2 ? sp2->status : last_resort_status);
 
-		if (sp1 != NULL && is_in_status(status, gp->p->offline_status))
+		if (sp1 && sp2 && is_in_status(sp2->status, gp->p->offline_status))
 		{
 			/* *INDENT-OFF* */
 			gp->blinker_image1 = create_pixbuf(sp1->image);
