@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.3 2003/03/23 15:10:57 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.4 2003/03/23 17:05:12 thrulliq Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -63,12 +63,12 @@ void on_destroy_chat(GtkWidget *chat, gpointer user_data)
 
 	if (chat_type == CHAT_TYPE_TABBED) {
 		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
-		gint nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook),session->chat);
+		gint nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook), session->chat);
 
-		gulong id = (gulong)g_object_get_data(G_OBJECT(chat_window),"switch_page_id");
+		gulong id = (gulong)g_object_get_data(G_OBJECT(chat_window), "switch_page_id");
 		g_signal_handler_block(chat_notebook,id);
 
-		gtk_notebook_remove_page(GTK_NOTEBOOK(chat_notebook),nr);
+		gtk_notebook_remove_page(GTK_NOTEBOOK(chat_notebook), nr);
 
 		g_signal_handler_unblock(chat_notebook,id);
 
@@ -78,9 +78,10 @@ void on_destroy_chat(GtkWidget *chat, gpointer user_data)
 			chat_window = NULL;
 		} else {
 			gp->chat_sessions = g_slist_remove(gp->chat_sessions,session);
+			gui_chat_notebook_switch(chat_notebook, NULL, gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook)), NULL);
 			g_free(session);
 		}
-
+		
 	} else if (chat_type == CHAT_TYPE_CLASSIC) {
 		gtk_widget_destroy(GTK_WIDGET(chat));
 		chat_window = NULL;
@@ -457,8 +458,6 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	    }
 	    else
 		tmp = g_strdup_printf(_("Talking to %s"),id);
-		
-	    
 	}
 	    
     }
