@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.17 2003/05/24 21:41:49 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.18 2003/05/25 19:20:21 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -329,14 +329,18 @@ void handle_disconnected(GGaduSignal *signal)
 
     g_return_if_fail(sp != NULL);
     
-    gtk_timeout_remove (gp->blinker);
+    if (gp->blinker > 0)
+      gtk_timeout_remove (gp->blinker);
+    gp->blinker = -1;
     if (gp->blinker_image1)
       g_free (gp->blinker_image1);
     if (gp->blinker_image2)
       g_free (gp->blinker_image2);
 
-    gtk_timeout_remove (gp->aaway_timer);
-    	    
+    if (gp->aaway_timer > 0)
+      gtk_timeout_remove (gp->aaway_timer);
+    gp->aaway_timer = -1;
+      
     image = create_pixbuf(sp->image);
     model = (tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore);
     
@@ -406,13 +410,17 @@ void handle_status_changed(GGaduSignal *signal)
     sp = gui_find_status_prototype(gp->p, status);
     g_return_if_fail(sp != NULL);
 
-    gtk_timeout_remove (gp->blinker);
+    if (gp->blinker > 0)
+      gtk_timeout_remove (gp->blinker);
+    gp->blinker = -1;
     if (gp->blinker_image1)
       g_free (gp->blinker_image1);
     if (gp->blinker_image2)
       g_free (gp->blinker_image2);
 
-    gtk_timeout_remove (gp->aaway_timer);
+    if (gp->aaway_timer > 0)
+      gtk_timeout_remove (gp->aaway_timer);
+    gp->aaway_timer = -1;
 
     if (status != gp->p->offline_status && status != gp->p->away_status &&
 	gp->p->away_status != -1 && config_var_get (gui_handler, "auto_away"))
@@ -461,7 +469,7 @@ gboolean auto_away_func (gpointer data)
   if (!sp)
     return FALSE;
 
-  signal_emit ("main-gui", "change status", sp, gp->plugin_name);
+  signal_emit_full ("main-gui", "change status", sp, gp->plugin_name, g_free);
   
   return FALSE;
 }

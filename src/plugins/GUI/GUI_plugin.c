@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.16 2003/05/24 14:30:18 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.17 2003/05/25 19:20:21 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -394,20 +394,25 @@ void change_status(GPtrArray *ptra)
 
 
     gp = gui_find_protocol (plugin_source, protocols);
-    g_return_if_fail (gp != NULL);
-    if (sp->status != gp->p->offline_status &&
+    if (gp && sp->status != gp->p->offline_status &&
 	config_var_get (gui_handler, "blink"))
     {
       status = (gint) signal_emit ("main-gui", "get current status", NULL, gp->plugin_name);
-      sp1 = gui_find_status_prototype (gp->p, status ? status : gp->p->offline_status);
-      g_return_if_fail (gp != NULL);
-      gp->blinker_image1 = g_strdup (sp1->image);
-      gp->blinker_image2 = g_strdup (sp->image);
-      print_debug ("gui: blinking %s and %s\n", sp1->image, sp->image);
-      gp->blinker = gtk_timeout_add (
-	  config_var_get (gui_handler, "blink_interval") ?
-	  (gint) config_var_get (gui_handler, "blink_interval"):500,
-	  status_blinker, gp);
+      print_debug ("%d %d\n", status, gp->p->offline_status);
+      sp1 = gui_find_status_prototype (gp->p, status != 0 ? status : gp->p->offline_status);
+      if (sp1 != NULL) 
+      {
+	if (gp->blinker > 0)
+	  gtk_timeout_remove (gp->blinker);
+	gp->blinker = -1;
+	gp->blinker_image1 = g_strdup (sp1->image);
+	gp->blinker_image2 = g_strdup (sp->image);
+	print_debug ("gui: blinking %s and %s\n", sp1->image, sp->image);
+	gp->blinker = gtk_timeout_add (
+	    config_var_get (gui_handler, "blink_interval") ?
+	    (gint) config_var_get (gui_handler, "blink_interval"):500,
+	    status_blinker, gp);
+      }
     }
     
     signal_emit("main-gui","change status", sp, plugin_source);

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.26 2003/05/24 14:30:18 zapal Exp $ */
+/* $Id: gui_chat.c,v 1.27 2003/05/25 19:20:21 zapal Exp $ */
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -261,7 +261,9 @@ void on_send_clicked(GtkWidget *button, gpointer user_data)
 		{
 		  gint status = (gint) signal_emit ("main-gui",
 		      "get current status", NULL, plugin_name);
-		  gtk_timeout_remove (gp->aaway_timer);
+		  if (gp->aaway_timer > 0)
+		    gtk_timeout_remove (gp->aaway_timer);
+		  gp->aaway_timer = -1;
 		  if (status != gp->p->offline_status &&
 		      status != gp->p->away_status &&
 		      gp->p->away_status != -1 &&
