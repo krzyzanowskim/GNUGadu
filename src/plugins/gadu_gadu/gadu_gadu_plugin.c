@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.102 2004/01/07 12:34:03 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.103 2004/01/07 19:49:48 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -186,7 +186,7 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
     memset (&p, 0, sizeof (p));
 
     p.server_port = GG_DEFAULT_PORT;
-    if (serveraddr == NULL)
+    if (!serveraddr)
 	serveraddr = g_strdup ("217.17.41.88");
     else
       {
@@ -194,11 +194,16 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 
 	  if (serv_addr)
 	    {
-		serveraddr = serv_addr[0];
+	    	if (serveraddr) 
+			g_free(serveraddr);
+			
+		serveraddr = g_strdup(serv_addr[0]);
+
 		if (serv_addr[1] != NULL)
 		    p.server_port = g_strtod (serv_addr[1], NULL);
 		else
 		    p.server_port = GG_DEFAULT_PORT;
+		    
 		g_strfreev(serv_addr);
 	    }
       }
