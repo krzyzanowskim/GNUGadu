@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.32 2003/05/28 19:13:40 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.33 2003/06/01 22:44:40 shaster Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -307,8 +307,8 @@ void on_send_clicked (GtkWidget * button, gpointer user_data)
 		    config_var_get (gui_handler, "auto_away"))
 		  {
 		      gp->aaway_timer =
-			  g_timeout_add (config_var_get (gui_handler, "auto_away_interval") ? (gint)
-					 config_var_get (gui_handler, "auto_away_interval") : 300000, auto_away_func,
+			  g_timeout_add (config_var_get (gui_handler, "auto_away_interval") ? ((gint)
+					 config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000, auto_away_func,
 					 gp);
 		  }
 	    }

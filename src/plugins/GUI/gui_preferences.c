@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.19 2003/05/31 09:50:46 shaster Exp $ */
+/* $Id: gui_preferences.c,v 1.20 2003/06/01 22:44:40 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -649,8 +649,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 3, 4);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 2, 3, 4);
 	
-	label = gtk_label_new (_("Auto away interval"));
-	auto_away_interval = gtk_spin_button_new_with_range (0, 600000, 1000);
+	label = gtk_label_new (_("Auto away interval (minutes)"));
+	auto_away_interval = gtk_spin_button_new_with_range (0, 1440, 1);
 	
 	gtk_table_attach_defaults (GTK_TABLE(tabbox), label, 0, 1, 4, 5);
 	gtk_table_attach_defaults (GTK_TABLE(tabbox), auto_away_interval, 1, 2, 4, 5);

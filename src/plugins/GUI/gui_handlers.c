@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.20 2003/05/28 07:42:59 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.21 2003/06/01 22:44:40 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -436,7 +436,7 @@ void handle_status_changed(GGaduSignal *signal)
     {
       gp->aaway_timer = g_timeout_add (
 	  config_var_get (gui_handler, "auto_away_interval") ?
-	  (gint) config_var_get (gui_handler, "auto_away_interval"):300000,
+	  ((gint) config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000,
 	  auto_away_func, gp);
     } else
       gp->aaway_timer = -1;
