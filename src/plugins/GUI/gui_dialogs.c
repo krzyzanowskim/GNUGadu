@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.26 2003/12/28 23:31:19 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.27 2004/01/09 13:55:08 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -487,10 +487,8 @@ void gui_show_window_with_text (gpointer signal)
     gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), sw);
     gtk_container_add (GTK_CONTAINER (sw), gtv);
 
+    g_signal_connect (G_OBJECT (dialog), "response", G_CALLBACK (gtk_widget_destroy), dialog);
     gtk_widget_show_all (dialog);
-
-    gtk_dialog_run (GTK_DIALOG (dialog));
-    gtk_widget_destroy (dialog);
 
 }
 

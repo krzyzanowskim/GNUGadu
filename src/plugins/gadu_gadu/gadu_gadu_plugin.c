@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.107 2004/01/09 09:50:04 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.108 2004/01/09 13:55:09 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -779,11 +779,13 @@ gpointer user_view_history_action (gpointer user_data)
 
     if (!k)
 	return NULL;
+	
 
     path = g_build_filename (this_configdir, "history", k->id, NULL);
     ch = g_io_channel_new_file (path, "r", NULL);
+    print_debug("Looking into file %s",path);
     g_free (path);
-
+    
     if (!ch)
 	return NULL;
 
