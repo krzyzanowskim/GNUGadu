@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.62 2004/03/15 21:55:45 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.63 2004/03/23 23:02:51 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -410,7 +410,7 @@ void gui_main_window_create(gboolean visible)
 	gtk_window_set_wmclass(GTK_WINDOW(window), "GM_NAME", "GNUGadu");
 	gtk_window_set_title(GTK_WINDOW(window), "GNU Gadu 2");
 	gtk_window_set_modal(GTK_WINDOW(window), FALSE);
-	gtk_window_set_has_frame(GTK_WINDOW(window), FALSE);
+	/* gtk_window_set_has_frame(GTK_WINDOW(window), FALSE); */
 	gtk_window_set_role(GTK_WINDOW(window), "GNUGadu");
 
 	width = (gint) ggadu_config_var_get(gui_handler, "width");

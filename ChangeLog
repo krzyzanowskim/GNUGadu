@@ -1,3 +1,6 @@
+24.03.2004
+- change "chat_window_auto_raise" to not focus after raise but it will not raise on actual active screen, window manager decide where to raise it. (GUI/krzak)
+
 15.03.2004
 - 'Close' button in classic chat (without tabs) will hide chat window (GUI/THrull)
 
