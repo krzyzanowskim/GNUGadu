@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.9 2003/04/25 07:38:53 zapal Exp $ */
+/* $Id: gui_main.c,v 1.10 2003/04/26 22:24:15 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -106,6 +106,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     config_var_add(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL);
     config_var_add(gui_handler, "chat_type",  VAR_INT);
     config_var_add(gui_handler, "chat_window_auto_show", VAR_BOOL);
+    config_var_add(gui_handler, "chat_paned_size", VAR_INT);
     config_var_add(gui_handler, "expand", VAR_BOOL);
     config_var_add(gui_handler, "show_active", VAR_BOOL);
     config_var_add(gui_handler, "width", VAR_INT);

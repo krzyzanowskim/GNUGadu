@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.20 2003/04/24 13:41:41 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.21 2003/04/26 22:24:15 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -528,6 +528,7 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	GGaduContact *k = gui_find_user(id,gui_find_protocol(plugin_name,protocols));	
 	gui_protocol *gp = NULL;
 	GGaduStatusPrototype *sp = NULL;
+	GdkPixbuf *image = NULL;
 
 	/* confer_topic create */
 	if (conference)	{
@@ -573,6 +574,11 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 				wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf(_("Talking to %s"),id);
 
 			chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+			
+			image = create_pixbuf("icon.png");
+			gtk_window_set_icon(GTK_WINDOW(chat_window), image);
+			gdk_pixbuf_unref(image);
+
 			gtk_window_set_title(GTK_WINDOW(chat_window), g_strdup(wintitle));
 		
 			gtk_box_pack_start(GTK_BOX(vbox), vbox_in_out, TRUE, TRUE, 0);
@@ -592,6 +598,11 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 				gulong id_tmp;
 		
 				chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+				
+				image = create_pixbuf("icon.png");
+				gtk_window_set_icon(GTK_WINDOW(chat_window), image);
+				gdk_pixbuf_unref(image);
+				
 				gtk_window_set_title(GTK_WINDOW(chat_window), _("Chat Window"));
 
 				chat_notebook = gtk_notebook_new();
@@ -744,7 +755,10 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	gtk_container_add(GTK_CONTAINER(sw), input);   
 	gtk_paned_add2(GTK_PANED(paned), sw);
     
-	gtk_paned_set_position(GTK_PANED(paned),150);
+	if ((config_var_get(gui_handler,"chat_paned_size") == NULL || 0))
+		gtk_paned_set_position(GTK_PANED(paned),160);
+	else
+		gtk_paned_set_position(GTK_PANED(paned),(gint)config_var_get(gui_handler,"chat_paned_size"));
     
 	/* attach paned to vbox_in_out */
 	gtk_box_pack_start(GTK_BOX(vbox_in_out), paned, TRUE, TRUE, 0);

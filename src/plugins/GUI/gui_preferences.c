@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.11 2003/04/05 21:37:04 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.12 2003/04/26 22:24:15 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -399,6 +399,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *usexosdfornewmsgs;
 	GtkWidget *send_on_enter;
 	GtkWidget *hide_on_start;
+	GtkWidget *chat_paned_size;
 	GtkWidget *tabbox;
 	GDir *dir;
 	GtkWidget *combo_theme;
@@ -485,24 +486,28 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	hide_on_start = gtk_check_button_new_with_label(_("Auto hide on start"));
 	gtk_box_pack_start(GTK_BOX(vbox), hide_on_start, FALSE, FALSE, 0);
-
-
-	tabbox = gtk_table_new(3, 3, FALSE);
+	
+	tabbox = gtk_table_new(3, 2, FALSE);
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox, FALSE, FALSE, 0);
+	
+	/* ZONK - how to name it ? */
+	label = gtk_label_new(_("Chat window split size"));
+	chat_paned_size = gtk_spin_button_new_with_range(0,3000,5);
+	
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 0, 1);
 
 	combo_theme = gtk_combo_new();
 	label = gtk_label_new(_("Select Theme"));
 
-//    gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(combo_theme)->entry), FALSE);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 4, 5);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 2, 4, 5);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 2, 1, 2);
 
 	combo_icons = gtk_combo_new();
 	label = gtk_label_new(_("Select icon set"));
 
-//    gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(combo_icons)->entry), FALSE);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 5, 6);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 2, 5, 6);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 2, 2, 3);
 
 	if (config_var_get(gui_handler, "emot"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(emotic),
@@ -537,6 +542,10 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (config_var_get(gui_handler, "chat_window_auto_raise"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chatwindowraise),
 					     TRUE);
+
+	if (config_var_get(gui_handler, "chat_paned_size"))
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(chat_paned_size),
+					     (gint)config_var_get(gui_handler, "chat_paned_size"));
 
 	if (config_var_get(gui_handler, "send_on_enter"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(send_on_enter),
@@ -658,6 +667,16 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 			       gtk_toggle_button_get_active
 			       (GTK_TOGGLE_BUTTON(chatwindowraise)));
 
+		config_var_set(gui_handler, "chat_paned_size",
+			       (gpointer)
+			       gtk_spin_button_get_value_as_int
+			       (GTK_SPIN_BUTTON(chat_paned_size)));
+
+/*		config_var_set(gui_handler, "chat_paned_size",
+			       (gpointer)
+			       gtk_toggle_button_get_active
+			       (GTK_TOGGLE_BUTTON(chatwindowraise)));
+*/
 		config_var_set(gui_handler, "send_on_enter",
 			       (gpointer)
 			       gtk_toggle_button_get_active
