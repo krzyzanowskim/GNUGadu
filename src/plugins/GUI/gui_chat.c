@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.51 2004/01/03 15:30:22 thrulliq Exp $ 
+ * $Id: gui_chat.c,v 1.52 2004/01/05 13:47:32 thrulliq Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -1174,16 +1174,17 @@ void gui_chat_append (GtkWidget * chat, gpointer msg, gboolean self)
 	    {
 		GtkTextChildAnchor *anchor;
 
-		gtk_text_buffer_delete (buf, &istart, &iend);
-		widget = GTK_WIDGET (create_image (gemo->file));
-		anchor = gtk_text_buffer_create_child_anchor (buf, &istart);
+		widget = create_image (gemo->file);
+		if (widget) {
+		    gtk_text_buffer_delete (buf, &istart, &iend);
+		    anchor = gtk_text_buffer_create_child_anchor (buf, &istart);
 
-		gtk_text_view_add_child_at_anchor (GTK_TEXT_VIEW (history), widget, anchor);
-		gtk_text_buffer_get_end_iter (buf, &istart);
-		gtk_text_iter_backward_char (&istart);
-		/* gdk_pixbuf_unref(widget); ZONK */
+		    gtk_text_view_add_child_at_anchor (GTK_TEXT_VIEW (history), widget, anchor);
+		    gtk_text_buffer_get_end_iter (buf, &istart);
+		    gtk_text_iter_backward_char (&istart);
 
-		gtk_widget_show (widget);
+		    gtk_widget_show (widget);
+		}
 	    }
 
 	  emottmp = emottmp->next;
