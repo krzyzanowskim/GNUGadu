@@ -1,4 +1,4 @@
-/* $Id: ggadu_menu.h,v 1.2 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_menu.h,v 1.3 2004/06/14 14:53:23 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -23,7 +23,9 @@
 #ifndef GGadu_MENU_H
 #define GGadu_MENU_H 1
 
+#ifndef GG2_CORE_H
 #include "ggadu_types.h"
+#endif
 
 void ggadu_menu_free(GGaduMenu * menu);
 

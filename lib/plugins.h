@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.7 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: plugins.h,v 1.8 2004/06/14 14:53:23 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -23,7 +23,9 @@
 #ifndef GGadu_PROTOCOLS_H
 #define GGadu_PROTOCOLS_H 1
 
+#ifndef GG2_CORE_H
 #include "ggadu_types.h"
+#endif
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>

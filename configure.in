@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.67 2004/06/12 07:58:46 krzyzak Exp $
+dnl $Id: configure.in,v 1.68 2004/06/14 14:53:22 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.3])
 
@@ -451,6 +451,27 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CFLAGS_CLEAN)
 AC_SUBST(LDFLAGS)
 
+
+AC_SUBST_FILE(gg2_menu)
+gg2_menu=$srcdir/lib/ggadu_menu.h
+AC_SUBST_FILE(gg2_types)
+gg2_types=$srcdir/lib/ggadu_types.h
+AC_SUBST_FILE(gg2_plugins)
+gg2_plugins=$srcdir/lib/plugins.h
+AC_SUBST_FILE(gg2_conf)
+gg2_conf=$srcdir/lib/ggadu_conf.h
+AC_SUBST_FILE(gg2_repo)
+gg2_repo=$srcdir/lib/ggadu_repo.h
+AC_SUBST_FILE(gg2_signals)
+gg2_signals=$srcdir/lib/signals.h
+AC_SUBST_FILE(gg2_dialog)
+gg2_dialog=$srcdir/lib/ggadu_dialog.h
+AC_SUBST_FILE(gg2_support)
+gg2_support=$srcdir/lib/ggadu_support.h
+AC_SUBST_FILE(gg2_perl_embed)
+gg2_perl_embed=$srcdir/lib/perl_embed.h
+
+
 AC_OUTPUT([ 
 intl/Makefile 
 m4/Makefile 
@@ -489,6 +510,10 @@ pixmaps/icons/tlen-3d/Makefile
 sounds/Makefile
 themes/Makefile
 ])
+
+# sed -e 's/#include \"ggadu_types.h\"//g' $srcdir/lib/gg2_core.h > $srcdir/lib/gg2_core.h-
+# mv -f $srcdir/lib/gg2_core.h- $srcdir/lib/gg2_core.h
+
 
 echo
 echo Build plugin GUI-GTK2.................. : $want_gui
