@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.16 2003/04/13 18:50:52 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.17 2003/04/15 13:40:57 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -157,7 +157,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
     GGaduContact *k;
     GGaduNotify *notify;
     GGaduMsg *msg;
-    GSList *l;
+    GSList *l = userlist;
     
 /*    if (condition & G_IO_ERR || condition & G_IO_HUP) {
 	connected = FALSE;
