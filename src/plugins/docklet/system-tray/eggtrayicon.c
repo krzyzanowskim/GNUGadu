@@ -75,7 +75,6 @@ static void egg_tray_icon_class_init(EggTrayIconClass * klass)
 	GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
 	parent_class = g_type_class_peek_parent(klass);
-
 	widget_class->unrealize = egg_tray_icon_unrealize;
 }
 
@@ -115,7 +114,6 @@ static void egg_tray_icon_unrealize(GtkWidget * widget)
 	}
 
 	root_window = gdk_screen_get_root_window(gtk_widget_get_screen(widget));
-
 	gdk_window_remove_filter(root_window, egg_tray_icon_manager_filter, icon);
 
 	if (GTK_WIDGET_CLASS(parent_class)->unrealize)
@@ -163,7 +161,6 @@ static void egg_tray_icon_update_manager_window(EggTrayIcon * icon)
 		GdkWindow *gdkwin;
 
 		gdkwin = gdk_window_lookup_for_display(gtk_widget_get_display(GTK_WIDGET(icon)), icon->manager_window);
-
 		gdk_window_remove_filter(gdkwin, egg_tray_icon_manager_filter, icon);
 	}
 
@@ -182,9 +179,7 @@ static void egg_tray_icon_update_manager_window(EggTrayIcon * icon)
 		GdkWindow *gdkwin;
 
 		gdkwin = gdk_window_lookup_for_display(gtk_widget_get_display(GTK_WIDGET(icon)), icon->manager_window);
-
 		gdk_window_add_filter(gdkwin, egg_tray_icon_manager_filter, icon);
-
 		/* Send a request that we'd like to dock */
 		egg_tray_icon_send_dock_request(icon);
 	}
@@ -223,11 +218,8 @@ EggTrayIcon *egg_tray_icon_new_for_xscreen(Screen * xscreen, const char *name)
 	g_snprintf(buffer, sizeof (buffer), "_NET_SYSTEM_TRAY_S%d", XScreenNumberOfScreen(xscreen));
 
 	icon->selection_atom = XInternAtom(DisplayOfScreen(xscreen), buffer, False);
-
 	icon->manager_atom = XInternAtom(DisplayOfScreen(xscreen), "MANAGER", False);
-
 	icon->system_tray_opcode_atom = XInternAtom(DisplayOfScreen(xscreen), "_NET_SYSTEM_TRAY_OPCODE", False);
-
 	egg_tray_icon_update_manager_window(icon);
 
 	root_window = gdk_screen_get_root_window(gtk_widget_get_screen(GTK_WIDGET(icon)));

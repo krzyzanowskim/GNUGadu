@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.131 2004/12/25 19:38:20 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.132 2004/12/26 00:10:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -20,9 +20,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#include <gtk/gtk.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+
 #include <gdk/gdkkeysyms.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
+
+#include <gtk/gtk.h>
+
 #include <string.h>
+
 #include "ggadu_support.h"
 #include "signals.h"
 #include "plugins.h"
@@ -41,8 +50,7 @@ extern GGaduPlugin *gui_handler;
 
 static GtkWidget *chat_window = NULL;
 
-static void gui_chat_notebook_switch(GtkWidget * notebook, GtkNotebookPage * page, guint page_num, gpointer user_data
-)
+static void gui_chat_notebook_switch(GtkWidget * notebook, GtkNotebookPage * page, guint page_num, gpointer user_data)
 {
 	GtkWidget *chat_notebook = NULL;
 	GtkWidget *chat = NULL;
@@ -85,8 +93,7 @@ static void gui_chat_notebook_switch(GtkWidget * notebook, GtkNotebookPage * pag
 	print_debug("gui_chat_notebook_switch");
 }
 
-static void on_destroy_chat_window(GtkWidget * chat, gpointer user_data
-)
+static void on_destroy_chat_window(GtkWidget * chat, gpointer user_data)
 {
 	if (G_IS_OBJECT(chat) && GTK_IS_WINDOW(chat))
 		gui_remove_all_chat_sessions(protocols);
@@ -96,8 +103,7 @@ static void on_destroy_chat_window(GtkWidget * chat, gpointer user_data
 }
 
 
-static void on_destroy_chat(GtkWidget * button, gpointer user_data
-)
+static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	gui_chat_session *session = NULL;
@@ -197,8 +203,7 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data
 	print_debug("main-gui : chat : zwalniam session");
 }
 
-static gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey * event, gpointer user_data
-)
+static gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey * event, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 
@@ -222,7 +227,7 @@ static gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey * eve
 	return FALSE;
 }
 
-gboolean on_key_press_event_chat_window(GtkWidget *widget, GdkEventKey *event, gpointer data)
+gboolean on_key_press_event_chat_window(GtkWidget * widget, GdkEventKey * event, gpointer data)
 {
 	if (event->keyval == GDK_Escape)
 	{
@@ -238,8 +243,7 @@ gboolean on_key_press_event_chat_window(GtkWidget *widget, GdkEventKey *event, g
 	return FALSE;
 }
 
-void on_clear_clicked(GtkWidget * button, gpointer user_data
-)
+void on_clear_clicked(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	gui_chat_session *session = NULL;
@@ -263,8 +267,7 @@ void on_clear_clicked(GtkWidget * button, gpointer user_data
 	gtk_text_buffer_set_text(buf, "", -1);
 }
 
-void on_autosend_clicked(GtkWidget * button, gpointer user_data
-)
+void on_autosend_clicked(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 
@@ -295,8 +298,7 @@ void on_autosend_clicked(GtkWidget * button, gpointer user_data
 	}
 }
 
-static void on_send_clicked(GtkWidget * button, gpointer user_data
-)
+static void on_send_clicked(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	gui_chat_session *session = NULL;
@@ -368,8 +370,7 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data
 }
 
 
-static gboolean on_input_press_event(gpointer object, GdkEventKey * event, gpointer user_data
-)
+static gboolean on_input_press_event(gpointer object, GdkEventKey * event, gpointer user_data)
 {
 	gui_chat_session *s = user_data;
 
@@ -391,8 +392,7 @@ static gboolean on_input_press_event(gpointer object, GdkEventKey * event, gpoin
 	return (event->state & GDK_CONTROL_MASK) ? on_press_event_switching_tabs(object, event, user_data) : FALSE;
 }
 
-static void on_stick_clicked(GtkWidget * button, gpointer user_data
-)
+static void on_stick_clicked(GtkWidget * button, gpointer user_data)
 {
 	gui_chat_session *s = user_data;
 	gboolean q = FALSE;
@@ -416,8 +416,7 @@ static void on_stick_clicked(GtkWidget * button, gpointer user_data
 	}
 }
 
-static void on_emoticon_press_event(GtkWidget * event_box, GdkEventButton * event, gpointer user_data
-)
+static void on_emoticon_press_event(GtkWidget * event_box, GdkEventButton * event, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	GtkWidget *input;
@@ -458,8 +457,7 @@ static void on_emoticon_press_event(GtkWidget * event_box, GdkEventButton * even
 	gtk_widget_hide(emoticons_window);
 }
 
-static gboolean find_emoticon(gchar * name, GSList * here
-)
+static gboolean find_emoticon(gchar * name, GSList * here)
 {
 	GSList *tmp = here;
 
@@ -476,8 +474,7 @@ static gboolean find_emoticon(gchar * name, GSList * here
 	return FALSE;
 }
 
-static void on_emoticons_clicked(GtkWidget * button, gpointer user_data
-)
+static void on_emoticons_clicked(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	GtkWidget *emoticons_window = NULL;
@@ -528,7 +525,7 @@ static void on_emoticons_clicked(GtkWidget * button, gpointer user_data
 		gtk_container_add(GTK_CONTAINER(emoticons_window), outervbox);
 
 		scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_SHADOW_ETCHED_IN);
+		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_SHADOW_ETCHED_IN);
 		gtk_widget_set_name(scrolledwindow1, "scrolledwindow1");
 		gtk_widget_ref(scrolledwindow1);
 		gtk_object_set_data_full(GTK_OBJECT(emoticons_window), "scrolledwindow1", scrolledwindow1, (GtkDestroyNotify) gtk_widget_unref);
@@ -611,8 +608,7 @@ static void on_emoticons_clicked(GtkWidget * button, gpointer user_data
 	gtk_widget_show_all(emoticons_window);
 }
 
-static void on_chat_find_clicked(GtkWidget * button, gpointer user_data
-)
+static void on_chat_find_clicked(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	GGaduDialog *dialog = g_new0(GGaduDialog, 1);
@@ -644,8 +640,7 @@ static void on_chat_find_clicked(GtkWidget * button, gpointer user_data
 	signal_emit("main-gui", "search", dialog, plugin_name);
 }
 
-void gui_chat_update_tags(
-)
+void gui_chat_update_tags()
 {
 	GSList *tmplist = protocols;
 	GSList *tmpsessions;
@@ -706,8 +701,7 @@ void gui_chat_update_tags(
 	}
 }
 
-static gboolean window_event_signal(GtkWidget * window, GdkEvent * event, gpointer user_data
-)
+static gboolean window_event_signal(GtkWidget * window, GdkEvent * event, gpointer user_data)
 {
 	if (((event->type == GDK_WINDOW_STATE) || (event->type == GDK_FOCUS_CHANGE)) && g_object_get_data(G_OBJECT(window), "new-message-mark"))
 	{
@@ -722,8 +716,7 @@ static gboolean window_event_signal(GtkWidget * window, GdkEvent * event, gpoint
 	return FALSE;
 }
 
-static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * event, gpointer user_data
-)
+static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * event, gpointer user_data)
 {
 	if (event->send_event == FALSE)
 	{
@@ -752,7 +745,7 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 				r.height = event->height;
 				if (hbox_buttons)
 					gtk_widget_size_request(GTK_WIDGET(hbox_buttons), &rb);
-					
+
 				position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
 				gtk_paned_set_position(GTK_PANED(paned), (gint) position);
 			}
@@ -791,7 +784,7 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 					r.height = event->height;
 					if (hbox_buttons)
 						gtk_widget_size_request(GTK_WIDGET(hbox_buttons), &rb);
-						
+
 					position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
 					gtk_paned_set_position(GTK_PANED(paned), (gint) position);
 				}
@@ -799,13 +792,12 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 			}
 		}
 	}
-	
+
 	return FALSE;
 }
 
 
-GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * id, gboolean visible
-)
+GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * id, gboolean visible)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	gint width = (gint) ggadu_config_var_get(gui_handler, "chat_window_width");
@@ -844,6 +836,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	float position = 0;
 	float tab_minus = 0;
 	gint percent = 0;
+	gint number_of_workspaces = 0;
 	GtkWidget *chat_notebook_paned_size = NULL;
 
 	if (!session || !plugin_name || !id)
@@ -1026,7 +1019,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	if (height < 20 || height > 2000)
 		height = DEFAULT_CHAT_WINDOW_HEIGHT;
 
-	gtk_container_set_border_width(GTK_CONTAINER(chat_window),4);
+	gtk_container_set_border_width(GTK_CONTAINER(chat_window), 4);
 	gtk_window_set_default_size(GTK_WINDOW(chat_window), width, height);
 	gtk_window_set_modal(GTK_WINDOW(chat_window), FALSE);
 	gtk_widget_set_name(GTK_WIDGET(chat_window), "GGChat");
@@ -1122,7 +1115,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	 */
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw),GTK_SHADOW_IN);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_IN);
 
 	gtk_container_add(GTK_CONTAINER(sw), history);
 	gtk_paned_pack1(GTK_PANED(paned), sw, TRUE, FALSE);
@@ -1132,7 +1125,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	 */
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw),GTK_SHADOW_IN);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_IN);
 
 	gtk_container_add(GTK_CONTAINER(sw), input);
 	gtk_paned_pack2(GTK_PANED(paned), sw, TRUE, FALSE);
@@ -1167,10 +1160,33 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	button_close = gtk_button_new_from_stock("gtk-close");
 	gtk_button_set_focus_on_click(GTK_BUTTON(button_close), FALSE);
 
-	button_stick = gtk_toggle_button_new();
-	bas_image = create_image("push-pin.png");
-	gtk_container_add(GTK_CONTAINER(button_stick), bas_image);
-	gtk_button_set_focus_on_click(GTK_BUTTON(button_stick), FALSE);
+	/* check if there is more than one virtual desktop available */
+	{
+		Atom type;
+		gint format;
+		gulong nitems;
+		gulong bytes_after;
+		guchar *data;
+		GdkWindow *root_window = gdk_get_default_root_window();
+		GdkDisplay *display = gdk_drawable_get_display(root_window);
+		XGetWindowProperty(GDK_DISPLAY_XDISPLAY(display),
+				   GDK_WINDOW_XWINDOW(root_window),
+				   gdk_x11_get_xatom_by_name_for_display(display, "_NET_NUMBER_OF_DESKTOPS"),
+				   0, G_MAXLONG, False, XA_CARDINAL, &type, &format, &nitems, &bytes_after, &data);
+
+		print_debug("WIRTUALNYCH DESKTOPOW JEST %d", data[0]);
+		number_of_workspaces = data[0];
+		XFree(data);
+	}
+
+	if (number_of_workspaces > 1)
+	{
+		button_stick = gtk_toggle_button_new();
+		bas_image = create_image("push-pin.png");
+		gtk_container_add(GTK_CONTAINER(button_stick), bas_image);
+		gtk_button_set_focus_on_click(GTK_BUTTON(button_stick), FALSE);
+		gtk_button_set_relief(GTK_BUTTON(button_stick), GTK_RELIEF_NONE);
+	}
 
 	button_clear = gtk_button_new();
 	bas_image = gtk_image_new();
@@ -1180,13 +1196,15 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 
 	gtk_button_set_relief(GTK_BUTTON(button_find), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_clear), GTK_RELIEF_NONE);
-	gtk_button_set_relief(GTK_BUTTON(button_stick), GTK_RELIEF_NONE);
 
 	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_send, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_autosend, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_close, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_clear, FALSE, FALSE, 2);
-	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 2);
+	if (number_of_workspaces > 1)
+	{
+		gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 2);
+	}
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 0);
 
 	tips = gtk_tooltips_new();
@@ -1194,7 +1212,10 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_tooltips_set_tip(tips, button_autosend, _("Send message with enter"), "");
 	gtk_tooltips_set_tip(tips, button_close, _("Close a window"), "");
 	gtk_tooltips_set_tip(tips, button_clear, _("Clear the buffer"), "");
-	gtk_tooltips_set_tip(tips, button_stick, _("Stick to all virtual desktops"), "");
+	if (number_of_workspaces > 1)
+	{
+		gtk_tooltips_set_tip(tips, button_stick, _("Stick to all virtual desktops"), "");
+	}
 	gtk_tooltips_set_tip(tips, button_find, _("Find a contact"), "");
 
 
@@ -1258,19 +1279,20 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_paned_set_position(GTK_PANED(paned), (gint) position);
 	/* end chat_paned_size */
 
-
 	g_signal_connect(chat_window, "configure-event", G_CALLBACK(window_resize_signal), session);
 	g_signal_connect(chat_window, "event", G_CALLBACK(window_event_signal), session);
 	g_signal_connect(button_autosend, "clicked", G_CALLBACK(on_autosend_clicked), session);
 	g_signal_connect(button_send, "clicked", G_CALLBACK(on_send_clicked), session);
-	g_signal_connect(button_stick, "toggled", G_CALLBACK(on_stick_clicked), session);
+	if (number_of_workspaces > 1)
+	{
+		g_signal_connect(button_stick, "toggled", G_CALLBACK(on_stick_clicked), session);
+	}
 	g_signal_connect(button_find, "clicked", G_CALLBACK(on_chat_find_clicked), session);
 	g_signal_connect(button_clear, "clicked", G_CALLBACK(on_clear_clicked), session);
-	
-	if(ggadu_config_var_get(gui_handler, "close_on_esc"))
+
+	if (ggadu_config_var_get(gui_handler, "close_on_esc"))
 	{
-		g_signal_connect(chat_window, "key-press-event",
-			    G_CALLBACK(on_key_press_event_chat_window), (gpointer) chat_type);
+		g_signal_connect(chat_window, "key-press-event", G_CALLBACK(on_key_press_event_chat_window), (gpointer) chat_type);
 	}
 
 	switch (chat_type)
@@ -1294,8 +1316,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 }
 
 /* self mean that this is my message, not my opponent :) */
-void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean notice_message
-)
+void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean notice_message)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	GtkWidget *history = g_object_get_data(G_OBJECT(chat), "history");

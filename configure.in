@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.112 2004/12/25 16:08:14 krzyzak Exp $
+dnl $Id: configure.in,v 1.113 2004/12/26 00:10:53 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.3])
 
@@ -18,7 +18,6 @@ AC_PROG_CPP
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
-AC_PATH_X
 
 AC_DEFINE_UNQUOTED(INSTALLPREFIX, "${prefix}")
 
@@ -299,7 +298,11 @@ fi
 AC_ARG_WITH(gui, [  --without-gui		  Build without gtk2 GUI plugin	])
 if test "x$with_gui" != "xno"; then 
     with_gui=yes
+    AC_PATH_X
+    AC_PATH_XTRA
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    GTK_CFLAGS="$GTK_CFLAGS $X_CFLAGS"
+    GTK_LIBS="$GTK_LIBS $X_LIBS"
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
 else
@@ -444,10 +447,9 @@ fi
 
 AC_ARG_WITH(aaway, [  --without-aaway		  Build without auto away plugin])
 if test "x$with_aaway" != "xno"; then
-	PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
-	
+	AC_PATH_X
 	AC_PATH_XTRA
-	
+	PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
 	AAWAY_LIBS="$GTK_LIBS $X_LIBS $X_EXTRA_LIBS -lXss"
 	AAWAY_CFLAGS="$GTK_CFLAGS $X_CFLAGS"
 	AC_SUBST(AAWAY_CFLAGS)
