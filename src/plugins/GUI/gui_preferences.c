@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.13 2003/04/28 15:15:15 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.14 2003/05/15 14:19:01 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -517,6 +517,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GDir *dir;
 	GtkWidget *combo_theme;
 	GtkWidget *combo_icons;
+	GdkPixbuf *windowicon = NULL;
 	gint response = -1;
 	gchar *dirname;
 
@@ -533,8 +534,13 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 						  NULL);
 
 	gtk_window_set_resizable(GTK_WINDOW(preferences), FALSE);
-	notebook = gtk_notebook_new();
 
+	if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL) {
+		gtk_window_set_icon(GTK_WINDOW(preferences), windowicon);
+		gdk_pixbuf_unref(windowicon);
+	}
+
+	notebook = gtk_notebook_new();
 	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(preferences)->vbox),
 			  notebook);
 

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.12 2003/05/07 09:26:26 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.13 2003/05/15 14:19:01 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -329,7 +329,7 @@ void gui_main_window_create(gboolean visible)
     /* HINT: some window managers may ignore this with default configuration */
     gtk_window_move(GTK_WINDOW(window), left, top); 
 
-    image = create_pixbuf("icon.png");
+    image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
     gtk_window_set_icon(GTK_WINDOW(window), image);
     gdk_pixbuf_unref(image);
     
@@ -636,7 +636,7 @@ void gui_reload_images()
 //    gui_user_view_refresh();
     
     sigdata = g_slist_append(sigdata, (gchar *)config_var_get(gui_handler, "icons"));
-    sigdata = g_slist_append(sigdata, "icon.png");
+    sigdata = g_slist_append(sigdata, GGADU_DEFAULT_ICON_FILENAME);
     sigdata = g_slist_append(sigdata, "GNU Gadu 2");
 
     signal_emit_full("main-gui", "docklet set default icon", sigdata , NULL, (gpointer)g_slist_free);

@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.2 2003/04/08 21:37:10 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.3 2003/05/15 14:19:01 shaster Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -9,6 +9,9 @@
 
 #define DEFAULT_WIDTH 160
 #define DEFAULT_HEIGHT 488
+
+/* default icon's filename */
+#define GGADU_DEFAULT_ICON_FILENAME "icon.png"
 
 typedef struct  {
     gchar *id;

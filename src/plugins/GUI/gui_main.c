@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.14 2003/05/12 09:42:18 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.15 2003/05/15 14:19:01 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -261,7 +261,7 @@ void start_plugin()
     gui_config_emoticons();
     
     sigdata = g_slist_append(sigdata, (gchar *) config_var_get(gui_handler, "icons"));
-    sigdata = g_slist_append(sigdata, "icon.png");
+    sigdata = g_slist_append(sigdata, GGADU_DEFAULT_ICON_FILENAME);
     sigdata = g_slist_append(sigdata, "GNU Gadu 2");
 
     signal_emit_full("main-gui", "docklet set default icon", sigdata, NULL, (gpointer)g_slist_free);

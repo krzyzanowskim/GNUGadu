@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.23 2003/05/12 08:01:52 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.24 2003/05/15 14:19:01 shaster Exp $ */
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -578,7 +578,7 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 
 			chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 			
-			image = create_pixbuf("icon.png");
+			image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
 			gtk_window_set_icon(GTK_WINDOW(chat_window), image);
 			gdk_pixbuf_unref(image);
 
@@ -608,7 +608,7 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 				gtk_window_add_accel_group(GTK_WINDOW(chat_window),accgroup);
 */				
 				chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-				image = create_pixbuf("icon.png");
+				image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
 				gtk_window_set_icon(GTK_WINDOW(chat_window), image);
 				gdk_pixbuf_unref(image);
 				

@@ -1,6 +1,7 @@
 15.05.2003
 - kludge for tlen plugin strange behaviour, taking login() from libutil
   (thus, segfaulting). Changed login() to ggadu_tlen_login() (tlen/shasta)
+- set 'happyface' icon on all window's titlebars (GUI/shasta)
 
 14.05.2003
 - don't build arts/oss plugins without usable headers (configure/shasta)

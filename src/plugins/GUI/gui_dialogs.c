@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.19 2003/05/01 20:18:09 shaster Exp $ */
+/* $Id: gui_dialogs.c,v 1.20 2003/05/15 14:19:01 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -359,6 +359,7 @@ void gui_show_dialog(gpointer signal, gboolean change)
     GtkWidget *table;
     GtkWidget *label;
     GtkWidget *hbox;
+    GdkPixbuf *windowicon = NULL;
     GGaduDialog *d = (sig) ? sig->data : NULL;
     gchar *markup;
     
@@ -370,6 +371,11 @@ void gui_show_dialog(gpointer signal, gboolean change)
 					GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
     gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
     
+    if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL) {
+	gtk_window_set_icon(GTK_WINDOW(dialog), windowicon);
+	gdk_pixbuf_unref(windowicon);
+    }
+
     hbox = gtk_hbox_new(FALSE, 0);
     
     if (d->type) {
@@ -537,6 +543,7 @@ void gui_about(GtkWidget *widget, gpointer data)
     GtkWidget *about;
     GtkWidget *table;
     GtkWidget *image;
+    GdkPixbuf *windowicon = NULL;
             
     print_debug("About\n");
     
@@ -550,6 +557,11 @@ void gui_about(GtkWidget *widget, gpointer data)
     table = gtk_table_new(2, 2, FALSE);
     gtk_container_add(GTK_CONTAINER(GTK_DIALOG(about)->vbox), table);
     
+    if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL) {
+	gtk_window_set_icon(GTK_WINDOW(about), windowicon);
+	gdk_pixbuf_unref(windowicon);
+    }
+
     image = create_image("gg-about.png");
     gtk_table_attach_defaults(GTK_TABLE(table), image, 0, 1, 0, 1);
 
