@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.12 2003/04/06 20:56:56 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.13 2003/04/07 21:08:54 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -874,7 +874,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
     	    GSList *tmplist = d->optlist;
 	    struct tlen_pubdir *req;
 
-	    if (d->response == GGADU_OK) {
+	    if ((d->response == GGADU_OK) || (d->response == GGADU_NONE)) {
 	    
 		if (!(req = tlen_new_pubdir())) {
 	    	    GGaduDialog_free(d);
