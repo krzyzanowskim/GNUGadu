@@ -11,7 +11,7 @@ upubliczniæ pierwsz± wersjê - 2.0pre0 jako wersjê pogl±dow±.
 	- wszystko, program zosta³ napisany od nowa w oparciu o bibliotekê 
 	  glib 2.2.0
 
-2. Mo¿liwo¶ci GNU Gadu 2.0pre0
+2. Mo¿liwo¶ci GNU Gadu 2.0pre1
 	- Obs³uga wtyczek (plugins)
 	- Dostêpne wtyczki :
 		gui-gtk+2  ( Interfejs u¿ytkownika napisany w gtk+2 )
@@ -79,16 +79,16 @@ upubliczniæ pierwsz± wersjê - 2.0pre0 jako wersjê pogl±dow±.
     	http://www.gadu.gnu.pl/
 
     - 2.0pre1
-	ftp://ftp.slackware.pl/pub/gg/
+	http://prdownloads.sourceforge.net/ggadu/gg2-2.0pre1.tar.gz?download
 	
     - CVS
-    	cvs -d:pserver:cvs@cvs.slackware.pl:/home/cvs co gg2
+    	cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/ggadu co gg2
 
     - codzienny snapszot z cvs'a
     	http://www.hakore.com/~krzak/gg2/gg2-snap.tar.gz
 
-    - FTP - przy oficjalnych wydaniach 
-	ftp://ftp.slackware.pl/pub/gg/
+    - Download - przy oficjalnych wydaniach 
+	http://sourceforge.net/project/showfiles.php?group_id=76206
 
 6. Uwagi
     Wszelkie uwagi prosimy kierowaæ na listê dyskusyjn±, a nie do autorów
