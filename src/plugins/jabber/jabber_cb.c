@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.82 2005/01/12 21:55:32 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.83 2005/02/17 19:29:21 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -424,10 +424,12 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 		gchar *string = g_strdup_printf(_("Software used by %s:"),
 				                lm_message_node_get_attribute(message->node, "from"));
 		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user get software");
+		gchar **vec   = NULL;
 		LmMessageNode *node;
 		
-		ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
+		vec = g_strsplit(lm_message_node_get_attribute(message->node, "from"), "/", 2);
 
+		ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
 		node = lm_message_node_find_child(message->node, "name");
 		ggadu_dialog_add_entry(dialog, GGADU_JABBER_CLIENT, _("Client"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
@@ -440,8 +442,13 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 		ggadu_dialog_add_entry(dialog, GGADU_JABBER_OS, _("Operating System"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
+		ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
+				       vec ? vec[1] : NULL, VAR_FLAG_INSENSITIVE);
 
 		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
+
+		if(vec)
+		    g_strfreev(vec);
 		g_free(string);
 	}
 	
