@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.16 2003/04/13 17:58:35 shaster Exp $ */
+/* $Id: gui_dialogs.c,v 1.17 2003/04/27 08:38:38 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -113,13 +113,8 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 			    gtk_entry_set_text( GTK_ENTRY(entry), kv->value );
 			break;
 		case VAR_INT: {
-			    gchar *tmp;
-			    entry = gtk_entry_new();
-			    if (kv->value) {
-				tmp = g_strdup_printf("%d", (gint)kv->value);
-				gtk_entry_set_text( GTK_ENTRY(entry), tmp);
-				g_free(tmp);
-			    }
+			entry = gtk_spin_button_new_with_range(-999999999,999999999,1);
+			gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),(gint)kv->value);
 			}
 			break;
 		case VAR_BOOL:
@@ -242,7 +237,7 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 			}
 			break;
 	    case VAR_INT:
-			kv->value = (gpointer)atoi(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
+	    		kv->value = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(kv->user_data));
 			break;
 	    case VAR_BOOL:
 			kv->value = (gpointer)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(kv->user_data));
