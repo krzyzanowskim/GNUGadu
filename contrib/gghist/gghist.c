@@ -108,11 +108,17 @@ void prev_page(GtkWidget * widget, gpointer gdata)
 }
 
 
-GtkWidget *PutNewButton(GtkWidget * field, char *Label)
+GtkWidget *PutNewButton(GtkWidget * field, gchar *label,gchar *tip_label, GtkSignalFunc func, gpointer user_data)
 {
-	GtkWidget *button = gtk_button_new_with_mnemonic(Label);
+	
+	GtkTooltips *tip = gtk_tooltips_new();
+	
+	GtkWidget *button = gtk_button_new_from_stock(label);
+	
+	gtk_tooltips_set_tip(tip, button, tip_label, "");
+
 	gtk_box_pack_start(GTK_BOX(field), button, FALSE, FALSE, 5);
-	gtk_widget_show(button);
+	gtk_signal_connect(GTK_OBJECT(button), "clicked", func, user_data);
 
 	return (button);
 }
@@ -234,7 +240,6 @@ void show_lines(int start, int end, int *list)
 int main(int argc, char **argv)
 {
 	GtkWidget *window;
-	GtkWidget *button;
 	GtkWidget *field;
 	GtkWidget *field_s;
 	GtkWidget *base_field;
@@ -312,20 +317,11 @@ int main(int argc, char **argv)
 	field = PutNewHField(base_field);
 	/* button = PutNewButton(field, _("Find")); */
 
-	button = PutNewButton(field, _("_First page"));
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(first_page), list);
-
-	button = PutNewButton(field, _("_Previous page"));
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(prev_page), list);
-
-	button = PutNewButton(field, _("_Next page"));
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(next_page), list);
-
-	button = PutNewButton(field, _("_Last page"));
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(last_page), list);
-
-	button = PutNewButton(field, _("_Close"));
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(close_window), NULL);
+	PutNewButton(field, "gtk-goto-first", _("Go to first page"), GTK_SIGNAL_FUNC(first_page), list);
+	PutNewButton(field, "gtk-go-back", _("Go to pevious page"), GTK_SIGNAL_FUNC(prev_page), list);
+	PutNewButton(field, "gtk-go-forward", _("Go to next page"), GTK_SIGNAL_FUNC(next_page), list);
+	PutNewButton(field, "gtk-goto-last", _("Go to last page"), GTK_SIGNAL_FUNC(last_page), list);
+	PutNewButton(field, "gtk-close", _("Close this window"),GTK_SIGNAL_FUNC(close_window), NULL);
 
 	/* Add 'Base container' to window */
 	gtk_container_add(GTK_CONTAINER(window), base_field);
