@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.2 2003/03/25 17:53:34 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -390,7 +390,7 @@ void gui_build_default_menu()
     GtkItemFactoryEntry menu_items[] = {
 	{ "/_Menu",		NULL,		NULL,		0,	"<Branch>" },
 	{ "/_GnuGadu",		NULL,		NULL,		0,	"<Branch>" },
-	{ _("/GnuGadu/_Preferences"), "<CTRL>c",gui_preferences,0,	"<StockItem>", GTK_STOCK_PREFERENCES},
+	{ _("/GnuGadu/_Preferences"), NULL,	gui_preferences,0,	"<StockItem>", GTK_STOCK_PREFERENCES},
 	{ _("/GnuGadu/"),	"",		NULL,	0,	0 },
 	{ _("/GnuGadu/_About"),	"<CTRL>a",	gui_about,	0,	"<StockItem>", GTK_STOCK_DIALOG_INFO },
 	{ _("/GnuGadu/_Quit"),	"<CTRL>q",	gui_quit, 	0,	"<StockItem>", GTK_STOCK_QUIT },
@@ -608,7 +608,7 @@ void gui_reload_images()
 {
     GSList *sigdata  = NULL;
     
-    gui_user_view_refresh();
+//    gui_user_view_refresh();
     
     sigdata = g_slist_append(sigdata, (gchar *)config_var_get(gui_handler, "icons"));
     sigdata = g_slist_append(sigdata, "online.png");

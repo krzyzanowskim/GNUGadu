@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.2 2003/03/23 17:58:30 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.3 2003/03/25 17:53:37 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -205,6 +205,7 @@ void gui_list_add(gui_protocol *gp)
 	label = create_image(gp->p->img_filename);
     } else {
 	label = gtk_label_new(NULL);
+	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 	markup = g_strdup_printf("<small>%s</small>", gp->p->display_name);
 	gtk_label_set_markup(GTK_LABEL(label), markup);
 	g_free(markup);
@@ -227,6 +228,7 @@ void gui_list_add(gui_protocol *gp)
     gtk_box_pack_start(GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
     
     gp->add_info_label = gtk_label_new(NULL);
+    gtk_label_set_selectable(GTK_LABEL(gp->add_info_label), TRUE);
     gtk_widget_set_size_request(GTK_WIDGET(gp->add_info_label), 0, -1);
     gtk_misc_set_alignment(GTK_MISC(gp->add_info_label), 0, 0.5);
     gtk_misc_set_padding(GTK_MISC(gp->add_info_label), 3, 0);
@@ -312,6 +314,7 @@ void gui_create_tree()
     gtk_container_add(GTK_CONTAINER(frame), scrolled_window);
 
     add_info_label = gtk_label_new(NULL);
+    gtk_label_set_selectable(GTK_LABEL(add_info_label), TRUE);
     gtk_widget_set_size_request(GTK_WIDGET(add_info_label), 0, -1);
     gtk_misc_set_alignment(GTK_MISC(add_info_label), 0, 0.5);
     gtk_misc_set_padding(GTK_MISC(add_info_label), 3, 0);
@@ -641,8 +644,10 @@ void gui_user_view_refresh()
 
     while (tmplist) {
 	gui_protocol *gp = (gui_protocol *)tmplist->data;
-	if (gp->statuslist_eventbox)
+	if (gp->statuslist_eventbox) {
 	    gtk_widget_destroy(gp->statuslist_eventbox);
+	    gp->statuslist_eventbox = NULL;
+	}
 	gui_user_view_register(gp);
 	gui_user_view_add_userlist(gp);
 	tmplist = tmplist->next;

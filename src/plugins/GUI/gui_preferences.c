@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.2 2003/03/23 16:52:15 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.3 2003/03/25 17:53:35 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -716,7 +716,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gui_load_theme();
 		gui_config_emoticons();
 		gui_reload_images();
-		gui_user_view_switch();
+		gui_user_view_refresh();
 		gui_chat_update_tags();
 	}
 
