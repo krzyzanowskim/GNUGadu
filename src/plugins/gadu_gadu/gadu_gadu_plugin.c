@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.22 2003/04/10 10:11:34 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.23 2003/04/10 18:11:51 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -108,7 +108,7 @@ gchar *insert_cr(gchar *txt)
     return start;
 }
 
-gpointer gadu_gadu_login(gpointer data, gint status)
+gpointer gadu_gadu_login(gpointer desc, gint status)
 {
     struct gg_login_params p;
     gchar *serveraddr = (gchar *)config_var_get(handler,"server");
@@ -144,6 +144,7 @@ gpointer gadu_gadu_login(gpointer data, gint status)
     p.password	= (gchar *)config_var_get(handler,"password");
     p.async	= 1;
     p.status	= status;
+		p.status_descr = desc;
     if (config_var_get(handler, "private"))
 	p.status |= GG_STATUS_FRIENDS_MASK;
     
@@ -361,7 +362,6 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			    notify->status = n->status;
 			    set_userlist_status(notify->id, n->status, NULL, userlist);
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
-			    /* signal_emit(GGadu_PLUGIN_NAME, "xosd show message",g_strdup_printf("%s - %s",k->nick,sp->description),"xosd"); */
 
 			    n++;
 			}
@@ -416,9 +416,10 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 
 
 void exit_signal_handler() {
+		if (connected) 
+			gg_logoff(session);
+
     show_error(_("Program is about to leave"));
-    if (connected)
-	gg_logoff(session);
 }
 
 gpointer user_chat_action(gpointer user_data)
@@ -458,7 +459,9 @@ gpointer user_view_history_action(gpointer user_data)
     gchar	 *utf8str = NULL;
     GString	 *hist_buf = g_string_new(NULL);
     GSList 	 *users	   = (GSList *)user_data;
-    GGaduContact *k 	   = (GGaduContact *)users->data;
+    GGaduContact *k			= (users) ? (GGaduContact *)users->data : NULL;
+
+		if (!k) return NULL;
     
     path = g_build_filename(this_configdir, "history", k->id, NULL);
     ch   = g_io_channel_new_file(path,"r",NULL);
@@ -548,7 +551,15 @@ gpointer user_preferences_action(gpointer user_data)
 {
 	gchar *utf = NULL;
 	GGaduDialog *d = ggadu_dialog_new();
-//	GSList *statuslist_names = NULL;
+	GSList *statuslist_names = NULL;
+	GSList *tmplist = p->statuslist;
+
+	while (tmplist) {
+		GGaduStatusPrototype *sp = tmplist->data;
+		if (!sp->receive_only)
+			statuslist_names  = g_slist_append(statuslist_names,sp->description);	
+		tmplist = tmplist->next;
+	}
 
 
 	ggadu_dialog_set_title(d, _("Gadu-gadu plugin configuration"));
@@ -561,7 +572,7 @@ gpointer user_preferences_action(gpointer user_data)
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL, config_var_get(handler, "log"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
-	//ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, p->statuslist, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"), VAR_BOOL, config_var_get(handler, "private"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE, _("Sound file (app)"), VAR_FILE_CHOOSER, config_var_get(handler, "sound_app_file"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE, _("Sound file (chat)"), VAR_FILE_CHOOSER, config_var_get(handler, "sound_chat_file"), VAR_FLAG_NONE);
@@ -899,6 +910,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	config_var_add(handler, "sound_app_file", VAR_STR);
 	config_var_add(handler, "log", VAR_BOOL);
 	config_var_add(handler, "autoconnect", VAR_BOOL);
+	config_var_add(handler, "status", VAR_INT);
 	config_var_add(handler, "reason", VAR_STR);
 	config_var_add(handler, "private", VAR_BOOL);
 
@@ -1047,8 +1059,13 @@ void start_plugin()
 
 	register_userlist_menu();
 
-	if (config_var_get(handler, "autoconnect") && !connected) 
-		gadu_gadu_login(NULL,GG_STATUS_AVAIL);
+	if (config_var_get(handler, "autoconnect") && !connected)
+				gadu_gadu_login(
+					(config_var_check(handler,"reason")) ? config_var_get(handler,"reason") : _("no reason")
+					, 
+					(config_var_check(handler,"status")) ? (gint)config_var_get(handler,"status") : GG_STATUS_AVAIL
+				);
+
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr) 
@@ -1362,6 +1379,23 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    print_debug("changing var setting autoconnect to %d\n", kv->value);
 				    config_var_set(handler, "autoconnect", kv->value);
 				    break;
+			case GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS: {
+						/* change string description to int value depending on current locales so it cannot be hardcoded eh.. */
+						GSList *statuslist_tmp = p->statuslist;
+						gint val = -1;
+						
+						while (statuslist_tmp) {
+								GGaduStatusPrototype *sp = (GGaduStatusPrototype *)statuslist_tmp->data;
+								if (!g_strcasecmp(sp->description,kv->value)) {
+										val = sp->status;
+								}
+								statuslist_tmp = statuslist_tmp->next;
+						}
+						
+				    print_debug("changing var setting status to %d\n", val);
+				    config_var_set(handler, "status", (gpointer)val);
+						}
+				    break;
 			case GGADU_GADU_GADU_CONFIG_REASON:
 				    {
 				    gchar *utf = NULL;
@@ -1394,6 +1428,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		message = insert_cr(message);
 		    
 		print_debug("%s\n",message);
+			
+		msg->time = g_strtod(get_timestamp(0),NULL);
 		
 		if ((msg->class == GGADU_CLASS_CONFERENCE) && (msg->recipients != NULL)) {
 		    gint   i = 0;

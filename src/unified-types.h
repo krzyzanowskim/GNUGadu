@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.5 2003/04/09 16:07:18 thrulliq Exp $ */
+/* $Id: unified-types.h,v 1.6 2003/04/10 18:11:46 krzyzak Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -60,9 +60,8 @@ typedef struct {
     gchar *message;
     guint class;
     guint time;
-    
+   
     /* conference */
-//    guint recipients_count;
     GSList *recipients;
     
 } GGaduMsg;
@@ -120,4 +119,3 @@ typedef struct {
 void GGaduDialog_free(GGaduDialog *d);
 
 #endif
-

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.13 2003/04/04 15:17:31 thrulliq Exp $ */
+/* $Id: gui_dialogs.c,v 1.14 2003/04/10 18:11:49 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -38,7 +38,6 @@ void gui_add_user_window_response(GtkDialog *dialog, int resid, gpointer user_da
 
 		if ((kv != NULL) && (kv->user_data != NULL))
 			kv->value = (gpointer)g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
-			/* gtk_widget_unref(GTK_WIDGET(kv->user_data)); */
 
 		kvlist = kvlist->next;
 		}
@@ -429,31 +428,6 @@ gint timeout(gpointer user_data)
     layout = gtk_widget_create_pango_layout(image, NULL);
  
     pango_layout_set_markup(layout, about_text, -1);
-/*
-    pango_layout_set_markup(layout, _(
-    "<b>GNU Gadu " VERSION "</b>\n"
-    "Copyright (C) 2001-2003 GNU Gadu Team\n"
-    "License" ": GPL\n"
-    "Homepage" ": http://www.gadu.gnu.pl\n\n"
-
-    "<b>Main Programmers:</b>\n"
-    "Igor Popik &lt;thrull@slackware.pl&gt;\n"
-    "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n"
-
-    "<b>Patches:</b>\n"
-    "Mateusz Papiernik\n"
-    "Pawel Jan Maczewski\n"
-    "HelDoRe\n"
-    "Bartosz Zapalowski\n"
-    "Jakub 'shasta' Jankowski\n\n"
-    
-    "<b>Thanks to:</b>\n"
-    "Dwuziu\nAflinta\nGammaRay\nPlavi\n"
-    "see AUTHORS file for details\n\n"
-    
-    "<i>Compile time:\n" __DATE__ " " __TIME__ "</i>"
-    ), -1);
-*/
     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
     pango_layout_set_justify(layout, TRUE);
 
@@ -604,24 +578,27 @@ void gui_about(GtkWidget *widget, gpointer data)
 	  "<b>GNU Gadu %s</b>\n"
 	  "Copyright (C) 2001-2003 GNU Gadu Team\n"
 	  "License: GPL\n"
-	  "Homepage: http://www.gadu.gnu.pl\n\n"
+	  "Homepage: http://www.gadu.gnu.pl/\n\n"
 	  
 	  "<b>Main Programmers:</b>\n"
 	  "Igor Popik &lt;thrull@slackware.pl&gt;\n"
 	  "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n"
 	  
-	  "<b>Patches:</b>\n"
-	  "Mateusz Papiernik\n"
-	  "Pawel Jan Maczewski\n"
-	  "HelDoRe\n"
+	  "<b>Also:</b>\n"
 	  "Bartosz Zapalowski\n"
-	  "Jakub 'shasta' Jankowski\n\n"
+	  "Mateusz Papiernik\n"
+	  "HelDoRe\n"
+	  "Jakub 'shasta' Jankowski\n"
+	  "Pawel Jan Maczewski\n\n"
 	  
 	  "<b>Thanks to:</b>\n"
-	  "Dwuziu\nAflinta\nGammaRay\nPlavi\n"
+	  "Dwuziu\n"
+		"Aflinta\n"
+		"GammaRay\n"
+		"Plavi\n"
 	  "see AUTHORS file for details\n\n"
 	  
-	  "<i>Compite time:\n%s %s</i>"),
-	VERSION, __DATE__, __TIME__);
+	  "<i>Compite time:\n%s %s</i>"), VERSION, __DATE__, __TIME__);
+		
     about_timeout = g_timeout_add(50, timeout, image);
 }
