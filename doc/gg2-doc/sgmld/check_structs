@@ -72,8 +72,8 @@ sub output_struct($$) {
     s/\/\/.*//g;
     s/\/.*//g;
     s/[\t]/ /g;
-    s/^[^\w]+/  /g;
-    s/(^$)|([^\w\n;]+$)//g;
+    s/^[^\w\{\}]+/  /g;
+    s/(^$)|([^\w\n\}\;\{]+$)//g;
     $line = $_;
     if (m/^$/) {
       if ($no eq 2)
@@ -87,6 +87,7 @@ sub output_struct($$) {
       next;
     }
     push @output, $line;
+    print $line;
     $empty = 0;
   }
   write_2_file($struct,\@output);
@@ -118,10 +119,11 @@ foreach (@structs) {
     LINE: foreach (@tab) {
       next if not $_;
       if ($typedefed) {
-	if      (m/^}[ ]*$struct/) {
+	if      (m/^}[ ]*$struct[ ]*;/) {
 	  push @struct_code, $_;
 	  print "Mam skubañca - ".$struct.":\n";
 	  output_struct($struct, \@struct_code);
+	  splice @struct_code;
 	  last LINE;
 	} elsif (m/^}/)	{
 	  splice @struct_code;
@@ -132,6 +134,7 @@ foreach (@structs) {
       }
       if (m/^typedef struct/) {
 	$typedefed = 1;
+	splice @struct_code;
 	push @struct_code, $_;
       }
     }

@@ -10,9 +10,9 @@ opisem.</para>
 <sect2 id="GGaduMenuItem" xreflabel="GGaduMenuItem"><title>GGaduMenuItem</title>
 <programlisting>
 typedef struct {
-  gchar    *label; a
-  gpointer data;
-  gpointer callback;
+  gchar *label;
+  gpointer   data;
+  gpointer     callback;
 } GGaduMenuItem;
 </programlisting>
 
@@ -29,8 +29,8 @@ tzw. akceleratorem (czyt. skrótem).</para>
 <sect2 id="GGaduVar" xreflabel="GGaduVar"><title>GGaduVar</title>
 <programlisting>
 typedef struct {
-  gchar   *name;
-  gint     type;
+  gchar *name;
+  gint type;
   gpointer ptr;
 } GGaduVar;
 </programlisting>
@@ -44,10 +44,10 @@ dana zmienna.</para>
 <sect2 id="GGaduProtocol" xreflabel="GGaduProtocol"><title>GGaduProtocol</title>
 <programlisting>
 typedef struct {
-  gchar  *display_name;
-  gchar  *img_filename;
+  gchar *display_name;
+  gchar *img_filename;
   GSList *statuslist;
-  gint    offline_status;
+  gint   offline_status;
 } GGaduProtocol;
 </programlisting>
 
@@ -69,7 +69,7 @@ typedef struct {
   gpointer destination_plugin_name;
   gpointer data;
   gpointer data_return;
-  gint error;
+  gint     error;
   gboolean free_me;
   void (*free)(gpointer signal);
 } GGaduSignal;
@@ -115,11 +115,11 @@ typedef struct {
 <sect2 id="GGaduPlugin" xreflabel="GGaduPlugin"><title>GGaduPlugin</title>
 <programlisting>
 typedef struct {
-  guint    type;
-  gchar   *name;
-  gchar   *description;
+  guint  type;
+  gchar  *name;
+  gchar  *description;
   gpointer ptr;
-  void    *plugin_so_handler;
+  void *plugin_so_handler;
 
   gchar  *config_file;
   GSList *variables;
@@ -157,8 +157,8 @@ wskaźnikiem do funkcji uruchamiającej plugin.</para>
 <sect2 id="GGaduPluginFile" xreflabel="GGaduPluginFile"><title>GGaduPluginFile</title>
 <programlisting>
 typedef struct {
-    gchar *name;
-    gchar *path;
+  gchar *name;
+  gchar *path;
 } GGaduPluginFile;
 </programlisting>
 
@@ -176,6 +176,7 @@ typedef struct {
   guint height;
   gint pos_x;
   gint pos_y;
+
   GSList *all_available_plugins;
   GSList *plugins;
 
@@ -185,6 +186,8 @@ typedef struct {
   GMainLoop *main_loop;
 
   GSource *signals_source;
+
+  gpointer repos;
 } GGaduConfig;
 </programlisting>
 
@@ -207,6 +210,7 @@ typedef struct {
   gchar *comment;
   gchar *birthdate;
   gchar *status_descr;
+  gchar *ip;
   gint status;
 } GGaduContact;
 </programlisting>
@@ -222,6 +226,7 @@ typedef struct {
   guint time;
 
   GSList *recipients;
+
 } GGaduMsg;
 </programlisting>
 
@@ -232,6 +237,7 @@ typedef struct {
 typedef struct {
   gchar *id;
   unsigned long status;
+  gchar *ip;
 } GGaduNotify;
 </programlisting>
 
@@ -240,7 +246,7 @@ typedef struct {
 <sect2 id="GGaduStatusPrototype" xreflabel="GGaduStatusPrototype"><title>GGaduStatusPrototype</title>
 <programlisting>
 typedef struct {
-  guint status;
+  gint status;
   gchar *description;
   gchar *image;
   gboolean receive_only;
@@ -252,15 +258,15 @@ typedef struct {
 <sect2 id="GGaduKeyValue" xreflabel="GGaduKeyValue"><title>GGaduKeyValue</title>
 <programlisting>
 typedef struct {
-  gint        key;
-  gpointer    value;
+  gint key;
+  gpointer value;
 
-  guint       type;
-  guint       flag;
+  guint type;
+  guint flag;
 
-  gchar       *description;
+  gchar *description;
 
-  gpointer    user_data;
+  gpointer  user_data;
 } GGaduKeyValue;
 </programlisting>
 
@@ -279,6 +285,43 @@ typedef struct {
 </programlisting>
 
 </sect2>
+</sect1>
+
+<sect1><title>repo.h</title>
+<sect2 id="GGaduRepo" xreflabel="GGaduRepo"><title>GGaduRepo</title>
+<programlisting>
+typedef struct {
+  gchar  *name;
+  GSList *values;
+  GSList *watches;
+} GGaduRepo;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduRepoWatch" xreflabel="GGaduRepoWatch"><title>GGaduRepoWatch</title>
+<programlisting>
+typedef struct {
+  gint      actions;
+  gint      types;
+  watch_ptr callback;
+} GGaduRepoWatch;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduRepoValue" xreflabel="GGaduRepoValue"><title>GGaduRepoValue</title>
+<programlisting>
+typedef struct {
+  gpointer key;
+  gpointer value;
+  gint     type;
+  GSList  *watches;
+} GGaduRepoValue;
+</programlisting>
+
+</sect2>
+
 </sect1>
 
 </chapter>

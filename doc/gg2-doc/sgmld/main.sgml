@@ -21,6 +21,7 @@
 <!ENTITY icons SYSTEM "icons.sgml">
 <!ENTITY menu SYSTEM "menu.sgml">
 <!ENTITY plugins SYSTEM "plugins.sgml">
+<!ENTITY repo SYSTEM "repo.sgml">
 ]>
 <book lang="pl">
 <bookinfo>
@@ -36,4 +37,5 @@
 &signals;
 &menu;
 &plugins;
+&repo;
 </book>

@@ -12,3 +12,6 @@ src/unified-types.h GGaduNotify
 src/unified-types.h GGaduStatusPrototype
 src/unified-types.h GGaduKeyValue
 src/unified-types.h GGaduDialog
+src/repo.h GGaduRepo
+src/repo.h GGaduRepoWatch
+src/repo.h GGaduRepoValue
