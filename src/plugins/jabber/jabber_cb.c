@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.47 2004/08/16 13:15:27 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.48 2004/08/18 12:42:40 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -33,19 +33,6 @@ extern jabber_data_type jabber_data;
 
 void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, gpointer user_data)
 {
-	if (reason == LM_DISCONNECT_REASON_OK)
-	{
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Jabber disconnected")), "main-gui");
-	} else if (reason == LM_DISCONNECT_REASON_PING_TIME_OUT) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Connection to the Jabber server timed out")), "main-gui");
-	} else if (reason == LM_DISCONNECT_REASON_HUP) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Connection hung up")), "main-gui");
-	} else if (reason == LM_DISCONNECT_REASON_ERROR) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Generic error somewhere in the transport layer")), "main-gui");
-	} else if (reason == LM_DISCONNECT_REASON_UNKNOWN) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("An unknown Jabber error")), "main-gui");
-	}
-
 	lm_connection_unregister_message_handler(connection, iq_handler, LM_MESSAGE_TYPE_IQ);
 	iq_handler = NULL;
 	lm_connection_unregister_message_handler(connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ);
@@ -59,6 +46,19 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 	
 	jabber_data.status = JABBER_STATUS_UNAVAILABLE;
 	signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
+
+	if (reason == LM_DISCONNECT_REASON_OK)
+	{
+		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Jabber disconnected")), "main-gui");
+	} else if (reason == LM_DISCONNECT_REASON_PING_TIME_OUT) {
+		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Connection to the Jabber server timed out")), "main-gui");
+	} else if (reason == LM_DISCONNECT_REASON_HUP) {
+		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Connection hung up")), "main-gui");
+	} else if (reason == LM_DISCONNECT_REASON_ERROR) {
+		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Generic error somewhere in the transport layer")), "main-gui");
+	} else if (reason == LM_DISCONNECT_REASON_UNKNOWN) {
+		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("An unknown Jabber error")), "main-gui");
+	}
 
 }
 
@@ -115,11 +115,13 @@ void jabber_register_account_cb(LmConnection * connection, gboolean result, GGad
 
 static gboolean jabber_ping(gpointer data)
 {
-	if (!lm_connection_is_open(jabber_data.connection))
+	if (!jabber_data.connection ||
+	   (!lm_connection_is_open(jabber_data.connection)))
 		return FALSE;
 
 	print_debug("PING!\n");
-	return lm_connection_send_raw(jabber_data.connection," ",NULL);
+	
+	return lm_connection_send_raw(jabber_data.connection,"\n",NULL);
 }
 
 
@@ -133,7 +135,7 @@ void connection_auth_cb(LmConnection * connection, gboolean success, gpointer st
 
 	print_debug("jabber: Authentication succeeded. Changing status...\n");
 	jabber_fetch_roster(status);
-	g_timeout_add(100000, jabber_ping, NULL);
+	g_timeout_add(200000, jabber_ping, NULL);
 	
 }
 
@@ -157,7 +159,7 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
 	if (!lm_connection_authenticate
 	    (connection, jid, ggadu_config_var_get(jabber_handler, "password"),
 	     ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler,
-										     "resource") : "GNU Gadu 2",
+										     "resource") : "GNU Gadu",
 	     (LmResultFunction) connection_auth_cb, status, NULL, NULL))
 	{
 		print_debug("jabber: lm_connection_authenticate() failed.");

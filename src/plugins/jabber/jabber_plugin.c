@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.89 2004/08/16 13:15:27 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.90 2004/08/18 12:42:44 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -597,14 +597,14 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		GGaduDialog *dialog = signal->data;
 		gchar *jid = dialog->user_data;
-		LmMessage *msg;
+		LmMessage *msg = NULL;
 
 		if (jid && ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_PRESENCE,
 							   LM_MESSAGE_SUB_TYPE_SUBSCRIBED);
 		}
-		else if (ggadu_dialog_get_response(dialog) == GGADU_CANCEL)
+		else if (jid && ggadu_dialog_get_response(dialog) == GGADU_CANCEL)
 		{
 			msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_PRESENCE,
 							   LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED);
@@ -612,8 +612,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		lm_connection_send(jabber_data.connection, msg, NULL);
 		lm_message_unref(msg);
-		if (jid)
-			g_free(jid);
+
+		g_free(jid);
 			
 		GGaduDialog_free(dialog);
 
