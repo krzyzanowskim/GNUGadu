@@ -1,17 +1,17 @@
-# $Id: pl.po,v 1.44 2004/01/26 21:20:33 krzyzak Exp $
+# $Id: pl.po,v 1.45 2004/01/27 01:25:25 shaster Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-01-26 22:05+0100\n"
+"POT-Creation-Date: 2004-01-27 02:00+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
 
 #: src/main.c:61
 msgid "Cannot open any modules directory\n"
@@ -283,10 +283,10 @@ msgstr ""
 #: src/plugins/GUI/gui_preferences.c:698
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:284
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1502
-#: src/plugins/tlen/tlen_plugin.c:823 src/plugins/xosd/plugin_xosd.c:404
+#: src/plugins/tlen/tlen_plugin.c:834 src/plugins/xosd/plugin_xosd.c:403
 #: src/plugins/jabber/jabber_plugin.c:688
-#: src/plugins/remote/remote_plugin.c:626 src/plugins/sms/sms_gui.c:170
-#: src/plugins/update/update_plugin.c:325
+#: src/plugins/remote/remote_plugin.c:626 src/plugins/sms/sms_gui.c:181
+#: src/plugins/update/update_plugin.c:349
 msgid "Preferences"
 msgstr "Ustawienia"
 
@@ -382,7 +382,7 @@ msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki GUI"
 msgid "Status"
 msgstr "Stan"
 
-#: src/plugins/GUI/gui_search.c:27 src/plugins/sms/sms_gui.c:82
+#: src/plugins/GUI/gui_search.c:27 src/plugins/sms/sms_gui.c:93
 msgid "Id"
 msgstr "Id"
 
@@ -398,23 +398,13 @@ msgstr "Miejscowo¶æ"
 msgid "Age"
 msgstr "Wiek"
 
-#: src/plugins/GUI/gui_search.c:104 src/plugins/tlen/tlen_plugin.c:887
+#: src/plugins/GUI/gui_search.c:104 src/plugins/tlen/tlen_plugin.c:897
 msgid "Add"
 msgstr "Dodaj"
 
 #: src/plugins/GUI/gui_search.c:142
 msgid "Search results"
 msgstr "Wyniki wyszukiwania"
-
-#: src/plugins/GUI/gui_userview.c:489
-#, c-format
-msgid "%s %s"
-msgstr ""
-
-#: src/plugins/GUI/gui_userview.c:491
-#, fuzzy, c-format
-msgid "%s (%s) %s"
-msgstr "Rozmowa z %s (%s) %s"
 
 #: src/plugins/GUI/gui_dialogs.c:340
 msgid "Change User"
@@ -502,7 +492,7 @@ msgstr "Dokowalny aplet WindowMakera"
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:601
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1585
-#: src/plugins/xosd/plugin_xosd.c:517
+#: src/plugins/xosd/plugin_xosd.c:515
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki %s"
@@ -536,7 +526,7 @@ msgid "You have to enter your GG# and password first!"
 msgstr "Nale¿y najpierw podaæ numer GG oraz has³o!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:288
-#: src/plugins/tlen/tlen_plugin.c:484 src/plugins/jabber/jabber_protocol.c:181
+#: src/plugins/tlen/tlen_plugin.c:493 src/plugins/jabber/jabber_protocol.c:181
 msgid "No users have been found!"
 msgstr "Nie znaleziono ¿adnych u¿ytkowników!"
 
@@ -549,14 +539,14 @@ msgid "Userlist has been imported succesfully!"
 msgstr "Zaimportowano listê u¿ytkowników z serwera!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:706
-#: src/plugins/tlen/tlen_plugin.c:548
+#: src/plugins/tlen/tlen_plugin.c:559
 msgid "Program is about to leave"
 msgstr "Program zakoñczy swoje dzia³anie"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:819
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:835
-#: src/plugins/tlen/tlen_plugin.c:614 src/plugins/sms/sms_gui.c:83
-#: src/plugins/sms/sms_gui.c:101
+#: src/plugins/tlen/tlen_plugin.c:625 src/plugins/sms/sms_gui.c:94
+#: src/plugins/sms/sms_gui.c:112
 msgid "Nick"
 msgstr "Ksywa"
 
@@ -580,7 +570,7 @@ msgid "Gadu-gadu plugin configuration"
 msgstr "Konfiguracja wtyczki Gadu-gadu"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:872
-#: src/plugins/tlen/tlen_plugin.c:800 src/plugins/jabber/jabber_plugin.c:656
+#: src/plugins/tlen/tlen_plugin.c:811 src/plugins/jabber/jabber_plugin.c:656
 msgid "Password"
 msgstr "Has³o"
 
@@ -601,17 +591,17 @@ msgid "Default reason"
 msgstr "Domy¶lny powód"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:884
-#: src/plugins/tlen/tlen_plugin.c:802 src/plugins/jabber/jabber_plugin.c:658
+#: src/plugins/tlen/tlen_plugin.c:813 src/plugins/jabber/jabber_plugin.c:658
 msgid "Log chats to history file"
 msgstr "Zapis tre¶ci rozmów w pliku"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:886
-#: src/plugins/tlen/tlen_plugin.c:804 src/plugins/jabber/jabber_plugin.c:660
+#: src/plugins/tlen/tlen_plugin.c:815 src/plugins/jabber/jabber_plugin.c:660
 msgid "Autoconnect on startup"
 msgstr "Automatyczne ³±czenie po uruchomieniu"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:888
-#: src/plugins/tlen/tlen_plugin.c:806
+#: src/plugins/tlen/tlen_plugin.c:817
 msgid "Autoconnect status"
 msgstr "Automatyczne ³±czenie ze statusem"
 
@@ -624,8 +614,9 @@ msgid "Enable DCC"
 msgstr "W³±cz DCC"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:912
-msgid "Registration process failed"
-msgstr ""
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:962
+msgid "Registration failed."
+msgstr "Rejestracja nieudana."
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:924
 #, c-format
@@ -633,33 +624,34 @@ msgid ""
 "Registration process succeded: UIN: %s\n"
 "Settings have been updated."
 msgstr ""
+"Rejestracja przebieg³a pomy¶lnie: UIN: %s\n"
+"Ustawienia zosta³y zaktualizowane."
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:929
 #, c-format
 msgid "Registration process succeded: UIN: %s"
-msgstr ""
-
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:962
-#, fuzzy
-msgid "Registration failed."
-msgstr "Nie mo¿na nawi±zaæ po³±czenia!"
+msgstr "Rejestracja przebieg³a pomy¶lnie: UIN: %s"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:978
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Registration failed:\n"
 "couldn't write token image to %s"
-msgstr "B³±d podczas zapisu ¿etonu!"
+msgstr ""
+"Rejestracja nieudana:\n"
+"b³±d przy zapisie ¿etonu do %s"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:994
 msgid "Register Gadu-Gadu account"
-msgstr ""
+msgstr "Zarejestruj konto Gadu-Gadu"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:997
 msgid ""
 "Registration code:\n"
 "(shown above)"
 msgstr ""
+"Kod rejestracji:\n"
+"(pokazany wy¿ej)"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:998
 #: src/plugins/jabber/jabber_protocol.c:162
@@ -667,28 +659,27 @@ msgid "Email:"
 msgstr "Email:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:999
-#, fuzzy
 msgid "Password:"
-msgstr "Has³o"
+msgstr "Has³o:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1000
 msgid "Update settings on success?"
-msgstr ""
+msgstr "Zaktualizowaæ ustawienia w razie sukcesu?"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1029
-#: src/plugins/tlen/tlen_plugin.c:745 src/plugins/jabber/jabber_plugin.c:614
+#: src/plugins/tlen/tlen_plugin.c:756 src/plugins/jabber/jabber_plugin.c:614
 msgid "You have to be connected to perform searching!"
 msgstr "Do wyszukiwania potrzebne jest nawi±zane po³±czenie z serwerem!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1034
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2326
-#: src/plugins/tlen/tlen_plugin.c:754 src/plugins/tlen/tlen_plugin.c:1212
+#: src/plugins/tlen/tlen_plugin.c:765 src/plugins/tlen/tlen_plugin.c:1217
 msgid "female"
 msgstr "kobieta"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1035
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2329
-#: src/plugins/tlen/tlen_plugin.c:755 src/plugins/tlen/tlen_plugin.c:1214
+#: src/plugins/tlen/tlen_plugin.c:766 src/plugins/tlen/tlen_plugin.c:1219
 msgid "male"
 msgstr "mê¿czyzna"
 
@@ -697,22 +688,22 @@ msgid "Gadu-Gadu search"
 msgstr "Wyszukiwanie w Gadu-Gadu"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1041
-#: src/plugins/tlen/tlen_plugin.c:762 src/plugins/jabber/jabber_protocol.c:153
+#: src/plugins/tlen/tlen_plugin.c:773 src/plugins/jabber/jabber_protocol.c:153
 msgid "First name:"
 msgstr "Imiê:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1042
-#: src/plugins/tlen/tlen_plugin.c:763 src/plugins/jabber/jabber_protocol.c:156
+#: src/plugins/tlen/tlen_plugin.c:774 src/plugins/jabber/jabber_protocol.c:156
 msgid "Last name:"
 msgstr "Nazwisko:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1043
-#: src/plugins/tlen/tlen_plugin.c:764 src/plugins/jabber/jabber_protocol.c:159
+#: src/plugins/tlen/tlen_plugin.c:775 src/plugins/jabber/jabber_protocol.c:159
 msgid "Nick:"
 msgstr "Ksywa:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1044
-#: src/plugins/tlen/tlen_plugin.c:765
+#: src/plugins/tlen/tlen_plugin.c:776
 msgid "City:"
 msgstr "Miejscowo¶æ:"
 
@@ -721,7 +712,7 @@ msgid "Birthyear:"
 msgstr "Rok urodzenia:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1046
-#: src/plugins/tlen/tlen_plugin.c:766
+#: src/plugins/tlen/tlen_plugin.c:777
 msgid "Gender:"
 msgstr "P³eæ:"
 
@@ -778,13 +769,13 @@ msgid "Select File :"
 msgstr "Wybór pliku"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1501
-#: src/plugins/tlen/tlen_plugin.c:822 src/plugins/jabber/jabber_plugin.c:687
-#: src/plugins/sms/sms_gui.c:169
+#: src/plugins/tlen/tlen_plugin.c:833 src/plugins/jabber/jabber_plugin.c:687
+#: src/plugins/sms/sms_gui.c:180
 msgid "Add Contact"
 msgstr "Dodaj kontakt"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1503
-#: src/plugins/tlen/tlen_plugin.c:824 src/plugins/jabber/jabber_plugin.c:689
+#: src/plugins/tlen/tlen_plugin.c:835 src/plugins/jabber/jabber_plugin.c:689
 msgid "Search for friends"
 msgstr "Szukaj znajomych"
 
@@ -801,9 +792,8 @@ msgid "Delete userlist"
 msgstr "Usuñ listê kontaktów z serwera"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1509
-#, fuzzy
 msgid "Register account"
-msgstr "Zdalne sterowanie"
+msgstr "Zarejestruj konto"
 
 # FIXME - co ma znaczyæ (c) w tym miejscu??!
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1545
@@ -811,7 +801,7 @@ msgid "Gadu-Gadu(c) protocol"
 msgstr "Protokó³ Gadu-Gadu(c)"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1607
-#: src/plugins/tlen/tlen_plugin.c:673 src/plugins/jabber/jabber_plugin.c:564
+#: src/plugins/tlen/tlen_plugin.c:684 src/plugins/jabber/jabber_plugin.c:564
 msgid "Available"
 msgstr "Dostêpny"
 
@@ -828,7 +818,7 @@ msgid "Busy with description"
 msgstr "Zajêty z opisem"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1635
-#: src/plugins/tlen/tlen_plugin.c:703
+#: src/plugins/tlen/tlen_plugin.c:714
 msgid "Invisible"
 msgstr "Niewidoczny"
 
@@ -853,7 +843,7 @@ msgid "no reason"
 msgstr "Domy¶lny powód"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1754
-#: src/plugins/tlen/tlen_plugin.c:883 src/plugins/jabber/jabber_plugin.c:239
+#: src/plugins/tlen/tlen_plugin.c:893 src/plugins/jabber/jabber_plugin.c:239
 msgid "Chat"
 msgstr "Rozmowa"
 
@@ -862,28 +852,28 @@ msgid "Send File"
 msgstr "Wy¶lij plik"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1759
-#: src/plugins/jabber/jabber_plugin.c:240 src/plugins/sms/sms_gui.c:230
+#: src/plugins/jabber/jabber_plugin.c:240 src/plugins/sms/sms_gui.c:241
 msgid "Edit"
 msgstr "Modyfikuj"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1760
-#: src/plugins/tlen/tlen_plugin.c:888 src/plugins/jabber/jabber_plugin.c:241
-#: src/plugins/sms/sms_gui.c:231
+#: src/plugins/tlen/tlen_plugin.c:898 src/plugins/jabber/jabber_plugin.c:241
+#: src/plugins/sms/sms_gui.c:242
 msgid "Remove"
 msgstr "Usuñ"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1761
-#: src/plugins/jabber/jabber_plugin.c:242 src/plugins/sms/sms_gui.c:232
+#: src/plugins/jabber/jabber_plugin.c:242 src/plugins/sms/sms_gui.c:243
 msgid "Add New"
 msgstr "Nowy kontakt"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1766
-#: src/plugins/tlen/tlen_plugin.c:884 src/plugins/jabber/jabber_plugin.c:252
+#: src/plugins/tlen/tlen_plugin.c:894 src/plugins/jabber/jabber_plugin.c:252
 msgid "View History"
 msgstr "Wy¶wietl historiê"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2009
-#: src/plugins/tlen/tlen_plugin.c:951 src/plugins/jabber/jabber_plugin.c:328
+#: src/plugins/tlen/tlen_plugin.c:961 src/plugins/jabber/jabber_plugin.c:328
 msgid "Enter status description"
 msgstr "Opis stanu"
 
@@ -901,110 +891,105 @@ msgstr "Nie mo¿na zmieniæ stanu"
 msgid "Unable send message"
 msgstr "Nie mo¿na wys³aæ wiadomo¶ci"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2231
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2255
-#, fuzzy, c-format
-msgid "<- (%s) Me :: %s\n"
-msgstr ""
-":: Ja (%s) ::\n"
-"%s\n"
-"\n"
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2232
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2256
+msgid "Me"
+msgstr "Ja"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2349
-#: src/plugins/tlen/tlen_plugin.c:1229
+#: src/plugins/tlen/tlen_plugin.c:1234
 msgid "Error! Cannot perform search!"
 msgstr "B³±d! Nie mo¿na przeprowadziæ wyszukiwania!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2428
 msgid "You have to fill in all fields"
-msgstr ""
+msgstr "Musisz wype³niæ wszystkie pola"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2491
 msgid "I still cannot open contacts files! Exiting..."
 msgstr "Nie mo¿na odczytaæ pliku z kontaktami. Rezygnujê..."
 
-#: src/plugins/tlen/tlen_plugin.c:243
+#: src/plugins/tlen/tlen_plugin.c:244
 msgid "Unauthorized"
 msgstr "Brak autoryzacji"
 
-#: src/plugins/tlen/tlen_plugin.c:254
+#: src/plugins/tlen/tlen_plugin.c:255
 msgid "Bad response from server"
 msgstr "Niepoprawna odpowied¼ od serwera"
 
-#: src/plugins/tlen/tlen_plugin.c:260
+#: src/plugins/tlen/tlen_plugin.c:261
 msgid "Memory allocation error"
 msgstr "B³±d przy próbie alokacji pamiêci"
 
-#: src/plugins/tlen/tlen_plugin.c:266
+#: src/plugins/tlen/tlen_plugin.c:267
 msgid "Network error"
 msgstr "B³±d sieciowy"
 
-#: src/plugins/tlen/tlen_plugin.c:271
+#: src/plugins/tlen/tlen_plugin.c:272
 msgid "Unknown error"
 msgstr "Nieznany b³±d"
 
-#: src/plugins/tlen/tlen_plugin.c:305
+#: src/plugins/tlen/tlen_plugin.c:306
 msgid "Error while GETROSTERITEM"
 msgstr "B³±d przy operacji GETROSTERITEM"
 
-#: src/plugins/tlen/tlen_plugin.c:527
+#: src/plugins/tlen/tlen_plugin.c:538
 msgid "You have to enter your login and password first!"
 msgstr "Podaj swój login i has³o"
 
-#: src/plugins/tlen/tlen_plugin.c:615
+#: src/plugins/tlen/tlen_plugin.c:626
 msgid "Group"
 msgstr "Grupa"
 
-#: src/plugins/tlen/tlen_plugin.c:679 src/plugins/jabber/jabber_plugin.c:574
+#: src/plugins/tlen/tlen_plugin.c:690 src/plugins/jabber/jabber_plugin.c:574
 msgid "Away"
 msgstr "Zajêty"
 
-#: src/plugins/tlen/tlen_plugin.c:685
+#: src/plugins/tlen/tlen_plugin.c:696
 msgid "Chatty"
 msgstr "Rozmowa"
 
-#: src/plugins/tlen/tlen_plugin.c:691
+#: src/plugins/tlen/tlen_plugin.c:702
 msgid "Very busy"
 msgstr "Bardzo zajêty"
 
-#: src/plugins/tlen/tlen_plugin.c:697 src/plugins/jabber/jabber_plugin.c:584
+#: src/plugins/tlen/tlen_plugin.c:708 src/plugins/jabber/jabber_plugin.c:584
 msgid "DND"
 msgstr "Nie przeszkadzaæ"
 
-#: src/plugins/tlen/tlen_plugin.c:709 src/plugins/jabber/jabber_plugin.c:589
+#: src/plugins/tlen/tlen_plugin.c:720 src/plugins/jabber/jabber_plugin.c:589
 msgid "Unavailable"
 msgstr "Niedostêpny"
 
-#: src/plugins/tlen/tlen_plugin.c:715 src/plugins/jabber/jabber_plugin.c:594
+#: src/plugins/tlen/tlen_plugin.c:726 src/plugins/jabber/jabber_plugin.c:594
 msgid "Set description ..."
 msgstr "Ustaw opis ..."
 
-#: src/plugins/tlen/tlen_plugin.c:760
+#: src/plugins/tlen/tlen_plugin.c:771
 msgid "Tlen search"
 msgstr "Wyszukiwanie w Tlenie"
 
-#: src/plugins/tlen/tlen_plugin.c:767
+#: src/plugins/tlen/tlen_plugin.c:778
 msgid "@tlen.pl"
 msgstr "@tlen.pl"
 
-#: src/plugins/tlen/tlen_plugin.c:794
+#: src/plugins/tlen/tlen_plugin.c:805
 msgid "Tlen plugin configuration"
 msgstr "Konfiguracja wtyczki Tlen"
 
-#: src/plugins/tlen/tlen_plugin.c:798
+#: src/plugins/tlen/tlen_plugin.c:809
 msgid "Tlen login"
 msgstr "Tlen login"
 
-#: src/plugins/tlen/tlen_plugin.c:886
+#: src/plugins/tlen/tlen_plugin.c:896
 msgid "List"
 msgstr "Lista"
 
-#: src/plugins/tlen/tlen_plugin.c:957
-#, fuzzy
+#: src/plugins/tlen/tlen_plugin.c:967
 msgid "Description"
-msgstr "Opis:"
+msgstr "Opis"
 
-#: src/plugins/tlen/tlen_plugin.c:1147 src/plugins/tlen/tlen_plugin.c:1160
+#: src/plugins/tlen/tlen_plugin.c:1152 src/plugins/tlen/tlen_plugin.c:1165
 #: src/plugins/jabber/jabber_plugin.c:364
 #, c-format
 msgid ""
@@ -1017,51 +1002,51 @@ msgstr ""
 "%s\n"
 "\n"
 
-#: src/plugins/xosd/plugin_xosd.c:373
+#: src/plugins/xosd/plugin_xosd.c:372
 msgid "XOSD Preferences"
 msgstr "Ustawienia XOSD"
 
-#: src/plugins/xosd/plugin_xosd.c:378
+#: src/plugins/xosd/plugin_xosd.c:377
 msgid "Timestamp"
 msgstr "Znacznik czasowy"
 
-#: src/plugins/xosd/plugin_xosd.c:379
+#: src/plugins/xosd/plugin_xosd.c:378
 msgid "Colour"
 msgstr "Kolor"
 
-#: src/plugins/xosd/plugin_xosd.c:383
+#: src/plugins/xosd/plugin_xosd.c:382
 msgid "Alignment"
 msgstr "Wyrównanie"
 
-#: src/plugins/xosd/plugin_xosd.c:384
+#: src/plugins/xosd/plugin_xosd.c:383
 msgid "Position"
 msgstr "Pozycja"
 
-#: src/plugins/xosd/plugin_xosd.c:385
+#: src/plugins/xosd/plugin_xosd.c:384
 msgid "Number of lines"
 msgstr "Liczba wierszy"
 
-#: src/plugins/xosd/plugin_xosd.c:386
+#: src/plugins/xosd/plugin_xosd.c:385
 msgid "Timeout"
 msgstr "Czas trwania"
 
-#: src/plugins/xosd/plugin_xosd.c:387
+#: src/plugins/xosd/plugin_xosd.c:386
 msgid "Horizontal offset"
 msgstr "Przesuniêcie w poziomie"
 
-#: src/plugins/xosd/plugin_xosd.c:388
+#: src/plugins/xosd/plugin_xosd.c:387
 msgid "Vertical offset"
 msgstr "Przesuniêcie w pionie"
 
-#: src/plugins/xosd/plugin_xosd.c:389
+#: src/plugins/xosd/plugin_xosd.c:388
 msgid "Shadow offset"
 msgstr "Przesuniêcie cienia"
 
-#: src/plugins/xosd/plugin_xosd.c:405
+#: src/plugins/xosd/plugin_xosd.c:404
 msgid "Show messages"
 msgstr "Poka¿ wiadomo¶ci"
 
-#: src/plugins/xosd/plugin_xosd.c:481
+#: src/plugins/xosd/plugin_xosd.c:480
 msgid "On Screen Display"
 msgstr "Wy¶wietlanie na ekranie"
 
@@ -1192,15 +1177,15 @@ msgstr ""
 msgid "Error: %s (code %s)"
 msgstr "B³±d: %s (kod %s)"
 
-#: src/plugins/jabber/jabber_login.c:80 src/plugins/jabber/jabber_login.c:94
+#: src/plugins/jabber/jabber_login.c:81 src/plugins/jabber/jabber_login.c:95
 msgid "Invalid jid!"
 msgstr "Nieprawid³owy Jabber ID!"
 
-#: src/plugins/jabber/jabber_login.c:127
+#: src/plugins/jabber/jabber_login.c:128
 msgid "SSL not supported by loudmouth"
 msgstr "SSL nie jest obs³ugiwany przez biblioteke loudmouth"
 
-#: src/plugins/jabber/jabber_login.c:174
+#: src/plugins/jabber/jabber_login.c:175
 msgid "Connection failed"
 msgstr "Nie mo¿na nawi±zaæ po³±czenia!"
 
@@ -1240,263 +1225,270 @@ msgstr "Zdalne sterowanie"
 msgid "Unable to read config file for plugin remote"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki remote"
 
-#: src/plugins/sms/sms_core.c:186
+#: src/plugins/sms/sms_core.c:198
 msgid "IDEA token"
 msgstr "¯eton IDEA"
 
-#: src/plugins/sms/sms_core.c:191
+#: src/plugins/sms/sms_core.c:203
 msgid "Enter token text"
 msgstr "Wpisz tekst z obrazka"
 
-#: src/plugins/sms/sms_core.c:216
+#: src/plugins/sms/sms_core.c:228
 msgid "None"
 msgstr "Brak"
 
-#: src/plugins/sms/sms_core.c:218
+#: src/plugins/sms/sms_core.c:230
 msgid "SMS plugin: "
 msgstr "Wtyczka SMS: "
 
-#: src/plugins/sms/sms_core.c:426
+#: src/plugins/sms/sms_core.c:438
 msgid "Please enter token"
 msgstr "Wpisz tekst z obrazka"
 
-#: src/plugins/sms/sms_core.c:464 src/plugins/sms/sms_core.c:877
+#: src/plugins/sms/sms_core.c:475 src/plugins/sms/sms_core.c:888
 msgid "Cannot connect!"
 msgstr "Nie mo¿na siê po³±czyæ!"
 
-#: src/plugins/sms/sms_core.c:497 src/plugins/sms/sms_core.c:836
+#: src/plugins/sms/sms_core.c:508 src/plugins/sms/sms_core.c:847
 msgid "SMS has been sent"
 msgstr "SMS zosta³ wys³any"
 
-#: src/plugins/sms/sms_core.c:500
+#: src/plugins/sms/sms_core.c:511
 msgid "Bad token!"
 msgstr "B³êdne has³o!"
 
-#: src/plugins/sms/sms_core.c:503
+#: src/plugins/sms/sms_core.c:514
 msgid "Bad token entered!"
 msgstr "Wprowadzony z³y ¿eton!"
 
-#: src/plugins/sms/sms_core.c:506 src/plugins/sms/sms_core.c:871
+#: src/plugins/sms/sms_core.c:517 src/plugins/sms/sms_core.c:882
 msgid "Daily limit exceeded!"
 msgstr "Dzienny limit przekroczony!"
 
-#: src/plugins/sms/sms_core.c:509 src/plugins/sms/sms_core.c:874
+#: src/plugins/sms/sms_core.c:520 src/plugins/sms/sms_core.c:885
 msgid "Gateway error!"
 msgstr "B³±d bramki!"
 
-#: src/plugins/sms/sms_core.c:512
+#: src/plugins/sms/sms_core.c:523
 msgid "Service not activated!"
 msgstr "Us³uga nie jest aktywna!"
 
-#: src/plugins/sms/sms_core.c:515
+#: src/plugins/sms/sms_core.c:526
 msgid "Invalid number"
 msgstr "Nieprawid³owy numer!"
 
-#: src/plugins/sms/sms_core.c:757
+#: src/plugins/sms/sms_core.c:768
 msgid "Specify recipient number!"
 msgstr "Okre¶l numer odbiorcy!"
 
-#: src/plugins/sms/sms_core.c:763
+#: src/plugins/sms/sms_core.c:774
 msgid "Specify sender name!"
 msgstr "Okre¶l nazwê nadawcy!"
 
-#: src/plugins/sms/sms_core.c:769
+#: src/plugins/sms/sms_core.c:780
 msgid "Message is empty!"
 msgstr "Tre¶æ wiadomo¶ci jest pusta"
 
-#: src/plugins/sms/sms_core.c:808
+#: src/plugins/sms/sms_core.c:819
 msgid "Empty Era login!"
 msgstr "Pusty login Era"
 
-#: src/plugins/sms/sms_core.c:814
+#: src/plugins/sms/sms_core.c:825
 msgid "Empty Era password!"
 msgstr "Puste has³o Era"
 
-#: src/plugins/sms/sms_core.c:823
+#: src/plugins/sms/sms_core.c:834
 msgid "Invalid number!"
 msgstr "Nieprawid³owy numer!"
 
-#: src/plugins/sms/sms_core.c:839
+#: src/plugins/sms/sms_core.c:850
 #, c-format
 msgid "SMS has been sent. Left: %d"
 msgstr "SMS zosta³ wys³any. Pozosta³o: %d"
 
-#: src/plugins/sms/sms_core.c:847
+#: src/plugins/sms/sms_core.c:858
 msgid "SMS not delivered!"
 msgstr "SMS nie zosta³ dostarczony!"
 
-#: src/plugins/sms/sms_core.c:850
+#: src/plugins/sms/sms_core.c:861
 msgid "Unauthorized!"
 msgstr "U¿ytkownik nieautoryzowany!"
 
-#: src/plugins/sms/sms_core.c:853
+#: src/plugins/sms/sms_core.c:864
 msgid "Access denied!"
 msgstr "Dostêp zablokowany!"
 
-#: src/plugins/sms/sms_core.c:856
+#: src/plugins/sms/sms_core.c:867
 msgid "Syntax error!"
 msgstr "B³±d sk³adni!"
 
-#: src/plugins/sms/sms_core.c:859
+#: src/plugins/sms/sms_core.c:870
 msgid "Invalid recipient!"
 msgstr "B³êdny adres odbiorcy!"
 
-#: src/plugins/sms/sms_core.c:862
+#: src/plugins/sms/sms_core.c:873
 msgid "Message too long!"
 msgstr "Wiadomo¶æ zbyt d³uga!"
 
-#: src/plugins/sms/sms_core.c:865
+#: src/plugins/sms/sms_core.c:876
 msgid "Error while reading token!"
 msgstr "B³±d podczas po³±czenia"
 
-#: src/plugins/sms/sms_core.c:868
+#: src/plugins/sms/sms_core.c:879
 msgid "Cannot write token image to file!"
 msgstr "B³±d podczas zapisu ¿etonu!"
 
-#: src/plugins/sms/sms_core.c:882
+#: src/plugins/sms/sms_core.c:893
 msgid "Unknown error!"
 msgstr "Nieznany b³±d!"
 
-#: src/plugins/sms/sms_gui.c:54
+#: src/plugins/sms/sms_gui.c:65
 msgid "SMS Preferences"
 msgstr "Ustawienia SMS"
 
-#: src/plugins/sms/sms_gui.c:59
+#: src/plugins/sms/sms_gui.c:70
 msgid "Use \"SMS\" program to send"
 msgstr "U¿yj programu \"SMS\" do wysy³ania"
 
-#: src/plugins/sms/sms_gui.c:60 src/plugins/sms/sms_gui.c:154
-#: src/plugins/sms/sms_gui.c:304
+#: src/plugins/sms/sms_gui.c:71 src/plugins/sms/sms_gui.c:165
+#: src/plugins/sms/sms_gui.c:315
 msgid "Sender"
 msgstr "Nadawca"
 
-#: src/plugins/sms/sms_gui.c:61
+#: src/plugins/sms/sms_gui.c:72
 msgid "Era login"
 msgstr "Era login"
 
-#: src/plugins/sms/sms_gui.c:62
+#: src/plugins/sms/sms_gui.c:73
 msgid "Era password"
 msgstr "Era has³o"
 
-#: src/plugins/sms/sms_gui.c:63
+#: src/plugins/sms/sms_gui.c:74
 msgid "Show plugin in status list (needs reload)"
 msgstr "Pokazuj modu³ na li¶cie stanów (wymaga prze³adowania)"
 
-#: src/plugins/sms/sms_gui.c:84 src/plugins/sms/sms_gui.c:102
-#: src/plugins/sms/sms_gui.c:305
+#: src/plugins/sms/sms_gui.c:95 src/plugins/sms/sms_gui.c:113
+#: src/plugins/sms/sms_gui.c:316
 msgid "Number"
 msgstr "Numer"
 
-#: src/plugins/sms/sms_gui.c:140
+#: src/plugins/sms/sms_gui.c:151
 msgid "No phone number"
 msgstr "Brak numeru telefonu"
 
-#: src/plugins/sms/sms_gui.c:145
+#: src/plugins/sms/sms_gui.c:156
 msgid "Send to : "
 msgstr "Wy¶lij do : "
 
-#: src/plugins/sms/sms_gui.c:153
+#: src/plugins/sms/sms_gui.c:164
 msgid "Use external program"
 msgstr "U¿yj zewnêtrznego programu"
 
-#: src/plugins/sms/sms_gui.c:155 src/plugins/sms/sms_gui.c:306
+#: src/plugins/sms/sms_gui.c:166 src/plugins/sms/sms_gui.c:317
 msgid "Message"
 msgstr "Wiadomo¶æ"
 
-#: src/plugins/sms/sms_gui.c:181
+#: src/plugins/sms/sms_gui.c:192
 msgid "SMS sender"
 msgstr "Wysy³acz SMSów"
 
-#: src/plugins/sms/sms_gui.c:207
+#: src/plugins/sms/sms_gui.c:218
 msgid "Unable to read config file for plugin sms"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki sms"
 
-#: src/plugins/sms/sms_gui.c:229 src/plugins/sms/sms_gui.c:556
+#: src/plugins/sms/sms_gui.c:240 src/plugins/sms/sms_gui.c:567
 msgid "Send SMS"
 msgstr "Wy¶lij SMS"
 
-#: src/plugins/sms/sms_gui.c:300
+#: src/plugins/sms/sms_gui.c:311
 msgid "SMS Send"
 msgstr "Wysy³anie SMS"
 
-#: src/plugins/sms/sms_gui.c:505
+#: src/plugins/sms/sms_gui.c:516
 msgid "Send SMS (internal)"
 msgstr "Wy¶lij SMS (wewnêtrznie)"
 
-#: src/plugins/sms/sms_gui.c:511
+#: src/plugins/sms/sms_gui.c:522
 msgid "Send SMS (external)"
 msgstr "Wy¶lij SMS (zewnêtrznie)"
 
-#: src/plugins/sms/sms_gui.c:594 src/plugins/sms/sms_gui.c:623
-#: src/plugins/sms/sms_gui.c:633
+#: src/plugins/sms/sms_gui.c:605 src/plugins/sms/sms_gui.c:634
+#: src/plugins/sms/sms_gui.c:644
 msgid "Writing userlist failed!"
 msgstr "B³±d podczas zapisu listy kontaktów!"
 
-#: src/plugins/update/update_plugin.c:73 src/plugins/update/update_plugin.c:75
+#: src/plugins/update/update_plugin.c:96 src/plugins/update/update_plugin.c:98
 #, c-format
 msgid "Unknown host: %s"
 msgstr "Nieznany host: %s"
 
-#: src/plugins/update/update_plugin.c:101
-#: src/plugins/update/update_plugin.c:103
+#: src/plugins/update/update_plugin.c:124
+#: src/plugins/update/update_plugin.c:126
 #, c-format
 msgid "Error while connecting to %s"
 msgstr "B³±d podczas próby po³±czenia z %s"
 
-#: src/plugins/update/update_plugin.c:132
-#: src/plugins/update/update_plugin.c:134
+#: src/plugins/update/update_plugin.c:155
+#: src/plugins/update/update_plugin.c:157
 msgid "Server-side error during update check"
 msgstr "B³±d serwera"
 
-#: src/plugins/update/update_plugin.c:146
-#: src/plugins/update/update_plugin.c:148
-#: src/plugins/update/update_plugin.c:160
-#: src/plugins/update/update_plugin.c:162
+#: src/plugins/update/update_plugin.c:169
+#: src/plugins/update/update_plugin.c:171
+#: src/plugins/update/update_plugin.c:183
+#: src/plugins/update/update_plugin.c:185
 msgid "Malformed server reply"
 msgstr "B³êdna odpowied¼ serwera"
 
-#: src/plugins/update/update_plugin.c:247
-#: src/plugins/update/update_plugin.c:249
+#: src/plugins/update/update_plugin.c:271
+#: src/plugins/update/update_plugin.c:273
 #, c-format
 msgid "Update available: %s"
 msgstr "Dostêpna aktualizacja: %s"
 
-#: src/plugins/update/update_plugin.c:254
-#: src/plugins/update/update_plugin.c:256
+#: src/plugins/update/update_plugin.c:278
+#: src/plugins/update/update_plugin.c:280
 msgid "No updates available"
 msgstr "Brak dostêpnych aktualizacji"
 
-#: src/plugins/update/update_plugin.c:303
+#: src/plugins/update/update_plugin.c:327
 msgid "Update Preferences"
 msgstr "Ustawienia wtyczki update"
 
-#: src/plugins/update/update_plugin.c:308
+#: src/plugins/update/update_plugin.c:332
 msgid "Check for updates on startup"
 msgstr "Sprawdzaj aktualizacje przy uruchomieniu"
 
-#: src/plugins/update/update_plugin.c:309
+#: src/plugins/update/update_plugin.c:333
 msgid "Check for updates automatically"
 msgstr "Automatycznie wyszukuj aktualizacji"
 
-#: src/plugins/update/update_plugin.c:310
+#: src/plugins/update/update_plugin.c:334
 msgid "Check interval (minutes)"
 msgstr "Odstêp pomiêdzy sprawdzeniami (w minutach)"
 
-#: src/plugins/update/update_plugin.c:312
+#: src/plugins/update/update_plugin.c:336
 msgid "Use XOSD instead of dialog boxes"
 msgstr "U¿yj XOSD zamiast okienek dialogowych"
 
-#: src/plugins/update/update_plugin.c:326
+#: src/plugins/update/update_plugin.c:350
 msgid "Check for updates"
 msgstr "Sprawd¼ aktualizacje"
 
-#: src/plugins/update/update_plugin.c:401
+#: src/plugins/update/update_plugin.c:425
 msgid "Update checker"
 msgstr "Sprawdzanie aktualizacji"
 
-#: src/plugins/update/update_plugin.c:420
+#: src/plugins/update/update_plugin.c:444
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki update"
+
+#~ msgid "Registration failed"
+#~ msgstr "Rejestracja nieudana"
+
+#, fuzzy
+#~ msgid "%s (%s) %s"
+#~ msgstr "Rozmowa z %s (%s) %s"
 
 #~ msgid "Talking to %s %s"
 #~ msgstr "Rozmowa z %s %s"
