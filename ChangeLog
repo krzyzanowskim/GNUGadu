@@ -1,10 +1,3 @@
-2004-01-26  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (SUBDIRS): Add m4.
-	(ACLOCAL_AMFLAGS): New variable.
-	(EXTRA_DIST): Add config.rpath.
-	* configure.in (AC_OUTPUT): Add m4/Makefile.
-
 26.01.2004
 - added ability to register new gadu-gadu account [uses threads] (gadu-gadu/shasta)
 
