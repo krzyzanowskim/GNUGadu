@@ -91,9 +91,10 @@ static void hijack_menu_cb(GtkIMHtml *imhtml, GtkMenu *menu, gpointer data);
 static void paste_received_cb (GtkClipboard *clipboard, GtkSelectionData *selection_data, gpointer data);
 static void paste_plaintext_received_cb (GtkClipboard *clipboard, const gchar *text, gpointer data);
 
+#define GTK_IMHTML_USE_POINTSIZE 1
 /* POINT_SIZE converts from AIM font sizes to point sizes.  It probably should be redone in such a
  * way that it base the sizes off the default font size rather than using arbitrary font sizes. */
-#define MAX_FONT_SIZE 7
+#define MAX_FONT_SIZE 24
 #define POINT_SIZE(x) (options & GTK_IMHTML_USE_POINTSIZE ? x : _point_sizes [MIN ((x), MAX_FONT_SIZE) - 1])
 static gdouble _point_sizes [] = { .69444444, .8333333, 1, 1.2, 1.44, 1.728, 2.0736};
 
@@ -3627,9 +3628,11 @@ static GtkTextTag *find_font_size_tag(GtkIMHtml *imhtml, int size)
 		 * size other than my theme's default size. Our size 4 was actually smaller than
 		 * our size 3 for me. So this works around that oddity.
 		 */
-		tag = gtk_text_buffer_create_tag(imhtml->text_buffer, str, "size",
+/*		tag = gtk_text_buffer_create_tag(imhtml->text_buffer, str, "size",
 		                                 (gint) (imhtml->original_fsize *
-		                                 ((double) _point_sizes[size-1] * imhtml->zoom)), NULL);
+		                                 ((double) _point_sizes[size-1] * imhtml->zoom)), NULL);*/
+		tag = gtk_text_buffer_create_tag(imhtml->text_buffer, str, "size",
+		                                 (gint)size, NULL);
 	}
 
 	return tag;

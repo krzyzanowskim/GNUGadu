@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.142 2005/02/18 11:46:52 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.143 2005/02/22 15:35:50 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1350,6 +1350,12 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	gui_chat_session *session = NULL;
 	gboolean conference = FALSE;
 	gchar *colorstr;
+	
+	PangoFontDescription *fontdesc = NULL;
+	gchar *fontstr;
+	const gchar *fontstr_str;
+	gint   fontstr_size;
+	
 	gchar *escaped_txt;
 
 	print_debug("gui_chat_append");
@@ -1498,6 +1504,24 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 //	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text", NULL);
 	colorstr = self ? ggadu_config_var_get(gui_handler, "msg_out_body_color") : ggadu_config_var_get(gui_handler, "msg_body_color");
 	gtk_imhtml_toggle_forecolor(GTK_IMHTML(history),colorstr);
+
+	fontstr =  self ? ggadu_config_var_get(gui_handler, "msg_out_body_font") : ggadu_config_var_get(gui_handler, "msg_body_font");
+	
+	if (fontstr)
+	{
+	    fontdesc = pango_font_description_from_string(fontstr);
+
+	    fontstr_str = pango_font_description_get_family(fontdesc);
+	    print_debug("FONT FACE :%s:",fontstr_str);
+	    gtk_imhtml_toggle_fontface(GTK_IMHTML(history),fontstr_str);
+	
+	    fontstr_size = pango_font_description_get_size(fontdesc);
+	    print_debug("FONT SIZE :%d:%d",GTK_IMHTML(history)->original_fsize,fontstr_size);
+	    gtk_imhtml_font_set_size(GTK_IMHTML(history), fontstr_size);
+	
+    	    pango_font_description_free(fontdesc);
+	}
+	
 	escaped_txt = ggadu_escape_html(tmp);
 	gtk_imhtml_append_text(GTK_IMHTML(history),escaped_txt,0);
 	g_free(tmp);
