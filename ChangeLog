@@ -1,3 +1,7 @@
+07.03.2005
+- Basic implementation of JEP-0030 (Service Discovery). (mkobierzycki/jabber)
+- Implemented `<os>' node handling - JEP-0092 (Software Version) (mkobierzycki/jabber)
+
 02.03.2005
 - close #166 - import userlist (gadu-gadu/krzak)
 - disable plugin "remote" at all (krzak)
