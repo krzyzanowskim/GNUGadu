@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.33 2004/02/17 09:29:54 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.34 2004/02/17 23:20:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -409,27 +409,43 @@ void gui_create_tree()
 void gui_user_view_clear(gui_protocol * gp)
 {
 	GtkTreeIter users_iter;
-
+	gboolean valid = FALSE;
+	
 	g_return_if_fail(gp != NULL);
-
-	if (!tree)
+	
+	if (tree)
 	{
-		gtk_list_store_clear(gp->users_liststore);
-		g_free(g_object_get_data(G_OBJECT(gp->users_liststore), "plugin_name"));
-	}
-	else
-	{
-		gboolean valid = FALSE;
 		gchar *path = g_strdup_printf("%s:0", gp->tree_path);
 		valid = gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(users_treestore), &users_iter, path);
 		g_free(path);
-		while (valid)
-		{
-			GdkPixbuf *image = NULL;
-			gtk_tree_model_get(GTK_TREE_MODEL(users_treestore), &users_iter, 0, &image, -1);
+	} else {
+		valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(gp->users_liststore),&users_iter);
+	}
+
+	while (valid)
+	{
+		GdkPixbuf *image = NULL;
+		gchar *id = NULL;
+		/*GGaduContact *k = NULL;*/
+		
+		gtk_tree_model_get((tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore), &users_iter, 0, &image, -1);
+		gtk_tree_model_get((tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore), &users_iter, 1, &id, -1);
+		/*gtk_tree_model_get((tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore), &users_iter, 2, &k, -1);*/
+		gdk_pixbuf_unref(image);
+		g_free(id);
+		/*GGaduContact_free(k);*/
+		
+		if (tree)
 			valid = gtk_tree_store_remove(GTK_TREE_STORE(users_treestore), &users_iter);
-			gdk_pixbuf_unref(image);
+		else
+			valid = gtk_list_store_remove(GTK_LIST_STORE(gp->users_liststore), &users_iter);
+/*
+		if (!tree)
+		{
+			g_free(g_object_get_data(G_OBJECT(gp->users_liststore), "plugin_name"));
+			gtk_list_store_clear(gp->users_liststore);
 		}
+*/
 	}
 }
 
@@ -641,17 +657,18 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 {
 	GtkTreeIter parent_iter;
 	GtkTreeIter users_iter;
-	GSList *tmplist;
+	GSList *tmplist = NULL;
 
 	g_return_if_fail(gp != NULL);
-
-	tmplist = gp->userlist;
 
 	gui_user_view_clear(gp);
 
 	if (tree)
+	{
 		gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(users_treestore), &parent_iter, gp->tree_path);
+	}
 
+	tmplist = gp->userlist;
 	while (tmplist)
 	{
 		GGaduContact *k = tmplist->data;

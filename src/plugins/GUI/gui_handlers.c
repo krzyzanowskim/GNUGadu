@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.50 2004/02/17 09:29:54 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.51 2004/02/17 23:20:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -266,6 +266,7 @@ void handle_send_userlist(GGaduSignal * signal)
 
 	if (gp && (gp->users_liststore || users_treestore))
 	{
+		g_slist_free(gp->userlist);
 		gp->userlist = ggadu_repo_get_as_slist(signal->source_plugin_name, REPO_VALUE_CONTACT);
 		gui_user_view_add_userlist(gp);
 	}
