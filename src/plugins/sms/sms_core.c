@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.18 2003/09/27 18:06:38 shaster Exp $ */
+/* $Id: sms_core.c,v 1.19 2003/10/28 02:59:51 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -629,7 +629,7 @@ void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_num
     case SMS_IDEA:
 	if (external)
 	{
-	    sms_warning(sms_number, _("IDEA does not work this way!"));
+	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ", sms_sender, "\"", NULL));
 	    return;
 	}
 	else
