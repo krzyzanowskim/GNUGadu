@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.11 2003/12/13 14:32:04 thrulliq Exp $ */
+/* $Id: signals.c,v 1.12 2003/12/20 21:06:23 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -46,7 +46,7 @@ GGaduSignal *signal_cpy(GGaduSignal *sig)
 
 /*
  * tylko wrzuca signal do listy signali funkcje zwalniajaca signal 
- * BUL? kiedy zdejmowac to z listy? nie wiem, a moze przybic to dosignala ? a moze nie
+ * BOL? kiedy zdejmowac to z listy? nie wiem, a moze przybic to dosignala ? a moze nie
  */
 GGaduSigID register_signal(GGaduPlugin * plugin_handler, gpointer name)
 {
