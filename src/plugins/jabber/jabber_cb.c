@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.59 2004/08/31 11:16:51 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.60 2004/08/31 11:28:07 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -69,7 +69,6 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 	}
 
 	g_static_mutex_unlock(&connect_mutex);
-	g_thread_exit(0);
 }
 
 LmHandlerResult register_register_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * msg,
