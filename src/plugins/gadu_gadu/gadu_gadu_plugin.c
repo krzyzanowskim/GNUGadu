@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.79 2003/06/26 21:44:55 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.80 2003/08/23 20:44:56 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -460,11 +460,20 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		struct gg_dcc *d = NULL;
 		gchar *idtmp = g_strdup_printf ("%d", e->event.msg.sender);
 		gchar **addr_arr = NULL;
-		GGaduContact *k = NULL;
+		gpointer key = NULL,index = NULL;
+		GGaduContact *k = NULL, *ktmp = NULL;
 
 		print_debug ("somebody want to send us a file\n");
 
-		k = ggadu_repo_find_value ("gadu-gadu", idtmp);
+		//k = ggadu_repo_find_value ("gadu-gadu", idtmp);
+  		index = ggadu_repo_value_first ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *)&key);
+		while (index) {
+			ktmp = ggadu_repo_find_value ("gadu-gadu", key);
+			if (ktmp && (!g_strcasecmp(ktmp->id,idtmp))) k = ktmp;
+			index = ggadu_repo_value_next ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *)&key, index);
+		}
+
+		if (k == NULL) return TRUE;
 
 		addr_arr = g_strsplit (k->ip, ":", 2);
 
