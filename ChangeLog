@@ -1,3 +1,6 @@
+20.05.2003
+- use global sound configuration to notify about new messages (GUI/zapal)
+
 19.05.2003
 - fixed reason encoding in config (gadu-gadu/shasta)
 
