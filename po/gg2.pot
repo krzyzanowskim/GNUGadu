@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-07-01 12:31+0200\n"
+"POT-Creation-Date: 2003-09-12 12:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,19 +15,29 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:60
+#: src/main.c:61
 msgid "Cannot open any modules directory\n"
 msgstr ""
 
-#: src/main.c:70
+#: src/main.c:72
 #, c-format
 msgid "Unable to open directory with plugins (%s)\n"
 msgstr ""
 
 #. zaladowanie plugina
-#: src/main.c:82
+#: src/main.c:85
 #, c-format
 msgid "Cannot load plugin %s\n"
+msgstr ""
+
+#: lib/plugins.c:107
+#, c-format
+msgid "core: %s have no %s: %s\n"
+msgstr ""
+
+#: lib/plugins.c:180
+#, c-format
+msgid "core : trying to unload not loaded plugin %s\n"
 msgstr ""
 
 #: src/plugins/GUI/GUI_plugin.c:171
@@ -65,20 +75,20 @@ msgstr ""
 msgid "New message from %s"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:498 src/plugins/GUI/gui_search.c:167
+#: src/plugins/GUI/gui_chat.c:500 src/plugins/GUI/gui_search.c:167
 msgid "_Close"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:754
+#: src/plugins/GUI/gui_chat.c:756
 msgid "Chat Window"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:830 src/plugins/GUI/gui_userview.c:459
+#: src/plugins/GUI/gui_chat.c:833 src/plugins/GUI/gui_userview.c:459
 #, c-format
 msgid "Talking to %s (%s) %s"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:833
+#: src/plugins/GUI/gui_chat.c:836
 #, c-format
 msgid "Talking to %s"
 msgstr ""
@@ -86,209 +96,209 @@ msgstr ""
 #.
 #. * buttons
 #.
-#: src/plugins/GUI/gui_chat.c:950
+#: src/plugins/GUI/gui_chat.c:954
 msgid "_Send"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:957
+#: src/plugins/GUI/gui_chat.c:961
 msgid "S_tick"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1086
+#: src/plugins/GUI/gui_chat.c:1090
 #, c-format
 msgid "Me :: %s ::\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:118
+#: src/plugins/GUI/gui_preferences.c:146
 msgid "Enable"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:128
+#: src/plugins/GUI/gui_preferences.c:153
 msgid "Plugin name"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:157 src/plugins/GUI/gui_dialogs.c:133
+#: src/plugins/GUI/gui_preferences.c:179 src/plugins/GUI/gui_dialogs.c:133
 msgid "Select color"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:195
+#: src/plugins/GUI/gui_preferences.c:220
 msgid ""
 "\n"
 "Colors settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:200 src/plugins/GUI/gui_preferences.c:316
+#: src/plugins/GUI/gui_preferences.c:225 src/plugins/GUI/gui_preferences.c:345
 msgid "Incoming messages"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:206 src/plugins/GUI/gui_preferences.c:238
-#: src/plugins/GUI/gui_preferences.c:322 src/plugins/GUI/gui_preferences.c:354
+#: src/plugins/GUI/gui_preferences.c:231 src/plugins/GUI/gui_preferences.c:263
+#: src/plugins/GUI/gui_preferences.c:351 src/plugins/GUI/gui_preferences.c:383
 msgid "Message header"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:219 src/plugins/GUI/gui_preferences.c:251
-#: src/plugins/GUI/gui_preferences.c:335 src/plugins/GUI/gui_preferences.c:367
+#: src/plugins/GUI/gui_preferences.c:244 src/plugins/GUI/gui_preferences.c:276
+#: src/plugins/GUI/gui_preferences.c:364 src/plugins/GUI/gui_preferences.c:396
 msgid "Message body"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:232 src/plugins/GUI/gui_preferences.c:348
+#: src/plugins/GUI/gui_preferences.c:257 src/plugins/GUI/gui_preferences.c:377
 msgid "Outgoing messages"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:274 src/plugins/GUI/gui_dialogs.c:111
+#: src/plugins/GUI/gui_preferences.c:299 src/plugins/GUI/gui_dialogs.c:111
 msgid "Select font"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:311
+#: src/plugins/GUI/gui_preferences.c:340
 msgid ""
 "\n"
 "Fonts settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:380
+#: src/plugins/GUI/gui_preferences.c:409
 msgid "Contact list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:386
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1677 src/plugins/sms/sms_gui.c:206
+#: src/plugins/GUI/gui_preferences.c:415
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1690 src/plugins/sms/sms_gui.c:209
 msgid "Contact"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:399
+#: src/plugins/GUI/gui_preferences.c:428
 msgid "Protocol (tree view)"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:423 src/plugins/GUI/gui_dialogs.c:88
+#: src/plugins/GUI/gui_preferences.c:452 src/plugins/GUI/gui_dialogs.c:88
 msgid "Select file"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:456
+#: src/plugins/GUI/gui_preferences.c:486
 msgid ""
 "\n"
 "Sound settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:461
+#: src/plugins/GUI/gui_preferences.c:491
 msgid "Messages"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:467
+#: src/plugins/GUI/gui_preferences.c:497
 msgid "Incoming message:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:480
+#: src/plugins/GUI/gui_preferences.c:510
 msgid "Outgoing message:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:532
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1439
-#: src/plugins/tlen/tlen_plugin.c:701 src/plugins/xosd/plugin_xosd.c:360
+#: src/plugins/GUI/gui_preferences.c:564
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1452
+#: src/plugins/tlen/tlen_plugin.c:701 src/plugins/xosd/plugin_xosd.c:397
 #: src/plugins/jabber/jabber_plugin.c:561
-#: src/plugins/remote/remote_plugin.c:636 src/plugins/sms/sms_gui.c:158
+#: src/plugins/remote/remote_plugin.c:636 src/plugins/sms/sms_gui.c:159
 #: src/plugins/update/update_plugin.c:286
 msgid "Preferences"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:559
+#: src/plugins/GUI/gui_preferences.c:583
 msgid "General"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:562
+#: src/plugins/GUI/gui_preferences.c:585
 msgid "Sound"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:565
+#: src/plugins/GUI/gui_preferences.c:587
 msgid "Colors"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:568
+#: src/plugins/GUI/gui_preferences.c:589
 msgid "Fonts"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:572
+#: src/plugins/GUI/gui_preferences.c:591
 msgid "Plugins manager"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:579
+#: src/plugins/GUI/gui_preferences.c:598
 msgid ""
 "\n"
 "GUI plugin preferences\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:587
+#: src/plugins/GUI/gui_preferences.c:606
 msgid "Enable emoticons"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:590
+#: src/plugins/GUI/gui_preferences.c:609
 msgid "Show only active users"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:593
+#: src/plugins/GUI/gui_preferences.c:612
 msgid "Tree user list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:596
+#: src/plugins/GUI/gui_preferences.c:615
 msgid "Expand Tree by default"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:601
+#: src/plugins/GUI/gui_preferences.c:620
 msgid "Tabbed chat window style"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:604
+#: src/plugins/GUI/gui_preferences.c:623
 msgid "Automatically show chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:607
+#: src/plugins/GUI/gui_preferences.c:626
 msgid "Automatically raise chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:610
+#: src/plugins/GUI/gui_preferences.c:629
 msgid "Send messages after 'Enter' button pressed"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:613
+#: src/plugins/GUI/gui_preferences.c:632
 msgid "Notify about new messages via XOSD"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:616
+#: src/plugins/GUI/gui_preferences.c:635
 msgid "Auto hide on start"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:619
+#: src/plugins/GUI/gui_preferences.c:638
 msgid "Blink status"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:622
+#: src/plugins/GUI/gui_preferences.c:641
 msgid "Auto away"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:628
+#: src/plugins/GUI/gui_preferences.c:647
 msgid "Blink interval"
 msgstr ""
 
 #. ZONK - how to name it ?
-#: src/plugins/GUI/gui_preferences.c:636
+#: src/plugins/GUI/gui_preferences.c:655
 msgid "Chat window split size (%)"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:643
+#: src/plugins/GUI/gui_preferences.c:662
 msgid "Select Theme"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:649
+#: src/plugins/GUI/gui_preferences.c:668
 msgid "Select icon set"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:654
+#: src/plugins/GUI/gui_preferences.c:673
 msgid "Auto away interval (minutes)"
 msgstr ""
 
-#: src/plugins/GUI/gui_main.c:135
+#: src/plugins/GUI/gui_main.c:132
 msgid "Unable to read configuration file for plugin GUI"
 msgstr ""
 
@@ -296,7 +306,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/plugins/GUI/gui_search.c:28 src/plugins/sms/sms_gui.c:80
+#: src/plugins/GUI/gui_search.c:28 src/plugins/sms/sms_gui.c:78
 msgid "Id"
 msgstr ""
 
@@ -313,9 +323,9 @@ msgid "Age"
 msgstr ""
 
 #: src/plugins/GUI/gui_search.c:105
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1678
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1691
 #: src/plugins/tlen/tlen_plugin.c:764 src/plugins/jabber/jabber_plugin.c:160
-#: src/plugins/sms/sms_gui.c:207
+#: src/plugins/sms/sms_gui.c:210
 msgid "Add"
 msgstr ""
 
@@ -360,10 +370,10 @@ msgid ""
 "Pawel Jan Maczewski\n"
 "\n"
 "<b>Thanks to:</b>\n"
-"Dwuziu\n"
 "Aflinta\n"
 "GammaRay\n"
 "Plavi\n"
+"Dwuziu\n"
 "see AUTHORS file for details\n"
 "\n"
 "<i>Compile time:\n"
@@ -408,320 +418,320 @@ msgstr ""
 msgid "Connection failed"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:670
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:683
 #: src/plugins/tlen/tlen_plugin.c:416
 msgid "Program is about to leave"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:780
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:797
-#: src/plugins/tlen/tlen_plugin.c:491 src/plugins/sms/sms_gui.c:82
-#: src/plugins/sms/sms_gui.c:97
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:793
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:810
+#: src/plugins/tlen/tlen_plugin.c:491 src/plugins/sms/sms_gui.c:79
+#: src/plugins/sms/sms_gui.c:94
 msgid "Nick"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:781
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:798
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:794
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:811
 msgid "First Name"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:782
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:799
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:795
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:812
 msgid "Last Name"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:783
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:800
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:796
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:813
 msgid "Phone"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:830
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:843
 msgid "Gadu-gadu plugin configuration"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:835
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:848
 #: src/plugins/tlen/tlen_plugin.c:682 src/plugins/jabber/jabber_plugin.c:533
 msgid "Password"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:837
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:850
 msgid "Server (optional)"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:840
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:853
 msgid ""
 "Proxy server (optional)\n"
 "[user:pass@]host.com[:80]"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:846
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:859
 msgid "Default reason"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:848
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:861
 msgid "Log chats to history file"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:850
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:863
 #: src/plugins/tlen/tlen_plugin.c:684 src/plugins/jabber/jabber_plugin.c:536
 msgid "Autoconnect on startup"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:852
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:865
 #: src/plugins/tlen/tlen_plugin.c:686
 msgid "Autoconnect status"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:854
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:867
 msgid "Available only for friends"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:856
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:869
 msgid "Enable DCC"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:858
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:871
 msgid "Sound file (app)"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:860
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:873
 msgid "Sound file (chat)"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:862
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:875
 msgid "Sound file (msg)"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:878
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:891
 #: src/plugins/tlen/tlen_plugin.c:629 src/plugins/jabber/jabber_plugin.c:499
 msgid "You have to be connected to perform searching!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:883
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2249
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:896
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2262
 #: src/plugins/tlen/tlen_plugin.c:636 src/plugins/tlen/tlen_plugin.c:1072
 msgid "female"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:884
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2251
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:897
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2264
 #: src/plugins/tlen/tlen_plugin.c:637 src/plugins/tlen/tlen_plugin.c:1074
 msgid "male"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:888
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:901
 msgid "Gadu-Gadu search"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:890
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:903
 #: src/plugins/tlen/tlen_plugin.c:644 src/plugins/jabber/jabber_protocol.c:136
 msgid "First name:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:891
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:904
 #: src/plugins/tlen/tlen_plugin.c:645 src/plugins/jabber/jabber_protocol.c:138
 msgid "Last name:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:892
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:905
 #: src/plugins/tlen/tlen_plugin.c:646 src/plugins/jabber/jabber_protocol.c:140
 msgid "Nick:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:893
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:906
 #: src/plugins/tlen/tlen_plugin.c:647
 msgid "City:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:894
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:907
 msgid "Birthyear:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:895
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:908
 #: src/plugins/tlen/tlen_plugin.c:648
 msgid "Gender:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:896
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:909
 msgid "GG#"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:897
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:910
 msgid "Search only for active users"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1060
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1073
 msgid "Userlist has been imported succesfully!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1063
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1076
 msgid "Server returned empty userlist!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1073
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1086
 msgid "Userlist export succeeded!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1075
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1088
 msgid "Userlist export failed!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1082
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1095
 msgid "Userlist delete succeeded!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1084
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1097
 msgid "Userlist delete failed!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1321
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1334
 #, c-format
 msgid "File %s received succesful"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1325
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1338
 msgid "File sent succesful"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1340
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1351
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1353
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1364
 msgid "File refused"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1396
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1412
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1409
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1425
 msgid "You cannot send file to this person"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1419
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1432
 #, c-format
 msgid "Sending File to %s"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1422
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1435
 msgid "Select File :"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1438
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1451
 #: src/plugins/tlen/tlen_plugin.c:700 src/plugins/jabber/jabber_plugin.c:557
-#: src/plugins/sms/sms_gui.c:157
+#: src/plugins/sms/sms_gui.c:158
 msgid "Add Contact"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1440
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1453
 #: src/plugins/tlen/tlen_plugin.c:702 src/plugins/jabber/jabber_plugin.c:559
 msgid "Search for friends"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1442
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1455
 msgid "Import userlist"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1443
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1456
 msgid "Export userlist"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1444
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1457
 msgid "Delete userlist"
 msgstr ""
 
 #. wazne zeby wywolac to makro w tym miejscu
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1480
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1493
 msgid "Gadu-Gadu(c) protocol"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1516
-#: src/plugins/xosd/plugin_xosd.c:468
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1529
+#: src/plugins/xosd/plugin_xosd.c:505
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1534
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1547
 #: src/plugins/tlen/tlen_plugin.c:557 src/plugins/jabber/jabber_plugin.c:449
 msgid "Available"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1541
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1554
 msgid "Available with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1548
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1561
 msgid "Busy"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1555
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1568
 msgid "Busy with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1562
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1575
 #: src/plugins/tlen/tlen_plugin.c:587
 msgid "Invisible"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1569
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1582
 msgid "Invisible with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1576
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1589
 msgid "Offline with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1583
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1596
 msgid "Offline"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1590
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1603
 msgid "Blocked"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1643
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1656
 msgid "no reason"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1667
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1680
 #: src/plugins/tlen/tlen_plugin.c:761 src/plugins/jabber/jabber_plugin.c:159
 msgid "Chat"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1672
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1685
 msgid "View History"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1675
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1688
 msgid "Send File"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1679
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1692
 #: src/plugins/tlen/tlen_plugin.c:765 src/plugins/jabber/jabber_plugin.c:162
-#: src/plugins/sms/sms_gui.c:208
+#: src/plugins/sms/sms_gui.c:211
 msgid "Remove"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1680
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1693
 msgid "Info"
 msgstr ""
 
 #. end
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1932
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1945
 #: src/plugins/tlen/tlen_plugin.c:828 src/plugins/jabber/jabber_plugin.c:228
 msgid "Enter status description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1934
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1947
 #: src/plugins/tlen/tlen_plugin.c:832 src/plugins/jabber/jabber_plugin.c:230
 msgid "Description:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1949
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1962
 msgid "Unable to change status"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2142
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2169
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2155
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2182
 msgid "Unable send message"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2153
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2166
 #, c-format
 msgid ""
 ":: Me (%s)::\n"
@@ -729,7 +739,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2175
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2188
 #, c-format
 msgid ""
 ":: Me (%s) ::\n"
@@ -737,12 +747,12 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2271
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2284
 #: src/plugins/tlen/tlen_plugin.c:1092
 msgid "Error! Cannot perform search!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2328
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2341
 msgid "I still cannot open contacts files! Exiting..."
 msgstr ""
 
@@ -822,55 +832,53 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:332
-msgid "X OSD Preferences"
+#: src/plugins/xosd/plugin_xosd.c:371
+msgid "XOSD Preferences"
 msgstr ""
 
 #. *INDENT-OFF*
-#: src/plugins/xosd/plugin_xosd.c:337
+#: src/plugins/xosd/plugin_xosd.c:376
 msgid "Timestamp"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:338
+#: src/plugins/xosd/plugin_xosd.c:377
 msgid "Colour"
 msgstr ""
 
-#. not yet
-#. ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
-#.
-#: src/plugins/xosd/plugin_xosd.c:342
+#.    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
+#: src/plugins/xosd/plugin_xosd.c:379
 msgid "Alignment"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:343
+#: src/plugins/xosd/plugin_xosd.c:380
 msgid "Position"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:344
+#: src/plugins/xosd/plugin_xosd.c:381
 msgid "Number of lines"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:345
+#: src/plugins/xosd/plugin_xosd.c:382
 msgid "Timeout"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:346
+#: src/plugins/xosd/plugin_xosd.c:383
 msgid "Horizontal offset"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:347
+#: src/plugins/xosd/plugin_xosd.c:384
 msgid "Vertical offset"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:348
+#: src/plugins/xosd/plugin_xosd.c:385
 msgid "Shadow offset"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:361
+#: src/plugins/xosd/plugin_xosd.c:398
 msgid "Show messages"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:437
+#: src/plugins/xosd/plugin_xosd.c:474
 msgid "On Screen Display"
 msgstr ""
 
@@ -883,7 +891,7 @@ msgstr ""
 msgid "Nickname"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:161 src/plugins/sms/sms_gui.c:209
+#: src/plugins/jabber/jabber_plugin.c:161 src/plugins/sms/sms_gui.c:212
 msgid "Edit"
 msgstr ""
 
@@ -998,81 +1006,122 @@ msgstr ""
 msgid "Unable to read config file for plugin remote"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:88
+#: src/plugins/sms/sms_core.c:139
 msgid "IDEA token"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:93
+#: src/plugins/sms/sms_core.c:144
 msgid "Enter token text"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:261
+#: src/plugins/sms/sms_core.c:306
 msgid "Please enter token"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:271 src/plugins/sms/sms_core.c:292
-#: src/plugins/sms/sms_core.c:644
+#: src/plugins/sms/sms_core.c:316 src/plugins/sms/sms_core.c:337
+#: src/plugins/sms/sms_core.c:710
 msgid "Cannot connect!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:299 src/plugins/sms/sms_core.c:628
+#: src/plugins/sms/sms_core.c:346 src/plugins/sms/sms_core.c:679
 msgid "SMS has been sent"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:306
+#: src/plugins/sms/sms_core.c:353
+msgid "SMS has NOT been sent!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:360
 msgid "Bad token entered!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:313 src/plugins/sms/sms_core.c:638
+#: src/plugins/sms/sms_core.c:367 src/plugins/sms/sms_core.c:704
 msgid "Daily limit exceeded!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:320 src/plugins/sms/sms_core.c:641
+#: src/plugins/sms/sms_core.c:374 src/plugins/sms/sms_core.c:707
 msgid "Gateway error!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:327
+#: src/plugins/sms/sms_core.c:381
 msgid "Service not activated!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:334
+#: src/plugins/sms/sms_core.c:388
 msgid "Invalid number"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:533
+#: src/plugins/sms/sms_core.c:505
+#, c-format
+msgid "SMS has been sent. Left: %s"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:570
 msgid "None"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:535
+#: src/plugins/sms/sms_core.c:572
 msgid "SMS plugin : "
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:557
+#: src/plugins/sms/sms_core.c:595
 msgid "Specify recipient number!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:563
+#: src/plugins/sms/sms_core.c:601
 msgid "Specify sender name!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:569
+#: src/plugins/sms/sms_core.c:607
 msgid "Message is empty!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:585
+#: src/plugins/sms/sms_core.c:623
 msgid "IDEA does not work this way!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:616
+#: src/plugins/sms/sms_core.c:652
+msgid "Empty Era login!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:658
+msgid "Empty Era password!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:667
 msgid "Invalid number!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:622
+#: src/plugins/sms/sms_core.c:673
 msgid "SMS not delivered!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:635
+#: src/plugins/sms/sms_core.c:686
+msgid "Unauthorized!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:689
+msgid "Access denied!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:692
+msgid "Syntax error!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:695
+msgid "Invalid recipient!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:698
+msgid "Message too long!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:701
 msgid "Token not found!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:713
+msgid "Unknown error!"
 msgstr ""
 
 #: src/plugins/sms/sms_gui.c:54
@@ -1083,57 +1132,67 @@ msgstr ""
 msgid "Use \"SMS\" program to send"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:60 src/plugins/sms/sms_gui.c:142
-#: src/plugins/sms/sms_gui.c:275
+#: src/plugins/sms/sms_gui.c:59 src/plugins/sms/sms_gui.c:139
+#: src/plugins/sms/sms_gui.c:286
 msgid "Sender"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:63
+#: src/plugins/sms/sms_gui.c:60 src/plugins/sms/sms_gui.c:143
+#: src/plugins/sms/sms_gui.c:292
+msgid "Era login"
+msgstr ""
+
+#: src/plugins/sms/sms_gui.c:61 src/plugins/sms/sms_gui.c:145
+#: src/plugins/sms/sms_gui.c:294
+msgid "Era password"
+msgstr ""
+
+#: src/plugins/sms/sms_gui.c:62
 msgid "Show plugin in status list (needs reload)"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:83 src/plugins/sms/sms_gui.c:98
-#: src/plugins/sms/sms_gui.c:277
+#: src/plugins/sms/sms_gui.c:80 src/plugins/sms/sms_gui.c:95
+#: src/plugins/sms/sms_gui.c:288
 msgid "Number"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:131
+#: src/plugins/sms/sms_gui.c:128
 msgid "No phone number"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:136
+#: src/plugins/sms/sms_gui.c:133
 msgid "Send to : "
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:140
+#: src/plugins/sms/sms_gui.c:137
 msgid "Use external program"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:144 src/plugins/sms/sms_gui.c:279
+#: src/plugins/sms/sms_gui.c:141 src/plugins/sms/sms_gui.c:290
 msgid "Message"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:169
+#: src/plugins/sms/sms_gui.c:170
 msgid "SMS sender"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:185
+#: src/plugins/sms/sms_gui.c:188
 msgid "Unable to read config file for plugin sms"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:204 src/plugins/sms/sms_gui.c:501
+#: src/plugins/sms/sms_gui.c:207 src/plugins/sms/sms_gui.c:528
 msgid "Send SMS"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:272
+#: src/plugins/sms/sms_gui.c:283
 msgid "SMS Send"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:451
+#: src/plugins/sms/sms_gui.c:478
 msgid "Send SMS (internal)"
 msgstr ""
 
-#: src/plugins/sms/sms_gui.c:457
+#: src/plugins/sms/sms_gui.c:484
 msgid "Send SMS (external)"
 msgstr ""
 
