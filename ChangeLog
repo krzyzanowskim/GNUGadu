@@ -1,3 +1,6 @@
+27.01.2004
+- hopefully fixed '<unknown>' on some panels with window groupping turned on (core/shasta)
+
 26.01.2004
 - added ability to register new gadu-gadu account [uses threads] (gadu-gadu/shasta)
 - pure gettext instead intltool (krzak)

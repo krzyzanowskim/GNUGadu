@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.15 2004/01/17 00:44:59 shaster Exp $ */
+/* $Id: main.c,v 1.16 2004/01/27 17:24:16 shaster Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -188,6 +188,8 @@ int main(int argc, char **argv)
 #endif
     signal(SIGPIPE, SIG_IGN);
     signal(SIGCHLD, sigchld);
+
+    g_set_application_name(_("GNU Gadu 2"));
 
     g_thread_init(NULL);
     gnu_gadu_init(NULL);
