@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.18 2004/12/26 22:23:19 shaster Exp $ */
+/* $Id: dbus_plugin.c,v 1.19 2005/01/10 09:39:11 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -58,10 +58,10 @@ static DBusHandlerResult ofi_getPresence(DBusConnection * connection, DBusMessag
 		GSList *plugins = config->loaded_plugins;
 
 		/* get contactURIhandler from contactURI */
-		URItab = g_strsplit(contactURI, "://", 2);
+		URItab = g_strsplit(contactURI, ":", 2);
 		if (URItab)
 		{
-			contactURIhandler = g_strconcat(URItab[0], "://", NULL);
+			contactURIhandler = g_strconcat(URItab[0], ":", NULL);
 			contactURIdata = URItab[1];
 		}
 		else
@@ -186,10 +186,10 @@ static DBusHandlerResult ofi_openChat(DBusConnection * connection, DBusMessage *
 		GSList *plugins = config->loaded_plugins;
 
 		/* get contactURIhandler from contactURI */
-		URItab = g_strsplit(contactURI, "://", 2);
+		URItab = g_strsplit(contactURI, ":", 2);
 		if (URItab)
 		{
-			contactURIhandler = g_strconcat(URItab[0], "://", NULL);
+			contactURIhandler = g_strconcat(URItab[0], ":", NULL);
 			contactURIdata = URItab[1];
 		}
 		else
