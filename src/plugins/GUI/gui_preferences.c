@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.87 2004/12/27 12:12:22 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.88 2004/12/30 03:06:42 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -966,6 +966,7 @@ void gui_preferences(GtkWidget * widget, gpointer data
 					    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
 
 	gtk_window_set_resizable(GTK_WINDOW(preferences), FALSE);
+	gtk_container_set_border_width(GTK_CONTAINER(preferences),2);
 
 	if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL)
 	{
