@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.49 2003/05/09 19:45:09 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.50 2003/05/10 11:45:21 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -73,6 +73,7 @@ void ggadu_gadu_gadu_disconnect()
     session = NULL;
     signal_emit(GGadu_PLUGIN_NAME, "gui disconnected",NULL,"main-gui");
 
+    ggadu_repo_disable_notification ();
     while (tmplist) {
 	GGaduContact *k = tmplist->data;
 	fprintf(stderr, "\t%s\n", k->id);
@@ -80,6 +81,7 @@ void ggadu_gadu_gadu_disconnect()
 	ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 	tmplist = tmplist->next;
     }
+    ggadu_repo_enable_notification ();
 }
 
 void ggadu_gadu_gadu_disconnect_msg(gchar *txt)
