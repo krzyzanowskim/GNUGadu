@@ -71,13 +71,19 @@ void jabber_login (enum states status)
 
     if (!iq_handler) iq_handler = lm_message_handler_new (iq_cb, NULL, NULL);
     if (!iq_roster_handler) iq_roster_handler = lm_message_handler_new (iq_roster_cb, NULL, NULL);
+    if (!iq_version_handler) iq_version_handler = lm_message_handler_new (iq_version_cb, NULL, NULL);
     if (!presence_handler) presence_handler = lm_message_handler_new (presence_cb, NULL, NULL);
     if (!message_handler) message_handler = lm_message_handler_new (message_cb, NULL, NULL);
 
     lm_connection_register_message_handler (connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ,
 	LM_HANDLER_PRIORITY_FIRST);
+
+    lm_connection_register_message_handler (connection, iq_version_handler, LM_MESSAGE_TYPE_IQ,
+	LM_HANDLER_PRIORITY_NORMAL); 
+
     lm_connection_register_message_handler (connection, iq_handler, LM_MESSAGE_TYPE_IQ,
 	LM_HANDLER_PRIORITY_NORMAL);
+
 
     if (!lm_connection_open (connection,
 	  (LmResultFunction) connection_open_result_cb, (gint *)status, NULL, NULL))

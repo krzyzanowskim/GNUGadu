@@ -20,6 +20,7 @@ LmConnection *connection;
 
 LmMessageHandler *iq_handler;
 LmMessageHandler *iq_roster_handler;
+LmMessageHandler *iq_version_handler;
 LmMessageHandler *presence_handler;
 LmMessageHandler *message_handler;
 
@@ -158,7 +159,7 @@ gpointer user_edit_action (gpointer user_data)
 		return NULL;
 
 	k = (GGaduContact *) user->data;
-	ggadu_dialog_add_entry (&optlist, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, k->id, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry (&optlist, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, k->id, VAR_FLAG_INSENSITIVE);
 	ggadu_dialog_add_entry (&optlist, GGADU_NICK, _("Nickname"), VAR_STR, k->nick, VAR_FLAG_NONE);
 
 	signal_emit (GGadu_PLUGIN_NAME, "gui add user window", optlist, "main-gui");

@@ -51,6 +51,7 @@ extern LmConnection *connection;
 
 extern LmMessageHandler *iq_handler;
 extern LmMessageHandler *iq_roster_handler;
+extern LmMessageHandler *iq_version_handler;
 extern LmMessageHandler *presence_handler;
 extern LmMessageHandler *message_handler;
 
