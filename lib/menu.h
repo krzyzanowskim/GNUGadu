@@ -1,3 +1,5 @@
+/* $Id: menu.h,v 1.2 2003/06/09 18:24:36 shaster Exp $ */
+
 #ifndef GGadu_MENU_H
 #define GGadu_MENU_H 1
 

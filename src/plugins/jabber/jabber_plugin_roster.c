@@ -1,3 +1,5 @@
+/* $Id: jabber_plugin_roster.c,v 1.12 2003/06/09 18:24:35 shaster Exp $ */
+
 #include <iksemel.h>
 
 #include "gg-types.h"

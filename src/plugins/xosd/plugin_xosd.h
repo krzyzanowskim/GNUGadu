@@ -1,4 +1,4 @@
-/* $Id */
+/* $Id: plugin_xosd.h,v 1.2 2003/06/09 18:24:33 shaster Exp $ */
 #include <glib.h>
 
 gint set_configuration ();

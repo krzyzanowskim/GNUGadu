@@ -1,3 +1,5 @@
+/* $Id: jabber_plugin_roster.h,v 1.2 2003/06/09 18:24:35 shaster Exp $ */
+
 #ifndef JABBER_PLUGIN_ROSTER_H
 #define JABBER_PLUGIN_ROSTER_H 1
 

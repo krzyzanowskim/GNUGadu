@@ -1,3 +1,5 @@
+/* $Id: perl_embed.h,v 1.2 2003/06/09 18:24:36 shaster Exp $ */
+
 #ifndef GGadu_PERL_EMBED_H
 #define GGadu_PERL_EMBED_H 1
 

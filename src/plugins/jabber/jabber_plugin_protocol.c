@@ -1,13 +1,16 @@
+/* $Id: jabber_plugin_protocol.c,v 1.6 2003/06/09 18:24:35 shaster Exp $ */
+
 /*
-** Jabber Plugin for GNU Gadu 2 2002-2003 Marcin Krzyzanowski <krzak@linux.net.pl>
-**
-** Parts of code from :
-** JabberX (Jabber Client)
-** Copyright (c) 1999-2001 Gurer Ozen <palpa@jabber.org>
-**
-** This code is free software; you can redistribute it and/or
-** modify it under the terms of the GNU General Public License.
-*/
+ * Jabber Plugin for GNU Gadu 2 2002-2003 Marcin Krzyzanowski <krzak@linux.net.pl>
+ *
+ * Parts of code from :
+ * JabberX (Jabber Client)
+ * Copyright (c) 1999-2001 Gurer Ozen <palpa@jabber.org>
+ *
+ * This code is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License.
+ */
+
 #include <iksemel.h>
 
 #include "gg-types.h"

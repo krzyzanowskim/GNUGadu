@@ -1,15 +1,18 @@
+/* $Id: jabber_plugin.c,v 1.21 2003/06/09 18:24:35 shaster Exp $ */
+
 /*
-** Jabber protocol plugin for GNU Gadu 2
-** Marcin Krzyzanowski Copyright (c) 2002-2003
-**
-** Based on code from:
-** JabberX (Jabber Client)
-** Copyright (c) 1999-2001 Gurer Ozen <palpa@jabber.org>
-**
-** This code is free software; you can redistribute it and/or
-** modify it under the terms of the GNU General Public License.
-**
-*/
+ * Jabber protocol plugin for GNU Gadu 2
+ * Marcin Krzyzanowski Copyright (c) 2002-2003
+ *
+ * Based on code from:
+ * JabberX (Jabber Client)
+ * Copyright (c) 1999-2001 Gurer Ozen <palpa@jabber.org>
+ *
+ * This code is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License.
+ *
+ */
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif

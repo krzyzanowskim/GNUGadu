@@ -1,12 +1,14 @@
+/* $Id: sms_core.c,v 1.10 2003/06/09 18:24:34 shaster Exp $ */
+
 /*
-** Sms send plugin for GNU Gadu 2
-** Bartlomiej Pawlak Copyright (c) 2003
-**
-**
-** This code is free software; you can redistribute it and/or
-** modify it under the terms of the GNU General Public License.
-**
-*/
+ * Sms send plugin for GNU Gadu 2
+ * Bartlomiej Pawlak Copyright (c) 2003
+ *
+ *
+ * This code is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License.
+ */
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif

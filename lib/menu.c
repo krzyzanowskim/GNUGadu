@@ -1,3 +1,5 @@
+/* $Id: menu.c,v 1.2 2003/06/09 18:24:36 shaster Exp $ */
+
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>

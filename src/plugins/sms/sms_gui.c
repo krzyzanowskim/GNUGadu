@@ -1,12 +1,15 @@
+/* $Id: sms_gui.c,v 1.18 2003/06/09 18:24:34 shaster Exp $ */
+
 /*
-** Sms gui plugin for GNU Gadu 2
-** Bartlomiej Pawlak Copyright (c) 2003
-**
-**
-** This code is free software; you can redistribute it and/or
-** modify it under the terms of the GNU General Public License.
-**
-*/
+ * Sms gui plugin for GNU Gadu 2
+ * Bartlomiej Pawlak Copyright (c) 2003
+ *
+ *
+ * This code is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License.
+ *
+ */
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif

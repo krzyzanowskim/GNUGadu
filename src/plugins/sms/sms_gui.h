@@ -1,3 +1,5 @@
+/* $Id: sms_gui.h,v 1.3 2003/06/09 18:24:34 shaster Exp $ */
+
 #ifndef SMS_PLUGIN_H
 #define SMS_PLUGIN_H 1
 

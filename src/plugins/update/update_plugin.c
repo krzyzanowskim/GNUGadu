@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.4 2003/06/09 00:20:46 krzyzak Exp $ */
+/* $Id: update_plugin.c,v 1.5 2003/06/09 18:24:32 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -48,7 +48,7 @@ int update_use_xosd(void)
  * returns pointer to version string
  * HEAVILY RELIES ON SF.NET's RSS LAYOUT.
  */
-gchar *update_get_current_version(int show)
+gchar *update_get_current_version(gboolean show)
 {
     int sock_r, sock_s, i = 0;
     struct hostent *h;
@@ -179,16 +179,16 @@ gchar *update_get_current_version(int show)
 
     print_debug("%s : Server returned version ,,%s''\n", GGadu_PLUGIN_NAME, reply);
 
-    if (reply && strlen(reply) > 0)
+    if (reply)
 	return reply;
     else
 	return NULL;
 }
 
-/* compares. show == 0 will disable any gui/xosd notices
+/* compares. show == FALSE will disable any gui/xosd notices
  * returns -1 on error, 0 if no updates found, 1 if update found
  */
-int update_check_real(int show)
+int update_check_real(gboolean show)
 {
     gchar *reply = update_get_current_version(show);
     gchar *version = NULL;
@@ -209,11 +209,11 @@ int update_check_real(int show)
 	if (show)
 	{
 	    if (update_use_xosd())
-		signal_emit(GGadu_PLUGIN_NAME, "xosd show message",
-			    g_strdup_printf(_("Update available: %s"), (reply ? reply : _("[error]"))), "xosd");
+		signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Update available: %s"), reply),
+			    "xosd");
 	    else
-		signal_emit(GGadu_PLUGIN_NAME, "gui show message",
-			    g_strdup_printf(_("Update available: %s"), (reply ? reply : _("[error]"))), "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("Update available: %s"), reply),
+			    "main-gui");
 	}
 	result = 1;
     }
@@ -227,7 +227,7 @@ int update_check_real(int show)
 /* for g_timeout_add */
 gboolean update_check(gpointer data)
 {
-    update_check_real(1);
+    update_check_real(TRUE);
 
     /* never ending story ;) */
     return TRUE;
@@ -236,7 +236,7 @@ gboolean update_check(gpointer data)
 /* called with menu-click */
 gpointer update_menu_check(gpointer data)
 {
-    if (update_check_real(1) == 0)
+    if (update_check_real(TRUE) == 0)
     {
 	if (update_use_xosd())
 	    signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup(_("No updates available")), "xosd");
@@ -249,7 +249,7 @@ gpointer update_menu_check(gpointer data)
 
 gboolean update_check_on_startup(gpointer data)
 {
-    update_check_real(1);
+    update_check_real(TRUE);
 
     /* it's called ONCE. */
     return FALSE;
