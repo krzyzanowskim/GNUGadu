@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.33 2004/01/09 02:39:40 shaster Exp $ */
+/* $Id: sms_gui.c,v 1.34 2004/01/09 22:43:43 krzyzak Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -207,15 +207,12 @@ void signal_receive(gpointer name, gpointer signal_ptr)
     if (signal->name == g_quark_from_static_string("get user menu"))
     {
 	GGaduMenu *umenu = ggadu_menu_create();
-	GGaduMenu *listmenu = NULL;
 
 	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send SMS"), sms_send_sms, NULL));
 
-	listmenu = ggadu_menu_new_item(_("Contact"), NULL, NULL);
-	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"), sms_add_contact, NULL));
-	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"), sms_remove_contact, NULL));
-	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Edit"), sms_edit_contact, NULL));
-	ggadu_menu_add_submenu(umenu, listmenu);
+	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), sms_edit_contact, NULL));
+	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), sms_remove_contact, NULL));
+	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), sms_add_contact, NULL));
 
 	ggadu_menu_print(umenu, NULL);
 

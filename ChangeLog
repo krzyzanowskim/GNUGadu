@@ -5,6 +5,7 @@
 - more new goodies in docklet systray (docklet/THrull)
 - "Rozgwiazda" iconset as a default one (krzak)
 - History window is no longer Modal type (GUI/krzak)
+- menu items order changed (sms/krzak)
 
 08.01.2004
 - fixed `private` setting usage with autoconnect (gadu-gadu/shasta)
