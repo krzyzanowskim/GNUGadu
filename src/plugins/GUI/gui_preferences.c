@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.3 2003/03/25 17:53:35 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.4 2003/04/02 22:42:35 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -21,9 +21,7 @@ GtkWidget *list = NULL;
 extern GGaduPlugin *gui_handler;
 extern GGaduConfig *config;
 
-static gboolean save_selected_plugins(GtkTreeModel * model,
-				      GtkTreePath * path,
-				      GtkTreeIter * iter, gpointer data)
+static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path,  GtkTreeIter * iter, gpointer data)
 {
 	gboolean enable;
 	gchar *name = NULL;
@@ -40,14 +38,23 @@ static gboolean save_selected_plugins(GtkTreeModel * model,
 
 		g_io_channel_write_chars(ch, name, -1, &count, NULL);
 		g_io_channel_write_chars(ch, "\n", -1, &count, NULL);
+		
+		if (!find_plugin_by_name(name)) {
+			gchar *path = g_build_filename(config->modulesdir,name,NULL);
+			gchar *fullpath = g_strconcat(path,".so",NULL);
+			load_plugin(fullpath);
+			g_free(path);
+			g_free(fullpath);
+		}
 
+	} else if (name != NULL) {
+		unload_plugin(name);
 	}
 
 	return FALSE;
 }
 
-static void enable_toggled(GtkCellRendererToggle * cell, gchar * path_str,
-			   gpointer data)
+static void enable_toggled(GtkCellRendererToggle * cell, gchar * path_str, gpointer data)
 {
 	GtkTreeIter iter;
 	gboolean enable;
@@ -59,10 +66,10 @@ static void enable_toggled(GtkCellRendererToggle * cell, gchar * path_str,
 
 	enable ^= 1;
 
-	gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
-			   PLUGINS_MGR_ENABLE, enable, -1);
+	gtk_tree_store_set(GTK_TREE_STORE(model), &iter, PLUGINS_MGR_ENABLE, enable, -1);
 
 	gtk_tree_path_free(path);
+		
 }
 
 GtkWidget *gui_plugins_mgr_tab()
@@ -72,24 +79,20 @@ GtkWidget *gui_plugins_mgr_tab()
 	GtkTreeIter iter;
 	GtkCellRenderer *renderer = NULL;
 	GtkTreeViewColumn *column = NULL;
-	GtkWidget *info_label = NULL;
 
 	vbox = gtk_vbox_new(FALSE, 0);
-	store =
-	    gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING,
-			       G_TYPE_BOOLEAN);
+	store = gtk_tree_store_new(PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
 
 	while (plugins_list) {
 		gboolean tmpvar = FALSE;
 
-		if (find_plugin_by_name((gchar *) plugins_list->data))
-			tmpvar = TRUE;
+		if ((plugins_list) && (plugins_list->data) && (find_plugin_by_name((gchar *) plugins_list->data)))
+				tmpvar = TRUE;
 
 		gtk_tree_store_append(GTK_TREE_STORE(store), &iter, NULL);
-		gtk_tree_store_set(GTK_TREE_STORE(store), &iter,
-				   PLUGINS_MGR_NAME,
-				   (gchar *) plugins_list->data,
-				   PLUGINS_MGR_ENABLE, tmpvar, -1);
+		gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME,
+				(gchar *) plugins_list->data,
+				PLUGINS_MGR_ENABLE, tmpvar, -1);
 
 		plugins_list = plugins_list->next;
 	}
@@ -99,32 +102,24 @@ GtkWidget *gui_plugins_mgr_tab()
 	g_object_unref(G_OBJECT(store));
 
 	renderer = gtk_cell_renderer_text_new();
-	column =
-	    gtk_tree_view_column_new_with_attributes(_("Plugin name"),
+	column = gtk_tree_view_column_new_with_attributes(_("Plugin name"),
 						     renderer, "text",
 						     PLUGINS_MGR_NAME,
 						     NULL);
+
 	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
 
-
 	renderer = gtk_cell_renderer_toggle_new();
-	column =
-	    gtk_tree_view_column_new_with_attributes(_("Enable"), renderer,
+	column = gtk_tree_view_column_new_with_attributes(_("Enable"), renderer,
 						     "active",
 						     PLUGINS_MGR_ENABLE,
 						     NULL);
+	
 	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
-	g_signal_connect(renderer, "toggled", G_CALLBACK(enable_toggled),
-			 store);
-
+	
+	g_signal_connect(renderer, "toggled", G_CALLBACK(enable_toggled), store);
 
 	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(list), TRUE, TRUE, 0);
-
-	info_label =
-	    gtk_label_new(_
-			  ("Changes take effect\nafter program restart!"));
-	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(info_label), TRUE,
-			   TRUE, 0);
 
 	gtk_widget_show_all(vbox);
 
@@ -599,13 +594,10 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	response = gtk_dialog_run(GTK_DIALOG(preferences));
 	if (response == GTK_RESPONSE_ACCEPT) {
 		GtkWidget *entry;
-		GIOChannel *ch =
-		    g_io_channel_new_file(g_build_filename
-					  (config->configdir,
-					   "modules.load", NULL), "w",
-					  NULL);
-		gtk_tree_model_foreach(GTK_TREE_MODEL(store),
-				       save_selected_plugins, ch);
+		GIOChannel *ch = g_io_channel_new_file(g_build_filename (config->configdir, "modules.load", NULL), "w", NULL);
+			
+		gtk_tree_model_foreach(GTK_TREE_MODEL(store), save_selected_plugins, ch);
+			
 		g_io_channel_shutdown(ch, TRUE, NULL);
 
 		config_var_set(gui_handler, "emot",

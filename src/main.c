@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.2 2003/03/23 11:18:47 krzyzak Exp $ */
+/* $Id: main.c,v 1.3 2003/04/02 22:42:24 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -61,6 +61,8 @@ void load_available_modules() {
 		}
 	}
 
+	config->modulesdir = g_strdup(dirpath);
+	
 	config->all_plugins_loaded = FALSE;
 
 	print_debug("core : searching modules in directory : %s\n",dirpath);

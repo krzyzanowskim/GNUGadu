@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.3 2003/04/01 15:09:25 thrulliq Exp $ */
+/* $Id: plugins.c,v 1.4 2003/04/02 22:42:25 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -109,10 +109,8 @@ gboolean load_plugin (gchar *path)
   {
     config->plugins = g_slist_append (config->plugins, plugin_handler);
     start_plugin ();
-  } else
-  {
-    config->all_available_plugins = g_slist_append
-      (config->all_available_plugins, ggadu_plugin_name ());
+  } else {
+    config->all_available_plugins = g_slist_append(config->all_available_plugins, g_strdup(ggadu_plugin_name ()));
   }
 
   return TRUE;
@@ -125,11 +123,10 @@ void unload_plugin(gchar *name)
     GGaduVar	*var_tmp  = NULL;
     GGaduSignalinfo 	 *sig_tmp = NULL;
     
-    if (plugin_handler == NULL) 
-    { 
-	print_debug("core : trying to unload not loaded plugin %s\n",name); 
-	return; 
-    }
+		if (plugin_handler == NULL) { 
+		print_debug("core : trying to unload not loaded plugin %s\n",name); 
+		return; 
+		}
 
     print_debug ("core: unloading plugin %s\n", name);
     
@@ -155,24 +152,26 @@ void unload_plugin(gchar *name)
         
     /* variables na celowniku */
     list_tmp = (GSList *)plugin_handler->variables;
-    while (list_tmp) 
-    {
-	var_tmp = (GGaduVar *)list_tmp->data;
-	g_free(var_tmp->name);
-	g_free(var_tmp);
-	list_tmp = list_tmp->next;
+		while (list_tmp) 
+		{
+			var_tmp = (GGaduVar *)list_tmp->data;
+			g_free(var_tmp->name);
+			g_free(var_tmp);
+			list_tmp = list_tmp->next;
     }
+		
     g_slist_free(plugin_handler->variables);
 
     /* bye bye signals */
     list_tmp = (GSList *)plugin_handler->signals;
-    while (list_tmp) 
-    {
-	sig_tmp = (GGaduSignalinfo *) list_tmp->data;
-	g_free (sig_tmp->name);
-	g_free (sig_tmp);
-	list_tmp = list_tmp->next;
-    }
+		
+		while (list_tmp) 
+		{
+			sig_tmp = (GGaduSignalinfo *) list_tmp->data;
+			g_free (sig_tmp->name);
+			g_free (sig_tmp);
+			list_tmp = list_tmp->next;
+		}
     g_slist_free(plugin_handler->signals);
     plugin_handler->signals = NULL;
 
@@ -192,7 +191,6 @@ void unload_plugin(gchar *name)
 
     /* u¶mierciæ */
 //    g_free (plugin_handler->protocol);
-    
     g_free(plugin_handler);
 }
 
@@ -325,11 +323,6 @@ void config_var_set(GGaduPlugin *handler, gchar *name, gpointer val)
     }
 }
 
-/*
- * Uruchamia czytanie plikow konfiguracyjnych dla wszystkich zarejestrowanych protokolow
- * Czyta pliki konfiguracyjne i ustawia wartosci zmiennych
- * Jesli plik nie zostal zdefiniowany to proboje czytac plik o nazwie pluginu, jesli i takiego pliku nie ma to nie wczytuje nic
- */
 GGaduVar *find_variable(GGaduPlugin *plugin_handler,gchar *name)
 {
     GSList *tmp = plugin_handler->variables;
@@ -343,7 +336,12 @@ GGaduVar *find_variable(GGaduPlugin *plugin_handler,gchar *name)
     }
     return NULL;
 }
- 
+
+/*
+ * Uruchamia czytanie plikow konfiguracyjnych dla wszystkich zarejestrowanych protokolow
+ * Czyta pliki konfiguracyjne i ustawia wartosci zmiennych
+ * Jesli plik nie zostal zdefiniowany to proboje czytac plik o nazwie pluginu, jesli i takiego pliku nie ma to nie wczytuje nic
+ */
 gboolean config_read(GGaduPlugin *plugin_handler)
 {
     FILE *f;
@@ -530,27 +528,27 @@ GGaduPlugin *register_plugin(gchar *name, gchar *desc)
 
 
 /*
- *    Zwraca handler protokolu o podanej nazwie
+ *    Zwraca handler protokolu o podanej nazwie, z zaladowanych pluginow
  */
  
 GGaduPlugin *find_plugin_by_name(gchar *name) 
 {
-    GSList 	*tmp		= config->plugins;
+    GSList 	*tmp		= (config) ? config->plugins : NULL;
     GGaduPlugin *plugin_handler = NULL;
 
     if (name == NULL) return NULL;
-    
+				
     while (tmp) 
     {
-	plugin_handler = (GGaduPlugin *)tmp->data;
+			plugin_handler = (GGaduPlugin *)tmp->data;
 	
-	if (plugin_handler)
-	if (!ggadu_strcasecmp(plugin_handler->name, name)) 
-	    return plugin_handler;
+			if ((plugin_handler != NULL) && (plugin_handler->name != NULL) && (!ggadu_strcasecmp(plugin_handler->name, name))) 
+					return plugin_handler;
 	    
-	tmp = tmp->next;
-    }
-    return NULL;
+			tmp = tmp->next;
+		}
+		
+		return NULL;
 }
 
 /* 

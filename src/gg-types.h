@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.2 2003/04/01 15:09:24 thrulliq Exp $ */
+/* $Id: gg-types.h,v 1.3 2003/04/02 22:42:23 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -139,6 +139,7 @@ typedef struct {
 	GSList *plugins;		// lista protokolow 
 
 	gchar  *configdir;		// katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2)
+	gchar  *modulesdir;
 	GSList *waiting_signals;
 	gboolean all_plugins_loaded;
 	GMainLoop *main_loop;
@@ -154,4 +155,3 @@ enum {
 };
 
 #endif
-
