@@ -3,6 +3,7 @@
 - fixed disconnect handling and server value changing (jabber/krzak)
 - fixed segfault with gadu-gadu connection (gadu-gadu/krzak)
 - more new goodies in docklet systray (docklet/THrull)
+- "Rozgwiazda" iconset as a default one
 
 08.01.2004
 - fixed `private` setting usage with autoconnect (gadu-gadu/shasta)
