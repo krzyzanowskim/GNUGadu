@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.3 2003/03/23 15:10:58 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.4 2003/03/23 16:52:15 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -187,31 +187,22 @@ void gui_user_data_window(gpointer signal, gboolean change)
     GGaduSignal *sig = (GGaduSignal *)signal;
     GtkWidget *adduserwindow = NULL;
     GtkWidget *table;
-    GtkWidget *frame = NULL;
-    
-    if (change)
-	adduserwindow = gtk_dialog_new_with_buttons(_("Change User"),GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
-    else
-	adduserwindow = gtk_dialog_new_with_buttons(_("Add User"),GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
-    
-    frame = gtk_frame_new(NULL);
-
+    adduserwindow = gtk_dialog_new_with_buttons((change) ? _("Change User") : _("Add User"),GTK_WINDOW(window),
+						GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
+						GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
     table = gui_build_dialog_gtk_table((GSList *)sig->data, 1);
     
     gtk_table_set_row_spacings(GTK_TABLE(table),5);
     gtk_table_set_col_spacings(GTK_TABLE(table),3);
 
-    gtk_container_add(GTK_CONTAINER(GTK_DIALOG(adduserwindow)->vbox), frame);
+    gtk_container_add(GTK_CONTAINER(GTK_DIALOG(adduserwindow)->vbox), table);
 
-    gtk_container_add(GTK_CONTAINER(frame), table);
-
-    if (change)
-	g_signal_connect(G_OBJECT(adduserwindow), "response", G_CALLBACK(gui_change_user_window_response), signal_cpy(signal));
-    else
-        g_signal_connect(G_OBJECT(adduserwindow), "response", G_CALLBACK(gui_add_user_window_response), signal_cpy(signal));
+    g_signal_connect(G_OBJECT(adduserwindow), "response", 
+		    (change) ? G_CALLBACK(gui_change_user_window_response) : G_CALLBACK(gui_add_user_window_response), 
+		    signal_cpy(signal));
 
     gtk_widget_show_all(adduserwindow);
-    
 }
 
 void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
@@ -282,13 +273,13 @@ void gui_show_message_box(gint type, gpointer signal)
     gchar 	*title;
     gui_protocol *gp;
 	
-	warning = gtk_message_dialog_new(GTK_WINDOW(window),
+    warning = gtk_message_dialog_new(GTK_WINDOW(window),
 					GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 					type,
 					GTK_BUTTONS_OK,
 					txt);
 	
-	gp = gui_find_protocol(((GGaduSignal *)signal)->source_plugin_name, protocols);
+    gp = gui_find_protocol(((GGaduSignal *)signal)->source_plugin_name, protocols);
 	
     title = g_strdup_printf("%s: %s", 
     	(gp) ? gp->p->display_name : (char *)((GGaduSignal *)signal)->source_plugin_name, 
@@ -341,21 +332,29 @@ void gui_show_dialog(gpointer signal, gboolean change)
     GGaduSignal *sig = (GGaduSignal *)signal;
     GtkWidget *dialog = NULL;
     GtkWidget *table;
-    GtkWidget *frame = NULL;
+    GtkWidget *label;
     GGaduDialog *d = sig->data;
+    gchar *markup;
     
-    dialog = gtk_dialog_new_with_buttons(d->title,GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
+    dialog = gtk_dialog_new_with_buttons(d->title,GTK_WINDOW(window),
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
+					GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
+    gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
     
-    frame = gtk_frame_new(d->title);
-
+    label = gtk_label_new(NULL);
+    markup = g_strdup_printf("<span weight=\"bold\">%s</span>", d->title);    
+    gtk_label_set_markup(GTK_LABEL(label), markup);
+    g_free(markup);
+    
+    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), label, TRUE, TRUE, 10);
+    
     table = gui_build_dialog_gtk_table(d->optlist, 1);
     
     gtk_table_set_row_spacings(GTK_TABLE(table),5);
     gtk_table_set_col_spacings(GTK_TABLE(table),3);
 
-    gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), frame);
-
-    gtk_container_add(GTK_CONTAINER(frame), table);
+    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), table, TRUE, TRUE, 0);
 
     g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gui_dialog_response), signal_cpy(signal));
 

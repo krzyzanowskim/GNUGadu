@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.2 2003/03/23 16:52:15 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -403,11 +403,12 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 						  NULL,
 						  GTK_DIALOG_MODAL |
 						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_OK,
-						  GTK_RESPONSE_ACCEPT,
 						  GTK_STOCK_CANCEL,
 						  GTK_RESPONSE_REJECT,
+						  GTK_STOCK_OK,
+						  GTK_RESPONSE_ACCEPT,
 						  NULL);
+	gtk_window_set_resizable(GTK_WINDOW(preferences), FALSE);
 	notebook = gtk_notebook_new();
 
 	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(preferences)->vbox),
