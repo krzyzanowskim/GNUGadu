@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.20 2004/01/07 23:50:11 thrulliq Exp $ */
+/* $Id: jabber_cb.c,v 1.21 2004/01/08 20:46:57 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -15,20 +15,14 @@ void connection_auth_cb (LmConnection * connection, gboolean success, gint * sta
 {
 	if (!success)
 	{
-		print_debug ("jabber: Authentication failed.\n");
-    		signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
+        signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
 		signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
 		return;
 	}
 
 	jabber_data.connected = 2;
-
 	print_debug ("jabber: Authentication succeeded. Changing status...\n");
-
 	jabber_change_status (*(gint *) & status);
-
-	print_debug ("jabber: Fetching roster.\n");
-
 	jabber_fetch_roster ();
 }
 
@@ -336,13 +330,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
          /* pokazuj wszystkie */
 			if (first_seen)
-			{
-/*				if (!strcmp (subs, "to"))
-					k->status = JABBER_STATUS_WAIT_SUBSCRIBE;
-				else
-*/
 					k->status = JABBER_STATUS_UNAVAILABLE;
-			}
 
 			if (!g_slist_find (jabber_data.userlist, k))
 				jabber_data.userlist = g_slist_append (jabber_data.userlist, k);

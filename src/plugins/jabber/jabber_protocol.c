@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.15 2004/01/08 09:57:28 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.16 2004/01/08 20:46:57 krzyzak Exp $ */
 
 #include <loudmouth/loudmouth.h>
 #include <string.h>
@@ -78,8 +78,6 @@ void jabber_change_status (enum states status)
   if (jabber_data.status_descr)
     lm_message_node_add_child (m->node, "status", jabber_data.status_descr);
   
-  print_debug ("STATUS - %d\n", status);
-  
   if (!lm_connection_send (connection, m, NULL))
   {
     print_debug ("jabber: Couldn't change status!\n");
@@ -95,6 +93,8 @@ void jabber_fetch_roster (void)
   LmMessage *m;
   LmMessageNode *node;
 
+  print_debug ("jabber: Fetching roster.\n");
+
   m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
   node = lm_message_node_add_child (m->node, "query", NULL);
   lm_message_node_set_attribute (node, "xmlns", "jabber:iq:roster");
@@ -103,8 +103,6 @@ void jabber_fetch_roster (void)
     print_debug ("jabber: Can't fetch roster (lm_connection_send() failed).\n");
   
   lm_message_unref (m);
-
-  
 }
 
 void action_search_form (LmConnection *connection, LmMessage *message, gpointer data)

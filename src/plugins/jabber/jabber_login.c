@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.17 2004/01/07 23:49:16 thrulliq Exp $ */
+/* $Id: jabber_login.c,v 1.18 2004/01/08 20:46:57 krzyzak Exp $ */
 
 #include <string.h>
 
@@ -70,9 +70,7 @@ gpointer jabber_login_connect (gpointer status)
 	}
 
     if (!(server = ggadu_config_var_get (jabber_handler, "server")))
-        {
         server = strchr (jid, '@') + 1;
-        }
     
 	if (!server)
 	{
@@ -98,7 +96,6 @@ gpointer jabber_login_connect (gpointer status)
 		}
 		else
 		{
-			print_debug ("SSL not supported by loudmouth.\n");
 			signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
             signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("SSL not supported by loudmouth")), "main-gui");
 		}

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.47 2004/01/08 09:57:28 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.48 2004/01/08 20:46:57 krzyzak Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -442,37 +442,35 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 		while (tmplist)
 		  {
 		      GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
-		      switch (kv->key)
+            switch (kv->key)
 			{
 			case 0:
 			    if (kv->value)
-			      {
+			    {
 				  LmMessage *message;
 				  LmMessageNode *node;
-				  gboolean result;
 
 				  message =
 				      lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
-				  lm_message_node_set_attributes (message->node, "to", kv->value, "id", "search1",
-								  NULL);
-				  ggadu_config_var_set (jabber_handler, "search_server", kv->value);
-				  ggadu_config_save (jabber_handler);
+                
+				  lm_message_node_set_attributes (message->node, "to", kv->value, "id", "search1", NULL);
 				  node = lm_message_node_add_child (message->node, "query", NULL);
 				  lm_message_node_set_attribute (node, "xmlns", "jabber:iq:search");
 
+                    ggadu_config_var_set (jabber_handler, "search_server", kv->value);
+                    ggadu_config_save (jabber_handler);
+
 				  action_queue_add ("search1", "result", action_search_form, NULL);
 
-				  result = lm_connection_send (connection, message, NULL);
-				  lm_message_unref (message);
-				  if (!result)
-				    {
+				  if (!lm_connection_send (connection, message, NULL)) {
 					signal_emit ("jabber", "gui show warning",
 						     g_strdup (_("Can't perform search!")), "main-gui");
 				    }
-			      }
-			    break;
+                lm_message_unref (message);
+                }
+            break;
 			default:
-			    break;
+            break;
 			}
 
 		      tmplist = tmplist->next;
@@ -595,9 +593,7 @@ gpointer user_search_action (gpointer user_data)
       {
 	  server = ggadu_config_var_get (jabber_handler, "jid");
 	  if (server && (server = strchr (server, '@')))
-	    {
 		server++;
-	    }
       }
 
     d = ggadu_dialog_new ();
@@ -667,8 +663,8 @@ void start_plugin ()
     p->statuslist = status_init ();
     p->offline_status = g_slist_append (p->offline_status, (gint *) JABBER_STATUS_UNAVAILABLE);
     p->online_status = g_slist_append (p->online_status, (gint *) JABBER_STATUS_AVAILABLE);
-    p->away_status = g_slist_append (p->away_status, (gint *) JABBER_STATUS_DND);
     p->away_status = g_slist_append (p->away_status, (gint *) JABBER_STATUS_AWAY);
+    p->away_status = g_slist_append (p->away_status, (gint *) JABBER_STATUS_DND);
     p->away_status = g_slist_append (p->away_status, (gint *) JABBER_STATUS_XA);
 
     ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);

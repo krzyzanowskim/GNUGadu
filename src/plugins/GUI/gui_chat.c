@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.52 2004/01/05 13:47:32 thrulliq Exp $ 
+ * $Id: gui_chat.c,v 1.53 2004/01/08 20:46:56 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -831,10 +831,10 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  {
 	      if (k)
 		  wintitle =
-		      (conference) ? g_strdup (confer_title) : g_strdup_printf (_("Talking to %s (%s) %s"), k->nick, id,
+		      (conference) ? g_strdup (confer_title) : g_strdup_printf ("%s (%s) %s", k->nick, id,
 										(sp) ? status_desc : "");
 	      else
-		  wintitle = (conference) ? g_strdup (confer_title) : g_strdup_printf (_("Talking to %s"), id);
+		  wintitle = (conference) ? g_strdup (confer_title) : g_strdup_printf ("%s", id);
 
 	      chat_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
