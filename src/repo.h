@@ -1,9 +1,10 @@
-/* $Id: repo.h,v 1.1 2003/04/12 14:20:32 zapal Exp $ */
+/* $Id: repo.h,v 1.2 2003/04/12 16:38:53 zapal Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
 
 #include <glib.h>
+#include <limits.h>
 
 #include "gg-types.h"
 
@@ -13,9 +14,18 @@ gboolean ggadu_repo_check_value (gchar *repo_name, gpointer key);
 gpointer ggadu_repo_find_value (gchar *repo_name, gpointer key);
 gboolean ggadu_repo_exists (gchar *repo_name);
 
+enum {
+  REPO_VALUE_DC      = 0, /* don't change */
+  REPO_VALUE_CONTACT = 1,
+  REPO_VALUE_SETTING = 2,
+  REPO_VALUE_OTHER   = 4,
+  
+  REPO_VALUE_ANY     = INT_MAX
+};
+
 gboolean ggadu_repo_add (gchar *repo_name);
-gboolean ggadu_repo_add_value (gchar *repo_name, gpointer key, gpointer value);
-gboolean ggadu_repo_change_value (gchar *repo_name,gpointer key,gpointer value);
+gboolean ggadu_repo_add_value (gchar *repo_name, gpointer key, gpointer value, gint type);
+gboolean ggadu_repo_change_value (gchar *repo_name,gpointer key,gpointer value, gint type);
 gboolean ggadu_repo_del_value (gchar *repo_name, gpointer key);
 gboolean ggadu_repo_del (gchar *repo_name);
 
@@ -69,9 +79,15 @@ extern const gint REPO_value_mask;
  * funkcji
  * GGaduRepo_watch_add(), to watch jest ca³kowicie usuwany.
  */
-gboolean ggadu_repo_watch_add (gchar *repo_name, gpointer key, gint actions,
-			       watch_ptr callback);
-gboolean ggadu_repo_watch_del (gchar *repo_name, gpointer key, gint actions,
-	 		       watch_ptr callback);
+gboolean ggadu_repo_watch_add (gchar *repo_name, gint actions, gint types, watch_ptr callback);
+gboolean ggadu_repo_watch_del (gchar *repo_name, gint actions, gint types, watch_ptr callback);
+
+gboolean ggadu_repo_watch_value_add (gchar *repo_name, gpointer key, gint actions, watch_ptr callback);
+gboolean ggadu_repo_watch_value_del (gchar *repo_name, gpointer key, gint actions, watch_ptr callback);
+
+gboolean ggadu_repo_watch_values_add (gchar *repo_name, gint actions, gint types, watch_ptr callback);
+gboolean ggadu_repo_watch_values_del (gchar *repo_name, gint actions, gint types, watch_ptr callback);
+
+gboolean ggadu_repo_watch_clear_callback (watch_ptr callback);
 
 #endif
