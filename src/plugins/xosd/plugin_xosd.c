@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.3 2003/03/23 17:58:32 thrulliq Exp $ */
+/* $Id: plugin_xosd.c,v 1.4 2003/04/02 18:40:40 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -314,5 +314,6 @@ void destroy_plugin() {
     if (menu_pluginmenu)
     {
       signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
+      ggadu_menu_free (menu_pluginmenu);
     }
 }

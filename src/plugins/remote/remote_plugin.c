@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.3 2003/03/29 21:24:13 zapal Exp $ */
+/* $Id: remote_plugin.c,v 1.4 2003/04/02 18:40:37 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -681,6 +681,7 @@ void destroy_plugin()
   if (menu_remotemenu)
   {
     signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_remotemenu, "main-gui");
+    ggadu_menu_free (menu_remotemenu);
   }
   g_free (this_configdir);
   unlink (sock_path);

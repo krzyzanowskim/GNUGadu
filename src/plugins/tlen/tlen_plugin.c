@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.8 2003/04/01 15:38:48 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.9 2003/04/02 18:40:39 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -954,8 +954,8 @@ void destroy_plugin() {
     if (menu_tlenmenu)
     {
       signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_tlenmenu, "main-gui");
-      signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
-      signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
+      ggadu_menu_free (menu_tlenmenu);
     }
-
+    signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+    signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 }

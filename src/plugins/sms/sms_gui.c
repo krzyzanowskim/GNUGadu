@@ -525,10 +525,10 @@ void destroy_plugin()
     if (menu_smsmenu)
     {
       signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_smsmenu, "main-gui");
-      signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
-      signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui"); 
+      ggadu_menu_free (menu_smsmenu);
     }
-    
+    signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+    signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui"); 
 }
 
 
