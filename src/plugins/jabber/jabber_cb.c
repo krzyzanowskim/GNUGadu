@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.84 2005/02/23 15:28:51 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.85 2005/02/23 16:18:33 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -339,7 +339,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 				break;
 			}
 
-			if(oldstatus == JABBER_STATUS_UNAVAILABLE &&
+			if(g_slist_find(p->offline_status, (gpointer) oldstatus) &&
 		           (g_slist_find(p->online_status, (gpointer) k->status) ||
 			    g_slist_find(p->away_status, (gpointer) k->status)))
 			{
