@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.24 2003/04/10 19:25:10 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.25 2003/04/11 09:22:02 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -553,11 +553,17 @@ gpointer user_preferences_action(gpointer user_data)
 	GGaduDialog *d = ggadu_dialog_new();
 	GSList *statuslist_names = NULL;
 	GSList *tmplist = p->statuslist;
+	
 
 	while (tmplist) {
 		GGaduStatusPrototype *sp = tmplist->data;
-		if (!sp->receive_only)
+	
+		if ((!sp->receive_only) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR) && (sp->status != GG_STATUS_NOT_AVAIL))
 			statuslist_names  = g_slist_append(statuslist_names,sp->description);	
+		
+		if (sp->status == (gint)config_var_get(handler,"status"))
+			statuslist_names  = g_slist_prepend(statuslist_names,sp->description);	
+		
 		tmplist = tmplist->next;
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.12 2003/04/10 19:17:17 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.13 2003/04/11 09:22:01 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -49,7 +49,6 @@ void on_destroy_chat_window(GtkWidget *chat, gpointer user_data)
 {
 	print_debug("on_destroy_chat_window\n");
 	gui_remove_all_chat_sessions(protocols);
-//	gtk_widget_destroy(chat);
 	chat_window = NULL;
 }
 
@@ -88,6 +87,8 @@ void on_destroy_chat(GtkWidget *button, gpointer user_data)
 			gtk_notebook_remove_page(GTK_NOTEBOOK(chat_notebook),nr);
 			g_signal_handler_unblock(chat_notebook,id);
 
+			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(chat_notebook),(gtk_notebook_get_n_pages (GTK_NOTEBOOK(chat_notebook)) <= 1) ? FALSE : TRUE);
+	
 			if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook)) <= 0) {
 				gui_remove_all_chat_sessions(protocols);
 				gtk_widget_destroy(chat_window);
@@ -109,7 +110,6 @@ void on_destroy_chat(GtkWidget *button, gpointer user_data)
 			
 			chat_window = NULL;
 			gtk_widget_destroy(button);
-			//gtk_widget_destroy(g_object_get_data(G_OBJECT(session->chat),"top_window"));
 			session->chat = NULL;
 			gp->chat_sessions = g_slist_remove(gp->chat_sessions,session);
 			g_free(session);
@@ -588,8 +588,11 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 
 			gtk_notebook_set_menu_label_text(GTK_NOTEBOOK(chat_notebook),session->chat,title);
 	
-			/* append page */	
+			/* append page */
 			gtk_notebook_append_page(GTK_NOTEBOOK(chat_notebook),vbox_in_out,tab_label_hbox);
+			gtk_notebook_set_menu_label_text(GTK_NOTEBOOK(chat_notebook),vbox_in_out,title);
+
+			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(chat_notebook),(gtk_notebook_get_n_pages (GTK_NOTEBOOK(chat_notebook)) <= 1) ? FALSE : TRUE);
 	    
 	    gtk_widget_show_all(tab_label_hbox);
 		}
