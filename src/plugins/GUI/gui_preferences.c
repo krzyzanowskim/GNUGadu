@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.89 2005/01/02 14:26:49 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.90 2005/01/02 14:58:29 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -753,11 +753,11 @@ static GtkWidget *create_advanced_tab()
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *tabbox;
+	GtkWidget *tabbox2;
 	GtkWidget *label0_align;
 	GtkWidget *label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *label3_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *label4_align = gtk_alignment_new(0, 0.5, 0, 0);
-	GtkWidget *label5_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *combo_theme = NULL;
 	GtkWidget *combo_icons = NULL;
 	GtkWidget *notify_status_changes = NULL;
@@ -913,9 +913,22 @@ static GtkWidget *create_advanced_tab()
 		g_object_set_data(G_OBJECT(combo_icons), "combo_icons_slist", list_icons);
 	}
 
+	/* browsers */
+	tabbox2 = gtk_table_new(1, 0, TRUE);
+	gtk_table_set_row_spacings(GTK_TABLE(tabbox2), 7);
+	gtk_table_set_col_spacings(GTK_TABLE(tabbox2), 5);
 
+	gtk_box_pack_start(GTK_BOX(adv_vbox), tabbox2, TRUE, TRUE, 0);
+	label = gtk_label_new(_("Web Browser:"));
+	gtk_container_add(GTK_CONTAINER(label4_align), label);
+
+	GtkWidget *entry = gtk_entry_new();
+	gtk_table_attach_defaults(GTK_TABLE(tabbox2), label4_align, 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox2), entry, 1, 2, 0, 1);
+	g_object_set_data(G_OBJECT(adv_vbox), "browser_exec", entry);
+
+	
 	/* set */
-
 	if (ggadu_config_var_get(gui_handler, "blink_interval"))
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(blink_interval), (gint) ggadu_config_var_get(gui_handler, "blink_interval"));
 
@@ -925,10 +938,11 @@ static GtkWidget *create_advanced_tab()
 	if (ggadu_config_var_get(gui_handler, "close_on_esc"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(close_on_esc), TRUE);
 
-
 	if (ggadu_config_var_get(gui_handler, "notify_status_changes"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(notify_status_changes), TRUE);
 
+	if (ggadu_config_var_get(gui_handler, "browser_exec"))
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "browser_exec"));
 
 	return adv_vbox;
 }
@@ -1374,6 +1388,10 @@ void gui_preferences(GtkWidget * widget, gpointer data
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "contact_list_protocol_font");
 		g_return_if_fail(entry != NULL);
 		ggadu_config_var_set(gui_handler, "contact_list_protocol_font", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "browser_exec");
+		g_return_if_fail(entry != NULL);
+		ggadu_config_var_set(gui_handler, "browser_exec", (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		ggadu_config_save(gui_handler);
 
