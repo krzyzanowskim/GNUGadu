@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.27 2004/01/19 20:15:27 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.28 2004/01/19 20:26:02 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -305,9 +305,13 @@ void gui_tree_add(gui_protocol * gp)
 				 gp);
 		gtk_box_pack_start(GTK_BOX(status_hbox), gp->statuslist_eventbox, FALSE, FALSE, 2);
 		gtk_widget_show_all(gp->statuslist_eventbox);
-	} else if (gp->p->offline_status) {
+	} 
+	/* ZONK what is it for ? nothing use "sp" after that 
+	else if (gp->p->offline_status) 
+	{  
 		sp = gui_find_status_prototype(gp->p, (status) ? status : *(int *) &gp->p->offline_status->data);
-	}
+	} 
+	*/
 
 	gp->add_info_label = g_object_get_data(G_OBJECT(treeview), "add_info_label");
 
