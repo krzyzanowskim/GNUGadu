@@ -15,6 +15,7 @@ void connection_auth_cb (LmConnection * connection, gboolean success, gint * sta
 	if (!success)
 	{
 		print_debug ("jabber: Authentication failed.\n");
+        signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
 		signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
 		return;
 	}
@@ -32,7 +33,7 @@ void connection_auth_cb (LmConnection * connection, gboolean success, gint * sta
 
 void connection_open_result_cb (LmConnection * connection, gboolean success, gint * status)
 {
-	gchar *jid;
+	gchar *jid = NULL;
 
 	if (!success)
 	{
@@ -53,7 +54,9 @@ void connection_open_result_cb (LmConnection * connection, gboolean success, gin
 	     (LmResultFunction) connection_auth_cb, status, NULL, NULL))
 	{
 		print_debug ("jabber: lm_connection_authenticate() failed.\n");
+        signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
 	}
+
 	g_free (jid);
 }
 
@@ -264,6 +267,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 	if (!(node = lm_message_node_get_child (message->node, "query")))
 	{
 		print_debug ("jabber: weird roster.\n%s", lm_message_node_to_string (message->node));
+        lm_message_node_unref(node);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
@@ -272,11 +276,14 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 	{
 		print_debug ("%s\n", lm_message_node_get_attribute (message->node, "type"));
 		print_debug ("xml:\n%s", lm_message_node_to_string (message->node));
+        lm_message_node_unref(node);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
-	if (strcmp (lm_message_node_get_attribute (node, "xmlns"), "jabber:iq:roster"))
+	if (strcmp (lm_message_node_get_attribute (node, "xmlns"), "jabber:iq:roster")) {
+        lm_message_node_unref(node);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+    }
 
 	child = lm_message_node_get_child (node, "item");
 
@@ -299,7 +306,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
 		print_debug ("jabber: roster: %s -> %s with %s\n", jid, name, subs);
 
-		if (!strcmp (subs, "remove"))
+/*		if (!strcmp (subs, "remove"))
 		{
 			GSList *list = jabber_data.rosterlist;
 			while (list)
@@ -310,6 +317,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 				{
 					if (k->nick)
 						g_free (k->nick);
+                    
 					jabber_data.rosterlist = g_slist_remove (jabber_data.rosterlist, k);
 					jabber_data.userlist = g_slist_remove (jabber_data.userlist, k);
 					ggadu_repo_del_value ("jabber", k->id);
@@ -319,9 +327,11 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 				}
 				list = list->next;
 			}
+            lm_message_node_unref(node);
 			return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 		}
-
+*/
+        /* co to kurwa jest ? tu sprawdzac raczej czy id=roster_1 bo to jest lista kontaktow */
 		if (jabber_data.rosterlist)
 		{
 			GSList *list = jabber_data.rosterlist;
@@ -335,8 +345,8 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 						g_free (k->nick);
 					break;
 				}
-				list = list->next;
 				k = NULL;
+                list = list->next;
 			}
 		}
 
@@ -346,6 +356,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 			k->id = g_strdup (jid);
 			jabber_data.rosterlist = g_slist_append (jabber_data.rosterlist, k);
 		}
+    
 		k->nick = g_strdup (name ? name : jid);
 
 		if (strcmp (subs, "none") && strcmp (subs, "from"))
@@ -370,14 +381,10 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
 	signal_emit ("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
 
-	if (first_time)
+    /* pytanie o status kolesi ktorzy znalezli sie na liscie */
+    if (first_time)
 	{
 		GSList *list;
-
-		lm_connection_register_message_handler (connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE,
-							LM_HANDLER_PRIORITY_NORMAL);
-		lm_connection_register_message_handler (connection, message_handler, LM_MESSAGE_TYPE_MESSAGE,
-							LM_HANDLER_PRIORITY_NORMAL);
 
 		list = jabber_data.userlist;
 		while (list)
@@ -393,6 +400,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		}
 	}
 
+    lm_message_node_unref(node);
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
 

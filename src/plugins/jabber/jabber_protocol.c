@@ -65,6 +65,8 @@ void jabber_change_status (enum states status)
   gchar *show_dnd  = "dnd";
   gchar *show_chat = "chat";
 
+  if (status == jabber_data.status) return;
+
   m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_PRESENCE,
       status == JABBER_STATUS_UNAVAILABLE ?
       LM_MESSAGE_SUB_TYPE_UNAVAILABLE : LM_MESSAGE_SUB_TYPE_AVAILABLE);
