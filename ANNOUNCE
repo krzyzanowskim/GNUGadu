@@ -1,17 +1,14 @@
 
-GNU Gadu 2.0 http://www.gnugadu.org
+GNU Gadu 2 http://www.gnugadu.org
 
 GNU Gadu Team z dum± prezentuje najm³odsze dziecko ze stajni
 wolnych rozmów. GNU Gadu 2 (kodowa nazwa - TNNJNG).
 
-Po kilku miesi±cach prac nad programem zdecydowali¶my siê 
-upubliczniæ wersjê - 2.0, jako kolejn± wersjê pogl±dow±.
-
-1. Zmiany w stosunku do wcze¶niejszych wersji GNU Gadu:
+1. Zmiany w stosunku do wcze¶niejszych (1.x) wersji GNU Gadu:
 	- wszystko, program zosta³ napisany od nowa w oparciu o bibliotekê 
 	  glib 2.2.0
 
-2. Mo¿liwo¶ci GNU Gadu 2.0
+2. Mo¿liwo¶ci GNU Gadu 2
 	- Obs³uga wtyczek (plugins)
 	- Dostêpne wtyczki:
 		gui-gtk+2	( Interfejs u¿ytkownika napisany w gtk+2 )
@@ -26,6 +23,7 @@ upubliczniæ wersjê - 2.0, jako kolejn± wersjê pogl±dow±.
 		sms		( Wysy³anie SMS'ów do polskich operatorów GSM )
 		remote		( Do komunikacji gg2 z zewnêtrznymi aplikacjami )
 		update		( Wyszukiwanie dostêpnych aktualizacji )
+                dbus            ( Obs³uga DBUS )
 		docklet-system-tray	( Obs³uga dokowania ikonki w ¶rodowiskach:
 					  gnome, kde, fluxbox, blackbox, *box )
 		docklet-dockapp 	( Dokowalny aplet WindowMaker )
@@ -75,7 +73,7 @@ upubliczniæ wersjê - 2.0, jako kolejn± wersjê pogl±dow±.
     - glib 2.2.0 (ftp://ftp.gnome.org/pub/GNOME/)
     - gtk+ 2.4.0 (ftp://ftp.gnome.org/pub/GNOME/) - GUI
     - libtlen (http://www.libtlen.eu.org) - Tlen
-    - Loudmouth 0.13 (http://www.imendio.com/projects/loudmouth/) - Jabber
+    - Loudmouth 0.17 (http://www.imendio.com/projects/loudmouth/) - Jabber
     - xosd (http://ignavus.net/software.html) - XOSD
     - esound (http://www.tux.org/~ricdude/EsounD.html) - sound-esd
     - arts (razem z KDE zazwyczaj) - sound-arts
@@ -88,14 +86,14 @@ upubliczniæ wersjê - 2.0, jako kolejn± wersjê pogl±dow±.
     - System ¶ledzenia b³êgów
 	http://bugs.gnugadu.org/
 
-    - 2.0
-	http://prdownloads.sourceforge.net/ggadu/gg2-2.0.tar.gz?download
+    - Wersja 2.2.1
+	http://prdownloads.sourceforge.net/ggadu/gg2-2.2.1.tar.gz?download
 
     - CVS
     	cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/ggadu co gg2
 
-    - codzienny snapszot z cvs'a
-    	http://gg.tiwek.com/gg2/snapshots/gg2-latest.tar.bz2
+    - Codzienny snapszot z CVS
+    	http://snap.gnugadu.org/
 
     - Download - przy oficjalnych wydaniach 
 	http://sourceforge.net/project/showfiles.php?group_id=76206
