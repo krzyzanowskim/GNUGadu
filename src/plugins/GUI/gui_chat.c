@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.63 2004/01/17 00:44:59 shaster Exp $ 
+ * $Id: gui_chat.c,v 1.64 2004/01/17 23:17:44 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -61,7 +61,6 @@ static void gui_chat_notebook_switch(GtkWidget * notebook, GtkNotebookPage * pag
 					txt);
 	gtk_window_set_title(GTK_WINDOW(chat_window), txt2);
 	gtk_label_set_markup(GTK_LABEL(lb), markup);
-	gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
 
 	g_free(markup);
     }
