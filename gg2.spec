@@ -1,23 +1,25 @@
-# $Revision: 1.24 $, $Date: 2004/11/18 13:34:32 $
+# $Revision: 1.25 $, $Date: 2004/12/20 09:11:09 $
 #
 # Conditional build: 
 %bcond_without	arts
 %bcond_without	perl
 %bcond_without	esd
 %bcond_without	gtkspell
-%bcond_with	dbus
+%bcond_without	dbus
 #
 Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
 Version:	2.2.3
-Release:	1
+Release:	2
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://osdn.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}.tar.gz
+# Source0-md5:	5d38e161612307ea2a7a00f9453678e3
 URL:		http://www.gnugadu.org/
+#Patch0:	%{name}-desktop.patch
 %{?with_arts:BuildRequires:	artsc-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.7
@@ -29,13 +31,18 @@ BuildRequires:	libtlen-devel
 BuildRequires:	libtool
 BuildRequires:	loudmouth-devel >= 0.17.1
 BuildRequires:	openssl-devel >= 0.9.7d
-%{?with_dbus:BuildRequires:	dbus-libs >= 0.22}
-%{?with_perl:BuildRequires:	perl-devel}
+%{?with_dbus:BuildRequires:	dbus-glib-devel >= 0.22}
 %{?with_gtkspell:BuildRequires:	gtkspell-devel}
 %{?with_gtkspell:BuildRequires:	aspell-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	xosd-devel   >= 2.0.0
+%if %{with perl}
+BuildRequires:	perl-devel
+Requires:	perl(DynaLoader) = %(%{__perl} -MDynaLoader -e 'print DynaLoader->VERSION')
+%endif
 Requires:	gg2-ui
+Obsoletes:	gg-common
+Obsoletes:	gg-kde
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -79,6 +86,7 @@ Group:		Applications/Communications
 Provides:	gg2-ui
 Provides:	%{name}-gui-gtk+2 = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-gui-gtk+2
+Obsoletes:	gg-gnome
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description plugin-gui-gtk+2
@@ -280,6 +288,8 @@ Provides:	%{name}-docklet-dockapp = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-docklet-dockapp
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-docklet
+Obsoletes:	gg-gnome-applet
+Obsoletes:	gg-wm-applet
 
 %description plugin-docklet-dockapp
 Support for WindowMaker-style dockapp.
@@ -316,7 +326,7 @@ Summary(pl):	Dostêp do programu z innych aplikacji
 Group:		Applications/Communications
 Provides:	%{name}-remote = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-remote
-Provides:	gg2-ui
+#Provides:	gg2-ui
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description plugin-remote
@@ -394,6 +404,7 @@ Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__gettextize}
@@ -422,6 +433,7 @@ Motywy graficzne dla GUI GNU Gadu 2.
 	--with-gghist \
 	--with%{!?with_gtkspell:out}-gtkspell \
 	--with%{!?with_dbus:out}-dbus \
+	%{?with_dbus:--with-dbus-dir=%{_datadir}/dbus-1.0/services/} \
 	--%{?with_perl:with}%{!?with_perl:without}-perl \
  	--with-remote
 
@@ -572,8 +584,24 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.24  2004/11/18 13:34:32  krzyzak
-- 2.0.3
+Revision 1.25  2004/12/20 09:11:09  krzyzak
+- sync with PLD
+
+Revision 1.132  2004/12/07 12:47:35  zbyniu
+- BR: dbus-libs -> dbus-glib-devel
+
+Revision 1.131  2004/12/07 12:11:15  blues
+- obsoletes for old gg from RA
+
+Revision 1.130  2004/11/20 20:02:26  radek
+- tweak: strict DynaLoader req only if built with perl support
+
+Revision 1.129  2004/11/20 19:59:11  radek
+- release 2: require DynaLoader in version available at build time
+
+Revision 1.128  2004/11/18 13:43:10  krzak
+- up to 2.2.3
+- enable building dbus plugin
 
 Revision 1.127  2004/11/17 11:33:29  paladine
 - added desktop patch
