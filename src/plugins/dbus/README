@@ -27,9 +27,10 @@ Gadu-Gadu	gg://
 Jabber		jabber://
 AIM		aim://
 ICQ		icq://
+EMAIL		email://
 
-#####
-Interface org.freedesktop.im
+
+##### interface org.freedesktop.im #####
 
 [org.freedesktop.im.getProtocols()]
     RETURN: 
@@ -39,10 +40,13 @@ Interface org.freedesktop.im
 [org.freedesktop.im.getPresence( contactURI )]
     example: jabber://krzak@jabberpl.org
     
-    RETURN: type DBUS_TYPE_UINT32
-	enum
+    RETURN: (DBUS_TYPE_UINT32 DBusIMPresence,DBUS_TYPE_STRING icon_path)
+    
+	typedef enum
 	{
 	    IM_PRESENCE_ONLINE = 1,
 	    IM_PRESENCE_AWAY,
 	    IM_PRESENCE_OFFLINE
-	} DBusIMPresence;	    
+	} DBusIMPresence;
+	
+	icon_path - path to icon of this presence (optional, may be NULL)

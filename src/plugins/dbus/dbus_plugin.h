@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.h,v 1.6 2004/10/28 09:00:38 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.7 2004/10/28 10:04:19 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -26,7 +26,7 @@
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE "getPresence"
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS "getProtocols"
 
-enum
+typedef enum
 {
     IM_PRESENCE_ONLINE,
     IM_PRESENCE_AWAY,
