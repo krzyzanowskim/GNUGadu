@@ -1,6 +1,6 @@
-dnl $Id: configure.in,v 1.1 2003/03/20 10:37:01 krzyzak Exp $
+dnl $Id: configure.in,v 1.2 2003/03/20 17:45:01 krzyzak Exp $
 
-m4_define([gg2_version],[2.0_CVS_`date +%D`])
+m4_define([gg2_version],[2.0_CVS])
 
 AC_INIT(gg2,[gg2_version])
 AM_INIT_AUTOMAKE([no-define])
