@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.21 2003/06/02 09:51:06 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.22 2003/06/06 13:47:33 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -13,12 +13,14 @@
 #include "GUI_plugin.h"
 #include "gui_userview.h"
 #include "gui_chat.h"
+#include "gui_handlers.h"
 
 GtkWidget *plugins_dialog = NULL;
 GSList *selected_plugins = NULL;
 GtkTreeStore *store = NULL;
 GtkWidget *list = NULL;
 
+extern GSList *protocols;
 extern GGaduPlugin *gui_handler;
 extern GGaduConfig *config;
 
@@ -852,6 +854,16 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		config_var_set(gui_handler, "auto_away_interval",
 		    (gpointer) gtk_spin_button_get_value_as_int
 		    (GTK_SPIN_BUTTON(auto_away_interval)));
+
+		{
+		  GSList *list = protocols;
+		  while (list)
+		  {
+		    gui_protocol *gp = (gui_protocol *) protocols;
+		    auto_away_start (gp);
+		    list = list->next;
+		  }
+		}
 
 		config_var_set(gui_handler, "send_on_enter",
 			       (gpointer)
