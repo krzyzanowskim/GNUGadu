@@ -1,3 +1,6 @@
+01.04.2005
+- 2.2.5 released
+
 27.03.2005
 - IDEA has changed its sms gateway url again, fixed by Artur Gadawski <artur[at]ufo.o.k.pl>.
   Maybe we should make these configurable? (sms)
