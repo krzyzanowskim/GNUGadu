@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.147 2004/12/29 15:09:38 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.148 2005/01/05 18:44:47 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1403,7 +1403,7 @@ void start_plugin()
 {
 	p = g_new0(GGaduProtocol, 1);
 	p->display_name = g_strdup("Jabber");
-	p->protocol_uri = g_strdup("jabber://");
+	p->protocol_uri = g_strdup("xmpp://");
 	p->img_filename = g_strdup("jabber.png");
 	p->statuslist = status_init();
 	p->offline_status = g_slist_append(p->offline_status, (gint *) JABBER_STATUS_UNAVAILABLE);
