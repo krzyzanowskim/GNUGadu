@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.h,v 1.14 2004/01/28 23:40:26 shaster Exp $ */
+/* $Id: gui_handlers.h,v 1.15 2004/11/19 17:36:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -54,6 +54,8 @@ void handle_null(GGaduSignal * signal);
 
 void notify_callback(gchar * repo_name, gpointer key, gint actions);
 
-void auto_away_start(gui_protocol * gp);
+/*void auto_away_start(gui_protocol * gp);
 void auto_away_stop(gui_protocol * gp);
 gboolean auto_away_func(gpointer data);
+*/
+

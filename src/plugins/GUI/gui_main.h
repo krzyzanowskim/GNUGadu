@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.17 2004/10/27 09:19:19 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.18 2004/11/19 17:36:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -59,7 +59,7 @@ typedef struct
 	guint blinker;
 	GdkPixbuf *blinker_image1;
 	GdkPixbuf *blinker_image2;
-	guint aaway_timer;
+//	guint aaway_timer;
 	GGaduProtocol *p;
 	GtkTooltips *tooltips;
 } gui_protocol;

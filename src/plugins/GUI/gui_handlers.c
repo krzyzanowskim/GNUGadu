@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.60 2004/11/19 17:28:45 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.61 2004/11/19 17:36:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -50,7 +50,7 @@
 
 GtkTreeIter users_iter;
 GtkItemFactory *item_factory = NULL;
-static gint auto_away_enabled = FALSE;
+//static gint auto_away_enabled = FALSE;
 
 extern GtkTreeStore *users_treestore;
 extern GGaduPlugin *gui_handler;
@@ -187,7 +187,7 @@ void handle_register_protocol(GGaduSignal * signal)
 	print_debug("%s: %s protocol registered %s\n", "main-gui", p->display_name, signal->source_plugin_name);
 	gp->plugin_name = g_strdup(signal->source_plugin_name);
 	gp->p = p;
-	gp->aaway_timer = 0;
+//	gp->aaway_timer = 0;
 	gp->blinker = -1;
 
 	gui_user_view_register(gp);
@@ -320,7 +320,7 @@ void handle_disconnected(GGaduSignal * signal)
 
 	gp->blinker = -1;
 
-	auto_away_stop(gp);
+//	auto_away_stop(gp);
 
 	image = create_pixbuf(sp->image);
 	model = (tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore);
@@ -445,7 +445,7 @@ void handle_status_changed(GGaduSignal * signal)
 	gp->blinker_image1 = NULL;
 	gp->blinker_image2 = NULL;
 
-	auto_away_start(gp);
+//	auto_away_start(gp);
 	
 	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, sp->description, NULL);
 	
@@ -475,7 +475,7 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 	g_free(n);
 }
 
-void auto_away_start(gui_protocol * gp)
+/*void auto_away_start(gui_protocol * gp)
 {
 	GGaduStatusPrototype *sp = NULL;
 
@@ -523,7 +523,6 @@ gboolean auto_away_func(gpointer data)
 
 	if (!sp)
 	{
-		/* gp->aaway_timer = -1; */
 		return FALSE;
 	}
 
@@ -531,3 +530,4 @@ gboolean auto_away_func(gpointer data)
 	signal_emit("main-gui", "change status", sp, gp->plugin_name);
 	return TRUE;
 }
+*/
