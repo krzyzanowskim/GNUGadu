@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.31 2003/09/12 10:37:57 shaster Exp $
+# $Id: pl.po,v 1.32 2003/09/21 14:09:30 shaster Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"POT-Creation-Date: 2003-09-12 12:34+0200\n"
+"POT-Creation-Date: 2003-09-21 03:03+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,27 +51,27 @@ msgstr ""
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/GUI_plugin.c:548
+#: src/plugins/GUI/GUI_plugin.c:549
 msgid "/GnuGadu/_Preferences"
 msgstr "/GnuGadu/_Ustawienia"
 
-#: src/plugins/GUI/GUI_plugin.c:549
+#: src/plugins/GUI/GUI_plugin.c:550
 msgid "/GnuGadu/"
 msgstr "/GnuGadu/"
 
-#: src/plugins/GUI/GUI_plugin.c:550
+#: src/plugins/GUI/GUI_plugin.c:551
 msgid "/GnuGadu/_About"
 msgstr "/GnuGadu/_Informacje o"
 
-#: src/plugins/GUI/GUI_plugin.c:551
+#: src/plugins/GUI/GUI_plugin.c:552
 msgid "/GnuGadu/_Quit"
 msgstr "/GnuGadu/Za_koñcz"
 
-#: src/plugins/GUI/GUI_plugin.c:610
+#: src/plugins/GUI/GUI_plugin.c:611
 msgid "You Have Message"
 msgstr "Masz wiadomo¶æ"
 
-#: src/plugins/GUI/GUI_plugin.c:634
+#: src/plugins/GUI/GUI_plugin.c:635
 #, c-format
 msgid "New message from %s"
 msgstr "Nowa wiadomo¶æ od %s"
@@ -169,7 +169,7 @@ msgid "Contact list"
 msgstr "Lista kontaktów"
 
 #: src/plugins/GUI/gui_preferences.c:415
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1690 src/plugins/sms/sms_gui.c:209
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1690 src/plugins/sms/sms_gui.c:211
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -207,7 +207,7 @@ msgstr "Wiadomo¶ci wychodz±ce:"
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1452
 #: src/plugins/tlen/tlen_plugin.c:701 src/plugins/xosd/plugin_xosd.c:397
 #: src/plugins/jabber/jabber_plugin.c:561
-#: src/plugins/remote/remote_plugin.c:636 src/plugins/sms/sms_gui.c:159
+#: src/plugins/remote/remote_plugin.c:636 src/plugins/sms/sms_gui.c:161
 #: src/plugins/update/update_plugin.c:286
 msgid "Preferences"
 msgstr "Ustawienia"
@@ -319,7 +319,8 @@ msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki GUI"
 msgid "Status"
 msgstr "Stan"
 
-#: src/plugins/GUI/gui_search.c:28 src/plugins/sms/sms_gui.c:78
+#. *INDENT-OFF*
+#: src/plugins/GUI/gui_search.c:28 src/plugins/sms/sms_gui.c:79
 msgid "Id"
 msgstr "Id"
 
@@ -338,7 +339,7 @@ msgstr "Wiek"
 #: src/plugins/GUI/gui_search.c:105
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1691
 #: src/plugins/tlen/tlen_plugin.c:764 src/plugins/jabber/jabber_plugin.c:160
-#: src/plugins/sms/sms_gui.c:210
+#: src/plugins/sms/sms_gui.c:212
 msgid "Add"
 msgstr "Dodaj"
 
@@ -461,10 +462,11 @@ msgstr "Nie mo¿na nawi±zaæ po³±czenia!"
 msgid "Program is about to leave"
 msgstr "Program zakoñczy swoje dzia³anie"
 
+#. *INDENT-OFF*
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:793
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:810
-#: src/plugins/tlen/tlen_plugin.c:491 src/plugins/sms/sms_gui.c:79
-#: src/plugins/sms/sms_gui.c:94
+#: src/plugins/tlen/tlen_plugin.c:491 src/plugins/sms/sms_gui.c:80
+#: src/plugins/sms/sms_gui.c:97
 msgid "Nick"
 msgstr "Ksywa"
 
@@ -654,7 +656,7 @@ msgstr "Wybór pliku"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1451
 #: src/plugins/tlen/tlen_plugin.c:700 src/plugins/jabber/jabber_plugin.c:557
-#: src/plugins/sms/sms_gui.c:158
+#: src/plugins/sms/sms_gui.c:160
 msgid "Add Contact"
 msgstr "Dodaj kontakt"
 
@@ -744,7 +746,7 @@ msgstr "Wy¶lij plik"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1692
 #: src/plugins/tlen/tlen_plugin.c:765 src/plugins/jabber/jabber_plugin.c:162
-#: src/plugins/sms/sms_gui.c:211
+#: src/plugins/sms/sms_gui.c:213
 msgid "Remove"
 msgstr "Usuñ"
 
@@ -938,7 +940,7 @@ msgstr "Identyfikator Jabbera (jid)"
 msgid "Nickname"
 msgstr "Pseudo"
 
-#: src/plugins/jabber/jabber_plugin.c:161 src/plugins/sms/sms_gui.c:212
+#: src/plugins/jabber/jabber_plugin.c:161 src/plugins/sms/sms_gui.c:214
 msgid "Edit"
 msgstr "Modyfikuj"
 
@@ -1055,185 +1057,192 @@ msgstr "Zdalne sterowanie"
 msgid "Unable to read config file for plugin remote"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki remote"
 
-#: src/plugins/sms/sms_core.c:139
+#: src/plugins/sms/sms_core.c:141
 msgid "IDEA token"
 msgstr "¯eton IDEA"
 
-#: src/plugins/sms/sms_core.c:144
+#: src/plugins/sms/sms_core.c:146
 msgid "Enter token text"
 msgstr "Wpisz tekst z obrazka"
 
-#: src/plugins/sms/sms_core.c:306
+#: src/plugins/sms/sms_core.c:309
 msgid "Please enter token"
 msgstr "Wpisz tekst z obrazka"
 
-#: src/plugins/sms/sms_core.c:316 src/plugins/sms/sms_core.c:337
-#: src/plugins/sms/sms_core.c:710
+#: src/plugins/sms/sms_core.c:320 src/plugins/sms/sms_core.c:341
+#: src/plugins/sms/sms_core.c:688
 msgid "Cannot connect!"
 msgstr "Nie mo¿na siê po³±czyæ!"
 
-#: src/plugins/sms/sms_core.c:346 src/plugins/sms/sms_core.c:679
+#: src/plugins/sms/sms_core.c:347 src/plugins/sms/sms_core.c:651
 msgid "SMS has been sent"
 msgstr "SMS zosta³ wys³any"
 
-#: src/plugins/sms/sms_core.c:353
-msgid "SMS has NOT been sent!"
-msgstr "SMS nie zosta³ wys³any!"
+#: src/plugins/sms/sms_core.c:354
+msgid "Bad token!"
+msgstr "B³êdne has³o!"
 
-#: src/plugins/sms/sms_core.c:360
+#: src/plugins/sms/sms_core.c:357
 msgid "Bad token entered!"
 msgstr "Wprowadzony z³y ¿eton!"
 
-#: src/plugins/sms/sms_core.c:367 src/plugins/sms/sms_core.c:704
+#: src/plugins/sms/sms_core.c:360 src/plugins/sms/sms_core.c:682
 msgid "Daily limit exceeded!"
 msgstr "Dzienny limit przekroczony!"
 
-#: src/plugins/sms/sms_core.c:374 src/plugins/sms/sms_core.c:707
+#: src/plugins/sms/sms_core.c:363 src/plugins/sms/sms_core.c:685
 msgid "Gateway error!"
 msgstr "B³±d bramki!"
 
-#: src/plugins/sms/sms_core.c:381
+#: src/plugins/sms/sms_core.c:366
 msgid "Service not activated!"
 msgstr "Us³uga nie jest aktywna!"
 
-#: src/plugins/sms/sms_core.c:388
+#: src/plugins/sms/sms_core.c:369
 msgid "Invalid number"
 msgstr "Nieprawid³owy numer!"
 
-#: src/plugins/sms/sms_core.c:505
-#, c-format
-msgid "SMS has been sent. Left: %s"
-msgstr "SMS zosta³ wys³any. Pozosta³o: %s"
-
-#: src/plugins/sms/sms_core.c:570
+#: src/plugins/sms/sms_core.c:537
 msgid "None"
 msgstr "(Brak)"
 
-#: src/plugins/sms/sms_core.c:572
-msgid "SMS plugin : "
-msgstr "Wtyczka SMS : "
+#: src/plugins/sms/sms_core.c:539
+msgid "SMS plugin: "
+msgstr "Wtyczka SMS: "
 
-#: src/plugins/sms/sms_core.c:595
+#: src/plugins/sms/sms_core.c:565
 msgid "Specify recipient number!"
 msgstr "Okre¶l numer odbiorcy!"
 
-#: src/plugins/sms/sms_core.c:601
+#: src/plugins/sms/sms_core.c:571
 msgid "Specify sender name!"
 msgstr "Okre¶l nazwê nadawcy!"
 
-#: src/plugins/sms/sms_core.c:607
+#: src/plugins/sms/sms_core.c:577
 msgid "Message is empty!"
 msgstr "Tre¶æ wiadomo¶ci jest pusta"
 
-#: src/plugins/sms/sms_core.c:623
+#: src/plugins/sms/sms_core.c:594
 msgid "IDEA does not work this way!"
 msgstr "IDEA nie dzia³a w ten sposób!"
 
-#: src/plugins/sms/sms_core.c:652
+#: src/plugins/sms/sms_core.c:623
 msgid "Empty Era login!"
 msgstr "Pusty login Era"
 
-#: src/plugins/sms/sms_core.c:658
+#: src/plugins/sms/sms_core.c:629
 msgid "Empty Era password!"
 msgstr "Puste has³o Era"
 
-#: src/plugins/sms/sms_core.c:667
+#: src/plugins/sms/sms_core.c:638
 msgid "Invalid number!"
 msgstr "Nieprawid³owy numer!"
 
-#: src/plugins/sms/sms_core.c:673
+#: src/plugins/sms/sms_core.c:653
+#, c-format
+msgid "SMS has been sent. Left: %d"
+msgstr "SMS zosta³ wys³any. Pozosta³o: %d"
+
+#: src/plugins/sms/sms_core.c:658
 msgid "SMS not delivered!"
 msgstr "SMS nie zosta³ dostarczony!"
 
-#: src/plugins/sms/sms_core.c:686
+#: src/plugins/sms/sms_core.c:661
 msgid "Unauthorized!"
 msgstr "U¿ytkownik nieautoryzowany!"
 
-#: src/plugins/sms/sms_core.c:689
+#: src/plugins/sms/sms_core.c:664
 msgid "Access denied!"
 msgstr "Dostêp zablokowany!"
 
-#: src/plugins/sms/sms_core.c:692
+#: src/plugins/sms/sms_core.c:667
 msgid "Syntax error!"
 msgstr "B³±d sk³adni!"
 
-#: src/plugins/sms/sms_core.c:695
+#: src/plugins/sms/sms_core.c:670
 msgid "Invalid recipient!"
 msgstr "B³êdny adres odbiorcy!"
 
-#: src/plugins/sms/sms_core.c:698
+#: src/plugins/sms/sms_core.c:673
 msgid "Message too long!"
 msgstr "Wiadomo¶æ zbyt d³uga!"
 
-#: src/plugins/sms/sms_core.c:701
+#: src/plugins/sms/sms_core.c:676
 msgid "Token not found!"
 msgstr "¯eton nie odnaleziony"
 
-#: src/plugins/sms/sms_core.c:713
+#: src/plugins/sms/sms_core.c:679
+msgid "Cannot write token image to file!"
+msgstr "B³±d podczas zapisu ¿etonu!"
+
+#: src/plugins/sms/sms_core.c:693
 msgid "Unknown error!"
 msgstr "Nieznany b³±d!"
 
-#: src/plugins/sms/sms_gui.c:54
+#: src/plugins/sms/sms_gui.c:52
 msgid "SMS Preferences"
 msgstr "Ustawienia SMS"
 
-#: src/plugins/sms/sms_gui.c:58
+#. *INDENT-OFF*
+#: src/plugins/sms/sms_gui.c:57
 msgid "Use \"SMS\" program to send"
 msgstr "U¿yj programu \"SMS\" do wysy³ania"
 
-#: src/plugins/sms/sms_gui.c:59 src/plugins/sms/sms_gui.c:139
-#: src/plugins/sms/sms_gui.c:286
+#. *INDENT-OFF*
+#: src/plugins/sms/sms_gui.c:58 src/plugins/sms/sms_gui.c:143
+#: src/plugins/sms/sms_gui.c:290
 msgid "Sender"
 msgstr "Nadawca"
 
-#: src/plugins/sms/sms_gui.c:60 src/plugins/sms/sms_gui.c:143
-#: src/plugins/sms/sms_gui.c:292
+#: src/plugins/sms/sms_gui.c:59 src/plugins/sms/sms_gui.c:145
+#: src/plugins/sms/sms_gui.c:293
 msgid "Era login"
 msgstr "Era login"
 
-#: src/plugins/sms/sms_gui.c:61 src/plugins/sms/sms_gui.c:145
+#: src/plugins/sms/sms_gui.c:60 src/plugins/sms/sms_gui.c:146
 #: src/plugins/sms/sms_gui.c:294
 msgid "Era password"
 msgstr "Era has³o"
 
-#: src/plugins/sms/sms_gui.c:62
+#: src/plugins/sms/sms_gui.c:61
 msgid "Show plugin in status list (needs reload)"
 msgstr "Pokazuj modu³ na li¶cie stanów (wymaga prze³adowania)"
 
-#: src/plugins/sms/sms_gui.c:80 src/plugins/sms/sms_gui.c:95
-#: src/plugins/sms/sms_gui.c:288
+#: src/plugins/sms/sms_gui.c:81 src/plugins/sms/sms_gui.c:98
+#: src/plugins/sms/sms_gui.c:291
 msgid "Number"
 msgstr "Numer"
 
-#: src/plugins/sms/sms_gui.c:128
+#: src/plugins/sms/sms_gui.c:132
 msgid "No phone number"
 msgstr "Brak numeru telefonu"
 
-#: src/plugins/sms/sms_gui.c:133
+#: src/plugins/sms/sms_gui.c:137
 msgid "Send to : "
 msgstr "Wy¶lij do : "
 
-#: src/plugins/sms/sms_gui.c:137
+#. *INDENT-OFF*
+#: src/plugins/sms/sms_gui.c:142
 msgid "Use external program"
 msgstr "U¿yj zewnêtrznego programu"
 
-#: src/plugins/sms/sms_gui.c:141 src/plugins/sms/sms_gui.c:290
+#: src/plugins/sms/sms_gui.c:144 src/plugins/sms/sms_gui.c:292
 msgid "Message"
 msgstr "Wiadomo¶æ"
 
-#: src/plugins/sms/sms_gui.c:170
+#: src/plugins/sms/sms_gui.c:172
 msgid "SMS sender"
 msgstr "Wysy³acz SMSów"
 
-#: src/plugins/sms/sms_gui.c:188
+#: src/plugins/sms/sms_gui.c:190
 msgid "Unable to read config file for plugin sms"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki sms"
 
-#: src/plugins/sms/sms_gui.c:207 src/plugins/sms/sms_gui.c:528
+#: src/plugins/sms/sms_gui.c:209 src/plugins/sms/sms_gui.c:527
 msgid "Send SMS"
 msgstr "Wy¶lij SMS"
 
-#: src/plugins/sms/sms_gui.c:283
+#: src/plugins/sms/sms_gui.c:286
 msgid "SMS Send"
 msgstr "Wysy³anie SMS"
 
@@ -1311,6 +1320,9 @@ msgstr "Sprawdzanie aktualizacji"
 #: src/plugins/update/update_plugin.c:382
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki update"
+
+#~ msgid "SMS has NOT been sent!"
+#~ msgstr "SMS nie zosta³ wys³any!"
 
 #~ msgid "Connection error"
 #~ msgstr "Wyst±pi³ b³±d na poziomie po³±czenia"
