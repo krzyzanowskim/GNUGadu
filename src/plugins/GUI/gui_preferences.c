@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.94 2005/01/26 08:41:55 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.95 2005/01/26 08:45:25 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -879,12 +879,14 @@ static GtkWidget *create_advanced_tab()
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label1_align, 0, 1, 3, 4);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_skins, 1, 3, 3, 4);
 
-	dirname = g_build_filename(g_get_home_dir(), ".gg2/skins", NULL);
+	dirname = g_build_filename(config->configdir, "skins", NULL);
 
 	dir = g_dir_open(dirname, 0, NULL);
+
 	if (!dir) {
 	    g_free(dirname);
-	    dirname = g_build_filename(g_getenv("HOME_ETC"), "gg2/skins", NULL);
+	    
+	    dirname = g_build_filename(PACKAGE_DATA_DIR, "skins", NULL);
 	    dir = g_dir_open(dirname, 0, NULL);
 	}
 	
