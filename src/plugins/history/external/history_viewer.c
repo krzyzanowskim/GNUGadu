@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.6 2004/10/13 18:12:24 thrulliq Exp $ */
+/* $Id: history_viewer.c,v 1.7 2004/12/15 17:51:31 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -40,7 +40,7 @@ gpointer history_external_preferences(gpointer user_data)
 	
     print_debug("%s: Preferences\n","External history viewer");
 
-    ggadu_dialog_add_entry(dialog, GGADU_HISTORY_CONFIG_VIEWER, _("Path to external viewer"), VAR_FILE_CHOOSER, ggadu_config_var_get(handler, "viewer"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(dialog, GGADU_HISTORY_CONFIG_VIEWER, _("_Path to external viewer"), VAR_FILE_CHOOSER, ggadu_config_var_get(handler, "viewer"), VAR_FLAG_NONE);
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -102,7 +102,7 @@ gpointer show_external_history(gpointer user_data)
 GGaduMenu *build_plugin_menu()
 {
     GGaduMenu *root = ggadu_menu_create();
-    GGaduMenu *item_gg = ggadu_menu_add_item(root, _("History Viewer"), NULL, NULL);
+    GGaduMenu *item_gg = ggadu_menu_add_item(root, _("History _Viewer"), NULL, NULL);
     ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), history_external_preferences, NULL));
 
     return root;
@@ -115,7 +115,7 @@ void start_plugin()
     ext = g_new0(GGaduPluginExtension, 1);
     ext->type = GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE;
     ext->callback = show_external_history;
-    ext->txt = _("View History");
+    ext->txt = _("View _History");
 
     register_extension_for_plugin(ext,GGADU_PLUGIN_TYPE_PROTOCOL);
 

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.125 2004/12/15 17:44:31 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.126 2004/12/15 17:51:43 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1400,18 +1400,18 @@ GGaduMenu *build_jabber_menu()
 	root = ggadu_menu_create();
 	item = ggadu_menu_add_item(root, "_Jabber", NULL, NULL);
 
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Add Contact"), user_add_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("_Add Contact"), user_add_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Search for friends"), user_search_action, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("_Search for friends"), user_search_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("_Preferences"), user_preferences_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Personal data"), user_own_vcard_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show _ignored"), user_show_ignored_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Personal _data"), user_own_vcard_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	account=ggadu_menu_new_item(_("Account"), NULL, NULL);
-	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Register account"), jabber_register_account_dialog, NULL));
-	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Remove account"), user_remove_account_action, NULL));
-	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Change password"), user_change_password_action, NULL));
+	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("R_egister account"), jabber_register_account_dialog, NULL));
+	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("Remo_ve account"), user_remove_account_action, NULL));
+	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("C_hange password"), user_change_password_action, NULL));
 	ggadu_menu_add_submenu(item, account);
 	
 	return root;

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.79 2004/12/15 17:15:47 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.80 2004/12/15 17:51:44 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -773,12 +773,12 @@ gpointer search_action(gpointer user_data)
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Tlen search"), "search");
 
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("@tlen.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_FIRSTNAME, _("_First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("_Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("_Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_CITY, _("_City:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("@t_len.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("_Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -806,11 +806,11 @@ gpointer user_preferences_action(gpointer user_data)
 	}
 
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_UIN, _("Tlen login"), VAR_STR, ggadu_config_var_get(handler, "login"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_PASSWORD, _("Password"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_PASSWORD, _("_Password"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT, _("_Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("A_utoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
 	
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -825,9 +825,9 @@ GGaduMenu *build_tlen_menu()
 	GGaduMenu *root = ggadu_menu_create();
 	GGaduMenu *item_tl = ggadu_menu_add_item(root, "_Tlen", NULL, NULL);
 
-	ggadu_menu_add_submenu(item_tl, ggadu_menu_new_item(_("Add Contact"), user_add_user_action, NULL));
-	ggadu_menu_add_submenu(item_tl, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
-	ggadu_menu_add_submenu(item_tl, ggadu_menu_new_item(_("Search for friends"), search_action, NULL));
+	ggadu_menu_add_submenu(item_tl, ggadu_menu_new_item(_("_Add Contact"), user_add_user_action, NULL));
+	ggadu_menu_add_submenu(item_tl, ggadu_menu_new_item(_("_Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu(item_tl, ggadu_menu_new_item(_("_Search for friends"), search_action, NULL));
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", root, "main-gui");
 
@@ -883,12 +883,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		GGaduMenu *umenu = ggadu_menu_create();
 		/* GGaduMenu *listmenu = NULL; */
 
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View _History"), user_view_history_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), user_add_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Remove"), user_remove_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Add New"), user_add_user_action, NULL));
 
 		/* ggadu_menu_add_submenu(umenu, listmenu); */
 
