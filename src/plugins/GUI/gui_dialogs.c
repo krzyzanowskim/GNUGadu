@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.37 2004/02/14 16:46:54 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.38 2004/02/17 02:04:57 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -253,10 +253,16 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 		}
 
 		if ((kv->flag & VAR_FLAG_SENSITIVE) != 0)
+		{
+			gtk_widget_set_sensitive (GTK_WIDGET(entry),TRUE);
 			gtk_editable_set_editable(GTK_EDITABLE(entry), TRUE);
+		}
 
 		if ((kv->flag & VAR_FLAG_INSENSITIVE) != 0)
+		{
+			gtk_widget_set_sensitive (GTK_WIDGET(entry),FALSE);
 			gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
+		}
 
 		if ((kv->flag & VAR_FLAG_PASSWORD) != 0)
 			gtk_entry_set_visibility(GTK_ENTRY(entry), FALSE);
