@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.40 2004/04/18 19:47:48 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.41 2004/05/01 08:49:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -315,6 +315,11 @@ void gui_list_add(gui_protocol * gp)
 	gtk_box_pack_start(GTK_BOX(vbox), eventbox, FALSE, FALSE, 0);
 
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, label);
+	
+	if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(notebook)) == 1)
+	    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),FALSE);
+	else
+	    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),TRUE);
 
 	gtk_widget_show_all(vbox);
 	gtk_widget_hide(gp->add_info_label);
@@ -325,6 +330,7 @@ void gui_list_add(gui_protocol * gp)
 	g_object_set_data(G_OBJECT(gp->add_info_label), "add_info_label_desc", add_info_label_desc);
 
 	gp->users_liststore = users_liststore;
+	
 }
 
 void gui_tree_add(gui_protocol * gp)
