@@ -1,4 +1,4 @@
-# $Revision: 1.6 $, $Date: 2003/06/03 21:43:18 $
+# $Revision: 1.7 $, $Date: 2003/06/10 10:30:54 $
 
 %define		snap	snap
 
@@ -211,6 +211,18 @@ Make possible exchange data with other applications.
 %description remote -l pl
 Wtyczka umo¿liwiaj±ca wymianê informacji z innymi aplikacjami.
 
+%package update
+Summary:        Update checker
+Summary(pl):    Wyszukiwanie aktualizacji
+Group:          Applications/Communications
+Requires:       %{name} = %{version}
+
+%description update
+Automatically check for available updates.
+
+%description update -l pl
+Wtyczka umo¿liwiaj±ca automatyczne wyszukiwanie dostêpnych aktualizacji.
+
 %package themes
 Summary:	Themes for GNU Gadu 2 GUI
 Summary(pl):	Motywy graficzne dla GUI GNU Gadu 2
@@ -248,6 +260,7 @@ intltoolize --copy --force
  	--with-oss \
  	--with-sms \
  	--with-external \
+	--with-update \
  	--with-remote
 #	--with-arts
 
@@ -338,6 +351,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libremote_plugin.so
 
+%files update
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gg2/libupdate_plugin.so
+
 %files themes
 %defattr(644,root,root,755)
 %dir %{_datadir}/gg2/themes
@@ -367,6 +384,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.7  2003/06/10 10:30:54  shaster
+added update plugin
+
 Revision 1.6  2003/06/03 21:43:18  krzyzak
 - update to latest snap
 
