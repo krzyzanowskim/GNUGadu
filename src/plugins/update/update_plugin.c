@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.7 2003/09/22 11:09:33 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.8 2003/09/27 13:50:00 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -55,7 +55,7 @@ gchar *update_get_current_version(gboolean show)
     struct sockaddr_in servAddr;
     const gchar *server = GGADU_UPDATE_SERVER;
     gchar temp[2];
-    gchar *get = NULL, *recv_buff = NULL, *buf1 = NULL;
+    gchar *get = NULL, *recv_buff = NULL, *buf = NULL, *buf1 = NULL;
     gchar *reply = NULL;
 
     /* where to connect */
@@ -116,7 +116,7 @@ gchar *update_get_current_version(gboolean show)
     send(sock_s, get, strlen(get), MSG_WAITALL);
     g_free(get);
 
-    /* allocate some buffers */
+    /* allocate receive buffers */
     recv_buff = g_malloc0(GGADU_UPDATE_BUFLEN);
 
     /* receiving data */
@@ -127,7 +127,7 @@ gchar *update_get_current_version(gboolean show)
     close(sock_s);
 
     /* check for "200 OK" response */
-    if ((recv_buff = g_strstr_len(recv_buff, i, "200 OK")) == NULL)
+    if ((buf = g_strstr_len(recv_buff, i, "200 OK")) == NULL)
     {
 	if (show)
 	{
@@ -138,11 +138,12 @@ gchar *update_get_current_version(gboolean show)
 		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Server-side error during update check")),
 			    "main-gui");
 	}
+	g_free(recv_buff);
 	return NULL;
     }
 
-    /* Search for: <title>gg2 XXXXXX released */
-    if ((recv_buff = g_strstr_len(recv_buff, strlen(recv_buff), "<title>gg2")) == NULL)
+    /* Search for first occurence of: <title>gg2 XXXXXX released */
+    if ((buf = g_strstr_len(recv_buff, i, "<title>gg2")) == NULL)
     {
 	if (show)
 	{
@@ -151,11 +152,11 @@ gchar *update_get_current_version(gboolean show)
 	    else
 		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Malformed server reply")), "main-gui");
 	}
+	g_free(recv_buff);
 	return NULL;
     }
 
-    buf1 = g_malloc0(GGADU_UPDATE_BUFLEN);
-    buf1 = g_strstr_len(recv_buff + 11, strlen(recv_buff) - 11, " released");
+    buf1 = g_strstr_len(buf + 11, strlen(buf) - 11, " released");
     if (!buf1)
     {
 	if (show)
@@ -165,14 +166,16 @@ gchar *update_get_current_version(gboolean show)
 	    else
 		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Malformed server reply")), "main-gui");
 	}
+	g_free(recv_buff);
 	return NULL;
     }
 
     /* version returned by server */
-    reply = g_strndup(recv_buff + 11, strlen(recv_buff) - 11 - strlen(buf1));
+    reply = g_strndup(buf + 11, strlen(buf) - 11 - strlen(buf1));
 
     print_debug("%s : Server returned version ,,%s''\n", GGadu_PLUGIN_NAME, reply);
 
+    g_free(recv_buff);
     return reply;
 }
 

@@ -1,3 +1,6 @@
+27.09.2003
+- FREE MALLOCS! [strajk edyszyn] (sms/update/shasta)
+
 24.09.2003
 - workaround IDEA's gateway problems, we were getting 404/302 all the time.
   Retry 3 times before giving up, then return ERR_GATEWAY (sms/shasta)
