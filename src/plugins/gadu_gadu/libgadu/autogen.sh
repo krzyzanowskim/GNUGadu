@@ -5,9 +5,9 @@ else
 	test -f config.log && ARGS=`grep '^  \$ \./configure ' config.log | sed 's/^  \$ \.\/configure //' 2> /dev/null`
 fi
 
-if automake-1.7 --version < /dev/null > /dev/null 2>&1 ; then
-    AUTOMAKE=automake-1.7
-    ACLOCAL=aclocal-1.7
+if automake-1.9 --version < /dev/null > /dev/null 2>&1 ; then
+    AUTOMAKE=automake-1.9
+    ACLOCAL=aclocal-1.9
 else
     if automake-1.8 --version < /dev/null > /dev/null 2>&1 ; then
 	AUTOMAKE=automake-1.8

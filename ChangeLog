@@ -1,3 +1,6 @@
+04.02.2005
+- automake 1.9, 1.8 and at least unspecified used by autogen sutff (krzak)
+
 01.02.2005
 - patch from Andrzej Kurzeja andyx(at)budorex.com.pl for Tlen.pl status (Tlen)
 - build core and gadu-gadu plugin on MacOSX (krzak)
