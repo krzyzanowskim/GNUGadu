@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.236 2005/01/10 09:39:11 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.237 2005/01/10 10:49:18 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -91,10 +91,10 @@ static gint ggadu_gadu_gadu_is_status_descriptive(GGaduStatusPrototype * sp)
 {
 	gint status;
 	gint ret = 0;
-	
+
 	if (!sp)
-	    return 0;
-	
+		return 0;
+
 	status = sp->status;
 	ret = (gint) (status == GG_STATUS_AVAIL_DESCR || status == GG_STATUS_BUSY_DESCR || status == GG_STATUS_NOT_AVAIL_DESCR || status == GG_STATUS_INVISIBLE_DESCR);
 	return ret;
@@ -145,9 +145,10 @@ gchar *insert_cr(gchar * txt)
 	gchar *out;
 	gchar *in;
 	gchar *start;
-	
-	if (!txt) return NULL;
-	
+
+	if (!txt)
+		return NULL;
+
 	in = txt;
 	out = g_malloc0(strlen(txt) * 2);
 	start = out;
@@ -488,7 +489,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		break;
 	case GG_EVENT_DISCONNECT:
 		{
-			ggadu_gadu_gadu_reconnect();
+//                      ggadu_gadu_gadu_reconnect();
 		}
 		break;
 	case GG_EVENT_USERLIST:
@@ -910,31 +911,31 @@ static gpointer user_remove_user_action(gpointer user_data)
 
 static gpointer user_info_user_action(gpointer user_data)
 {
-    GGaduDialog *dialog;
-    GSList *users;
-    GGaduContact *k;
+	GGaduDialog *dialog;
+	GSList *users;
+	GGaduContact *k;
 
-    if (!connected)
-    {
-	signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("You have to be connected to perform searching!")), "main-gui");
-	return NULL;
-    }
-    
-    users = (GSList *) user_data;
-    
-    if (!users)
-	return NULL;
-    
-    k = (GGaduContact *) users->data;
-    if (!k)
-	return NULL;
-    
-    dialog = g_new0(GGaduDialog, 1);
-    dialog->response = GGADU_OK;
-    ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, k->id, VAR_FLAG_NONE);
-    signal_emit("main-gui", "search", dialog, GGadu_PLUGIN_NAME);
+	if (!connected)
+	{
+		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("You have to be connected to perform searching!")), "main-gui");
+		return NULL;
+	}
 
-    return NULL;
+	users = (GSList *) user_data;
+
+	if (!users)
+		return NULL;
+
+	k = (GGaduContact *) users->data;
+	if (!k)
+		return NULL;
+
+	dialog = g_new0(GGaduDialog, 1);
+	dialog->response = GGADU_OK;
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, k->id, VAR_FLAG_NONE);
+	signal_emit("main-gui", "search", dialog, GGadu_PLUGIN_NAME);
+
+	return NULL;
 }
 
 static gpointer user_change_user_action(gpointer user_data)
@@ -1800,12 +1801,12 @@ void start_plugin()
 	{
 		gchar *cp;
 		gint status;
-		
+
 		status = (ggadu_config_var_check(handler, "status") ? (gint) ggadu_config_var_get(handler, "status") : GG_STATUS_AVAIL);
-		
+
 		if (ggadu_config_var_get(handler, "private"))
 			status |= GG_STATUS_FRIENDS_MASK;
-			
+
 		cp = from_utf8("CP1250", ggadu_config_var_get(handler, "reason"));
 		gadu_gadu_login((ggadu_config_var_check(handler, "reason")) ? cp : _("no reason"), status);
 		g_free(cp);
@@ -2103,89 +2104,101 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == CHANGE_STATUS_SIG)
 	{
 		GGaduStatusPrototype *sp = signal->data;
+		gint internal_status;
 
 		if (!sp)
 			return;
 
-		if (sp->status == GG_STATUS_NOT_AVAIL)
+/*		if (sp->status & GG_STATUS_FRIENDS_MASK)
+			internal_status = (sp->status ^ GG_STATUS_FRIENDS_MASK);
+		else
+			internal_status = sp->status;
+*/
+		internal_status = sp->status;
+		if (ggadu_config_var_get(handler, "private"))
 		{
-			ggadu_gadu_gadu_disconnect();
-			return;
+			internal_status |= GG_STATUS_FRIENDS_MASK;
 		}
+
+
 
 		/* descriptions, call dialogbox */
 		if (ggadu_gadu_gadu_is_status_descriptive(sp) && (!sp->status_description))
 		{
 			GGaduDialog *dialog;
-			
-			dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, 
-						       _("Enter status description"),
-						       "change status descr dialog",
-						       sp);
-			
-			ggadu_dialog_add_entry(dialog, 
-					      0,
-					      _("_Description:"),
-					      VAR_STR,
-					      (gpointer) ggadu_config_var_get(handler, "reason"),
-					      VAR_FLAG_FOCUS);
-					      
+
+			dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr dialog", sp);
+
+			ggadu_dialog_add_entry(dialog, 0, _("_Description:"), VAR_STR, (gpointer) ggadu_config_var_get(handler, "reason"), VAR_FLAG_FOCUS);
+
 			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 		}
 		else
 		{
-			gint _status = sp->status;
-
 			if (sp->status_description)
 			{
 				switch (sp->status)
 				{
 				case GG_STATUS_AVAIL:
-					_status = GG_STATUS_AVAIL_DESCR;
+					sp->status = GG_STATUS_AVAIL_DESCR;
 					break;
 				case GG_STATUS_BUSY:
-					_status = GG_STATUS_BUSY_DESCR;
+					sp->status = GG_STATUS_BUSY_DESCR;
 					break;
 				case GG_STATUS_NOT_AVAIL:
-					_status = GG_STATUS_NOT_AVAIL_DESCR;
+					sp->status = GG_STATUS_NOT_AVAIL_DESCR;
 					break;
 				case GG_STATUS_INVISIBLE:
-					_status = GG_STATUS_INVISIBLE_DESCR;
+					sp->status = GG_STATUS_INVISIBLE_DESCR;
 					break;
+				}
+				if (ggadu_config_var_get(handler, "private"))
+				{
+					internal_status = sp->status;
+					internal_status |= GG_STATUS_FRIENDS_MASK;
 				}
 			}
 
+
 			ggadu_config_var_set(handler, "reason", sp->status_description);
 			ggadu_config_save(handler);
-
-			if (ggadu_config_var_get(handler, "private"))
-				_status |= GG_STATUS_FRIENDS_MASK;
 
 			/* if not connected, login. else, just change status */
 			if (!connected)
 			{
 				connect_count = 0;
-				gadu_gadu_login(NULL, sp->status);
+				gadu_gadu_login(NULL, internal_status);
 			}
 			else if (sp->status_description)
 			{
 				gchar *desc_cp;
-				
+
 				desc_cp = from_utf8("CP1250", sp->status_description);
-				gg_change_status_descr(session, _status, desc_cp ? desc_cp : "");
+				gg_change_status_descr(session, internal_status, desc_cp ? desc_cp : "");
 				g_free(desc_cp);
 
-				print_debug("changed to %d",_status);
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
-					(gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
-				
+				print_debug("changed to %d %d %d %d", internal_status, sp->status, GG_STATUS_NOT_AVAIL, GG_STATUS_NOT_AVAIL_DESCR);
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+/*				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
+					    (gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
+*/
 			}
-			else if (gg_change_status(session, _status) != -1)
+			else if (gg_change_status(session, internal_status) != -1)
 			{
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
-					(gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
-			} else {
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+/*				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
+					    (gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
+*/
+			}
+			else
+			{
 				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Unable to change status")), "main-gui");
+			}
+
+			if ((sp->status == GG_STATUS_NOT_AVAIL) || (sp->status == GG_STATUS_NOT_AVAIL_DESCR))
+			{
+				ggadu_gadu_gadu_disconnect();
+				return;
 			}
 		}
 
@@ -2209,7 +2222,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 				if (kv && kv->value && (strlen(kv->value) > 0))
 				{
-					sp->status_description = g_strdup(kv->value); /* not sure */
+					sp->status_description = g_strdup(kv->value);	/* not sure */
 					signal_emit(GGadu_PLUGIN_NAME, "change status", sp, "gadu-gadu");
 				}
 			}
@@ -2305,12 +2318,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			gchar *message = NULL;
 
 			message = from_utf8("CP1250", msg->message);
-			if (!message) 
+			if (!message)
 			{
 				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Unable to send message")), "main-gui");
 				return;
 			}
-			
+
 			message = insert_cr(message);
 			msg->time = time(NULL);
 
