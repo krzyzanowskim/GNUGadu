@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.25 2004/08/02 11:13:59 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.26 2004/08/04 20:43:49 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -103,8 +103,6 @@ void start_plugin();
 void destroy_plugin();
 
 void gadu_gadu_enable_dcc_socket(gboolean state);
-
-gpointer gadu_gadu_login(gpointer desc, gint status);
 
 void wyjdz_signal_handler();
 

@@ -250,7 +250,7 @@ int main(int argc, char **argv)
 	}
 
 #ifdef GGADU_DEBUG
-	g_print("Opening file..\n");
+	g_print("Trying to open a file..\n");
 #endif
 	int fd = open(argv[1], O_RDONLY);
 
@@ -265,9 +265,10 @@ int main(int argc, char **argv)
 						
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
-		
-		g_error("Failed to open history file! %s\n", argv[1]);
+
+		gtk_exit(0);
 	}
+	
 
 #ifdef GGADU_DEBUG
 	g_print("Getting lines count..\n");

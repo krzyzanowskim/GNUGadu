@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.182 2004/08/03 21:34:31 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.183 2004/08/04 20:43:49 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -183,7 +183,7 @@ void gadu_gadu_enable_dcc_socket(gboolean state)
 	}
 }
 
-gpointer gadu_gadu_login(gpointer desc, gint status)
+static gpointer gadu_gadu_login(gpointer desc, gint status)
 {
 	struct gg_login_params p;
 	gchar *server_addr_config = (gchar *) ggadu_config_var_get(handler, "server");
@@ -284,7 +284,7 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 	return NULL;
 }
 
-gboolean gadu_gadu_ping(gpointer data)
+static gboolean gadu_gadu_ping(gpointer data)
 {
 	if (!connected)
 		return FALSE;
@@ -294,7 +294,7 @@ gboolean gadu_gadu_ping(gpointer data)
 	return TRUE;
 }
 
-void handle_search_event(struct gg_event *e)
+static void handle_search_event(struct gg_event *e)
 {
 	gg_pubdir50_t res = e->event.pubdir50;
 	gint count, i;

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.45 2004/08/02 11:42:03 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.46 2004/08/04 20:43:49 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -113,6 +113,16 @@ void jabber_register_account_cb(LmConnection * connection, gboolean result, GGad
 	g_free(jid);
 }
 
+static gboolean jabber_ping(gpointer data)
+{
+	if (!lm_connection_is_open(jabber_data.connection))
+		return FALSE;
+
+	print_debug("PING!\n");
+	return lm_connection_send_raw(jabber_data.connection," ",NULL);
+}
+
+
 void connection_auth_cb(LmConnection * connection, gboolean success, gpointer status)
 {
 	if (!success)
@@ -123,6 +133,8 @@ void connection_auth_cb(LmConnection * connection, gboolean success, gpointer st
 
 	print_debug("jabber: Authentication succeeded. Changing status...\n");
 	jabber_fetch_roster(status);
+	g_timeout_add(100000, jabber_ping, NULL);
+	
 }
 
 void connection_open_result_cb(LmConnection * connection, gboolean success, gint * status)

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.87 2004/08/03 21:34:32 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.88 2004/08/04 20:43:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -63,7 +63,7 @@ GGaduMenu *jabbermenu;
 
 GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
 
-gpointer user_chat_action(gpointer user_data)
+static gpointer user_chat_action(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
 
@@ -88,7 +88,7 @@ gpointer user_chat_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_add_action(gpointer user_data)
+static gpointer user_add_action(gpointer user_data)
 {
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
 	ggadu_dialog_add_entry(dialog, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, NULL, VAR_FLAG_NONE);
@@ -99,7 +99,7 @@ gpointer user_add_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_edit_action(gpointer user_data)
+static gpointer user_edit_action(gpointer user_data)
 {
 	GSList *user = (GSList *) user_data;
 	GGaduDialog *dialog = NULL;
@@ -117,7 +117,7 @@ gpointer user_edit_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_ask_remove_action(gpointer user_data)
+static gpointer user_ask_remove_action(gpointer user_data)
 {
         GGaduDialog *dialog;
 	                                                                                                               
@@ -127,7 +127,7 @@ gpointer user_ask_remove_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_remove_action(gpointer user_data)
+static gpointer user_remove_action(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
 
@@ -173,7 +173,7 @@ gpointer user_remove_action(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_resend_auth_to(gpointer user_data)
+static gpointer user_resend_auth_to(gpointer user_data)
 {
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) user->data;
@@ -183,7 +183,7 @@ gpointer user_resend_auth_to(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_rerequest_auth_from(gpointer user_data)
+static gpointer user_rerequest_auth_from(gpointer user_data)
 {
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = NULL;
@@ -198,7 +198,7 @@ gpointer user_rerequest_auth_from(gpointer user_data)
 	return NULL;
 }
 
-gpointer user_remove_auth_from(gpointer user_data)
+static gpointer user_remove_auth_from(gpointer user_data)
 {
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) user->data;
@@ -223,7 +223,7 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 	return NULL;
 }
 
-GGaduMenu *build_userlist_menu(void)
+static GGaduMenu *build_userlist_menu(void)
 {
 	GGaduMenu *menu = ggadu_menu_create();
 	GGaduMenu *listmenu;

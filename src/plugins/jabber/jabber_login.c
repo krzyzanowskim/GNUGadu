@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.31 2004/06/16 12:12:26 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.32 2004/08/04 20:43:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -30,52 +30,6 @@
 
 extern jabber_data_type jabber_data;
 
-/*void jabber_login(enum states status)
-{
-	GSList *list;
-
-	if (!jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE)
-		return;
-
-	if (jabber_data.connected == 1)
-	{
-		print_debug("jabber: Slow down, please");
-	}
-	else if (jabber_data.connected && status == JABBER_STATUS_UNAVAILABLE)
-	{
-		list = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
-		jabber_data.status = status;
-
-		if (lm_connection_close(jabber_data.connection, NULL))
-		{
-			signal_emit("jabber", "gui disconnected", NULL, "main-gui");
-			jabber_data.connected = 0;
-			return;
-		}
-
-		while (list)
-		{
-			GGaduContact *k = (GGaduContact *) list->data;
-			ggadu_repo_del_value("jabber", ggadu_repo_key_from_string(k->id));
-			g_free(k->id);
-			g_free(k->nick);
-			g_free(k);
-			list = list->next;
-		}
-
-		g_slist_free(list);
-		jabber_data.connected = 0;
-	}
-	else if (jabber_data.connected == 2)
-	{
-		jabber_change_status(status);
-	}
-	else
-	{
-		g_thread_create(jabber_login_connect, (gpointer) status, FALSE, NULL);
-	}
-}
-*/
 static LmSSLResponse jabber_connection_ssl_func (LmSSL *ssl, LmSSLStatus status, gpointer data)
  {
 	 return LM_SSL_RESPONSE_CONTINUE;
