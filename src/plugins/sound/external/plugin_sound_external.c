@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.12 2004/02/13 22:40:05 thrulliq Exp $ */
+/* $Id: plugin_sound_external.c,v 1.13 2004/02/13 22:40:48 thrulliq Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -103,7 +103,7 @@ gpointer se_preferences(gpointer user_data)
 
     d = ggadu_dialog_new1(GGADU_DIALOG_CONFIG, _("Sound external preferences"), "update config");
 
-    ggadu_dialog_add_entry(d, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, ggadu_config_var_get(handler, "player"),
+    ggadu_dialog_add_entry1(d, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, ggadu_config_var_get(handler, "player"),
 			   VAR_FLAG_NONE);
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
