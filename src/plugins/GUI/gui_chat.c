@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.34 2003/06/02 10:12:44 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.35 2003/06/04 20:30:59 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -302,14 +302,13 @@ void on_send_clicked (GtkWidget * button, gpointer user_data)
 		if (gp->aaway_timer > 0)
 		    g_source_remove (gp->aaway_timer);
 		gp->aaway_timer = -1;
-		if (status != gp->p->offline_status &&
-		    !is_in_status (status, gp->p->away_status) &&
+		if (status != gp->p->offline_status && !is_in_status (status, gp->p->away_status) &&
 		    config_var_get (gui_handler, "auto_away"))
 		  {
 		      gp->aaway_timer =
-			  g_timeout_add (config_var_get (gui_handler, "auto_away_interval") ? ((gint)
-					 config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000, auto_away_func,
-					 gp);
+			  g_timeout_add (config_var_get (gui_handler, "auto_away_interval")
+					 ? ((gint) config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000,
+					 auto_away_func, gp);
 		  }
 	    }
 
@@ -582,42 +581,47 @@ void gui_chat_update_tags ()
       }
 }
 
-gboolean window_resize_signal (GtkWidget *window,GdkEventConfigure *event, gpointer user_data)
+gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * event, gpointer user_data)
 {
-          gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
-	  gui_chat_session *session = user_data;;
-	  GtkRequisition rb,r;
-	  GtkWidget *paned = g_object_get_data(G_OBJECT(session->chat),"paned");
-	  GtkWidget *hbox_buttons = g_object_get_data(G_OBJECT(session->chat),"hbox_buttons");
+
+    if (event->send_event == FALSE)
+      {
+	  gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+	  gui_chat_session *session = user_data;
+	  GtkWidget *paned = g_object_get_data (G_OBJECT (session->chat), "paned");
+	  GtkWidget *hbox_buttons = g_object_get_data (G_OBJECT (session->chat), "hbox_buttons");
 	  gint percent = (gint) config_var_get (gui_handler, "chat_paned_size");
-	  float tab_minus = 0;
-	  
-	  if (chat_type == CHAT_TYPE_TABBED) 
-	  {
-	  	GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (window), "chat_notebook");
-	   	if  (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook)))
-		{
-			GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook),
-							       GTK_WIDGET (session->chat));
-			GtkRequisition rbnl;
 
-			gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
+	  if ((paned != NULL) && (GTK_IS_PANED (paned)))
+	    {
+		GtkRequisition r;
+		GtkRequisition rb;
+		float tab_minus = 0;
+		float position = 0;
 
-			tab_minus = -rbnl.height;
-		}
-	  }
+		if (chat_type == CHAT_TYPE_TABBED)
+		  {
+		      GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (window), "chat_notebook");
+		      if (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook)))
+			{
+			    GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook),
+									   GTK_WIDGET (session->chat));
+			    GtkRequisition rbnl;
 
+			    gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
 
-	  
-	  if ((paned != NULL) && (GTK_IS_PANED(paned))) {
-	  	 float position = 0;
-	 	 r.height = event->height;
-	 	 gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
-	  	 position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
-	 	 gtk_paned_set_position (GTK_PANED (paned), (gint) position);
-	  }
+			    tab_minus = -rbnl.height;
+			}
+		  }
 
-	return FALSE;
+		r.height = event->height;
+		gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
+		position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
+		gtk_paned_set_position (GTK_PANED (paned), (gint) position);
+	    }
+
+      }
+    return FALSE;
 }
 
 
@@ -1013,9 +1017,9 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
 
 	  position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
-	  
-	  g_object_set_data(G_OBJECT(session->chat),"paned",paned);
-	  g_object_set_data(G_OBJECT(session->chat),"hbox_buttons",hbox_buttons);
+
+	  g_object_set_data (G_OBJECT (session->chat), "paned", paned);
+	  g_object_set_data (G_OBJECT (session->chat), "hbox_buttons", hbox_buttons);
 
 	  gtk_paned_set_position (GTK_PANED (paned), (gint) position);
       }
@@ -1023,8 +1027,8 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 
     // g_signal_connect(button_close, "clicked",
     // G_CALLBACK(on_destroy_chat), session);
-    g_signal_connect(chat_window, "configure-event", G_CALLBACK (window_resize_signal), session);
-    
+    g_signal_connect (chat_window, "configure-event", G_CALLBACK (window_resize_signal), session);
+
     g_signal_connect (button_autosend, "clicked", G_CALLBACK (on_autosend_clicked), session);
     g_signal_connect (button_send, "clicked", G_CALLBACK (on_send_clicked), session);
     g_signal_connect (button_stick, "toggled", G_CALLBACK (on_stick_clicked), session);
