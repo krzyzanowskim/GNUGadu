@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.18 2003/05/26 12:27:06 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.19 2003/06/05 19:56:47 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -420,6 +420,10 @@ void change_status(GPtrArray *ptra)
 	    (gint) config_var_get (gui_handler, "blink_interval"):500,
 	    status_blinker, gp);
       }
+    } else if (sp->status == gp->p->offline_status && gp->blinker > 0)
+    {
+      g_source_remove (gp->blinker);
+      gp->blinker = -1;
     }
     
     signal_emit("main-gui","change status", sp, plugin_source);
