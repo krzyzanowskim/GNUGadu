@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.87 2004/03/15 20:27:14 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.88 2004/03/23 23:02:11 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1111,7 +1111,8 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		if (chat_window != NULL)
 			gtk_widget_show_all(chat_window);
 
-		gtk_widget_grab_focus(GTK_WIDGET(input));
+		if (((gint) ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == FALSE))
+		    gtk_widget_grab_focus(GTK_WIDGET(input));
 
 	}
 	else
@@ -1320,7 +1321,17 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 
 	if (((gint) ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
 	    (GTK_WIDGET_VISIBLE(chat)))
-		gtk_window_present(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window")));
+	    {
+/*		GdkDisplay *display;
+		GtkWidget *gwindow = GTK_WIDGET(g_object_get_data(G_OBJECT(chat), "top_window"));
+		display = gdk_screen_get_display(gtk_window_get_screen GTK_WINDOW(gwindow));
+		XRaiseWindow (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (gwindow->window));
+*/
+		/* will not bring window to actually active screen */
+		gtk_window_deiconify(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window"))); 
+/*		gtk_window_present(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window"))); */
+/*		gtk_widget_show_all(GTK_WIDGET(g_object_get_data(G_OBJECT(chat), "top_window"))); */
+	    }
 
 	g_free(header);
 	g_free(text);
