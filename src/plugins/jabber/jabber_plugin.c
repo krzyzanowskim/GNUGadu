@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.141 2004/12/27 13:20:28 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.142 2004/12/27 14:12:47 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1321,7 +1321,7 @@ static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler * hand
 	    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 
 	}
-	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
 
 gpointer jabber_services_discovery_action(gpointer user_data)
@@ -1338,7 +1338,6 @@ gpointer jabber_services_discovery_action(gpointer user_data)
 
 	msg = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 	lm_message_node_set_attribute(msg->node, "to", lm_connection_get_server(jabber_data.connection));
-	lm_message_node_set_attribute(msg->node, "id", "services_browse_1");
 
 	node = lm_message_node_add_child(msg->node, "query", NULL);
 	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:browse");
