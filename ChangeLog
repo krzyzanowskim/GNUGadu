@@ -2,6 +2,7 @@
 - dynamically load/unload plugins from GUI (restart isn't necessary)
   (GUI/krzak)
 - fix for IDEA (sms/HelDoRe)
+- automatically show chat window (optional) (GUI/zapal)
 
 2.04.2003
 - fix "reason" variable encoding (gadu-gadu/krzak)
