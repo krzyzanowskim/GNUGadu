@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.9 2003/04/13 18:13:06 zapal Exp $ */
+/* $Id: main.c,v 1.10 2003/05/09 19:43:47 zapal Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -38,6 +38,7 @@
 #include "plugins.h"
 #include "signals.h"
 #include "repo.h"
+#include "perl_embed.h"
 
 GGaduConfig *config;
 
@@ -155,6 +156,7 @@ gboolean gnu_gadu_init(gpointer data)
 	mkdir(config->configdir, 0700);
 	config->repos = g_new0(GGaduRepo, 1);
 	ggadu_repo_add ("_protocols_");
+	perl_load_scripts ();
 	load_available_modules();
 	start_plugins_ordered();
 	flush_queued_signals();

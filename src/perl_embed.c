@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.5 2003/05/09 19:06:37 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.6 2003/05/09 19:43:47 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -22,6 +22,8 @@
 #include "perl_embed.h"
 #include "signals.h"
 #include "support.h"
+
+extern GGaduConfig *config;
 
 typedef struct {
   char loaded;
@@ -253,6 +255,39 @@ int perl_unload_script (char *script_name)
   }
   
   return 0;
+}
+
+gint perl_load_scripts (void)
+{
+  GIOChannel *ch = NULL;
+  GString *buffer = g_string_new (NULL);
+  gchar *filename;
+  gint loaded = 0;
+
+  filename = g_build_filename (config->configdir, "perl.load", NULL);
+
+  ch = g_io_channel_new_file (filename, "r", NULL);
+  g_free (filename);
+
+  if (!ch)
+  {
+    g_string_free (buffer, TRUE);
+    return 0;
+  }
+
+  while (g_io_channel_read_line_string (ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
+  {
+    print_debug ("Loading script %s\n", buffer->str);
+    buffer->str[buffer->len - 1] = '\0';
+    perl_load_script (buffer->str);
+    loaded++;
+  }
+
+  g_io_channel_shutdown (ch, TRUE, NULL);
+
+  g_string_free (buffer, TRUE);
+
+  return loaded;
 }
 
 char *perl_action_on_msg_receive (char *uid, char *msg)
