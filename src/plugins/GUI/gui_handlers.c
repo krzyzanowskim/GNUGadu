@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.8 2003/04/07 19:45:50 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.9 2003/04/08 09:24:15 thrulliq Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -307,7 +307,7 @@ void handle_status_changed(GGaduSignal *signal)
     gp = gui_find_protocol(signal->source_plugin_name,protocols);
     g_return_if_fail(gp != NULL);
 
-    sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status);
+    sp = gui_find_status_prototype(gp->p, status);
     g_return_if_fail(sp != NULL);
     	    
     image = create_pixbuf(sp->image);
