@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.95 2005/01/26 08:45:25 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.96 2005/01/28 16:56:28 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -880,12 +880,11 @@ static GtkWidget *create_advanced_tab()
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_skins, 1, 3, 3, 4);
 
 	dirname = g_build_filename(config->configdir, "skins", NULL);
-
+g_print("DIRNAME %s\n", dirname);
 	dir = g_dir_open(dirname, 0, NULL);
 
 	if (!dir) {
 	    g_free(dirname);
-	    
 	    dirname = g_build_filename(PACKAGE_DATA_DIR, "skins", NULL);
 	    dir = g_dir_open(dirname, 0, NULL);
 	}
@@ -896,30 +895,33 @@ static GtkWidget *create_advanced_tab()
 	{
 		GSList *list_skins = NULL;
 		gchar *skin_current;
-		gchar *skin_dir_name;
+		gchar *skin_dir;
 		gint i = 0;
-
-		skin_current = ggadu_config_var_get(gui_handler, "skin");
-
-		// select first (\ none \) if empty
-
+	
+		list_skins = g_slist_append(list_skins, g_strdup(_("")));
+		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_skins), g_strdup(_("default")));
 		
-		while ((skin_dir_name = (gchar *) g_dir_read_name(dir)) != NULL)
-		{
-			gchar *full_skin_dir_name = g_build_filename(dirname, skin_dir_name, NULL);
-			print_debug("skin file : %s", skin_dir_name);
-			
-			if (g_file_test(full_skin_dir_name, G_FILE_TEST_IS_DIR))
-			{
-				list_skins = g_slist_append(list_skins, g_strdup(skin_dir_name));
-				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_skins), g_strdup(skin_dir_name));
+		// select 1st one anyway...
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_skins), i);
 
-				if (skin_current && !ggadu_strcasecmp(skin_dir_name, skin_current))
+		i++;
+		
+		while ((skin_dir = (gchar *) g_dir_read_name(dir)) != NULL)
+		{
+			gchar *full_skin_dir = g_build_filename(dirname, skin_dir, NULL);
+			print_debug("skin file : %s", skin_dir);
+			
+			if (g_file_test(full_skin_dir, G_FILE_TEST_IS_DIR))
+			{
+				list_skins = g_slist_append(list_skins, g_strdup(skin_dir));
+				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_skins), g_strdup(skin_dir));
+
+				if (skin_current && !ggadu_strcasecmp(skin_dir, skin_current))
 					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_skins), i);
 
 				i++;
 			}
-			g_free(full_skin_dir_name);
+			g_free(full_skin_dir);
 		}
 
 		g_dir_close(dir);
@@ -1394,8 +1396,13 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		g_return_if_fail(entry != NULL);
 
 		GSList *combo_skins_slist = g_object_get_data(G_OBJECT(entry), "combo_skins_slist");
-		ggadu_config_var_set(gui_handler, "skin", (gpointer) g_strdup(g_slist_nth_data(combo_skins_slist, gtk_combo_box_get_active(GTK_COMBO_BOX(entry)))));
-		
+
+		if (gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) {
+		    ggadu_config_var_set(gui_handler, "skin", (gpointer) g_strdup(g_slist_nth_data(combo_skins_slist, gtk_combo_box_get_active(GTK_COMBO_BOX(entry)))));
+		} else {
+		    ggadu_config_var_set(gui_handler, "skin", g_strdup(""));
+		}
+
 		g_slist_foreach(combo_skins_slist, (GFunc) g_free, NULL);
 		g_slist_free(combo_skins_slist);
 
