@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.9 2004/01/05 15:20:59 thrulliq Exp $ */
+/* $Id: dockapp_plugin.c,v 1.10 2004/01/12 11:17:00 jarwyp Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -515,12 +515,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
             print_debug("changing var setting dockapp_protocol to %s\n",
                kv->value);
             from_utf8("ISO-8859-2", kv->value, iso);
-            if (ggadu_strcasecmp(ggadu_config_var_get(handler, "dockapp_protocol"),
-                  iso)) {
-              /* dockapp_plugin really changed, clear existent notifies */
-              for (i = 0; i < NNICK; i++)
-                g_strlcpy(prev_nick[i], "\0\0\0\0\0\0\0\0\0\0", 9);
-            };
+	    if (ggadu_config_var_get(handler, "dockapp_protocol")){
+                if (ggadu_strcasecmp(ggadu_config_var_get(handler, "dockapp_protocol"),
+	              iso)) {
+    	          /* dockapp_plugin really changed, clear existent notifies */
+        	  for (i = 0; i < NNICK; i++)
+            	    g_strlcpy(prev_nick[i], "\0\0\0\0\0\0\0\0\0\0", 9);
+        	};
+	    }
             ggadu_config_var_set(handler, "dockapp_protocol", iso);
             break;
           }
