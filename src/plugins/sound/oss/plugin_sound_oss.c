@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.9 2004/05/04 21:39:12 krzyzak Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.10 2004/07/28 09:56:14 shaster Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
@@ -148,6 +148,7 @@ void oss_play_file(const gchar * file)
 	    return;
 	}
     close(d);
+    close(w);
 }
 
 gpointer ggadu_play_file(gpointer user_data)

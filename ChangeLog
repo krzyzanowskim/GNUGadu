@@ -1,3 +1,6 @@
+28.07.2004
+- fixed fd leak (sound-oss/HelDoRe)
+
 21.07.2004
 - fixed detecting 'service not activated' at IDEA GSM (sms/shasta)
 
