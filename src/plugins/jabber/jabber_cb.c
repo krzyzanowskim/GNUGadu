@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.51 2004/08/22 19:56:58 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.52 2004/08/24 12:39:49 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -25,6 +25,7 @@
 #endif
 
 #include <string.h>
+#include <stdlib.h>
 #include "ggadu_conf.h"
 #include "jabber_cb.h"
 #include "jabber_protocol.h"
@@ -369,56 +370,67 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			      gpointer user_data)
 {
-	if(!lm_message_node_get_attribute(message->node, "id"))
+	if(!lm_message_node_get_attribute(message->node, "id") ||
+	   !lm_message_node_find_child(message->node, "vCard"))
 	        return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 
         if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "v1"))
 	{
 		LmMessageNode *node;
-		GGaduDialog *dialog=ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Personal info:"), "user edit vcard");
+		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Personal info:"), "user edit vcard");
+		gchar **tab = NULL;
 
-		node=lm_message_node_find_child(message->node, "GIVEN");
+		node = lm_message_node_find_child(message->node, "GIVEN");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_GIVEN, _("First name"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "FAMILY");
+		node = lm_message_node_find_child(message->node, "FAMILY");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_FAMILY, _("Last name"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "FN");
+		node = lm_message_node_find_child(message->node, "FN");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_FN, _("Full name"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "NICKNAME");
+				       VAR_FLAG_INSENSITIVE);
+		node = lm_message_node_find_child(message->node, "NICKNAME");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_NICKNAME, _("Nick"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "BDAY");
-                ggadu_dialog_add_entry(dialog, GGADU_JABBER_BDAY, _("Birth date"), VAR_STR,
-				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "USERID");
-                ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERID, _("E-mail"), VAR_STR,
-				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "URL");
+		node = lm_message_node_find_child(message->node, "URL");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_URL, _("Homepage"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "ORGNAME");
+
+		node = lm_message_node_find_child(message->node, "BDAY");
+		if(lm_message_node_get_value(node))
+                	tab = g_strsplit(lm_message_node_get_value(node), "-", 3);
+                ggadu_dialog_add_entry(dialog, GGADU_JABBER_BDAY, _("Birthday"), VAR_INT,
+				       tab ? (gpointer) atoi(tab[2]) : NULL, VAR_FLAG_NONE);
+                ggadu_dialog_add_entry(dialog, GGADU_JABBER_BMONTH, _("Month"), VAR_INT,
+				       tab ? (gpointer) atoi(tab[1]) : NULL, VAR_FLAG_NONE);
+                ggadu_dialog_add_entry(dialog, GGADU_JABBER_BYEAR, _("Year"), VAR_INT,
+				       tab ? (gpointer) atoi(tab[0]) : NULL, VAR_FLAG_NONE);
+		if(tab)
+			g_strfreev(tab);
+
+		node = lm_message_node_find_child(message->node, "ORGNAME");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_ORGNAME, _("Organization"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "NUMBER");
+		node = lm_message_node_find_child(message->node, "NUMBER");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_NUMBER, _("Telephone number"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "LOCALITY");
+		node = lm_message_node_find_child(message->node, "LOCALITY");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOCALITY, _("Locality"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		node=lm_message_node_find_child(message->node, "CTRY");
+		node = lm_message_node_find_child(message->node, "CTRY");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_CTRY, _("Country"), VAR_STR,
+				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
+				       VAR_FLAG_NONE);
+		node = lm_message_node_find_child(message->node, "USERID");
+                ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERID, _("E-mail"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
 		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
@@ -435,48 +447,48 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 
 		g_free(string);
 
-		node=lm_message_node_find_child(message->node, "GIVEN");
+		node = lm_message_node_find_child(message->node, "GIVEN");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_GIVEN, _("First name"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "FAMILY");
+		node = lm_message_node_find_child(message->node, "FAMILY");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_FAMILY, _("Last name"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "FN");
+		node = lm_message_node_find_child(message->node, "FN");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_FN, _("Full name"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "NICKNAME");
+		node = lm_message_node_find_child(message->node, "NICKNAME");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_NICKNAME, _("Nick"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "BDAY");
-                ggadu_dialog_add_entry(dialog, GGADU_JABBER_BDAY, _("Birth date"), VAR_STR,
-				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "USERID");
-                ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERID, _("E-mail"), VAR_STR,
-				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "URL");
+		node = lm_message_node_find_child(message->node, "URL");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_URL, _("Homepage"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "ORGNAME");
+		node = lm_message_node_find_child(message->node, "BDAY");
+                ggadu_dialog_add_entry(dialog, GGADU_JABBER_BDAY, _("Birth date"), VAR_STR,
+				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
+				       VAR_FLAG_INSENSITIVE);
+		node = lm_message_node_find_child(message->node, "ORGNAME");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_ORGNAME, _("Organization"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "NUMBER");
+		node = lm_message_node_find_child(message->node, "NUMBER");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_NUMBER, _("Telephone number"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "LOCALITY");
+		node = lm_message_node_find_child(message->node, "LOCALITY");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOCALITY, _("Locality"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
-		node=lm_message_node_find_child(message->node, "CTRY");
+		node = lm_message_node_find_child(message->node, "CTRY");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_CTRY, _("Country"), VAR_STR,
+				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
+				       VAR_FLAG_INSENSITIVE);
+		node = lm_message_node_find_child(message->node, "USERID");
+                ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERID, _("E-mail"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
 		signal_emit("jabber", "gui show dialog", dialog, "main-gui");

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.95 2004/08/22 20:37:22 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.96 2004/08/24 12:39:49 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -642,10 +642,119 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		
 		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
-                        signal_emit("jabber", "gui show message",
-				    g_strdup("Editing own vcard is not yet supported.\n"
-					     "I'm working on it. -mpk"),
-				    "main-gui");
+			GSList *entries = ggadu_dialog_get_entries(dialog);
+			LmMessage *msg  = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+			LmMessageNode *node;
+			gchar *string;
+			gchar *given  = NULL;
+			gchar *family = NULL;
+			gint bday;
+			gint bmonth;
+			gint byear;
+
+			lm_message_node_set_attribute(msg->node, "id", "v1");
+			node=lm_message_node_add_child(msg->node, "vCard", NULL);
+			lm_message_node_set_attribute(node, "xmlns", "vcard-temp");
+
+			while(entries)
+			{
+			        GGaduKeyValue *kv = entries->data;
+
+				switch(kv->key)
+				{
+					case GGADU_JABBER_GIVEN:
+						        given  = (gchar *) kv->value;
+						break;
+					case GGADU_JABBER_FAMILY:
+						        family = (gchar *) kv->value;
+						break;
+					case GGADU_JABBER_FN:
+						{
+							string = g_strconcat(given ? given : "",
+									     (given && family) ? " " : "", family,
+									     NULL);
+							lm_message_node_add_child(node, "FN", string);
+							node = lm_message_node_add_child(node, "N", NULL);
+							lm_message_node_add_child(node, "FAMILY", family);
+							lm_message_node_add_child(node, "GIVEN", given);
+							lm_message_node_add_child(node, "MIDDLE", NULL);
+
+							g_free(string);
+						}
+						break;
+					case GGADU_JABBER_NICKNAME:
+						{
+							node = lm_message_node_find_child(msg->node, "vCard");
+							lm_message_node_add_child(node, "NICKNAME", kv->value);
+						}
+						break;
+					case GGADU_JABBER_URL:
+							lm_message_node_add_child(node, "URL", kv->value);
+						break;
+					case GGADU_JABBER_BDAY:
+							bday = (gint) kv->value;
+						break;
+					case GGADU_JABBER_BMONTH:
+							bmonth = (gint) kv->value;
+						break;
+					case GGADU_JABBER_BYEAR:
+						{
+							byear  = (gint) kv->value;
+							string = (byear && bmonth && bday)
+								 ? g_strdup_printf("%d-%02d-%02d", byear, bmonth, bday)
+								 : NULL;
+							lm_message_node_add_child(node, "BDAY", string);
+
+							g_free(string);
+						}
+						break;
+					case GGADU_JABBER_ORGNAME:
+						{
+							node = lm_message_node_add_child(node, "ORG", NULL);
+							lm_message_node_add_child(node, "ORGNAME", kv->value);
+							lm_message_node_add_child(node, "ORGUNIT", NULL);
+							node = lm_message_node_find_child(msg->node, "vCard");
+							lm_message_node_add_child(node, "TITLE", NULL);
+							lm_message_node_add_child(node, "ROLE", NULL);
+						}
+						break;
+					case GGADU_JABBER_NUMBER:
+						{
+							node = lm_message_node_add_child(node, "TEL", NULL);
+							lm_message_node_add_child(node, "NUMBER", kv->value);
+							node = lm_message_node_find_child(msg->node, "vCard");
+						}
+						break;
+					case GGADU_JABBER_LOCALITY:
+						{
+							node = lm_message_node_add_child(node, "ADR", NULL);
+							lm_message_node_add_child(node, "HOME", NULL);
+							lm_message_node_add_child(node, "EXTADD", NULL);
+							lm_message_node_add_child(node, "STREET", NULL);
+							lm_message_node_add_child(node, "LOCALITY", kv->value);
+							lm_message_node_add_child(node, "REGION", NULL);
+							lm_message_node_add_child(node, "PCODE", NULL);
+
+						}
+						break;
+					case GGADU_JABBER_CTRY:
+						{
+							lm_message_node_add_child(node, "CTRY", kv->value);
+							node = lm_message_node_find_child(msg->node, "vCard");
+						}
+						break;
+					case GGADU_JABBER_USERID:
+						{
+							node = lm_message_node_add_child(node, "EMAIL", NULL);
+							lm_message_node_add_child(node, "USERID", kv->value);
+						}
+						break;
+				}
+                                entries = entries->next;
+			}
+
+			lm_connection_send(jabber_data.connection, msg, NULL);
+			lm_message_unref(msg);
 		}
 
 		GGaduDialog_free(dialog);

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.36 2004/08/22 18:37:22 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.37 2004/08/24 12:39:49 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -89,13 +89,15 @@ enum vcard
     GGADU_JABBER_FAMILY,
     GGADU_JABBER_FN,
     GGADU_JABBER_NICKNAME,
-    GGADU_JABBER_BDAY,
-    GGADU_JABBER_USERID,
     GGADU_JABBER_URL,
+    GGADU_JABBER_BDAY,
+    GGADU_JABBER_BMONTH,
+    GGADU_JABBER_BYEAR,
     GGADU_JABBER_ORGNAME,
     GGADU_JABBER_NUMBER,
     GGADU_JABBER_LOCALITY,
-    GGADU_JABBER_CTRY
+    GGADU_JABBER_CTRY,
+    GGADU_JABBER_USERID
 };
 
 typedef struct
