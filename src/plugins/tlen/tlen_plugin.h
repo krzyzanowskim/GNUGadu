@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.h,v 1.2 2003/05/15 10:31:27 shaster Exp $ */
+/* $Id: tlen_plugin.h,v 1.3 2003/06/01 13:49:20 shaster Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -17,11 +17,12 @@ typedef struct {
 } dummy_config;
 
 enum {
-    TLEN_TLEN_UIN,
-    TLEN_TLEN_NICK,
-    TLEN_TLEN_GROUP,
-    TLEN_TLEN_PASSWORD,
-    TLEN_TLEN_AUTOCONNECT
+    GGADU_TLEN_UIN,
+    GGADU_TLEN_NICK,
+    GGADU_TLEN_GROUP,
+    GGADU_TLEN_PASSWORD,
+    GGADU_TLEN_AUTOCONNECT,
+    GGADU_TLEN_AUTOCONNECT_STATUS
 };
 
 enum {

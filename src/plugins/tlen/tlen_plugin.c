@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.29 2003/06/01 00:37:53 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.30 2003/06/01 13:49:20 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -38,8 +38,6 @@ static GSList *search_results = NULL;
 GIOChannel *source_chan = NULL;
 gboolean connected = FALSE;
 static guint tag = 0;
-
-gchar *this_configdir = NULL;
 
 GGaduMenu *menu_tlenmenu;
 
@@ -447,21 +445,21 @@ gpointer user_add_user_action(gpointer user_data)
     GGaduKeyValue *kv = NULL;
     
     kv = g_new0(GGaduKeyValue,1);
-    kv->key		= TLEN_TLEN_UIN;
+    kv->key		= GGADU_TLEN_UIN;
     kv->description	= g_strdup("Tlen ID");
     kv->type		= VAR_STR;
     
     optlist = g_slist_append(optlist,kv);
 
     kv = g_new0(GGaduKeyValue,1);
-    kv->key		= TLEN_TLEN_NICK;
+    kv->key		= GGADU_TLEN_NICK;
     kv->description	= g_strdup(_("Nick"));
     kv->type		= VAR_STR;
     
     optlist = g_slist_append(optlist,kv);
 
     kv = g_new0(GGaduKeyValue,1);
-    kv->key		= TLEN_TLEN_GROUP;
+    kv->key		= GGADU_TLEN_GROUP;
     kv->description	= g_strdup(_("Group"));
     kv->type		= VAR_STR;
     
@@ -479,6 +477,8 @@ gpointer user_add_user_action(gpointer user_data)
  */
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
+    gchar *this_configdir = NULL;
+
     print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
     
     GGadu_PLUGIN_ACTIVATE(conf_ptr); /* wazne zeby wywolac to makro w tym miejscu */
@@ -495,10 +495,13 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     mkdir(this_configdir, 0700);
     
     set_config_file_name((GGaduPlugin *)handler,g_build_filename(this_configdir,"config",NULL));
+
+    g_free(this_configdir);
     
     config_var_add(handler, "login",    VAR_STR);
     config_var_add(handler, "password", VAR_STR);
     config_var_add(handler, "autoconnect", VAR_BOOL);
+    config_var_add(handler, "autoconnect_status", VAR_INT);
     
     config_read(handler);
 
@@ -627,14 +630,28 @@ void register_userlist_menu()
 gpointer user_preferences_action(gpointer user_data) 
 {
     GGaduDialog *d = ggadu_dialog_new();
+    GSList *statuslist_names = NULL;
+    GSList *tmplist = p->statuslist;
+
+    while (tmplist) {
+        GGaduStatusPrototype *sp = tmplist->data;
+        if ((!sp->receive_only) && (sp->status != TLEN_STATUS_UNAVAILABLE) && (sp->status != TLEN_STATUS_DESC))
+            statuslist_names = g_slist_append(statuslist_names, sp->description);
+
+        if (sp->status == (gint)config_var_get(handler,"autoconnect_status"))
+            statuslist_names = g_slist_prepend(statuslist_names, sp->description);
+
+        tmplist = tmplist->next;
+    }
     
     ggadu_dialog_set_title(d, _("Tlen plugin configuration"));
     ggadu_dialog_callback_signal(d, "update config");
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
 
-    ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_UIN, _("Tlen login"), VAR_STR, config_var_get(handler, "login"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_PASSWORD, _("Password"), VAR_STR, config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-    ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_UIN, _("Tlen login"), VAR_STR, config_var_get(handler, "login"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_PASSWORD, _("Password"), VAR_STR, config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
     
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
         
@@ -689,7 +706,7 @@ void start_plugin()
 	register_userlist_menu();
 
 	if (config_var_get(handler, "autoconnect") && !connected)
-	    ggadu_tlen_login((gpointer)TLEN_STATUS_AVAILABLE);
+	    ggadu_tlen_login(config_var_get(handler, "autoconnect_status") ? (gpointer) config_var_get(handler, "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr) {
@@ -789,18 +806,34 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		
 		    switch (kv->key) 
 		    {
-			case TLEN_TLEN_UIN:
+			case GGADU_TLEN_UIN:
 				    print_debug("changing var setting uin to %s\n", kv->value);
 				    config_var_set(handler, "login", kv->value);
 				    break;
-			case TLEN_TLEN_PASSWORD:
+			case GGADU_TLEN_PASSWORD:
 				    print_debug("changing var setting password to %s\n", kv->value);
 				    config_var_set(handler, "password", kv->value);
 				    break;
-			case TLEN_TLEN_AUTOCONNECT:
+			case GGADU_TLEN_AUTOCONNECT:
 				    print_debug("changing var setting autoconnect to %d\n", kv->value);
 				    config_var_set(handler, "autoconnect", kv->value);
 				    break;
+                        case GGADU_TLEN_AUTOCONNECT_STATUS: {
+				    GSList *statuslist_tmp = p->statuslist;
+				    gint val = -1;
+
+				    while (statuslist_tmp) {
+					GGaduStatusPrototype *sp = (GGaduStatusPrototype *)statuslist_tmp->data;
+					if (!ggadu_strcasecmp(sp->description, kv->value)) {
+					    val = sp->status;
+					}
+					statuslist_tmp = statuslist_tmp->next;
+				    }
+
+				    print_debug("changing var setting autoconnect_status to %d\n", val);
+				    config_var_set(handler, "autoconnect_status", (gpointer) val);
+				}
+				break;
 		    }
 		    tmplist = tmplist->next;
 		}
@@ -853,17 +886,17 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		
 		switch ((gint)kv->key) {
 		
-		    case TLEN_TLEN_UIN:
+		    case GGADU_TLEN_UIN:
 			k->id = g_strdup((gchar *)kv->value);
 			g_free(kv->value);
 			break;
 
-		    case TLEN_TLEN_NICK:
+		    case GGADU_TLEN_NICK:
 			k->nick		= g_strdup((gchar *)kv->value);
 			g_free(kv->value);
 			break;
 			
-		    case TLEN_TLEN_GROUP:
+		    case GGADU_TLEN_GROUP:
 			k->group	= g_strdup((gchar *)kv->value);
 			g_free(kv->value);
 			break;
