@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.24 2003/07/01 10:05:43 shaster Exp $ */
+/* $Id: gui_dialogs.c,v 1.25 2003/08/24 01:36:20 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -696,8 +696,8 @@ void gui_about (GtkWidget * widget, gpointer data)
 			  "Homepage: http://www.gadu.gnu.pl/\n\n" "<b>Main Programmers:</b>\n"
 			  "Igor Popik &lt;thrull@slackware.pl&gt;\n" "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n"
 			  "<b>Also:</b>\n" "Bartosz Zapalowski\n" "Mateusz Papiernik\n" "HelDoRe\n"
-			  "Jakub 'shasta' Jankowski\n" "Pawel Jan Maczewski\n\n" "<b>Thanks to:</b>\n" "Dwuziu\n"
-			  "Aflinta\n" "GammaRay\n" "Plavi\n" "see AUTHORS file for details\n\n"
+			  "Jakub 'shasta' Jankowski\n" "Pawel Jan Maczewski\n\n" "<b>Thanks to:</b>\n" 
+			  "Aflinta\n" "GammaRay\n" "Plavi\n" "Dwuziu\n" "see AUTHORS file for details\n\n"
 			  "<i>Compile time:\n%s %s</i>"), VERSION, __DATE__, __TIME__);
 
     about_timeout = g_timeout_add (50, timeout, image);
