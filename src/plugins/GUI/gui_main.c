@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.56 2004/08/20 14:56:47 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.57 2004/08/22 12:26:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -144,7 +144,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(gui_handler, "dictionary", VAR_STR);
 #endif
 	ggadu_config_var_add(gui_handler, "chat_window_auto_show", VAR_BOOL);
-	ggadu_config_var_add(gui_handler, "chat_paned_size", VAR_INT);
+	ggadu_config_var_add_with_default(gui_handler, "chat_paned_size", VAR_INT,(gpointer) 80);
 	ggadu_config_var_add_with_default(gui_handler, "expand", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(gui_handler, "show_active", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "width", VAR_INT);

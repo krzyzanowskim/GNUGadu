@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.65 2004/08/20 21:32:00 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.66 2004/08/22 12:26:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -668,7 +668,7 @@ static GtkWidget *create_chat_tab()
 	label3_align = gtk_alignment_new(0.9, 0.5, 0, 0);
 	gtk_container_add(GTK_CONTAINER(label3_align), label);
 
-	g_object_set_data(G_OBJECT(chat_vbox), "combospell", combo_spell);
+	g_object_set_data(G_OBJECT(chat_vbox), "combo_spell", combo_spell);
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox_spell), use_spell, 0, 1, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox_spell), label3_align, 1, 2, 0, 1);
@@ -705,7 +705,7 @@ static GtkWidget *create_chat_tab()
 
 	/* ZONK - how to name it ? */
 	label = gtk_label_new(_("Chat window split size (percent)"));
-	chat_paned_size = gtk_spin_button_new_with_range(0, 100, 5);
+	chat_paned_size = gtk_spin_button_new_with_range(5, 100, 5);
 	gtk_container_add(GTK_CONTAINER(label2_align), label);
 
 	g_object_set_data(G_OBJECT(chat_vbox), "chat_paned_size", chat_paned_size);
@@ -725,8 +725,11 @@ static GtkWidget *create_advanced_tab()
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *tabbox;
-	GtkWidget *label0_align, *label2_align;
+	GtkWidget *label0_align = gtk_alignment_new(0.9, 0.5, 0, 0);
+	GtkWidget *label2_align = gtk_alignment_new(0, 0.5, 0, 0);
+	GtkWidget *label3_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *combo_theme = NULL;
+	GtkWidget *combo_icons = NULL;
 	gchar *dirname = NULL;
 	GDir *dir;
 	GtkWidget *adv_vbox = gtk_vbox_new(FALSE, 5);
@@ -736,7 +739,7 @@ static GtkWidget *create_advanced_tab()
 
 	image = gtk_image_new();
 	gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-properties", GTK_ICON_SIZE_DND);
-	label = gtk_label_new(_("\nAdvanced GUI settings\n\n"));
+	label = gtk_label_new(_("\nAdvanced settings\n\n"));
 
 	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
@@ -755,13 +758,12 @@ static GtkWidget *create_advanced_tab()
 	
 	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
 
-	tabbox = gtk_table_new(2, 3, FALSE);
+	tabbox = gtk_table_new(3, 3, FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 
 	gtk_box_pack_start(GTK_BOX(adv_vbox), tabbox, FALSE, FALSE, 0);
 
-	label0_align = gtk_alignment_new(0.9, 0.5, 0, 0);
 	label = gtk_label_new(_("interval"));
 	gtk_container_add(GTK_CONTAINER(label0_align), label);
 
@@ -778,7 +780,6 @@ static GtkWidget *create_advanced_tab()
 
 	/* themes */
 	combo_theme = gtk_combo_box_new_text();
-	label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 	g_object_set_data(G_OBJECT(adv_vbox), "combo_theme", combo_theme);
 	
 	label = gtk_label_new(_("Selected theme"));
@@ -797,7 +798,6 @@ static GtkWidget *create_advanced_tab()
 		gchar *theme_current;
 		gchar *theme_name_file;
 		gchar *theme_name;
-		gint theme_current_idx = 0;
 		gint i = 0;
 
 		theme_current = ggadu_config_var_get(gui_handler, "theme");
@@ -814,19 +814,64 @@ static GtkWidget *create_advanced_tab()
 				gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),g_strdup(theme_name));
 				
 				if (theme_current && !ggadu_strcasecmp(theme_name,theme_current))
-					theme_current_idx = i;
+					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_theme),i);
 				
+				i++;
 				g_free(theme_name);
 			}
 			
-			i++;
 		}
 
 		g_dir_close(dir);
-		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_theme),theme_current_idx);
 		g_object_set_data(G_OBJECT(combo_theme), "combo_theme_slist", list_theme);
 
 	}
+	
+	/* iconset */
+	combo_icons = gtk_combo_box_new_text();
+	g_object_set_data(G_OBJECT(adv_vbox), "combo_icons", combo_icons);
+	label = gtk_label_new(_("Select icon set"));
+	gtk_container_add(GTK_CONTAINER(label3_align), label);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 3, 2, 3);
+
+	dirname = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", NULL);
+	print_debug("Trying to read icons directory %s", dirname);
+	dir = g_dir_open(dirname, 0, NULL);
+	g_free(dirname);
+
+	if (dir)
+	{
+		GList *list_icons = NULL;
+		gchar *icons_current;
+		gchar *icons_dir;
+		gint  i = 0;
+
+		icons_current = ggadu_config_var_get(gui_handler, "icons");
+
+		while ((icons_dir = (gchar *) g_dir_read_name(dir)) != NULL)
+		{
+			gchar *testdirname = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", icons_dir, NULL);
+
+			if (g_file_test(testdirname, G_FILE_TEST_IS_DIR))
+			{
+				print_debug("%s\n", icons_dir);
+				list_icons = g_list_append(list_icons, g_strdup(icons_dir));
+				gtk_combo_box_append_text (GTK_COMBO_BOX(combo_icons),g_strdup(icons_dir));
+
+				if (icons_dir && !ggadu_strcasecmp(icons_dir,icons_current))
+					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_icons),i);
+				
+				i++;
+			}
+			g_free(testdirname);
+		}
+
+		g_dir_close(dir);
+		g_object_set_data(G_OBJECT(combo_icons), "combo_icons_slist", list_icons);
+	}
+
 	
 	/* set */
 	
@@ -866,13 +911,10 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *descr_on_list;
 	GtkWidget *tabbox;
 	GtkWidget *tabbox_auto_away;
-	GtkWidget *label1_align, *label2_align, *label3_align;
-	GDir *dir;
-	GtkWidget *combo_icons;
+	GtkWidget *label1_align;
 	GtkWidget *entry;
 	GdkPixbuf *windowicon = NULL;
 	gint response = -1;
-	gchar *dirname;
 
 	print_debug("Preferences");
 
@@ -889,8 +931,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gdk_pixbuf_unref(windowicon);
 	}
 
-	label2_align = gtk_alignment_new(0, 0.5, 0, 0);
-	label3_align = gtk_alignment_new(0, 0.5, 0, 0);
 
 	notebook = gtk_notebook_new();
 	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(preferences)->vbox), notebook);
@@ -993,12 +1033,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox, FALSE, FALSE, 0);
 
 
-	combo_icons = gtk_combo_new();
-	label = gtk_label_new(_("Select icon set"));
-	gtk_container_add(GTK_CONTAINER(label3_align), label);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 3, 4);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 2, 3, 4);
 
 	entry = g_object_get_data(G_OBJECT(chat_vbox), "emotic");
 	g_return_if_fail(entry != NULL);
@@ -1041,7 +1075,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	   	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), FALSE);
 
 	{
-	   	GtkWidget *entry2 = g_object_get_data(G_OBJECT(chat_vbox), "combospell");
+	   	GtkWidget *entry2 = g_object_get_data(G_OBJECT(chat_vbox), "combo_spell");
 		gchar *cur_dict = ggadu_config_var_get(gui_handler, "dictionary");
 		GSList *dict_list = NULL;
 
@@ -1162,36 +1196,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(descr_on_list), TRUE);
 
 
-	dirname = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", NULL);
-	print_debug("Trying to read icons directory %s", dirname);
-	dir = g_dir_open(dirname, 0, NULL);
-	g_free(dirname);
-
-	if (dir)
-	{
-		GList *list_icons = NULL;
-		gchar *icons_current;
-		gchar *icons_dir;
-
-		icons_current = ggadu_config_var_get(gui_handler, "icons");
-		list_icons = g_list_append(list_icons, icons_current);
-
-		while ((icons_dir = (gchar *) g_dir_read_name(dir)) != NULL)
-		{
-			gchar *testdirname = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", icons_dir, NULL);
-
-			if (g_file_test(testdirname, G_FILE_TEST_IS_DIR))
-			{
-				print_debug("%s\n", icons_dir);
-				if (!icons_current || ggadu_strcasecmp(icons_dir, icons_current))
-					list_icons = g_list_append(list_icons, g_strdup(icons_dir));
-			}
-			g_free(testdirname);
-		}
-
-		g_dir_close(dir);
-		gtk_combo_set_popdown_strings(GTK_COMBO(combo_icons), list_icons);
-	}
 
 //	gtk_window_set_default_size(GTK_WINDOW(preferences), 250, 200);
 
@@ -1238,7 +1242,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "use_spell",
 		      		     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
-		entry = g_object_get_data(G_OBJECT(chat_vbox), "combospell");
+		entry = g_object_get_data(G_OBJECT(chat_vbox), "combo_spell");
 		GSList *dict_slist= g_object_get_data(G_OBJECT(entry), "dictionary_slist");
 		
 		g_return_if_fail(entry != NULL);
@@ -1343,16 +1347,20 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_theme");
 		g_return_if_fail(entry != NULL);
-		GSList *combo_theme_slist= g_object_get_data(G_OBJECT(entry), "combo_theme_slist");
 		
+		GSList *combo_theme_slist= g_object_get_data(G_OBJECT(entry), "combo_theme_slist");
 		ggadu_config_var_set(gui_handler, "theme",
 				     (gpointer) g_strdup(g_slist_nth_data(combo_theme_slist,gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) ));
 
 		g_slist_foreach(combo_theme_slist,(GFunc)g_free,NULL);
 		g_slist_free(combo_theme_slist);				     
 				     
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_icons");
+		g_return_if_fail(entry != NULL);
+		GSList *combo_icons_slist= g_object_get_data(G_OBJECT(entry), "combo_icons_slist");
 		ggadu_config_var_set(gui_handler, "icons",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_icons)->entry))));
+				     (gpointer) g_strdup(g_slist_nth_data(combo_icons_slist,gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) ));
+		g_slist_free(combo_icons_slist);
 
 		entry = g_object_get_data(G_OBJECT(colors_vbox), "msg_header_color");
 		g_return_if_fail(entry != NULL);

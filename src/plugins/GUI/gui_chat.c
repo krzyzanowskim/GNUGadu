@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.107 2004/08/19 23:05:44 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.108 2004/08/22 12:26:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -804,6 +804,11 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gchar *fontstr = NULL;
 	GGaduStatusPrototype *sp = NULL;
 	GdkPixbuf *image = NULL;
+	GtkRequisition r, rb;
+	float position = 0;
+	float tab_minus = 0;
+	gint percent = 0;
+	GtkWidget *chat_notebook_paned_size = NULL;
 
 	if (!session || !plugin_name || !id)
 		return NULL;
@@ -1207,37 +1212,31 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		invisible_chats = g_slist_append(invisible_chats, session->chat);
 	}
 
-	if (ggadu_config_var_get(gui_handler, "chat_paned_size") == NULL)
-		gtk_paned_set_position(GTK_PANED(paned), 160);
-	else
+
+	/* chat_paned_size */
+	chat_notebook_paned_size = g_object_get_data(G_OBJECT(chat_window), "chat_notebook");
+	percent = (gint) ggadu_config_var_get(gui_handler, "chat_paned_size");
+
+	if ((chat_type == CHAT_TYPE_TABBED) && (gtk_notebook_get_show_tabs(GTK_NOTEBOOK(chat_notebook_paned_size))))
 	{
-		GtkRequisition r, rb;
-		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window), "chat_notebook");
-		gint percent = (gint) ggadu_config_var_get(gui_handler, "chat_paned_size");
-		float position = 0;
-		float tab_minus = 0;
-
-		if ((chat_type == CHAT_TYPE_TABBED) && (gtk_notebook_get_show_tabs(GTK_NOTEBOOK(chat_notebook))))
-		{
-			GtkRequisition rbnl;
-			GtkWidget *label = gtk_notebook_get_tab_label(GTK_NOTEBOOK(chat_notebook),
-								      GTK_WIDGET(session->chat));
-
-			gtk_widget_size_request(GTK_WIDGET(label), &rbnl);
-			tab_minus = -rbnl.height;
-		}
-
-		gtk_window_get_size(GTK_WINDOW(chat_window), &r.width, &r.height);
-		gtk_widget_size_request(GTK_WIDGET(hbox_buttons), &rb);
-
-		position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
-
-		g_object_set_data(G_OBJECT(session->chat), "paned", paned);
-		g_object_set_data(G_OBJECT(session->chat), "hbox_buttons", hbox_buttons);
-
-		gtk_paned_set_position(GTK_PANED(paned), (gint) position);
-
+		GtkRequisition rbnl;
+		GtkWidget *label = gtk_notebook_get_tab_label(GTK_NOTEBOOK(chat_notebook_paned_size),
+							      GTK_WIDGET(session->chat));
+		gtk_widget_size_request(GTK_WIDGET(label), &rbnl);
+		tab_minus = -rbnl.height;
 	}
+
+	gtk_window_get_size(GTK_WINDOW(chat_window), &r.width, &r.height);
+	gtk_widget_size_request(GTK_WIDGET(hbox_buttons), &rb);
+
+	position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
+
+	g_object_set_data(G_OBJECT(session->chat), "paned", paned);
+	g_object_set_data(G_OBJECT(session->chat), "hbox_buttons", hbox_buttons);
+
+	gtk_paned_set_position(GTK_PANED(paned), (gint) position);
+	/* end chat_paned_size */
+	
 
 	g_signal_connect(chat_window, "configure-event", G_CALLBACK(window_resize_signal), session);
 	g_signal_connect(button_autosend, "clicked", G_CALLBACK(on_autosend_clicked), session);
