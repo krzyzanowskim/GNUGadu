@@ -338,11 +338,16 @@ GSList *status_init ()
   GSList *list = NULL;
   GGaduStatusPrototype *sp;
 
-  if (!(sp = g_new0 (GGaduStatusPrototype, 7)))
+  if (!(sp = g_new0 (GGaduStatusPrototype, 8)))
     return NULL;
 
   sp->status      = JABBER_STATUS_AVAILABLE;
   sp->description = g_strdup (_("Available"));
+  sp->image       = g_strdup ("jabber-online.png");
+  list = g_slist_append (list, sp++);
+
+  sp->status      = JABBER_STATUS_CHAT;
+  sp->description = g_strdup (_("Free for chat"));
   sp->image       = g_strdup ("jabber-online.png");
   list = g_slist_append (list, sp++);
 

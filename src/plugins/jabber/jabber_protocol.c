@@ -69,7 +69,8 @@ void jabber_change_status (enum states status)
     case JABBER_STATUS_AWAY:      show = show_away; break;
     case JABBER_STATUS_XA:        show = show_xa;   break;
     case JABBER_STATUS_DND:       show = show_dnd;  break;
-    case JABBER_STATUS_AVAILABLE: show = show_chat; break;
+    case JABBER_STATUS_CHAT:      show = show_chat; break;
+    case JABBER_STATUS_AVAILABLE: show = NULL;      break;
     default:
       break;
   }

@@ -123,6 +123,8 @@ LmHandlerResult presence_cb (LmMessageHandler *handler, LmConnection *connection
 	      k->status = JABBER_STATUS_XA;
 	    else if (!strcmp (show, "dnd"))
 	      k->status = JABBER_STATUS_DND;
+	    else if (!strcmp (show, "chat"))
+	      k->status = JABBER_STATUS_CHAT;
 	    else
 	      k->status = JABBER_STATUS_AVAILABLE;
 	  } else
