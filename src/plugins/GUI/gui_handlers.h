@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.h,v 1.8 2003/05/12 09:42:17 thrulliq Exp $ */
+/* $Id: gui_handlers.h,v 1.9 2003/05/24 14:30:18 zapal Exp $ */
 
 #include "signals.h"
 
@@ -33,3 +33,5 @@ void handle_show_search_results(GGaduSignal *signal);
 void handle_status_changed(GGaduSignal *signal);
 
 void notify_callback (gchar *repo_name, gpointer key, gint actions);
+
+gboolean auto_away_func (gpointer data);

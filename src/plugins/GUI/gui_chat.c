@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.25 2003/05/21 17:30:53 zapal Exp $ */
+/* $Id: gui_chat.c,v 1.26 2003/05/24 14:30:18 zapal Exp $ */
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -11,6 +11,7 @@
 #include "gui_main.h"
 #include "gui_support.h"
 #include "gui_chat.h"
+#include "gui_handlers.h"
 
 extern GGaduConfig *config;
 extern GSList *protocols;
@@ -212,6 +213,7 @@ void on_send_clicked(GtkWidget *button, gpointer user_data)
 	GtkTextBuffer *buf = NULL;
 	GtkTextIter start, end;
 	gchar *tmpmsg = NULL;
+	gui_protocol *gp;
 
 
 	if (chat_type == CHAT_TYPE_TABBED) {
@@ -253,6 +255,26 @@ void on_send_clicked(GtkWidget *button, gpointer user_data)
 		{
 		      signal_emit_full ("main-gui", "sound play file", soundfile, "sound*", NULL);
 		}
+
+		gp = gui_find_protocol (plugin_name, protocols);
+		if (gp)
+		{
+		  gint status = (gint) signal_emit ("main-gui",
+		      "get current status", NULL, plugin_name);
+		  gtk_timeout_remove (gp->aaway_timer);
+		  if (status != gp->p->offline_status &&
+		      status != gp->p->away_status &&
+		      gp->p->away_status != -1 &&
+		      config_var_get (gui_handler, "auto_away"))
+		  {
+		    gp->aaway_timer = gtk_timeout_add (
+			config_var_get (gui_handler, "auto_away_interval") ?
+			(gint) config_var_get (gui_handler,
+					       "auto_away_interval"):300000,
+			auto_away_func, gp);
+		  }
+		}
+		
 		signal_emit("main-gui", "send message", msg, plugin_name);
 	} else 
 		g_free(tmpmsg);

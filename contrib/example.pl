@@ -28,7 +28,7 @@ sub userlist_watch {
 # $_[1] - action (see repo for more info)
 # $_[2] - user id
 # You can't modify above values.
-  GGadu::signal_emit ("sound play file", "/usr/local/sounds/usr.wav", "sound*", 0);
+  GGadu::signal_emit ("sound play file", "/usr/share/gg2/sounds/usr.wav", "sound*", 0);
 }
 
 # GGadu::register_script() must be called at the very begginning

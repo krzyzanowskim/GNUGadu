@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.15 2003/05/24 10:03:22 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.16 2003/05/24 14:30:18 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -145,7 +145,7 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		    switch (atoi(strtab[1])) {
 //			case 0: ip = g_strdup_printf("\n[brak p2p]");break;
 			case 1: ip = g_strdup_printf("\n[NAT %s]",strtab[0]);break;
-			case 2: ip = g_strdup_printf(_("\n[nie ma Cie w kontaktach]"));break;
+			case 2: ip = g_strdup_printf(_("\n[not in userlist]"));break;
 			default: ip = g_strdup_printf("\n[%s]",strtab[0]);
 			}
 		    g_strfreev(strtab);

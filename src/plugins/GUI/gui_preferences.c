@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.15 2003/05/24 10:03:23 zapal Exp $ */
+/* $Id: gui_preferences.c,v 1.16 2003/05/24 14:30:18 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -514,6 +514,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *hide_on_start;
 	GtkWidget *blink;
 	GtkWidget *blink_interval;
+	GtkWidget *auto_away;
+	GtkWidget *auto_away_interval;
 	GtkWidget *chat_paned_size;
 	GtkWidget *tabbox;
 	GDir *dir;
@@ -614,8 +616,11 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	blink = gtk_check_button_new_with_label (_("Blink status"));
 	gtk_box_pack_start(GTK_BOX(vbox), blink, FALSE, FALSE, 0);
+
+	auto_away = gtk_check_button_new_with_label (_("Auto away"));
+	gtk_box_pack_start(GTK_BOX(vbox), auto_away, FALSE, FALSE, 0);
 	
-	tabbox = gtk_table_new(4, 2, FALSE);
+	tabbox = gtk_table_new(5, 2, FALSE);
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox, FALSE, FALSE, 0);
 
 	label = gtk_label_new (_("Blink interval"));
@@ -643,6 +648,13 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 3, 4);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 2, 3, 4);
+	
+	label = gtk_label_new (_("Auto away interval"));
+	auto_away_interval = gtk_spin_button_new_with_range (0, 600000, 1000);
+	
+	gtk_table_attach_defaults (GTK_TABLE(tabbox), label, 0, 1, 4, 5);
+	gtk_table_attach_defaults (GTK_TABLE(tabbox), auto_away_interval, 1, 2, 4, 5);
+	g_signal_connect(auto_away, "toggled", G_CALLBACK(tree_toggled), auto_away_interval);
 
 	if (config_var_get(gui_handler, "emot"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(emotic),
@@ -678,6 +690,15 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (config_var_get (gui_handler, "blink_interval"))
 	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (blink_interval),
 	      (gint)config_var_get (gui_handler, "blink_interval"));
+	
+	if (config_var_get (gui_handler, "auto_away"))
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(auto_away), TRUE);
+	else
+	  gtk_widget_set_sensitive (auto_away_interval, FALSE);
+
+	if (config_var_get (gui_handler, "auto_away_interval"))
+	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (auto_away_interval),
+	      (gint)config_var_get (gui_handler, "auto_away_interval"));
 
 	if (config_var_get(gui_handler, "chat_window_auto_show"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chatwindowshow),
@@ -823,6 +844,14 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		config_var_set(gui_handler, "blink_interval",
 		    (gpointer) gtk_spin_button_get_value_as_int
 		    (GTK_SPIN_BUTTON(blink_interval)));
+		
+		config_var_set(gui_handler, "auto_away",
+		    (gpointer) gtk_toggle_button_get_active
+		    (GTK_TOGGLE_BUTTON (auto_away)));
+
+		config_var_set(gui_handler, "auto_away_interval",
+		    (gpointer) gtk_spin_button_get_value_as_int
+		    (GTK_SPIN_BUTTON(auto_away_interval)));
 
 /*		config_var_set(gui_handler, "chat_paned_size",
 			       (gpointer)

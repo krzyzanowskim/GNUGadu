@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.15 2003/05/24 10:03:23 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.16 2003/05/24 14:30:18 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -334,6 +334,8 @@ void handle_disconnected(GGaduSignal *signal)
       g_free (gp->blinker_image1);
     if (gp->blinker_image2)
       g_free (gp->blinker_image2);
+
+    gtk_timeout_remove (gp->aaway_timer);
     	    
     image = create_pixbuf(sp->image);
     model = (tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore);
@@ -401,6 +403,18 @@ void handle_status_changed(GGaduSignal *signal)
       g_free (gp->blinker_image1);
     if (gp->blinker_image2)
       g_free (gp->blinker_image2);
+
+    gtk_timeout_remove (gp->aaway_timer);
+
+    if (status != gp->p->offline_status && status != gp->p->away_status &&
+	gp->p->away_status != -1 && config_var_get (gui_handler, "auto_away"))
+    {
+      
+      gp->aaway_timer = gtk_timeout_add (
+	  config_var_get (gui_handler, "auto_away_interval") ?
+	  (gint) config_var_get (gui_handler, "auto_away_interval"):300000,
+	  auto_away_func, gp);
+    }
     	    
     image = create_pixbuf(sp->image);
     status_image = gtk_bin_get_child(GTK_BIN(gp->statuslist_eventbox));
@@ -425,4 +439,21 @@ void notify_callback (gchar *repo_name, gpointer key, gint actions)
 
   gui_user_view_notify (gp, n);
   g_free (n);
+}
+
+gboolean auto_away_func (gpointer data)
+{
+  gui_protocol *gp = (gui_protocol *) data;
+  GGaduStatusPrototype *sp;
+
+  if (!gp)
+    return FALSE;
+
+  sp = gui_find_status_prototype (gp->p, gp->p->away_status);
+  if (!sp)
+    return FALSE;
+
+  signal_emit ("main-gui", "change status", sp, gp->plugin_name);
+  
+  return FALSE;
 }

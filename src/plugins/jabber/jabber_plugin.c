@@ -471,6 +471,7 @@ void start_plugin()
 	p->img_filename = g_strdup("jabber.png");
 	p->statuslist = status_init();
 	p->offline_status = JABBER_STATUS_UNAVAILABLE;
+	p->away_status = JABBER_STATUS_AWAY;
 
 	ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
     
