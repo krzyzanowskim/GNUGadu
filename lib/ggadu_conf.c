@@ -28,8 +28,8 @@ gint ggadu_config_var_check (GGaduPlugin * handler, gchar * name)
     GGaduVar *var = NULL;
     GSList *tmp = handler->variables;
 
-    if ((handler == NULL) || (name == NULL) || (handler->variables == NULL))
-	return 0;
+    if (!handler || !name || !handler->variables)
+		return 0;
 
     while (tmp)
       {
@@ -37,7 +37,7 @@ gint ggadu_config_var_check (GGaduPlugin * handler, gchar * name)
 
 	  if (!g_strcasecmp (var->name, name))
 	    {
-		if (var->ptr != NULL)
+		if (var->ptr)
 		    return 1;
 		else
 		    return 0;
@@ -54,8 +54,8 @@ gpointer ggadu_config_var_get (GGaduPlugin * handler, gchar * name)
     GGaduVar *var = NULL;
     GSList *tmp = NULL;
 
-    if ((handler == NULL) || (name == NULL) || (handler->variables == NULL))
-	return NULL;
+    if (!handler || !name || !handler->variables)
+		return NULL;
 
     tmp = handler->variables;
 
@@ -63,7 +63,7 @@ gpointer ggadu_config_var_get (GGaduPlugin * handler, gchar * name)
       {
 	  var = (GGaduVar *) tmp->data;
 
-	  if ((var != NULL) && (!g_strcasecmp (var->name, name)))
+	  if (var && (!g_strcasecmp (var->name, name)))
 	    {
 		return var->ptr ? var->ptr : var->def;
 	    }
@@ -156,8 +156,8 @@ void ggadu_config_var_add (GGaduPlugin * handler, gchar * name, gint type)
 {
     GGaduVar *var = NULL;
 
-    if ((name == NULL) || (handler == NULL))
-	return;
+    if (!name || !handler)
+		return;
 
     var = g_new0 (GGaduVar, 1);
     var->name = g_strdup (name);
@@ -195,7 +195,7 @@ gboolean ggadu_config_read (GGaduPlugin * plugin_handler)
     gchar line[1024], *val, *path;
     GGaduVar *v = NULL;
 
-    print_debug ("core : config_init : plugin : %s\n", plugin_handler->name);
+    print_debug ("Reading configuration file %s\n", plugin_handler->name);
 
     /* plik trzeba ustalic */
     path = g_strdup (plugin_handler->config_file);

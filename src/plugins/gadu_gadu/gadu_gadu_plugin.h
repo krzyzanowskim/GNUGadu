@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.13 2003/12/11 00:58:51 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.14 2004/01/15 11:44:40 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -23,53 +23,53 @@ static GQuark GET_USER_MENU_SIG;
 
 enum
 {
-    GGADU_GADU_GADU_CONFIG_ID,
-    GGADU_GADU_GADU_CONFIG_PASSWORD,
-    GGADU_GADU_GADU_CONFIG_SERVER,
-    GGADU_GADU_GADU_CONFIG_PROXY,
-    GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE,
-    GGADU_GADU_GADU_CONFIG_SOUND_MSG_FILE,
-    GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE,
-    GGADU_GADU_GADU_CONFIG_HISTORY,
-    GGADU_GADU_GADU_CONFIG_AUTOCONNECT,
-    GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS,
-    GGADU_GADU_GADU_CONFIG_REASON,
-    GGADU_GADU_GADU_CONFIG_FRIENDS_MASK,
-    GGADU_GADU_GADU_CONFIG_DCC,
-    GGADU_GADU_GADU_SELECTED_FILE,
-    GGADU_GADU_GADU_CONTACT
+	GGADU_GADU_GADU_CONFIG_ID,
+	GGADU_GADU_GADU_CONFIG_PASSWORD,
+	GGADU_GADU_GADU_CONFIG_SERVER,
+	GGADU_GADU_GADU_CONFIG_PROXY,
+	GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE,
+	GGADU_GADU_GADU_CONFIG_SOUND_MSG_FILE,
+	GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE,
+	GGADU_GADU_GADU_CONFIG_HISTORY,
+	GGADU_GADU_GADU_CONFIG_AUTOCONNECT,
+	GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS,
+	GGADU_GADU_GADU_CONFIG_REASON,
+	GGADU_GADU_GADU_CONFIG_FRIENDS_MASK,
+	GGADU_GADU_GADU_CONFIG_DCC,
+	GGADU_GADU_GADU_SELECTED_FILE,
+	GGADU_GADU_GADU_CONTACT
 };
 
-GGaduPlugin *initialize_plugin (gpointer conf_ptr);
+GGaduPlugin *initialize_plugin(gpointer conf_ptr);
 
-gpointer config_init_plugin (GGaduPlugin * plugin_handler);
+gpointer config_init_plugin(GGaduPlugin * plugin_handler);
 
-gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data);
+gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data);
 
-gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer data);
+gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer data);
 
-gboolean test_chan_dcc_get (GIOChannel * source, GIOCondition condition, gpointer data);
+gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer data);
 
-void my_signal_receive (gpointer name, gpointer signal_ptr);
+void my_signal_receive(gpointer name, gpointer signal_ptr);
 
-void start_plugin ();
+void start_plugin();
 
-void destroy_plugin ();
+void destroy_plugin();
 
-void gadu_gadu_enable_dcc_socket (gboolean state);
+void gadu_gadu_enable_dcc_socket(gboolean state);
 
-gpointer gadu_gadu_login (gpointer desc, gint status);
+gpointer gadu_gadu_login(gpointer desc, gint status);
 
-void wyjdz_signal_handler ();
+void wyjdz_signal_handler();
 
-void load_contacts (gchar * encoding);
+void load_contacts(gchar * encoding);
 
-void import_userlist (gchar * list);
+void import_userlist(gchar * list);
 
-void test ();
+void test();
 
-void save_addressbook_file (gpointer userlist);
+void save_addressbook_file(gpointer userlist);
 
-gpointer user_preferences_action (gpointer user_data);
+gpointer user_preferences_action(gpointer user_data);
 
 #endif

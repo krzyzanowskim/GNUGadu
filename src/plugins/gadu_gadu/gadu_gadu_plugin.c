@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.117 2004/01/14 20:05:56 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.118 2004/01/15 11:44:39 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -68,12 +68,9 @@ void test()
 {
 }
 
-
 void ggadu_gadu_gadu_disconnect()
 {
 	GSList *tmplist = userlist;
-
-	connected = FALSE;
 
 	if (watch > 0)
 		g_source_remove(watch);
@@ -82,25 +79,21 @@ void ggadu_gadu_gadu_disconnect()
 		g_io_channel_unref(source_chan);
 
 	gg_logoff(session);
-
 	gg_free_session(session);
-
 	session = NULL;
+	connected = FALSE;
 
 	while (tmplist)
 	{
 		GGaduContact *k = tmplist->data;
 		if (k->status != GG_STATUS_NOT_AVAIL)
 		{
-			print_debug("\t%s", k->id);
 			k->status = GG_STATUS_NOT_AVAIL;
 			ggadu_repo_change_value("gadu-gadu", k->id, k, REPO_VALUE_DC);
 		}
 		tmplist = tmplist->next;
 	}
-
 	signal_emit(GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
-
 }
 
 void ggadu_gadu_gadu_disconnect_msg(gchar * txt)
@@ -118,21 +111,16 @@ gchar *insert_cr(gchar * txt)
 
 	while (*in)
 	{
-
 		if (*in == '\n')
 		{
 			*out = '\r';
 			out++;
 		}
-
 		*out = *in;
-
 		in++;
 		out++;
 	}
-
 	start = g_try_realloc(start, strlen(start) + 1);
-
 	return start;
 }
 
@@ -151,12 +139,12 @@ void gadu_gadu_enable_dcc_socket(gboolean state)
 		dcc_channel_get = g_io_channel_unix_new(dcc_session_get->fd);
 		cond = (dcc_session_get->check == GG_CHECK_READ) ? G_IO_IN : G_IO_OUT;
 		watch_dcc_file = g_io_add_watch(dcc_channel_get, G_IO_ERR | cond, test_chan_dcc_get, dcc_session_get);
-
 	}
 	else if (state == FALSE)
 	{
 		if (watch_dcc_file)
 			g_source_remove(watch_dcc_file);
+
 		gg_free_dcc(dcc_session_get);
 		dcc_session_get = NULL;
 		gg_dcc_ip = 0;
@@ -207,9 +195,8 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 
 	if (server_addr_ip)
 	{
-		print_debug("server : %s %d", server_addr_ip, p.server_port);
-
 		p.server_addr = inet_addr(server_addr_ip);
+		print_debug("server : %s %d", server_addr_ip, p.server_port);
 		g_free(server_addr_ip);
 	}
 
@@ -239,25 +226,22 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 		array_free(proxy_userpass);
 		array_free(auth);
 
+		print_debug("proxy : %s %d", gg_proxy_host, gg_proxy_port);
 	}
 
 	if (!p.uin || (!p.password || !*p.password))
 	{
 		user_preferences_action(NULL);
-
 		signal_emit(GGadu_PLUGIN_NAME, "gui show warning",
 			    g_strdup(_("You have to enter your GG# and password first!")), "main-gui");
-
 		ggadu_gadu_gadu_disconnect();
-
 		return NULL;
 	}
 
-	print_debug("loguje sie - GG# %d status %d", (gint) ggadu_config_var_get(handler, "uin"), status);
+	print_debug("Trying login as %d", (gint) ggadu_config_var_get(handler, "uin"));
 
 	if (!(session = gg_login(&p)))
 	{
-		print_debug("%s \t\t connection failed", GGadu_PLUGIN_NAME);
 		ggadu_gadu_gadu_disconnect_msg(NULL);
 		return NULL;
 	}
@@ -270,12 +254,11 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 
 gboolean gadu_gadu_ping(gpointer data)
 {
-	if (connected == FALSE)
+	if (!connected)
 		return FALSE;
 
 	gg_ping(session);
 	print_debug("PING! send!\n");
-
 	return TRUE;
 }
 
@@ -305,29 +288,29 @@ void handle_search_event(struct gg_event *e)
 		const gchar *status = gg_pubdir50_get(res, i, GG_PUBDIR50_STATUS);
 		const gchar *city = gg_pubdir50_get(res, i, GG_PUBDIR50_CITY);
 		const gchar *birthyear = gg_pubdir50_get(res, i, GG_PUBDIR50_BIRTHYEAR);
-		gint b_year;
 
 		k->id = g_strdup((uin) ? uin : "?");
 
 		if (birthyear != NULL)
 		{
-			b_year = ((cur_date->year) - atoi(birthyear));
+			gint b_year = ((cur_date->year) - atoi(birthyear));
 			k->age = (b_year <= 99) ? g_strdup_printf("%d", b_year) : NULL;
 		}
 		else
+		{
 			k->age = NULL;
+		}
 
-		if (first_name != NULL)
+		if (first_name)
 			to_utf8("CP1250", first_name, k->first_name);
 
-		if (nick != NULL)
+		if (nick)
 			to_utf8("CP1250", nick, k->nick);
 
-		if (city != NULL)
+		if (city)
 			to_utf8("CP1250", city, k->city);
 
 		k->status = (status) ? atoi(status) : GG_STATUS_NOT_AVAIL;
-
 		list = g_slist_append(list, k);
 	}
 	signal_emit(GGadu_PLUGIN_NAME, "gui show search results", list, "main-gui");
@@ -335,19 +318,11 @@ void handle_search_event(struct gg_event *e)
 
 void ggadu_gg_save_history(gchar * to, gchar * txt)
 {
-
 	if (ggadu_config_var_get(handler, "log"))
 	{
-		gchar *dir = g_build_filename(this_configdir, "history", NULL);
 		gchar *path = g_build_filename(this_configdir, "history", to, NULL);
-
-		if (!g_file_test(dir, G_FILE_TEST_IS_DIR))
-			mkdir(dir, 0700);
-
 		write_line_to_file(path, txt, "CP1250");
-
 		g_free(path);
-		g_free(dir);
 	}
 }
 
@@ -367,8 +342,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	    ((condition & G_IO_HUP) &&
 	     ((session->state != GG_STATE_CONNECTING_GG) && (session->check != GG_CHECK_WRITE))))
 	{
-		connected = FALSE;
-
 		if (++connect_count < 3)
 		{
 			gint _status = session->status;
@@ -389,43 +362,32 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	switch (e->type)
 	{
 	case GG_EVENT_NONE:
-		print_debug("GG_EVENT_NONE!!\n");
+		print_debug("GG_EVENT_NONE");
 		break;
 
 	case GG_EVENT_PONG:
+		print_debug("GG_EVENT_PONG");
 		gg_ping(session);
-		print_debug("GG_EVENT_PONG!\n");
 		break;
 
 	case GG_EVENT_CONN_SUCCESS:
-		print_debug("polaczono!\n");
+		print_debug("GG_EVENT_CONN_SUCCESS");
+
 		connected = TRUE;
-
-		/* notify wysylam */
-		slistmp = userlist;
-		i = 0;
-
-		while (slistmp)
-		{
-			i++;
-			slistmp = slistmp->next;
-		}
-
-		uins = g_malloc0(i * sizeof (uint32_t));
-		slistmp = userlist;
+		i = g_slist_length(userlist);
 		j = 0;
 
+		/* notify wysylam */
+		uins = g_malloc0(i * sizeof (uint32_t));
+		slistmp = userlist;
 		while (slistmp)
 		{
 			GGaduContact *k = slistmp->data;
-
 			uins[j++] = atoi(k->id);
 			slistmp = slistmp->next;
 		}
-
 		gg_notify(session, uins, i);
 		g_free(uins);
-
 		/* pingpong */
 		g_timeout_add(100000, gadu_gadu_ping, NULL);
 
@@ -434,22 +396,21 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				    ggadu_config_var_get(handler, "sound_app_file"), "sound*");
 
 		signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
-			    (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status) , "main-gui");
+			    (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->
+										      status ^ GG_STATUS_FRIENDS_MASK) :
+					session->status), "main-gui");
 
 		break;
-
 	case GG_EVENT_CONN_FAILED:
-		print_debug("nie udalo sie polaczyc\n");
 		ggadu_gadu_gadu_disconnect_msg(_("Connection failed"));
 		break;
-
 	case GG_EVENT_DISCONNECT:
-	{
-		gint _status = session->status;
-		ggadu_gadu_gadu_disconnect_msg(_("Disconnected"));
-		gadu_gadu_login(NULL, _status);
+		{
+			gint _status = session->status;
+			ggadu_gadu_gadu_disconnect_msg(_("Disconnected"));
+			gadu_gadu_login(NULL, _status);
+		}
 		break;
-	}
 	case GG_EVENT_USERLIST:
 
 		switch (e->event.userlist.type)
@@ -469,19 +430,14 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		break;
 
 		break;
-
 	case GG_EVENT_MSG:
-		print_debug("you have message!\n");
-		print_debug("from: %d\n", e->event.msg.sender);
-		print_debug("Type: %d\n", e->event.msg.msgclass);
+		print_debug("GG_EVENT_MSG from: %d type: %d", e->event.msg.sender, e->event.msg.msgclass);
 
-		if (e->event.msg.msgclass == GG_CLASS_CHAT)
-		{
+/*		if (e->event.msg.msgclass == GG_CLASS_CHAT) {
 			print_debug("body: %s\n", e->event.msg.message);
-		}
-		else
-			/* dcc part */
-		if ((e->event.msg.msgclass == GG_CLASS_CTCP))
+		} else */
+
+		if ((e->event.msg.msgclass == GG_CLASS_CTCP))	/* dcc part */
 		{
 			struct gg_dcc *d = NULL;
 			gchar *idtmp = g_strdup_printf("%d", e->event.msg.sender);
@@ -490,9 +446,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			GGaduContact *k = NULL, *ktmp = NULL;
 			GIOChannel *ch = NULL;
 
-			print_debug("somebody want to send us a file\n");
-
-			//k = ggadu_repo_find_value ("gadu-gadu", idtmp);
+			print_debug("somebody want to send you a file");
 			index = ggadu_repo_value_first("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *) & key);
 			while (index)
 			{
@@ -503,11 +457,10 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 							      index);
 			}
 
-			if (k == NULL)
+			if (!k)
 				return TRUE;
 
 			addr_arr = g_strsplit(k->ip, ":", 2);
-
 			if (!addr_arr[0] || !addr_arr[1])
 			{
 				g_strfreev(addr_arr);
@@ -523,8 +476,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			g_free(idtmp);
 			g_strfreev(addr_arr);
 			break;
-		}
-		/* end of dcc part */
+		}		/* end of dcc part */
 
 		msg = g_new0(GGaduMsg, 1);
 		msg->id = g_strdup_printf("%d", e->event.msg.sender);
@@ -551,11 +503,10 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		}
 
 		{
-			gchar *line = g_strdup_printf(":: %s (%s)::\n%s\n\n", msg->id, get_timestamp(msg->time),
-						      msg->message);
-
-			ggadu_gg_save_history(msg->id, line);
-			g_free(line);
+			gchar *hist_line =
+				g_strdup_printf(":: %s (%s):: %s\n\n", msg->id, get_timestamp(msg->time), msg->message);
+			ggadu_gg_save_history(msg->id, hist_line);
+			g_free(hist_line);
 		}
 
 		signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
@@ -569,8 +520,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	case GG_EVENT_NOTIFY60:
 		{
 			int i;
-
-			print_debug("GG_EVENT_NOTIFY60\n");
+			print_debug("GG_EVENT_NOTIFY60");
 
 			for (i = 0; e->event.notify60[i].uin; i++)
 			{
@@ -584,37 +534,30 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				notify->id = g_strdup_printf("%d", e->event.notify60[i].uin);
 				notify->status = e->event.notify60[i].status;
 
-				strIP = inet_ntoa(ip_addr);	/* cannot be freed it staically allocated memory */
+				strIP = inet_ntoa(ip_addr);	/* cannot be freed it's staically allocated memory */
 
 				if (strIP && (ggadu_strcasecmp(strIP, "0.0.0.0")))
 					notify->ip = g_strdup_printf("%s:%d", strIP, e->event.notify60[i].remote_port);
 
 				ggadu_convert("CP1250", "UTF-8", e->event.notify60[i].descr, desc_utf8);
-
 				set_userlist_status(notify, desc_utf8, userlist);
 
 				l = userlist;
-
 				while (l)
 				{
 					GGaduContact *k = (GGaduContact *) l->data;
-
 					if (!ggadu_strcasecmp(k->id, notify->id))
 						ggadu_repo_change_value("gadu-gadu", k->id, k, REPO_VALUE_DC);
-
 					l = l->next;
 				}
-
-
 			}
-
 		}
 		break;
-
 	case GG_EVENT_NOTIFY:
 	case GG_EVENT_NOTIFY_DESCR:
 		{
 			struct gg_notify_reply *n = NULL;
+
 			print_debug("GG_EVENT_NOTIFY\n");
 
 			if (e->type == GG_EVENT_NOTIFY)
@@ -645,7 +588,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				set_userlist_status(notify, desc_utf8, userlist);
 
 				l = userlist;
-
 				while (l)
 				{
 					GGaduContact *k = (GGaduContact *) l->data;
@@ -655,12 +597,10 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 					l = l->next;
 				}
-
 				n++;
 			}
 		}
 		break;
-
 	case GG_EVENT_STATUS60:
 	case GG_EVENT_STATUS:
 		{
@@ -668,19 +608,14 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			print_debug("GG_EVENT_STATUS");
 
-			ggadu_convert("CP1250", "UTF-8",
-				      ((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr),
-				      desc_utf8);
+			/* *INDENT-OFF* */
+			ggadu_convert("CP1250", "UTF-8",((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr), desc_utf8);
 			notify = g_new0(GGaduNotify, 1);
-			notify->id =
-				g_strdup_printf("%d",
-						(e->type ==
-						 GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
-			notify->status =
-				(e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
+			notify->id = g_strdup_printf("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
+			notify->status = (e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
+			/* *INDENT-ON* */
 
 			set_userlist_status(notify, desc_utf8, userlist);
-
 			while (l)
 			{
 				GGaduContact *k = (GGaduContact *) l->data;
@@ -694,12 +629,10 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		break;
 
 	case GG_EVENT_ACK:
-
 		if (e->event.ack.status == GG_ACK_QUEUED)
 			print_debug("wiadomosc bedzie dostarczona pozniej do %d.\n", e->event.ack.recipient);
 		else
 			print_debug("wiadomosc dotarla do %d.\n", e->event.ack.recipient);
-
 		break;
 	case GG_EVENT_PUBDIR50_SEARCH_REPLY:
 		handle_search_event(e);
@@ -713,15 +646,15 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		prev_check = session->check;
 		if (session->check == GG_CHECK_READ)
 		{
-			print_debug("GG_CHECK_READ\n");
+			print_debug("GG_CHECK_READ");
 			watch = g_io_add_watch(source, G_IO_IN | G_IO_ERR | G_IO_HUP, test_chan, NULL);
 			return FALSE;
 		}
 
 		if (session->check == GG_CHECK_WRITE)
 		{
+			print_debug("GG_CHECK_WRITE");
 			watch = g_io_add_watch(source, G_IO_OUT | G_IO_ERR | G_IO_HUP, test_chan, NULL);
-			print_debug("GG_CHECK_WRITE\n");
 			return FALSE;
 		}
 	}
@@ -2264,9 +2197,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 		if (!session)
 			return;
-			
+
 		signal->data_return =
-				(gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status);
+			(gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->
+										  status ^ GG_STATUS_FRIENDS_MASK) :
+				    session->status);
 
 	}
 }
