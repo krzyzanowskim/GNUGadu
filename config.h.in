@@ -1,0 +1,7 @@
+#undef PACKAGE_SOURCE_DIR
+#undef PACKAGE_DATA_DIR
+#undef PACKAGE_LOCALE_DIR
+#undef PACKAGE
+#undef VERSION
+#undef DEBUG
+#undef ENABLE_NLS
