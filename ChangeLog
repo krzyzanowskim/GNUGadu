@@ -1,10 +1,12 @@
-29.10.2004
+28.10.2004
 - dbus plugin handle methods
   org.freedesktop.im.getPresence
   org.freedesktop.im.getProtocols
   (krzak/thrull/dbus)
 - GGaduProtocol->protocol_handler_str (krzak)
-  /* gg:// tlen:// jabber:// */ 
+  (gg:// tlen:// jabber://)
+- introduced new signal "get user" -  should return GGaduContact (krzak)
+- added GGaduContact_copy() (krzak)
 
 26.10.2004
 - fix exit if set unavailable in jabber plugin (krzak/jabber)
