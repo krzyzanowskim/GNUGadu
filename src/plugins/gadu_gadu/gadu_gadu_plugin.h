@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.16 2004/01/17 17:48:17 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.17 2004/01/21 19:37:24 thrulliq Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -7,7 +7,6 @@
 #  include <config.h>
 #endif
 
-static GQuark CHANGE_STATUS_SIG;
 static GQuark CHANGE_STATUS_SIG;
 static GQuark CHANGE_STATUS_DESCR_SIG;
 static GQuark SEND_MESSAGE_SIG;
