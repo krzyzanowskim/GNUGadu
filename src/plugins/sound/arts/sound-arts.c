@@ -1,4 +1,4 @@
-/* $Id: sound-arts.c,v 1.1 2004/08/24 13:56:00 krzyzak Exp $ */
+/* $Id: sound-arts.c,v 1.2 2004/08/26 12:35:54 krzyzak Exp $ */
     /*
 
        Copyright (C) 2004 Marcin Krzy¿anowski krzak@hakore.com
@@ -27,10 +27,10 @@
 #include <config.h>
 #endif
 
+#include <glib.h>
 #include <artsc.h>
 #include <audiofile.h>
 
-#include <glib.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,20 +40,19 @@
 
 #include "sound-arts.h"
 
-#define FILE_NAME_MAX 512
 #define MAX_BUF_SIZE (4 * 1024)
 
-int arts_play_file(char *filename)
+gint arts_play_file(gchar *filename)
 {
     /* input from libaudiofile... */
     AFfilehandle in_file;
-    int in_format, in_width, in_channels, frame_count;
+    gint in_format, in_width, in_channels, frame_count;
     double in_rate;
-    int bytes_per_frame;
+    gint bytes_per_frame;
     arts_stream_t a_stream;
-    char buf[ MAX_BUF_SIZE ];
-    int buf_frames;
-    int frames_read;
+    gchar buf[ MAX_BUF_SIZE ];
+    gint buf_frames;
+    gint frames_read;
 
     /* open the audio file */
     in_file = afOpenFile( filename, "rb", NULL );

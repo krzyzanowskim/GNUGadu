@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_esd.c,v 1.11 2004/08/24 14:20:34 krzyzak Exp $ */
+/* $Id: plugin_sound_esd.c,v 1.12 2004/08/26 12:35:55 krzyzak Exp $ */
 
 /* 
  * sound-ESD plugin for GNU Gadu 2 
@@ -25,11 +25,7 @@
 #  include <config.h>
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
+#include <glib.h>
 #include <esd.h>
 
 #include "ggadu_types.h"
@@ -46,7 +42,7 @@ static GQuark SOUND_PLAY_FILE_SIG;
 
 gpointer ggadu_play_file(gpointer filename)
 {
-    if (!esd_play_file(g_get_prgname(), filename, 1))
+    if (!esd_play_file(g_get_prgname(), filename, TRUE))
     {
 	signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("Unable to play file")), "main-gui");
     }
@@ -57,11 +53,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 
-    print_debug("%s : receive signal %d", GGadu_PLUGIN_NAME, signal->name);
-
-    if (signal->name == SOUND_PLAY_FILE_SIG)
+    if (signal && signal->name == SOUND_PLAY_FILE_SIG)
     {
 	gchar *filename = signal->data;
+
+        print_debug("%s : receive signal %d", GGadu_PLUGIN_NAME, signal->name);
 
 	if ((filename != NULL) && g_file_test(filename, G_FILE_TEST_IS_REGULAR))
 	    g_thread_create(ggadu_play_file, filename, FALSE, NULL);

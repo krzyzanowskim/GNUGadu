@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_arts.c,v 1.8 2004/08/24 13:56:00 krzyzak Exp $ */
+/* $Id: plugin_sound_arts.c,v 1.9 2004/08/26 12:35:54 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -25,11 +25,7 @@
 #  include <config.h>
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
+#include <glib.h>
 #include <artsc.h>
 
 #include "ggadu_types.h"
@@ -53,13 +49,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 
-    print_debug("%s : receive signal %d\n", GGadu_PLUGIN_NAME, signal->name);
-
-    if (signal->name == g_quark_from_static_string("sound play file"))
+    if (signal && signal->name == g_quark_from_static_string("sound play file"))
     {
 	gchar *filename = signal->data;
 
-	if (filename != NULL)
+        print_debug("%s : receive signal %d\n", GGadu_PLUGIN_NAME, signal->name);
+
+	if ((filename != NULL) && g_file_test(filename, G_FILE_TEST_IS_REGULAR))
 	    g_thread_create(ggadu_play_file, filename, FALSE, NULL);
     }
 }

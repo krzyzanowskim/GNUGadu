@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.4 2004/08/22 20:01:15 krzyzak Exp $ */
+/* $Id: history_viewer.c,v 1.5 2004/08/26 12:35:54 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -53,11 +53,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 
-    print_debug("%s : receive signal %d", GGadu_PLUGIN_NAME, signal->name);
-
-    if (signal->name == UPDATE_CONFIG_SIG)
+    if (signal && signal->name == UPDATE_CONFIG_SIG)
     {
 	GGaduDialog *dialog = signal->data;
+        print_debug("%s : receive signal %d", GGadu_PLUGIN_NAME, signal->name);
 
 	if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 	{
@@ -127,7 +126,7 @@ void start_plugin()
 /* PLUGIN INITIALISATION */
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-    gchar *this_configdir;
+    gchar *this_configdir = NULL;
 
     print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
