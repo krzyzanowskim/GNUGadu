@@ -1,4 +1,4 @@
-/* $Id: icq_plugin.c,v 1.4 2003/04/09 17:05:23 thrulliq Exp $ */
+/* $Id: icq_plugin.c,v 1.5 2003/04/09 17:15:13 krzyzak Exp $ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -22,8 +22,6 @@ static GGaduProtocol *p;
 static GGaduMenu *menu;
 
 gboolean connected = FALSE;
-
-gchar *this_configdir = NULL;
 
 static GSList *userlist = NULL;
 
@@ -376,9 +374,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
         if (!ggadu_strcasecmp(signal->name,"update config")) 
 	{ 
 	    GGaduDialog *d = signal->data;
-	    GSList *tmplist = d->optlist;
 	    
 	    if (d->response == GGADU_OK) {
+		GSList *tmplist = d->optlist;
 		while (tmplist) 
 		{
 		    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
@@ -400,6 +398,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		    }
 		    tmplist = tmplist->next;
 		}
+		print_debug("QQQQ\n");
 	        config_save(handler);
 	    }
 	    GGaduDialog_free(d);
@@ -436,14 +435,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
     register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
 
-    if (g_getenv("CONFIG_DIR"))
-	this_configdir = g_build_filename(g_get_home_dir(),g_getenv("CONFIG_DIR"),"gg2",NULL);
-     else
-	this_configdir = g_build_filename(g_get_home_dir(),".gg2",NULL);
-
-    mkdir(this_configdir, 0700);
-    
-    set_config_file_name((GGaduPlugin *)handler,g_build_filename(this_configdir,"icq",NULL));
+    set_config_file_name((GGaduPlugin *)handler,g_build_filename(config->configdir,"icq",NULL));
     
     config_var_add(handler, "uin",    VAR_INT);
     config_var_add(handler, "password", VAR_STR);
@@ -706,7 +698,6 @@ void destroy_plugin() {
     icq_Logout(icqlink);
     icq_Disconnect(icqlink);
     icq_LinkDelete(icqlink);
-    g_free(this_configdir);
 }
 
 /* contacts file i/o */
@@ -760,7 +751,7 @@ void load_contacts(gchar *encoding)
 	gchar *line;
 	gchar *path;
 		
-	path = g_build_filename(this_configdir, "icq_userlist", NULL);
+	path = g_build_filename(config->configdir, "icq_userlist", NULL);
 
 	fp = fopen(path, "r");
 
@@ -816,7 +807,7 @@ void save_addressbook_file(gpointer userlist)
 	GIOChannel *ch = NULL;
 	gchar *path = NULL;
     
-	path = g_build_filename(this_configdir, "icq_userlist", NULL);
+	path = g_build_filename(config->configdir, "icq_userlist", NULL);
 	print_debug("path is %s\n", path);
 	ch = g_io_channel_new_file(path,"w",NULL);
     
