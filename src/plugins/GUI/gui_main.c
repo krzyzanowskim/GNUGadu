@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.13 2003/05/11 18:07:27 zapal Exp $ */
+/* $Id: gui_main.c,v 1.14 2003/05/12 09:42:18 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -163,8 +163,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
      *
      */
     register_signal(gui_handler,"gui msg receive"); /* !!! DODAC FREE */
+#ifdef PERL_EMBED
     register_signal_perl ("gui msg receive", perl_gui_msg_receive);
-
+#endif
     register_signal(gui_handler,"gui register userlist menu"); /* !!! DODAC FREE */
     register_signal(gui_handler,"gui unregister userlist menu"); /* !!! o to chodzi? ;) */
 

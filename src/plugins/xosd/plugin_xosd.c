@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.8 2003/05/11 14:13:42 zapal Exp $ */
+/* $Id: plugin_xosd.c,v 1.9 2003/05/12 09:42:19 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -13,8 +13,10 @@
 
 #include <xosd.h>
 
+#ifdef PERL_EMBED
 #include <EXTERN.h>
 #include <perl.h>
+#endif
 
 #include "gg-types.h"
 #include "unified-types.h"
@@ -308,6 +310,7 @@ void start_plugin() {
     xosd_display(osd,0,XOSD_string,"GNU Gadu 2");
 }
 
+#ifdef PERL_EMBED
 void perl_xosd_show_message (GGaduSignal *signal, gchar *perl_func, void *pperl)
 {
   int count, junk;
@@ -353,6 +356,7 @@ void perl_xosd_show_message (GGaduSignal *signal, gchar *perl_func, void *pperl)
   FREETMPS;
   LEAVE;
 }
+#endif
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     gchar *this_configdir = NULL;
@@ -364,7 +368,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,_("On Screen Display"));
     
     register_signal(handler,"xosd show message");
+#ifdef PERL_EMBED
     register_signal_perl ("xosd show message", perl_xosd_show_message);
+#endif
     register_signal(handler,"update config");
     
     print_debug("%s : READ CONFIGURATION\n", GGadu_PLUGIN_NAME);

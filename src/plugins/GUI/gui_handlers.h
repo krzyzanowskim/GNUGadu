@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.h,v 1.7 2003/05/11 18:07:27 zapal Exp $ */
+/* $Id: gui_handlers.h,v 1.8 2003/05/12 09:42:17 thrulliq Exp $ */
 
 #include "signals.h"
 
@@ -7,7 +7,9 @@ void handle_show_dialog(GGaduSignal *signal);
 void handle_show_window_with_text(GGaduSignal *signal);
 void handle_show_about(GGaduSignal *signal);
 void handle_change_user_window(GGaduSignal *signal);
+#ifdef PERL_EMBED
 void perl_gui_msg_receive (GGaduSignal *signal, gchar *perl_func, void *pperl);
+#endif
 void handle_msg_receive(GGaduSignal *signal);
 void handle_show_invisible_chats(GGaduSignal *signal);
 void handle_register_protocol(GGaduSignal *signal);
