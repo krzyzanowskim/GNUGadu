@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.134 2004/12/22 15:56:29 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.135 2004/12/22 16:24:19 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -91,6 +91,21 @@ static gpointer user_chat_action(gpointer user_data)
 		msg->class = GGADU_CLASS_CHAT;
 		msg->id = k->id;
 		msg->time = time(NULL);
+
+		/* check if ignored */
+		{
+		    GGaduContact *ki = g_new0(GGaduContact,1);
+		    
+		    ki->id = g_strdup(msg->id);
+		    if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
+		    {
+			GGaduMsg_free(msg);
+			return NULL;
+		    }
+	
+		    GGaduContact_free(ki);
+		}
+		
 		signal_emit("jabber", "gui msg receive", msg, "main-gui");
 	}
 

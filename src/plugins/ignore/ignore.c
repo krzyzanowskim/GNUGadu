@@ -1,4 +1,4 @@
-/* $Id: ignore.c,v 1.1 2004/12/22 15:56:28 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.2 2004/12/22 16:24:18 krzyzak Exp $ */
 
 /* 
  * Ignore: plugin code for GNU Gadu 2 
@@ -46,6 +46,14 @@ static void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == IGNORE_CHECK_CONTACT_SIG)
 	{
+	    GGaduContact *k = (GGaduContact *)signal->data;
+	    
+	    signal->data_return = FALSE;
+	    if (g_strrstr(ggadu_config_var_get(ignore_handler, "list"), k->id))
+	    {
+	        signal->data_return = (gpointer)TRUE;
+	    }
+	    
 	}
 }
 

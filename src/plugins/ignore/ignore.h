@@ -1,4 +1,4 @@
-/* $Id: ignore.h,v 1.1 2004/12/22 15:56:28 krzyzak Exp $ */
+/* $Id: ignore.h,v 1.2 2004/12/22 16:24:18 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 

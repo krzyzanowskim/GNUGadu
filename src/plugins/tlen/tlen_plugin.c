@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.83 2004/12/22 15:56:32 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.84 2004/12/22 16:24:20 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -358,17 +358,29 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 						notifytype = "powiadomienie d¼wiêkowe";
 						/* na razie tak jak w tlenie - informacja mesgiem. Potem sie doda informowanie przez dzwiek */
 						msg = g_new0(GGaduMsg, 1);
-
 						msg->id = g_strdup_printf("%s", e->notify->from);
-
 						msg->message = to_utf8("ISO-8859-2", _("You received sound alert"));
-
 						msg->class = TLEN_CHAT;
+
+						/* check if ignored */
+						{
+							GGaduContact *ki = g_new0(GGaduContact, 1);
+
+							ki->id = g_strdup(msg->id);
+							if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
+							{
+								GGaduMsg_free(msg);
+								break;
+							}
+
+							GGaduContact_free(ki);
+						}
+
 						signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
 
 						if (ggadu_config_var_get(handler, "log"))
 						{
-							ggadu_tlen_save_history(GGADU_HISTORY_TYPE_RECEIVE,msg,msg->id);
+							ggadu_tlen_save_history(GGADU_HISTORY_TYPE_RECEIVE, msg, msg->id);
 						}
 						break;
 					}
@@ -395,7 +407,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			if (ggadu_config_var_get(handler, "log"))
 			{
-				ggadu_tlen_save_history(GGADU_HISTORY_TYPE_RECEIVE,msg,msg->id);
+				ggadu_tlen_save_history(GGADU_HISTORY_TYPE_RECEIVE, msg, msg->id);
 			}
 
 			break;
@@ -748,7 +760,7 @@ gpointer user_preferences_action(gpointer user_data)
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_PASSWORD, _("_Password"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT, _("_Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("A_utoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
-	
+
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("_Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -986,10 +998,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 					if (kv)
 					{
-//					    ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
+//                                          ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
 
-					    /* ustaw nowy opis w sesji  ZONK free */
-					    tlen_presence(session, sp->status, from_utf8("ISO-8859-2", kv->value));
+						/* ustaw nowy opis w sesji  ZONK free */
+						tlen_presence(session, sp->status, from_utf8("ISO-8859-2", kv->value));
 					}
 
 					/* uaktualnij GUI */
@@ -1004,16 +1016,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == g_quark_from_static_string("get user"))
 	{
 		GGaduContact *k = NULL;
-		gchar *id = (gchar *)signal->data;
+		gchar *id = (gchar *) signal->data;
 		GSList *ul = userlist;
-		
-		if (id && ul && (k = ggadu_find_contact_in_userlist(userlist,id)))
+
+		if (id && ul && (k = ggadu_find_contact_in_userlist(userlist, id)))
 		{
 			signal->data_return = GGaduContact_copy(k);
-		}		
-		
+		}
+
 	}
-	
+
 
 	if (signal->name == g_quark_from_static_string("add user"))
 	{
@@ -1090,7 +1102,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					print_debug("zjebka podczas send message %s\n", msg->id, TLEN_CHAT);
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					ggadu_tlen_save_history(GGADU_HISTORY_TYPE_SEND,msg,msg->id);
+					ggadu_tlen_save_history(GGADU_HISTORY_TYPE_SEND, msg, msg->id);
 				}
 
 				break;
@@ -1100,7 +1112,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					print_debug("zjebka podczas send message %s\n", msg->id, TLEN_MESSAGE);
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					ggadu_tlen_save_history(GGADU_HISTORY_TYPE_SEND,msg,msg->id);
+					ggadu_tlen_save_history(GGADU_HISTORY_TYPE_SEND, msg, msg->id);
 				}
 
 				break;
@@ -1179,7 +1191,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (session)
 		{
 			signal->data_return = ggadu_find_status_prototype(p, session->status);
-		}			
+		}
 		else
 		{
 			signal->data_return = ggadu_find_status_prototype(p, TLEN_STATUS_UNAVAILABLE);

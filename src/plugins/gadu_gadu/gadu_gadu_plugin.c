@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.215 2004/12/20 10:41:30 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.216 2004/12/22 16:24:16 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -484,6 +484,20 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		msg->message = to_utf8("CP1250", e->event.msg.message);
 		msg->class = e->event.msg.msgclass;
 		msg->time = e->event.msg.time;
+		
+		/* check if ignored */
+		{
+		    GGaduContact *ki = g_new0(GGaduContact,1);
+		    
+		    ki->id = g_strdup(msg->id);
+		    if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
+		    {
+			GGaduMsg_free(msg);
+			break;
+		    }
+	
+		    GGaduContact_free(ki);
+		}
 
 		if (e->event.msg.recipients_count > 0)
 		{
