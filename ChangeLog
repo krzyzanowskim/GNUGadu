@@ -1,5 +1,6 @@
 07.04.2004
 - fixes in build process (gadu-gadu/krzak)
+- fixed problem with disappearing chat windows without any docklet plugin active (GUI/THrull)
 
 02.04.2004
 - some changes in chat window button placement (GUI/THrull)
