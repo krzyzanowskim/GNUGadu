@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.102 2004/11/05 12:38:14 thrulliq Exp $
+dnl $Id: configure.in,v 1.103 2004/11/09 14:51:59 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.2])
 
@@ -215,7 +215,7 @@ if test x$with_all_plugins = xyes; then
     with_sms=yes
     with_remote=yes
     with_dbus=yes
-    with_mozilla=yes
+#    with_mozilla=yes
     with_external=yes
     with_history_external_viewer=yes
     with_update=yes
@@ -432,7 +432,7 @@ else
 	AC_SUBST(DBUS_LIBS)
 fi
 
-AC_ARG_WITH(mozilla, [  --with-mozilla		  Build mozilla plugin])
+AC_ARG_WITH(mozilla, [  --with-mozilla		  Build experimental mozilla plugin])
 if test "x$with_mozilla" != "xyes"; then 
 	with_mozilla=no
 else
