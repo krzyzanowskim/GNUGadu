@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.8 2003/06/09 00:20:39 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.9 2003/06/09 18:39:24 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -22,6 +22,7 @@
 #include "menu.h"
 #include "support.h"
 #include "dialog.h"
+#include "perl_embed.h"
 
 #include "remote_plugin.h"
 
@@ -60,6 +61,9 @@ int remote_sig_remote_get_icon_path (char *arg);
 
 int remote_sig_core_load_plugin (char *arg);
 int remote_sig_core_unload_plugin (char *arg);
+
+int remote_sig_perl_load (char *arg);
+int remote_sig_perl_unload (char *arg);
 
 /* Scacheowane dane dla klientów remote */
 gchar *remote_data_icon_directory;
@@ -105,6 +109,8 @@ const struct
   {"remote", "get_icon_path", 1, 1, remote_sig_remote_get_icon_path},
   {"core"  , "load_plugin"  , 1, 0, remote_sig_core_load_plugin},
   {"core"  , "unload_plugin", 1, 0, remote_sig_core_unload_plugin},
+  {"perl"  , "load"         , 1, 0, remote_sig_perl_load},
+  {"perl"  , "unload"       , 1, 0, remote_sig_perl_unload},
   {NULL    , NULL           , 0, 0, NULL}
 };
 
@@ -297,6 +303,20 @@ int remote_sig_core_unload_plugin (char *arg)
 {
   print_debug ("%s: attempting to unload %s plugin\n", GGadu_PLUGIN_NAME, arg);
   unload_plugin (arg);
+  return 0;
+}
+
+int remote_sig_perl_load (char *arg)
+{
+  print_debug ("%s: attempting to load %s script\n", GGadu_PLUGIN_NAME, arg);
+  perl_load_script (arg);
+  return 0;
+}
+
+int remote_sig_perl_unload (char *arg)
+{
+  print_debug ("%s: attempting to unload %s script\n", GGadu_PLUGIN_NAME, arg);
+  perl_unload_script (arg);
   return 0;
 }
 
