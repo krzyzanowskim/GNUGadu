@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.24 2003/06/21 11:35:41 shaster Exp $
+dnl $Id: configure.in,v 1.25 2003/08/20 19:42:24 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -202,13 +202,10 @@ fi
 
 AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
 if test "x$with_gadu" = "xyes"; then 
-    AC_CHECK_LIB([gadu], [gg_login],want_gadu=yes,want_gadu=no)
-    if test "x$want_gadu" != "xno"; then
-	GG_LIBS=-lgadu
-	AC_CHECK_HEADERS(libgadu.h)
-	AC_SUBST(GG_LIBS)
-	AC_CHECK_MEMBER(struct gg_pubdir50_s.count,, [AC_MSG_ERROR([Too old libgadu version!])], [#include "libgadu.h"])
-    fi
+    PKG_CHECK_MODULES(GG,libgadu >= 0.15.0 ,[],AC_MSG_ERROR($GG_PKG_ERRORS))
+    want_gadu=yes
+    AC_SUBST(GG_LIBS)
+    AC_SUBST(GG_CFLAGS)
 fi
 
 AC_ARG_WITH(tlen, [  --with-tlen		  Build tlen plugin		default=no])
