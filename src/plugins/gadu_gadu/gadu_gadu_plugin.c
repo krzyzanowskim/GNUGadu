@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.214 2004/12/20 10:21:17 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.215 2004/12/20 10:41:30 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -502,7 +502,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
 		GSList *us = list;
-		gchar *recipienst_line = NULL;
+		gchar *recipients_line = NULL;
 
 		while (us)
 		{
@@ -510,7 +510,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			if (strcmp(k->id, msg->id) == 0)
 			{
 				g_free(recipients_line);
-				recipienst_line = g_strdup_printf("%s", k->nick);
+				recipients_line = g_strdup_printf("%s", k->nick);
 			}
 
 			us = us->next;
@@ -557,7 +557,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 					/* Zapiszmy sobie zmiane opisu do pliku historii */
 
-					gchar *status = NULL;
+/*					gchar *status = NULL;
 					if ((k->status == GG_STATUS_AVAIL) || (k->status == GG_STATUS_AVAIL_DESCR))
 						status = g_strdup_printf("avail");
 					else if ((k->status == GG_STATUS_BUSY) || (k->status == GG_STATUS_BUSY_DESCR))
@@ -571,15 +571,16 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 					else
 						status = g_strdup_printf("unknown");
 
-					/* Format kompatybilny z histori± Kadu ;)                       */
-					/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;) */
-/*					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
+					 Format kompatybilny z histori± Kadu ;)                       
+					 Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;) 
+					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
 							    ((k->ip == NULL) ? "0.0.0.0" : k->ip), (int)time(0), status,
 							    ((k->status_descr == NULL) ? "" : g_strdup_printf(",%s",k->status_descr)));
                                         g_free(line);
-*/					
+					
 					ggadu_gg_save_history((gchar *) k->id, line);
 					g_free(status);
+*/					
 				}
 				else
 				{
