@@ -61,7 +61,7 @@ extern GSList *actions;
 
 extern gint connected;
 
-extern enum states jabber_status;
+extern gint jabber_status;
 extern gchar *status_descr;
 
 void ggadu_jabber_save_history (gchar *to, gchar *txt);

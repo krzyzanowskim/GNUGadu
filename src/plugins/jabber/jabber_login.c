@@ -15,7 +15,7 @@ void jabber_login (enum states status)
   {
     GSList *list = rosterlist;
 
-    jabber_status = JABBER_STATUS_UNAVAILABLE;
+    jabber_status = status;
     lm_connection_close (connection, NULL);
 
     signal_emit ("jabber", "gui status changed", (gpointer) status, "main-gui");
