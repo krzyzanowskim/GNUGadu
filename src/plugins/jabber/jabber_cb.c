@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.65 2004/09/28 14:01:33 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.66 2004/09/28 14:03:14 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -647,8 +647,8 @@ LmHandlerResult iq_account_data_cb(LmMessageHandler * handler, LmConnection * co
 
 LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer data)
 {
-	LmMessageNode *node;
-	LmMessageNode *child;
+	LmMessageNode *node = NULL;
+	LmMessageNode *child = NULL;
 	int first_time = 0;
 	int first_seen = 1;
 	GSList *list = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
@@ -659,7 +659,8 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 	if (!message)
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 
-	print_debug("%s", lm_message_node_to_string(message->node));
+	if (message && message->node) 
+	    print_debug("%s", lm_message_node_to_string(message->node));
 
 	/* verbose error reporting */
 	if (lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_ERROR)
