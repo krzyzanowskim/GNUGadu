@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.37 2004/05/04 21:39:11 krzyzak Exp $ */
+/* $Id: sms_core.c,v 1.38 2004/05/29 00:35:15 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -741,6 +741,9 @@ gint check_operator(gchar * number)
 		else
 			return SMS_ERA;
 	}
+
+	if (*sms_number == '8')
+		return SMS_ERA;
 
 	return FALSE;
 }
