@@ -1,6 +1,10 @@
 22.09.2003
 - another bunch of fixes and code cleanups (sms/shasta)
 - fix for short final version numbers like "2.4" (update/shasta)
+- jabber plugin needs loudmouth >= 0.12 for ssl connections (configure/shasta)
+- save last used reason as default one everytime (gadu-gadu/shasta)
+- use default reason when connecting to server using any of description
+  status (gadu-gadu/shasta)
 
 21.09.2003
 - sending sms to IDEA works again (sms/shasta)

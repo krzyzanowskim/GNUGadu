@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.82 2003/09/16 23:15:47 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.83 2003/09/22 19:07:32 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1927,7 +1927,13 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		connect_count = 0;
 
 		if ((sp != NULL) && (sp->status != GG_STATUS_NOT_AVAIL) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR))
-		    gadu_gadu_login (NULL, sp->status);
+		  {
+		      if (sp->status == GG_STATUS_AVAIL_DESCR || sp->status == GG_STATUS_BUSY_DESCR ||
+			  sp->status == GG_STATUS_INVISIBLE_DESCR)
+		    		gadu_gadu_login (config_var_get (handler, "reason") ? config_var_get (handler, "reason") : NULL, sp->status);
+		      else
+		    		gadu_gadu_login (NULL, sp->status);
+		  }
 
 	    }
 	  else if (connected && sp)
@@ -2013,6 +2019,8 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 					     "main-gui");
 			    g_free (desc_cp);
 			    g_free (desc_iso);
+
+			    config_save(handler);
 			}
 
 		      if (sp->status == GG_STATUS_NOT_AVAIL_DESCR)
