@@ -233,7 +233,7 @@ static void gtk_anim_label_size_request (GtkWidget * widget, GtkRequisition * re
     requisition->width = 1;
     requisition->height = 1;
 
-    if (anim_label->layout && GTK_WIDGET_MAPPED(widget) && (strlen(anim_label->txt) > 0)) {
+    if (anim_label->layout && GTK_WIDGET_MAPPED(widget) && (anim_label->txt) && (strlen(anim_label->txt) > 0)) {
       pango_layout_get_extents (anim_label->layout, NULL, &prect);
       requisition->height = PANGO_PIXELS (prect.height);
       return;
