@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.10 2003/09/24 14:19:31 shaster Exp $ */
+/* $Id: sms_core.h,v 1.11 2003/09/27 18:06:38 shaster Exp $ */
 
 #ifndef SMS_CORE_PLUGIN_H
 #define SMS_CORE_PLUGIN_H 1
@@ -58,11 +58,11 @@ enum
     GGADU_SMS_TYPE_INFO
 };
 
-void send_sms(gboolean external, const gchar * sms_sender, gchar * sms_number, const gchar * sms_body,
+void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body,
 	      const gchar * eralogin, const gchar * erapass);
 
-void sms_message(gchar * sms_number, gchar * message);
-void sms_warning(gchar * sms_number, gchar * warning);
+void sms_message(const gchar * sms_number, const gchar * message);
+void sms_warning(const gchar * sms_number, const gchar * warning);
 
 int send_IDEA_stage2(gchar * pass, gpointer user_data);
 

@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.17 2003/09/27 13:49:59 shaster Exp $ */
+/* $Id: sms_core.c,v 1.18 2003/09/27 18:06:38 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -180,7 +180,7 @@ gboolean IDEA_logo(gpointer user_data)
  * number than you've sent msgs. It's better to cut prefixes while loading userlist
  * than here.
  */
-void sms_dialog_box(gchar * sms_number, gchar * message, gint type)
+void sms_dialog_box(const gchar * sms_number, const gchar * message, gint type)
 {
     if (method == GGADU_SMS_METHOD_POPUP)
     {
@@ -193,7 +193,7 @@ void sms_dialog_box(gchar * sms_number, gchar * message, gint type)
     if (method == GGADU_SMS_METHOD_CHAT)
     {
 	GGaduMsg *msg = g_new0(GGaduMsg, 1);
-	msg->id = (sms_number ? sms_number : g_strdup(_("None")));
+	msg->id = g_strdup(sms_number ? sms_number : _("None"));
 	msg->class = GGADU_CLASS_CHAT;
 	msg->message = g_strconcat(_("SMS plugin: "), message, NULL);
 	signal_emit("sms", "gui msg receive", msg, "main-gui");
@@ -201,13 +201,13 @@ void sms_dialog_box(gchar * sms_number, gchar * message, gint type)
 }
 
 /* handy wrapper */
-void sms_message(gchar * sms_number, gchar * message)
+void sms_message(const gchar * sms_number, const gchar * message)
 {
     sms_dialog_box(sms_number, message, GGADU_SMS_TYPE_INFO);
 }
 
 /* handy wrapper */
-void sms_warning(gchar * sms_number, gchar * warning)
+void sms_warning(const gchar * sms_number, const gchar * warning)
 {
     sms_dialog_box(sms_number, warning, GGADU_SMS_TYPE_WARN);
 }
@@ -592,7 +592,7 @@ int check_operator(const gchar * sms_number)
 }
 
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
-void send_sms(gboolean external, const gchar * sms_sender, gchar * sms_number, const gchar * sms_body,
+void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_number, const gchar * sms_body,
 	      const gchar * era_login, const gchar * era_password)
 {
     gint result, gsm_oper;
