@@ -1,5 +1,6 @@
 18.11.2004
 - sync libgadu with ekg cvs version (gadu-gadu/krzak)
+- close bugs #116,#91,#115
 
 17.11.2004
 - fixed memory leak in ggadu_strcasecmp (changed to function instead macro)
@@ -7,6 +8,7 @@
 
 10.11.2004
 - remove useless mozilla-plugin part of code (krzak)
+- fixed build process of dbus plugin (krzak)
 
 05.10.2004
 - bugfix release 2.2.2 (bugs #101-#103)

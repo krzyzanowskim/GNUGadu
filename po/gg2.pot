@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-11-05 13:35+0100\n"
+"POT-Creation-Date: 2004-11-18 13:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,17 +69,17 @@ msgstr ""
 msgid "Close this window"
 msgstr ""
 
-#: lib/plugins.c:143
+#: lib/plugins.c:146
 #, c-format
 msgid "core: %s have no %s: %s\n"
 msgstr ""
 
-#: lib/plugins.c:216
+#: lib/plugins.c:219
 #, c-format
 msgid "core : trying to unload not loaded plugin %s\n"
 msgstr ""
 
-#: lib/ggadu_support.c:104 src/plugins/remote/remote_plugin.c:302
+#: lib/ggadu_support.c:120 src/plugins/remote/remote_plugin.c:302
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr ""
@@ -90,7 +90,7 @@ msgid ""
 "[not in userlist]"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:189 src/plugins/GUI/gui_userview.c:745
+#: src/plugins/GUI/GUI_plugin.c:189 src/plugins/GUI/gui_userview.c:743
 msgid "(None)"
 msgstr ""
 

@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.82 2004/11/05 12:38:17 thrulliq Exp $
+# $Id: pl.po,v 1.83 2004/11/18 13:34:34 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-11-05 13:35+0100\n"
+"POT-Creation-Date: 2004-11-18 13:35+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -74,17 +74,17 @@ msgstr "Przechodzi do ostatniej strony"
 msgid "Close this window"
 msgstr "Zamyka to okno"
 
-#: lib/plugins.c:143
+#: lib/plugins.c:146
 #, c-format
 msgid "core: %s have no %s: %s\n"
 msgstr "core: %s nie posiada %s: %s\n"
 
-#: lib/plugins.c:216
+#: lib/plugins.c:219
 #, c-format
 msgid "core : trying to unload not loaded plugin %s\n"
 msgstr "core : próba wyładowania nie załadowanej wtyczki %s\n"
 
-#: lib/ggadu_support.c:104 src/plugins/remote/remote_plugin.c:302
+#: lib/ggadu_support.c:120 src/plugins/remote/remote_plugin.c:302
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Nie można odnaleźć pliku piksmapy: %s"
@@ -97,7 +97,7 @@ msgstr ""
 "\n"
 "[nie ma Cię w kontaktach]"
 
-#: src/plugins/GUI/GUI_plugin.c:189 src/plugins/GUI/gui_userview.c:745
+#: src/plugins/GUI/GUI_plugin.c:189 src/plugins/GUI/gui_userview.c:743
 msgid "(None)"
 msgstr "(Brak)"
 

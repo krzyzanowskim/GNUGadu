@@ -11,7 +11,7 @@ libdbus_plugin_la_CFLAGS = $(DBUS_CFLAGS)
 libdbus_plugin_la_LIBADD = $(DBUS_LIBS) $(top_builddir)/lib/libgg2_core.la
 libdbus_plugin_la_LDFLAGS = -avoid-version  
 
-servicesdir = $(DESTDIR)`pkg-config dbus-1 --variable=prefix`/share/dbus-1.0/services
+servicesdir = $(DBUS_DIR)
 services_DATA = org.freedesktop.im.GG.service
 
 EXTRA_DIST = $(services_DATA) README

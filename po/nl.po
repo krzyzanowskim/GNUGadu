@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-11-05 13:35+0100\n"
+"POT-Creation-Date: 2004-11-18 13:35+0100\n"
 "PO-Revision-Date: 04/06/04 21:02\n"
 "Last-Translator: Sander Devrieze <s.devrieze@pandora.be>\n"
 "Language-Team: Nederlands <i18n@kde.nl>\n"
@@ -80,17 +80,17 @@ msgstr "Achternaam"
 msgid "Close this window"
 msgstr "Berichtenvenster"
 
-#: lib/plugins.c:143
+#: lib/plugins.c:146
 #, c-format
 msgid "core: %s have no %s: %s\n"
 msgstr "core: %s heeft geen %s: %s\n"
 
-#: lib/plugins.c:216
+#: lib/plugins.c:219
 #, c-format
 msgid "core : trying to unload not loaded plugin %s\n"
 msgstr "core : bezig met niet geladen plugin proberen te sluiten %s\n"
 
-#: lib/ggadu_support.c:104 src/plugins/remote/remote_plugin.c:302
+#: lib/ggadu_support.c:120 src/plugins/remote/remote_plugin.c:302
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Kon pixmap-bestand niet vinden: %s"
@@ -103,7 +103,7 @@ msgstr ""
 "\n"
 "[niet in gebruikerslijst]"
 
-#: src/plugins/GUI/GUI_plugin.c:189 src/plugins/GUI/gui_userview.c:745
+#: src/plugins/GUI/GUI_plugin.c:189 src/plugins/GUI/gui_userview.c:743
 msgid "(None)"
 msgstr "(Geen)"
 

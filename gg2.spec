@@ -1,22 +1,22 @@
-# $Revision: 1.23 $, $Date: 2004/10/22 20:52:57 $
+# $Revision: 1.24 $, $Date: 2004/11/18 13:34:32 $
 #
 # Conditional build: 
 %bcond_without	arts
 %bcond_without	perl
 %bcond_without	esd
 %bcond_without	gtkspell
+%bcond_with	dbus
 #
 Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.2.1
+Version:	2.2.3
 Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://osdn.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}.tar.gz
-# Source0-md5:	ed977cb5bc00b37c9ceaece94f785b65
 URL:		http://www.gnugadu.org/
 %{?with_arts:BuildRequires:	artsc-devel}
 BuildRequires:	autoconf
@@ -29,6 +29,7 @@ BuildRequires:	libtlen-devel
 BuildRequires:	libtool
 BuildRequires:	loudmouth-devel >= 0.17.1
 BuildRequires:	openssl-devel >= 0.9.7d
+%{?with_dbus:BuildRequires:	dbus-libs >= 0.22}
 %{?with_perl:BuildRequires:	perl-devel}
 %{?with_gtkspell:BuildRequires:	gtkspell-devel}
 %{?with_gtkspell:BuildRequires:	aspell-devel}
@@ -360,6 +361,20 @@ Verifica si hay nuevas versiones de GNU Gadu.
 %description plugin-update -l pl
 Wtyczka sprawdzaj±ca, czy jest dostêpna nowsza wersja GNU Gadu.
 
+%package plugin-dbus
+Summary:	Allow to communicate using D-BUS message bus
+Summary(pl):	Komunikacja za pomoc± magistrali D-BUS
+Group:		Applications/Communications
+Provides:	%{name}-update = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-update
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description plugin-dbus
+This plugin allows to communicate using D-BUS interface.
+
+%description plugin-dbus -l pl
+Wtyczka pozwala na komunikacjê za pomoc± magistrali D-BUS.
+
 %package themes
 Summary:	Themes for GNU Gadu 2 GUI
 Summary(es):	Temas para el GUI de GNU Gadu 2
@@ -406,6 +421,7 @@ Motywy graficzne dla GUI GNU Gadu 2.
 	--with-history-external-viewer \
 	--with-gghist \
 	--with%{!?with_gtkspell:out}-gtkspell \
+	--with%{!?with_dbus:out}-dbus \
 	--%{?with_perl:with}%{!?with_perl:without}-perl \
  	--with-remote
 
@@ -520,6 +536,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libupdate_plugin.so
 
+%if %{with dbus}
+%files plugin-dbus
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gg2/libdbus_plugin.so
+%{_datadir}/dbus-1.0/services/org.freedesktop.im.GG.service
+%endif
+
 %files themes
 %defattr(644,root,root,755)
 %dir %{_datadir}/gg2/themes
@@ -549,10 +572,27 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.23  2004/10/22 20:52:57  krzyzak
-- bugfix release 2.2.1
+Revision 1.24  2004/11/18 13:34:32  krzyzak
+- 2.0.3
 
-Revision 1.22  2004/10/21 13:32:38  krzyzak
+Revision 1.127  2004/11/17 11:33:29  paladine
+- added desktop patch
+- rel 2
+
+Revision 1.126  2004/11/05 17:45:18  qboosh
+- desc fix
+
+Revision 1.125  2004/11/05 16:06:19  krzak
+- up to 2.2.2
+- added dbus plugin but building disabled by default
+
+Revision 1.124  2004/10/22 20:47:46  krzak
+- up to 2.2.1
+
+Revision 1.123  2004/10/21 13:41:44  krzak
+- R: loudmouth-devel >= 0.17.1
+
+Revision 1.122  2004/10/21 13:36:13  krzak
 - up to 2.2.0
 
 Revision 1.121  2004/10/07 12:49:19  qboosh

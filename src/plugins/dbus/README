@@ -1,3 +1,5 @@
+For more details check http://ofi.hakore.com/
+
 if you use DBUS-0.22 please apply patches from contrib/patches/dbus-all-services.patch to DBUS source.
 
 To get DBUS operational you need to start system bus service at system 
