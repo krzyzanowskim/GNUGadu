@@ -50,7 +50,10 @@ else
         echo "You must have automake 1.7.x installed to compile $PROJECT."
         echo "Install the appropriate package for your distribution,"
         echo "or get the source tarball at http://ftp.gnu.org/gnu/automake/"
-        DIE=1
+	echo "\n"
+	echo "trying to automake anyway but YOU WERE WARNED"
+	AUTOMAKE=automake
+    	ACLOCAL=aclocal
 fi
 
 
