@@ -120,9 +120,9 @@ static void gtk_anim_label_destroy (GtkObject * object)
     anim_label = GTK_ANIM_LABEL (object);
 
     gtk_anim_label_animate (anim_label, FALSE);
-
+    
     if (anim_label->timer)
-	g_timer_destroy (anim_label->timer);
+       g_timer_stop(anim_label->timer);
 
     if (GTK_OBJECT_CLASS (parent_class)->destroy)
 	(*GTK_OBJECT_CLASS (parent_class)->destroy) (object);
@@ -147,7 +147,7 @@ static void gtk_anim_label_finalize (GObject * object)
 	g_object_unref (anim_label->pixmap);
 
     if (anim_label->timer)
-	g_object_unref (anim_label->timer);
+	g_timer_destroy (anim_label->timer);
 
     G_OBJECT_CLASS (parent_class)->finalize (object);
 }
