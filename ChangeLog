@@ -1,3 +1,6 @@
+01.02.2004
+- jabber plugin adapted to work witch changed API of loudmouth library (krzak/jabber)
+
 27.01.2004
 - hopefully fixed '<unknown>' on some panels with window groupping turned on (core/shasta)
 - tootips on protocol status icons (GUI/THrull)
