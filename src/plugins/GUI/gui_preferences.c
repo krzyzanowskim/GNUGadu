@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.39 2004/01/11 13:06:21 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.40 2004/01/11 14:05:36 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -547,42 +547,145 @@ static GtkWidget *create_sound_tab ()
     return sound_vbox;
 }
 
+static GtkWidget *create_chat_tab ()
+{
+	GtkWidget *chat_vbox;
+	GtkWidget *sound_vbox;
+	GtkWidget *vbox;
+	GtkWidget *image;
+	GtkWidget *label;
+	GtkWidget *hbox;
+	GtkWidget *tabbox;
+	GtkWidget *emotic;
+	GtkWidget *send_on_enter;
+	GtkWidget *chatstyle;
+    	GtkWidget *chatwindowwidth;
+    	GtkWidget *chatwindowheight;
+    	GtkWidget *chatwindowshow;
+    	GtkWidget *chatwindowraise;
+        GtkWidget *use_username;
+	GtkWidget *chat_paned_size;
+	GtkWidget *label0_align, *label1_align, *label2_align;
+	
+	chat_vbox = gtk_vbox_new (FALSE, 2);
+    
+    	sound_vbox = gtk_vbox_new (FALSE, 2);
+
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (chat_vbox), hbox, FALSE, FALSE, 0);
+
+	image = gtk_image_new ();
+	gtk_image_set_from_stock (GTK_IMAGE (image), "gtk-justify-fill", GTK_ICON_SIZE_DND);
+	label = gtk_label_new (_("\nChat window settings\n\n"));
+
+	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (chat_vbox), vbox, FALSE, FALSE, 0);
+	
+	emotic = gtk_check_button_new_with_label (_("Enable emoticons"));
+    	gtk_box_pack_start (GTK_BOX (vbox), emotic, FALSE, FALSE, 0);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "emotic", emotic);
+    
+	chatwindowshow = gtk_check_button_new_with_label (_("Automatically show chat window"));
+	gtk_box_pack_start (GTK_BOX (vbox), chatwindowshow, FALSE, FALSE, 0);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "chatwindowshow", chatwindowshow);
+
+	chatwindowraise = gtk_check_button_new_with_label (_("Automatically raise chat window"));
+	gtk_box_pack_start (GTK_BOX (vbox), chatwindowraise, FALSE, FALSE, 0);
+
+	g_object_set_data (G_OBJECT (chat_vbox), "chatwindowraise", chatwindowraise);
+	
+	send_on_enter = gtk_check_button_new_with_label (_("'Enter' - send message"));
+	gtk_box_pack_start (GTK_BOX (vbox), send_on_enter, FALSE, FALSE, 0);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "send_on_enter", send_on_enter);
+	
+	
+	chatstyle = gtk_check_button_new_with_label (_("Tabbed chat window style"));
+	gtk_box_pack_start (GTK_BOX (vbox), chatstyle, FALSE, FALSE, 0);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "chatstyle", chatstyle);
+
+	use_username = gtk_check_button_new_with_label (_("Use username instead of \"Me\" in chat window"));
+	gtk_box_pack_start (GTK_BOX (vbox), use_username, FALSE, FALSE, 0);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "use_username", use_username);
+	
+	
+	label0_align = gtk_alignment_new (0, 0.5, 0, 0);
+	label1_align = gtk_alignment_new (0, 0.5, 0, 0);
+	label2_align = gtk_alignment_new (0, 0.5, 0, 0);
+    
+	tabbox = gtk_table_new (8, 2, FALSE);
+
+	gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    	gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
+    	gtk_box_pack_start (GTK_BOX (chat_vbox), tabbox, FALSE, FALSE, 0);
+    
+       	label = gtk_label_new (_("Chat window width"));
+	chatwindowwidth = gtk_spin_button_new_with_range (100, 1000, 10);
+	gtk_container_add (GTK_CONTAINER (label0_align), label);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "chatwindowwidth", chatwindowwidth);
+
+	gtk_table_attach_defaults (GTK_TABLE (tabbox), label0_align, 0, 1, 2, 3);
+	gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowwidth, 0, 1, 3, 4);
+
+	label = gtk_label_new (_("Chat window height"));
+	chatwindowheight = gtk_spin_button_new_with_range (50, 1000, 10);
+	gtk_container_add (GTK_CONTAINER (label1_align), label);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "chatwindowheight", chatwindowheight);
+
+	gtk_table_attach_defaults (GTK_TABLE (tabbox), label1_align, 1, 2, 2, 3);
+	gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowheight, 1, 2, 3, 4);
+       
+       	/* ZONK - how to name it ? */
+	label = gtk_label_new (_("Chat window split size (percent)"));
+	chat_paned_size = gtk_spin_button_new_with_range (0, 100, 5);
+	gtk_container_add (GTK_CONTAINER (label2_align), label);
+	
+	g_object_set_data (G_OBJECT (chat_vbox), "chat_paned_size", chat_paned_size);
+       
+       	gtk_table_attach_defaults (GTK_TABLE (tabbox), label2_align, 0, 1, 4, 5);
+	gtk_table_attach_defaults (GTK_TABLE (tabbox), chat_paned_size, 1, 2, 4, 5);
+
+    	return chat_vbox;
+}
+
 void gui_preferences (GtkWidget * widget, gpointer data)
 {
     GtkWidget *preferences;
     GtkWidget *notebook;
     GtkWidget *image;
     GtkWidget *general_vbox;
+    GtkWidget *chat_vbox;
     GtkWidget *sound_vbox;
     GtkWidget *colors_vbox;
     GtkWidget *fonts_vbox;
     GtkWidget *vbox;
     GtkWidget *hbox;
     GtkWidget *label;
-    GtkWidget *emotic;
     GtkWidget *show_active;
     GtkWidget *tree;
     GtkWidget *expand;
-    GtkWidget *chatstyle;
-    GtkWidget *chatwindowwidth;
-    GtkWidget *chatwindowheight;
-    GtkWidget *chatwindowshow;
-    GtkWidget *chatwindowraise;
     GtkWidget *usexosdfornewmsgs;
-    GtkWidget *send_on_enter;
     GtkWidget *hide_on_start;
     GtkWidget *hide_toolbar;
     GtkWidget *blink;
     GtkWidget *blink_interval;
     GtkWidget *auto_away;
     GtkWidget *auto_away_interval;
-    GtkWidget *chat_paned_size;
-    GtkWidget *use_username;
     GtkWidget *tabbox;
-    GtkWidget *label0_align, *label1_align, *label2_align, *label3_align, *label4_align, *label5_align, *label6_align;
+    GtkWidget *label0_align, *label1_align, *label2_align, *label3_align;
     GDir *dir;
     GtkWidget *combo_theme;
     GtkWidget *combo_icons;
+    GtkWidget *entry;
     GdkPixbuf *windowicon = NULL;
     gint response = -1;
     gchar *dirname;
@@ -605,9 +708,6 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     label1_align = gtk_alignment_new (0, 0.5, 0, 0);
     label2_align = gtk_alignment_new (0, 0.5, 0, 0);
     label3_align = gtk_alignment_new (0, 0.5, 0, 0);
-    label4_align = gtk_alignment_new (0, 0.5, 0, 0);
-    label5_align = gtk_alignment_new (0, 0.5, 0, 0);
-    label6_align = gtk_alignment_new (0, 0.5, 0, 0);
   
     notebook = gtk_notebook_new ();
     gtk_container_add (GTK_CONTAINER (GTK_DIALOG (preferences)->vbox), notebook);
@@ -615,6 +715,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     general_vbox = gtk_vbox_new (FALSE, 4);
     gtk_container_set_border_width (GTK_CONTAINER ( general_vbox ), 10);
 
+    chat_vbox = create_chat_tab ();
+    gtk_container_set_border_width (GTK_CONTAINER ( chat_vbox ), 10);
+    
     sound_vbox = create_sound_tab ();
     gtk_container_set_border_width (GTK_CONTAINER ( sound_vbox ), 10);
 
@@ -626,6 +729,8 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), general_vbox, gtk_label_new (_("General")));
 
+    gtk_notebook_append_page (GTK_NOTEBOOK (notebook), chat_vbox, gtk_label_new (_("Chat window")));
+    
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), sound_vbox, gtk_label_new (_("Sound")));
 
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), colors_vbox, gtk_label_new (_("Colors")));
@@ -647,9 +752,6 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     vbox = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (general_vbox), vbox, FALSE, FALSE, 0);
 
-    emotic = gtk_check_button_new_with_label (_("Enable emoticons"));
-    gtk_box_pack_start (GTK_BOX (vbox), emotic, FALSE, FALSE, 0);
-
     show_active = gtk_check_button_new_with_label (_("Show only active users"));
     gtk_box_pack_start (GTK_BOX (vbox), show_active, FALSE, FALSE, 0);
 
@@ -661,18 +763,6 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
     g_signal_connect (tree, "toggled", G_CALLBACK (tree_toggled), expand);
 
-    chatstyle = gtk_check_button_new_with_label (_("Tabbed chat window style"));
-    gtk_box_pack_start (GTK_BOX (vbox), chatstyle, FALSE, FALSE, 0);
-
-    chatwindowshow = gtk_check_button_new_with_label (_("Automatically show chat window"));
-    gtk_box_pack_start (GTK_BOX (vbox), chatwindowshow, FALSE, FALSE, 0);
-
-    chatwindowraise = gtk_check_button_new_with_label (_("Automatically raise chat window"));
-    gtk_box_pack_start (GTK_BOX (vbox), chatwindowraise, FALSE, FALSE, 0);
-
-    send_on_enter = gtk_check_button_new_with_label (_("'Enter' - send message"));
-    gtk_box_pack_start (GTK_BOX (vbox), send_on_enter, FALSE, FALSE, 0);
-
     usexosdfornewmsgs = gtk_check_button_new_with_label (_("Notify about new messages via XOSD"));
     gtk_box_pack_start (GTK_BOX (vbox), usexosdfornewmsgs, FALSE, FALSE, 0);
 
@@ -681,9 +771,6 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
     hide_toolbar = gtk_check_button_new_with_label (_("Show toolbar"));
     gtk_box_pack_start (GTK_BOX (vbox), hide_toolbar, FALSE, FALSE, 0);
-
-    use_username = gtk_check_button_new_with_label (_("Use username instead of \"Me\" in chat window"));
-    gtk_box_pack_start (GTK_BOX (vbox), use_username, FALSE, FALSE, 0);
 
     blink = gtk_check_button_new_with_label (_("Blink status"));
     gtk_box_pack_start (GTK_BOX (vbox), blink, FALSE, FALSE, 0);
@@ -699,58 +786,39 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
     label = gtk_label_new (_("Blink interval"));
     blink_interval = gtk_spin_button_new_with_range (0, 2000, 100);
-    gtk_container_add (GTK_CONTAINER (label2_align), label);
+    gtk_container_add (GTK_CONTAINER (label0_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label2_align, 0, 1, 0, 1);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label0_align, 0, 1, 0, 1);
     gtk_table_attach_defaults (GTK_TABLE (tabbox), blink_interval, 0, 1, 1, 2);
     g_signal_connect (blink, "toggled", G_CALLBACK (tree_toggled), blink_interval);
 
     label = gtk_label_new (_("Auto away interval (minutes)"));
     auto_away_interval = gtk_spin_button_new_with_range (0, 1440, 1);
-    gtk_container_add (GTK_CONTAINER (label3_align), label);
+    gtk_container_add (GTK_CONTAINER (label1_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label3_align, 1, 2, 0, 1);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label1_align, 1, 2, 0, 1);
     gtk_table_attach_defaults (GTK_TABLE (tabbox), auto_away_interval, 1, 2, 1, 2);
     g_signal_connect (auto_away, "toggled", G_CALLBACK (tree_toggled), auto_away_interval);
 
-    label = gtk_label_new (_("Chat window width"));
-    chatwindowwidth = gtk_spin_button_new_with_range (100, 1000, 10);
-    gtk_container_add (GTK_CONTAINER (label0_align), label);
-
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label0_align, 0, 1, 2, 3);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowwidth, 0, 1, 3, 4);
-
-    label = gtk_label_new (_("Chat window height"));
-    chatwindowheight = gtk_spin_button_new_with_range (50, 1000, 10);
-    gtk_container_add (GTK_CONTAINER (label1_align), label);
-
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label1_align, 1, 2, 2, 3);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowheight, 1, 2, 3, 4);
-
-    /* ZONK - how to name it ? */
-    label = gtk_label_new (_("Chat window split size (percent)"));
-    chat_paned_size = gtk_spin_button_new_with_range (0, 100, 5);
-    gtk_container_add (GTK_CONTAINER (label4_align), label);
-
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label4_align, 0, 2, 4, 5);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chat_paned_size, 0, 2, 5, 6);
-
     combo_theme = gtk_combo_new ();
     label = gtk_label_new (_("Select theme"));
-    gtk_container_add (GTK_CONTAINER (label5_align), label);
+    gtk_container_add (GTK_CONTAINER (label2_align), label);
     
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label5_align, 0, 1, 6, 7);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_theme, 1, 2, 6, 7);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label2_align, 0, 1, 2, 3);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_theme, 1, 2, 2, 3);
 
     combo_icons = gtk_combo_new ();
     label = gtk_label_new (_("Select icon set"));
-    gtk_container_add (GTK_CONTAINER (label6_align), label);
+    gtk_container_add (GTK_CONTAINER (label3_align), label);
     
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label6_align, 0, 1, 7, 8);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_icons, 1, 2, 7, 8);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label3_align, 0, 1, 3, 4);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_icons, 1, 2, 3, 4);
+
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "emotic");
+    g_return_if_fail (entry != NULL);
 
     if (ggadu_config_var_get (gui_handler, "emot"))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (emotic), TRUE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
 
     if (ggadu_config_var_get (gui_handler, "show_active"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_active), TRUE);
@@ -760,26 +828,34 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     else
 	gtk_widget_set_sensitive (expand, FALSE);
 
-
     if (ggadu_config_var_get (gui_handler, "expand"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (expand), TRUE);
-	
+    
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "chatstyle");
+    g_return_if_fail (entry != NULL);
+    
     if ((gint) ggadu_config_var_get (gui_handler, "chat_type") == CHAT_TYPE_TABBED)
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatstyle), TRUE);
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
     else if ((gint) ggadu_config_var_get (gui_handler, "chat_type") == CHAT_TYPE_CLASSIC)
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatstyle), FALSE);
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), FALSE);
 
     if (ggadu_config_var_get (gui_handler, "blink"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (blink), TRUE);
     else
 	gtk_widget_set_sensitive (blink_interval, FALSE);
-
+    
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowwidth");
+    g_return_if_fail (entry != NULL);
+    
     if (ggadu_config_var_get (gui_handler, "chat_window_width"))
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON (chatwindowwidth),
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (entry),
 				   (gint) ggadu_config_var_get (gui_handler, "chat_window_width"));
-
+    
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowheight");
+    g_return_if_fail (entry != NULL);
+    
     if (ggadu_config_var_get (gui_handler, "chat_window_height"))
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON (chatwindowheight),
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (entry),
 				   (gint) ggadu_config_var_get (gui_handler, "chat_window_height"));
 
     if (ggadu_config_var_get (gui_handler, "blink_interval"))
@@ -795,21 +871,36 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (auto_away_interval),
 				   (gint) ggadu_config_var_get (gui_handler, "auto_away_interval"));
 
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowshow");
+    g_return_if_fail (entry != NULL);
+ 
     if (ggadu_config_var_get (gui_handler, "chat_window_auto_show"))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatwindowshow), TRUE);
-
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
+    
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowraise");
+    g_return_if_fail (entry != NULL);
+    
     if (ggadu_config_var_get (gui_handler, "chat_window_auto_raise"))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatwindowraise), TRUE);
-
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
+    
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "chat_paned_size");
+    g_return_if_fail (entry != NULL);
+    
     if (ggadu_config_var_get (gui_handler, "chat_paned_size"))
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON (chat_paned_size),
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (entry),
 				   (gint) ggadu_config_var_get (gui_handler, "chat_paned_size"));
-
+    
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "use_username");
+    g_return_if_fail (entry != NULL);
+    
     if (ggadu_config_var_get (gui_handler, "use_username"))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (use_username), TRUE);
-
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
+    
+    entry = g_object_get_data (G_OBJECT (chat_vbox), "send_on_enter");
+    g_return_if_fail (entry != NULL);
+    
     if (ggadu_config_var_get (gui_handler, "send_on_enter"))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (send_on_enter), TRUE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
 
     if (ggadu_config_var_get (gui_handler, "use_xosd_for_new_msgs"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs), TRUE);
@@ -892,15 +983,15 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     response = gtk_dialog_run (GTK_DIALOG (preferences));
     if (response == GTK_RESPONSE_ACCEPT)
       {
-	  GtkWidget *entry;
-
 	  if (plugins_updated) {
 		GIOChannel *ch = g_io_channel_new_file (g_build_filename (config->configdir, "modules.load", NULL), "w", NULL);
 	        gtk_tree_model_foreach (GTK_TREE_MODEL (store), save_selected_plugins, ch);
 		g_io_channel_shutdown (ch, TRUE, NULL);
 	  }
-
-	  ggadu_config_var_set (gui_handler, "emot", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (emotic)));
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "emotic");
+	  g_return_if_fail (entry != NULL);
+ 
+	  ggadu_config_var_set (gui_handler, "emot", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
 
 	  ggadu_config_var_set (gui_handler, "show_active",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_active)));
@@ -908,29 +999,50 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	  ggadu_config_var_set (gui_handler, "tree", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tree)));
 
 	  ggadu_config_var_set (gui_handler, "expand", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (expand)));
-
-	  ggadu_config_var_set (gui_handler, "chat_type",
-			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (chatstyle)));
-
+	  
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "use_username");
+	  g_return_if_fail (entry != NULL);
+ 
+	  ggadu_config_var_set (gui_handler, "chatstyle",
+			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
+	  
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowshow");
+	  g_return_if_fail (entry != NULL);
+	  
 	  ggadu_config_var_set (gui_handler, "chat_window_auto_show",
-			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (chatwindowshow)));
-
+			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
+	  
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "use_username");
+	  g_return_if_fail (entry != NULL);
+	  
 	  ggadu_config_var_set (gui_handler, "chat_window_auto_raise",
-			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (chatwindowraise)));
-
+			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
+	  
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "chat_paned_size");
+	  g_return_if_fail (entry != NULL);
+	  
 	  ggadu_config_var_set (gui_handler, "chat_paned_size",
-			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (chat_paned_size)));
+			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (entry)));
 
 	  ggadu_config_var_set (gui_handler, "blink", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (blink)));
 
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowwidth");
+	  g_return_if_fail (entry != NULL);
+	  
 	  ggadu_config_var_set (gui_handler, "chat_window_width",
-			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (chatwindowwidth)));
-
+			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (entry)));
+	  
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "chatwindowheight");
+	  g_return_if_fail (entry != NULL);
+	  
 	  ggadu_config_var_set (gui_handler, "chat_window_height",
-			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (chatwindowheight)));
-
+			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (entry)));
+	  
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "use_username");
+	  g_return_if_fail (entry != NULL);
+	  
 	  ggadu_config_var_set (gui_handler, "use_username",
-			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (use_username)));
+			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
 
 	  ggadu_config_var_set (gui_handler, "blink_interval",
 			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (blink_interval)));
@@ -950,9 +1062,12 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 		    list = list->next;
 		}
 	  }
+	  
+	  entry = g_object_get_data (G_OBJECT (chat_vbox), "send_on_enter");
+	  g_return_if_fail (entry != NULL);
 
 	  ggadu_config_var_set (gui_handler, "send_on_enter",
-			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (send_on_enter)));
+			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
 
 	  ggadu_config_var_set (gui_handler, "use_xosd_for_new_msgs",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs)));
