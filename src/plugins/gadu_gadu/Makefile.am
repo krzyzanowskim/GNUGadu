@@ -3,8 +3,6 @@ pkgdir = $(libdir)/gg2
 pkg_LTLIBRARIES = libgadu_gadu_plugin.la
 noinst_LIBRARIES =
 
-libgadu_gadu_plugin_la_CFLAGS = $(GTK_CFLAGS)
-
 libgadu_gadu_plugin_la_SOURCES = gadu_gadu_plugin.c \
     gadu_gadu_plugin.h
 
