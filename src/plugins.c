@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.2 2003/03/22 21:46:12 zapal Exp $ */
+/* $Id: plugins.c,v 1.3 2003/04/01 15:09:25 thrulliq Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -302,6 +302,7 @@ void config_var_set(GGaduPlugin *handler, gchar *name, gpointer val)
 	    {
 		case VAR_STR:
 		case VAR_IMG: // VAR_IMG is a path to image file
+		case VAR_LIST:
 		    print_debug("VAR_STR %s %d\n",val,strlen(val));
 		    if (*(gchar *)val == 1)
 			var->ptr = (gpointer) base64_decode(g_strstrip((gchar *)val+1));

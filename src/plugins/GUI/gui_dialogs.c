@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.8 2003/03/30 11:34:49 zapal Exp $ */
+/* $Id: gui_dialogs.c,v 1.9 2003/04/01 15:09:25 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -97,18 +97,15 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
     GSList *listtmp = list;
     gint ielements = g_slist_position(list,g_slist_last(list));
     gint rows = ((ielements + 1) / cols);
-    GtkWidget *tab = gtk_table_new(rows,cols,TRUE);
+    GtkWidget *tab = gtk_table_new(rows, cols, FALSE);
     gint actC = 0, actR = 0;
     
     while (listtmp) 
     {
 	GGaduKeyValue *kv = (GGaduKeyValue *)listtmp->data;
-	GtkWidget *label = NULL;
 	GtkWidget *entry = NULL;
-	GtkWidget *tabbox = NULL;
-	
-	label = gtk_label_new(kv->description);
-	    
+	gboolean need_label = TRUE;
+		    
 	switch (kv->type) {
 		case VAR_STR:
 			entry = gtk_entry_new();
@@ -126,7 +123,8 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 			}
 			break;
 		case VAR_BOOL:
-			entry = gtk_check_button_new();
+			need_label = FALSE;
+			entry = gtk_check_button_new_with_label(kv->description);
 			if (kv->value)
 			    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 			break;
@@ -153,10 +151,14 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 			}
 			break;
 		case VAR_IMG:
+			need_label = FALSE;
 			entry = gtk_image_new_from_file(kv->value);
 			gtk_table_set_homogeneous(GTK_TABLE(tab), FALSE);
 			break;
-
+		case VAR_LIST:
+			entry = gtk_combo_new();
+			gtk_combo_set_popdown_strings(GTK_COMBO(entry), kv->value);
+			break;
 	}
 
     	if ((kv->flag & VAR_FLAG_SENSITIVE) != 0)
@@ -170,13 +172,18 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 		gtk_entry_set_visibility( GTK_ENTRY(entry), FALSE);
 	
 	kv->user_data = (gpointer)entry;	
-
-	tabbox = gtk_table_new(1,2,TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 0, 1);
-	
-	gtk_table_attach_defaults(GTK_TABLE(tab), tabbox, actC, actC+1, actR, actR+1);
-	
+        
+	if (need_label) {
+	    GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+	    GtkWidget *label = gtk_label_new(kv->description);
+	    
+	    gtk_container_add(GTK_CONTAINER(vbox), label);
+	    gtk_table_attach_defaults(GTK_TABLE(tab), vbox, 0, 1, actR, actR+1);
+	    gtk_table_attach_defaults(GTK_TABLE(tab), entry, 1, 2, actR, actR+1);
+	} else {
+	    gtk_table_attach(GTK_TABLE(tab), entry, actC, actC+2, actR, actR+1, GTK_FILL, GTK_SHRINK, 0, 0);
+	}
+		
 	if ((actC + 1) < cols) actC++; else  { actC = 0; actR++; }
 
 	listtmp = listtmp->next;
@@ -243,7 +250,7 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 			GtkWidget *hbox = (GtkWidget *)kv->user_data;
 			GtkWidget *entry = (GtkWidget *)g_object_get_data(G_OBJECT(hbox),"txt_entry");
 			
-			tmp = (gchar *)g_strdup(gtk_entry_get_text(GTK_ENTRY(entry)));
+			tmp = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
 			if (strlen(tmp) > 0)
 	    		    kv->value = (gpointer)tmp;
 			else {
@@ -254,6 +261,9 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 			break;
 		case VAR_IMG:
 			kv->value = NULL;
+			break;
+		case VAR_LIST:
+			kv->value = gtk_editable_get_chars(GTK_EDITABLE(GTK_COMBO(kv->user_data)->entry), 0, -1);
 			break;
 
 	    }

@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.2 2003/04/01 15:09:24 thrulliq Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -17,13 +17,13 @@ typedef gpointer (*function_ptr)(gpointer);
 typedef void (*signal_func_ptr)(gpointer,gpointer);
 
 enum {
-    GGADU_PLUGIN_TYPE_UI,
+    GGADU_PLUGIN_TYPE_UI = 1,
     GGADU_PLUGIN_TYPE_PROTOCOL,
     GGADU_PLUGIN_TYPE_MISC
 };
 
 enum {
-    GGADU_ID,
+    GGADU_ID = 1,
     GGADU_NICK,
     GGADU_FIRST_NAME,
     GGADU_LAST_NAME,
@@ -33,15 +33,16 @@ enum {
 
 
 enum {
-    VAR_STR = 1 << 0,
-    VAR_INT = 1 << 2,
-    VAR_BOOL = 1 << 4,
-    VAR_IMG = 1 << 8,
-    VAR_FILE_CHOOSER = 1 << 16
+    VAR_STR = 1,
+    VAR_INT,
+    VAR_BOOL,
+    VAR_IMG,
+    VAR_FILE_CHOOSER,
+    VAR_LIST
 };
 
 enum {
-    VAR_FLAG_NONE         = 1 << 0,
+    VAR_FLAG_NONE         = 1,
     VAR_FLAG_SENSITIVE    = 1 << 2,
     VAR_FLAG_INSENSITIVE  = 1 << 4,
     VAR_FLAG_PASSWORD     = 1 << 5

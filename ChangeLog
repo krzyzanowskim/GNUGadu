@@ -1,4 +1,6 @@
-1.04.2003
+1.03.2003
+- add VAR_LIST variable type (core/gui/THrull)
+- checkboxes in dialogs are now more GNOME HIG (gui/THrull)
 - we don't need change icon signal anymore (tlen/gui/THrull)
 
 31.03.2003
