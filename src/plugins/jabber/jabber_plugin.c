@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.109 2004/09/28 14:25:52 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.110 2004/10/08 12:24:26 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -455,7 +455,7 @@ static GGaduMenu *build_userlist_menu(void)
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
 	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
 
-	infomenu = ggadu_menu_new_item(_("Contact's info"), NULL, NULL);
+	infomenu = ggadu_menu_new_item(_("Contact info"), NULL, NULL);
 	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("Personal data"), user_vcard_action, NULL));
 	ggadu_menu_add_submenu(infomenu, ggadu_menu_new_item(_("Software"), user_get_software_action, NULL));
 	ggadu_menu_add_submenu(menu, infomenu);
