@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.44 2004/02/14 02:52:17 thrulliq Exp $ */
+/* $Id: sms_gui.c,v 1.45 2004/02/14 02:55:34 thrulliq Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -449,27 +449,27 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 				entry = entry->next;
 			}
 
-			/*while (uslist) {
+			while (uslist) {
 				GGaduContact *kvtmp = (GGaduContact *) uslist->data;
 				gchar *id = g_strconcat(kvtmp->nick, "@", kvtmp->mobile, NULL);
 
 				if (!ggadu_strcasecmp(id, k->id))
 				{
 					//ggadu_repo_del_value("sms", kvtmp->id);
-					g_free(kvtmp->id);
-					g_free(kvtmp->nick);
-					g_free(kvtmp->mobile);
-					kvtmp->mobile = k->mobile;
-					kvtmp->id = g_strdup(k->mobile);
-					kvtmp->nick = k->nick;
+					//g_free(kvtmp->id);
+					//g_free(kvtmp->nick);
+					//g_free(kvtmp->mobile);
+					//kvtmp->mobile = k->mobile;
+					//kvtmp->id = g_strdup(k->mobile);
+					//kvtmp->nick = k->nick;
 					//ggadu_repo_add_value("sms", kvtmp->id, kvtmp, REPO_VALUE_CONTACT);
-					g_free(k);
+					//g_free(k);
+					g_free(id);
 					break;
 				}
 				g_free(id);
 				uslist = uslist->next;
 			}
-		}*/
 			save_smslist();
 			signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 
