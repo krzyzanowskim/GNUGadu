@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.h,v 1.8 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_conf.h,v 1.9 2004/06/11 00:19:02 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -26,6 +26,8 @@
 #include "ggadu_types.h"
 
 void		ggadu_config_set_filename	(GGaduPlugin * plugin_handler, gchar * config_file);
+
+gboolean	ggadu_config_read_from_file	(GGaduPlugin * plugin_handler, gchar *file_path);
 
 gboolean	ggadu_config_read		(GGaduPlugin * plugin_handler);
 

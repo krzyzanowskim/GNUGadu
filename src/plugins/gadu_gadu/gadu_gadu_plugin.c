@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.173 2004/06/10 21:50:19 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.174 2004/06/11 00:19:02 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1483,6 +1483,7 @@ static void handle_sighup()
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
 	gchar *path = NULL;
+	
 	print_debug("%s : initialize", GGadu_PLUGIN_NAME);
 	signal(SIGHUP, handle_sighup);
 #if GGADU_DEBUG
@@ -1505,9 +1506,65 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "ignore_unknown_sender", VAR_BOOL);
 	
 	if (g_getenv("HOME_ETC"))
+	{
+		gchar *gg2_path = NULL;
+		gchar *gg2_dir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
 		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg", NULL);
+		
+		path = g_build_filename(gg2_dir, "gadu_gadu", NULL);
+		gg2_path = g_build_filename(gg2_dir, "gadu_gadu", NULL);
+		if (!g_file_test(path,G_FILE_TEST_EXISTS))
+		{
+			g_free(path);
+			path = g_build_filename(this_configdir, "config", NULL);
+			
+			ggadu_config_set_filename((GGaduPlugin *) handler, gg2_path);
+			if (!ggadu_config_read_from_file(handler,path))
+				g_warning(_("Unable to read configuration file for plugin %s"), "gadu-gadu");
+				
+		}
+		 else if (!ggadu_config_read_from_file(handler,path))
+		{
+		        g_warning(_("Unable to read configuration file for plugin %s"), "gadu-gadu");
+		} 
+		 else 
+		{
+			ggadu_config_set_filename((GGaduPlugin *) handler, path);
+		}
+
+		g_free(gg2_path);
+	}
 	else
+	{
+		gchar *gg2_path = NULL;
+		gchar *gg2_dir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg", NULL);
+		
+		path = g_build_filename(gg2_dir, "gadu_gadu", NULL);
+		gg2_path = g_build_filename(gg2_dir, "gadu_gadu", NULL);
+		
+		if (!g_file_test(path,G_FILE_TEST_EXISTS))
+		{
+			g_free(path);
+			path = g_build_filename(this_configdir, "config", NULL);
+			
+			ggadu_config_set_filename((GGaduPlugin *) handler, gg2_path);
+			if (!ggadu_config_read_from_file(handler,path))
+			    g_warning(_("Unable to read configuration file for plugin %s"), "gadu-gadu");
+		}
+		 else if (!ggadu_config_read_from_file(handler,path))
+		{
+		        g_warning(_("Unable to read configuration file for plugin %s"), "gadu-gadu");
+		} 
+		 else 
+		{
+			ggadu_config_set_filename((GGaduPlugin *) handler, path);
+		}
+		
+		g_free(gg2_path);
+	}
+	
+	g_free(path);
 /* reserved for DEVEL branch 
 #if GGADU_DEBUG
     path = g_build_filename (this_configdir, "config_test", NULL);
@@ -1520,13 +1577,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
       {
 	  g_free (path);
 #endif
-*/
-	path = g_build_filename(this_configdir, "config", NULL);
-	ggadu_config_set_filename((GGaduPlugin *) handler, path);
-	g_free(path);
-	if (!ggadu_config_read(handler))
-		g_warning(_("Unable to read configuration file for plugin %s"), "gadu-gadu");
-/*
 #if GGADU_DEBUG
       }
 #endif

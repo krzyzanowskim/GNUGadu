@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.20 2004/05/17 11:24:27 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.21 2004/06/11 00:19:02 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -181,26 +181,27 @@ void ggadu_config_var_add(GGaduPlugin * handler, gchar * name, gint type)
 }
 
 /*
- * Uruchamia czytanie plikow konfiguracyjnych dla wszystkich zarejestrowanych protokolow
+ * Uruchamia czytanie pliku konfiguracyjnego
  * Czyta pliki konfiguracyjne i ustawia wartosci zmiennych
  * Jesli plik nie zostal zdefiniowany to proboje czytac plik o nazwie pluginu, jesli i takiego pliku nie ma to nie wczytuje nic
  */
-gboolean ggadu_config_read(GGaduPlugin * plugin_handler)
+gboolean ggadu_config_read_from_file(GGaduPlugin * plugin_handler, gchar *file_path)
 {
 	FILE *f;
 	gchar line[1024], *val, *path;
 	GGaduVar *v = NULL;
 
-	print_debug("Reading configuration file %s\n", plugin_handler->name);
+	print_debug("Reading configuration file %s\n", file_path);
 
 	/* plik trzeba ustalic */
-	path = g_strdup(plugin_handler->config_file);
+	/* path = g_strdup(plugin_handler->config_file); */
+	path = file_path;
 
 	print_debug("core : trying to read file %s\n", path);
 
 	f = fopen(path, "r");
 
-	g_free(path);
+	/* g_free(path); */
 
 	if (!f)
 	{
@@ -248,6 +249,17 @@ gboolean ggadu_config_read(GGaduPlugin * plugin_handler)
 	fclose(f);
 
 	return TRUE;
+}
+/*
+ * Uruchamia czytanie plikow konfiguracyjnych dla wszystkich zarejestrowanych protokolow
+ * Czyta pliki konfiguracyjne i ustawia wartosci zmiennych
+ * Jesli plik nie zostal zdefiniowany to proboje czytac plik o nazwie pluginu, jesli i takiego pliku nie ma to nie wczytuje nic
+ */
+gboolean ggadu_config_read(GGaduPlugin * plugin_handler)
+{
+	print_debug("Reading configuration file %s\n", plugin_handler->name);
+	/*path = g_strdup(plugin_handler->config_file);*/
+	return ggadu_config_read_from_file(plugin_handler,plugin_handler->config_file);
 }
 
 gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
