@@ -1,0 +1,46 @@
+Warstwa opisujca menu
+Zalecane do konstrukcji wszelkiego rodzaju menu, nie nalezy uzywac rozwiazan np. GTK, a jedynie
+dokonac konwersji w pozniejszym etapie w fragmencie kodu ktory napewno uzywa gtk. Tak jak ma
+to miejsce w GUI_plugin.so
+
+wyglada to mniej wiecej tak :
+
+typedef struct {
+    GGaduMenuItem *data;  /* GGaduMenuItem zdefiniowany jest w "gg-types.h" */
+    GGaduMenu *prev;
+    GGaduMenu *next;
+    GGaduMenu *children;
+    GGaduMenu *parent;    
+} GGaduMenu;
+
+najpierw trzeba stworzyc jakis korzen:
+
+----
+GGaduMenu *root;
+GGaduMenu *item1;
+GGaduMenu *item2;
+
+root = ggadu_menu_create();
+
+item1 = ggadu_menu_new_item("item1",NULL,NULL);
+item2 = ggadu_menu_new_item("item2",NULL,NULL);
+
+ggadu_menu_add_submenu(root,item1);
+ggadu_menu_add_submenu(root,item2);
+
+ggadu_menu_print(root);
+----
+
+strukture mozna sprawdzic wynikiem funkcji ggadu_menu_print(root);
+
+Do kazdego "item" mozna podlaczyc dowolny inny "item" tworzac podgalezie menu.
+
+
+Wyjasnie tylko argumenty jednej funkcji :
+
+    ggadu_menu_add_submenu(GGaduMenu *to_item,GGaduMenu *item);
+
+	Podlacza "item" jako podgalaz "to_item"
+
+Czy to jest wystarczajaco jasne ?
+Dodatkowe funkcje znajdziesz w pliku "menu.h"

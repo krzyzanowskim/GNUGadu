@@ -1,0 +1,34 @@
+Tworzenie nowego zestawu ikon jest bardzo proste :-)
+
+Przykladowo je¶li chcemy stworzyæ nowy zestaw ikon dla protoko³u Gadu-Gadu, 
+tworzymy obrazki o nastêpuj±cych nazwach:
+
+online.png - dostêpny
+online-descr.png - dostêpny z opisem
+away.png - zajêty
+away-descr.png - zajêty z opisem
+offline.png - niedostêpny
+offline-descr.png - niedostêpny z opisem
+invisible.png - niewidoczny
+invisible-descr.png - niewidoczny z opisem
+
+Po stworzeniu tych plików tworzymy katalog w $PREFIX/share/gg2/pixmaps/icons/ 
+np. "moje" i umieszczamy tam nasze ikonki. Po uruchomieniu GNU Gadu 2 nowy zestaw powinien 
+siê pojawiæ w preferencjach GUI w opcji "Wybierz zestaw ikon".
+
+$PREFIX to katalog, w którym jest zainstalowane gg2 np. /usr, /usr/local
+
+Analogicznie postêpujemy dla innych protoko³ów np. Tlen, Jabber
+
+Ikonki Tlen'a
+tlen-1.png - dostêpny
+tlen-2.png - zajêty
+tlen-3.png - rozmowa
+tlen-4.png - bardzo zajêty
+tlen-5.png - nie przeszkadzac
+tlen-6.png - niewidoczny
+tlen-7.png - niedostepny
+
+Przy pomocy mechanizmu mo¿na tworzyæ zestawy ikon dla ca³ego programu, umieszczaj±c 
+pliki graficzne o analogicznych nazwach w katalogu z ikonami (Uwaga! w przysz³o¶ci 
+mo¿e siê to zmieniæ).

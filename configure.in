@@ -1,0 +1,352 @@
+dnl $Id: configure.in,v 1.1 2003/03/20 10:37:01 krzyzak Exp $
+
+m4_define([gg2_version],[2.0_CVS_`date +%D`])
+
+AC_INIT(gg2,[gg2_version])
+AM_INIT_AUTOMAKE([no-define])
+AM_CONFIG_HEADER(config.h)
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+
+AC_PROG_CC
+AC_PROG_CPP
+
+AC_DISABLE_STATIC
+
+AC_PROG_INTLTOOL
+
+AM_PROG_LIBTOOL
+
+LIBTOOL="$LIBTOOL --silent"
+
+AC_PROG_INSTALL
+
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AC_PROG_AWK
+
+AC_HEADER_STDC
+AC_STDC_HEADERS
+
+
+AC_C_CONST
+AC_STRUCT_TM
+
+AC_TYPE_SIGNAL
+AC_FUNC_STRFTIME
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([memset mkdir strcasecmp strchr])
+
+
+ALL_LINGUAS="pl"
+GETTEXT_PACKAGE="$PACKAGE"
+AC_SUBST(GETTEXT_PACKAGE)
+
+AM_GLIB_GNU_GETTEXT
+
+dnl CATOBJEXT=".po"
+dnl AC_SUBST(CATOBJEXT)
+
+AM_PROG_LIBTOOL
+AM_MAINTAINER_MODE
+
+if test "x$GCC" = "xyes"; then
+   CFLAGS="$CFLAGS -Wall -Wno-uninitialized -Wchar-subscripts -Wnested-externs -Wpointer-arith -Wno-sign-compare -Wsign-promo"
+fi
+
+
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+
+PKG_CHECK_MODULES(GLIB,glib-2.0 >= 2.2.0,[
+   CFLAGS="$CFLAGS $GLIB_CFLAGS"
+   LDFLAGS="$LDFLAGS $GLIB_LIBS"
+    ],AC_MSG_ERROR($GLIB_PKG_ERRORS))
+
+PKG_CHECK_MODULES(GTHREAD,gthread-2.0 >= 2.2.0,[
+   CFLAGS="$CFLAGS $THREAD_CFLAGS"
+   LDFLAGS="$LDFLAGS $GTHREAD_LIBS"
+    ],AC_MSG_ERROR($GLIB_PKG_ERRORS))
+
+AC_ARG_ENABLE(debug, [  --enable-debug	  debug mode			default=enabled],
+    if test x$enableval = xyes; then
+	 want_debug=yes
+    else
+	if test "x$enableval" = xno; then
+		want_debug=no
+	else
+		want_debug=yes
+	fi
+    fi,
+    want_debug=yes)
+
+if test "$want_debug" = "yes"; then
+  AC_DEFINE(DEBUG)
+fi
+
+
+AC_ARG_ENABLE(gdb, [  --enable-gdb		  gdb support			default=enabled],
+    if test x$enableval = xyes; then
+	 want_gdb=yes
+    else
+	if test "x$enableval" = xno; then
+		want_gdb=no
+	else
+		want_gdb=yes
+	fi
+    fi,
+    want_gdb=yes)
+
+
+if test "$want_gdb" = "yes"; then
+ CFLAGS="$CFLAGS -ggdb"
+fi
+
+want_gui=no
+want_gadu=no
+want_tlen=no
+want_jabber=no
+want_xosd=no
+want_sms=no
+want_remote=no
+want_esd=no
+want_oss=no
+want_arts=no
+want_all=no
+
+AC_ARG_WITH(all_plugins, [  --with-all_plugins	  Build all plugins		default=no])
+if test "x$with_all_plugins" = "xyes"; then
+    with_gui=yes
+    with_gadu=yes
+    with_tlen=yes
+    with_jabber=yes
+    with_xosd=yes
+    with_docklet=yes
+    with_esd=yes
+    with_oss=yes
+    with_sms=yes
+    with_remote=yes
+fi
+
+
+AC_ARG_WITH(gui, [  --with-gui		  Build gtk2 GUI plugin		default=no])
+if test "x$with_gui" = "xyes"; then 
+    want_gui=yes
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    AC_SUBST(GTK_CFLAGS)
+    AC_SUBST(GTK_LIBS)
+fi
+
+AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
+if test "x$with_gadu" = "xyes"; then 
+    AC_CHECK_LIB([gadu], [gg_login],want_gadu=yes,want_gadu=no)
+    if test "x$want_gadu" != "xno"; then
+	GG_LIBS=-lgadu
+	AC_CHECK_HEADERS(libgadu.h)
+	AC_SUBST(GG_LIBS)
+	AC_CHECK_MEMBER(struct gg_pubdir50_s.count,, [AC_MSG_ERROR([Too old libgadu version!])], [#include "libgadu.h"])
+    fi
+fi
+
+AC_ARG_WITH(tlen, [  --with-tlen		  Build tlen plugin		default=no])
+if test "x$with_tlen" = "xyes"; then 
+    AC_CHECK_LIB([tlen], [tlen_set_hub_blocking], want_tlen=yes, want_tlen=no)
+    if test "x$want_tlen" != "xno"; then
+	AC_CHECK_HEADERS(libtlen/libtlen.h)
+	TLEN_LIBS="-ltlen -lm"
+	AC_SUBST(TLEN_LIBS)
+    fi
+fi
+
+AC_ARG_WITH(jabber, [  --with-jabber		  Build jabber plugin		default=no])
+if test "x$with_jabber" = "xyes"; then 
+    AC_CHECK_LIB([iksemel], [iks_send], want_jabber=yes, want_jabber=no)
+    if test "x$want_jabber" != "xno"; then
+	AC_CHECK_HEADERS(iksemel.h)
+	JABBER_LIBS="-liksemel"
+	AC_SUBST(JABBER_LIBS)
+    fi
+fi
+
+AC_ARG_WITH(xosd, [  --with-xosd		  Build XOSD plugin		default=no])
+if test "x$with_xosd" = "xyes"; then 
+    AC_PATH_PROG(xosd_config_script, xosd-config, "none")
+    
+    if test "x$xosd_config_script" != "xnone"; then
+	AC_CHECK_LIB([xosd], [xosd_display], want_xosd=yes, want_xosd=no, `$xosd_config_script --libs`)
+
+	if test "x$want_xosd" != "xno"; then
+
+	    XOSD_CFLAGS=`$xosd_config_script --cflags`
+	    XOSD_LIBS=`$xosd_config_script --libs`
+    
+	    AC_CHECK_HEADERS(xosd.h)
+
+	    AC_SUBST(XOSD_LIBS)
+	    AC_SUBST(XOSD_CFLAGS)
+	fi
+    else
+	want_xosd=no
+    fi
+fi
+
+AC_ARG_WITH(sms, [  --with-sms		  Build sms plugin		default=no])
+if test "x$with_sms" = "xyes"; then 
+	want_sms=yes
+    else
+	want_sms=no
+fi
+
+AC_ARG_WITH(remote, [  --with-remote		  Build remote plugin		default=no])
+if test "x$with_remote" = "xyes"; then 
+	want_remote=yes
+	else
+	want_remote=no
+fi
+
+
+AC_ARG_WITH(docklet, [  --with-docklet	  Build docklet plugin		default=no])
+if test "x$with_docklet" = "xyes"; then 
+    want_docklet=yes
+    else
+    want_docklet=no
+fi
+
+AC_ARG_WITH(esd, [  --with-esd		  Build esd sound plugin	default=no])
+if test "x$with_esd" = "xyes"; then
+    have_libesd=no
+    AM_PATH_ESD(0.2.7 ,have_libesd=yes,
+    [AC_MSG_WARN([*** sound support for esd has been disabled ***])])
+    
+    if test "$have_libesd" = yes; then
+	AC_SUBST(ESD_CFLAGS)
+	AC_SUBST(ESD_LIBS)
+	want_esd=yes
+    else
+	want_esd=no
+    fi
+fi
+
+
+AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
+if test "x$with_arts" = "xyes"; then 
+    AC_PROG_CXX
+
+    ARTS_CXXFLAGS="$CXXFLAGS -I/usr/include/kde -I/opt/kde/include -I/usr/X11R6/include"
+    ARTS_LIBS="-L/opt/kde/lib -L/usr/X11R6/lib -lstdc++ -lartsflow_idl -mcop -lartsflow -lartswavplayobject"
+    AC_SUBST(ARTS_LIBS)
+    AC_SUBST(ARTS_CXXFLAGS)
+
+    
+    AC_SUBST(CXX, $CC)
+    AC_SUBST(CXXFLAGS)
+    want_arts=yes
+else
+    AM_CONDITIONAL(am__fastdepCXX, test yes = "$want_arts")
+    want_arts=no
+fi
+
+AC_ARG_WITH(oss, [  --with-oss		  Build OSS sound plugin	default=no])
+if test "x$with_oss" = "xyes"; then
+    AC_CHECK_HEADERS(sys/soundcard.h)
+    want_oss=yes
+fi
+
+
+dnl AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
+dnl AC_CHECK_FUNCS(bswap_32 bswap_16)
+dnl AC_C_BIGENDIAN
+
+
+AM_CONDITIONAL(BUILD_GUI, test "$want_gui" = "yes")
+AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")
+AM_CONDITIONAL(BUILD_TLEN, test "$want_tlen" = "yes")
+AM_CONDITIONAL(BUILD_JABBER, test "$want_jabber" = "yes")
+AM_CONDITIONAL(BUILD_XOSD, test "$want_xosd" = "yes")
+AM_CONDITIONAL(BUILD_DOCKLET, test "$want_docklet" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_ESD, test "$want_esd" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_ARTS, test "$want_arts" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_OSS, test "$want_oss" = "yes")
+AM_CONDITIONAL(BUILD_SMS, test "$want_sms" = "yes")
+AM_CONDITIONAL(BUILD_REMOTE, test "$want_remote" = "yes")
+
+
+
+dnl Set PACKAGE_DATA_DIR in config.h.
+if test "x${datadir}" = 'x${prefix}/share'; then
+  if test "x${prefix}" = "xNONE"; then
+    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${ac_default_prefix}/share/${PACKAGE}")
+  else
+    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${prefix}/share/${PACKAGE}")
+  fi
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${datadir}/${PACKAGE}")
+fi
+
+dnl Set PACKAGE_LOCAL_DIR in config.h.
+if test "x${datadir}" = 'x${prefix}/share'; then
+  if test "x${prefix}" = "xNONE"; then
+    AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/share/locale")
+  else
+    AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/share/locale")
+  fi
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${datadir}/locale")
+fi
+
+
+dnl Set PACKAGE_SOURCE_DIR in config.h.
+packagesrcdir=`cd $srcdir && pwd`
+AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
+
+CFLAGS="$CFLAGS -I${packagesrcdir}/src"
+ 
+AC_SUBST(CFLAGS)
+AC_SUBST(LDFLAGS)
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+src/plugins/Makefile
+src/plugins/GUI/Makefile
+src/plugins/gadu_gadu/Makefile
+src/plugins/tlen/Makefile
+src/plugins/jabber/Makefile
+src/plugins/xosd/Makefile
+src/plugins/docklet/Makefile
+src/plugins/sound/Makefile
+src/plugins/sound/esd/Makefile
+src/plugins/sound/arts/Makefile
+src/plugins/sound/oss/Makefile
+src/plugins/sms/Makefile
+src/plugins/remote/Makefile
+po/Makefile.in
+])
+
+dnl po/gg2.pot
+
+echo
+echo Build plugin GUI-GTK2.......... : $want_gui
+echo Build plugin Gadu-Gadu......... : $want_gadu
+echo Build plugin Tlen.pl........... : $want_tlen
+echo Build plugin Jabber............ : $want_jabber
+echo Build plugin XOSD.............. : $want_xosd
+echo Build plugin docklet........... : $want_docklet
+echo Build plugin sound ESD......... : $want_esd
+echo Build plugin sound aRts........ : $want_arts
+echo Build plugin sound OSS......... : $want_oss
+echo Build plugin sms............... : $want_sms
+echo Build plugin remote............ : $want_remote
+echo
+echo "*************************************************************"
+echo Remember that GNU Gadu 2 built without any plugin, 
+echo especially without gui plugin is probably useless for you!
+echo Check \"./configure --help\" to see how to enable some plugins
+echo "*************************************************************"
+echo
+echo configure complete, now type \"make\"
+echo
+
+

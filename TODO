@@ -1,0 +1,13 @@
+- current status description text somewhere
+- docklet menu (??)
+- auto-away
+- widgets unique names for theme + docs (GUI)
+- memory leaks audit (all)
+- sound configuration (all)
+- authorization dialogs (jabber/tlen)
+- jabber confference (jabber)
+- jabber search (jabber)
+- translations have to be updated !!! (all)
+- docklet should work in wmaker as dockapp (docklet)
+(done)- status caption not necessary in utf8 (gadu-gadu)
+(done)- plugin docklet cant core dump if there is no gui-gtk2 plugin (docklet)

@@ -1,0 +1,98 @@
+
+GNU Gadu 2.0pre1 http://www.gadu.gnu.pl
+
+GNU Gadu Team z dum± prezentuje najm³odsze dziecko ze stajni
+wolnych rozmów. GNU Gadu 2 (kodowa nazwa - TNNJNG).
+
+Po kilku miesi±cach prac nad programem zdecydowali¶my siê 
+upubliczniæ pierwsz± wersjê - 2.0pre0 jako wersjê pogl±dow±.
+
+1. Zmiany w stosunku do wcze¶niejszych wersji GNU Gadu:
+	- wszystko, program zosta³ napisany od nowa w oparciu o bibliotekê 
+	  glib 2.2.0
+
+2. Mo¿liwo¶ci GNU Gadu 2.0pre0
+	- Obs³uga wtyczek (plugins)
+	- Dostêpne wtyczki :
+		gui-gtk+2  ( Interfejs u¿ytkownika napisany w gtk+2 )
+		gadu-gadu  ( Obs³uga protoko³u Gadu-Gadu(C) )
+		tlen	   ( Obs³uga protoko³u Tlen(C) )
+		jabber	   ( Obs³uga protoko³u Jabber )
+		sound-esd  ( Obs³uga d¼wiêku poprzez Esound )
+		sound-oss  ( Obs³uga d¼wiêku poprzez OSS )
+		sound-aRts ( Obs³uga d¼wiêku poprzez aRts )
+		xosd	   ( Wy¶wietlanie ró¿nych informacji na ekranie )
+		sms	   ( Wysy³anie SMS'ów do polskich operatorów GSM )
+		remote     ( Do komunikacji gg2 z zewnêtrznymi aplikacjami )
+		docklet    ( Obs³uga dokowania ikonki w ¶rodowiskach:
+					gnome, kde, fluxbox, blackbox, *box )
+	
+	- Statusy opisowe
+	- Emotikony
+	- Mo¿liwo¶¶ prowadzenia rozmowy konferencyjnej
+	- Historia rozmowy
+	- Tematy graficzne
+	- Zak³adki w oknie rozmowy
+
+2.1 Tabela zaimplementowanych mo¿liwo¶ci w pluginach:
+
+   /-------------------------------------------------------------------------\
+    Nazwa	| Konf | Wyszuk. | Manip. kontaktami | D¼wiêk | Historia
+    -------------------------------------------------------------------------
+    Gadu-Gadu(C)| Tak  | Tak     | Tak               | Tak    | Tak
+    Tlen (C)	| Nie  | Tak     | Tak               | Nie    | Nie
+    Jabber      | Nie  | Nie     | Tak (bez edycji)  | Nie    | Nie
+   \-------------------------------------------------------------------------/
+
+
+2.2 API wtyczek jest bardzo proste i kazdy jest w stanie napisaæ w³asn±
+    wtyczkê, do czego zachêcamy. Ma³e HOWTO jak to zrobiæ znajduje siê
+    w dokumentacji, a pomoc mo¿na uzyskaæ na li¶cie dyskusyjnej.
+    ( http://gadu.gnu.pl/lista.html )
+
+3. Plany
+
+   - Planujemy zaimplementowaæ wiekszo¶æ (je¶li nie wszystkie) mo¿liwo¶ci
+   protoko³ów.
+  
+   - Wtyczka obs³uguj±ca protokó³ ICQ.
+
+   - Niebawem plugin docklet powinien zostaæ równie¿ wzbogacony o wspó³pracê
+   z WindowMakerem (potrzebna pomoc).
+   
+   - Dodatkowe wtyczki jakie sobie kto¶ wymarzy (Zapraszamy).
+
+4. Wymagania (dla wszystkich pluginów)
+
+    - glib 2.2.0 (ftp://ftp.gnome.org/pub/GNOME/)
+    - gtk+ 2.2.0 (ftp://ftp.gnome.org/pub/GNOME/) - GUI
+    - libgadu (http://dev.null.pl/ekg/) - Gadu-Gadu
+    - libtlen (http://www.libtlen.eu.org) - Tlen
+    - iksemel (http://iksemel.jabberstudio.org) - Jabber
+    - xosd (http://ignavus.net/software.html) - XOSD
+    - esound (http://www.tux.org/~ricdude/EsounD.html)
+    - arts (razem z KDE zazwyczaj)
+
+5. Adresy
+
+    - Strona domowa
+    	http://www.gadu.gnu.pl/
+
+    - 2.0pre1
+	ftp://ftp.slackware.pl/pub/gg/
+	
+    - CVS
+    	cvs -d:pserver:cvs@cvs.slackware.pl:/home/cvs co gg2
+
+    - codzienny snapszot z cvs'a
+    	http://www.hakore.com/~krzak/gg2/gg2-snap.tar.gz
+
+    - FTP - przy oficjalnych wydaniach 
+	ftp://ftp.slackware.pl/pub/gg/
+
+6. Uwagi
+    Wszelkie uwagi prosimy kierowaæ na listê dyskusyjn±, a nie do autorów
+    programu, którzy czêsto s± zajêci i nie s± w stanie odpowiadaæ na 
+    wszystkie mejle. Jak siê zapisaæ na listê? Nale¿y udaæ siê pod adres
+    http://gadu.gnu.pl/lista.html, przeczytaæ instrukcjê i w³ala (czyt: voila).
+

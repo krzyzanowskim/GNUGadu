@@ -1,0 +1,21 @@
+#!/bin/sh
+
+cd /tmp
+cvs -d:pserver:cvs@cvs.slackware.pl:/home/cvs co gg2
+cd gg2
+
+ACPATH1="/usr/share/aclocal"
+intltoolize --force --automake
+libtoolize --force --copy --automake
+aclocal $ACPATH
+automake --add-missing
+autoconf
+
+find . -name "CVS" -type d -exec rm -rf {} \;
+
+cd ..
+tar -c gg2 > gg2-snap.tar
+gzip gg2-snap.tar
+mv gg2-snap.tar.gz /home/users/krzak/public_html/gg2/gg2-snap.tar.gz
+chmod o+r /home/users/krzak/public_html/gg2/gg2-snap.tar.gz
+rm -rf /tmp/gg2

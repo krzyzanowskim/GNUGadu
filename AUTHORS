@@ -1,0 +1,63 @@
+--------------------------
+--- GNU Gadu 2 credits ---
+--- codename:  TNNJNG  ---
+--------------------------
+--- alphabetical order ---
+--------------------------
+
+
+CORE and MAINTAINERS :
+	Marcin Krzy풹nowski	<krzak@hakore.com>
+	Igor Popik		<igipop@wsfiz.edu.pl>
+
+
+
+
+----------------------------------------------------------------
+-- PLUGINS -----------------------------------------------------
+----------------------------------------------------------------
+GUI (gtk+-2)	
+		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
+		: Igor Popik		<igipop@wsfiz.edu.pl>
+
+----------------------------------------------------------------
+Gadu-Gadu	(http://www.gadu-gadu.pl)
+
+		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
+		: Igor Popik		<igipop@wsfiz.edu.pl>
+----------------------------------------------------------------
+Tlen		(http://www.tlen.pl)
+
+		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
+		: Mateusz Papiernik	<mati@mati.rm.pl>
+		: Igor Popik		<igipop@wsfiz.edu.pl>
+
+----------------------------------------------------------------
+Jabber		(http://www.jabber.org)
+
+		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
+----------------------------------------------------------------
+Docklet 	
+		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
+		: Mateusz Papiernik	<mati@mati.rm.pl>
+
+----------------------------------------------------------------
+XOSD 		
+		: Marcin Krzy풹nowski	<krzak@linux.net.pl>
+
+----------------------------------------------------------------
+Sound-*		
+		: Igor Popik		<igipop@wsfiz.edu.pl>
+----------------------------------------------------------------
+remote
+		: Bartosz Zapa쿽wski 	<bartek@klepisko.eu.org>
+----------------------------------------------------------------
+sms
+		: HelDoRe
+----------------------------------------------------------------
+
+----------------------------------------------------------------
+-- THANKS FOR---------------------------------------------------
+----------------------------------------------------------------
+Aflinta - gettext patch, testing
+Dwuziu  - testing

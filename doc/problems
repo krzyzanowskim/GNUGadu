@@ -1,0 +1,22 @@
+Spis najczesciej spotykanych problemow przy kompilacji/uzytkowaniu gg2
+
+1. W trakcie kompilacji dostaje taki blad:
+	[ciach]
+	Making all in gadu_gadu
+	[ciach]
+	gadu_gadu_plugin.c: In function andle_search_event':
+	gadu_gadu_plugin.c:200: g_pubdir50_t' undeclared (first use in this
+	function)
+	gadu_gadu_plugin.c:200: (Each undeclared identifier is reported only once
+	gadu_gadu_plugin.c:200: for each function it appears in.)
+	gadu_gadu_plugin.c:200: parse error before "res"
+	gadu_gadu_plugin.c:204: warning: implicit declaration of function
+	g_pubdir50_count'
+	gadu_gadu_plugin.c:204: es' undeclared (first use in this function)
+
+itp. komunikaty zwiazane z Katalogiem Publicznym w pluginie gadu_gadu.
+ROZWIAZANIE: zainstaluj najnowsze ekg (http://dev.null.pl/ekg/), uzywajac
+przy wywolaniu ./configure opcji --enable-shared. Potem make i make install
+zainstaluje ci najnowsza werjse libgadu, ktora obsluguje juz nowy katalog
+publiczny.
+

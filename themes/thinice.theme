@@ -1,0 +1,38 @@
+# The following module path will be correct unless your libdir is different
+# from $prefix/lib .. automake problems...
+# Edit these colors and fonts however you like.
+style "default"
+{
+  fg[NORMAL]       = "#000000"
+  fg[ACTIVE]       = "#000000"
+  fg[PRELIGHT]     = "#000000"
+  fg[SELECTED]     = "#FFFFFF"
+  fg[INSENSITIVE]  = "#747474"
+  bg[NORMAL]       = "#D3D3DD"
+  bg[ACTIVE]       = "#C1C1CC"
+  bg[PRELIGHT]     = "#E5E5F7"
+  bg[SELECTED]     = "#336699"
+  bg[INSENSITIVE]  = "#D3D3DD"
+  base[NORMAL]     = "#E5E5F7"
+  base[ACTIVE]     = "#D3D3DD"
+  base[PRELIGHT]   = "#E5E5F7"
+  base[INSENSITIVE]= "#D3D3DD"
+  base[SELECTED]   = "#F5F5F7"
+  text[NORMAL] = "#000000"
+  text[ACTIVE] = "#000000"
+  text[PRELIGHT] = "#000000"
+  text[SELECTED] = "#000000"
+  text[INSENSITIVE]= "#747474"
+  # helvetica 120 is default, so it's not really needed here..
+  #font = "-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*"
+}
+
+class "GtkWidget" style "default"
+class "GtkMenu"	style	"default"
+
+widget_class "*.GtkMenuItem.*" style "default"                                 
+widget_class "*.GtkImageMenuItem.*" style "default"                            
+widget_class "*.GtkAccelMenuItem.*" style "default"                            
+widget_class "*.GtkRadioMenuItem.*" style "default"                            
+widget_class "*.GtkCheckMenuItem.*" style "default"                            
+widget_class "*.GtkMenu.*" style "default"   

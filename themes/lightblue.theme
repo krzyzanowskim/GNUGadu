@@ -1,0 +1,37 @@
+style "lightblue"
+{
+  text[NORMAL]         = "#000000" # kolor tekstu wpisywanego
+  text[SELECTED]       = "#888888" # nie wiem
+  text[PRELIGHT]       = "#888888" #
+  text[ACTIVE]         = "#888888" #
+  text[INSENSITIVE]    = "#888888" #
+  fg[NORMAL]           = "#14233d" # tekst normalny
+  fg[PRELIGHT]         = "#2323ba" # podkreslenia , skroty itp
+  fg[ACTIVE]           = "#2323ba" # tekst zaznaczony aktywny
+  fg[SELECTED]         = "#ffffff" # tekst zaznaczony nieaktywny
+  fg[INSENSITIVE]      = "#ffffff" #### nie wiem
+  bg[NORMAL]           = "#e6ebef" # tlo podstawowe
+  bg[PRELIGHT]         = "#a7bac9" # podswietlenie buttona
+  bg[ACTIVE]           = "#596e7f" # wcisniety button
+  bg[SELECTED]         = "#565a72" # tlo zaznaczenie
+  bg[INSENSITIVE]      = "#8a8aa0" # nienaciskalny? przycisk
+  base[NORMAL]         = "#e5e5e8" # tlo tekstu wpisywanego
+  base[PRELIGHT]       = "#a7bac9" # podswietlenie przycisku
+  base[ACTIVE]         = "#9eb0c1" # ramki
+  base[SELECTED]       = "#565a72" # zaznaczony tekst
+  base[INSENSITIVE]    = "#c6c6c6" # zaznaczenie nieaktywne
+
+}
+
+#000a98
+
+class "GtkWidget" style "lightblue"
+class "GtkMenu"	style	"lightblue"
+
+widget_class "*.GtkMenuItem.*" style "lightblue"                                 
+widget_class "*.GtkImageMenuItem.*" style "lightblue"                            
+widget_class "*.GtkAccelMenuItem.*" style "lightblue"                            
+widget_class "*.GtkRadioMenuItem.*" style "lightblue"                            
+widget_class "*.GtkCheckMenuItem.*" style "lightblue"                            
+widget_class "*.GtkMenu.*" style "lightblue"                                     
+                                                                                

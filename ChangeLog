@@ -1,0 +1,297 @@
+19.03.2003
+- Translation update (Chyla)
+- fixes in docklet, gui (import/export)
+
+18.03.2003
+- unload_plugin initial support (B.Zapa³owski/core)
+- load_plugin fixes (B.Zapa³owski/core)
+- remote fixes (B.Zapa³owski/core)
+
+16.03.2003
+- autoconnect option in protocols plugins (gadu-gadu/tlen/jabber/shasta)
+
+15.03.2003
+- slight API change in config_var_*() - more standarized (core/plugins/THrull)
+
+14.03.2003
+- 2.0 pre1 release
+- changed freeing memory system as it was discussed (all plugins need to accomodate in short time) (core/krzak)
+- signal_emit deprecated, use signal_emit_full() instead. (core/krzak)
+- register_signal() have only one parameter that is name of signal. (core/krzak)
+- building all plugins disabled by default (krzak)
+- cosmetics (shasta)
+- adapt remote and docklet for new signal_emit_full (remote/docklet/B.Zapa³owski)
+
+12.03.2003
+- autohidden startup option (GUI/Bartosz Zapa³owski)
+
+10.03.2003
+- docklet signals behavior changed - now you send file path instead image (GUI/shasta/krzak)
+- color settings tab in preferences (GUI/THrull)
+
+09.03.2003
+- send_on_enter configurable (GUI/THrull) 
+- welcome "remote" plugin (Bartosz Zapa³owski)
+
+08.03.2003
+- improved tree user list appearance (GUI/THrull)
+- display of active users count in tree view (GUI/THrull)
+- new message notified by xosd (option) (GUI/shasta)
+- added (implamented) new type of VAR - VAR_IMG - it is actually a string, full path to image file (GUI/THrull)
+- updated some translations (po/GUI/THrull)
+- sticky chat window option (GUI/krzak)
+- (classic mode) chat window raise if new message arrive (GUI/krzak)
+
+07.03.2003
+- chat window title (classic mode) display current status of chatter
+  (GUI/shasta)
+- tab switching ctrl+tab from input text area in chat window (GUI/krzak)
+
+06.03.2003
+- docklet menu (docklet/shasta)
+- tabbed window showing fixed (GUI/krzak)
+- scrolling in chat window fixed (GUI/krzak)
+- coredump when adding user with only ID fixed (GUI/Thrull)
+
+04.03.2003
+- saving position and size of a window (GUI/THrull)
+
+03.03.2003
+- scrolling error in tabbed chat window partial solved (GUI/krzak)
+- some cosmetics in chat window (GUI/krzak)
+
+02.03.2003
+- show only active users option, tree expanding (GUI/THrull)
+- CONFIG_DIR patch (sms/Tiwek)
+
+01.03.2003
+- fixed IDEA picture, and added error messages (sms/HelDoRe)
+- fix in dialog.c should solve some segfolts (GUI/krzak)
+
+26.02.2003
+- if nick is empty then get first name in userlist (gadu-gadu/krzak)
+- SMS plugin initial (HelDoRe)
+
+25.02.2003
+- fixed tabbed chat window (I very hope) (GUI/krzak)
+
+24.02.2003
+- Improved chat window (resize fixed, tabs with close, more stock icons) (GUI/krzak)
+- Fully functional "Set description" option in Tlen. (tlen/mati)
+
+23.02.2003
+- Improved emoticons engine (GUI/krzak)
+- Tabbed style chat window initial (GUI/krzak)
+- "Set description" quite works, but GUI sets NULL icon with this meta-status (tlen/mati)
+- changes in GGaduNotify - field description moved to GGaduContact->status_descr (core/THrull)
+- got rid of the fifth column in tree/list ;-) (GUI/THrull)
+
+22.02.2003
+- plugins manager moved to preferences (GUI/THrull)
+
+21.02.2003
+- memory leak messive attack - signal is freed after execute by core
+  so I made few changes to work with that new behaviour, also add signal_cpy()
+  that copy signal data (of course without ->data entry),
+  we start to move to better signal engine (core/GUI/krzak)
+
+20.02.2003
+- colours in chat window (hemmm) (GUI/krzak)
+- changes in search engine (need to be rewriten IMHO) (core/tlen/gadu-gadu/krzak)
+- "find" button in chat window (GUI/krzak)
+- check for text != NULL in conversion macros (core/krzak)
+
+19.02.2003
+- source files split in GUI to clean up this mess a bit (GUI/THrull)
+- frame around chat window widgets (GUI/THrull)
+- description in tooltip (GUI/krzak)
+
+18.02.2003
+- further tree improvements (GUI/THrull)
+- title of warning message now is set from plugin/protocol name (GUI/HelDoRe/THrull)
+- icon naming in Tlen changed (tlen/pixmaps/THrull)
+- new icons added for tlen in modern set (pixmaps/Rael)
+
+17.02.2003
+- nice stock item icons in menu (GUI/THrull)
+- tree user view - experimental (GUI/THrull)
+- default reason option in gg (gadu_gadu/HelDoRe)
+
+15.02.2003
+- auto-detection of installed libraries (configure/THrull)
+- added docs/icons.howto (docs/THrull)
+- all icons/image files converted from xpm -> png (pixmaps, plugins/THrull)
+- icons chooser (GUI/THrull)
+- themes chooser small fixes (GUI/THrull)
+
+14.02.2003
+- history in gg1 style (gadu-gadu/krzak)
+- themes chooser (GUI/HelDoRe/krzak)
+- translation update, and little fixes (po/krzak)
+- removed lots of memory leaks in preferences/read_emoticons (GUI/THrull)
+- s/configure/preferences/, s/read_emot/read_emoticons/ (GUI/THrull)
+- variable "emot" in .gg2/gui for emoticons emable disable. (GUI/HelDoRe)
+- emoticons configuration in GUI (initial) (GUI/HelDoRe)
+
+13.02.2003
+- XOSD configuration menu (xosd/gui/Kender)
+- you can now switch on/off chat logging (gadu_gadu/THrull)
+- VAR_BOOL fixed in config_var_set/config_read	(core/THrull)
+
+12.02.2003
+- testing thread for login in jabber, now it shouldn't freeze gui until login (jabber/krzak)
+- fixed coredumps and relogin after offline selected twice (gadu-gadu/tlen/jabber/krzak)
+
+11.02.2003
+- fixed description encoding (gadu-gadu/gui/krzak)
+
+10.02.2003
+- docklet plugin now works allright in fluxbox/blackbox (docklet/Kender)
+
+09.02.2003
+- in xosd plugin config is read form .gg2/xosd not .gg2/xosd_test (xosd/THrull)
+- memory leak in core (core/THrull)
+- memory leaks in varius plugins (plugins/THrull)
+- import/export of userlist now works in GG (gadu_gadu/THrull)
+
+08.02.2003
+- configuration file for gadu_gadu is now encoded properly in iso-8859-2 (gadu_gadu/THrull)
+- docklet plugin do not fault loaded without main-gui (docklet/krzak)
+- stop segfolt while plugins load (core/krzak)
+- VAR_FILE_CHOOSER option for dialog (gui/krzak)
+- sound file configuration in gadugadu (gadu-gadu/krzak).
+
+07.02.2003
+- perhapes tlen search now works fine - forgot about UTF8 conversion (tlen/mati)
+- segmentation fault fix in search (tlen/krzak)
+
+06.02.2003
+- fixes for xosd (xosd/Piotr Bednarczyk)
+
+05.02.2003
+- configuration file for tlen is now $HOME/.tlen or $HOME/$CONFIG_DIR/tlen (tlen/THrull)
+- tlen checks if users tries to login with empty login/password (tlen/THrull)
+ 
+04.02.2003
+- status message is now send in cp1250 (gadu-gadu/krzak)
+
+03.02.2003
+- configuration file .gg2/xosd for XOSD plugin (xosd/Pawel Jan Maczewski)
+- search nearly-implemented in tlen plugin (tlen/mati)
+
+03.02.2003
+- search implemented in gadu_gadu plugin (gadu_gadu/THrull)
+- search framework in gui added (GUI/THrull)
+
+2.02.2003
+- fixed sigsegv in tlen session error, now all is working fine (tlen/mati)
+- tlen session error emits "gui disconnect" to change icon to disconnect one (tlen/mati)
+
+1.02.2003
+- little fixes (GUI/Pawel J. Maczewski)
+- updated creation of user-defined dialogs, new type of variable VAR_BOOL is supported (GUI/THrull)
+
+31.01.2003
+- updated translation
+- fixed "gui disconnected" to change icon to disconnect one in such case (GUI/krzak)
+- fixed (I start looking on it) connection error messages (gadu-gadu/krzak)
+
+28.01.2003
+- compatibility fixes for latest libtlen (tlen/mati)
+
+27.01.2003
+- gg2 GUI reads "theme" variable from $CONFIG_DIR/gg2 || $HOME/.gg2, 
+  and parses gtkrc compatible file from $DATADIR/themes/themename.theme (GUI/mati)
+
+25.01.2003
+- fixed i18n (core/aflinta)
+
+24.01.2003
+- added tlen_freesession after unavailable presence (tlen/mati)
+
+23.01.2003
+- fix in history encoding (gadu-gadu/krzak)
+
+22.01.2003
+- config_save fixes , new config_var_check() checking do we have such 
+  variable registered, caution for config_var_get() - can return NULL 
+  and it not mean that we do not have registered such varaiable (core/krzak)
+
+21.01.2003
+- more fixes config_save (core/krzak)
+- preferences for plugins jabber and tlen (jabber/tlen/krzak)
+- fixed history (gadu-gadu/gui/krzak)
+- jabber plugin enabled default (core/krzak)
+
+20.01.2003
+- fixed config_save (krzak)
+
+19.01.2003
+- "history" initial support (need to clear) (gadu-gadu/gui/krzak)
+- until now gadu-gadu can initialize conference, so we have full (?) support for conference system (gadu-gadu/krzak)
+- fixed and changed conferrence support "engine", it works! (krzak)
+
+10.01.2003
+- added session->error checking (tlen/mati)
+- unauthorized error removed (from libtlen too) because of session->error (tlen/mati)
+
+09.01.2003
+- fixes saving configuration to file.. seems work fine (core/krzak)
+- config_save(handler) in plugins.h, so it's core function like config_read() (core/krzak)
+
+08.01.2003
+- saving configuration data to file (gadu-gadu/krzak)
+- fixes in base64_encode (core/krzak)
+- improved debug messages (core/krzak)
+
+28.12.2002
+- jabber plugin massive attack - working log-in and talk. (jabber/krzak)
+
+23.12.2002
+- conferences start - currently you can receive conference and talk within (core/GUI/gadu-gadu/krzak)
+
+22.12.2002
+- initial dialog.c abstract for dialog windows usage (core/gadu-gadu/tlen/GUI/krzak)
+- fixed emoticons engine (GUI/krzak)
+- little fixes (GUI/tlen/gadu-gadu/krzak)
+- modifications for aRts plugin build (arts/krzak)
+- unified and fixed config_* functions (take care about VAR_STR,VAR_INT type) (core/krzak)
+- s/gadu_gadu/gadu-gadu/ (gadu-gadu/krzak)
+
+21.12.2002
+- if status clicked while not connected, tlen will login as clicked status (tlen/mati)
+- additional field (flag) in GGaduKeyValue (VAR_FLAG_SENSITIVE (default), VAR_FLAG_INSENSITIVE) (core/GUI/krzak)
+- merge build_option_gtk_table() into build_dialog_gtk_table() (GUI/krzak)
+- tlen_plugin supports description status now (tlen/mati)
+- added few gui_warnings (tlen/mati)
+
+20.12.2002
+- config path is now $CONFIG_DIR/gg2 && $HOME/.gg2 (core,gadu-gadu/THrull)
+- translation update (po/THrull)
+- user (plugin) defined dialogs are supported (core,GUI,gadu-gadu/THrull)
+- other small fixes (THrull)
+
+17.12.2002
+- support for delete-event which hides main window if docklet is present (GUI/THrull)
+- zmiana "kodowania" daty w czejczlogu na bardziej H4k3rskie... (all/Srul)
+- sound-arts u¿ywa w±tków i juz siê nie forkuje (sound-arts/THrull)
+- poprawki w t³umaczeniach (po+GUI/THrull)
+- signal_emit can get destination plugin name as pattern (ex. "sound*" affect "sound-oss","sound-esd" etc.) (core/krzak)
+- plugins manager (core/GUI/krzak)
+- .gg2/modules.load
+
+15.12.2002
+- changed behaviour of config_read and set_config_file_name (now expect full path to file) (core/krzak)
+- initial plugins manager (GUI/krzak)
+- cleanup for gcc3 (all/krzak)
+- fixed additioal information field (GUI/Thrull)
+- config file moved to ~/.tlen/config (tlen/krzak)
+
+09.12.2002
+- little fixes ( "_()" for status )
+
+08.12.2002
+- notify server about add/remove contact to list (gadu-gadu/krzak)
+- fixed core dumps with signal "gui send userlist" (GUI/krzak)
+- little fixes in GUI (GUI/krzak)
+- description info - start (GUI/krzak)

@@ -1,0 +1,767 @@
+# $Id: pl.po,v 1.1 2003/03/20 10:37:04 krzyzak Exp $
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Igor Popik <thrull@slackware.pl>, 2002.
+msgid ""
+msgstr ""
+"Project-Id-Version: gg2 2.0_CVS\n"
+"POT-Creation-Date: 2003-03-13 14:25+0100\n"
+"PO-Revision-Date: 2003-03-19 19:16+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.c:1
+msgid "Cannot open any modules directory\n"
+msgstr "Nie można odczytać zawartości żadnego katalogu z modułami\n"
+
+#: src/main.c:1
+#, c-format
+msgid "Unable to open directory with plugins (%s)\n"
+msgstr "Nie można odczytać zawartości katalogu z wtyczkami (%s)\n"
+
+#: src/main.c:1
+#, c-format
+msgid "Cannot load plugin %s\n"
+msgstr "Nie można załadować wtyczki %s\n"
+
+#: src/plugins/GUI/GUI_plugin.c:1
+msgid "/GnuGadu/_Preferences"
+msgstr "/GnuGadu/_Ustawienia"
+
+#: src/plugins/GUI/GUI_plugin.c:1
+msgid "/GnuGadu/"
+msgstr "/GnuGadu/"
+
+#: src/plugins/GUI/GUI_plugin.c:1
+msgid "/GnuGadu/_About"
+msgstr "/GnuGadu/_Informacje o programie"
+
+#: src/plugins/GUI/GUI_plugin.c:1
+msgid "/GnuGadu/_Quit"
+msgstr "/GnuGadu/Za_kończ"
+
+#: src/plugins/GUI/GUI_plugin.c:1
+msgid "You Have Message"
+msgstr "Masz wiadomość"
+
+#: src/plugins/GUI/GUI_plugin.c:1
+#, c-format
+msgid "New message from %s"
+msgstr "Nowa wiadomość od %s"
+
+#: src/plugins/GUI/gui_chat.c:1 src/plugins/GUI/gui_search.c:1
+msgid "_Close"
+msgstr "Za_mknij"
+
+#: src/plugins/GUI/gui_chat.c:1
+#, c-format
+msgid "Conference with %s"
+msgstr "Konferencja z %s"
+
+#: src/plugins/GUI/gui_chat.c:1 src/plugins/GUI/gui_chat.c:1
+#, c-format
+msgid "%s"
+msgstr "%s"
+
+#: src/plugins/GUI/gui_chat.c:1 src/plugins/GUI/gui_userview.c:1
+#, c-format
+msgid "Talking to %s (%s) %s"
+msgstr "Rozmowa z %s (%s) %s"
+
+#: src/plugins/GUI/gui_chat.c:1
+#, c-format
+msgid "Talking to %s"
+msgstr "Rozmowa z %s"
+
+#: src/plugins/GUI/gui_chat.c:1
+msgid "Chat Window"
+msgstr "Okno rozmowy"
+
+#: src/plugins/GUI/gui_chat.c:1
+msgid "_Send"
+msgstr "_Wyślij"
+
+#: src/plugins/GUI/gui_chat.c:1
+msgid "S_tick"
+msgstr "P_rzypnij"
+
+#: src/plugins/GUI/gui_chat.c:1
+#, c-format
+msgid "Me :: %s ::\n"
+msgstr "Ja :: %s ::\n"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Plugin name"
+msgstr "Nazwa wtyczki"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Enable"
+msgstr "Aktywna"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid ""
+"Changes take effect\n"
+"after program restart!"
+msgstr ""
+"Zmiany odniosą skutek po\n"
+"ponownym uruchomieniu programu!"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Select color"
+msgstr "Wybór koloru"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid ""
+"\n"
+"Colors settings\n"
+"\n"
+msgstr ""
+"\n"
+"Ustawienia kolorów\n"
+"\n"
+
+#: src/plugins/GUI/gui_preferences.c:1 src/plugins/GUI/gui_preferences.c:1
+msgid "Incoming messages"
+msgstr "Wiadomości przychodzące"
+
+#: src/plugins/GUI/gui_preferences.c:1 src/plugins/GUI/gui_preferences.c:1
+#: src/plugins/GUI/gui_preferences.c:1 src/plugins/GUI/gui_preferences.c:1
+msgid "Message header"
+msgstr "Nagłówek wiadomości"
+
+#: src/plugins/GUI/gui_preferences.c:1 src/plugins/GUI/gui_preferences.c:1
+#: src/plugins/GUI/gui_preferences.c:1 src/plugins/GUI/gui_preferences.c:1
+msgid "Message body"
+msgstr "Treść wiadomości"
+
+#: src/plugins/GUI/gui_preferences.c:1 src/plugins/GUI/gui_preferences.c:1
+msgid "Outgoing messages"
+msgstr "Wiadomości wychodzące"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Select font"
+msgstr "Wybór czcionki"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid ""
+"\n"
+"Fonts settings\n"
+"\n"
+msgstr ""
+"\n"
+"Ustawienia czcionek\n"
+"\n"
+
+#: src/plugins/GUI/gui_preferences.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/xosd/plugin_xosd.c:1
+#: src/plugins/jabber/jabber_plugin.c:1
+msgid "Preferences"
+msgstr "Ustawienia"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "General"
+msgstr "Ogólne"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Colors"
+msgstr "Kolory"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Fonts"
+msgstr "Czcionki"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Plugins manager"
+msgstr "Zarządzanie wtyczkami"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid ""
+"\n"
+"GUI plugin preferences\n"
+"\n"
+msgstr ""
+"\n"
+"Ustawienia wtyczki GUI\n"
+"\n"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Enable emoticons"
+msgstr "Użycie emotikonów"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Show only active users"
+msgstr "Tylko aktywni użytkownicy"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Tree user list"
+msgstr "Lista kontaktów w postaci drzewa"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Expand Tree by default"
+msgstr "Domyślne rozwijanie drzewa"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Tabbed chat window style"
+msgstr "Zakładki w oknie rozmowy"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Automaticaly raise chat window"
+msgstr "Automatyczne otwieranie okna rozmowy"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Send messages after 'Enter' button pressed"
+msgstr "Wysyłanie wiadomości po przyciśnięciu klawisza \"Enter\""
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Notify about new messages via XOSD"
+msgstr "Powiadamianie o nowych wiadomościach poprzez XOSD"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Auto hide on start"
+msgstr "Automatyczne ukrywanie po uruchomieniu"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Select Theme"
+msgstr "Motyw:"
+
+#: src/plugins/GUI/gui_preferences.c:1
+msgid "Select icon set"
+msgstr "Zestaw ikon:"
+
+#: src/plugins/GUI/gui_main.c:1
+msgid "Unable to read configuration file for plugin GUI"
+msgstr "Nie można odczytać pliku z konfiguracją wtyczki GUI"
+
+#: src/plugins/GUI/gui_search.c:1
+msgid "Status"
+msgstr "Stan"
+
+#: src/plugins/GUI/gui_search.c:1
+msgid "Id"
+msgstr "Id"
+
+#: src/plugins/GUI/gui_search.c:1
+msgid "User"
+msgstr "Kontakt"
+
+#: src/plugins/GUI/gui_search.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Add"
+msgstr "Dodaj"
+
+#: src/plugins/GUI/gui_search.c:1
+msgid "Search results"
+msgstr "Wyniki wyszukiwania"
+
+#: src/plugins/GUI/gui_userview.c:1
+#, c-format
+msgid "Talking to %s %s"
+msgstr "Rozmowa z %s %s"
+
+#: src/plugins/GUI/gui_userview.c:1
+msgid "(None)"
+msgstr "(Brak)"
+
+#: src/plugins/GUI/gui_dialogs.c:1
+msgid "Select file"
+msgstr "Wybór pliku"
+
+#: src/plugins/GUI/gui_dialogs.c:1
+msgid "Change User"
+msgstr "Modyfikacja danych kontaktu"
+
+#: src/plugins/GUI/gui_dialogs.c:1
+msgid "Add User"
+msgstr "Nowy kontakt"
+
+#: src/plugins/GUI/gui_dialogs.c:1
+msgid "About"
+msgstr "Informacje o programie"
+
+#: src/plugins/GUI/gui_dialogs.c:1
+msgid ""
+"Copyright (C) 2002 GNU Gadu Team\n"
+"\tGNU Gadu "
+msgstr ""
+"Copyright (C) 2002 GNU Gadu Team\n"
+"\tGNU Gadu "
+
+#: src/plugins/GUI/gui_dialogs.c:1
+msgid ""
+"\n"
+"\tLicense: GPL\n"
+"\tHomepage: http://gadu.gnu.pl/\n"
+"\n"
+"Main Programmers:\n"
+"\tIgor Popik <thrull@slackware.pl>\n"
+"\tMarcin Krzyzanowski <krzak@hakore.com>\n"
+"Patches:\n"
+"\tMateusz Papiernik, Pawel Jan Maczewski,\n"
+"\tHelDoRe\n"
+"\n"
+"Thanks to:\n"
+"\tDwuziu, Aflinta, GammaRay, Plavi\n"
+"\tsee AUTHORS file for details\n"
+"\n"
+"Compile time:\n"
+"\t"
+msgstr ""
+"\n"
+"\tLicencja: GPL\n"
+"\tWitryna domowa: http://gadu.gnu.pl/\n"
+"\n"
+"Główni programiści:\n"
+"\tIgor Popik <thrull@slackware.pl>\n"
+"\tMarcin Krzyzanowski <krzak@hakore.com>\n"
+"Autorzy łatek:\n"
+"\tMateusz Papiernik, Pawel Jan Maczewski,\n"
+"\tHelDoRe\n"
+"\n"
+"Podziękowania:\n"
+"\tDwuziu, Aflinta, GammaRay, Plavi\n"
+"\twięcej w pliku AUTHORS\n"
+"\n"
+"Data kompilacji:\n"
+"\t"
+
+#: src/plugins/GUI/gui_dialogs.c:1
+msgid " "
+msgstr " "
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Connection failed!"
+msgstr "Nie można nawiązać połączenia!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "You have to enter your GG# and password first!"
+msgstr "Należy najpierw podać numer GG oraz hasło!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "No users have been found!"
+msgstr "Nie znaleziono żadnych użytkowników!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Disconnected"
+msgstr "Rozłączony"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Connection error"
+msgstr "Wystąpił błąd na poziomie połączenia"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Unable to authenticate (propably)"
+msgstr "Nie można przeprowadzić uwierzytelnienia (prawdopodobnie)"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Program is about to leave"
+msgstr "Program zakończy swoje działanie"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Nick"
+msgstr "Przydomek"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "First Name"
+msgstr "Imię"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Last Name"
+msgstr "Nazwisko"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Phone"
+msgstr "Telefon"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Gadu-gadu plugin configuration"
+msgstr "Konfiguracja wtyczki Gadu-gadu"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Password"
+msgstr "Hasło"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Server"
+msgstr "Serwer"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Default reason"
+msgstr "Domyślny powód"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Log chats to history file"
+msgstr "Zapis treści rozmów w pliku"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Sound file (app)"
+msgstr "Plik dźwiękowy (app)"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Sound file (chat)"
+msgstr "Plik dźwiękowy (chat)"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Sound file (msg)"
+msgstr "Plik dźwiękowy (msg)"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "You have to be connected to perform searching!"
+msgstr "Do wyszukiwania potrzebne jest nawiązane połączenie z serwerem!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Gadu-Gadu search"
+msgstr "Wyszukiwanie w Gadu-Gadu"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "First name:"
+msgstr "Imię:"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Last name:"
+msgstr "Nazwisko:"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Nick:"
+msgstr "Przydomek:"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "City:"
+msgstr "Miejscowość:"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "GG#"
+msgstr "GG#"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Search only for active users"
+msgstr "Tylko aktywni użytkownicy"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Userlist has been imported succesfully!"
+msgstr "Zaimportowano listę użytkowników z serwera!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Server returned empty userlist!"
+msgstr "Serwer zwrócił pustą listę użytkowników!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Userlist export succeeded!"
+msgstr "Wyeksportowano listę użytkowników na serwer!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Userlist export failed!"
+msgstr "Przy eksportowaniu listy użytkowników wystąpił błąd!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Userlist delete succeeded!"
+msgstr "Usunięto listę użytkowników z serwera!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Userlist delete failed!"
+msgstr "Przy usuwaniu listy użytkowników wystąpił błąd!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Chat"
+msgstr "Rozmowa"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "View History"
+msgstr "Wyświetl historię rozmów"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Contact"
+msgstr "Kontakt"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Remove"
+msgstr "Usuń"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Info"
+msgstr "Informacje"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Add Contact"
+msgstr "Dodaj kontakt"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Search for friends"
+msgstr "Szukaj znajomych"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Import userlist"
+msgstr "Zaimportuj listę kontaktów"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Export userlist"
+msgstr "Wyeksportuj listę kontaktów"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Delete userlist"
+msgstr "Usuń listę kontaktów z serwera"
+
+# FIXME - co ma znaczyć (c) w tym miejscu??!
+#. wazne zeby wywolac to makro w tym miejscu
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Gadu-Gadu(c) protocol"
+msgstr "Protokół Gadu-Gadu(c)"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/xosd/plugin_xosd.c:1
+#, c-format
+msgid "Unable to read configuration file for plugin %s"
+msgstr "Nie można odczytać pliku z konfiguracją wtyczki %s"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Available"
+msgstr "Dostępny"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Available with description"
+msgstr "Dostępny z opisem"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Busy"
+msgstr "Zajęty"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Busy with description"
+msgstr "Zajęty z opisem"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Invisible"
+msgstr "Niewidoczny"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Invisible with description"
+msgstr "Niewidoczny z opisem"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Offline with description"
+msgstr "Niedostępny z opisem"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Offline"
+msgstr "Niedostępny"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Blocked"
+msgstr "Zablokowany"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Not valid GG#"
+msgstr "Niepoprawny numer GG"
+
+#. end
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Enter status description"
+msgstr "Opis stanu"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Description:"
+msgstr "Opis:"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Unable change status"
+msgstr "Nie można zmienić stanu"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "Unable send message"
+msgstr "Nie można wysłać wiadomości"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#, c-format
+msgid ""
+":: Me (%s)::\n"
+"%s\n"
+"\n"
+msgstr ""
+":: Ja (%s)::\n"
+"%s\n"
+"\n"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#, c-format
+msgid ""
+":: Me (%s) ::\n"
+"%s\n"
+"\n"
+msgstr ""
+":: Ja (%s) ::\n"
+"%s\n"
+"\n"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Error! Cannot perform search!"
+msgstr "Błąd! Nie można przeprowadzić wyszukiwania!"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1
+msgid "I still cannot open contacts files! Exiting..."
+msgstr "Nie można odczytać pliku z kontaktami. Rezygnacja..."
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Unauthorized"
+msgstr "Brak autoryzacji"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Bad response from server"
+msgstr "Niepoprawna odpowiedź od serwera"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Memory allocation error"
+msgstr "Błąd przy próbie uzyskania pamięci"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Network error"
+msgstr "Błąd sieciowy"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Unknown error"
+msgstr "Nieznany błąd"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Error while GETROSTERITEM"
+msgstr "Błąd przy operacji GETROSTERITEM"
+
+#. warning pokazujemy pozniej, bo jest modalny!
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "You have to enter your login and password first!"
+msgstr "Podaj swój login i hasło"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Group"
+msgstr "Grupa"
+
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Away"
+msgstr "Zajęty"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Chatty"
+msgstr "Rozmowa"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Very busy"
+msgstr "Bardzo zajęty"
+
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "DND"
+msgstr "Nie przeszkadzać"
+
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "Unavailable"
+msgstr "Niedostępny"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Set description ..."
+msgstr "Ustaw opis ..."
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Tlen search"
+msgstr "Wyszukiwanie w Tlenie"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "@tlen.pl"
+msgstr "@tlen.pl"
+
+#: src/plugins/tlen/tlen_plugin.c:1 src/plugins/jabber/jabber_plugin.c:1
+msgid "List"
+msgstr "Lista"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Tlen plugin configuration"
+msgstr "Konfiguracja wtyczki Tlen"
+
+#: src/plugins/tlen/tlen_plugin.c:1
+msgid "Tlen login"
+msgstr "Tlen login"
+
+#: src/plugins/xosd/plugin_xosd.c:1
+msgid "X OSD Preferences"
+msgstr "Ustawienia X OSD"
+
+#: src/plugins/xosd/plugin_xosd.c:1
+msgid "Colour"
+msgstr "Kolor"
+
+#: src/plugins/xosd/plugin_xosd.c:1
+msgid "Number of lines"
+msgstr "Liczba wierszy"
+
+#: src/plugins/xosd/plugin_xosd.c:1
+msgid "Timeout"
+msgstr "Czas trwania"
+
+#: src/plugins/xosd/plugin_xosd.c:1
+msgid "Timestamp"
+msgstr "Znacznik czasowy"
+
+#: src/plugins/xosd/plugin_xosd.c:1
+msgid "On Screen Display"
+msgstr "Wyświetlanie na ekranie"
+
+#: src/plugins/jabber/jabber_plugin.c:1
+msgid "Jabber ID (jid)"
+msgstr "Identyfikator Jabbera (jid)"
+
+#: src/plugins/jabber/jabber_plugin.c:1
+msgid "XA"
+msgstr "XA"
+
+#: src/plugins/jabber/jabber_plugin.c:1
+msgid "Jabber plugin configuration"
+msgstr "Konfiguracja Jabbera"
+
+#: src/plugins/jabber/jabber_plugin.c:1
+msgid "Jabber ID"
+msgstr "Identyfikator Jabbera"
+
+#: src/plugins/jabber/jabber_plugin.c:1
+msgid "Jabber protocol"
+msgstr "Protokół Jabber"
+
+#: src/plugins/jabber/jabber_plugin.c:1
+msgid "Unable to read configuration file for plugin jabber"
+msgstr "Nie można odczytać pliku z konfiguracją wtyczki jabber"
+
+# FIXME - co to?
+#: src/plugins/jabber/jabber_plugin_protocol.c:1
+msgid "Something went bad witn iksemel!\n"
+msgstr "Stało się coś niedobrego z iksemel!\n"
+
+#: src/plugins/jabber/jabber_plugin_protocol.c:1
+msgid "Please check configuration file"
+msgstr "Sprawdź zawartość pliku konfiguracyjnego"
+
+#: src/plugins/jabber/jabber_plugin_protocol.c:1
+msgid "Authorisation failed"
+msgstr "Nie uzyskano autoryzacji"

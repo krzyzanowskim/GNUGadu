@@ -1,0 +1,14 @@
+To compile all plugins you need:
+
+- automake 1.6 or better
+- libtool 1.4e or better
+
+- gtk+ 2.2.0 (http://gtk.org.pl/) - GUI
+- libgadu (http://dev.null.pl/ekg/) - Gadu-Gadu
+- libtlen (http://www.libtlen.eu.org) - Tlen
+- iksemel (http://iksemel.jabberstudio.org) - Jabber
+- xosd (http://ignavus.net/software.html) - XOSD
+- esound (http://www.tux.org/~ricdude/EsounD.html
+
+Read doc/problems and other documentation files BEFORE submitting ANY
+bugreports.

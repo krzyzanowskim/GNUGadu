@@ -1,0 +1,41 @@
+# theme by HelDoRe
+style "theme2"
+{
+  text[NORMAL]         = "#bbccff"
+  text[SELECTED]       = "#888888"
+  text[PRELIGHT]       = "#888888"
+  text[ACTIVE]         = "#888888"
+  text[INSENSITIVE]    = "#888888"
+  fg[NORMAL]           = "#c0d0f0"
+  fg[PRELIGHT]         = "#8888ff"
+  fg[ACTIVE]           = "#3d4aff"
+  fg[SELECTED]         = "#ffffff"
+  fg[INSENSITIVE]      = "#ffffff"
+  bg[NORMAL]           = "#102030"
+  bg[PRELIGHT]         = "#354555"
+  bg[ACTIVE]           = "#253545"
+  bg[SELECTED]         = "#2a2044"
+  bg[INSENSITIVE]      = "#000022"
+  base[NORMAL]         = "#050533"
+  base[PRELIGHT]       = "#202077"
+  base[ACTIVE]         = "#101033"
+  base[SELECTED]       = "#141066"
+  base[INSENSITIVE]    = "#333366"
+  GtkWidget::cursor_color = "white"
+
+}
+
+#000a98
+
+class "GtkWidget" style "theme2"
+class "GtkMenu"	style	"theme2"
+
+widget_class "*.GtkMenuItem.*" style "theme2"                                 
+widget_class "*.GtkImageMenuItem.*" style "theme2"                            
+widget_class "*.GtkAccelMenuItem.*" style "theme2"                            
+widget_class "*.GtkRadioMenuItem.*" style "theme2"                            
+widget_class "*.GtkCheckMenuItem.*" style "theme2"                            
+widget_class "*.GtkMenu.*" style "theme2"                                     
+                                    
+                                            
+

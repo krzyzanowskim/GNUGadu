@@ -1,0 +1,38 @@
+style "darkblue"
+{
+    fg[NORMAL]		= "#ffffff"
+    fg[ACTIVE]		= "#ffffff"
+    fg[INSENSITIVE]	= "#ffffff"
+    fg[PRELIGHT]	= "#ffff00"
+    fg[SELECTED]	= "#ffff00"
+    
+    bg[ACTIVE]		= "#0030ff"
+    bg[NORMAL]		= "#000a98"
+    bg[PRELIGHT]	= "#0030ff"
+    bg[INSENSITIVE]	= "#000a98"
+    bg[SELECTED]	= "#000a98"
+
+    base[ACTIVE]	= "#0030ff"
+    base[PRELIGHT]	= "#0030ff"
+    base[NORMAL]	= "#000a98"
+    base[INSENSITIVE]	= "#000a98"
+    base[SELECTED]	= "#0030ff"
+    
+    text[NORMAL]	= "#ffffff"
+    text[ACTIVE]	= "#ffff00"
+
+}
+
+#000a98
+
+class "GtkWidget" style "darkblue"
+class "GtkMenu"	style	"darkblue"
+
+widget_class "*.GtkMenuItem.*" style "darkblue"                                 
+widget_class "*.GtkImageMenuItem.*" style "darkblue"                            
+widget_class "*.GtkAccelMenuItem.*" style "darkblue"                            
+widget_class "*.GtkRadioMenuItem.*" style "darkblue"                            
+widget_class "*.GtkCheckMenuItem.*" style "darkblue"                            
+widget_class "*.GtkMenu.*" style "darkblue"                                     
+                                                                                
+                                   
