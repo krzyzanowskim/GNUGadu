@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.18 2003/04/04 15:17:32 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.19 2003/04/05 21:37:05 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -25,6 +25,8 @@
 #include "menu.h"
 #include "gadu_gadu_plugin.h"
 #include "dialog.h"
+
+extern GGaduConfig *config;
 
 GGaduPlugin *handler;
 
@@ -849,39 +851,39 @@ gpointer delete_userlist_action(gpointer user_data)
 
 void register_userlist_menu() 
 {
-    GGaduMenu *umenu 	= ggadu_menu_create();
-    GGaduMenu *listmenu = NULL;
+	GGaduMenu *umenu 	= ggadu_menu_create();
+	GGaduMenu *listmenu = NULL;
+
+	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"),user_chat_action,NULL)   );
+	ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"),user_view_history_action,NULL)   );
     
-    ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"),user_chat_action,NULL)   );
-    ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"),user_view_history_action,NULL)   );
-    
-    listmenu = ggadu_menu_new_item(_("Contact"),NULL,NULL);
-    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"),user_add_user_action,NULL)   );
-    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"),user_remove_user_action,NULL)   );
-    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Info"),user_change_user_action,NULL)   );
+	listmenu = ggadu_menu_new_item(_("Contact"),NULL,NULL);
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"),user_add_user_action,NULL)   );
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"),user_remove_user_action,NULL)   );
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Info"),user_change_user_action,NULL)   );
 
-    ggadu_menu_add_submenu(umenu, listmenu );
+	ggadu_menu_add_submenu(umenu, listmenu );
 
-    ggadu_menu_print(umenu,NULL);
+	ggadu_menu_print(umenu,NULL);
 
-    signal_emit(GGadu_PLUGIN_NAME, "gui register userlist menu", umenu, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui register userlist menu", umenu, "main-gui");
 }
 
 
 GGaduMenu *build_plugin_menu() 
 {
-    GGaduMenu *root	= ggadu_menu_create();
-    GGaduMenu *item_gg	= ggadu_menu_add_item(root,"Gadu-Gadu",NULL,NULL);
+	GGaduMenu *root	= ggadu_menu_create();
+	GGaduMenu *item_gg	= ggadu_menu_add_item(root,"Gadu-Gadu",NULL,NULL);
     
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Add Contact"),user_add_user_action,NULL)   );
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"),user_preferences_action,NULL)   );
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Search for friends"),search_action,NULL)   );
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("",NULL,NULL)   );
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Import userlist"),import_userlist_action,NULL)   );
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Export userlist"),export_userlist_action,NULL)   );
-    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Delete userlist"),delete_userlist_action,NULL)   );
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Add Contact"),user_add_user_action,NULL)   );
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"),user_preferences_action,NULL)   );
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Search for friends"),search_action,NULL)   );
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("",NULL,NULL)   );
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Import userlist"),import_userlist_action,NULL)   );
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Export userlist"),export_userlist_action,NULL)   );
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Delete userlist"),delete_userlist_action,NULL)   );
 
-    return root;
+	return root;
 }
 
 /*
@@ -902,7 +904,8 @@ static void handle_sighup()
  
 GGaduPlugin *initialize_plugin(gpointer conf_ptr) 
 {
-	gchar *path;
+	gchar *path = NULL;
+
 	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
 	signal(SIGHUP,handle_sighup);
@@ -910,7 +913,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 #if DEBUG    
 	gg_debug_level = 255;
 #endif
-
 
 	GGadu_PLUGIN_ACTIVATE(conf_ptr); /* wazne zeby wywolac to makro w tym miejscu */
 
@@ -927,19 +929,22 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	config_var_add(handler, "reason", VAR_STR);
 	config_var_add(handler, "private", VAR_BOOL);
 
+
 	if (g_getenv("CONFIG_DIR"))
 		this_configdir = g_build_filename(g_get_home_dir(),g_getenv("CONFIG_DIR"),"gg",NULL);
 	else
 		this_configdir = g_build_filename(g_get_home_dir(),".gg",NULL);
 
-	mkdir(this_configdir, 0700);
-
 	path = g_build_filename(this_configdir,"config_test",NULL);
+	
+	mkdir(this_configdir, 0700);
+	
 	set_config_file_name((GGaduPlugin *)handler, path);
 
 	if (!config_read(handler)) {
 		g_free(path);
 		path = g_build_filename(this_configdir,"config",NULL);
+
 		set_config_file_name((GGaduPlugin *)handler, path);
 
 		if (!config_read(handler)) 

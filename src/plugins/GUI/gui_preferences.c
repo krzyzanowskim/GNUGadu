@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.10 2003/04/04 14:04:32 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.11 2003/04/05 21:37:04 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -417,6 +417,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 						  GTK_STOCK_OK,
 						  GTK_RESPONSE_ACCEPT,
 						  NULL);
+
 	gtk_window_set_resizable(GTK_WINDOW(preferences), FALSE);
 	notebook = gtk_notebook_new();
 

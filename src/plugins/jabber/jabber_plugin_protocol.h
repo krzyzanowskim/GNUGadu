@@ -3,7 +3,7 @@
 
 #include <iksemel.h>
 
-gpointer login(gpointer data);
+gpointer jabber_login(gpointer data);
 void message_parse(ikspak *pak);
 void j_handle_iq(ikspak *pak);
 void j_on_packet(void *udata, ikspak *pak);
