@@ -21,7 +21,7 @@ libgadu_gadu_plugin_la_LIBADD =  \
 	    $(top_srcdir)/lib/libgg2_core.la 
     
 libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(OSSL_LIBS)
-libgadu_gadu_plugin_la_CFLAGS =  -I./libgadu/lib $(CFLAGS) $(OSSL_CFLAGS)
+libgadu_gadu_plugin_la_CFLAGS =  -I./libgadu/lib -I/usr/kerberos/include/ $(CFLAGS) $(OSSL_CFLAGS)
 
 EXTRA_DIST = libgadu/autogen.sh \
 	libgadu/compat \
