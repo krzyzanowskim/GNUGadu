@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.47 2004/01/18 02:07:23 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.48 2004/01/18 12:55:36 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -438,6 +438,7 @@ void gui_main_window_create(gboolean visible)
 	if (visible)
 	{
 		gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
+		gtk_window_set_auto_startup_notification(TRUE);
 		gtk_widget_show_all(GTK_WIDGET(window));
 	}
 

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.37 2004/01/17 21:10:55 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.38 2004/01/18 12:55:36 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -100,6 +100,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	gchar *this_configdir = NULL;
 
 	gtk_init(NULL, NULL);
+	gtk_window_set_auto_startup_notification(FALSE);
 
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
 

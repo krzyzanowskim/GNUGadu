@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.124 2004/01/17 19:41:13 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.125 2004/01/18 12:55:36 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -308,13 +308,13 @@ void handle_search_event(struct gg_event *e)
 		}
 
 		if (first_name)
-			k->first_name = to_utf8("CP1250", (gchar *)first_name);
+			k->first_name = to_utf8("CP1250", (gchar *) first_name);
 
 		if (nick)
-			k->nick = to_utf8("CP1250", (gchar *)nick);
+			k->nick = to_utf8("CP1250", (gchar *) nick);
 
 		if (city)
-			k->city = to_utf8("CP1250", (gchar *)city);
+			k->city = to_utf8("CP1250", (gchar *) city);
 
 		k->status = (status) ? atoi(status) : GG_STATUS_NOT_AVAIL;
 		list = g_slist_append(list, k);
@@ -616,12 +616,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		print_debug("GG_EVENT_STATUS");
 
-			/* *INDENT-OFF* */
-			desc_utf8 = ggadu_convert("CP1250", "UTF-8",((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr));
-			notify = g_new0(GGaduNotify, 1);
-			notify->id = g_strdup_printf("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
-			notify->status = (e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
-			/* *INDENT-ON* */
+		/* *INDENT-OFF* */
+		desc_utf8 = ggadu_convert("CP1250", "UTF-8",((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr));
+		notify = g_new0(GGaduNotify, 1);
+		notify->id = g_strdup_printf("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
+		notify->status = (e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
+		/* *INDENT-ON* */
 
 		set_userlist_status(notify, desc_utf8, userlist);
 		while (l)
