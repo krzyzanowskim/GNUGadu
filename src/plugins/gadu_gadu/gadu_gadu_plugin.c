@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.165 2004/04/18 19:47:49 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.166 2004/04/20 21:59:24 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1799,16 +1799,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					k->id = g_strdup(kv->value);
 					break;
 				case GGADU_NICK:
-					k->nick = g_strdup((gchar *) kv->value);
+					k->nick =  kv->value ? g_strdup((gchar *) kv->value) : "";
 					break;
 				case GGADU_FIRST_NAME:
-					k->first_name = g_strdup((gchar *) kv->value);
+					k->first_name =  kv->value ? g_strdup((gchar *) kv->value) : "";
 					break;
 				case GGADU_LAST_NAME:
-					k->last_name = g_strdup((gchar *) kv->value);
+					k->last_name =  kv->value ? g_strdup((gchar *) kv->value) : "";
 					break;
 				case GGADU_MOBILE:
-					k->mobile = g_strdup((gchar *) kv->value);
+					k->mobile = kv->value ? g_strdup((gchar *) kv->value) : "";
 					break;
 				}
 				kvlist = kvlist->next;
@@ -1816,6 +1816,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 			/* initial status for added person */
 			k->status = GG_STATUS_NOT_AVAIL;
+			k->group = g_strdup("");
 			ggadu_repo_add_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_CONTACT);
 
 			if ((connected == TRUE) && (session != NULL) & (k != NULL) && (k->id != NULL))
@@ -1862,19 +1863,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					{
 					case GGADU_NICK:
 						g_free(k->nick);
-						k->nick = g_strdup((gchar *) kv->value);
+						k->nick = kv->value ? g_strdup((gchar *) kv->value) : "";
 						break;
 					case GGADU_FIRST_NAME:
 						g_free(k->first_name);
-						k->first_name = g_strdup((gchar *) kv->value);
+						k->first_name = kv->value ? g_strdup((gchar *) kv->value) : "";
 						break;
 					case GGADU_LAST_NAME:
 						g_free(k->last_name);
-						k->last_name = g_strdup((gchar *) kv->value);
+						k->last_name = kv->value ? g_strdup((gchar *) kv->value) : "";
 						break;
 					case GGADU_MOBILE:
 						g_free(k->mobile);
-						k->mobile = g_strdup((gchar *) kv->value);
+						k->mobile = kv->value ? g_strdup((gchar *) kv->value) : "";
 						break;
 					}
 					kvlist = kvlist->next;
@@ -2412,20 +2413,29 @@ void load_contacts(gchar * encoding)
 		}
 
 		k = g_new0(GGaduContact, 1);
-		print_debug("%s\n", uin);
 		k->id = uin ? g_strdup(uin) : g_strdup("");
 		k->first_name = g_strdup(first_name);
 		k->last_name = g_strdup(last_name);
+		
+		print_debug("'%s' '%s' '%s' '%s'", uin, nick,nick2,mobile);
+		
 		if (strlen(nick2) == 0)
 			k->nick = (strlen(nick) == 0) ? g_strconcat(first_name, " ", last_name, NULL) : g_strdup(nick);
 		else
 			k->nick = g_strdup(nick2);
+		
+		if ((strlen(k->nick) == 0) || (!ggadu_strcasecmp(k->nick," "))) 
+		{
+		    g_free(k->nick);
+		    k->nick = g_strdup(k->id);
+		}
+			
 		/* k->comment = g_strdup (comment); */
 		k->mobile = g_strdup(mobile);
 		k->group = g_strdup(group);
 		k->status = GG_STATUS_NOT_AVAIL;
-		g_strfreev(l);
 		ggadu_repo_add_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_CONTACT);
+		g_strfreev(l);
 	}
 
 	g_free(line);
