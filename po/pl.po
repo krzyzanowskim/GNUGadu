@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.34 2003/11/06 20:03:26 thrulliq Exp $
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2002 Free Software Foundation, Inc.
-# Igor Popik <thrull@slackware.pl>, 2002.
+# $Id: pl.po,v 1.35 2003/11/09 10:39:13 thrulliq Exp $
+# Copyright (C) 2003 GNU Gadu Team.
+# Igor Popik <thrull@slackware.pl>, 2003.
+
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"POT-Creation-Date: 2003-11-06 20:58+0100\n"
+"POT-Creation-Date: 2003-11-09 11:34+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,27 +51,39 @@ msgstr ""
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/GUI_plugin.c:560
+#: src/plugins/GUI/GUI_plugin.c:559
 msgid "/GnuGadu/_Preferences"
 msgstr "/GnuGadu/_Ustawienia"
 
-#: src/plugins/GUI/GUI_plugin.c:561
+#: src/plugins/GUI/GUI_plugin.c:560
 msgid "/GnuGadu/"
 msgstr "/GnuGadu/"
 
-#: src/plugins/GUI/GUI_plugin.c:562
+#: src/plugins/GUI/GUI_plugin.c:561
 msgid "/GnuGadu/_About"
 msgstr "/GnuGadu/_Informacje o"
 
-#: src/plugins/GUI/GUI_plugin.c:563
+#: src/plugins/GUI/GUI_plugin.c:562
 msgid "/GnuGadu/_Quit"
 msgstr "/GnuGadu/Za_koñcz"
 
-#: src/plugins/GUI/GUI_plugin.c:636
+#: src/plugins/GUI/GUI_plugin.c:601
+msgid "Open preferences window"
+msgstr "Otwarcie okna ustawieñ"
+
+#: src/plugins/GUI/GUI_plugin.c:602
+msgid "Exit program"
+msgstr "Wyj¶cie z programu"
+
+#: src/plugins/GUI/GUI_plugin.c:604
+msgid "Show/hide inactive users"
+msgstr "Poka¿/ukryj nieaktywnych u¿ytkowników"
+
+#: src/plugins/GUI/GUI_plugin.c:652
 msgid "You Have Message"
 msgstr "Masz wiadomo¶æ"
 
-#: src/plugins/GUI/GUI_plugin.c:660
+#: src/plugins/GUI/GUI_plugin.c:676
 #, c-format
 msgid "New message from %s"
 msgstr "Nowa wiadomo¶æ od %s"

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-11-06 20:58+0100\n"
+"POT-Creation-Date: 2003-11-09 11:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,27 +50,39 @@ msgstr ""
 msgid "(None)"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:560
+#: src/plugins/GUI/GUI_plugin.c:559
 msgid "/GnuGadu/_Preferences"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:561
+#: src/plugins/GUI/GUI_plugin.c:560
 msgid "/GnuGadu/"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:562
+#: src/plugins/GUI/GUI_plugin.c:561
 msgid "/GnuGadu/_About"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:563
+#: src/plugins/GUI/GUI_plugin.c:562
 msgid "/GnuGadu/_Quit"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:636
+#: src/plugins/GUI/GUI_plugin.c:601
+msgid "Open preferences window"
+msgstr ""
+
+#: src/plugins/GUI/GUI_plugin.c:602
+msgid "Exit program"
+msgstr ""
+
+#: src/plugins/GUI/GUI_plugin.c:604
+msgid "Show/hide inactive users"
+msgstr ""
+
+#: src/plugins/GUI/GUI_plugin.c:652
 msgid "You Have Message"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:660
+#: src/plugins/GUI/GUI_plugin.c:676
 #, c-format
 msgid "New message from %s"
 msgstr ""
