@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.h,v 1.5 2004/01/28 23:42:12 shaster Exp $ */
+/* $Id: plugin_xosd.h,v 1.6 2004/10/20 08:06:24 krzyzak Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
@@ -29,8 +29,8 @@
 
 #define GGADU_XOSD_WELCOME_STRING "GNU Gadu 2"
 
-#define GGADU_XOSD_DEFAULT_FONT "-misc-fixed-bold-r-*-*-15-*-*-*-*-*-*-2"
-#define GGADU_XOSD_DEFAULT_COLOUR "#FFFF00"
+#define GGADU_XOSD_DEFAULT_FONT "-*-*-*-r-*-*-20-*-*-*-*-*-iso8859-2"
+#define GGADU_XOSD_DEFAULT_COLOUR "#67FF40"
 #define GGADU_XOSD_DEFAULT_NUMLINES 5
 #define GGADU_XOSD_DEFAULT_TIMEOUT 5
 #define GGADU_XOSD_DEFAULT_SHADOW_OFFSET 1

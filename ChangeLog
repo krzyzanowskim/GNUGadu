@@ -1,3 +1,7 @@
+20.10.2004
+- default font set to -*-*-*-r-*-*-20-*-*-*-*-*-iso8859-2
+  default color set to #67FF40,  suggested by misior  (xosd/krzak)
+
 19.10.2004
 - close #87, improved "open chat window" action (GUI/krzak)
 - close #49, descriptions are now rendered, cosmetics (GUI/THrull)
