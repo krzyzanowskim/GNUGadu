@@ -1,3 +1,6 @@
+10.01.2005
+- support for protocol: instead protocol:// (krzak)
+
 05.01.2005
 - perl support is still too experimental and is disabled by default (krzak)
 - some default values (GUI/krzak)
