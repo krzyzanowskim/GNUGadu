@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.c,v 1.6 2004/05/24 05:36:18 krzyzak Exp $ */
+/* $Id: ggadu_dialog.c,v 1.7 2004/05/24 14:28:13 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -99,7 +99,7 @@ void ggadu_dialog_set_flags(GGaduDialog * dialog, guint flags)
 
 guint ggadu_dialog_get_flags(GGaduDialog * dialog)
 {
-	g_return_if_fail(dialog != NULL);
+	g_return_val_if_fail(dialog != NULL,0);
 	return dialog->flags;
 }
 

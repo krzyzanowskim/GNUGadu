@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.44 2004/05/24 05:36:20 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.45 2004/05/24 14:28:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -124,11 +124,11 @@ void gui_dialog_show_colorchooser(GtkWidget * txt_entry)
 	gtk_widget_destroy(color_selector);
 }
 
-GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
+GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_progress)
 {
 	GSList *listtmp = list;
 	gint ielements = g_slist_position(list, g_slist_last(list));
-	gint rows = ((ielements + 1) / cols);
+	gint rows = ((ielements + 1) / cols) + use_progress;
 	GtkWidget *tab = gtk_table_new(rows, cols, FALSE);
 	gint actC = 0, actR = 0;
 	GtkWidget *to_grab_focus = NULL;
@@ -286,8 +286,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 		}
 		else
 		{
-			gtk_table_attach(GTK_TABLE(tab), entry, actC, actC + 2, actR, actR + 1, GTK_FILL, GTK_SHRINK, 0,
-					 0);
+			gtk_table_attach(GTK_TABLE(tab), entry, actC, actC + 2, actR, actR + 1, GTK_FILL, GTK_SHRINK, 0, 0);
 		}
 
 		if ((actC + 1) < cols)
@@ -299,6 +298,12 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 		}
 
 		listtmp = listtmp->next;
+	}
+	
+	/* progress stuff */
+	if (use_progress) {
+	    GtkWidget *progress = gtk_progress_bar_new();
+	    gtk_table_attach_defaults(GTK_TABLE(tab), progress, 0, rows, actR, actR+1);
 	}
 
 	if (to_grab_focus)
@@ -529,7 +534,10 @@ void gui_show_dialog(gpointer signal, gboolean change)
 
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog_widget)->vbox), hbox, TRUE, TRUE, 10);
 
-	table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1);
+	if (dialog->flags & GGADU_DIALOG_FLAG_PROGRESS)
+	    table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1, TRUE);
+	    else
+	    table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1, FALSE);
 
 	gtk_table_set_row_spacings(GTK_TABLE(table), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(table), 5);

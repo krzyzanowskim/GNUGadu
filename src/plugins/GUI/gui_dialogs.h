@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.h,v 1.4 2004/01/28 23:40:23 shaster Exp $ */
+/* $Id: gui_dialogs.h,v 1.5 2004/05/24 14:28:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -33,7 +33,7 @@ void gui_show_message_box(gint type, gpointer signal);
 
 void gui_show_window_with_text(gpointer signal);
 
-GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols);
+GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_progress);
 
 void gui_about();
 
