@@ -16,8 +16,9 @@ src/plugins/gadu_gadu/gadu_gadu_plugin.c
 src/plugins/tlen/tlen_plugin.c
 src/plugins/xosd/plugin_xosd.c
 src/plugins/jabber/jabber_plugin.c
-src/plugins/jabber/jabber_plugin_protocol.c
-src/plugins/jabber/jabber_plugin_roster.c
+src/plugins/jabber/jabber_cb.c
+src/plugins/jabber/jabber_login.c
+src/plugins/jabber/jabber_protocol.c
 src/plugins/remote/remote_plugin.c
 src/plugins/sms/sms_core.c
 src/plugins/sms/sms_gui.c
