@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.5 2004/01/07 13:42:04 thrulliq Exp $ */
+/* $Id: docklet_plugin.c,v 1.6 2004/01/07 21:41:01 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -28,7 +28,7 @@ GtkWidget *pixmap = NULL;
 GdkPixbuf *logopix = NULL;
 GtkTooltips *tooltips = NULL;
 gchar *tooltipstr = NULL;
-
+gchar *icons_dir = NULL;
 EggTrayIcon *docklet = NULL;
 
 GGadu_PLUGIN_INIT(DOCKLET_PLUGIN_NAME,GGADU_PLUGIN_TYPE_MISC);
@@ -179,9 +179,8 @@ GtkWidget *ggadu_new_item_from_image(GtkWidget *menu, const char *str, const cha
             g_signal_connect(GTK_OBJECT(menuitem), "activate", sf, data);
 
         if (icon != NULL) {
-            image = docklet_create_image(NULL, icon);
+            image = docklet_create_image(icons_dir, icon);
             gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), image);
-//	    gtk_widget_unref(image);
         }
 	
         gtk_widget_show_all(menuitem);
@@ -348,10 +347,15 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    gchar    *directory = g_strdup(g_slist_nth_data(sigdata,0));
 	    gchar    *filename = g_strdup(g_slist_nth_data(sigdata,1));
 	    gchar    *tooltip = g_strdup(g_slist_nth_data(sigdata,2));
+	    
+	    /* save current icons pack dir for other purposes */
+	    if (icons_dir) 
+		g_free(icons_dir);
 
+	    icons_dir = g_strdup(directory);
+	    
 	    if (!filename) return;
 	    
-
 	    image = (GtkImage *) docklet_create_image(directory, filename);
 
 	    gtk_widget_ref(GTK_WIDGET(image));
@@ -381,6 +385,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    gchar    *filename = g_strdup(g_slist_nth_data(sigdata,1));
 	    gchar    *tooltip = g_strdup(g_slist_nth_data(sigdata,2));
 	    logopix = (GdkPixbuf *)docklet_create_pixbuf(directory, filename);
+
+	    /* save current icons pack dir for other purposes */
+	    if (icons_dir) 
+		g_free(icons_dir);
+
+	    icons_dir = g_strdup(directory);
 	    
 	    gtk_image_set_from_pixbuf(GTK_IMAGE(pixmap),logopix);
 	    
@@ -431,4 +441,5 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
 void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
     gtk_widget_destroy (GTK_WIDGET(docklet));
+    g_free(icons_dir);
 }
