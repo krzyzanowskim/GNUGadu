@@ -1,3 +1,8 @@
+28.09.2004
+- fixes relared to auto_away feature (GUI/krzak)
+- fixes related to empty messages and disconnect handling (Jabber/krzak)
+- other fixes (GUI/Jabber/krzak)
+
 27.09.2004
 - fixed lib/ggadu_conf.c/ggadu_config_var_set() with g_strstrip() not called with NULL argument.
   Close bug #82 thanks Marcin Grzeskowiak.

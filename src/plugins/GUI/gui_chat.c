@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.115 2004/09/24 08:05:24 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.116 2004/09/28 14:01:32 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -329,7 +329,6 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 
 	if (tmpmsg && strlen(tmpmsg) > 0)
 	{
-//		GtkWidget *window =  g_object_get_data(G_OBJECT(session->chat), "top_window");
 		gchar *soundfile = NULL;
 		msg = g_new0(GGaduMsg, 1);
 		msg->id = g_strdup(session->id);
@@ -345,18 +344,8 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 			signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
 		}
 		
-		/* remove window "*" mark */
-/*		if (g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(window)),WINDOW_CHAT_NOTIFY_PREFIX))
-		{
-		    const gchar *old_title = gtk_window_get_title(GTK_WINDOW(window));
-		    gchar *new_title = g_strdup(old_title + 2);
-		    gtk_window_set_title(GTK_WINDOW(window),new_title);
-		}
-*/
-		gp = gui_find_protocol(plugin_name, protocols);
-		auto_away_start(gp);
-
 		signal_emit_full("main-gui", "send message", msg, plugin_name, GGaduMsg_free);
+		auto_away_start( gui_find_protocol(plugin_name, protocols) );
 	}
 	else if (tmpmsg)
 	{

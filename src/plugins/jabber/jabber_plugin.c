@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.107 2004/09/27 16:47:32 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.108 2004/09/28 14:01:33 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -723,11 +723,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
 						VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
-			jabber_change_status(jabber_data.status);
+			/*jabber_change_status(jabber_data.status); "change status descr" should do it */
 			return;
+		} else {
+			jabber_change_status(sp->status);
 		}
 
-		jabber_change_status(sp->status);
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
 	{

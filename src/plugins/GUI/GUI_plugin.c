@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.79 2004/09/06 07:23:48 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.80 2004/09/28 14:01:31 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -153,7 +153,7 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 		{
 			GGaduStatusPrototype *sp;
 			gint status;
-
+			print_debug("nick_list_row_changed");
 			status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 			sp = gui_find_status_prototype(gp->p, (gint) status);
 

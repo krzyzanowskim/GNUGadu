@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.48 2004/09/23 08:41:25 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.49 2004/09/28 14:01:32 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -283,6 +283,7 @@ void gui_list_add(gui_protocol * gp)
 	}
 
 	/* cos co jest oznaczone jakos p->offine_status przez protocol */
+	print_debug("gui_list_add");
 	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
 	if (!(sp = gui_find_status_prototype(gp->p, status)))
@@ -350,7 +351,7 @@ void gui_tree_add(gui_protocol * gp)
 	gtk_tree_store_set(GTK_TREE_STORE(users_treestore), &iter, 0, NULL, 1,
 			   g_strdup_printf("%s (0/0)", gp->p->display_name), 3, gp, -1);
 	gp->tree_path = g_strdup(gtk_tree_model_get_string_from_iter(model, &iter));
-
+	print_debug("gui_tree_add");
 	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
 	if (!(sp = gui_find_status_prototype(gp->p, status)))

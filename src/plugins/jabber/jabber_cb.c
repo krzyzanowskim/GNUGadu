@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.64 2004/09/27 07:51:31 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.65 2004/09/28 14:01:33 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -34,47 +34,56 @@ extern jabber_data_type jabber_data;
 
 void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, gpointer user_data)
 {
-	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
+/*	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
 	g_static_mutex_lock(&connect_mutex);
-
+*/	
+	print_debug("jabber_disconnect_cb 1");
 	if (iq_handler)
 	    lm_connection_unregister_message_handler(connection, iq_handler, LM_MESSAGE_TYPE_IQ);
 	    
 	iq_handler = NULL;
 
+	print_debug("jabber_disconnect_cb 2");
 	if (iq_roster_handler)
 	    lm_connection_unregister_message_handler(connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ);
 
 	iq_roster_handler = NULL;
 
+	print_debug("jabber_disconnect_cb 3");
 	if (iq_version_handler)
 	    lm_connection_unregister_message_handler(connection, iq_version_handler, LM_MESSAGE_TYPE_IQ);
 
 	iq_version_handler = NULL;
 	
+	print_debug("jabber_disconnect_cb 4");
 	if (iq_vcard_handler)	
 	    lm_connection_unregister_message_handler(connection, iq_vcard_handler, LM_MESSAGE_TYPE_IQ);
 
 	iq_vcard_handler = NULL;
 
+	print_debug("jabber_disconnect_cb 5");
 	if (iq_account_data_handler)
 	    lm_connection_unregister_message_handler(connection, iq_account_data_handler, LM_MESSAGE_TYPE_IQ);
 
 	iq_account_data_handler = NULL;
 
+	print_debug("jabber_disconnect_cb 6");
 	if (presence_handler)
 	    lm_connection_unregister_message_handler(connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE);
 
 	presence_handler = NULL;
 
+	print_debug("jabber_disconnect_cb 6");
 	if (message_handler)
 	    lm_connection_unregister_message_handler(connection, message_handler, LM_MESSAGE_TYPE_MESSAGE);
 
 	message_handler = NULL;
 	
+	print_debug("jabber_disconnect_cb 7");
 	jabber_data.status = JABBER_STATUS_UNAVAILABLE;
 	signal_emit("jabber", "gui disconnected", NULL, "main-gui");
 
+	print_debug("jabber_disconnect_cb 8");
 	if (reason == LM_DISCONNECT_REASON_OK)
 	{
 		signal_emit("jabber", "gui show message", g_strdup(_("Jabber disconnected")), "main-gui");
@@ -87,8 +96,12 @@ void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason,
 	} else if (reason == LM_DISCONNECT_REASON_UNKNOWN) {
 		signal_emit("jabber", "gui show message", g_strdup(_("An unknown Jabber error")), "main-gui");
 	}
-
-	g_static_mutex_unlock(&connect_mutex);
+	
+	print_debug("jabber_disconnect_cb 9");
+	lm_connection_close(connection,NULL);
+	
+//	g_static_mutex_unlock(&connect_mutex);
+	print_debug("jabber_disconnect_cb 10");
 }
 
 LmHandlerResult register_register_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * msg,
@@ -181,7 +194,7 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
 
 	if (!success)
 	{
-		jabber_disconnect_cb(jabber_data.connection,LM_DISCONNECT_REASON_OK, NULL);
+//dupa		jabber_disconnect_cb(jabber_data.connection,LM_DISCONNECT_REASON_OK, NULL);
 		return;
 	}
 
@@ -642,6 +655,9 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 
 	if (!list)
 		first_time = 1;
+		
+	if (!message)
+		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 
 	print_debug("%s", lm_message_node_to_string(message->node));
 

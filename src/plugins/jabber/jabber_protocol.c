@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.31 2004/09/27 16:47:33 mkobierzycki Exp $ */
+/* $Id: jabber_protocol.c,v 1.32 2004/09/28 14:01:33 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -57,8 +57,8 @@ void action_roster_add_result(LmConnection * connection, LmMessage * message, gp
 
 void action_roster_fetch_result(LmConnection * connection, LmMessage * message, gpointer user_data)
 {
-	iq_roster_cb(NULL, connection, message, user_data);
 	jabber_change_status((gint) user_data);
+	iq_roster_cb(NULL, connection, message, user_data);
 }
 
 void action_roster_remove_result(LmConnection * connection, LmMessage * message, gpointer data)
@@ -77,6 +77,8 @@ void jabber_change_status(enum states status)
 	gchar *show_xa = "xa";
 	gchar *show_dnd = "dnd";
 	gchar *show_chat = "chat";
+	
+	print_debug("jabber_change_status start");
 	
 	/*if ((status == jabber_data.status) && (!jabber_data.status_descr))*/
 	if ((status == jabber_data.status))
@@ -143,28 +145,30 @@ void jabber_change_status(enum states status)
 		signal_emit("jabber", "gui status changed", (gpointer) status, "main-gui");
 	}
 	lm_message_unref(m);
+	print_debug("jabber_change_status end");
 }
 
 void jabber_fetch_roster(gpointer user_data)
 {
-	LmMessage *m;
-	LmMessageNode *node;
+	LmMessage *m = NULL;
+	LmMessageNode *node = NULL;
 
+	print_debug("jabber_fetch_roster a");
 	print_debug("jabber: Fetching roster. %s", lm_connection_get_server(jabber_data.connection));
 
 	m = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
-
 	node = lm_message_node_add_child(m->node, "query", NULL);
-	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:roster");
-
 	lm_message_node_set_attribute(m->node, "id", "fetch_roster");
+	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:roster");
 
 	if (!lm_connection_send(jabber_data.connection, m, NULL))
 		print_debug("jabber: Can't fetch roster (lm_connection_send() failed).\n");
 	else
 		action_queue_add("fetch_roster", "result", action_roster_fetch_result, user_data, FALSE);
 
+	print_debug("jabber_fetch_roster b");
 	lm_message_unref(m);
+	print_debug("jabber_fetch_roster c");
 }
 
 void action_search_form(LmConnection * connection, LmMessage * message, gpointer data)

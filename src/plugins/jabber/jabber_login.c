@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.40 2004/09/27 15:01:20 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.41 2004/09/28 14:01:33 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -60,8 +60,8 @@ gpointer jabber_login_connect(gpointer status)
 		{
 			signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
 			signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Invalid jid!")), "main-gui");
-			g_static_mutex_unlock(&connect_mutex);
 			g_free(jid);
+			g_static_mutex_unlock(&connect_mutex);
 			g_thread_exit(0);
 			return NULL;
 		}
@@ -74,8 +74,8 @@ gpointer jabber_login_connect(gpointer status)
 	{
 		signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
 		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Invalid jid!")), "main-gui");
-		g_static_mutex_unlock(&connect_mutex);
 		g_free(jid);
+		g_static_mutex_unlock(&connect_mutex);
 		g_thread_exit(0);
 		return NULL;
 	}
@@ -209,12 +209,15 @@ gpointer jabber_login_connect(gpointer status)
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
+	lm_connection_set_disconnect_function(jabber_data.connection, jabber_disconnect_cb, NULL, NULL);
+	
 	if (!lm_connection_open(jabber_data.connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
 	{
-		jabber_disconnect_cb(jabber_data.connection,LM_DISCONNECT_REASON_OK, NULL);
+		signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
+		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Unable to open connection")), "main-gui");
+//		jabber_disconnect_cb(jabber_data.connection,LM_DISCONNECT_REASON_OK, NULL);
 	}
 
-	lm_connection_set_disconnect_function(jabber_data.connection, jabber_disconnect_cb, NULL, NULL);
 
 	g_free(jid);
 	g_static_mutex_unlock(&connect_mutex);
