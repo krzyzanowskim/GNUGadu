@@ -30,6 +30,10 @@ if BUILD_SOUND_ARTS
 SOUND=sound
 endif
 
+if BUILD_SOUND_OSS
+SOUND=sound
+endif
+
 if BUILD_SMS
 SMS=sms
 endif
