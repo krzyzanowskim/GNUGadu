@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.10 2004/03/27 08:23:21 krzyzak Exp $ */
+/* $Id: my_plugin.c,v 1.11 2004/08/01 22:31:43 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -27,7 +27,7 @@
 	after compile copy to $prefix/lib/gg2/my-plugin.so
 	and should work.
 	
-	NOTE you gave to have installed gg2 compile this plugin
+	NOTE you have to have installed gg2 to compile this plugin
 
 */
 
