@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.29 2004/01/17 17:20:53 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.30 2004/01/28 18:32:00 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -700,8 +700,9 @@ void gui_about(GtkWidget * widget, gpointer data)
 				("<b>GNU Gadu %s</b>\n" "Copyright (C) 2001-2003 GNU Gadu Team\n" "License: GPL\n"
 				 "Homepage: http://www.gadu.gnu.pl/\n\n" "<b>Main Programmers:</b>\n"
 				 "Igor Popik &lt;thrull@slackware.pl&gt;\n"
-				 "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n" "<b>Also:</b>\n"
-				 "Bartosz Zapalowski\n" "Mateusz Papiernik\n" "HelDoRe\n" "Jakub 'shasta' Jankowski\n"
+				 "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n"
+				 "Jakub 'shasta' Jankowski &lt;shasta@atn.pl&gt;\n\n" "<b>Also:</b>\n"
+				 "Bartosz Zapalowski\n" "Mateusz Papiernik\n" "HelDoRe\n" 
 				 "Pawel Jan Maczewski\n\n" "<b>Thanks to:</b>\n" "Aflinta\n" "GammaRay\n" "Plavi\n"
 				 "Dwuziu\n" "see AUTHORS file for details\n\n" "<i>Compile time:\n%s %s</i>"), VERSION,
 				__DATE__, __TIME__);
