@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.55 2004/08/27 14:37:55 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.56 2004/08/29 10:43:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -136,18 +136,6 @@ void jabber_register_account_cb(LmConnection * connection, gboolean result, gpoi
     return;
 }
 
-static gboolean jabber_ping(gpointer data)
-{
-	if (!jabber_data.connection ||
-	   (!lm_connection_is_open(jabber_data.connection)))
-		return FALSE;
-
-	print_debug("PING!\n");
-	
-	return lm_connection_send_raw(jabber_data.connection,"\n",NULL);
-}
-
-
 void connection_auth_cb(LmConnection * connection, gboolean success, gpointer status)
 {
 	if (!success)
@@ -158,8 +146,6 @@ void connection_auth_cb(LmConnection * connection, gboolean success, gpointer st
 
 	print_debug("jabber: Authentication succeeded. Changing status...\n");
 	jabber_fetch_roster(status);
-	g_timeout_add(200000, jabber_ping, NULL);
-	
 }
 
 void connection_open_result_cb(LmConnection * connection, gboolean success, gint * status)
@@ -192,7 +178,6 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
 		jabber_change_status((int)status);
 */
 	}
-/*      jabber_change_status(status); */
 
 	g_free(jid);
 }
@@ -237,14 +222,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 		signal_emit("jabber", "gui show message", msg, "main-gui");
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
-/*
-    else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_UNSUBSCRIBE)
-    {
-	gchar *msg = g_strdup_printf (_("%s unsubscribed you from presence"), jid);
-	signal_emit ("jabber", "gui show message", msg, "main-gui");
-	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
-    }
-*/
+
 	status = lm_message_node_get_child(message->node, "status");
 
 	if (status)
@@ -653,7 +631,7 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		child = child->next;
 	}
 
-	signal_emit("jabber", "gui send userlist", NULL, "main-gui");
+	signal_emit_from_thread("jabber", "gui send userlist", NULL, "main-gui");
 
 	/* ZONK ask everybowy from the list about their status, do we need it ? */
 	if (first_time)
