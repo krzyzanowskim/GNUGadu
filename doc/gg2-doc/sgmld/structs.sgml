@@ -68,7 +68,7 @@ nie ma połączenia z serwerem (jest w stanie offline).</para>
 typedef GQuark GGaduSigID;
 </programlisting>
 
-<para>Unikalny numer ID dla sygna�u.</para>
+<para>Unikalny numer ID dla sygnału.</para>
 </sect2>
 
 
@@ -86,8 +86,8 @@ typedef struct {
 } GGaduSignal;
 </programlisting>
 
-<para><type>name</type> przechowuje nazwę sygnału, np.
-<quote>gui show warning</quote>.</para>
+<para><type>name</type> przechowuje <xref linkend="GGaduSigID"/> (numer ID) sygnału, np.
+<quote>gui show warning</quote>. Numer ID otrzymywany jest podczas rejestracji sygnału z funckji register_signal()</para>
 
 <para><type>source_plugin_name</type> przechowuje nazwę pluginu, z którego
 został wysłany sygnał. Służy on m.in. do identyfikacji pluginu, w przypadku
