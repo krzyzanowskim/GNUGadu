@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.37 2004/01/17 19:41:13 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.38 2004/01/21 17:43:42 thrulliq Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -131,7 +131,8 @@ gpointer sms_send_sms(gpointer user_data)
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
 	GGaduDialog *d = NULL;
-
+	gchar *tmp;
+	
 	if ((!k) || (!k->mobile) || (strlen(k->mobile) <= 0))
 	{
 		signal_emit("sms", "gui show message", g_strdup(_("No phone number")), "main-gui");
@@ -139,7 +140,10 @@ gpointer sms_send_sms(gpointer user_data)
 	}
 
 	d = ggadu_dialog_new();
-	ggadu_dialog_set_title(d, g_strconcat(_("Send to : "), k->nick, " (", k->mobile, ")", NULL));
+	tmp = g_strconcat(_("Send to : "), k->nick, " (", k->mobile, ")", NULL);
+	ggadu_dialog_set_title(d, tmp);
+	g_free(tmp);
+	
 	ggadu_dialog_callback_signal(d, "sms send");
 	ggadu_config_var_set(sms_handler, "number", k->mobile);
 

@@ -1,3 +1,6 @@
+21.01.2004
+- clean'ups an memory leak fixes in ggadu_dialog_* (core/THrull)
+
 19.01.2004
 - am/ac stuff (krzak)
 - fixed segfault with gui_tree_add if no offline_status is declared (GUI/krzak)

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.129 2004/01/20 22:08:07 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.130 2004/01/21 17:43:40 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1300,7 +1300,8 @@ gpointer send_file_action(gpointer user_data)
 	GGaduDialog *d = NULL;
 	gint port;
 	gchar **addr_arr = NULL;
-
+	gchar *tmp;
+	
 	if (!connected || !k->ip || g_str_has_prefix(k->ip, "0.0.0.0"))
 	{
 		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("You cannot send file to this person")),
@@ -1328,8 +1329,9 @@ gpointer send_file_action(gpointer user_data)
 	}
 
 	d = ggadu_dialog_new();
-
-	ggadu_dialog_set_title(d, g_strdup_printf(_("Sending File to %s"), k->ip));
+	tmp = g_strdup_printf(_("Sending File to %s"), k->ip);
+	ggadu_dialog_set_title(d, tmp);
+	g_free(tmp);
 	ggadu_dialog_callback_signal(d, "send file");
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONTACT, NULL, VAR_NULL, k, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_SELECTED_FILE, _("Select File :"), VAR_FILE_CHOOSER, NULL,

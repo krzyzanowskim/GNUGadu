@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.30 2004/01/18 21:13:26 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.31 2004/01/21 17:43:41 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -103,7 +103,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 		GGaduDialog *d = ggadu_dialog_new();
 		gchar *msg = g_strdup_printf(_("Person : %s\nwants to subscribe your presence"), jid);
 
-		ggadu_dialog_set_title(d, g_strdup(_("Subscription request confirmation")));
+		ggadu_dialog_set_title(d, _("Subscription request confirmation"));
 		ggadu_dialog_set_type(d, GGADU_DIALOG_YES_NO);
 		ggadu_dialog_callback_signal(d, "jabber subscribe");
 		ggadu_dialog_add_entry(&(d->optlist), 0, msg, VAR_NULL, NULL, VAR_FLAG_NONE);

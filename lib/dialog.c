@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.3 2004/01/17 00:44:58 shaster Exp $ */
+/* $Id: dialog.c,v 1.4 2004/01/21 17:43:40 thrulliq Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -30,13 +30,13 @@ void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint 
 void ggadu_dialog_callback_signal(GGaduDialog * d, const gchar * t)
 {
     g_return_if_fail(d != NULL);
-    d->callback_signal = (gchar *) t;
+    d->callback_signal = g_strdup(t);
 }
 
 void ggadu_dialog_set_title(GGaduDialog * d, const gchar * t)
 {
     g_return_if_fail(d != NULL);
-    d->title = (gchar *) t;
+    d->title = g_strdup(t);
 }
 
 void ggadu_dialog_set_type(GGaduDialog * d, gint type)
@@ -51,7 +51,7 @@ void GGaduDialog_free(GGaduDialog * d)
 
     if (!d)
 	return;
-    return;
+
     g_free(d->title);
     g_free(d->callback_signal);
 
