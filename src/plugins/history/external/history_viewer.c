@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.8 2004/12/22 15:56:27 krzyzak Exp $ */
+/* $Id: history_viewer.c,v 1.9 2004/12/25 14:38:05 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -160,4 +160,8 @@ void destroy_plugin()
     {
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
     }
+  if (ext)
+  {
+    unregister_extension_for_plugins(ext);
+  }
 }
