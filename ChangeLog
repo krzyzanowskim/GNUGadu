@@ -1,3 +1,6 @@
+02.05.2003
+- do not install pixmaps/icons/CVS (Makefile/shasta)
+
 01.05.2003
 - made ,,About'' dialog available by docklet menu. (docklet/GUI/shasta)
 

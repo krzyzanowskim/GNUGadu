@@ -41,7 +41,7 @@ install-data-local:
 	if test -d $(srcdir)/pixmaps/icons; then \
 	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps/icons; \
 	  for icons in $(srcdir)/pixmaps/icons/*; do \
-	    if test -d $$icons; then \
+	    if test -d $$icons && test $$icons != "$(srcdir)/pixmaps/icons/CVS" ; then \
 	      cp -rp $$icons $(DESTDIR)$(pkgdatadir)/pixmaps/icons; \
 	    fi \
 	  done \
