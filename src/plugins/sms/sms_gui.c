@@ -50,7 +50,7 @@ gpointer sms_preferences (gpointer user_data)
     d = ggadu_dialog_new();
     ggadu_dialog_set_title(d,_("SMS Preferences"));
     ggadu_dialog_callback_signal(d,"update config");
-    
+    ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
     
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer)config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer)config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);

@@ -374,7 +374,8 @@ gpointer user_preferences_action(gpointer user_data)
     
     d->title = g_strdup(_("Jabber plugin configuration")); 
     d->callback_signal = g_strdup("update config");
-        
+    
+    ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_JID, _("Jabber ID"), VAR_STR, config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_JID_PASSWORD, _("Password"), VAR_STR, config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_JID_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);

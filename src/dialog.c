@@ -12,6 +12,7 @@ GGaduDialog *ggadu_dialog_new() {
     return g_new0(GGaduDialog,1);
 }
 
+
 void ggadu_dialog_add_entry(
 		      GSList **prefs, 
 		      gint key, 
@@ -32,10 +33,18 @@ void ggadu_dialog_add_entry(
 
 void ggadu_dialog_callback_signal(GGaduDialog *d,const gchar *t)
 {
+    g_return_if_fail(d != NULL);
     d->callback_signal = (gchar *)t;
 }
 
 void ggadu_dialog_set_title(GGaduDialog *d,const gchar *t)
 {
+    g_return_if_fail(d != NULL);
     d->title = (gchar *)t; 
+}
+
+void ggadu_dialog_set_type(GGaduDialog *d, gint type) 
+{
+    g_return_if_fail(d != NULL);
+    d->type = type;
 }

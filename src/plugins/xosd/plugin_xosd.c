@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.2 2003/03/23 11:51:35 zapal Exp $ */
+/* $Id: plugin_xosd.c,v 1.3 2003/03/23 17:58:32 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -244,6 +244,7 @@ gpointer osd_preferences (gpointer user_data)
     d = ggadu_dialog_new();
     ggadu_dialog_set_title(d,_("X OSD Preferences"));
     ggadu_dialog_callback_signal(d,"update config");
+    ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
     
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_STR, (gpointer)COLOUR, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer)NUMLINES, VAR_FLAG_NONE);

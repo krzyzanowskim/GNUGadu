@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.2 2003/03/23 11:51:34 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.3 2003/03/23 17:58:31 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -618,9 +618,10 @@ gpointer user_preferences_action(gpointer user_data)
 {
     GGaduDialog *d = ggadu_dialog_new();
     
-    ggadu_dialog_set_title(d,_("Tlen plugin configuration"));
-    ggadu_dialog_callback_signal(d,"update config");
-        
+    ggadu_dialog_set_title(d, _("Tlen plugin configuration"));
+    ggadu_dialog_callback_signal(d, "update config");
+    ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
+
     ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_UIN, _("Tlen login"), VAR_STR, config_var_get(handler, "login"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_PASSWORD, _("Password"), VAR_STR, config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
     ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_AUTOCONNECT, _("Auto connect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);

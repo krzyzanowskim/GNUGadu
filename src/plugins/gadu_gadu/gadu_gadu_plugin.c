@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.4 2003/03/23 15:10:59 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.5 2003/03/23 17:58:30 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -577,7 +577,8 @@ gpointer user_preferences_action(gpointer user_data)
 {
 	GGaduDialog *d = ggadu_dialog_new();
 
-	ggadu_dialog_set_title(d,_("Gadu-gadu plugin configuration"));        
+	ggadu_dialog_set_title(d, _("Gadu-gadu plugin configuration"));
+	ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);       
 	ggadu_dialog_callback_signal(d,"update config");
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, config_var_get(handler, "uin"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_PASSWORD, _("Password"), VAR_STR, config_var_get(handler, "password"), VAR_FLAG_PASSWORD);

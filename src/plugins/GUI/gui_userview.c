@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.1 2003/03/20 10:37:07 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.2 2003/03/23 17:58:30 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -243,8 +243,8 @@ void gui_list_add(gui_protocol *gp)
     gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
 
     gp->users_liststore = users_liststore;
-    
 }
+
 void gui_tree_add(gui_protocol *gp) 
 {
     GtkTreeIter iter;
@@ -567,6 +567,28 @@ void gui_user_view_add_userlist(gui_protocol *gp)
     	g_object_set_data(G_OBJECT(gp->users_liststore),"plugin_name",g_strdup(gp->plugin_name));
 	gtk_tree_sortable_sort_column_changed(GTK_TREE_SORTABLE(gp->users_liststore));
     }
+}
+
+void gui_user_view_unregister(gui_protocol *gp)
+{
+    GtkTreeIter users_iter;
+    
+    g_return_if_fail(gp != NULL);
+    
+    gui_user_view_clear(gp);
+    
+    if (!tree) {
+    } else {
+    	gchar *path = gp->tree_path;
+	gchar *txt = NULL;
+    	gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(users_treestore), &users_iter, path);
+    	gtk_tree_model_get(GTK_TREE_MODEL(users_treestore), &users_iter, 1, &txt, -1);
+	g_free(txt);
+    	gtk_tree_store_remove(GTK_TREE_STORE(users_treestore), &users_iter);
+    }
+
+    if (gp->statuslist_eventbox)
+        gtk_widget_destroy(gp->statuslist_eventbox);
 }
 
 void gui_user_view_register(gui_protocol *gp)

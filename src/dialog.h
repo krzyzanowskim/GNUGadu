@@ -17,6 +17,7 @@ void ggadu_dialog_callback_signal(GGaduDialog *,const gchar *);
 
 void ggadu_dialog_set_title(GGaduDialog *,const gchar *);
 
+void ggadu_dialog_set_type(GGaduDialog *, gint);
 		      
 #endif
 

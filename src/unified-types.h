@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.2 2003/03/23 17:58:29 thrulliq Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -108,12 +108,18 @@ typedef struct {
     gpointer 	user_data;
 } GGaduKeyValue;
 
+enum {
+    GGADU_DIALOG_GENERIC,
+    GGADU_DIALOG_CONFIG
+};
+
 typedef struct {
     gchar *title;
     gchar *callback_signal;
     gint result;
     GSList *optlist; // lista elementów GGaduKeyValue
     gpointer user_data;
+    gint type;
 } GGaduDialog;
 
 void GGaduDialog_free(GGaduDialog *d);

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.5 2003/03/23 17:07:10 thrulliq Exp $ */
+/* $Id: gui_dialogs.c,v 1.6 2003/03/23 17:58:30 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -332,8 +332,10 @@ void gui_show_dialog(gpointer signal, gboolean change)
 {
     GGaduSignal *sig = (GGaduSignal *)signal;
     GtkWidget *dialog = NULL;
+    GtkWidget *image = NULL;
     GtkWidget *table;
     GtkWidget *label;
+    GtkWidget *hbox;
     GGaduDialog *d = sig->data;
     gchar *markup;
     
@@ -343,12 +345,28 @@ void gui_show_dialog(gpointer signal, gboolean change)
 					GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
     gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
     
+    hbox = gtk_hbox_new(FALSE, 0);
+    
+    if (d->type) {
+	print_debug("d->type = %d\n", d->type);
+	switch (d->type) {
+	    case GGADU_DIALOG_CONFIG:
+		image = create_image("preferences.png");
+		break;
+	    default:
+		break;
+	}
+	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 5);
+    }
+    
     label = gtk_label_new(NULL);
     markup = g_strdup_printf("<span weight=\"bold\">%s</span>", d->title);    
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
     
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), label, TRUE, TRUE, 10);
+    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);
+    
+    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, TRUE, TRUE, 10);
     
     table = gui_build_dialog_gtk_table(d->optlist, 1);
     
