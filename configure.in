@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.63 2004/05/03 22:02:48 krzyzak Exp $
+dnl $Id: configure.in,v 1.64 2004/06/06 19:45:15 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.2])
 
@@ -51,7 +51,7 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memset mkdir strcasecmp strchr strlen])
 
 
-ALL_LINGUAS="pl"
+ALL_LINGUAS="pl nl"
 #GETTEXT_PACKAGE="$PACKAGE"
 #AC_SUBST(GETTEXT_PACKAGE)
 AC_CHECK_HEADERS(libintl.h)
