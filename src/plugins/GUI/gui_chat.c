@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.72 2004/02/14 02:08:09 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.73 2004/02/14 16:46:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -27,7 +27,7 @@
 #include "signals.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "GUI_plugin.h"
 #include "gui_main.h"
 #include "gui_support.h"
@@ -538,7 +538,7 @@ static void on_chat_find_clicked(GtkWidget * button, gpointer user_data)
 
 	print_debug("SEARCH %s\n", session->id);
 
-	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, session->id, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, session->id, VAR_FLAG_NONE);
 
 	signal_emit("main-gui", "search", dialog, plugin_name);
 }

@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.13 2004/02/13 22:40:48 thrulliq Exp $ */
+/* $Id: plugin_sound_external.c,v 1.14 2004/02/14 16:46:58 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -37,7 +37,7 @@
 #include "menu.h"
 #include "ggadu_conf.h"
 #include "support.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "plugin_sound_external.h"
 
 GGaduPlugin *handler;
@@ -72,11 +72,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
     if (signal->name == g_quark_from_static_string("update config"))
     {
-	GGaduDialog *d = signal->data;
-	GSList *tmplist = d->optlist;
+	GGaduDialog *dialog = signal->data;
 
-	if (d->response == GGADU_OK)
+	if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 	{
+	    GSList *tmplist = ggadu_dialog_get_entries(dialog);
 	    while (tmplist)
 	    {
 		GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -89,24 +89,23 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		}
 		tmplist = tmplist->next;
 	    }
+	    ggadu_config_save(handler);
 	}
-	ggadu_config_save(handler);
-	GGaduDialog_free(d);
+	GGaduDialog_free(dialog);
     }
 }
 
 
 gpointer se_preferences(gpointer user_data)
 {
-    GGaduDialog *d = NULL;
+    GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Sound external preferences"), "update config");
+
     print_debug("%s: Preferences\n", "Sound external");
 
-    d = ggadu_dialog_new1(GGADU_DIALOG_CONFIG, _("Sound external preferences"), "update config");
-
-    ggadu_dialog_add_entry1(d, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, ggadu_config_var_get(handler, "player"),
+    ggadu_dialog_add_entry(dialog, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, ggadu_config_var_get(handler, "player"),
 			   VAR_FLAG_NONE);
 
-    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
     return NULL;
 }

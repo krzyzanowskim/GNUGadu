@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.25 2004/02/13 22:34:18 thrulliq Exp $ */
+/* $Id: plugin_xosd.c,v 1.26 2004/02/14 16:47:01 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -46,7 +46,7 @@
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "plugin_xosd.h"
 
 /*
@@ -125,10 +125,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("update config"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
+		GGaduDialog *dialog = signal->data;
+		GSList *tmplist = ggadu_dialog_get_entries(dialog);
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			while (tmplist)
 			{
@@ -171,7 +171,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			ggadu_config_save(handler);
 			set_configuration();
 		}
-		GGaduDialog_free(d);
+		GGaduDialog_free(dialog);
 		return;
 	}
 
@@ -379,21 +379,18 @@ gpointer osd_preferences(gpointer user_data)
 	pos_list = g_slist_append(pos_list, "middle");
 	pos_list = g_slist_append(pos_list, "bottom");
 
-	d = ggadu_dialog_new1(GGADU_DIALOG_CONFIG, _("XOSD Preferences"), "update config");
+	d = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("XOSD Preferences"), "update config");
 
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) ggadu_config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_COLOUR_CHOOSER, (gpointer) COLOUR, VAR_FLAG_NONE);
-/*
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
-*/
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer) NUMLINES, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_TIMEOUT, _("Timeout"), VAR_INT, (gpointer) TIMEOUT, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET, _("Horizontal offset"), VAR_INT, (gpointer) HORIZONTAL_OFFSET, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_VERTICAL_OFFSET, _("Vertical offset"), VAR_INT, (gpointer) VERTICAL_OFFSET, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_XOSD_CONFIG_SHADOW_OFFSET, _("Shadow offset"), VAR_INT, (gpointer) SHADOW_OFFSET, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) ggadu_config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_COLOUR_CHOOSER, (gpointer) COLOUR, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer) NUMLINES, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_TIMEOUT, _("Timeout"), VAR_INT, (gpointer) TIMEOUT, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET, _("Horizontal offset"), VAR_INT, (gpointer) HORIZONTAL_OFFSET, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_VERTICAL_OFFSET, _("Vertical offset"), VAR_INT, (gpointer) VERTICAL_OFFSET, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_SHADOW_OFFSET, _("Shadow offset"), VAR_INT, (gpointer) SHADOW_OFFSET, VAR_FLAG_NONE);
 	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");

@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.46 2004/02/14 03:02:19 thrulliq Exp $ */
+/* $Id: sms_gui.c,v 1.47 2004/02/14 16:46:58 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -37,7 +37,7 @@
 #include "ggadu_conf.h"
 #include "menu.h"
 #include "support.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "repo.h"
 #include "sms_gui.h"
 #include "sms_core.h"
@@ -57,21 +57,19 @@ GGadu_PLUGIN_INIT("sms", GGADU_PLUGIN_TYPE_PROTOCOL);
 /* okienko z ustawieniami */
 gpointer sms_preferences(gpointer user_data)
 {
-	GGaduDialog *d;
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("SMS Preferences"), "update config");
 
 	print_debug("%s : Preferences\n", GGadu_PLUGIN_NAME);
 
-	d = ggadu_dialog_new1(GGADU_DIALOG_CONFIG, _("SMS Preferences"), "update config");
-
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_ERA_LOGIN, _("Era login"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "era_login"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_ERA_PASSWORD, _("Era password"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "era_password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_SHOW_IN_STATUS, _("Show plugin in status list (needs reload)"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "show_in_status"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_ERA_LOGIN, _("Era login"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "era_login"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_ERA_PASSWORD, _("Era password"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "era_password"), VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SHOW_IN_STATUS, _("Show plugin in status list (needs reload)"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "show_in_status"), VAR_FLAG_NONE);
 	/* *INDENT-ON* */
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	return NULL;
 }
@@ -82,14 +80,14 @@ gpointer sms_edit_contact(gpointer user_data)
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) users->data;
 	gchar *id = g_strconcat(k->nick, "@", k->mobile, NULL);
-	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("Edit contact"), "change user");
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Edit contact"), "change user");
 
 	print_debug("%s : Edit Contact\n", GGadu_PLUGIN_NAME);
 
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry1(dialog, GGADU_SMS_CONTACT_ID, _("Id"), VAR_STR, id, VAR_FLAG_INSENSITIVE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SMS_CONTACT_NICK, _("Nick"), VAR_STR, k->nick, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SMS_CONTACT_NUMBER, _("Number"), VAR_STR, k->mobile, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONTACT_ID, _("Id"), VAR_STR, id, VAR_FLAG_INSENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONTACT_NICK, _("Nick"), VAR_STR, k->nick, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONTACT_NUMBER, _("Number"), VAR_STR, k->mobile, VAR_FLAG_NONE);
 	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -101,13 +99,13 @@ gpointer sms_edit_contact(gpointer user_data)
 /* okienko do dodawania usera */
 gpointer sms_add_contact(gpointer user_data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
 
 	print_debug("%s : Add Contact\n", GGadu_PLUGIN_NAME);
 
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry1(dialog, GGADU_SMS_CONTACT_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SMS_CONTACT_NUMBER, _("Number"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONTACT_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONTACT_NUMBER, _("Number"), VAR_STR, NULL, VAR_FLAG_NONE);
 	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -140,7 +138,7 @@ gpointer sms_send_sms(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
-	GGaduDialog *d = NULL;
+	GGaduDialog *dialog = NULL;
 	gchar *tmp;
 
 	if ((!k) || (!k->mobile) || (strlen(k->mobile) <= 0))
@@ -150,18 +148,18 @@ gpointer sms_send_sms(gpointer user_data)
 	}
 
 	tmp = g_strconcat(_("Send to : "), k->nick, " (", k->mobile, ")", NULL);
-	d = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, tmp, "sms send");
+	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, tmp, "sms send");
 	g_free(tmp);
 
 	ggadu_config_var_set(sms_handler, "number", k->mobile);
 
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_EXTERNAL, _("Use external program"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_EXTERNAL, _("Use external program"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
 	/* *INDENT-ON* */
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	return NULL;
 }
@@ -244,11 +242,11 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("update config"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
+		GGaduDialog *dialog = signal->data;
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_reponse(dialog) == GGADU_OK)
 		{
+			GSList *tmplist = ggadu_dialog_get_entries(dialog);
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -279,8 +277,8 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 			}
 			ggadu_config_save(sms_handler);
 		}
-		GGaduDialog_free(d);
 
+		GGaduDialog_free(dialog);
 		return;
 	}
 
@@ -293,7 +291,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 		if (sp->status == 1 || sp->status == 2)
 		{
-			GGaduDialog *d;
+			GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("SMS Send"), "sms send");
 
 			if (sp->status == 1)
 				ggadu_config_var_set(sms_handler, "external", (gpointer) FALSE);
@@ -302,15 +300,13 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 			print_debug("%s : Send sms\n", GGadu_PLUGIN_NAME);
 
-			d = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("SMS Send"), "sms send");
-
 			/* *INDENT-OFF* */
-			ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
-			ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_NUMBER, _("Number"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "number"), VAR_FLAG_NONE);
-			ggadu_dialog_add_entry1(d, GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
+			ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
+			ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_NUMBER, _("Number"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "number"), VAR_FLAG_NONE);
+			ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
 			/* *INDENT-ON* */
 
-			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 		}
 	}
 
@@ -340,14 +336,15 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("sms send"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
-		gboolean old_external = (gboolean) ggadu_config_var_get(sms_handler, "external");
-		gchar *sender_temp;
+		GGaduDialog *dialog = signal->data;
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
+			gboolean old_external = (gboolean) ggadu_config_var_get(sms_handler, "external");
+			GSList *tmplist = ggadu_dialog_get_entries(dialog);
 			SMS *message = (SMS *) g_new0(SMS, 1);
+			gchar *sender_temp = NULL;
+			
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -383,7 +380,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 			ggadu_config_save(sms_handler);
 		}
 
-		GGaduDialog_free(d);
+		GGaduDialog_free(dialog);
 		return;
 	}
 
@@ -478,22 +475,25 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	
 	if (signal->name == g_quark_from_static_string("get token"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
-		SMS *message = (SMS *) d->user_data;
+		GGaduDialog *dialog = signal->data;
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
+			GSList *tmplist = ggadu_dialog_get_entries(dialog);
+			SMS *message = (SMS *) dialog->user_data;
+			
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
 				if (kv->key == 1)
 					message->idea_pass = g_strdup(kv->value);
+					
 				tmplist = tmplist->next;
 			}
 			g_thread_create((gpointer(*)())send_IDEA_stage2, message, FALSE, NULL);
 		}
-		GGaduDialog_free(d);
+		
+		GGaduDialog_free(dialog);
 	}
 }
 

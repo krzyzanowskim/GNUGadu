@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.36 2004/02/14 13:01:21 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.37 2004/02/14 16:46:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -30,7 +30,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "unified-types.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "signals.h"
 #include "support.h"
 #include "gui_support.h"
@@ -301,14 +301,14 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 	return tab;
 }
 
-void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)
+void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_data)
 {
 	GGaduSignal *signal = (GGaduSignal *) user_data;
-	GGaduDialog *d = signal->data;
+	GGaduDialog *dialog = signal->data;
 
-	if (d)
+	if (dialog)
 	{
-		GSList *kvlist = d->optlist;
+		GSList *kvlist = ggadu_dialog_get_entries(dialog);
 
 		while (kvlist)
 		{
@@ -387,26 +387,26 @@ void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)
 		switch (resid)
 		{
 		case GTK_RESPONSE_OK:
-			d->response = GGADU_OK;
+			dialog->response = GGADU_OK;
 			break;
 		case GTK_RESPONSE_CANCEL:
-			d->response = GGADU_CANCEL;
+			dialog->response = GGADU_CANCEL;
 			break;
 		case GTK_RESPONSE_YES:
-			d->response = GGADU_YES;
+			dialog->response = GGADU_YES;
 			break;
 		case GTK_RESPONSE_NO:
-			d->response = GGADU_NO;
+			dialog->response = GGADU_NO;
 			break;
 		default:
-			d->response = GGADU_NONE;
+			dialog->response = GGADU_NONE;
 			break;
 		}
 
-		signal_emit("main-gui", d->callback_signal, d, signal->source_plugin_name);
+		signal_emit("main-gui", dialog->callback_signal, dialog, signal->source_plugin_name);
 	}
 
-	gtk_widget_destroy(GTK_WIDGET(dialog));
+	gtk_widget_destroy(GTK_WIDGET(dialog_widget));
 	GGaduSignal_free(signal);
 }
 
@@ -468,36 +468,37 @@ void gui_show_window_with_text(gpointer signal)
 void gui_show_dialog(gpointer signal, gboolean change)
 {
 	GGaduSignal *sig = (GGaduSignal *) signal;
-	GtkWidget *dialog = NULL;
+	GtkWidget *dialog_widget = NULL;
 	GtkWidget *image = NULL;
 	GtkWidget *table;
 	GtkWidget *label;
 	GtkWidget *hbox;
 	GdkPixbuf *windowicon = NULL;
-	GGaduDialog *d = (sig) ? sig->data : NULL;
+	GGaduDialog *dialog = (sig) ? sig->data : NULL;
 	gchar *markup;
 
 	if (!sig)
 		return;
 
-	dialog = gtk_dialog_new_with_buttons(d->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL,
+	dialog_widget = gtk_dialog_new_with_buttons(dialog->title, NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL,
 					     GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
-	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
-	gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog_widget), GTK_RESPONSE_OK);
+	gtk_window_set_resizable(GTK_WINDOW(dialog_widget), FALSE);
 
 	if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL)
 	{
-		gtk_window_set_icon(GTK_WINDOW(dialog), windowicon);
+		gtk_window_set_icon(GTK_WINDOW(dialog_widget), windowicon);
 		gdk_pixbuf_unref(windowicon);
 	}
 
 	hbox = gtk_hbox_new(FALSE, 0);
 
-	if (d->type)
+	if (ggadu_dialog_get_type(dialog))
 	{
-		print_debug("d->type = %d\n", d->type);
-		switch (d->type)
+		gint type = ggadu_dialog_get_type(dialog);
+		print_debug("d->type = %d\n", type);
+		switch (type)
 		{
 		case GGADU_DIALOG_CONFIG:
 			image = gtk_image_new();
@@ -514,24 +515,24 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	}
 
 	label = gtk_label_new(NULL);
-	markup = g_strdup_printf("<span weight=\"bold\">%s</span>", d->title);
+	markup = g_strdup_printf("<span weight=\"bold\">%s</span>", ggadu_dialog_get_title(dialog));
 	gtk_label_set_markup(GTK_LABEL(label), markup);
 	g_free(markup);
 
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);
 
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, TRUE, TRUE, 10);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog_widget)->vbox), hbox, TRUE, TRUE, 10);
 
-	table = gui_build_dialog_gtk_table(d->optlist, 1);
+	table = gui_build_dialog_gtk_table(ggadu_dialog_get_entries(dialog), 1);
 
 	gtk_table_set_row_spacings(GTK_TABLE(table), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(table), 5);
 
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), table, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog_widget)->vbox), table, TRUE, TRUE, 0);
 
-	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gui_dialog_response), signal_cpy(signal));
+	g_signal_connect(G_OBJECT(dialog_widget), "response", G_CALLBACK(gui_dialog_response), signal_cpy(signal));
 
-	gtk_widget_show_all(dialog);
+	gtk_widget_show_all(dialog_widget);
 }
 
 static gint timeout(gpointer user_data)

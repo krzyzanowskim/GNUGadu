@@ -3,6 +3,8 @@
 - systray code cleanups (docket/systray/THrull)
 - "add user" & "change user" signals are now working... (sms/THrull)
 - "gui add user window" and "gui change user window" are no longer avilable (krzak)
+- dialog.[c,h] renamed to ggadu_dialog.[c,h] (krzak)
+- switch to new dialog API finished (krzak)
 
 13.02.2004
 - smashed nasty bug in sms plugin & started to move towards new dialog API (sms/THrull)

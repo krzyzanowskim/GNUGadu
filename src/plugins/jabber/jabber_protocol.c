@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.24 2004/02/14 13:12:46 thrulliq Exp $ */
+/* $Id: jabber_protocol.c,v 1.25 2004/02/14 16:46:56 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -156,7 +156,7 @@ void action_search_form(LmConnection * connection, LmMessage * message, gpointer
 	LmMessageNode *node;
 	LmMessageNode *child_first, *child_last, *child_nick, *child_email, *child_instr;
 	
-	dialog =  ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC,_("Jabber search: form"),"search", 
+	dialog =  ggadu_dialog_new_full(GGADU_DIALOG_GENERIC,_("Jabber search: form"),"search", 
 			    (gpointer) g_strdup(lm_message_node_get_attribute(message->node, "from")));
 
 	node = lm_message_node_get_child(message->node, "query");
@@ -169,16 +169,16 @@ void action_search_form(LmConnection * connection, LmMessage * message, gpointer
 		child_instr = lm_message_node_get_child(node, "instructions");
 
 		if (child_first)
-			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 		if (child_last)
-			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 		if (child_nick)
-			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 		if (child_email)
-			ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_EMAIL, _("Email:"), VAR_STR, NULL,
+			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_EMAIL, _("Email:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 
 		signal_emit("jabber", "gui show dialog", dialog, "main-gui");

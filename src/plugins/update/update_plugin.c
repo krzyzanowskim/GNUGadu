@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.18 2004/02/13 22:37:37 thrulliq Exp $ */
+/* $Id: update_plugin.c,v 1.19 2004/02/14 16:47:00 krzyzak Exp $ */
 
 /*  
  * Update plugin for GNU Gadu 2  
@@ -44,7 +44,7 @@
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "update_plugin.h"
 
 GGaduPlugin *update_handler;
@@ -323,14 +323,14 @@ gpointer update_preferences(gpointer user_data)
 
 	print_debug("%s : Preferences\n", GGadu_PLUGIN_NAME);
 
-	d = ggadu_dialog_new1(GGADU_DIALOG_CONFIG, _("Update Preferences"), "update config");
+	d = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Update Preferences"), "update config");
 
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry1(d, GGADU_UPDATE_CONFIG_CHECK_ON_STARTUP, _("Check for updates on startup"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_on_startup"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_UPDATE_CONFIG_CHECK_AUTOMATICALLY, _("Check for updates automatically"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_automatically"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, GGADU_UPDATE_CONFIG_CHECK_INTERVAL, _("Check interval (minutes)"), VAR_INT, (gpointer) ggadu_config_var_get(update_handler, "check_interval"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_UPDATE_CONFIG_CHECK_ON_STARTUP, _("Check for updates on startup"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_on_startup"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_UPDATE_CONFIG_CHECK_AUTOMATICALLY, _("Check for updates automatically"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_automatically"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_UPDATE_CONFIG_CHECK_INTERVAL, _("Check interval (minutes)"), VAR_INT, (gpointer) ggadu_config_var_get(update_handler, "check_interval"), VAR_FLAG_NONE);
 	if (find_plugin_by_name("xosd"))
-		ggadu_dialog_add_entry1(d, GGADU_UPDATE_CONFIG_USE_XOSD, _("Use XOSD instead of dialog boxes"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "use_xosd"), VAR_FLAG_NONE);
+		ggadu_dialog_add_entry(d, GGADU_UPDATE_CONFIG_USE_XOSD, _("Use XOSD instead of dialog boxes"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "use_xosd"), VAR_FLAG_NONE);
 	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
@@ -357,11 +357,11 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("update config"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
+		GGaduDialog *dialog = signal->data;
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
+			GSList *tmplist = ggadu_dialog_get_entries(dialog);
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -400,8 +400,8 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 			else
 				timer = -1;
 		}
-		GGaduDialog_free(d);
-
+		
+		GGaduDialog_free(dialog);
 		return;
 	}
 

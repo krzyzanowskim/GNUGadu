@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.8 2004/02/10 22:23:02 krzyzak Exp $ */
+/* $Id: my_plugin.c,v 1.9 2004/02/14 16:46:38 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -59,11 +59,11 @@ gpointer ggadu_play_file(gpointer user_data)
 
 gpointer se_preferences(gpointer user_data)
 {
-    GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("My Plugin preferences"),"update config");
+    GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("My Plugin preferences"),"update config");
 	
     print_debug("%s: Preferences\n", "My Plugin");
 
-    ggadu_dialog_add_entry1(dialog, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, config_var_get(handler, "player"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(dialog, GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, config_var_get(handler, "player"), VAR_FLAG_NONE);
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -88,11 +88,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
     if (signal->name == UPDATE_CONFIG_SIG)
     {
-	GGaduDialog *d = signal->data;
-	GSList *tmplist = d->optlist;
+	GGaduDialog *dialog = signal->data;
 
-	if (d->response == GGADU_OK)
+	if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 	{
+	    GSList *tmplist = ggadu_dialog_get_entries(dialog);
+	    
 	    while (tmplist)
 	    {
 		GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -105,9 +106,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		}
 		tmplist = tmplist->next;
 	    }
+	    ggadu_config_save(handler);
 	}
-	ggadu_config_save(handler);
-	GGaduDialog_free(d);
+	GGaduDialog_free(dialog);
     }
 }
 

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.59 2004/02/14 13:12:47 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.60 2004/02/14 16:46:59 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -44,7 +44,7 @@
 #include "menu.h"
 #include "support.h"
 #include "tlen_plugin.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "repo.h"
 
 GGaduPlugin *handler;
@@ -642,10 +642,10 @@ gpointer user_remove_user_action(gpointer user_data)
 
 gpointer user_add_user_action(gpointer user_data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, "Add contact", "add user");
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_UIN, "Tlen ID", VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_GROUP, _("Group"), VAR_STR, NULL, VAR_FLAG_NONE);
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, "Add contact", "add user");
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_UIN, "Tlen ID", VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_GROUP, _("Group"), VAR_STR, NULL, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -787,14 +787,14 @@ gpointer search_action(gpointer user_data)
 	gender_list = g_list_append(gender_list, _("female"));
 	gender_list = g_list_append(gender_list, _("male"));
 
-	dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("Tlen search"), "search");
+	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Tlen search"), "search");
 
-	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_ID, _("@tlen.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("@tlen.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -805,7 +805,7 @@ gpointer search_action(gpointer user_data)
 
 gpointer user_preferences_action(gpointer user_data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("Tlen plugin configuration"),"update config");
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("Tlen plugin configuration"),"update config");
 	GSList *statuslist_names = NULL;
 	GSList *tmplist = p->statuslist;
 
@@ -821,15 +821,15 @@ gpointer user_preferences_action(gpointer user_data)
 		tmplist = tmplist->next;
 	}
 
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_UIN, _("Tlen login"), VAR_STR,
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_UIN, _("Tlen login"), VAR_STR,
 			       ggadu_config_var_get(handler, "login"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_PASSWORD, _("Password"), VAR_STR,
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_PASSWORD, _("Password"), VAR_STR,
 			       ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL,
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL,
 			       ggadu_config_var_get(handler, "log"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 			       ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
 			       statuslist_names, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -974,9 +974,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				/* end */
 
-				dialog = ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr", _sp);
+				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr", _sp);
 				desc_utf = to_utf8("ISO-8859-2", description);
-				ggadu_dialog_add_entry1(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR,
+				ggadu_dialog_add_entry(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR,
 						       desc_utf, VAR_FLAG_NONE);
 				g_free(desc_utf);
 

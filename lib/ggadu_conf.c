@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.10 2004/02/09 23:28:56 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.11 2004/02/14 16:46:53 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -56,7 +56,6 @@ gint ggadu_config_var_check(GGaduPlugin * handler, gchar * name)
 	while (tmp)
 	{
 		var = (GGaduVar *) tmp->data;
-
 		if (!g_strcasecmp(var->name, name))
 		{
 			if (var->ptr)
@@ -64,7 +63,6 @@ gint ggadu_config_var_check(GGaduPlugin * handler, gchar * name)
 			else
 				return 0;
 		}
-
 		tmp = tmp->next;
 	}
 	return -1;

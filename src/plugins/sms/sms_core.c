@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.34 2004/02/14 13:12:47 thrulliq Exp $ */
+/* $Id: sms_core.c,v 1.35 2004/02/14 16:46:57 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -44,7 +44,7 @@
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "sms_gui.h"
 #include "sms_core.h"
 
@@ -194,12 +194,12 @@ void SMS_free(SMS * message)
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
 gboolean IDEA_logo(SMS * user_data)
 {
-	GGaduDialog *d = ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC, _("IDEA token"), "get token", user_data);
+	GGaduDialog *dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("IDEA token"), "get token", user_data);
 	
-	ggadu_dialog_add_entry1(d, 0, "", VAR_IMG, idea_token_path, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry1(d, 1, _("Enter token text"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, 0, "", VAR_IMG, idea_token_path, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, 1, _("Enter token text"), VAR_STR, NULL, VAR_FLAG_NONE);
 
-	signal_emit_from_thread("sms", "gui show dialog", d, "main-gui");
+	signal_emit_from_thread("sms", "gui show dialog", dialog, "main-gui");
 
 	return FALSE;
 }

@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.16 2004/02/14 02:08:10 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.17 2004/02/14 16:46:57 krzyzak Exp $ */
 
 /* 
  * remote plugin for GNU Gadu 2 
@@ -43,7 +43,7 @@
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "perl_embed.h"
 
 #include "remote_plugin.h"
@@ -355,10 +355,11 @@ void signal_recv(gpointer name, gpointer signal_ptr)
 
     if (signal->name == g_quark_from_static_string("update config"))
     {
-	GGaduDialog *d = signal->data;
-	GSList *tmplist = d->optlist;
-	if (d->response == GGADU_OK)
+	GGaduDialog *dialog = signal->data;
+	
+	if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 	{
+	    GSList *tmplist = ggadu_dialog_get_entries(dialog);
 	    while (tmplist)
 	    {
 		GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -378,8 +379,8 @@ void signal_recv(gpointer name, gpointer signal_ptr)
 	    ggadu_config_save(handler);
 	    read_remote_config();
 	}
-	GGaduDialog_free(d);
-
+	
+	GGaduDialog_free(dialog);
 	return;
     }
 
@@ -625,11 +626,11 @@ gpointer remote_menu_preferences(gpointer user_data)
 
     print_debug("%s : Preferences\n", GGadu_PLUGIN_NAME);
 	
-    dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("Remote Preferences"),"update config");
+    dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("Remote Preferences"),"update config");
 
-    ggadu_dialog_add_entry1(dialog, REMOTE_CONFIG_SAME_UID, _("Ignore commands with different uid"), VAR_BOOL,
+    ggadu_dialog_add_entry(dialog, REMOTE_CONFIG_SAME_UID, _("Ignore commands with different uid"), VAR_BOOL,
 			   (gpointer) ggadu_config_var_get(handler, "same_uid"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry1(dialog, REMOTE_CONFIG_SAME_GID, _("Ignore commands with different gid"), VAR_BOOL,
+    ggadu_dialog_add_entry(dialog, REMOTE_CONFIG_SAME_GID, _("Ignore commands with different gid"), VAR_BOOL,
 			   (gpointer) ggadu_config_var_get(handler, "same_gid"), VAR_FLAG_NONE);
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");

@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.17 2004/02/10 22:23:03 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.18 2004/02/14 16:46:54 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -36,7 +36,7 @@
 #include "support.h"
 #include "ggadu_conf.h"
 #include "repo.h"
-#include "dialog.h"
+#include "ggadu_dialog.h"
 #include "menu.h"
 
 #include "dockapp_plugin.h"
@@ -273,15 +273,15 @@ gpointer dockapp_preferences_action()
 	}
 
 	/* create dialog */
-	dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("Dockapp plugin configuration"),"update config");
+	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("Dockapp plugin configuration"),"update config");
 
 	/* plugin_visible=(int)*ggadu_config_var_get(handler,"dockapp_visible"); */
 	
-	ggadu_dialog_add_entry1(dialog, GGADU_DOCKAPP_CONFIG_VISIBLE, _("Visible"), VAR_BOOL,
+	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_CONFIG_VISIBLE, _("Visible"), VAR_BOOL,
 			       ggadu_config_var_get(handler, "dockapp_visible"), VAR_FLAG_NONE);
 
 	if (count > 0)
-		ggadu_dialog_add_entry1(dialog, GGADU_DOCKAPP_CONFIG_PROTOCOL, _("Protocol"), VAR_LIST,
+		ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_CONFIG_PROTOCOL, _("Protocol"), VAR_LIST,
 				       pluginlist_names, VAR_FLAG_NONE);
 
 
@@ -499,11 +499,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	/* read new settings, remember and save */
 	if (signal->name == g_quark_from_static_string("update config"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
+		GGaduDialog *dialog = signal->data;
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
+			GSList *tmplist = ggadu_dialog_get_entries(dialog);
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -550,7 +550,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			draw_pixmap();
 			redraw_dockapp();
 		}
-		GGaduDialog_free(d);
+		GGaduDialog_free(dialog);
 		return;
 	}
 }

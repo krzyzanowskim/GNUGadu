@@ -9,9 +9,9 @@ libgg2_core_la_SOURCES = unified-types.c \
 	plugins.c \
 	support.c \
 	menu.c \
-	dialog.c \
 	repo.c \
 	ggadu_conf.c \
+	ggadu_dialog.c \
 	perl_embed.c \
 	gg-types.h \
 	unified-types.h \
@@ -19,9 +19,9 @@ libgg2_core_la_SOURCES = unified-types.c \
 	plugins.h \
 	support.h \
 	menu.h \
-	dialog.h \
 	repo.h \
 	ggadu_conf.h \
+	ggadu_dialog.h \
 	perl_embed.h 
 	
 libgg2_core_la_HEADERS = gg2_core.h
@@ -39,7 +39,7 @@ all:
 	@cat $(top_builddir)/config.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/gg-types.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/unified-types.h >> $(top_builddir)/lib/gg2_core.h
-	@cat $(top_builddir)/lib/dialog.h >> $(top_builddir)/lib/gg2_core.h
+	@cat $(top_builddir)/lib/ggadu_dialog.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/perl_embed.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/repo.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/support.h >> $(top_builddir)/lib/gg2_core.h
