@@ -20,43 +20,48 @@ typedef struct _GUIChatSessionClass GUIChatSessionClass;
 
 GType gui_chat_session_get_type (void);
 
-enum {
-	GUI_CHAT_SESSION_HISTORY_RECV = 1,
-	GUI_CHAT_SESSION_HISTORY_SEND
+enum
+{
+    GUI_CHAT_SESSION_HISTORY_RECV = 1,
+    GUI_CHAT_SESSION_HISTORY_SEND
 };
 
-typedef struct  {
-	guint type; /* GUI_CHAT_SESSION_HISTORY_RECV,GUI_CHAT_SESSION_HISTORY_SEND */
-	gchar *text;
-	GTimeVal date1; /* receive date */
-	GTimeVal date2; /* send date */
+typedef struct
+{
+    guint type;			/* GUI_CHAT_SESSION_HISTORY_RECV,GUI_CHAT_SESSION_HISTORY_SEND */
+    gchar *text;
+    GTimeVal date1;		/* receive date */
+    GTimeVal date2;		/* send date */
 } gcs_history;
 
-struct _GUIChatSession {
-	GObject patent;
-	
-	/* instance members */
-	GList        *recipients; /* list of recipients, typically there is only one, but during conversation there may be a few */
-	GList	     *history_list; /* gcs_history */
-	/* gtk widget to put in some container */
-	GtkWidget    *widget;
-	gboolean     visibility;
+struct _GUIChatSession
+{
+    GObject patent;
+
+    /* instance members */
+    GList *recipients;		/* list of recipients, typically there is only one, but during conversation there may be a few */
+    GList *history_list;	/* gcs_history */
+    /* gtk widget to put in some container */
+    GtkWidget *widget;
+    gboolean visibility;
 };
 
-struct _GUIChatSessionClass {
-	GObjectClass parent;
-	/* class members */
+struct _GUIChatSessionClass
+{
+    GObjectClass parent;
+    /* class members */
 };
 
 /* public */
-GUIChatSession *gui_chat_session_new(void);
+GUIChatSession *gui_chat_session_new (void);
 
-void gui_chat_session_add_recipient(GUIChatSession *gsc, gchar *id);
+void gui_chat_session_add_recipient (GUIChatSession * gsc, gchar * id);
 
-GList *gui_chat_session_get_recipients_list(GUIChatSession *gsc);
+GList *gui_chat_session_get_recipients_list (GUIChatSession * gsc);
 
-guint gui_chat_session_get_session_type(GUIChatSession *gsc);
+guint gui_chat_session_get_session_type (GUIChatSession * gsc);
 
-GtkWidget *gui_chat_session_get_widget(GUIChatSession *gcs);
+GtkWidget *gui_chat_session_get_widget (GUIChatSession * gcs);
 
+void gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
 #endif

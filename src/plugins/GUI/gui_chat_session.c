@@ -173,7 +173,6 @@ void gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
     gtk_container_add (GTK_CONTAINER (sw), input);
     gtk_paned_add2 (GTK_PANED (paned), sw);
 
-
     /*
     * buttons 
     */
