@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.21 2004/12/28 17:48:04 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.22 2005/01/31 14:15:31 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -51,7 +51,7 @@ typedef enum
 } GGaduPluginType;
 
 /*! \brief Some kind of enum, don't know why it is here */
-enum
+typedef enum
 {
     GGADU_ID = 1,
     GGADU_NICK,

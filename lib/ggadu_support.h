@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.16 2005/01/03 15:50:59 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.17 2005/01/31 14:15:31 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -41,6 +41,7 @@
 #ifndef GG2_CORE_H
 #include "ggadu_types.h"
 #endif
+
 /*
  * Standard gettext macros.
  */
