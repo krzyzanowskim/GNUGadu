@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.30 2003/06/25 22:11:04 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.31 2003/09/16 23:10:13 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -370,7 +370,6 @@ void gui_main_window_create (gboolean visible)
     gint top, left;
 
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    gdk_window_set_decorations(GTK_WIDGET(window)->window,GDK_DECOR_MENU);
     gtk_widget_set_name (window, "ggadu_window");
     gtk_window_set_wmclass (GTK_WINDOW (window), "GM_NAME", "GNUGadu");
     gtk_window_set_title (GTK_WINDOW (window), "GNU Gadu 2");
@@ -423,8 +422,10 @@ void gui_main_window_create (gboolean visible)
     status_hbox = gtk_hbox_new (FALSE, 2);
     gtk_box_pack_start (GTK_BOX (main_vbox), status_hbox, FALSE, TRUE, 2);
 
-    if (visible)
+    if (visible) {
 	gtk_widget_show_all (GTK_WIDGET (window));
+	gdk_window_set_decorations(GTK_WIDGET(window)->window,GDK_DECOR_MENU);
+    }
 
     if (tree)
 	gui_create_tree ();
