@@ -1,4 +1,4 @@
-/* $Id: unified-types.c,v 1.4 2004/01/28 23:39:39 shaster Exp $ */
+/* $Id: unified-types.c,v 1.5 2004/02/08 23:01:59 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -29,74 +29,84 @@
 
 #include <glib.h>
 #include "unified-types.h"
+#include "gg-types.h"
 
 void GGaduContact_free(GGaduContact * k)
 {
-    if (k == NULL)
+	if (k == NULL)
+		return;
+
+	g_free(k->id);
+	g_free(k->first_name);
+	g_free(k->last_name);
+	g_free(k->nick);
+	g_free(k->mobile);
+	g_free(k->email);
+	g_free(k->gender);
+	g_free(k->group);
+	g_free(k->comment);
+	g_free(k->birthdate);
+	g_free(k->status_descr);
+	g_free(k->city);
+	g_free(k->age);
+	g_free(k->gender);
+
+	g_free(k);
 	return;
-
-    g_free(k->id);
-    g_free(k->first_name);
-    g_free(k->last_name);
-    g_free(k->nick);
-    g_free(k->mobile);
-    g_free(k->email);
-    g_free(k->gender);
-    g_free(k->group);
-    g_free(k->comment);
-    g_free(k->birthdate);
-    g_free(k->status_descr);
-    g_free(k->city);
-    g_free(k->age);
-    g_free(k->gender);
-
-    g_free(k);
-    return;
 }
 
 void GGaduMsg_free(GGaduMsg * m)
 {
-    if (!m)
+	if (!m)
+		return;
+
+	g_free(m->id);
+	g_free(m->message);
+
+	g_free(m);
 	return;
-
-    g_free(m->id);
-    g_free(m->message);
-
-    g_free(m);
-    return;
 }
 
 void GGaduNotify_free(GGaduNotify * n)
 {
-    if (!n)
+	if (!n)
+		return;
+
+	g_free(n->id);
+
+	g_free(n);
 	return;
-
-    g_free(n->id);
-
-    g_free(n);
-    return;
 }
 
 
 void GGaduStatusPrototype_free(GGaduStatusPrototype * s)
 {
-    if (!s)
+	if (!s)
+		return;
+
+	g_free(s->description);
+	g_free(s->image);
+
+	g_free(s);
 	return;
-
-    g_free(s->description);
-    g_free(s->image);
-
-    g_free(s);
-    return;
 }
 
 void GGaduKeyValue_free(GGaduKeyValue * kv)
 {
-    if (!kv)
-	return;
-    g_free(kv->value);
-    g_free(kv->description);
-    g_free(kv);
+	if (!kv)
+		return;
+	
+	if ((kv->type == VAR_STR) ||
+		(kv->type == VAR_LIST))
+		g_free(kv->value);
+
+	/*if (kv->type == VAR_LIST)
+		g_list_free(kv->value);*/
+	
+	/* ZONK add more */
+	
+	g_free(kv->description);
+	g_free(kv);
 }
 
 #endif

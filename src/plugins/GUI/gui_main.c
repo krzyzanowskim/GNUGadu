@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.42 2004/01/28 23:40:26 shaster Exp $ */
+/* $Id: gui_main.c,v 1.43 2004/02/08 23:01:59 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -215,8 +215,12 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 #ifdef PERL_EMBED
 	register_signal_perl("gui msg receive", perl_gui_msg_receive);
 #endif
+
+	/* DEPRECATED */
 	GUI_ADD_USER_WINDOW_SIG = register_signal(gui_handler, "gui add user window");
+	/* DEPRECATED */
 	GUI_CHANGE_USER_WINDOW_SIG = register_signal(gui_handler, "gui change user window");
+
 
 	GUI_SHOW_INVISIBLE_CHATS_SIG = register_signal(gui_handler, "gui show invisible chats");
 

@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.5 2004/01/28 23:39:22 shaster Exp $ */
+/* $Id: dialog.c,v 1.6 2004/02/08 23:01:59 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -33,65 +33,98 @@
 
 GGaduDialog *ggadu_dialog_new()
 {
-    return g_new0(GGaduDialog, 1);
+	return g_new0(GGaduDialog, 1);
+}
+
+GGaduDialog *ggadu_dialog_new1(guint type, gchar * title, gchar * callback_signal)
+{
+	GGaduDialog *dialog = g_new0(GGaduDialog, 1);
+	ggadu_dialog_callback_signal(dialog, callback_signal);
+	ggadu_dialog_set_title(dialog, title);
+	ggadu_dialog_set_type(dialog, type);
+	return dialog;
 }
 
 void ggadu_dialog_add_entry(GSList ** prefs, gint key, const gchar * desc, gint type, gpointer value, gint flags)
 {
-    GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
-    kv->key = key;
-    kv->description = g_strdup(desc);
-    kv->type = type;
-    kv->value = value;
-    kv->flag = flags;
+	GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
+	kv->key = key;
+	kv->description = g_strdup(desc);
+	kv->type = type;
+	kv->value = value;
+	kv->flag = flags;
 
-    *prefs = g_slist_append(*prefs, kv);
+	*prefs = g_slist_append(*prefs, kv);
+}
+
+
+void ggadu_dialog_add_entry1(GGaduDialog * d, gint key, const gchar * desc, gint type, gpointer value, gint flags)
+{
+	GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
+	kv->key = key;
+	kv->description = g_strdup(desc);
+	kv->type = type;
+	kv->value = value;
+	kv->flag = flags;
+
+	d->optlist = g_slist_append(d->optlist, kv);
+}
+
+GSList *ggadu_dialog_get_entries(GGaduDialog * dialog)
+{
+	g_return_val_if_fail(dialog != NULL, NULL);
+	return dialog->optlist;
+}
+
+GGaduDialogType ggadu_dialog_get_type(GGaduDialog * dialog)
+{
+	g_return_val_if_fail(dialog != NULL, -1);
+	return dialog->type;
+}
+
+gint ggadu_dialog_get_response(GGaduDialog * dialog)
+{
+	g_return_val_if_fail(dialog != NULL, -1);
+	return dialog->response;
 }
 
 void ggadu_dialog_callback_signal(GGaduDialog * d, const gchar * t)
 {
-    g_return_if_fail(d != NULL);
-    d->callback_signal = g_strdup(t);
+	g_return_if_fail(d != NULL);
+	d->callback_signal = g_strdup(t);
 }
 
 void ggadu_dialog_set_title(GGaduDialog * d, const gchar * t)
 {
-    g_return_if_fail(d != NULL);
-    d->title = g_strdup(t);
+	g_return_if_fail(d != NULL);
+	d->title = g_strdup(t);
 }
 
-void ggadu_dialog_set_type(GGaduDialog * d, gint type)
+void ggadu_dialog_set_type(GGaduDialog * d, GGaduDialogType type)
 {
-    g_return_if_fail(d != NULL);
-    d->type = type;
+	g_return_if_fail(d != NULL);
+	d->type = type;
 }
 
 void GGaduDialog_free(GGaduDialog * d)
 {
-    GSList *e = NULL;
+	GSList *e = NULL;
 
-    if (!d)
+	if (!d)
+		return;
+
+	g_free(d->title);
+	g_free(d->callback_signal);
+
+	e = d->optlist;
+	while (e)
+	{
+		GGaduKeyValue *kv = (GGaduKeyValue *) e->data;
+		GGaduKeyValue_free(kv);
+		e = e->next;
+	}
+	g_slist_free(d->optlist);
+
+	g_free(d);
 	return;
-
-    g_free(d->title);
-    g_free(d->callback_signal);
-
-    e = d->optlist;
-    while (e)
-    {
-	GGaduKeyValue *kv = (GGaduKeyValue *) e->data;
-/*
-	g_free(kv->value);
-*/
-	g_free(kv->description);
-	g_free(e->data);
-/*
-	GGaduKeyValue_free(kv);
-*/
-	e = e->next;
-    }
-    g_slist_free(d->optlist);
-
-    g_free(d);
-    return;
 }

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.33 2004/02/04 14:29:02 shaster Exp $ */
+/* $Id: gui_dialogs.c,v 1.34 2004/02/08 23:01:59 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -382,83 +382,87 @@ void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)
 {
 	GGaduSignal *signal = (GGaduSignal *) user_data;
 	GGaduDialog *d = signal->data;
-	GSList *kvlist = d->optlist;
 
-
-	while (kvlist)
+	if (d)
 	{
-		GGaduKeyValue *kv = (GGaduKeyValue *) kvlist->data;
+		GSList *kvlist = d->optlist;
 
-		switch (kv->type)
+		while (kvlist)
 		{
-		case VAR_STR:
-		{
-			gchar *tmp = (gchar *) g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
-			if (strlen(tmp) > 0)
-				kv->value = (gpointer) tmp;
-			else
+			GGaduKeyValue *kv = (GGaduKeyValue *) kvlist->data;
+
+			switch (kv->type)
 			{
-				kv->value = NULL;
-				g_free(tmp);
-			}
-		}
-			break;
-		case VAR_INT:
-		case VAR_INT_WITH_NEGATIVE:
-			kv->value = (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(kv->user_data));
-			break;
-		case VAR_BOOL:
-			kv->value = (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(kv->user_data));
-			break;
-		case VAR_FILE_CHOOSER:
-		case VAR_FONT_CHOOSER:
-		case VAR_COLOUR_CHOOSER:
-		{
-			gchar *tmp = NULL;
-			GtkWidget *hbox = (GtkWidget *) kv->user_data;
-			GtkWidget *entry = (GtkWidget *) g_object_get_data(G_OBJECT(hbox), "txt_entry");
-
-			tmp = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
-			if (strlen(tmp) > 0)
-				kv->value = (gpointer) tmp;
-			else
+			case VAR_STR:
 			{
-				kv->value = NULL;
-				g_free(tmp);
+				gchar *tmp = (gchar *) g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
+				if (strlen(tmp) > 0)
+					kv->value = (gpointer) tmp;
+				else
+				{
+					kv->value = NULL;
+					g_free(tmp);
+				}
 			}
+				break;
+			case VAR_INT:
+			case VAR_INT_WITH_NEGATIVE:
+				kv->value = (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(kv->user_data));
+				break;
+			case VAR_BOOL:
+				kv->value = (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(kv->user_data));
+				break;
+			case VAR_FILE_CHOOSER:
+			case VAR_FONT_CHOOSER:
+			case VAR_COLOUR_CHOOSER:
+			{
+				gchar *tmp = NULL;
+				GtkWidget *hbox = (GtkWidget *) kv->user_data;
+				GtkWidget *entry = (GtkWidget *) g_object_get_data(G_OBJECT(hbox), "txt_entry");
+
+				tmp = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
+				if (strlen(tmp) > 0)
+					kv->value = (gpointer) tmp;
+				else
+				{
+					kv->value = NULL;
+					g_free(tmp);
+				}
+			}
+				break;
+			case VAR_IMG:
+				kv->value = NULL;
+				break;
+			case VAR_LIST:
+				kv->value =
+					gtk_editable_get_chars(GTK_EDITABLE(GTK_COMBO(kv->user_data)->entry), 0, -1);
+				break;
+			}
+			kvlist = kvlist->next;
 		}
+
+		switch (resid)
+		{
+		case GTK_RESPONSE_OK:
+			d->response = GGADU_OK;
 			break;
-		case VAR_IMG:
-			kv->value = NULL;
+		case GTK_RESPONSE_CANCEL:
+			d->response = GGADU_CANCEL;
 			break;
-		case VAR_LIST:
-			kv->value = gtk_editable_get_chars(GTK_EDITABLE(GTK_COMBO(kv->user_data)->entry), 0, -1);
+		case GTK_RESPONSE_YES:
+			d->response = GGADU_YES;
+			break;
+		case GTK_RESPONSE_NO:
+			d->response = GGADU_NO;
+			break;
+		default:
+			d->response = GGADU_NONE;
 			break;
 		}
-		kvlist = kvlist->next;
+
+		signal_emit("main-gui", d->callback_signal, d, signal->source_plugin_name);
 	}
-
-	switch (resid)
-	{
-	case GTK_RESPONSE_OK:
-		d->response = GGADU_OK;
-		break;
-	case GTK_RESPONSE_CANCEL:
-		d->response = GGADU_CANCEL;
-		break;
-	case GTK_RESPONSE_YES:
-		d->response = GGADU_YES;
-		break;
-	case GTK_RESPONSE_NO:
-		d->response = GGADU_NO;
-		break;
-	default:
-		d->response = GGADU_NONE;
-		break;
-	}
-
-	signal_emit("main-gui", d->callback_signal, d, signal->source_plugin_name);
-
+	
 	GGaduSignal_free(signal);
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 }
@@ -484,7 +488,7 @@ void gui_show_message_box(gint type, gpointer signal)
 	gtk_window_set_title(GTK_WINDOW(warning), title);
 	gtk_widget_show_all(warning);
 	g_signal_connect_swapped(GTK_OBJECT(warning), "response", G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(warning));
-	g_free(txt); /* ZONK there shouldnt be free(txt) imho */
+	g_free(txt);		/* ZONK there shouldnt be free(txt) imho */
 	g_free(title);
 }
 

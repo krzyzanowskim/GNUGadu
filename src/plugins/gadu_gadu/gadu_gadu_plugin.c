@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.141 2004/02/02 23:22:45 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.142 2004/02/08 23:01:59 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -313,6 +313,7 @@ void handle_search_event(struct gg_event *e)
 	for (i = 0; i < count; i++)
 	{
 		GGaduContact *k = g_new0(GGaduContact, 1);
+		
 		const gchar *uin = gg_pubdir50_get(res, i, GG_PUBDIR50_UIN);
 		const gchar *first_name = gg_pubdir50_get(res, i, GG_PUBDIR50_FIRSTNAME);
 		const gchar *nick = gg_pubdir50_get(res, i, GG_PUBDIR50_NICKNAME);
@@ -677,6 +678,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			print_debug("wiadomosc dotarla do %d.", e->event.ack.recipient);
 		break;
 	case GG_EVENT_PUBDIR50_SEARCH_REPLY:
+		print_debug("GG_EVENT_PUBDIR50_SEARCH_REPLY");
 		handle_search_event(e);
 		break;
 	}
@@ -853,7 +855,7 @@ gpointer user_preferences_action(gpointer user_data)
 {
 	gchar *utf = NULL;
 	GGaduDialog *d = ggadu_dialog_new();
-	GSList *statuslist_names = NULL;
+	GList *statuslist_names = NULL;
 	GSList *tmplist = p->statuslist;
 
 	while (tmplist)
@@ -862,10 +864,10 @@ gpointer user_preferences_action(gpointer user_data)
 
 		if ((!sp->receive_only) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR) &&
 		    (sp->status != GG_STATUS_NOT_AVAIL))
-			statuslist_names = g_slist_append(statuslist_names, sp->description);
+			statuslist_names = g_list_append(statuslist_names, sp->description);
 
 		if (sp->status == (gint) ggadu_config_var_get(handler, "status"))
-			statuslist_names = g_slist_prepend(statuslist_names, sp->description);
+			statuslist_names = g_list_prepend(statuslist_names, sp->description);
 
 		tmplist = tmplist->next;
 	}
@@ -2273,11 +2275,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == SEARCH_SIG)
 	{
 		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
 		gg_pubdir50_t req;
 
-		if ((d->response == GGADU_OK) || (d->response == GGADU_NONE))
+		if (ggadu_dialog_get_response(d) == GGADU_OK)
 		{
+			GSList *tmplist = d->optlist;
+			
+			print_debug("GGADU_OK");
 			if (!(req = gg_pubdir50_new(GG_PUBDIR50_SEARCH)))
 			{
 				GGaduDialog_free(d);

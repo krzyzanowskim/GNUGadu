@@ -1,3 +1,8 @@
+09.02.2004
+- ggadu_dialog_* API change, not finished yet. (krzak/core)
+- "gui add user window" and "gui change user window" signals are deprecated. (krzak)
+- fixes, changes (krzak)
+
 02.02.2004
 - new account registration available with Jabber (jabber/krzak)
 
