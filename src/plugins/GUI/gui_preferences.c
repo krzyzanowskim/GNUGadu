@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.100 2005/03/02 13:00:57 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.101 2005/03/04 16:04:53 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -653,7 +653,7 @@ static GtkWidget *create_chat_tab()
 
 	g_object_set_data(G_OBJECT(chat_vbox), "chatstyle", chatstyle);
 
-	irc_msg_style = gtk_check_button_new_with_label(_("IRC messages style"));
+	irc_msg_style = gtk_check_button_new_with_label(_("IRC-like messages displaying"));
 	gtk_box_pack_start(GTK_BOX(vbox), irc_msg_style, FALSE, FALSE, 0);
 	g_object_set_data(G_OBJECT(chat_vbox), "irc_msg_style", irc_msg_style);
 	
