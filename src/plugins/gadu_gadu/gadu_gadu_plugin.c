@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.188 2004/08/29 11:13:03 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.189 2004/09/10 14:37:18 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -349,16 +349,6 @@ static void handle_search_event(struct gg_event *e)
 	signal_emit(GGadu_PLUGIN_NAME, "gui show search results", list, "main-gui");
 }
 
-/*void ggadu_gg_save_history(gchar * to, gchar * txt)
-{
-	if (ggadu_config_var_get(handler, "log"))
-	{
-		gchar *path = g_build_filename(this_configdir, "history", to, NULL);
-		write_line_to_file(path, txt, "CP1250");
-		g_free(path);
-	}
-}
-*/
 void ggadu_gadu_gadu_reconnect()
 {
 	if (++connect_count < 3)
