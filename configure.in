@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.56 2004/04/02 18:51:58 krzyzak Exp $
+dnl $Id: configure.in,v 1.57 2004/04/04 08:21:46 krzyzak Exp $
 
 m4_define([gg2_version],[2.0])
 
@@ -310,7 +310,7 @@ if test "x$with_remote" = "xyes"; then
 fi
 
 
-AC_ARG_WITH(docklet_system_tray, [  --with-docklet_system_tray	  Build docklet plugin		default=no])
+AC_ARG_WITH(docklet_system_tray, [  --with-docklet-system-tray	  Build docklet plugin		default=no])
 if test "x$with_docklet_system_tray" = "xyes"; then 
     want_docklet_system_tray=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], want_docklet_system_tray=no)
@@ -323,7 +323,7 @@ else
     want_docklet_system_tray=no
 fi
 
-AC_ARG_WITH(docklet_dockapp, [  --with-docklet_dockapp	  Build dockapp plugin		default=no])
+AC_ARG_WITH(docklet_dockapp, [  --with-docklet-dockapp	  Build dockapp plugin		default=no])
 if test "x$with_docklet_dockapp" = "xyes"; then 
     want_docklet_dockapp=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], want_docklet_dockapp=no)
