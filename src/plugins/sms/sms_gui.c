@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.51 2004/03/13 14:27:07 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.52 2004/03/13 15:13:17 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -285,6 +285,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == g_quark_from_static_string("change status"))
 	{
 		GGaduStatusPrototype *sp = signal->data;
+		
 
 		if (!sp)
 			return;
@@ -509,8 +510,8 @@ GSList *button_send()
 	sp->status = 1;
 	sp->description = g_strdup(_("Send SMS (internal)"));
 	sp->image = g_strdup("sms_i.png");
-	list = g_slist_append(list, sp);
 	sp->receive_only = receive_only_value;
+	list = g_slist_append(list, sp);
 	sp++;
 
 	sp->status = 2;

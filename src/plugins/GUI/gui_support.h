@@ -1,4 +1,4 @@
-/* $Id: gui_support.h,v 1.6 2004/01/28 23:40:38 shaster Exp $ */
+/* $Id: gui_support.h,v 1.7 2004/03/13 15:13:16 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -40,7 +40,7 @@ gboolean gui_check_for_sessions(GSList * protocolsl);
 
 gui_protocol *gui_find_protocol(gchar * plugin_name, GSList * protocolsl);
 
-GGaduStatusPrototype *gui_find_status_prototype(GGaduProtocol * gp, guint status);
+GGaduStatusPrototype *gui_find_status_prototype(GGaduProtocol * gp, gint status);
 
 GGaduContact *gui_find_user(gchar * id, gui_protocol * gp);
 

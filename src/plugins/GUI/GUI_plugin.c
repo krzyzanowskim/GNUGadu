@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.58 2004/02/29 23:43:35 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.59 2004/03/13 15:13:16 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -501,8 +501,9 @@ void change_status(GPtrArray * ptra)
 	GGaduStatusPrototype *sp = g_ptr_array_index(ptra, 0);
 	gchar *plugin_source = g_ptr_array_index(ptra, 1);
 	gui_protocol *gp = NULL;
-	GGaduStatusPrototype *sp1;
-	gint status;
+	GGaduStatusPrototype *sp1 = NULL;
+
+	gint status = 0;
 	/*    
 	 * GtkWidget *status_image = g_ptr_array_index(ptra, 2);
 	 * GtkWidget *image = create_image(sp->image);
@@ -514,15 +515,27 @@ void change_status(GPtrArray * ptra)
 	gp = gui_find_protocol(plugin_source, protocols);
 	if (gp && !is_in_status(sp->status, gp->p->offline_status) && ggadu_config_var_get(gui_handler, "blink"))
 	{
+		gint last_resort_status;
 		gp->aaway_timer = -1;
 
 		if (gp->blinker > 0)
 			g_source_remove(gp->blinker);
+		
 		gp->blinker = -1;
 
 		status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-		print_debug("%d %d\n", status, *(int *) &gp->p->offline_status->data);
-		sp1 = gui_find_status_prototype(gp->p, status != 0 ? status : *(int *) &gp->p->offline_status->data);
+		
+		if (gp->p->offline_status)
+			last_resort_status = (gint)gp->p->offline_status->data;
+		else {
+			GGaduStatusPrototype *stmp = (GGaduStatusPrototype *)gp->p->statuslist->data;
+			last_resort_status = stmp->status;
+		}
+		
+		print_debug("requested status ID : %d, last_resort_status : %d\n", status, last_resort_status);
+		
+		sp1 = gui_find_status_prototype(gp->p, status != 0 ? status : last_resort_status);
+		/* sp1 = gui_find_status_prototype(gp->p, status != 0 ? status : *(int *) &last_resort_status); */
 		if (sp1 != NULL && is_in_status(status, gp->p->offline_status))
 		{
 			/* *INDENT-OFF* */
