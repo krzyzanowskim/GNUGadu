@@ -1,6 +1,7 @@
 22.08.2004
 - tlen-3d icons set as default, current tlen icons set as tlen-classic (core/krzak)
 - close bug #76 http://bugs.gnugadu.org/?do=details&id=67 (gadu-gadu/krzak)
+- Jep-0054 - vcard support (jabber/m-kobierzycki@debian.linux.org.pl)
 
 21.08.2004
 - icons chooser moved to advanced tab, and other (GUI/krzak)

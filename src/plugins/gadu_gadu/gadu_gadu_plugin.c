@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.185 2004/08/22 14:39:41 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.186 2004/08/22 18:37:18 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1495,8 +1495,9 @@ GGaduMenu *build_plugin_menu()
 	GGaduMenu *root = ggadu_menu_create();
 	GGaduMenu *item_gg = ggadu_menu_add_item(root, "Gadu-Gadu", NULL, NULL);
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Add Contact"), user_add_user_action, NULL));
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Search for friends"), search_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Import userlist"), import_userlist_action, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Export userlist"), export_userlist_action, NULL));

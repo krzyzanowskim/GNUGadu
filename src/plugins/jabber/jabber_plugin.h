@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.35 2004/08/16 13:15:28 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.36 2004/08/22 18:37:22 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -83,6 +83,21 @@ enum subscription
     JABBER_S_BOTH
 };
 
+enum vcard
+{
+    GGADU_JABBER_GIVEN,
+    GGADU_JABBER_FAMILY,
+    GGADU_JABBER_FN,
+    GGADU_JABBER_NICKNAME,
+    GGADU_JABBER_BDAY,
+    GGADU_JABBER_USERID,
+    GGADU_JABBER_URL,
+    GGADU_JABBER_ORGNAME,
+    GGADU_JABBER_NUMBER,
+    GGADU_JABBER_LOCALITY,
+    GGADU_JABBER_CTRY
+};
+
 typedef struct
 {
     gchar *id;
@@ -104,6 +119,7 @@ extern GGaduPlugin *jabber_handler;
 extern LmMessageHandler *iq_handler;
 extern LmMessageHandler *iq_roster_handler;
 extern LmMessageHandler *iq_version_handler;
+extern LmMessageHandler *iq_vcard_handler;
 extern LmMessageHandler *presence_handler;
 extern LmMessageHandler *message_handler;
 

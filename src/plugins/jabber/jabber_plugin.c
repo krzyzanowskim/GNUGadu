@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.91 2004/08/22 16:39:07 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.92 2004/08/22 18:37:22 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -40,6 +40,7 @@ GGaduPlugin *jabber_handler;
 LmMessageHandler *iq_handler;
 LmMessageHandler *iq_roster_handler;
 LmMessageHandler *iq_version_handler;
+LmMessageHandler *iq_vcard_handler;
 LmMessageHandler *presence_handler;
 LmMessageHandler *message_handler;
 
@@ -55,6 +56,7 @@ static GQuark GET_CURRENT_STATUS_SIG;
 static GQuark GET_USER_MENU_SIG;
 static GQuark REGISTER_ACCOUNT;
 static GQuark USER_REMOVE_SIG;
+static GQuark USER_EDIT_VCARD_SIG;
 
 jabber_data_type jabber_data;
 
@@ -208,6 +210,43 @@ static gpointer user_show_ignored_action(gpointer user_data)
         return NULL;
 }
 
+static gpointer user_own_vcard_action(gpointer user_data)
+{
+        LmMessage *msg;
+        LmMessageNode *node;
+
+        msg=lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+        lm_message_node_set_attribute(msg->node, "from", ggadu_config_var_get(jabber_handler, "jid"));
+        lm_message_node_set_attribute(msg->node, "id", "v1");
+
+        node=lm_message_node_add_child(msg->node, "vCard", NULL);
+        lm_message_node_set_attribute(node, "xmlns", "vcard-temp");
+        lm_connection_send(jabber_data.connection, msg, NULL);
+        lm_message_unref(msg);
+	    
+        return NULL;
+}
+
+static gpointer user_vcard_action(gpointer user_data)
+{
+        GSList *user = (GSList *) user_data;
+	GGaduContact *k = (GGaduContact *) user->data;
+	LmMessage *msg;
+	LmMessageNode *node;
+
+	if(!user)
+		return NULL;
+
+	msg=lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+	lm_message_node_set_attribute(msg->node, "id", "v3");
+	node=lm_message_node_add_child(msg->node, "vCard", NULL);
+	lm_message_node_set_attribute(node, "xmlns", "vcard-temp");
+	lm_connection_send(jabber_data.connection, msg, NULL);
+
+	lm_message_unref(msg);
+
+	return NULL;
+}
 static gpointer user_ask_remove_action(gpointer user_data)
 {
         GGaduDialog *dialog;
@@ -321,7 +360,7 @@ static GGaduMenu *build_userlist_menu(void)
 	GGaduMenu *listmenu,*ignoremenu;
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
-
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Show personal data"), user_vcard_action, NULL));
 	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
 	
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
@@ -343,7 +382,6 @@ static GGaduMenu *build_userlist_menu(void)
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_ask_remove_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add New"), user_add_action, NULL));
 
 
@@ -593,6 +631,20 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			
 			lm_message_unref(m);
 			GGaduContact_free(k);
+		}
+
+		GGaduDialog_free(dialog);
+	}
+	else if(signal->name == USER_EDIT_VCARD_SIG)
+	{
+		GGaduDialog *dialog = signal->data;
+		
+		if(ggadu_dialog_get_response(dialog) == GGADU_OK)
+		{
+                        signal_emit("jabber", "gui show message",
+				    g_strdup("Editing own vcard is not yet supported.\n"
+					     "I'm working on it. -mpk"),
+				    "main-gui");
 		}
 
 		GGaduDialog_free(dialog);
@@ -892,8 +944,12 @@ GGaduMenu *build_jabber_menu()
 	item = ggadu_menu_add_item(root, "_Jabber", NULL, NULL);
 
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Add Contact"), user_add_action, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Search for friends"), user_search_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Personal data"), user_own_vcard_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Register account"), jabber_register_account_dialog, NULL));
 	return root;
@@ -927,6 +983,7 @@ void start_plugin()
 	ADD_USER_SIG = register_signal(jabber_handler, "add user");
 	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
 	USER_REMOVE_SIG = register_signal(jabber_handler, "user remove action");
+	USER_EDIT_VCARD_SIG = register_signal(jabber_handler, "user edit vcard");
 
 	jabbermenu = build_jabber_menu();
 
