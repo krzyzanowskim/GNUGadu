@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.93 2005/01/26 08:38:16 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.94 2005/01/26 08:41:55 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -837,7 +837,7 @@ static GtkWidget *create_advanced_tab()
 
 	if (dir)
 	{
-		GList *list_theme = NULL;
+		GSList *list_theme = NULL;
 		gchar *theme_current;
 		gchar *theme_name_file;
 		gchar *theme_name;
@@ -853,7 +853,7 @@ static GtkWidget *create_advanced_tab()
 			{
 				theme_name = g_strndup(theme_name_file, strlen(theme_name_file) - strlen(".theme"));
 
-				list_theme = g_list_append(list_theme, g_strdup(theme_name));
+				list_theme = g_slist_append(list_theme, g_strdup(theme_name));
 				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_theme), g_strdup(theme_name));
 
 				if (theme_current && !ggadu_strcasecmp(theme_name, theme_current))
@@ -892,7 +892,7 @@ static GtkWidget *create_advanced_tab()
 
 	if (dir)
 	{
-		GList *list_skins = NULL;
+		GSList *list_skins = NULL;
 		gchar *skin_current;
 		gchar *skin_dir_name;
 		gint i = 0;
@@ -909,7 +909,7 @@ static GtkWidget *create_advanced_tab()
 			
 			if (g_file_test(full_skin_dir_name, G_FILE_TEST_IS_DIR))
 			{
-				list_skins = g_list_append(list_skins, g_strdup(skin_dir_name));
+				list_skins = g_slist_append(list_skins, g_strdup(skin_dir_name));
 				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_skins), g_strdup(skin_dir_name));
 
 				if (skin_current && !ggadu_strcasecmp(skin_dir_name, skin_current))
@@ -942,7 +942,7 @@ static GtkWidget *create_advanced_tab()
 
 	if (dir)
 	{
-		GList *list_icons = NULL;
+		GSList *list_icons = NULL;
 		gchar *icons_current;
 		gchar *icons_dir;
 		gint i = 0;
@@ -956,7 +956,7 @@ static GtkWidget *create_advanced_tab()
 			if (g_file_test(testdirname, G_FILE_TEST_IS_DIR))
 			{
 				print_debug("%s\n", icons_dir);
-				list_icons = g_list_append(list_icons, g_strdup(icons_dir));
+				list_icons = g_slist_append(list_icons, g_strdup(icons_dir));
 				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_icons), g_strdup(icons_dir));
 
 				if (icons_dir && !ggadu_strcasecmp(icons_dir, icons_current))
