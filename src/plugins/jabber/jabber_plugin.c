@@ -28,6 +28,8 @@
 #include "menu.h"
 #include "support.h"
 #include "dialog.h"
+#include "repo.h"
+
 #include "jabber_plugin.h"
 #include "jabber_plugin_protocol.h"
 #include "jabber_plugin_roster.h"
@@ -264,6 +266,7 @@ gpointer user_remove_user_action(gpointer user_data)
 		GGaduContact *k = (GGaduContact *)users->data;
                                     
 		userlist = g_slist_remove(userlist,k);
+		ggadu_repo_del_value ("jabber", k->id);
 
 		if (connected && jabber_session && k) {
 			iks *x = iks_make_pres(IKS_TYPE_UNSUBSCRIBE, 0, k->id, NULL);
@@ -500,6 +503,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     
 	if (!config_read(jabber_handler)) 
 		g_warning(_("Unable to read configuration file for plugin jabber"));
+	
+	ggadu_repo_add ("jabber");
 	
 	return jabber_handler;
 }

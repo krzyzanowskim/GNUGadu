@@ -130,6 +130,9 @@ void j_handle_iq(ikspak *pak)
 void j_on_packet(void *udata, ikspak *pak) 
 {
 	print_debug("ON_PACKET\n");
+
+	if (!pak)
+	  return;
     
 	switch(pak->type) {
 		case IKS_PAK_STREAM: {

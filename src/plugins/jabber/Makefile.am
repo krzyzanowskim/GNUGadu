@@ -16,6 +16,7 @@ libjabber_plugin_la_LIBADD = ../../plugins.lo \
     ../../menu.lo \
     ../../unified-types.lo \
     ../../dialog.lo \
+    ../../repo.lo \
     $(JABBER_LIBS)
     
 libjabber_plugin_la_LDFLAGS = -module -avoid-version  

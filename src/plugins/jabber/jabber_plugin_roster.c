@@ -6,6 +6,7 @@
 #include "signals.h"
 #include "support.h"
 #include "dialog.h"
+#include "repo.h"
 
 #include "jabber_plugin.h"
 #include "jabber_plugin_protocol.h"
@@ -48,6 +49,7 @@ void remove_roster(char *jid)
 void roster_update_presence(ikspak *pak)
 {
 	GGaduNotify *notify;
+	GSList *l = userlist;
 
 	if (!pak) return;
 
@@ -61,6 +63,15 @@ void roster_update_presence(ikspak *pak)
 	notify = g_new0(GGaduNotify,1);
 	notify->id = g_strdup(iks_id_printx(pak->from,id_print));
 	notify->status = pak->show;
+	
+	while (l) {
+	  GGaduContact *k = (GGaduContact *)l->data;
+
+	  if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
+	    ggadu_repo_change_value ("jabber", k->id, k, REPO_VALUE_DC);
+	  }
+	  l = l->next;
+	}
 	
 	set_userlist_status(notify, iks_find_cdata(pak->x,"status"), userlist);
 	
@@ -83,6 +94,7 @@ void roster_update_item(iks *x, gint type)
 		
 					if (!g_strcasecmp(k->id,jid)) {
 						g_slist_remove(userlist,k);
+						ggadu_repo_del_value ("jabber", k->id);
 						remove_roster(jid);
 						GGaduContact_free(k);
 						userlist_changed = TRUE;
@@ -107,6 +119,7 @@ void roster_update_item(iks *x, gint type)
 				if (!user_in_userlist(userlist,k)) {
 					userlist_changed = TRUE;
 					userlist = g_slist_append(userlist, k);
+					ggadu_repo_add_value ("jabber", k->id, k, REPO_VALUE_CONTACT);
 				} else 
 					GGaduContact_free(k);
 		}
