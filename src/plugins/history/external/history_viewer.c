@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.3 2004/08/03 21:59:29 krzyzak Exp $ */
+/* $Id: history_viewer.c,v 1.4 2004/08/22 20:01:15 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -90,7 +90,7 @@ gpointer show_external_history(gpointer user_data)
 
 	if (!k)
 	{
-		signal_emit("sms", "gui show message", g_strdup(_("User not selected")), "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("User not selected")), "main-gui");
 		return NULL;
 	}
 
