@@ -1,5 +1,6 @@
 05.08.2004
 - fixed warning messages with g_strchomp() (GUI/krzak)
+- visible warning if there is no jid in configuration (Jabber/krzak)
 
 04.08.2004
 - fixed crash of gghist if no file is given (gghist/krzak)
