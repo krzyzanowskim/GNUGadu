@@ -556,7 +556,7 @@ GSList *status_init ()
     list = g_slist_append (list, sp++);
 
     sp->status = JABBER_STATUS_XA;
-    sp->description = g_strdup (_("XA"));
+    sp->description = g_strdup (_("eXtended Away"));
     sp->image = g_strdup ("jabber-xa.png");
     list = g_slist_append (list, sp++);
 
