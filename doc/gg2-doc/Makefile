@@ -18,6 +18,8 @@ htmlu:
 	docbook2html -p `which openjade` -d dtd.dsl#html sgmlu/main.sgml -o html/user -c /etc/sgml/catalog
 	scripts/html-stylesheet.sh html/user/
 	cp docbook.css html/user/
+	rm -rf html/user/img
+	test -f sgmlu/images && mkdir html/user/img && cp `cat sgmlu/images | sed "s/\(.*\)/sgmlu\/\1/g"` html/user/img || echo ""
 
 html-tarballd: html/devel/index.html
 	@mkdir -p tarballs
