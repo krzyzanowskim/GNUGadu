@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.55 2004/05/04 21:39:11 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.56 2004/06/27 13:57:05 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -227,8 +227,10 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		GGaduMenu *umenu = ggadu_menu_create();
 
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send SMS"), sms_send_sms, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), sms_edit_contact, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), sms_remove_contact, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), sms_add_contact, NULL));
 
 		ggadu_menu_print(umenu, NULL);

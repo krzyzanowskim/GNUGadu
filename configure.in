@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.68 2004/06/14 14:53:22 krzyzak Exp $
+dnl $Id: configure.in,v 1.69 2004/06/27 13:57:04 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.3])
 
@@ -14,6 +14,8 @@ AC_PROG_CPP
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
+
+AC_DEFINE_UNQUOTED(INSTALLPREFIX, "${prefix}")
 
 AC_PATH_PROG(GMAKE, gmake, no)
 

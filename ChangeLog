@@ -1,3 +1,6 @@
+27.06.2004
+- fixes build process with --with-included-gettext option (krzak)
+
 25.06.2004
 - fixed "clear" button in tabbed chat mode (#51) by Przemys³aw Grzegorczyk <fran86 o2.pl>
 
