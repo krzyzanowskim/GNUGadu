@@ -1,3 +1,9 @@
+27.03.2005
+- IDEA has changed its sms gateway url again, fixed by Artur Gadawski <artur[at]ufo.o.k.pl>.
+  Maybe we should make these configurable? (sms)
+- fixed: "signals.c:207: warning: use of cast expressions as lvalues is deprecated".
+  Hopefully it doesn't break any builds ;-) (core/shasta)
+
 09.03.2005
 - ggadu_strchomp() allways return newly-allocated string (core/krzak)
 - update preferences for skins support (GUI/krzak)
