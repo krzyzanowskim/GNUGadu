@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.58 2004/01/29 22:15:06 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.59 2004/02/01 09:39:31 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -740,7 +740,7 @@ void start_plugin()
 
 	if (ggadu_config_var_get(jabber_handler, "autoconnect") && !jabber_data.connected)
 	{
-		print_debug("jabber: autoconneting\n");
+		print_debug("jabber: autoconneting");
 		jabber_login(JABBER_STATUS_AVAILABLE);
 	}
 
@@ -766,10 +766,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(jabber_handler, "jid", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "password", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "server", VAR_STR);
+	ggadu_config_var_add_with_default(jabber_handler, "search_server", VAR_STR, "users.jabber.org");
 	ggadu_config_var_add(jabber_handler, "log", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "resource", VAR_STR);
-	ggadu_config_var_add(jabber_handler, "search_server", VAR_STR);
 
 	if (lm_ssl_is_supported())
 		ggadu_config_var_add(jabber_handler, "use_ssl", VAR_BOOL);
