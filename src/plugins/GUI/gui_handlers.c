@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.54 2004/09/28 14:01:32 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.55 2004/10/04 07:56:57 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -187,7 +187,6 @@ void handle_register_protocol(GGaduSignal * signal)
 	print_debug("%s: %s protocol registered %s\n", "main-gui", p->display_name, signal->source_plugin_name);
 	gp->plugin_name = g_strdup(signal->source_plugin_name);
 	gp->p = p;
-//	gp->aaway_timer = -1;
 	gp->aaway_timer = 0;
 	gp->blinker = -1;
 

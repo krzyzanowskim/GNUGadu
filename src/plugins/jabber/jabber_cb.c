@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.67 2004/09/29 13:22:18 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.68 2004/10/04 07:56:57 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -696,7 +696,7 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
-	if (strcmp(lm_message_node_get_attribute(node, "xmlns"), "jabber:iq:roster"))
+	if (g_ascii_strcasecmp(lm_message_node_get_attribute(node, "xmlns"), "jabber:iq:roster"))
 	{
 		lm_message_node_unref(node);
 		g_slist_free(list);

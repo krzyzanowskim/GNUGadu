@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.80 2004/09/28 14:01:31 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.81 2004/10/04 07:56:57 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -578,7 +578,7 @@ void change_status(GPtrArray * ptra)
 	if (gp && !is_in_status(sp->status, gp->p->offline_status) && ggadu_config_var_get(gui_handler, "blink"))
 	{
 		gint last_resort_status;
-		gp->aaway_timer = -1;
+		/* gp->aaway_timer = -1; */
 
 		if (gp->blinker > 0)
 			g_source_remove(gp->blinker);
