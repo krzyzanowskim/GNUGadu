@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.14 2003/05/20 16:19:37 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.15 2003/05/24 10:03:23 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -327,7 +327,13 @@ void handle_disconnected(GGaduSignal *signal)
 		
     sp = gui_find_status_prototype(gp->p, gp->p->offline_status);
 
-    g_return_if_fail(sp != NULL);	    
+    g_return_if_fail(sp != NULL);
+    
+    gtk_timeout_remove (gp->blinker);
+    if (gp->blinker_image1)
+      g_free (gp->blinker_image1);
+    if (gp->blinker_image2)
+      g_free (gp->blinker_image2);
     	    
     image = create_pixbuf(sp->image);
     model = (tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore);
@@ -389,6 +395,12 @@ void handle_status_changed(GGaduSignal *signal)
 
     sp = gui_find_status_prototype(gp->p, status);
     g_return_if_fail(sp != NULL);
+
+    gtk_timeout_remove (gp->blinker);
+    if (gp->blinker_image1)
+      g_free (gp->blinker_image1);
+    if (gp->blinker_image2)
+      g_free (gp->blinker_image2);
     	    
     image = create_pixbuf(sp->image);
     status_image = gtk_bin_get_child(GTK_BIN(gp->statuslist_eventbox));

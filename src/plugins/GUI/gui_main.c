@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.15 2003/05/15 14:19:01 shaster Exp $ */
+/* $Id: gui_main.c,v 1.16 2003/05/24 10:03:23 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -128,6 +128,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     config_var_add(gui_handler, "sound_msg_out", VAR_STR);
     config_var_add(gui_handler, "contact_list_contact_font", VAR_STR);
     config_var_add(gui_handler, "contact_list_protocol_font", VAR_STR);
+    config_var_add(gui_handler, "blink", VAR_BOOL);
+    config_var_add(gui_handler, "blink_interval", VAR_INT);
 
     if (!config_read(gui_handler))
 	g_warning(_("Unable to read configuration file for plugin GUI"));

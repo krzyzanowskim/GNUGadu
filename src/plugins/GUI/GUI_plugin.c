@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.14 2003/05/22 10:16:49 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.15 2003/05/24 10:03:22 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -357,16 +357,59 @@ void gui_main_window_create(gboolean visible)
 	gui_create_tree();
 }
 
+gboolean status_blinker (gpointer data)
+{
+  gui_protocol *gp = (gui_protocol *) data;
+  gchar *tmp;
+  GdkPixbuf *image = NULL;
+  GtkWidget *status_image;
+
+  if (!data)
+    return FALSE; /* stop blinking */
+
+  /* a little weird algorythm ;) */
+  tmp = gp->blinker_image1;
+  gp->blinker_image1 = gp->blinker_image2;
+  gp->blinker_image2 = tmp;
+
+  image = create_pixbuf (gp->blinker_image1);
+  status_image = gtk_bin_get_child (GTK_BIN (gp->statuslist_eventbox));
+  gtk_image_set_from_pixbuf (GTK_IMAGE (status_image), image);
+
+  return TRUE;
+}
+
 void change_status(GPtrArray *ptra)
 {
     GGaduStatusPrototype *sp = g_ptr_array_index(ptra, 0);
     gchar *plugin_source = g_ptr_array_index(ptra, 1);
+    gui_protocol *gp = NULL;
+    GGaduStatusPrototype *sp1;
+    gint status;
 //    GtkWidget *status_image = g_ptr_array_index(ptra, 2);
 //    GtkWidget *image = create_image(sp->image);
     
 //    gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), gtk_image_get_pixbuf(GTK_IMAGE(image)));
 //    gtk_widget_destroy(image);
 
+
+    gp = gui_find_protocol (plugin_source, protocols);
+    g_return_if_fail (gp != NULL);
+    if (sp->status != gp->p->offline_status &&
+	config_var_get (gui_handler, "blink"))
+    {
+      status = (gint) signal_emit ("main-gui", "get current status", NULL, gp->plugin_name);
+      sp1 = gui_find_status_prototype (gp->p, status ? status : gp->p->offline_status);
+      g_return_if_fail (gp != NULL);
+      gp->blinker_image1 = g_strdup (sp1->image);
+      gp->blinker_image2 = g_strdup (sp->image);
+      print_debug ("gui: blinking %s and %s\n", sp1->image, sp->image);
+      gp->blinker = gtk_timeout_add (
+	  config_var_get (gui_handler, "blink_interval") ?
+	  (gint) config_var_get (gui_handler, "blink_interval"):500,
+	  status_blinker, gp);
+    }
+    
     signal_emit("main-gui","change status", sp, plugin_source);
     /* ZONK */    
     /* te tablice "ptra" kiedys tam mozna zwolic, ale nie mozna tutaj */

@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.3 2003/05/15 14:19:01 shaster Exp $ */
+/* $Id: gui_main.h,v 1.4 2003/05/24 10:03:23 zapal Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -29,6 +29,9 @@ typedef struct {
     GtkWidget	  *statuslist_eventbox;
     GGaduProtocol *p;
     gchar 	  *tree_path;
+    guint	  blinker;
+    gchar	  *blinker_image1;
+    gchar	  *blinker_image2;
 } gui_protocol;
 
 typedef struct {

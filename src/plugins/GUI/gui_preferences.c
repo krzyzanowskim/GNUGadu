@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.14 2003/05/15 14:19:01 shaster Exp $ */
+/* $Id: gui_preferences.c,v 1.15 2003/05/24 10:03:23 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -512,6 +512,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *usexosdfornewmsgs;
 	GtkWidget *send_on_enter;
 	GtkWidget *hide_on_start;
+	GtkWidget *blink;
+	GtkWidget *blink_interval;
 	GtkWidget *chat_paned_size;
 	GtkWidget *tabbox;
 	GDir *dir;
@@ -609,28 +611,38 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	hide_on_start = gtk_check_button_new_with_label(_("Auto hide on start"));
 	gtk_box_pack_start(GTK_BOX(vbox), hide_on_start, FALSE, FALSE, 0);
+
+	blink = gtk_check_button_new_with_label (_("Blink status"));
+	gtk_box_pack_start(GTK_BOX(vbox), blink, FALSE, FALSE, 0);
 	
-	tabbox = gtk_table_new(3, 2, FALSE);
+	tabbox = gtk_table_new(4, 2, FALSE);
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox, FALSE, FALSE, 0);
+
+	label = gtk_label_new (_("Blink interval"));
+	blink_interval = gtk_spin_button_new_with_range (0, 2000, 100);
+	
+	gtk_table_attach_defaults (GTK_TABLE(tabbox), label, 0, 1, 0, 1);
+	gtk_table_attach_defaults (GTK_TABLE(tabbox), blink_interval, 1, 2, 0, 1);
+	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
 	
 	/* ZONK - how to name it ? */
 	label = gtk_label_new(_("Chat window split size"));
 	chat_paned_size = gtk_spin_button_new_with_range(0,3000,5);
 	
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 1, 2);
 
 	combo_theme = gtk_combo_new();
 	label = gtk_label_new(_("Select Theme"));
 
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 2, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 2, 2, 3);
 
 	combo_icons = gtk_combo_new();
 	label = gtk_label_new(_("Select icon set"));
 
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 2, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 3, 4);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 2, 3, 4);
 
 	if (config_var_get(gui_handler, "emot"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(emotic),
@@ -657,6 +669,15 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chatstyle),
 					     FALSE);
 	}
+
+	if (config_var_get (gui_handler, "blink"))
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(blink), TRUE);
+	else
+	  gtk_widget_set_sensitive (blink_interval, FALSE);
+
+	if (config_var_get (gui_handler, "blink_interval"))
+	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (blink_interval),
+	      (gint)config_var_get (gui_handler, "blink_interval"));
 
 	if (config_var_get(gui_handler, "chat_window_auto_show"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chatwindowshow),
@@ -794,6 +815,14 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 			       (gpointer)
 			       gtk_spin_button_get_value_as_int
 			       (GTK_SPIN_BUTTON(chat_paned_size)));
+
+		config_var_set(gui_handler, "blink",
+		    (gpointer) gtk_toggle_button_get_active
+		    (GTK_TOGGLE_BUTTON (blink)));
+
+		config_var_set(gui_handler, "blink_interval",
+		    (gpointer) gtk_spin_button_get_value_as_int
+		    (GTK_SPIN_BUTTON(blink_interval)));
 
 /*		config_var_set(gui_handler, "chat_paned_size",
 			       (gpointer)
