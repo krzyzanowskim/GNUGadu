@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.82 2004/08/23 14:41:32 krzyzak Exp $
+dnl $Id: configure.in,v 1.83 2004/08/24 13:55:45 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.5.1])
 
@@ -399,32 +399,56 @@ else
 fi
 
 AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
-AC_ARG_WITH(arts-prefix, [  --with-arts-prefix=PREFIX	Prefix where aRts! is installed (optional)], arts_prefix="$withval", arts_prefix="")
 if test "x$with_arts" = "xyes"; then 
-    AC_PROG_CXX
-    if test "$arts_prefix" != ""; then
-	arts_include_path="-I$arts_prefix/include"
-	arts_libs_path="-L$arts_prefix/lib"
+    AC_PATH_PROG(ARTSC, artsc-config, no)
+    if test "x$ARTSC" = "xno"; then
+	AC_MSG_ERROR([*** sound support for aRts! - unable to find artsc-config ***])
     fi
-    
-    have_arts=no
-    CFLAGS="$CFLAGS $arts_include_path"
-    CPPFLAGS="$CPPLAGS $arts_include_path"
-    AC_CHECK_HEADERS(arts/artsversion.h, have_arts=yes,
-    [AC_MSG_ERROR([*** sound support for aRts! - unable to find aRts! headers ***])],-)
 
-    if test "x$have_arts" = "xyes"; then
-        ARTS_CXXFLAGS="$CXXFLAGS $arts_include_path"
-	ARTS_LIBS="-lartsflow -lartswavplayobject $arts_libs_path"
-	AC_SUBST(ARTS_LIBS)
-	AC_SUBST(ARTS_CXXFLAGS)
-	AC_SUBST(CXX, $CC)
-	AC_SUBST(CXXFLAGS)
+    PKG_CHECK_MODULES(AUDIOFILE,audiofile >= 0.2.0, [], with_audiofile=no)
+    if test "$with_audiofile" = "no"; then 
+    	AC_MSG_ERROR($AUDIOFILE_PKG_ERRORS)
     fi
+
+    AC_SUBST(AUDIOFILE_CFLAGS)
+    AC_SUBST(AUDIOFILE_LIBS)
+    
+    ARTSC_LIBS=`$ARTSC --libs`
+    ARTSC_CFLAGS=`$ARTSC --cflags`
+    AC_SUBST(ARTSC_LIBS)
+    AC_SUBST(ARTSC_CFLAGS)
+
 else
-    AM_CONDITIONAL(am__fastdepCXX, test yes = "$with_arts")
-    with_arts=no
+     with_arts=no
 fi
+
+dnl AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
+dnl AC_ARG_WITH(arts-prefix, [  --with-arts-prefix=PREFIX	Prefix where aRts! is installed (optional)], arts_prefix="$withval", arts_prefix="")
+dnl if test "x$with_arts" = "xyes"; then 
+dnl     AC_PROG_CXX
+dnl     if test "$arts_prefix" != ""; then
+dnl 	arts_include_path="-I$arts_prefix/include"
+dnl 	arts_libs_path="-L$arts_prefix/lib"
+dnl     fi
+dnl     
+dnl     have_arts=no
+dnl     CFLAGS="$CFLAGS $arts_include_path"
+dnl     CPPFLAGS="$CPPLAGS $arts_include_path"
+dnl     AC_CHECK_HEADERS(arts/artsversion.h, have_arts=yes,
+dnl     [AC_MSG_ERROR([*** sound support for aRts! - unable to find aRts! headers ***])],-)
+dnl 
+dnl     if test "x$have_arts" = "xyes"; then
+dnl         ARTS_CXXFLAGS="$CXXFLAGS $arts_include_path"
+dnl 	ARTS_LIBS="-lartsflow -lartswavplayobject $arts_libs_path"
+dnl 	AC_SUBST(ARTS_LIBS)
+dnl 	AC_SUBST(ARTS_CXXFLAGS)
+dnl 	AC_SUBST(CXX, $CC)
+dnl 	AC_SUBST(CXXFLAGS)
+dnl     fi
+dnl else
+dnl     AM_CONDITIONAL(am__fastdepCXX, test yes = "$with_arts")
+dnl     with_arts=no
+dnl fi
 
 AC_ARG_WITH(oss, [  --without-oss		  Build OSS sound plugin	default=yes])
 if test "x$with_oss" != "xno"; then

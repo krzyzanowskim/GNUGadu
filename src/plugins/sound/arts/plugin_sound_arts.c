@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_arts.c,v 1.7 2004/05/04 21:39:11 krzyzak Exp $ */
+/* $Id: plugin_sound_arts.c,v 1.8 2004/08/24 13:56:00 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -30,6 +30,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <artsc.h>
+
 #include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
@@ -41,7 +43,7 @@ GGaduPlugin *handler;
 
 GGadu_PLUGIN_INIT("sound-arts", GGADU_PLUGIN_TYPE_MISC);
 
-gpointer ggadu_play_file(gpointer filename)
+static gpointer ggadu_play_file(gpointer filename)
 {
     arts_play_file(filename);
     return NULL;
@@ -64,6 +66,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 void start_plugin()
 {
+    int err = arts_init();
+    
+    if (err != 0)
+    {
+	signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(arts_error_text(err)), "main-gui");
+    }
+	
 }
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
@@ -84,4 +93,5 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+    arts_free();
 }
