@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.4 2003/04/02 18:04:35 zapal Exp $ */
+/* $Id: gui_userview.c,v 1.5 2003/04/02 18:11:49 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -574,22 +574,22 @@ void gui_user_view_add_userlist(gui_protocol *gp)
 
 static void gui_user_view_rescan_paths (gui_protocol *gp)
 {
+    gboolean valid;
+    GtkTreeIter iter;
+    GtkTreeModel *model = GTK_TREE_MODEL(users_treestore);
 
-  gboolean valid;
-  GtkTreeIter iter;
-  GtkTreeModel *model = GTK_TREE_MODEL(users_treestore);
+    while((valid = gtk_tree_model_get_iter_first (model, &iter)) != FALSE) {
+	gui_protocol *_gp;
 
-  for (valid = gtk_tree_model_get_iter_first (model, &iter); valid;
-       valid = gtk_tree_model_iter_next (model, &iter))
-  {
-    gui_protocol *lgp;
+	gtk_tree_model_get (model, &iter, 3, &_gp, -1);
 
-    gtk_tree_model_get (model, &iter, 3, &lgp, -1);
-    if (lgp == gp)
-      continue;
-    g_free (lgp->tree_path);
-    lgp->tree_path = g_strdup(gtk_tree_model_get_string_from_iter(model,&iter));
-  }
+	if (_gp == gp)
+    	    continue;
+	
+        g_free (_gp->tree_path);
+	_gp->tree_path = g_strdup(gtk_tree_model_get_string_from_iter(model, &iter));
+	valid = gtk_tree_model_iter_next (model, &iter);
+    }
 }
 
 void gui_user_view_unregister(gui_protocol *gp)
@@ -652,6 +652,8 @@ static gboolean get_iter_from_path(GtkTreeModel *model, GtkTreeIter *iter, gchar
 void gui_user_view_refresh()
 {
     GSList *tmplist;
+    
+    tree = (gboolean) config_var_get(gui_handler, "tree");
     
     print_debug("refreshing user view\n");
 
