@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.31 2003/09/16 23:10:13 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.32 2003/10/27 21:46:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -74,12 +74,12 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 	  if (!gtk_tree_view_get_path_at_pos
 	      (GTK_TREE_VIEW (widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
 	      return FALSE;
+
 	  print_debug ("GDK_2BUTTON_PRESS\n");
 	  gtk_tree_model_get_iter (model, &iter, treepath);
 	  gtk_tree_model_get (model, &iter, 2, &k, -1);
 
-	  if (!k)
-	      return FALSE;
+	  g_return_val_if_fail (k != NULL, FALSE);
 
 	  if (!tree)
 	    {
@@ -316,7 +316,7 @@ void gui_show_hide_window ()
  */
 
 /*
- * Wyj¶cie z programu poprzez menu
+ * WyjÅ›cie z programu poprzez menu
  */
 void gui_quit (GtkWidget * widget, gpointer user_data)
 {
@@ -340,7 +340,7 @@ void gui_quit (GtkWidget * widget, gpointer user_data)
 }
 
 /*
- * Obs³uguje sygna³ "skasownaia" g³ównego okna
+ * ObsÅ‚uguje sygnaÅ‚ "skasownaia" gÅ‚Ã³wnego okna
  */
 
 gboolean gui_main_window_delete (GtkWidget * window, GdkEvent * event, gpointer user_data)
@@ -422,10 +422,11 @@ void gui_main_window_create (gboolean visible)
     status_hbox = gtk_hbox_new (FALSE, 2);
     gtk_box_pack_start (GTK_BOX (main_vbox), status_hbox, FALSE, TRUE, 2);
 
-    if (visible) {
-	gtk_widget_show_all (GTK_WIDGET (window));
-	gdk_window_set_decorations(GTK_WIDGET(window)->window,GDK_DECOR_MENU);
-    }
+    if (visible)
+      {
+	  gtk_widget_show_all (GTK_WIDGET (window));
+	  gdk_window_set_decorations (GTK_WIDGET (window)->window, GDK_DECOR_MENU);
+      }
 
     if (tree)
 	gui_create_tree ();

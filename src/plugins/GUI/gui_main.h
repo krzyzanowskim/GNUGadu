@@ -1,8 +1,9 @@
-/* $Id: gui_main.h,v 1.8 2003/06/25 22:11:04 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.9 2003/10/27 21:46:19 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
 
+#include <gtk/gtk.h>
 #include "unified-types.h"
 
 // default size of a window
@@ -20,6 +21,7 @@ typedef struct  {
     GSList *recipients;
 } gui_chat_session;
 
+
 typedef struct {
     gchar 	  *plugin_name;
     GSList 	  *userlist;
@@ -27,12 +29,12 @@ typedef struct {
     GtkListStore  *users_liststore;
     GtkWidget     *add_info_label;
     GtkWidget	  *statuslist_eventbox;
-    GGaduProtocol *p;
     gchar 	  *tree_path;
     guint	  blinker;
     GdkPixbuf	  *blinker_image1;
     GdkPixbuf	  *blinker_image2;
     guint	  aaway_timer;
+    GGaduProtocol *p;
 } gui_protocol;
 
 typedef struct {

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.85 2003/10/27 18:16:20 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.86 2003/10/27 21:46:20 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -361,7 +361,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
     GSList *l = userlist;
     static gint prev_check = GG_CHECK_READ;
 
-    /* w przypadku b³êdu/utraty po³±czenia post±p tak jak w przypadku disconnect */
+    /* w przypadku bÅ‚Ä™du/utraty poÅ‚Ä…czenia postÄ…p tak jak w przypadku disconnect */
     if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) ||
 	((condition & G_IO_HUP) && (session->state != GG_STATE_CONNECTING_GG)))
       {
@@ -395,7 +395,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	  break;
 
       case GG_EVENT_CONN_SUCCESS:
-	  print_debug ("po³±czono!\n");
+	  print_debug ("poÅ‚Ä…czono!\n");
 	  connected = TRUE;
 
 	  /* notify wysylam */
@@ -435,7 +435,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	  break;
 
       case GG_EVENT_CONN_FAILED:
-	  print_debug ("nie uda³o siê polaczyc\n");
+	  print_debug ("nie udaÅ‚o siÄ™ polaczyc\n");
 	  ggadu_gadu_gadu_disconnect_msg (_("Connection failed"));
 	  break;
 
@@ -641,9 +641,9 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
       case GG_EVENT_ACK:
 
 	  if (e->event.ack.status == GG_ACK_QUEUED)
-	      print_debug ("wiadomo¶æ bedzie dostarczona pozniej do %d.\n", e->event.ack.recipient);
+	      print_debug ("wiadomoÅ›Ä‡ bedzie dostarczona pozniej do %d.\n", e->event.ack.recipient);
 	  else
-	      print_debug ("wiadomo¶æ dotar³a do %d.\n", e->event.ack.recipient);
+	      print_debug ("wiadomoÅ›Ä‡ dotarÅ‚a do %d.\n", e->event.ack.recipient);
 
 	  break;
       case GG_EVENT_PUBDIR50_SEARCH_REPLY:
@@ -1532,6 +1532,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 #if GGADU_DEBUG
       }
 #endif
+
     register_signal_receiver ((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
 
     ggadu_repo_add ("gadu-gadu");
