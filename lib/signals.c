@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.5 2003/06/09 11:55:28 krzyzak Exp $ */
+/* $Id: signals.c,v 1.6 2003/06/09 13:10:30 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -54,8 +54,8 @@ GQuark register_signal(GGaduPlugin * plugin_handler, gpointer name)
 
 	tmplugin->signals = g_slist_append(tmplugin->signals, signalinfo);
 
-#ifdef GGadu_PERL_EMBED_H
-	register_signal_perl (q_name, NULL);	
+#ifdef PERL_EMBED
+//	register_signal_perl (name, NULL);	
 #endif
 	return q_name;
 }
@@ -84,12 +84,15 @@ void register_signal_perl (gchar *name, void (*perl_handler) (GGaduSignal *, gch
   hook->hooks = NULL;
 
   config->signal_hooks = g_slist_append (config->signal_hooks, hook);
+  print_debug("register_signal_perl %s %d\n",name,q_name);
 }
 
 void hook_signal (GGaduSigID q_name, void (*hook) (GGaduSignal *signal, void (*perl_handler) (GGaduSignal *, gchar *, void *)))
 {
   GGaduSignalHook *signalhook;
   GSList *list = config->signal_hooks;
+  
+  print_debug("hook_signal : %s",g_quark_to_string(q_name));
 
   while (list)
   {
@@ -158,6 +161,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	while (hooks)
 	{
 	  GGaduSignalHook *hook = (GGaduSignalHook *) hooks->data;
+	  print_debug("qq %d %s - %d %s\n",tmpsignal->name,g_quark_to_string(tmpsignal->name),hook->name,g_quark_to_string(hook->name));
 	  if (tmpsignal->name == hook->name)
 	  {
 	    GSList *list = hook->hooks;
@@ -166,6 +170,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	    {
 	      (void *) hook_func = (void *) list->data;
 	      hook_func (tmpsignal, hook->perl_handler);
+	      print_debug("DO IT\n");
 	      list = list->next;
 	    }
 	    break;
@@ -310,7 +315,7 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer
 	tmpsignal->free_me = TRUE;	// flaga czy zwalniac signal po wykonaniu czy tez nie
 	tmpsignal->free    = signal_free;
 
-	print_debug("%s : signal_emit %d\n", src_name, q_name);
+	print_debug("%s : signal_emit %d %s\n", src_name, q_name, name);
 
 	if (config->all_plugins_loaded == TRUE) {
 	    ret = do_signal(tmpsignal, signalinfo);

@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.3 2003/06/09 11:55:28 krzyzak Exp $ */
+/* $Id: perl_embed.c,v 1.4 2003/06/09 13:10:30 krzyzak Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -89,6 +89,8 @@ int execute_perl (char *function, char **perl_args)
   PUSHMARK(sp);
   count = perl_call_argv (function, G_EVAL | G_SCALAR, perl_args);
   SPAGAIN;
+  
+  print_debug("EXECUTE_PERL\n");
 
   sv = GvSV (gv_fetchpv ("@", TRUE, SVt_PV));
   if (SvTRUE (sv))
@@ -180,6 +182,7 @@ void hook_handler (GGaduSignal *signal, void (*perl_func) (GGaduSignal *, gchar 
 	PERL_SET_CONTEXT (script->perl);
 	my_perl = script->perl;
 	perl_func (signal, hook->func, (void *) script->perl);
+	print_debug("!!!!qrwa mac\n");
       }
       
       list_hooks = list_hooks->next;
@@ -302,8 +305,8 @@ static XS (XS_GGadu_signal_emit)
 static XS (XS_GGadu_signal_hook)
 {
   char *name;
-//  char *signame; /* ZONK should bi GQuark ! */
   char *signame;
+  GGaduSigID q_signame;
   char *func;
   int junk;
   signal_hook *hook;
@@ -313,11 +316,11 @@ static XS (XS_GGadu_signal_hook)
   items = items;
 
   name    = SvPV (ST(0), junk);
-  /* ZONK */
   signame = SvPV (ST(1), junk); 
   func    = SvPV (ST(2), junk);
+  q_signame = g_quark_from_string(signame);
 
-  print_debug ("hooking %s, %s, %s\n", name, signame, func);
+  print_debug ("hooking %s, %s, %s, %d\n", name, signame, func, q_signame);
 
   script = find_perl_script (name);
   if (!script)
@@ -326,7 +329,7 @@ static XS (XS_GGadu_signal_hook)
   print_debug ("still hooking\n");
 
   hook = g_new0 (signal_hook, 1);
-  hook->q_name = g_quark_from_string(signame);
+  hook->q_name = q_signame;
   hook->func = g_strdup (func);
   script->hooks = g_slist_append (script->hooks, hook);
   hook_signal ((GGaduSigID)g_quark_from_string(signame), hook_handler);
