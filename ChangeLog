@@ -1,7 +1,7 @@
 24.08.2004
 - fix show/hide toolbar (GUI/krzak)
 - Editing own vcard implemented. (jabber/mkobierzycki)
-- aRts! plugin start use artsc (arts/krzak)
+- aRts! plugin start use artsc, need libaudiofile since now. (arts/krzak)
 
 23.08.2004
 - 2.0.5.1 bugfix release - now jabber plugin compile and work with pre/post loudmouth 0.16

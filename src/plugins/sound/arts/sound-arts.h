@@ -1,4 +1,4 @@
-/* $Id: sound-arts.h,v 1.3 2004/01/28 23:41:35 shaster Exp $ */
+/* $Id: sound-arts.h,v 1.4 2004/08/24 14:20:31 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -20,18 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
+#ifndef GGADU_SOUND_ARTS_H
+#define GGADU_SOUND_ARTS_H 1
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+int arts_play_file(char *filename);
 
-    int arts_play_file(char *filename);
-
-#ifdef __cplusplus
 }
 #endif

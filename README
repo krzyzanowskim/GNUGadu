@@ -3,13 +3,15 @@ To compile all plugins you need:
 - automake 1.7 or better
 - libtool 1.4e or better
 
-- glib 2.2.0 (http://www.gtk.org/)
-- gtk+ 2.4.0 (http://www.gtk.org/) - GUI
+- glib 2.2.0 (http://www.gtk.org)
+- gtk+ 2.4.0 (http://www.gtk.org) - GUI
 - libtlen (http://www.libtlen.eu.org) - Tlen
-- Loudmouth 0.15.1 or newer (http://www.imendio.com/projects/loudmouth/) - Jabber
+- Loudmouth 0.15.1 or newer (http://www.imendio.com/projects/loudmouth) - Jabber
 - xosd (http://ignavus.net/software.html) - XOSD
 - esound (http://www.tux.org/~ricdude/EsounD.html - sound-esd
-- gtkspell - http://gtkspell.sourceforge.net/
+- audiofile (http://www.68k.org/~michael/audiofile)
+- aRts! (http://www.arts-project.org)
+- gtkspell - http://gtkspell.sourceforge.net
 
 WARNING: perl support and remote plugin will compile/work only on Linux!
 
