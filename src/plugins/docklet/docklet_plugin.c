@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.1 2003/03/20 10:37:07 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.2 2003/03/22 20:35:34 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -307,6 +307,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    logopix = (GdkPixbuf *)docklet_create_pixbuf(directory, filename);
 	    
 	    gtk_image_set_from_pixbuf(GTK_IMAGE(pixmap),logopix);
+	    gtk_widget_unref (GTK_WIDGET(logopix));
 	    
 	    signal->data_return = logopix;
 	    
@@ -354,4 +355,5 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
 
 void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+    gtk_widget_unref (GTK_WIDGET(pixmap));
 }
