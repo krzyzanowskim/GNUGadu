@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.180 2004/08/02 11:13:59 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.181 2004/08/03 20:44:59 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1180,13 +1180,13 @@ gboolean import_userlist(gchar * list)
 		}
 
 		k = g_new0(GGaduContact, 1);
-		k->id = uin ? g_strdup(uin) : g_strdup("");
-		k->first_name = first_name ? g_strdup(first_name) : NULL;
-		k->last_name = last_name ? g_strdup(last_name) : NULL;
+		k->id = g_strdup(uin ? uin : "");
+		k->first_name = g_strdup(first_name ? first_name : "");
+		k->last_name = g_strdup(last_name ? last_name : "");
 		k->nick = (!strlen(nick)) ? g_strconcat(first_name, " ", last_name, NULL) : g_strdup(nick);
-		k->comment = g_strdup(comment);
-		k->mobile = g_strdup(mobile);
-		k->group = g_strdup(group);
+		k->comment = g_strdup(comment ? comment : "");
+		k->mobile = g_strdup(mobile ? mobile : "");
+		k->group = g_strdup(group ? group : "");
 		k->status = GG_STATUS_NOT_AVAIL;
 
 		/*userlist = g_slist_append(userlist, k); */
@@ -2621,8 +2621,24 @@ void save_addressbook_file()
 {
 	GIOChannel *ch = NULL;
 	gchar *path = NULL;
+	gchar *dir  = NULL;
 
 	path = g_build_filename(this_configdir, "userlist", NULL);
+	
+	dir = g_path_get_dirname(path);
+	if (strcmp(dir, ".") && !g_file_test(dir, G_FILE_TEST_EXISTS) && !g_file_test(dir, G_FILE_TEST_IS_DIR))
+	{
+		mkdir(dir, 0700);
+	}
+	else if (!g_file_test(dir, G_FILE_TEST_IS_DIR))
+	{
+		g_warning("Unable to open/create directory %s\n", dir);
+		g_free(dir);
+		g_free(path);
+		return;
+	}
+	g_free(dir);
+	
 	ch = g_io_channel_new_file(path, "w", NULL);
 	if (ch)
 	{

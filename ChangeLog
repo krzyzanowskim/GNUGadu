@@ -1,3 +1,6 @@
+03.08.2004
+- ~/.gg create if do not exist, fixed save userlist after import (gadu-gadu/krzak)
+
 02.08.2004
 - tropic.theme and office.theme sent by Krzysztof Foltman <krzysztof@foltman.com>
 - keep history in utf-8, and some cleanups (gghist/krzak)
