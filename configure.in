@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.4 2003/04/03 09:12:14 thrulliq Exp $
+dnl $Id: configure.in,v 1.5 2003/04/09 16:07:15 thrulliq Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -108,6 +108,7 @@ want_gui=no
 want_gadu=no
 want_tlen=no
 want_jabber=no
+want_icq=no
 want_xosd=no
 want_sms=no
 want_remote=no
@@ -123,6 +124,7 @@ if test "x$with_all_plugins" = "xyes"; then
     with_gadu=yes
     with_tlen=yes
     with_jabber=yes
+    with_icq=yes
     with_xosd=yes
     with_docklet=yes
     with_esd=yes
@@ -170,6 +172,12 @@ if test "x$with_jabber" = "xyes"; then
 	JABBER_LIBS="-liksemel"
 	AC_SUBST(JABBER_LIBS)
     fi
+fi
+
+AC_ARG_WITH(icq, [  --with-icq		  Build ICQ plugin[experimental]default=no])
+if test "x$with_icq" = "xyes"; then 
+    want_icq=yes
+    AC_SUBST(ICQ_LIBS)
 fi
 
 AC_ARG_WITH(xosd, [  --with-xosd		  Build XOSD plugin		default=no])
@@ -271,6 +279,7 @@ AM_CONDITIONAL(BUILD_GUI, test "$want_gui" = "yes")
 AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")
 AM_CONDITIONAL(BUILD_TLEN, test "$want_tlen" = "yes")
 AM_CONDITIONAL(BUILD_JABBER, test "$want_jabber" = "yes")
+AM_CONDITIONAL(BUILD_ICQ, test "$want_icq" = "yes")
 AM_CONDITIONAL(BUILD_XOSD, test "$want_xosd" = "yes")
 AM_CONDITIONAL(BUILD_DOCKLET, test "$want_docklet" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_ESD, test "$want_esd" = "yes")
@@ -322,6 +331,7 @@ src/plugins/GUI/Makefile
 src/plugins/gadu_gadu/Makefile
 src/plugins/tlen/Makefile
 src/plugins/jabber/Makefile
+src/plugins/icq/Makefile
 src/plugins/xosd/Makefile
 src/plugins/docklet/Makefile
 src/plugins/sound/Makefile
@@ -341,6 +351,7 @@ echo Build plugin GUI-GTK2.......... : $want_gui
 echo Build plugin Gadu-Gadu......... : $want_gadu
 echo Build plugin Tlen.pl........... : $want_tlen
 echo Build plugin Jabber............ : $want_jabber
+echo Build plugin ICQ............... : $want_icq
 echo Build plugin XOSD.............. : $want_xosd
 echo Build plugin docklet........... : $want_docklet
 echo Build plugin sound ESD......... : $want_esd
@@ -358,5 +369,3 @@ echo "*************************************************************"
 echo
 echo configure complete, now type \"make\"
 echo
-
-

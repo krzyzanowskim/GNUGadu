@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.4 2003/04/04 15:17:31 thrulliq Exp $ */
+/* $Id: unified-types.h,v 1.5 2003/04/09 16:07:18 thrulliq Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -88,7 +88,7 @@ void GGaduNotify_free(GGaduNotify *n);
  */ 
  
 typedef struct {
-    guint status;		// identyfikator statusu
+    gint status;		// identyfikator statusu
     gchar *description;		// wy¶wietlany opis np. "Dostêpny"
     gchar *image;		// nazwa pliku obrazeku statusu 
     gboolean receive_only;
