@@ -2,7 +2,7 @@
 - add VAR_LIST variable type (core/gui/THrull)
 - checkboxes in dialogs are now more GNOME HIG (gui/THrull)
 - we don't need change icon signal anymore (tlen/gui/THrull)
-- improved menu unregistering (GUI/gadu-gadu/jabber/sms/tlen/zapal)
+- improved menu and protocol unregistering (GUI/gadu-gadu/jabber/sms/tlen/zapal)
 
 31.03.2003
 - real fix of change status icon works with GG_STATUS_FRIENDS_MASK (gui/jabber/gadu-gadu/THrull)

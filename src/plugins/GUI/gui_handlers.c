@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.6 2003/04/01 15:38:38 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.7 2003/04/01 15:53:31 zapal Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -107,7 +107,7 @@ void handle_unregister_protocol(GGaduSignal *signal)
     while (tmp)
     {
       gp = (gui_protocol *)tmp->data;
-      if (!ggadu_strcasecmp(gp->plugin_name, (char *)signal->data))
+      if (!ggadu_strcasecmp(gp->plugin_name, (char *)signal->source_plugin_name))
       {
 	gui_user_view_unregister(gp);
 	protocols = g_slist_remove (protocols, gp);
