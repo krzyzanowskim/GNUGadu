@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.17 2003/04/27 08:38:38 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.18 2003/04/27 08:42:02 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -237,7 +237,7 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 			}
 			break;
 	    case VAR_INT:
-	    		kv->value = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(kv->user_data));
+	    		kv->value = (gpointer)gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(kv->user_data));
 			break;
 	    case VAR_BOOL:
 			kv->value = (gpointer)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(kv->user_data));
