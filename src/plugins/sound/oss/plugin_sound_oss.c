@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.12 2004/10/13 13:34:31 krzyzak Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.13 2004/10/13 13:45:45 krzyzak Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
@@ -120,12 +120,13 @@ gpointer ggadu_play_file(gpointer filename)
     static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
     gsize r,w;
     gchar *filename_native = NULL;
-    
+
     g_static_mutex_lock(&play_mutex);
 
     filename_native = g_filename_from_utf8(filename,-1,&r,&w,NULL);
+    print_debug("oss play file %s",filename_native);
     oss_play_file(filename_native);
-    g_free(filename);
+    g_free(filename_native);
 
     g_static_mutex_unlock(&play_mutex);
     g_thread_exit(0);
