@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.11 2003/09/10 22:31:59 shaster Exp $ */
+/* $Id: sms_core.c,v 1.12 2003/09/12 09:31:13 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -455,8 +455,8 @@ int send_PLUS(gchar * sms_sender, gchar * sms_number, gchar * sms_body)
 }
 
 /* wyslanie na ere */
-int send_ERA(gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * eraomnix_login,
-	     gchar * eraomnix_password)
+int send_ERA(gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * era_login,
+	     gchar * era_password)
 {
     gchar *recv_buff = NULL;
     gchar *post = NULL;
@@ -468,9 +468,10 @@ int send_ERA(gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * e
 	return ERR_SERVICE;
 
     /* *INDENT-OFF* */
-    post = g_strconcat ("login=", eraomnix_login, "&password=", eraomnix_password,
-			"&number=48", sms_number,
+    post = g_strconcat ("login=", ggadu_sms_formencode(g_strdup(era_login)),
+			"&password=", ggadu_sms_formencode(g_strdup(era_password)),
 			"&message=", ggadu_sms_formencode(g_strdup(sms_body)),
+			"&number=48", ggadu_sms_formencode(g_strdup(sms_number)),
 			"&contact=", "&signature=", ggadu_sms_formencode(g_strdup(sms_sender)),
 			"&success=OK", "&failure=FAIL", 
 			"&minute=", "&hour=", NULL);
@@ -494,6 +495,8 @@ int send_ERA(gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * e
 
     if (!recv_buff)
 	return ERR_SERVICE;
+
+    print_debug("RECV_BUFF: %s\n", recv_buff);
 
     /* sprawdzenie czy doszlo */
     if ((returncode = g_strstr_len(recv_buff, i, "OK?X-ERA-counter=")) != NULL)
@@ -582,8 +585,8 @@ void sms_warning(gchar * sms_number, gchar * warning)
 }
 
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
-void send_sms(gboolean external, gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * eraomnix_login,
-	      gchar * eraomnix_password)
+void send_sms(gboolean external, gchar * sms_sender, gchar * sms_number, gchar * sms_body,
+	      gchar * era_login, gchar * era_password)
 {
     gint result, gsm_oper;
 
@@ -644,18 +647,18 @@ void send_sms(gboolean external, gchar * sms_sender, gchar * sms_number, gchar *
 	}
 	else
 	{
-	    if (!eraomnix_login)
+	    if (!era_login)
 	    {
-		sms_warning(sms_number, _("Empty EraOmnix login!"));
+		sms_warning(sms_number, _("Empty Era login!"));
 		return;
 	    }
 
-	    if (!eraomnix_password)
+	    if (!era_password)
 	    {
-		sms_warning(sms_number, _("Empty EraOmnix password!"));
+		sms_warning(sms_number, _("Empty Era password!"));
 		return;
 	    }
-	    result = send_ERA(sms_sender, sms_number, sms_body, eraomnix_login, eraomnix_password);
+	    result = send_ERA(sms_sender, sms_number, sms_body, era_login, era_password);
 	}
 
 	break;

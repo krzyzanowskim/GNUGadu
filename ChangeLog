@@ -1,3 +1,10 @@
+12.09.2003
+- s/omnix//ig; sending to ERA uses "Basic Gateway", not Omnix.
+  Unfortunately, ERA has broken email access to their gateway, so you
+  have to register via gsm (and use login in 48XXXXXXXXX form).
+  Complaints to era. (sms/shasta)
+- more urlencoding (sms/shasta)
+
 11.09.2003
 - sending sms through ERA works again. Use your EraOmnix login/password
   (48601234567/foobar or email@some.where/foobar). Note that IDEA is

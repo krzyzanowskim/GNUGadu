@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.5 2003/09/10 22:31:59 shaster Exp $ */
+/* $Id: sms_core.h,v 1.6 2003/09/12 09:31:13 shaster Exp $ */
 
 #ifndef SMS_CORE_PLUGIN_H
 #define SMS_CORE_PLUGIN_H 1
