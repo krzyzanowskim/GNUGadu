@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.38 2004/01/18 12:55:36 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.39 2004/01/18 21:13:25 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -249,14 +249,14 @@ void start_plugin()
 	else
 		gui_main_window_create(TRUE);
 
-	print_debug("%s : start_plugin\n", "main-gui");
+	print_debug("%s : start_plugin", "main-gui");
 
 	config->send_on_enter = TRUE;
 
 	if ((ggadu_config_var_get(gui_handler, "theme")))
 		gui_load_theme();
 	else
-		print_debug("%s : No theme variable set, using defaults\n", "main-gui");
+		print_debug("%s : No theme variable set, using defaults", "main-gui");
 
 	gui_config_emoticons();
 
@@ -270,7 +270,7 @@ void start_plugin()
 
 void destroy_plugin()
 {
-	print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+	print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
 
 	gtk_widget_destroy(GTK_WIDGET(window));
 }

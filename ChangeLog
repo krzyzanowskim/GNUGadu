@@ -1,6 +1,7 @@
 18.01.2004
 - reordered buttons in chat window (GUI/krzak)
 - unable to change chat windows style (tabbed/classic) if there are any active sessions already (GUI/krzak)
+- ggadu_strchomp() and implementation (core/gadu-gadu/jabber/krzak)
 
 17.01.2004
 - mass code indentation (shasta)

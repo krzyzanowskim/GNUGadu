@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.125 2004/01/18 12:55:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.126 2004/01/18 21:13:25 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -512,7 +512,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		{
 			gchar *hist_line =
-				g_strdup_printf(":: %s (%s):: %s\n\n", msg->id, get_timestamp(msg->time), msg->message);
+				g_strdup_printf("%s (%s) :: %s\n", msg->id, get_timestamp(msg->time), msg->message);
 			ggadu_gg_save_history(msg->id, hist_line);
 			g_free(hist_line);
 		}
@@ -547,7 +547,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			if (strIP && (ggadu_strcasecmp(strIP, "0.0.0.0")))
 				notify->ip = g_strdup_printf("%s:%d", strIP, e->event.notify60[i].remote_port);
 
-			desc_utf8 = ggadu_convert("CP1250", "UTF-8", e->event.notify60[i].descr);
+			desc_utf8 = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify60[i].descr));
 			set_userlist_status(notify, desc_utf8, userlist);
 
 			l = userlist;
@@ -591,7 +591,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				notify->ip = g_strdup_printf("%s:%d", strIP, n->remote_port);
 
 			if (e->type == GG_EVENT_NOTIFY_DESCR)
-				desc_utf8 = ggadu_convert("CP1250", "UTF-8", e->event.notify_descr.descr);
+				desc_utf8 = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify_descr.descr));
 
 			set_userlist_status(notify, desc_utf8, userlist);
 
@@ -618,6 +618,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		/* *INDENT-OFF* */
 		desc_utf8 = ggadu_convert("CP1250", "UTF-8",((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr));
+		desc_utf8 = ggadu_strchomp(desc_utf8);
 		notify = g_new0(GGaduNotify, 1);
 		notify->id = g_strdup_printf("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
 		notify->status = (e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
@@ -2070,7 +2071,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					while (tmp)
 					{
 						gchar *line =
-							g_strdup_printf(_(":: Me (%s)::\n%s\n\n"), get_timestamp(0),
+							g_strdup_printf(_("Me (%s) :: %s\n"), get_timestamp(0),
 									msg->message);
 						ggadu_gg_save_history((gchar *) tmp->data, line);
 						g_free(line);
@@ -2094,7 +2095,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					gchar *line = g_strdup_printf(_(":: Me (%s) ::\n%s\n\n"), get_timestamp(0),
+					gchar *line = g_strdup_printf(_("Me (%s) :: %s\n"), get_timestamp(0),
 								      msg->message);
 					ggadu_gg_save_history(msg->id, line);
 					g_free(line);

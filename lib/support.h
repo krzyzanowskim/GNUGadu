@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.8 2004/01/17 19:41:12 krzyzak Exp $ */
+/* $Id: support.h,v 1.9 2004/01/18 21:13:25 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -49,6 +49,8 @@
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
 
 gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text);
+
+gchar *ggadu_strchomp(gchar * str);
 
 gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename);
 

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.29 2004/01/17 17:20:53 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.30 2004/01/18 21:13:26 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -134,7 +134,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 */
 	status = lm_message_node_get_child(message->node, "status");
 	if (status)
-		descr = (gchar *) lm_message_node_get_value(status);
+		descr = ggadu_strchomp((gchar *) lm_message_node_get_value(status));
 
 	list = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
 	while (list)
@@ -194,8 +194,10 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 				break;
 			}
 
-			if ((k->status != oldstatus) || (olddescr != k->status_descr))
+			if ((k->status != oldstatus) || (olddescr != k->status_descr)) {
+				//k->status_descr = g_strstrip(k->status_descr);
 				ggadu_repo_change_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
+			}
 
 		}
 		list = list->next;
