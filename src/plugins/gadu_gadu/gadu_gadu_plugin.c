@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.194 2004/10/18 15:03:16 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.195 2004/10/18 15:50:47 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1533,7 +1533,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "server", VAR_STR);
 	ggadu_config_var_add_with_default(handler, "log", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(handler, "autoconnect", VAR_BOOL);
-	ggadu_config_var_add(handler, "status", VAR_INT);
+	ggadu_config_var_add_with_default(handler, "status", VAR_INT,(gpointer)1);
 	ggadu_config_var_add(handler, "reason", VAR_STR);
 	ggadu_config_var_add(handler, "private", VAR_BOOL);
 	ggadu_config_var_add(handler, "dcc", VAR_BOOL);

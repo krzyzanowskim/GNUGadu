@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.54 2004/10/18 15:03:15 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.55 2004/10/18 15:50:46 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -234,30 +234,25 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 			gtk_table_set_homogeneous(GTK_TABLE(tab), FALSE);
 			break;
 		case VAR_LIST:
-/*			entry = gtk_combo_new();
-			gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(entry)->entry), FALSE);
-			gtk_combo_set_popdown_strings(GTK_COMBO(entry), kv->value);
-*/
 			{
-DUPACHUJ			GList *tmplist = kv->value;
-				GList *selected = tmplist->next;
+				GSList *selected = g_slist_nth ((GSList *)kv->value,0);
+				GSList *restlist = g_slist_nth ((GSList *)kv->value,1);
 				gint selected_index = 0;
 				gint i = -1;
 				
 				entry = gtk_combo_box_new_text();
 				
-//				tmplist = tmplist->next; /* omit first one */
-				g_object_set_data(G_OBJECT(entry),"options-list",tmplist);
-				while (tmplist)
+				g_object_set_data(G_OBJECT(entry),"options-list",restlist);
+				while (restlist)
 				{
 				    i++;
-				    if (!ggadu_strcasecmp(selected->data,tmplist->data))
+				    if (!g_strcasecmp(selected->data,restlist->data))
 				    {
 					selected_index = i;
-				print_debug("############# %d %s",selected_index,selected->data);
+					print_debug("############# %d %s",selected_index,selected->data);
 				    } 
-				    gtk_combo_box_append_text(GTK_COMBO_BOX(entry),tmplist->data);
-				    tmplist = tmplist->next;
+				    gtk_combo_box_append_text(GTK_COMBO_BOX(entry),g_strdup(restlist->data));
+				    restlist = restlist->next;
 				}
 				gtk_combo_box_set_active(GTK_COMBO_BOX(entry),selected_index);
 			}
@@ -385,25 +380,21 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 				kv->value = NULL;
 				break;
 			case VAR_LIST:
-			{
-				/*GSList *ltmp = kv->value;   ZONK
-				 * while (ltmp)
-				 * {
-				 * g_free(ltmp->data);
-				 * ltmp = ltmp->next;
-				 * } */
-//				g_slist_free(kv->value);
+				{
+				/* KURWA co z tym zwalnianiem, bo do chuja nie wiem czy to zwolnione czy 
+				   nie zwolnione ma byc do chuja NOOOOOOOOOOOO 
+				   i czemu KURWA XOSD SIE WYPIERDALA */
+				g_slist_free(kv->value);
 
-/*				kv->value =
-					g_slist_append(NULL,
-						       gtk_editable_get_chars(GTK_EDITABLE
-									      (GTK_COMBO(kv->user_data)->entry), 0,
-									      -1));
-*/
 				GSList *ltmp = g_object_get_data(G_OBJECT(kv->user_data),"options-list");
-				kv->value = g_slist_nth(ltmp,gtk_combo_box_get_active (GTK_COMBO_BOX(kv->user_data)));
-			}
+				GSList *aa = g_slist_nth(ltmp,gtk_combo_box_get_active (GTK_COMBO_BOX(kv->user_data)));
+				kv->value = g_slist_copy(aa);
+				
+//				print_debug("!!!!!!!!!!!!!!!!!! %d",gtk_combo_box_get_active (GTK_COMBO_BOX(kv->user_data)));
+//				print_debug("!!!!!!!!!!!!!!!!!! %s",aa->data);
+			
 				break;
+				}
 			}
 			kvlist = kvlist->next;
 		}

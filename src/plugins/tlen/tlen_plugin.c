@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.68 2004/10/15 14:14:42 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.69 2004/10/18 15:50:48 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -681,7 +681,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "password", VAR_STR);
 	ggadu_config_var_add(handler, "log", VAR_BOOL);
 	ggadu_config_var_add(handler, "autoconnect", VAR_BOOL);
-	ggadu_config_var_add(handler, "autoconnect_status", VAR_INT);
+	ggadu_config_var_add_with_default(handler, "autoconnect_status", VAR_INT,(gpointer)2);
 
 	ggadu_config_read(handler);
 
