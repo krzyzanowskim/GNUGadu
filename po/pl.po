@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.69 2004/08/03 21:36:02 krzyzak Exp $
+# $Id: pl.po,v 1.70 2004/08/04 20:53:58 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-08-03 23:35+0200\n"
+"POT-Creation-Date: 2004-08-04 22:47+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -50,7 +50,7 @@ msgstr ""
 msgid "GNU Gadu 2"
 msgstr "GNU Gadu 2"
 
-#: contrib/gghist/gghist.c:265
+#: contrib/gghist/gghist.c:264
 msgid "There is no history file"
 msgstr "Nie ma pliku historii"
 
@@ -160,28 +160,28 @@ msgstr ""
 "Zainstaluj wsparcie dla odpowiedniego jêzyka w aspell"
 
 #: src/plugins/GUI/gui_chat.c:1163
-msgid "Send"
-msgstr "Wy¶lij"
+msgid "Send a message"
+msgstr "Wysy³a wiadomo¶ci"
 
 #: src/plugins/GUI/gui_chat.c:1164
-msgid "Auto send"
-msgstr ""
+msgid "Send message with enter"
+msgstr "Wysy³a wiadomo¶æ po naci¶niêciu klawisza Enter"
 
 #: src/plugins/GUI/gui_chat.c:1165
-msgid "Close"
-msgstr "Zamknij"
+msgid "Close a window"
+msgstr "Zamyka okno"
 
 #: src/plugins/GUI/gui_chat.c:1166
-msgid "Clear"
-msgstr "Wyczy¶æ"
+msgid "Clear the buffer"
+msgstr "Czy¶ci panel historii rozmowy"
 
 #: src/plugins/GUI/gui_chat.c:1167
-msgid "Stick"
-msgstr "Przypnij"
+msgid "Stick to all virtual desktops"
+msgstr "Przypina okno do wszystkich wirtualnych biurek"
 
 #: src/plugins/GUI/gui_chat.c:1168
-msgid "Find"
-msgstr ""
+msgid "Find a contact"
+msgstr "Znajd¼ rozmówcê"
 
 #: src/plugins/GUI/gui_chat.c:1185
 msgid "Emoticons"
@@ -364,7 +364,7 @@ msgstr "S³ownik"
 #: src/plugins/jabber/jabber_plugin.c:789
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
-#: src/plugins/history/external/history_viewer.c:128
+#: src/plugins/history/external/history_viewer.c:107
 msgid "Preferences"
 msgstr "Ustawienia"
 
@@ -558,7 +558,7 @@ msgstr "Docklet-dockapp2"
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1586
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1590
 #: src/plugins/xosd/plugin_xosd.c:517
-#: src/plugins/history/external/history_viewer.c:172
+#: src/plugins/history/external/history_viewer.c:151
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki %s"
@@ -1068,7 +1068,7 @@ msgid "Tlen login"
 msgstr "Tlen login"
 
 #: src/plugins/tlen/tlen_plugin.c:907
-#: src/plugins/history/external/history_viewer.c:140
+#: src/plugins/history/external/history_viewer.c:119
 msgid "View History"
 msgstr "Wy¶wietl historiê"
 
@@ -1294,15 +1294,15 @@ msgstr ""
 "%s@%s\n"
 "zosta³o utworzone"
 
-#: src/plugins/jabber/jabber_cb.c:152
+#: src/plugins/jabber/jabber_cb.c:164
 msgid "Jabber authentication failed"
 msgstr "Uwierzytelnienie nie powiod³o siê"
 
-#: src/plugins/jabber/jabber_cb.c:183
+#: src/plugins/jabber/jabber_cb.c:195
 msgid "Subscription request confirmation"
 msgstr "Zatwierdzenie pro¶by o subskrypcje"
 
-#: src/plugins/jabber/jabber_cb.c:184
+#: src/plugins/jabber/jabber_cb.c:196
 #, c-format
 msgid ""
 "Person : %s\n"
@@ -1311,7 +1311,7 @@ msgstr ""
 "Osoba : %s\n"
 "chce ¶ledziæ zmiany Twojego stanu"
 
-#: src/plugins/jabber/jabber_cb.c:193
+#: src/plugins/jabber/jabber_cb.c:205
 #, c-format
 msgid ""
 "From %s\n"
@@ -1320,7 +1320,7 @@ msgstr ""
 "Od %s\n"
 "Otrzymano autoryzacjê"
 
-#: src/plugins/jabber/jabber_cb.c:199
+#: src/plugins/jabber/jabber_cb.c:211
 #, c-format
 msgid ""
 "From %s\n"
@@ -1329,16 +1329,16 @@ msgstr ""
 "Od %s\n"
 "Autoryzacja zosta³a cofniêta!"
 
-#: src/plugins/jabber/jabber_cb.c:377
+#: src/plugins/jabber/jabber_cb.c:389
 #, c-format
 msgid "Error: %s (code %s)"
 msgstr "B³±d: %s (kod %s)"
 
-#: src/plugins/jabber/jabber_login.c:106 src/plugins/jabber/jabber_login.c:120
+#: src/plugins/jabber/jabber_login.c:60 src/plugins/jabber/jabber_login.c:74
 msgid "Invalid jid!"
 msgstr "Nieprawid³owy Jabber ID!"
 
-#: src/plugins/jabber/jabber_login.c:196
+#: src/plugins/jabber/jabber_login.c:150
 msgid "SSL not supported by loudmouth"
 msgstr "SSL nie jest obs³ugiwany przez bibliotekê loudmouth"
 
@@ -1636,25 +1636,37 @@ msgstr "Sprawdzanie aktualizacji"
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki aktualizacji"
 
-#: src/plugins/history/external/history_viewer.c:52
+#: src/plugins/history/external/history_viewer.c:39
 msgid "External History Viewer Preferences"
 msgstr "Ustawienia Zewnêtrznej przegl±darki historii"
 
-#: src/plugins/history/external/history_viewer.c:56
+#: src/plugins/history/external/history_viewer.c:43
 msgid "Path to external viewer"
 msgstr "¦cie¿ka do przegl±darki historii"
 
-#: src/plugins/history/external/history_viewer.c:114
+#: src/plugins/history/external/history_viewer.c:93
 msgid "User not selected"
 msgstr "Nie wybrano kontaktu z listy"
 
-#: src/plugins/history/external/history_viewer.c:127
+#: src/plugins/history/external/history_viewer.c:106
 msgid "History Viewer"
 msgstr "Przegl±darka historii"
 
-#: src/plugins/history/external/history_viewer.c:156
+#: src/plugins/history/external/history_viewer.c:135
 msgid "External history viewer"
 msgstr "Zewnêtrzna przegl±darka historii"
+
+#~ msgid "Send"
+#~ msgstr "Wy¶lij"
+
+#~ msgid "Close"
+#~ msgstr "Zamknij"
+
+#~ msgid "Clear"
+#~ msgstr "Wyczy¶æ"
+
+#~ msgid "Stick"
+#~ msgstr "Przypnij"
 
 #~ msgid "Dockapp plugin configuration"
 #~ msgstr "Konfiguracja wtyczki Dockapp"

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.104 2004/06/29 20:21:47 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.105 2004/08/04 20:53:58 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1160,12 +1160,12 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 0);
 	
-	gtk_tooltips_set_tip(tips, button_send, _("Send"), "");
-	gtk_tooltips_set_tip(tips, button_autosend, _("Auto send"), "");
-	gtk_tooltips_set_tip(tips, button_close, _("Close"), "");
-	gtk_tooltips_set_tip(tips, button_clear, _("Clear"), "");
-	gtk_tooltips_set_tip(tips, button_stick, _("Stick"), "");
-	gtk_tooltips_set_tip(tips, button_find, _("Find"), "");
+	gtk_tooltips_set_tip(tips, button_send, _("Send a message"), "");
+	gtk_tooltips_set_tip(tips, button_autosend, _("Send message with enter"), "");
+	gtk_tooltips_set_tip(tips, button_close, _("Close a window"), "");
+	gtk_tooltips_set_tip(tips, button_clear, _("Clear the buffer"), "");
+	gtk_tooltips_set_tip(tips, button_stick, _("Stick to all virtual desktops"), "");
+	gtk_tooltips_set_tip(tips, button_find, _("Find a contact"), "");
 
 
 	g_object_set_data(G_OBJECT(session->chat), "autosend_button", button_autosend);

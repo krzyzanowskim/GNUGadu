@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-08-03 23:35+0200\n"
+"POT-Creation-Date: 2004-08-04 22:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "GNU Gadu 2"
 msgstr ""
 
-#: contrib/gghist/gghist.c:265
+#: contrib/gghist/gghist.c:264
 msgid "There is no history file"
 msgstr ""
 
@@ -150,27 +150,27 @@ msgid ""
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:1163
-msgid "Send"
+msgid "Send a message"
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:1164
-msgid "Auto send"
+msgid "Send message with enter"
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:1165
-msgid "Close"
+msgid "Close a window"
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:1166
-msgid "Clear"
+msgid "Clear the buffer"
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:1167
-msgid "Stick"
+msgid "Stick to all virtual desktops"
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:1168
-msgid "Find"
+msgid "Find a contact"
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:1185
@@ -337,7 +337,7 @@ msgstr ""
 #: src/plugins/jabber/jabber_plugin.c:789
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
-#: src/plugins/history/external/history_viewer.c:128
+#: src/plugins/history/external/history_viewer.c:107
 msgid "Preferences"
 msgstr ""
 
@@ -502,7 +502,7 @@ msgstr ""
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1586
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1590
 #: src/plugins/xosd/plugin_xosd.c:517
-#: src/plugins/history/external/history_viewer.c:172
+#: src/plugins/history/external/history_viewer.c:151
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr ""
@@ -1003,7 +1003,7 @@ msgid "Tlen login"
 msgstr ""
 
 #: src/plugins/tlen/tlen_plugin.c:907
-#: src/plugins/history/external/history_viewer.c:140
+#: src/plugins/history/external/history_viewer.c:119
 msgid "View History"
 msgstr ""
 
@@ -1218,45 +1218,45 @@ msgid ""
 "created"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:152
+#: src/plugins/jabber/jabber_cb.c:164
 msgid "Jabber authentication failed"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:183
+#: src/plugins/jabber/jabber_cb.c:195
 msgid "Subscription request confirmation"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:184
+#: src/plugins/jabber/jabber_cb.c:196
 #, c-format
 msgid ""
 "Person : %s\n"
 "wants to subscribe your presence"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:193
+#: src/plugins/jabber/jabber_cb.c:205
 #, c-format
 msgid ""
 "From %s\n"
 "You are now authorized"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:199
+#: src/plugins/jabber/jabber_cb.c:211
 #, c-format
 msgid ""
 "From %s\n"
 "Your authorization has been removed!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:377
+#: src/plugins/jabber/jabber_cb.c:389
 #, c-format
 msgid "Error: %s (code %s)"
 msgstr ""
 
-#: src/plugins/jabber/jabber_login.c:106 src/plugins/jabber/jabber_login.c:120
+#: src/plugins/jabber/jabber_login.c:60 src/plugins/jabber/jabber_login.c:74
 msgid "Invalid jid!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_login.c:196
+#: src/plugins/jabber/jabber_login.c:150
 msgid "SSL not supported by loudmouth"
 msgstr ""
 
@@ -1554,22 +1554,22 @@ msgstr ""
 msgid "Unable to read config file for plugin update"
 msgstr ""
 
-#: src/plugins/history/external/history_viewer.c:52
+#: src/plugins/history/external/history_viewer.c:39
 msgid "External History Viewer Preferences"
 msgstr ""
 
-#: src/plugins/history/external/history_viewer.c:56
+#: src/plugins/history/external/history_viewer.c:43
 msgid "Path to external viewer"
 msgstr ""
 
-#: src/plugins/history/external/history_viewer.c:114
+#: src/plugins/history/external/history_viewer.c:93
 msgid "User not selected"
 msgstr ""
 
-#: src/plugins/history/external/history_viewer.c:127
+#: src/plugins/history/external/history_viewer.c:106
 msgid "History Viewer"
 msgstr ""
 
-#: src/plugins/history/external/history_viewer.c:156
+#: src/plugins/history/external/history_viewer.c:135
 msgid "External history viewer"
 msgstr ""
