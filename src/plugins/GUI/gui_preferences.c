@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.40 2004/01/11 14:05:36 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.41 2004/01/11 14:08:09 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -65,7 +65,7 @@ static gboolean save_selected_plugins (GtkTreeModel * model, GtkTreePath * path,
 	  if (!ggadu_strcasecmp (name, "main-gui"))
 	    {
 		signal_emit_full ("main-gui", "gui show warning",
-				  g_strdup ("ZONK! Bo zaraz zdechne! Zrestartuj gada, by zmiany odniosly efekt."),
+				  g_strdup (_("GUI is selected as DISABLED\nIf you are sure, you have to restart GNU Gadu to take effect")),
 				  "main-gui", NULL);
 		return FALSE;
 	    }
