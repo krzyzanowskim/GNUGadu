@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.78 2004/08/24 12:04:30 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.79 2004/09/06 07:23:48 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -267,10 +267,6 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 	GSList *selectedusers = NULL;
 
 
-	/* count how many rows is selected and set list "selectedusers" */
-	gtk_tree_selection_selected_foreach(gtk_tree_view_get_selection(GTK_TREE_VIEW(widget)), set_selected_users_list,
-					    &selectedusers);
-
 	if ((event->type == GDK_2BUTTON_PRESS) && (event->button == 1))
 	{
 		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
@@ -330,16 +326,22 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 		GtkItemFactory *ifactory = NULL;
 		GGaduMenu *umenu = NULL;
 		GtkTreeIter iter;
+		GtkTreeSelection *selection;
 
 		print_debug("main-gui : wcisnieto prawy klawisz ? %s\n",
 			    g_object_get_data(G_OBJECT(user_data), "plugin_name"));
 
 		print_debug("GDK_BUTTON_PRESS 3\n");
-
+		
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(widget));
+		
 		if (!gtk_tree_view_get_path_at_pos
 		    (GTK_TREE_VIEW(widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
 			return FALSE;
-
+		
+		if (!((event->state == 1) || (event->state == 4)))
+			gtk_tree_selection_unselect_all (selection);
+		gtk_tree_selection_select_path (selection, treepath);		
 
 		if (!tree)
 		{
@@ -356,6 +358,9 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 			if (k)
 				gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
 		}
+		
+		/* count how many rows is selected and set list "selectedusers" */
+		gtk_tree_selection_selected_foreach(gtk_tree_view_get_selection(GTK_TREE_VIEW(widget)), set_selected_users_list, &selectedusers);
 
 		if (gp && gp->plugin_name && selectedusers)
 			umenu = signal_emit("main-gui", "get user menu", selectedusers, gp->plugin_name);
@@ -458,7 +463,7 @@ void gui_main_window_create(gboolean visible)
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_widget_set_name(window, "ggadu_window");
 	gtk_window_set_wmclass(GTK_WINDOW(window), "GM_NAME", "GNUGadu");
-	gtk_window_set_title(GTK_WINDOW(window), "GNU Gadu 2");
+	gtk_window_set_title(GTK_WINDOW(window), "GNU Gadu");
 	gtk_window_set_modal(GTK_WINDOW(window), FALSE);
 	/* gtk_window_set_has_frame(GTK_WINDOW(window), FALSE); */
 	gtk_window_set_role(GTK_WINDOW(window), "GNUGadu");
@@ -1007,7 +1012,7 @@ void gui_reload_images()
 
 	sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
 	sigdata = g_slist_append(sigdata, GGADU_DEFAULT_ICON_FILENAME);
-	sigdata = g_slist_append(sigdata, "GNU Gadu 2");
+	sigdata = g_slist_append(sigdata, "GNU Gadu");
 
 	signal_emit_full("main-gui", "docklet set default icon", sigdata, NULL, (gpointer) g_slist_free);
 }

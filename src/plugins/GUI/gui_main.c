@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.59 2004/08/23 13:56:32 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.60 2004/09/06 07:23:48 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -276,7 +276,7 @@ void start_plugin()
 
 	sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
 	sigdata = g_slist_append(sigdata, GGADU_DEFAULT_ICON_FILENAME);
-	sigdata = g_slist_append(sigdata, "GNU Gadu 2");
+	sigdata = g_slist_append(sigdata, "GNU Gadu");
 
 	signal_emit_full("main-gui", "docklet set default icon", sigdata, NULL, (gpointer) g_slist_free);
 

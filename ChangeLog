@@ -1,3 +1,6 @@
+06.09.2004
+- gg2-select.patch for userlist right click by madej@afn.no-ip.org (GUI/Madej)
+
 02.09.2004
 - set wrap mode to GTK_WRAP_WORD_CHAR (GUI/krzak)
   close #62
