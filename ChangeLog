@@ -1,3 +1,8 @@
+17.10.2003
+- when changing status to a descriptive one, ask for the description
+  everytime [even if disconnected]. provides (hopefully) current
+  description as the default value (gadu-gadu/shasta)
+
 12.10.2003
 - IDEA changed their URL again, fixed. (sms/shasta)
 

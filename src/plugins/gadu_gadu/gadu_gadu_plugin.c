@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.83 2003/09/22 19:07:32 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.84 2003/10/17 21:25:37 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1922,64 +1922,57 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
       {
 	  GGaduStatusPrototype *sp = signal->data;
 
-	  if (!connected)
+	  if (sp == NULL)
+		return;
+
+	  if (sp->status != GG_STATUS_NOT_AVAIL)
 	    {
-		connect_count = 0;
+	      /* descriptions, call dialogbox */
+	      if (sp->status == GG_STATUS_AVAIL_DESCR || sp->status == GG_STATUS_BUSY_DESCR ||
+		  sp->status == GG_STATUS_NOT_AVAIL_DESCR || sp->status == GG_STATUS_INVISIBLE_DESCR)
+		{
+		    GGaduDialog *d = ggadu_dialog_new ();
+		    gchar *reason_c = NULL;
 
-		if ((sp != NULL) && (sp->status != GG_STATUS_NOT_AVAIL) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR))
-		  {
-		      if (sp->status == GG_STATUS_AVAIL_DESCR || sp->status == GG_STATUS_BUSY_DESCR ||
-			  sp->status == GG_STATUS_INVISIBLE_DESCR)
-		    		gadu_gadu_login (config_var_get (handler, "reason") ? config_var_get (handler, "reason") : NULL, sp->status);
-		      else
-		    		gadu_gadu_login (NULL, sp->status);
-		  }
+		    to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), reason_c);
 
+		    ggadu_dialog_set_title (d, _("Enter status description"));
+		    ggadu_dialog_callback_signal (d, "change status descr");
+		    ggadu_dialog_add_entry (&(d->optlist), 0, _("Description:"), VAR_STR, (gpointer) reason_c,
+					    VAR_FLAG_FOCUS);
+
+		    d->user_data = sp;
+		    signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+		}
+	      else
+		{
+		    gint _status = sp->status;
+		    if (config_var_get (handler, "private"))
+			_status |= GG_STATUS_FRIENDS_MASK;
+
+		    /* if not connected, login. else, just change status */
+		    if (!connected)
+		      {
+			connect_count = 0;
+			gadu_gadu_login (NULL, sp->status);
+		      }
+		    else if (gg_change_status (session, _status) == -1)
+		      {
+			  signal_emit (GGadu_PLUGIN_NAME, "gui show warning",
+				       g_strdup (_("Unable to change status")), "main-gui");
+			  print_debug ("zjebka podczas change_status %d\n", sp->status);
+		      }
+		    else
+		      {
+			  signal_emit (GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status,
+				       "main-gui");
+		      }
+		}
 	    }
-	  else if (connected && sp)
+	  else
 	    {
-		if (sp->status != GG_STATUS_NOT_AVAIL)
-		  {
-		      if (sp->status == GG_STATUS_AVAIL_DESCR || sp->status == GG_STATUS_BUSY_DESCR ||
-			  sp->status == GG_STATUS_NOT_AVAIL_DESCR || sp->status == GG_STATUS_INVISIBLE_DESCR)
-			{
-			    GGaduDialog *d = ggadu_dialog_new ();
-			    gchar *reason_c = NULL;
-
-			    to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), reason_c);
-
-			    ggadu_dialog_set_title (d, _("Enter status description"));
-			    ggadu_dialog_callback_signal (d, "change status descr");
-			    ggadu_dialog_add_entry (&(d->optlist), 0, _("Description:"), VAR_STR, (gpointer) reason_c,
-						    VAR_FLAG_FOCUS);
-
-			    d->user_data = sp;
-			    signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
-			}
-		      else
-			{
-			    gint _status = sp->status;
-			    if (config_var_get (handler, "private"))
-				_status |= GG_STATUS_FRIENDS_MASK;
-
-			    if (gg_change_status (session, _status) == -1)
-			      {
-				  signal_emit (GGadu_PLUGIN_NAME, "gui show warning",
-					       g_strdup (_("Unable to change status")), "main-gui");
-				  print_debug ("zjebka podczas change_status %d\n", sp->status);
-			      }
-			    else
-			      {
-				  signal_emit (GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status,
-					       "main-gui");
-			      }
-			}
-		  }
-		else
-		  {
-		      /* nie czekamy az serwer powie good bye tylko sami sie rozlaczamy */
-		      ggadu_gadu_gadu_disconnect ();
-		  }
+	      /* nie czekamy az serwer powie good bye tylko sami sie rozlaczamy */
+	      ggadu_gadu_gadu_disconnect ();
 	    }
 
 	  return;
@@ -1990,10 +1983,8 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 	  GGaduDialog *d = signal->data;
 	  GGaduStatusPrototype *sp = d->user_data;
 
-	  if (d->response == GGADU_OK)
+	  if (d->response == GGADU_OK && sp)
 	    {
-		if (connected && sp)
-		  {
 		      GGaduKeyValue *kv = NULL;
 		      if (d->optlist)
 			{
@@ -2014,9 +2005,15 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			    from_utf8 ("ISO-8859-2", desc_utf, desc_iso);
 			    config_var_set (handler, "reason", desc_iso);
 
-			    if (!gg_change_status_descr (session, _status, desc_cp))
+			    if (!connected)
+			    {
+				connect_count = 0;
+				gadu_gadu_login (desc_cp, _status);
+			    }
+			    else if (!gg_change_status_descr (session, _status, desc_cp))
 				signal_emit (GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status,
 					     "main-gui");
+
 			    g_free (desc_cp);
 			    g_free (desc_iso);
 
@@ -2027,7 +2024,6 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			{
 			    ggadu_gadu_gadu_disconnect ();
 			}
-		  }
 	    }
 	  GGaduDialog_free (d);
 	  return;
