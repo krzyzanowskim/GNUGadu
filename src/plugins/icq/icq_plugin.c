@@ -1,4 +1,4 @@
-/* $Id: icq_plugin.c,v 1.5 2003/04/09 17:15:13 krzyzak Exp $ */
+/* $Id: icq_plugin.c,v 1.6 2003/04/09 21:49:31 shaster Exp $ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -253,8 +253,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			
 			for (i=0; i < strlen(tmp); i++)
 			    if (g_ascii_isdigit( (tmp)[i] ) == FALSE) {
-				signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("Not valid UIN")),"main-gui");
-				print_debug("This is not valid uin\n");
+				signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("Invalid UIN")),"main-gui");
+				print_debug("This is not a valid uin\n");
 				return;
 			    }
 			
@@ -519,7 +519,7 @@ gpointer user_preferences_action(gpointer user_data)
     ggadu_dialog_callback_signal(d, "update config");
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
 
-    ggadu_dialog_add_entry(&(d->optlist), ICQ_UIN, _("Uin"), VAR_INT, config_var_get(handler, "uin"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), ICQ_UIN, "UIN", VAR_INT, config_var_get(handler, "uin"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), ICQ_PASSWORD, _("Password"), VAR_STR, config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
     ggadu_dialog_add_entry(&(d->optlist), ICQ_NICK, _("Nick"), VAR_STR, config_var_get(handler, "nick"), VAR_FLAG_NONE);
     
