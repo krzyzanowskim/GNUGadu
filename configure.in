@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.41 2003/12/28 21:27:48 thrulliq Exp $
+dnl $Id: configure.in,v 1.42 2004/01/11 14:15:16 shaster Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -466,21 +466,21 @@ po/Makefile.in
 ])
 
 echo
-echo Build plugin docklet-system-tray........... : $want_docklet_system_tray
-echo Build plugin docklet-dockapp............... : $want_docklet_dockapp
-echo Build plugin GUI-GTK2.......... : $want_gui
-echo Build plugin Gadu-Gadu......... : $want_gadu
-echo Build plugin Tlen.pl........... : $want_tlen
-echo Build plugin Jabber............ : $want_jabber
-echo Build plugin XOSD.............. : $want_xosd
-echo Build plugin sound ESD......... : $want_esd
-echo Build plugin sound aRts........ : $want_arts
-echo Build plugin sound OSS......... : $want_oss
-echo Build plugin sound external.... : $want_external
-echo Build plugin sms............... : $want_sms
-echo Build plugin remote............ : $want_remote
-echo Build plugin update............ : $want_update
-echo Build perl support............. : $want_perl
+echo Build plugin GUI-GTK2.............. : $want_gui
+echo Build plugin Gadu-Gadu............. : $want_gadu
+echo Build plugin Tlen.pl............... : $want_tlen
+echo Build plugin Jabber................ : $want_jabber
+echo Build plugin docklet-system-tray... : $want_docklet_system_tray
+echo Build plugin docklet-dockapp....... : $want_docklet_dockapp
+echo Build plugin XOSD.................. : $want_xosd
+echo Build plugin sound ESD............. : $want_esd
+echo Build plugin sound aRts............ : $want_arts
+echo Build plugin sound OSS............. : $want_oss
+echo Build plugin sound external........ : $want_external
+echo Build plugin sms................... : $want_sms
+echo Build plugin remote................ : $want_remote
+echo Build plugin update................ : $want_update
+echo Build perl support................. : $want_perl
 echo
 echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 
