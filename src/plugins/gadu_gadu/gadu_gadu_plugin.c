@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.84 2003/10/17 21:25:37 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.85 2003/10/27 18:16:20 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1512,6 +1512,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".gg", NULL);
 
+#if GGADU_DEBUG
     path = g_build_filename (this_configdir, "config_test", NULL);
 
     mkdir (this_configdir, 0700);
@@ -1521,14 +1522,16 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     if (!config_read (handler))
       {
 	  g_free (path);
+#endif
 	  path = g_build_filename (this_configdir, "config", NULL);
 
 	  set_config_file_name ((GGaduPlugin *) handler, path);
 
 	  if (!config_read (handler))
 	      g_warning (_("Unable to read configuration file for plugin %s"), "gadu-gadu");
+#if GGADU_DEBUG
       }
-
+#endif
     register_signal_receiver ((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
 
     ggadu_repo_add ("gadu-gadu");
