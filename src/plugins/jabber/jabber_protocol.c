@@ -85,8 +85,10 @@ void jabber_change_status (enum states status)
   lm_message_unref (m);
   if (!result)
     print_debug ("jabber: Couldn't change status!\n");
-  else
+  else {
+    jabber_status = status;
     signal_emit ("jabber", "gui status changed", (gpointer) status, "main-gui");
+  }
 }
 
 void jabber_fetch_roster (void)
