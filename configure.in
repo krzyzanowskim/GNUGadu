@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.58 2004/04/04 21:20:50 krzyzak Exp $
+dnl $Id: configure.in,v 1.59 2004/04/05 11:40:04 krzyzak Exp $
 
 m4_define([gg2_version],[2.0])
 
@@ -212,7 +212,7 @@ fi
 AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
 if test "x$with_gadu" = "xyes"; then 
     want_gadu=yes
-    PKG_CHECK_MODULES(OSSL,openssl,[],[])
+    PKG_CHECK_MODULES(OSSL,openssl >= 0.9.7,[],AC_MSG_ERROR($OSSL_PKG_ERRORS))
     prev=`pwd`
     cd src/plugins/gadu_gadu/libgadu
     ./configure --with-pthread CFLAGS="$CFLAGS" || exit 1
