@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.130 2004/12/20 09:15:14 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.131 2004/12/25 19:38:20 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -752,6 +752,7 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 				r.height = event->height;
 				if (hbox_buttons)
 					gtk_widget_size_request(GTK_WIDGET(hbox_buttons), &rb);
+					
 				position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
 				gtk_paned_set_position(GTK_PANED(paned), (gint) position);
 			}
@@ -790,6 +791,7 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 					r.height = event->height;
 					if (hbox_buttons)
 						gtk_widget_size_request(GTK_WIDGET(hbox_buttons), &rb);
+						
 					position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
 					gtk_paned_set_position(GTK_PANED(paned), (gint) position);
 				}
@@ -826,11 +828,11 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	GtkWidget *button_emoticons;
 	GtkWidget *button_stick;
 	GtkWidget *button_clear;
-	GtkWidget *bs_image = create_image("send-im.png");
+	GtkWidget *bs_image;
 	GtkWidget *bas_image;
-	GtkWidget *bs_hbox = gtk_hbox_new(FALSE, 0);
-	GtkWidget *bs_label = gtk_label_new_with_mnemonic(_("_Send"));
-	GtkTooltips *tips = gtk_tooltips_new();
+	GtkWidget *bs_hbox;
+	GtkWidget *bs_label;
+	GtkTooltips *tips;
 	GtkTextBuffer *buf = NULL;
 	gchar *wintitle = NULL;
 	gchar *confer_title = NULL;
@@ -847,11 +849,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	if (!session || !plugin_name || !id)
 		return NULL;
 
-
-	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
-
 	gp = gui_find_protocol(plugin_name, protocols);
-
 	if (!gp)
 		return NULL;
 
@@ -860,12 +858,14 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	/*
 	 * confer_topic create 
 	 */
+	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
 	if (conference)
 	{
 		guint i = 0;
-		GSList *tmprl = session->recipients;
+		GSList *tmprl;
 		gchar *recipients_str_arr[g_slist_length(session->recipients)];
 
+		tmprl = session->recipients;
 		while (tmprl)
 		{
 			GGaduContact *k1 = NULL;
@@ -891,7 +891,6 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	vbox_in_out = gtk_vbox_new(FALSE, 0);	/* up - input, down -
 						 * history */
 	session->chat = vbox_in_out;
-
 	g_object_set_data(G_OBJECT(session->chat), "gui_session", session);
 
 	/*
@@ -1013,20 +1012,21 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 			gtk_window_set_title(GTK_WINDOW(chat_window), g_strdup(wintitle));
 			gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
 
+			gtk_box_pack_end(GTK_BOX(vbox_in_out), hbox_buttons, FALSE, FALSE, 0);
 			gtk_box_pack_start(GTK_BOX(vbox), vbox_in_out, TRUE, TRUE, 0);
-			gtk_box_pack_end(GTK_BOX(vbox), hbox_buttons, FALSE, FALSE, 0);
 
 			gtk_container_add(GTK_CONTAINER(chat_window), vbox);
 		}
 		break;
 	}
 
-	if (width < 50 || width > 2000)
+	if (width < 20 || width > 2000)
 		width = DEFAULT_CHAT_WINDOW_WIDTH;
 
-	if (height < 50 || height > 2000)
+	if (height < 20 || height > 2000)
 		height = DEFAULT_CHAT_WINDOW_HEIGHT;
 
+	gtk_container_set_border_width(GTK_CONTAINER(chat_window),4);
 	gtk_window_set_default_size(GTK_WINDOW(chat_window), width, height);
 	gtk_window_set_modal(GTK_WINDOW(chat_window), FALSE);
 	gtk_widget_set_name(GTK_WIDGET(chat_window), "GGChat");
@@ -1043,7 +1043,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(history), FALSE);
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(history), GTK_WRAP_WORD_CHAR);
 	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(history), FALSE);
-	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(history), 2);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(history), 1);
 
 	gtk_widget_ref(history);
 	g_object_set_data_full(G_OBJECT(session->chat), "history", history, (GDestroyNotify) gtk_widget_unref);
@@ -1107,7 +1107,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 #endif
 	gtk_widget_set_name(GTK_WIDGET(input), "GGInput");
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(input), GTK_WRAP_WORD_CHAR);
-	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(input), 2);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(input), 1);
 
 	gtk_widget_ref(input);
 	g_object_set_data_full(G_OBJECT(session->chat), "input", input, (GDestroyNotify) gtk_widget_unref);
@@ -1122,6 +1122,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	 */
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw),GTK_SHADOW_IN);
 
 	gtk_container_add(GTK_CONTAINER(sw), history);
 	gtk_paned_pack1(GTK_PANED(paned), sw, TRUE, FALSE);
@@ -1131,9 +1132,10 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	 */
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw),GTK_SHADOW_IN);
 
 	gtk_container_add(GTK_CONTAINER(sw), input);
-	gtk_paned_pack2(GTK_PANED(paned), sw, FALSE, FALSE);
+	gtk_paned_pack2(GTK_PANED(paned), sw, TRUE, FALSE);
 
 	/*
 	 * attach paned to vbox_in_out 
@@ -1143,11 +1145,12 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	/*
 	 * buttons 
 	 */
-
-
 	button_send = gtk_button_new();
-	gtk_box_pack_start_defaults(GTK_BOX(bs_hbox), bs_label);
-	gtk_box_pack_end(GTK_BOX(bs_hbox), bs_image, FALSE, FALSE, 0);
+	bs_hbox = gtk_hbox_new(FALSE, 0);
+	bs_label = gtk_label_new_with_mnemonic(_("_Send"));
+	bs_image = create_image("send-im.png");
+	gtk_box_pack_start(GTK_BOX(bs_hbox), bs_image, FALSE, FALSE, 1);
+	gtk_box_pack_end_defaults(GTK_BOX(bs_hbox), bs_label);
 	gtk_container_add(GTK_CONTAINER(button_send), bs_hbox);
 	gtk_button_set_focus_on_click(GTK_BUTTON(button_send), FALSE);
 
@@ -1186,6 +1189,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 0);
 
+	tips = gtk_tooltips_new();
 	gtk_tooltips_set_tip(tips, button_send, _("Send a message"), "");
 	gtk_tooltips_set_tip(tips, button_autosend, _("Send message with enter"), "");
 	gtk_tooltips_set_tip(tips, button_close, _("Close a window"), "");

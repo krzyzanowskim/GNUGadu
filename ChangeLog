@@ -1,6 +1,7 @@
 25.12.2004
 - patch for external-history plugin destroy function by BJ (foxia@alexandria.cc)
 - search for X libraries for aaway plugin (krzak)
+- chat window design modified a bit (GUI/krzak)
 
 23.12.2004
 - ignore list view added, it still sux but better than nothing (ignore/krzak)

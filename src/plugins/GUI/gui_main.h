@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.20 2004/12/20 09:15:14 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.21 2004/12/25 19:38:20 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -32,7 +32,7 @@
 
 /* default size of a chat window */
 #define DEFAULT_CHAT_WINDOW_WIDTH 400
-#define DEFAULT_CHAT_WINDOW_HEIGHT 300
+#define DEFAULT_CHAT_WINDOW_HEIGHT 275
 
 /* default icon's filename */
 #define GGADU_DEFAULT_ICON_FILENAME "icon.png"
