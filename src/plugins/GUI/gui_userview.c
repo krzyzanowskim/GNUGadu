@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.14 2003/06/19 15:10:57 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.15 2003/06/19 18:04:56 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -139,6 +139,8 @@ gint sort_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer use
     if ((!k1 || !k2))
     	return 0;
 	
+    /* print_debug("SORTUJE\n"); */ 
+    
     // je¶li status jest taki sam posortuj alfabetycznie wg. tego co wy¶wietla
     if ((k1->status == k2->status))
 	return g_strcasecmp(d1, d2);
@@ -149,6 +151,7 @@ gint sort_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer use
     // w innym przypadku sprawd¼ który status jest wy¿ej na li¶cie
     p1 = gui_get_status_pos(k1->status, gp);
     p2 = gui_get_status_pos(k2->status, gp);
+    
 
     if (p1 > p2)
 	return 1;

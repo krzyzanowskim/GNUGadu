@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.23 2003/06/19 13:52:46 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.24 2003/06/19 18:04:56 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -112,8 +112,8 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 	    GtkTreeModel 	*model		= gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
 	    GtkTreeIter 	iter;
 	    GGaduContact 	*k		= NULL;
-	    gchar 		*markup_id;
-	    gchar 		*markup_desc;
+	    gchar 		*markup_id = NULL;
+	    gchar 		*markup_desc = NULL;
 	    gboolean		is_desc = FALSE;
 	    gchar 		*desc_text	= NULL;
 	    gchar		*ip		= NULL;

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.72 2003/06/19 15:10:57 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.73 2003/06/19 18:04:56 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -83,20 +83,24 @@ void ggadu_gadu_gadu_disconnect ()
 
     session = NULL;
 
-    signal_emit (GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
-
-    ggadu_repo_disable_notification ();
+//    ggadu_repo_disable_notification ();
 
     while (tmplist)
       {
 	  GGaduContact *k = tmplist->data;
-	  print_debug ("\t%s\n", k->id);
-	  k->status = GG_STATUS_NOT_AVAIL;
-	  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+	  if (k->status != GG_STATUS_NOT_AVAIL)
+	  {
+		  print_debug ("\t%s\n", k->id);
+		  k->status = GG_STATUS_NOT_AVAIL;
+		  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+	  }
 	  tmplist = tmplist->next;
       }
 
-    ggadu_repo_enable_notification ();
+//    ggadu_repo_enable_notification ();
+
+    signal_emit (GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
+    
 }
 
 void ggadu_gadu_gadu_disconnect_msg (gchar * txt)
@@ -559,9 +563,8 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		    GGaduContact *k = (GGaduContact *) l->data;
 
 		    if (!g_strcasecmp (k->id, notify->id))
-		      {
 			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
-		      }
+
 		    l = l->next;
 		}
 	  }
@@ -779,7 +782,7 @@ gpointer user_preferences_action (gpointer user_data)
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SERVER, _("Server (optional)"), VAR_STR,
 			    config_var_get (handler, "server"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_PROXY,
-			    _("Proxy server (optional)\n[user:pass]@host.com[:80]"), VAR_STR, config_var_get (handler,
+			    _("Proxy server (optional)\n[user:pass@]host.com[:80]"), VAR_STR, config_var_get (handler,
 													      "proxy"),
 			    VAR_FLAG_NONE);
     to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), utf);

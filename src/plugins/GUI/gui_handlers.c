@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.29 2003/06/19 15:10:57 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.30 2003/06/19 18:04:56 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -369,6 +369,7 @@ void handle_disconnected (GGaduSignal * signal)
 		/* I expect that first entry in offline_status is offline without description */
 		/* only in such situation I can figure out which one is pure offline status */
 		/* if (!is_in_status (k->status, gp->p->offline_status)) */
+//		print_debug("%d %d\n",k->status,*(gint *)&gp->p->offline_status->data);
 		if (k->status != *(gint *)&gp->p->offline_status->data)
 		  {
 		      if (!tree)
@@ -402,7 +403,7 @@ void handle_disconnected (GGaduSignal * signal)
 
     gtk_image_set_from_pixbuf (GTK_IMAGE (status_image), image);
 
-/*    gtk_tree_sortable_sort_column_changed (GTK_TREE_SORTABLE (model)); */
+    gtk_tree_sortable_sort_column_changed (GTK_TREE_SORTABLE (model)); 
 
     if (gp->blinker_image1)
 	gdk_pixbuf_unref (gp->blinker_image1);
