@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.21 2003/06/15 10:46:46 krzyzak Exp $
+dnl $Id: configure.in,v 1.22 2003/06/19 13:52:44 krzyzak Exp $
 
 m4_define([gg2_version],[2.0-pre3])
 
@@ -223,12 +223,10 @@ fi
 
 AC_ARG_WITH(jabber, [  --with-jabber		  Build jabber plugin		default=no])
 if test "x$with_jabber" = "xyes"; then 
-    AC_CHECK_LIB([iksemel], [iks_send], want_jabber=yes, want_jabber=no)
-    if test "x$want_jabber" != "xno"; then
-	AC_CHECK_HEADERS(iksemel.h)
-	JABBER_LIBS="-liksemel"
-	AC_SUBST(JABBER_LIBS)
-    fi
+    PKG_CHECK_MODULES(JABBER,loudmouth-1.0, [],AC_MSG_ERROR($JABBER_PKG_ERRORS))
+    AC_SUBST(JABBER_LIBS)
+    AC_SUBST(JABBER_CFLAGS)
+    want_jabber=yes
 fi
 
 AC_ARG_WITH(xosd, [  --with-xosd		  Build XOSD plugin		default=no])
@@ -388,14 +386,10 @@ dnl Set PACKAGE_SOURCE_DIR in config.h.
 packagesrcdir=`cd $srcdir && pwd`
 AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
-#CFLAGS="$CFLAGS -I${packagesrcdir}/src"
 CFLAGS="$CFLAGS -I${packagesrcdir}/lib"
-#LDFLAGS="$LDFLAGS -L${packagesrcdir}/src/.libs"
  
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
-
-#echo "/* do not edit */" > ${packagesrcdir}/lib/gg2_core.h
 
 AC_OUTPUT([
 Makefile

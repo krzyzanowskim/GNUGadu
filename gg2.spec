@@ -1,4 +1,4 @@
-# $Revision: 1.7 $, $Date: 2003/06/10 10:30:54 $
+# $Revision: 1.8 $, $Date: 2003/06/19 13:52:44 $
 
 %define		snap	snap
 
@@ -19,7 +19,7 @@ URL:		http://www.gadu.gnu.pl/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.7
 BuildRequires:	esound-devel >= 0.2.7
-BuildRequires:	iksemel-devel >= 0.0.1
+BuildRequires:	loudmouth-devel >= 0.9.1
 BuildRequires:	glib2-devel  >= 2.2.0
 BuildRequires:	gtk+2-devel  >= 2.2.0
 BuildRequires:	libgadu-devel >= 1.0
@@ -384,6 +384,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.8  2003/06/19 13:52:44  krzyzak
+- Loudmouth library instead iksemel for Jabber - Thanks Zapal !
+
 Revision 1.7  2003/06/10 10:30:54  shaster
 added update plugin
 

@@ -20,8 +20,8 @@ libgg2_core_la_SOURCES = unified-types.c \
 	menu.h \
 	dialog.h \
 	repo.h \
-	perl_embed.h
-
+	perl_embed.h 
+	
 libgg2_core_la_HEADERS = gg2_core.h
 
 libgg2_core_la_LIBADD = $(PERL_OPTION_LDFLAGS) -ldl 

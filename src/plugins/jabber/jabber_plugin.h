@@ -1,58 +1,67 @@
-/* $Id: jabber_plugin.h,v 1.3 2003/06/09 18:24:35 shaster Exp $ */
-
 #ifndef JABBER_PLUGIN_H
 #define JABBER_PLUGIN_H 1
 
-#include <iksemel.h>
+#include <loudmouth/loudmouth.h>
 
-#define id_print IKS_ID_USER | IKS_ID_SERVER
-
-extern GGaduPlugin *jabber_handler;
-
-extern GIOChannel *source_chan;
-extern GSList *userlist;
-extern struct netdata *jabber_session;
-extern gint watch;
-extern gboolean connected;
+#include "gg-types.h"
+#include "unified-types.h"
+#include "plugins.h"
+#include "signals.h"
+#include "menu.h"
+#include "support.h"
+#include "dialog.h"
+#include "repo.h"
 
 enum {
-    GGADU_JID,
-    GGADU_JID_PASSWORD,
-    GGADU_JID_AUTOCONNECT
+  GGADU_JABBER_JID,
+  GGADU_JABBER_PASSWORD,
+  GGADU_JABBER_AUTOCONNECT,
+  GGADU_JABBER_USESSL
 };
-
 
 enum states {
-    JABBER_STATUS_AVAILABLE = IKS_SHOW_AVAILABLE,
-    JABBER_STATUS_UNAVAILABLE = IKS_SHOW_UNAVAILABLE,
-    JABBER_STATUS_AWAY = IKS_SHOW_AWAY,
-    JABBER_STATUS_XA = IKS_SHOW_XA,
-    JABBER_STATUS_DND = IKS_SHOW_DND,
-    JABBER_STATUS_CHAT = IKS_SHOW_CHAT,
-    JABBER_STATUS_WAIT_SUBSCRIBE = 10
+  JABBER_STATUS_AVAILABLE,
+  JABBER_STATUS_UNAVAILABLE,
+  JABBER_STATUS_AWAY,
+  JABBER_STATUS_XA,
+  JABBER_STATUS_DND,
+  JABBER_STATUS_WAIT_SUBSCRIBE
 };
 
-enum netstates
-{
-	NET_OFF,
-	NET_CONNECT,
-	NET_STREAM,
-	NET_REG,
-	NET_AUTH,
-	NET_ON
+enum subscription {
+  JABBER_S_NONE,
+  JABBER_S_TO,
+  JABBER_S_FROM,
+  JABBER_S_BOTH
 };
 
+typedef struct {
+  gchar *id;
+  gchar *type;
+  gpointer data;
+  void (*func) (LmConnection *connection, LmMessage *message, gpointer data);
+} waiting_action;
 
-struct netdata
-{
-	iksparser *parser;
-	iksid *id;
-	enum netstates state;
-	enum states status;
-	int regflag;
-};
+extern GGaduPlugin *jabber_handler;
+extern LmConnection *connection;
 
+extern LmMessageHandler *iq_handler;
+extern LmMessageHandler *iq_roster_handler;
+extern LmMessageHandler *presence_handler;
+extern LmMessageHandler *message_handler;
 
-gboolean updatewatch(struct netdata *);
+extern GSList *userlist;
+extern GSList *rosterlist;
+
+extern GSList *actions;
+
+extern gint connected;
+
+extern enum states jabber_status;
+
+GGaduContact *user_in_list (gchar *jid, GSList *list);
+
+#define user_in_userlist(x) user_in_list (x, userlist)
+#define user_in_rosterlist(x) user_in_list (x, rosterlist)
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.22 2003/06/15 15:32:43 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.23 2003/06/19 13:52:46 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -385,7 +385,7 @@ gboolean status_blinker (gpointer data)
   GdkPixbuf *image = NULL;
   GtkWidget *status_image;
 
-  print_debug ("status_blinker %p\n", data);
+//  print_debug ("status_blinker %p\n", data);
 
   if (!data)
   {

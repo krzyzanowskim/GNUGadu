@@ -73,7 +73,7 @@ upubliczniæ pierwsz± wersjê - 2.0pre0 jako wersjê pogl±dow±.
     - gtk+ 2.2.0 (ftp://ftp.gnome.org/pub/GNOME/) - GUI
     - libgadu (http://dev.null.pl/ekg/) - Gadu-Gadu
     - libtlen (http://www.libtlen.eu.org) - Tlen
-    - iksemel (http://iksemel.jabberstudio.org) - Jabber
+    - Loudmouth (http://www.imendio.com/projects/loudmouth/) - Jabber
     - xosd (http://ignavus.net/software.html) - XOSD
     - esound (http://www.tux.org/~ricdude/EsounD.html)
     - arts (razem z KDE zazwyczaj)

@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.2 2003/06/14 22:27:28 shaster Exp $ */
+/* $Id: unified-types.h,v 1.3 2003/06/19 13:52:45 krzyzak Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -6,6 +6,7 @@
 #include <config.h>
 #endif
 
+#include <stdio.h>
 
 /*
  *    GGaduContact
