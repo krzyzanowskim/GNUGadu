@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.61 2004/12/23 11:36:14 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.62 2004/12/26 00:45:11 shaster Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -48,8 +48,7 @@ static GdkGC *gc;
 
 static gchar *about_text = NULL;
 
-void gui_dialog_show_filename(GtkWidget * txt_entry
-)
+void gui_dialog_show_filename(GtkWidget * txt_entry)
 {
 	GtkWidget *file_chooser = NULL;
 	GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data(G_OBJECT(txt_entry), "kv");
@@ -75,8 +74,7 @@ void gui_dialog_show_filename(GtkWidget * txt_entry
 
 /* Does not work as expected yet. Need to know how to make it
    return XLFD. */
-void gui_dialog_show_fontchooser(GtkWidget * txt_entry
-)
+void gui_dialog_show_fontchooser(GtkWidget * txt_entry)
 {
 	GtkWidget *font_selector = NULL;
 	GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data(G_OBJECT(txt_entry), "kv");
@@ -98,8 +96,7 @@ void gui_dialog_show_fontchooser(GtkWidget * txt_entry
 	gtk_widget_destroy(font_selector);
 }
 
-static void gui_dialog_show_colorchooser(GtkColorButton * color_button, gpointer entry
-)
+static void gui_dialog_show_colorchooser(GtkColorButton * color_button, gpointer entry)
 {
 	GdkColor color;
 	gchar *tmp = NULL;
@@ -110,8 +107,7 @@ static void gui_dialog_show_colorchooser(GtkColorButton * color_button, gpointer
 	g_free(tmp);
 }
 
-GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_progress
-)
+GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_progress)
 {
 	GSList *listtmp = list;
 	GtkWidget *adv_vbox = NULL;
@@ -124,10 +120,10 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 	gboolean need_advanced = FALSE;
 
 	gtk_container_set_border_width(GTK_CONTAINER(tab), 15);
-	
+
 	/* remember to free adv_expander */
-	
-	adv_vbox = gtk_vbox_new(FALSE,5);
+
+	adv_vbox = gtk_vbox_new(FALSE, 5);
 
 	while (listtmp)
 	{
@@ -290,26 +286,26 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 
 		if ((kv->flag & VAR_FLAG_ADVANCED) != 0)
 		{
-		    GtkWidget *hbox = gtk_hbox_new(FALSE,5);
-		    GtkWidget *align;
-		    GtkWidget *label;
-		    
-		    need_advanced = TRUE;
-		    is_advanced = TRUE;
-		    
-		    gtk_box_pack_end_defaults(GTK_BOX(hbox),entry);
-		    
-		    if (need_label)
-		    {
-			align = gtk_alignment_new(0, 0.5, 0, 0);
-			label = gtk_label_new_with_mnemonic(kv->description);
-			gtk_container_add(GTK_CONTAINER(align), label);
-			gtk_box_pack_end_defaults(GTK_BOX(hbox),align);
-		    }
-		    
-		    gtk_box_pack_start_defaults(GTK_BOX(adv_vbox),hbox);
+			GtkWidget *hbox = gtk_hbox_new(FALSE, 5);
+			GtkWidget *align;
+			GtkWidget *label;
+
+			need_advanced = TRUE;
+			is_advanced = TRUE;
+
+			gtk_box_pack_end_defaults(GTK_BOX(hbox), entry);
+
+			if (need_label)
+			{
+				align = gtk_alignment_new(0, 0.5, 0, 0);
+				label = gtk_label_new_with_mnemonic(kv->description);
+				gtk_container_add(GTK_CONTAINER(align), label);
+				gtk_box_pack_end_defaults(GTK_BOX(hbox), align);
+			}
+
+			gtk_box_pack_start_defaults(GTK_BOX(adv_vbox), hbox);
 		}
-		
+
 		if (need_label && !is_advanced)
 		{
 			GtkWidget *align = gtk_alignment_new(0, 0.5, 0, 0);
@@ -317,26 +313,26 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 
 			gtk_container_add(GTK_CONTAINER(align), label);
 			gtk_table_attach_defaults(GTK_TABLE(tab), align, 0, 1, actR, actR + 1);
-			
+
 			if (entry)
-			    gtk_table_attach_defaults(GTK_TABLE(tab), entry, 1, 2, actR, actR + 1);
+				gtk_table_attach_defaults(GTK_TABLE(tab), entry, 1, 2, actR, actR + 1);
 
 		}
 		else if (!is_advanced)
 		{
 			gtk_table_attach(GTK_TABLE(tab), entry, actC, actC + 2, actR, actR + 1, GTK_FILL, GTK_SHRINK, 0, 0);
 		}
-		
-		
+
+
 		if (!is_advanced)
 		{
-		    if ((actC + 1) < cols)
-			actC++;
-		    else
-		    {
-			actC = 0;
-			actR++;
-		    }
+			if ((actC + 1) < cols)
+				actC++;
+			else
+			{
+				actC = 0;
+				actR++;
+			}
 		}
 
 		listtmp = listtmp->next;
@@ -344,11 +340,13 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 
 	if (need_advanced)
 	{
-	    adv_expander = gtk_expander_new_with_mnemonic(_("_More options"));
-	    gtk_container_add(GTK_CONTAINER(adv_expander),adv_vbox);
-	    gtk_table_attach_defaults(GTK_TABLE(tab), adv_expander, 0, rows, actR, actR + 1);
-	} else {
-	    gtk_widget_destroy(adv_vbox);
+		adv_expander = gtk_expander_new_with_mnemonic(_("_More options"));
+		gtk_container_add(GTK_CONTAINER(adv_expander), adv_vbox);
+		gtk_table_attach_defaults(GTK_TABLE(tab), adv_expander, 0, rows, actR, actR + 1);
+	}
+	else
+	{
+		gtk_widget_destroy(adv_vbox);
 	}
 
 	/* progress stuff */
@@ -364,8 +362,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 	return tab;
 }
 
-void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_data
-)
+void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_data)
 {
 	GGaduSignal *signal = (GGaduSignal *) user_data;
 	GGaduDialog *dialog = signal ? signal->data : NULL;
@@ -476,8 +473,7 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 
 }
 
-void gui_show_message_box(gint type, gpointer signal
-)
+void gui_show_message_box(gint type, gpointer signal)
 {
 	GtkWidget *warning = NULL;
 	gchar *txt = ((GGaduSignal *) signal)->data;
@@ -500,8 +496,7 @@ void gui_show_message_box(gint type, gpointer signal
 //      g_free(title);          because of void gtk_window_set_title (GtkWindow *window, const gchar *title);
 }
 
-void gui_show_window_with_text(gpointer signal
-)
+void gui_show_window_with_text(gpointer signal)
 {
 	GGaduSignal *sig = (GGaduSignal *) signal;
 	GtkWidget *dialog = NULL;
@@ -512,13 +507,13 @@ void gui_show_window_with_text(gpointer signal
 
 	dialog = gtk_dialog_new_with_buttons("", NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 	gtk_window_resize(GTK_WINDOW(dialog), 400, 400);
-	
+
 	if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL)
 	{
 		gtk_window_set_icon(GTK_WINDOW(dialog), windowicon);
 		gdk_pixbuf_unref(windowicon);
 	}
-	
+
 
 	buf = gtk_text_buffer_new(NULL);
 	gtk_text_buffer_set_text(buf, (gchar *) sig->data, -1);
@@ -538,8 +533,7 @@ void gui_show_window_with_text(gpointer signal
 
 }
 
-void gui_show_dialog(gpointer signal, gboolean change
-)
+void gui_show_dialog(gpointer signal, gboolean change)
 {
 	GGaduSignal *sig = (GGaduSignal *) signal;
 	GtkWidget *dialog_widget = NULL;
@@ -621,8 +615,7 @@ void gui_show_dialog(gpointer signal, gboolean change
 	gtk_widget_show_all(dialog_widget);
 }
 
-static gint timeout(gpointer user_data
-)
+static gint timeout(gpointer user_data)
 {
 	GtkWidget *image = user_data;
 	PangoLayout *layout;
@@ -676,8 +669,7 @@ static gint timeout(gpointer user_data
 	return TRUE;
 }
 
-static void about_response(GtkWidget * widget, gpointer user_data
-)
+static void about_response(GtkWidget * widget, gpointer user_data)
 {
 	g_source_remove(about_timeout);
 	about_timeout = -1;
@@ -687,8 +679,7 @@ static void about_response(GtkWidget * widget, gpointer user_data
 	g_free(about_text);
 }
 
-static gboolean about_configure_event(GtkWidget * image, GdkEventConfigure * event, gpointer data
-)
+static gboolean about_configure_event(GtkWidget * image, GdkEventConfigure * event, gpointer data)
 {
 	if (pixmap)
 		return TRUE;
@@ -707,15 +698,13 @@ static gboolean about_configure_event(GtkWidget * image, GdkEventConfigure * eve
 	return TRUE;
 }
 
-static gboolean about_expose_event(GtkWidget * image, GdkEventExpose * event, gpointer data
-)
+static gboolean about_expose_event(GtkWidget * image, GdkEventExpose * event, gpointer data)
 {
 	gdk_draw_drawable(image->window, gc, pixmap, event->area.x, event->area.y, event->area.x, event->area.y, event->area.width, event->area.height);
 	return TRUE;
 }
 
-void gui_about(GtkWidget * widget, gpointer data
-)
+void gui_about(GtkWidget * widget, gpointer data)
 {
 	GtkWidget *about;
 	GtkWidget *table;
@@ -765,8 +754,7 @@ void gui_about(GtkWidget * widget, gpointer data
 	about_timeout = g_timeout_add(50, timeout, image);
 }
 
-void gui_show_about(gpointer signal
-)
+void gui_show_about(gpointer signal)
 {
 	gui_about(NULL, NULL);
 }
