@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.108 2004/01/09 13:55:09 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.109 2004/01/11 03:58:56 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -187,9 +187,11 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 
     p.server_port = GG_DEFAULT_PORT;
     if (!serveraddr)
-	serveraddr = g_strdup ("217.17.41.88");
+    {
+	serveraddr = g_strdup ("0.0.0.0");
+    }
     else
-      {
+    {
 	  serv_addr = g_strsplit (serveraddr, ":", 2);
 
 	  if (serv_addr)
@@ -206,7 +208,7 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 		    
 		g_strfreev(serv_addr);
 	    }
-      }
+    }
 
     /* jesli jest proxy zerzniete z ekg */
     if (ggadu_config_var_check (handler, "proxy"))
