@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.15 2004/02/17 15:15:34 thrulliq Exp $ */
+/* $Id: docklet_plugin.c,v 1.16 2004/03/13 14:27:06 krzyzak Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -269,17 +269,44 @@ void docklet_menu(GdkEventButton * event)
 
 		while (index)
 		{
-			GGaduStatusPrototype *sp;
+			GGaduStatusPrototype *sp = NULL;
+			GSList *tmp = NULL;
+			gboolean empty = TRUE;
 			p = ggadu_repo_find_value("_protocols_", key);
+			
+			if (!p || !p->statuslist) 
+			{
+				index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+				continue;
+			}
+			
+			/* search if a submenu isn't empty, if so, then do not list here */
+			tmp = p->statuslist;
+			while (tmp && empty)
+			{
+				sp = tmp->data;
+				
+				if (!sp->receive_only)
+					empty = FALSE;
+				
+				tmp = tmp->next;
+			}
+			
+			if (empty)
+			{
+				index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+				continue;
+			}
+			
 			sp = p->statuslist->data;
 			menuitem = ggadu_new_item_from_image(menu, p->display_name, sp->image, NULL, NULL, 0, 0, 0);
 
 			if (p->statuslist)
 			{
-				GSList *tmp = p->statuslist;
 				GtkWidget *submenu = gtk_menu_new();
 				GtkWidget *subitem;
-
+				
+				tmp = p->statuslist;
 				while (tmp)
 				{
 					sp = tmp->data;

@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.37 2004/03/01 14:21:01 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.38 2004/03/13 14:27:06 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -278,9 +278,11 @@ void gui_list_add(gui_protocol * gp)
 			sp = gui_find_status_prototype(gp->p, status);
 		else if (gp->p->offline_status)
 			sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+		else if (gp->p->statuslist)
+			sp = gp->p->statuslist->data; /* last resord, get dirst status from statuslist */
 	}
 
-	if (sp)
+	if (sp && !sp->receive_only)
 	    create_protocol_icon(gp, sp);
 
 	vbox = gtk_vbox_new(FALSE, 0);
@@ -338,9 +340,11 @@ void gui_tree_add(gui_protocol * gp)
 			sp = gui_find_status_prototype(gp->p, status);
 		else if (gp->p->offline_status)
 			sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+		else if (gp->p->statuslist)
+			sp = gp->p->statuslist->data; /* last resord, get dirst status from statuslist */
 	}
 
-	if (sp)
+	if (sp && !sp->receive_only)
 	    create_protocol_icon(gp, sp);
 
 	gp->add_info_label = g_object_get_data(G_OBJECT(treeview), "add_info_label");

@@ -1,5 +1,6 @@
 13.03.2004
 - gtkspell configuration (Krzysztof Smigrodzki)
+- fixed some stuff with status prototypes registration and visualization (GUI/sms/krzak)
 
 12.03.2004
 - avoid ,,(null)'' when changing contact's info (gadu-gadu/shasta)

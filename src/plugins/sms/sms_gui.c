@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.50 2004/02/17 16:12:25 thrulliq Exp $ */
+/* $Id: sms_gui.c,v 1.51 2004/03/13 14:27:07 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -501,7 +501,8 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 GSList *button_send()
 {
 	GSList *list = NULL;
-	GGaduStatusPrototype *sp;
+	GGaduStatusPrototype *sp = NULL;
+	gboolean receive_only_value = ggadu_config_var_get(sms_handler,"show_in_status") ? FALSE : TRUE;
 
 	sp = g_new0(GGaduStatusPrototype, 2);
 
@@ -509,11 +510,13 @@ GSList *button_send()
 	sp->description = g_strdup(_("Send SMS (internal)"));
 	sp->image = g_strdup("sms_i.png");
 	list = g_slist_append(list, sp);
+	sp->receive_only = receive_only_value;
 	sp++;
 
 	sp->status = 2;
 	sp->description = g_strdup(_("Send SMS (external)"));
 	sp->image = g_strdup("sms_i.png");
+	sp->receive_only = receive_only_value;
 	list = g_slist_append(list, sp);
 
 	return list;
@@ -529,10 +532,11 @@ void start_plugin()
 	p->img_filename = g_strdup("sms.png");
 
 	p->statuslist = button_send();
-	p->offline_status =
+/*	p->offline_status =
 		g_slist_append(p->offline_status,
 			       (gint *) ggadu_config_var_get(sms_handler,
 							     "show_in_status") ? (gpointer) 2 : (gpointer) 3);
+*/
 
 	register_signal(sms_handler, "update config");
 	register_signal(sms_handler, "change status");
