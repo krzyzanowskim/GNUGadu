@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.20 2003/11/03 22:01:15 shaster Exp $ */
+/* $Id: sms_core.c,v 1.21 2003/11/07 22:57:18 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -373,7 +373,7 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
 	return FALSE;
     }
 
-    post = g_strconcat((gchar *) user_data, "&pass=", pass, NULL);
+    post = g_strconcat((gchar *) user_data, "&pass=", pass, "&respInfo=2", NULL);
 
     /* is there any better place for this? */
     unlink(IDEA_GFX);
