@@ -1,6 +1,7 @@
 11.01.2004
 - use username instead of 'Me' (option) (GUI/Thrull)
 - new tab in preferences... (Chat Window) (GUI/Thrull)
+- memory management fixes, still needs some work though (sms/shasta)
 
 10.01.2004
 - fixed sound preferences icon, docklet new message improved a bit (GUI/Maciek Gorniak)
