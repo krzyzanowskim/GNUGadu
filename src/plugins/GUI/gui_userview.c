@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.39 2004/04/02 14:14:03 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.40 2004/04/18 19:47:48 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -171,6 +171,11 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 		return 0;
 
 	/* print_debug("SORTUJE\n"); */
+	/* maly trik, jesli statusy sa w tej samej grupie to trakuj je jako te same statusy przy sortowaniu */
+	if ((is_in_status(k1->status,gp->p->online_status) && is_in_status(k2->status,gp->p->online_status)) ||
+	   (is_in_status(k1->status,gp->p->away_status) && is_in_status(k2->status,gp->p->away_status)) ||
+	   (is_in_status(k1->status,gp->p->offline_status) && is_in_status(k2->status,gp->p->offline_status)))
+	    k1->status = k2->status;
 
 	/* je¶li status jest taki sam posortuj alfabetycznie wg. tego co wy¶wietla */
 	if ((k1->status == k2->status))

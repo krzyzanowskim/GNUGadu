@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.164 2004/03/31 20:50:54 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.165 2004/04/18 19:47:49 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1076,7 +1076,7 @@ gboolean import_userlist(gchar * list)
 
 		first_name = l[0];
 		last_name = l[1];
-		nick = l[2];
+		nick = l[2] ? l[2] : g_strdup("unknown");
 		mobile = l[4];
 		group = l[5];
 		uin = l[6];
@@ -1095,8 +1095,8 @@ gboolean import_userlist(gchar * list)
 
 		k = g_new0(GGaduContact, 1);
 		k->id = uin ? g_strdup(uin) : g_strdup("");
-		k->first_name = g_strdup(first_name);
-		k->last_name = g_strdup(last_name);
+		k->first_name = first_name ? g_strdup(first_name) : NULL;
+		k->last_name = last_name ? g_strdup(last_name) : NULL;
 		k->nick = (!strlen(nick)) ? g_strconcat(first_name, " ", last_name, NULL) : g_strdup(nick);
 		k->comment = g_strdup(comment);
 		k->mobile = g_strdup(mobile);
@@ -1566,15 +1566,15 @@ GSList *status_init()
 	sp->receive_only = FALSE;
 	list = g_slist_append(list, sp);
 	sp++;
-	sp->status = GG_STATUS_NOT_AVAIL_DESCR;
-	sp->description = g_strdup(_("Offline with description"));
-	sp->image = g_strdup("gadu-gadu-offline-descr.png");
-	sp->receive_only = FALSE;
-	list = g_slist_append(list, sp);
-	sp++;
 	sp->status = GG_STATUS_NOT_AVAIL;
 	sp->description = g_strdup(_("Offline"));
 	sp->image = g_strdup("gadu-gadu-offline.png");
+	sp->receive_only = FALSE;
+	list = g_slist_append(list, sp);
+	sp++;
+	sp->status = GG_STATUS_NOT_AVAIL_DESCR;
+	sp->description = g_strdup(_("Offline with description"));
+	sp->image = g_strdup("gadu-gadu-offline-descr.png");
 	sp->receive_only = FALSE;
 	list = g_slist_append(list, sp);
 	sp++;
@@ -2438,18 +2438,18 @@ void save_addressbook_file()
 	gchar *path = NULL;
 
 	path = g_build_filename(this_configdir, "userlist", NULL);
-	print_debug("path is %s\n", path);
 	ch = g_io_channel_new_file(path, "w", NULL);
 	if (ch)
 	{
-		gchar *temp = userlist_dump();
 		if (g_io_channel_set_encoding(ch, "ISO-8859-2", NULL) != G_IO_STATUS_ERROR)
 		{
+			gchar *temp = userlist_dump();
+			
 			if (temp != NULL)
 				g_io_channel_write_chars(ch, temp, -1, NULL, NULL);
+				
+			g_free(temp);
 		}
-
-		g_free(temp);
 		g_io_channel_shutdown(ch, TRUE, NULL);
 		g_io_channel_unref(ch);
 	}
