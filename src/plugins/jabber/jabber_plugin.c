@@ -54,9 +54,9 @@ GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
 void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 		
-	print_debug("%s : receive signal %s\n",GGadu_PLUGIN_NAME,(gchar *)signal->name);
+	print_debug("%s : receive signal %d\n",GGadu_PLUGIN_NAME,signal->name);
 
-	if (!ggadu_strcasecmp(signal->name,"jabber subscribe")) { 
+	if (signal->name == g_quark_from_static_string("jabber subscribe")) { 
 		GGaduDialog *d = signal->data;
 		iksid *id = d->user_data;
 			
@@ -81,7 +81,7 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 		return;
 	}
 		
-	if (!ggadu_strcasecmp(signal->name,"jabber unsubscribe")) { 
+	if (signal->name == g_quark_from_static_string("jabber unsubscribe")) { 
 		GGaduDialog *d = signal->data;
 			
 		if (d->response == GGADU_OK) {
@@ -100,7 +100,7 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	}
 
 	
-	if (!ggadu_strcasecmp(signal->name,"add user")) { 
+	if (signal->name == g_quark_from_static_string("add user")) { 
 
 		GGaduContact *k = g_new0(GGaduContact,1);
 		GSList *kvlist = (GSList *)signal->data;
@@ -130,7 +130,7 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	    return;
 	}
 
-	if (!ggadu_strcasecmp(signal->name,"change status descr")) { 
+	if (signal->name == g_quark_from_static_string("change status descr")) { 
 		GGaduDialog *d = signal->data;
 		GGaduStatusPrototype *sp = d->user_data;
 			
@@ -147,7 +147,7 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	}
 
 	
-	if (!ggadu_strcasecmp(signal->name,"send message")) {
+	if (signal->name == g_quark_from_static_string("send message")) {
 		GGaduMsg *msg = signal->data;
 			
 		if (msg && connected) {
@@ -165,7 +165,7 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	}
 
 	
-	if (!ggadu_strcasecmp(signal->name,"update config")) 
+	if (signal->name == g_quark_from_static_string("update config")) 
 	{ 
 		GGaduDialog *d = signal->data;
 		GSList *tmplist = d->optlist;
@@ -204,7 +204,7 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 
 
 
-	if (!ggadu_strcasecmp(signal->name,"change status")) { 
+	if (signal->name == g_quark_from_static_string("change status")) { 
 	    GGaduStatusPrototype *sp = signal->data;
 	    
 		if (connected && sp) {
@@ -255,7 +255,7 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	return;
 }
 	
-	if (!ggadu_strcasecmp(signal->name,"get current status")) { 
+	if (signal->name == g_quark_from_static_string("get current status")) { 
 	    if (jabber_session) 
 		signal->data_return = (gpointer) jabber_session->status;
 	    else

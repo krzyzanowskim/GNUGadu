@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.33 2003/06/05 20:21:21 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.34 2003/06/09 00:20:46 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -719,13 +719,13 @@ void start_plugin()
 
 void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
-        print_debug("%s : receive signal %s\n",GGadu_PLUGIN_NAME,(gchar *)signal->name);
+        print_debug("%s : receive signal %d\n",GGadu_PLUGIN_NAME,signal->name);
 
-	if (!ggadu_strcasecmp(signal->name,"wyjdz")) { 
+	if (signal->name == g_quark_from_static_string("wyjdz")) { 
 	    wyjdz_signal_handler(); 
 	}
 	
-	if (!ggadu_strcasecmp(signal->name,"change status")) { 
+	if (signal->name == g_quark_from_static_string("change status")) { 
 	    GGaduStatusPrototype *sp = signal->data;
 	    
 	    if (connected && sp)
@@ -802,7 +802,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	}
 
 
-	if (!ggadu_strcasecmp(signal->name,"update config")) 
+	if (signal->name == g_quark_from_static_string("update config")) 
 	{ 
 	    GGaduDialog *d = signal->data;
 	    GSList *tmplist = d->optlist;
@@ -851,7 +851,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    return;
 	}
 	
-	if (!ggadu_strcasecmp(signal->name,"change status descr"))
+	if (signal->name == g_quark_from_static_string("change status descr"))
 	{
 	    GGaduDialog *d = signal->data;
 	    GGaduStatusPrototype *sp = d->user_data;
@@ -884,7 +884,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    return;
 	}
 
-	if (!ggadu_strcasecmp(signal->name,"add user")) { 
+	if (signal->name == g_quark_from_static_string("add user")) { 
 
 	    GGaduContact *k = g_new0(GGaduContact,1);
 	    GSList *kvlist = (GSList *)signal->data;
@@ -927,7 +927,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    
 	}
 
-    if (!ggadu_strcasecmp(signal->name, "add user search"))
+    if (signal->name == g_quark_from_static_string( "add user search"))
     {
         GGaduContact *k = signal->data;
                                                                                                                               
@@ -941,7 +941,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
         return;
     }
 
-	if (!ggadu_strcasecmp(signal->name,"send message")) {
+	if (signal->name == g_quark_from_static_string("send message")) {
 		
 	    GGaduMsg *msg = signal->data;
 	    if (connected && msg) {
@@ -971,7 +971,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    }
 	}
 
-	if (!ggadu_strcasecmp(signal->name,"search")) {
+	if (signal->name == g_quark_from_static_string("search")) {
             GGaduDialog *d = signal->data;
     	    GSList *tmplist = d->optlist;
 	    struct tlen_pubdir *req;
@@ -1027,7 +1027,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    GGaduDialog_free(d);
 	}
 	
-	if (!ggadu_strcasecmp(signal->name, "get current status")) {
+	if (signal->name == g_quark_from_static_string("get current status")) {
 	    if (session) 
 		signal->data_return = (gpointer) session->status;
 	    else

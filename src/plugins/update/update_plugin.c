@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.3 2003/06/01 00:19:28 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.4 2003/06/09 00:20:46 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -293,9 +293,9 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 
-    print_debug("%s : received signal %s\n", GGadu_PLUGIN_NAME, (gchar *) signal->name);
+    print_debug("%s : received signal %d\n", GGadu_PLUGIN_NAME, signal->name);
 
-    if (!ggadu_strcasecmp(signal->name, "update config"))
+    if (signal->name == g_quark_from_static_string("update config"))
     {
 	GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;
@@ -345,7 +345,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	return;
     }
 
-    if (!ggadu_strcasecmp(signal->name, "get current version"))
+    if (signal->name == g_quark_from_static_string("get current version"))
     {
 	gchar *tmp = update_get_current_version(0);
 	signal->data_return = (gpointer) g_strdup(tmp);

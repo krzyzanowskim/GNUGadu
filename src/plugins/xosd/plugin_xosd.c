@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.11 2003/05/22 19:14:09 shaster Exp $ */
+/* $Id: plugin_xosd.c,v 1.12 2003/06/09 00:20:47 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -78,9 +78,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	gchar *w = NULL;
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 
-        print_debug("%s : receive signal %s\n",GGadu_PLUGIN_NAME,(gchar *)signal->name);
+        print_debug("%s : receive signal %d\n",GGadu_PLUGIN_NAME,signal->name);
         
-        if (!ggadu_strcasecmp(signal->name,"update config"))
+        if (signal->name == g_quark_from_static_string("update config"))
         {
             GGaduDialog *d = signal->data;
             GSList *tmplist = d->optlist;
@@ -125,7 +125,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
             return;
         }
 
-	if (!ggadu_strcasecmp(signal->name,"xosd show message")) {
+	if (signal->name == g_quark_from_static_string("xosd show message")) {
 	    gchar *msg = signal->data;
 	    from_utf8("ISO8859-2",msg,w);
 

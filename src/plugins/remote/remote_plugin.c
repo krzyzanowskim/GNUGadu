@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.7 2003/05/07 11:14:38 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.8 2003/06/09 00:20:39 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -304,10 +304,10 @@ void signal_recv(gpointer name, gpointer signal_ptr)
 {
   GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 	
-  print_debug("%s : receive signal %s\n", GGadu_PLUGIN_NAME,
-      (gchar *)signal->name);
+  print_debug("%s : receive signal %d\n", GGadu_PLUGIN_NAME,
+      signal->name);
 
-  if (!ggadu_strcasecmp(signal->name, "update config")) 
+  if (signal->name == g_quark_from_static_string( "update config")) 
   {
     GGaduDialog *d = signal->data;
     GSList *tmplist = d->optlist;
@@ -336,8 +336,8 @@ void signal_recv(gpointer name, gpointer signal_ptr)
     return;
   }
 
-  if ((!ggadu_strcasecmp (signal->name, "docklet set icon")) ||
-      (!ggadu_strcasecmp (signal->name, "docklet set default icon")))
+  if ((signal->name == g_quark_from_static_string("docklet set icon")) ||
+      (signal->name == g_quark_from_static_string( "docklet set default icon")))
   {
     GSList *sigdata   = (GSList *)signal->data;
     gchar  *directory = g_slist_nth_data (sigdata, 0);

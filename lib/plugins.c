@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.2 2003/06/09 00:20:34 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -209,7 +209,7 @@ void unload_plugin(gchar *name)
 		while (list_tmp) 
 		{
 			sig_tmp = (GGaduSignalinfo *) list_tmp->data;
-			g_free (sig_tmp->name);
+//			g_free (sig_tmp->name);
 			g_free (sig_tmp);
 			list_tmp = list_tmp->next;
 		}

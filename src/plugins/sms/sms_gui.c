@@ -196,9 +196,9 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *)signal_ptr;
     
-    print_debug("%s : received signal %s\n", GGadu_PLUGIN_NAME, (gchar *)signal->name);
+    print_debug("%s : received signal %d\n", GGadu_PLUGIN_NAME, signal->name);
 
-    if (!ggadu_strcasecmp(signal->name,"update config"))
+    if (signal->name == g_quark_from_static_string("update config"))
     {
         GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;
@@ -232,7 +232,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	return;
     }
 
-    if (!ggadu_strcasecmp(signal->name,"change status"))
+    if (signal->name == g_quark_from_static_string("change status"))
     {
 	GGaduStatusPrototype *sp = signal->data;
 	
@@ -259,7 +259,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	}
     }
 
-    if  (!ggadu_strcasecmp(signal->name,"send message"))
+    if  (signal->name == g_quark_from_static_string("send message"))
     {
 	GGaduMsg *msg = signal->data;
 	
@@ -276,7 +276,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	}
     }
 
-    if (!ggadu_strcasecmp(signal->name,"sms send"))
+    if (signal->name == g_quark_from_static_string("sms send"))
     {
         GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;
@@ -320,7 +320,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	return;
     }
 
-    if (!ggadu_strcasecmp(signal->name,"add user"))
+    if (signal->name == g_quark_from_static_string("add user"))
     {
 	GSList *tmplist = (GSList *)signal->data;
 	GGaduContact *k = g_new0(GGaduContact,1);
@@ -351,7 +351,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	return;
     }
 
-    if (!ggadu_strcasecmp(signal->name,"change user"))
+    if (signal->name == g_quark_from_static_string("change user"))
     {
 	GSList *tmplist = (GSList *)signal->data;
 	GSList *uslist = smslist;
@@ -397,7 +397,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	return;
     }
 
-    if (!ggadu_strcasecmp(signal->name,"get token"))
+    if (signal->name == g_quark_from_static_string("get token"))
     {
         GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.18 2003/06/04 21:07:06 shaster Exp $ */
+/* $Id: gui_main.c,v 1.19 2003/06/09 00:20:35 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -63,16 +63,19 @@ gui_signal_handler handlers[] = {
 
 void gui_signal_receive(gpointer name, gpointer signal_ptr) 
 {
-	
+//	GQuark s_quark = g_quark_from_string(name);
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 	gui_signal_handler *h;
 //	gdk_threads_enter();
 
-	print_debug("%s : receive signal %s\n","main-gui",(gchar *)signal->name);
+	print_debug("%s : receive signal %d\n","main-gui",signal->name);
 	
 	for (h = handlers;h->signal_name; h++) {
-		if (!ggadu_strcasecmp(h->signal_name, signal->name))
+		if (g_quark_from_string(h->signal_name) == signal->name)
 			(h->handler_func)(signal);
+			
+//		if (!ggadu_strcasecmp(h->signal_name, signal->name))
+//			(h->handler_func)(signal);
 	}
 //	gdk_threads_leave();
 }

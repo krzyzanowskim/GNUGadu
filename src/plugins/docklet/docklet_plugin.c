@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.7 2003/05/07 11:14:37 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.8 2003/06/09 00:20:36 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -272,9 +272,9 @@ GtkWidget *create_docklet()
 void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 	
-        print_debug("%s : receive signal %s\n",GGadu_PLUGIN_NAME,(gchar *)signal->name);
+        print_debug("%s : receive signal %d\n",GGadu_PLUGIN_NAME,signal->name);
 
-	if (!ggadu_strcasecmp(signal->name,"docklet set icon")) 
+	if (signal->name == g_quark_from_static_string("docklet set icon")) 
 	{
 	    GtkImage *image = NULL;
 	    GSList   *sigdata = (GSList *)signal->data;
@@ -307,7 +307,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	}
 
 
-	if (!ggadu_strcasecmp(signal->name,"docklet set default icon")) 
+	if (signal->name == g_quark_from_static_string("docklet set default icon")) 
 	{
 	    GSList   *sigdata = signal->data;
 	    gchar    *directory = g_strdup(g_slist_nth_data(sigdata,0));

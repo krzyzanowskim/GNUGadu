@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.1 2003/06/03 21:30:09 krzyzak Exp $ */
+/* $Id: signals.c,v 1.2 2003/06/09 00:20:34 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -17,17 +17,17 @@ extern GGaduConfig *config;
 
 void GGaduSignal_free(GGaduSignal *sig)
 {
-    g_free(sig->name);
     g_free(sig->source_plugin_name);
     g_free(sig->destination_plugin_name);
     g_free(sig);
 }
 
+
 GGaduSignal *signal_cpy(GGaduSignal *sig) 
 {
 	GGaduSignal *tmpsignal = g_new0(GGaduSignal, 1);
 
-	tmpsignal->name    = g_strdup(sig->name);
+	tmpsignal->name    = sig->name;
 	tmpsignal->source_plugin_name      = g_strdup(sig->source_plugin_name);
 	tmpsignal->destination_plugin_name = g_strdup(sig->destination_plugin_name);
 
@@ -42,18 +42,22 @@ GGaduSignal *signal_cpy(GGaduSignal *sig)
  */
 void register_signal(GGaduPlugin * plugin_handler, gpointer name)
 {
+	GQuark q_name = g_quark_from_string(name);
 	GGaduPlugin *tmplugin = (GGaduPlugin *) plugin_handler;
 	GGaduSignalinfo *signalinfo;
 
-	print_debug("%s : signal_register : %s\n", tmplugin->name, name);
+//	print_debug("%s : signal_register : %s\n", tmplugin->name, name);
+	print_debug("%s : signal_register : %s %d\n", tmplugin->name, name, q_name);
 
 	signalinfo = g_new0(GGaduSignalinfo, 1);
-	signalinfo->name = g_strdup (name);
+	signalinfo->name = q_name;
 //	signalinfo->signal_free = signal_free;
 
 	tmplugin->signals = g_slist_append(tmplugin->signals, signalinfo);
 
-	register_signal_perl (name, NULL);	
+#ifndef GGadu_PERL_EMBED_H
+	register_signal_perl ((gpointer)q_name, NULL);	
+#endif
 }
 
 void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, gchar *, void *))
@@ -65,7 +69,7 @@ void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, g
   while (list)
   {
     hook = (GGaduSignalHook *) list->data;
-    if (!ggadu_strcasecmp (hook->name, name))
+    if (hook->name == (GQuark)name)
     {
       hook->perl_handler = perl_handler;
       return;
@@ -74,7 +78,7 @@ void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, g
   }
 
   hook = g_new0 (GGaduSignalHook, 1);
-  hook->name = g_strdup (name);
+  hook->name = (GQuark)name;
   hook->perl_handler = perl_handler;
   hook->hooks = NULL;
 
@@ -89,7 +93,7 @@ void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal, void (*perl_
   while (list)
   {
     signalhook = (GGaduSignalHook *) list->data;
-    if (!ggadu_strcasecmp (signalhook->name, name))
+    if (signalhook->name == (GQuark)name)
     {
       signalhook->hooks = g_slist_append (signalhook->hooks, (void *) hook);
       return;
@@ -102,7 +106,7 @@ void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal, void (*perl_
    * we have any signals, so we just create one here
    */
   signalhook = g_new0 (GGaduSignalHook, 1);
-  signalhook->name = g_strdup (name);
+  signalhook->name = (GQuark)name;
   signalhook->perl_handler = NULL;
   signalhook->hooks = g_slist_append (signalhook->hooks, (void *) hook);
 
@@ -116,7 +120,7 @@ GGaduSignalinfo *find_signal(gpointer signal_name)
 	GSList 		*signals_list	= NULL;
 	GGaduSignalinfo *signalinfo	= NULL;
 	
-	if (signal_name == NULL) return NULL;
+	if (signal_name == 0) return NULL;
 
 	while (tmp) 
 	{
@@ -129,7 +133,7 @@ GGaduSignalinfo *find_signal(gpointer signal_name)
 		{
 			signalinfo = (GGaduSignalinfo *) signals_list->data;
 
-			if (!ggadu_strcasecmp(signalinfo->name, signal_name))
+			if ((GQuark)signalinfo->name == (GQuark)signal_name)
 				return signalinfo;
 
 			signals_list = signals_list->next;
@@ -153,7 +157,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	while (hooks)
 	{
 	  GGaduSignalHook *hook = (GGaduSignalHook *) hooks->data;
-	  if (!g_strcasecmp (tmpsignal->name, hook->name))
+	  if (tmpsignal->name == hook->name)
 	  {
 	    GSList *list = hook->hooks;
 	    
@@ -175,10 +179,10 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 		dest = (GGaduPlugin *) tmp->data;
 		src = find_plugin_by_name(tmpsignal->source_plugin_name);
 			
-		if ((src != NULL) && (dest != NULL) && (dest->name != NULL)) {
+		if ((src != NULL) && (dest != NULL) && (dest->name != 0)) {
 
-		    if (ggadu_strcasecmp(src->name, dest->name))
-			dest->signal_receive_func(tmpsignal->name, tmpsignal);
+		    if (g_strcasecmp(src->name,dest->name))
+			dest->signal_receive_func((gpointer)tmpsignal->name, tmpsignal);
 				
 		    while (g_main_pending())
 			g_main_iteration(TRUE);	// ewentualne odrysowanie GUI
@@ -209,7 +213,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 		dest = (GGaduPlugin *)dest_list->data;
 		
 		if ((dest != NULL) && (dest->signal_receive_func != NULL))
-		    dest->signal_receive_func(tmpsignal->name, tmpsignal);
+		    dest->signal_receive_func((gpointer)tmpsignal->name, tmpsignal);
 		
 		dest_list = dest_list->next;
 	    }
@@ -248,11 +252,10 @@ void flush_queued_signals()
 	    GGaduSignal *sig = (GGaduSignal *) signals->data;
 	    GGaduSignalinfo *signalinfo = NULL;
 
-		if ((signalinfo = find_signal(sig->name)) == NULL) 
+		if ((signalinfo = find_signal((gpointer)sig->name)) == NULL) 
 		{
-		    print_debug ("core : flush_queued_signals : Nie ma takiego czego zarejestrowanego : %s!!! \n", sig->name);
+		    print_debug ("core : flush_queued_signals : Nie ma takiego czego zarejestrowanego : %d!!! \n", sig->name);
 		    /* wiec zwalniam go i puszczam w niepamiec ? */
-		    g_free(sig->name);
 		    g_free(sig->source_plugin_name);
 		    g_free(sig->destination_plugin_name);
 		    if (sig->free && sig->free_me)
@@ -261,7 +264,6 @@ void flush_queued_signals()
 			
 		}  else {
 		    do_signal(sig, signalinfo);
-		    g_free(sig->name);
 		    g_free(sig->source_plugin_name);
 		    g_free(sig->destination_plugin_name);
 		    g_free(sig);
@@ -285,12 +287,13 @@ void flush_queued_signals()
  */
 void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer dest_name, void (*signal_free) (gpointer))
 {
+	GQuark q_name = g_quark_from_string(name);
 	GGaduSignal 	*tmpsignal  = NULL;
 	GGaduSignalinfo *signalinfo = NULL;
 	gpointer ret = NULL;
 
 
-	if (config->all_plugins_loaded && (signalinfo = find_signal(name)) == NULL)
+	if (config->all_plugins_loaded && (signalinfo = find_signal((gpointer)q_name)) == NULL)
 	{
 		print_debug("core : Nie ma takiego czego zarejestrowanego : %s!!! \n", name);
 		return NULL;
@@ -298,7 +301,7 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer
 	
 	tmpsignal = g_new0(GGaduSignal, 1);
 
-	tmpsignal->name    = g_strdup(name);
+	tmpsignal->name    = q_name;
 	tmpsignal->source_plugin_name      = g_strdup(src_name);
 	tmpsignal->destination_plugin_name = g_strdup(dest_name);
 
@@ -306,11 +309,10 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer
 	tmpsignal->free_me = TRUE;	// flaga czy zwalniac signal po wykonaniu czy tez nie
 	tmpsignal->free    = signal_free;
 
-	print_debug("%s : signal_emit %s\n", src_name, name);
+	print_debug("%s : signal_emit %d\n", src_name, q_name);
 
 	if (config->all_plugins_loaded == TRUE) {
 	    ret = do_signal(tmpsignal, signalinfo);
-	    g_free(tmpsignal->name);
 	    g_free(tmpsignal->source_plugin_name);
 	    g_free(tmpsignal->destination_plugin_name);
 	    g_free(tmpsignal);
