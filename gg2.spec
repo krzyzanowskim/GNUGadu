@@ -1,4 +1,4 @@
-# $Revision: 1.2 $, $Date: 2003/04/15 18:03:47 $
+# $Revision: 1.3 $, $Date: 2003/06/02 10:48:43 $
 
 %define		_pre	pre2
 
@@ -32,11 +32,11 @@ BuildRequires:	fontconfig-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Gadu-Gadu and Tlen.pl and any other instant messanger client with
+Gadu-Gadu, Tlen.pl and others instant messanger client with
 GTK+2 GUI on GNU/GPL.
 
 %description -l pl
-Klient Gadu-Gadu i Tlen.pl oraz innych protoko³ów z GUI pod GTK+2 na
+Klient Gadu-Gadu, Tlen.pl oraz innych protoko³ów z GUI pod GTK+2 na
 licencji GNU/GPL.
 
 %package gui-gtk+2
@@ -97,7 +97,7 @@ Requires:	%{name} = %{version}
 Jabber protocol plugin.
 
 %description jabber -l pl
-Wtyczka protoko³u Jabber.org.
+Wtyczka protoko³u Jabber.
 
 %package sound-esd
 Summary:	Sound support with ESD
@@ -178,10 +178,10 @@ Group:          Applications/Communications
 Requires:       %{name} = %{version}
 
 %description sms
-Send SMS to cellurar phones via web gateways.
+Send SMS to cellular phones via web gateways.
 
 %description sms -l pl
-Wtyczka wysy³aj±ca SMS-y na telefony komórkowe przez bramki WWW.
+Wtyczka wysy³aj±ca wiadomo¶ci SMS na telefony komórkowe przez bramki WWW.
 
 %package remote
 Summary:        Remote access from other applications
@@ -196,17 +196,17 @@ Make possible exchange data with other applications.
 Wtyczka umo¿liwiaj±ca wymianê informacji z innymi aplikacjami.
 
 %package themes
-Summary:	Themes for GnuGadu 2 GUI
-Summary(pl):	Motywy graficzne dla GUI GnuGadu 2
+Summary:	Themes for GNU Gadu 2 GUI
+Summary(pl):	Motywy graficzne dla GUI GNU Gadu 2
 Group:		Applications/Communications
 Requires:       %{name} = %{version}
 Requires:	%{name}-gui-gtk+2
 
 %description themes
-Themes for GnuGadu 2 GUI.
+Themes for GNU Gadu 2 GUI.
 
 %description themes
-Motywy graficzne dla GUI GnuGadu 2.
+Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
 %setup -q -n %{name}-%{version}%{_pre}
@@ -345,6 +345,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld.org.pl
 
 $Log: gg2.spec,v $
+Revision 1.3  2003/06/02 10:48:43  shaster
+language fixes
+
 Revision 1.2  2003/04/15 18:03:47  krzyzak
 - sync with PLD repository
 
