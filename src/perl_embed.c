@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.6 2003/05/09 19:43:47 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.7 2003/05/10 08:04:36 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -112,7 +112,7 @@ static XS (XS_GGadu_register_script)
   char *name;
   char *on_msg_receive;
   int junk;
-  char *tmp;
+  gchar *tmp;
   perlscript *script;
   GSList *list;
   dXSARGS;
@@ -125,8 +125,10 @@ static XS (XS_GGadu_register_script)
   list = perlscripts;
   while (list)
   {
+    gchar *fn_dup;
     script = (perlscript *) list->data;
-    tmp = basename (script->filename);
+    fn_dup = g_strdup (script->filename);
+    tmp = basename (fn_dup);
     print_debug ("%s, %s\n", script->filename, tmp);
     if (!strcmp (tmp, name))
     {
@@ -135,9 +137,9 @@ static XS (XS_GGadu_register_script)
 
       script->on_msg_receive = g_strdup (on_msg_receive);
       
-      g_free (tmp);
-    }
-    g_free (tmp);
+      g_free (fn_dup);
+    } else
+      g_free (fn_dup);
     list = list->next;
   }
 }
