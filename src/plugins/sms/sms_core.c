@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.27 2004/01/09 22:56:46 shaster Exp $ */
+/* $Id: sms_core.c,v 1.28 2004/01/10 16:12:16 thrulliq Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -202,6 +202,7 @@ void sms_dialog_box(const gchar * sms_number, const gchar * message, gint type)
 	msg->class = GGADU_CLASS_CHAT;
 	msg->message = g_strconcat(_("SMS plugin: "), message, NULL);
 	signal_emit_from_thread("sms", "gui msg receive", msg, "main-gui");
+	g_free(message);
     }
 }
 
