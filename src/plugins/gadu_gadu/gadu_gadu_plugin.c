@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.233 2005/01/04 08:48:33 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.234 2005/01/04 08:51:43 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -143,12 +143,14 @@ void ggadu_gadu_gadu_disconnect_msg(gchar * txt)
 gchar *insert_cr(gchar * txt)
 {
 	gchar *out;
-	gchar *in = txt;
-	gchar *start = out;
+	gchar *in;
+	gchar *start;
 	
 	if (!txt) return NULL;
 	
+	in = txt;
 	out = g_malloc0(strlen(txt) * 2);
+	start = out;
 
 	while (*in)
 	{
