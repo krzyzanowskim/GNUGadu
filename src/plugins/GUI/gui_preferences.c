@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.69 2004/08/22 16:59:29 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.70 2004/08/22 17:24:08 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -745,7 +745,7 @@ static GtkWidget *create_advanced_tab()
 
 
 	/* blink */
-	blink = gtk_check_button_new_with_label(_("Blink status icon while connecting"));
+	blink = gtk_check_button_new_with_label(_("Blink status icon while connecting every :"));
 	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
 	g_object_set_data(G_OBJECT(adv_vbox), "blink", blink);
 	g_object_set_data(G_OBJECT(adv_vbox), "blink_interval", blink_interval);
@@ -758,7 +758,7 @@ static GtkWidget *create_advanced_tab()
 
 	gtk_box_pack_start(GTK_BOX(adv_vbox), tabbox, FALSE, FALSE, 0);
 
-	label = gtk_label_new(_("miliseconds (interval)"));
+	label = gtk_label_new(_("miliseconds"));
 	label0_align = gtk_alignment_new(0, 0.5, 0, 0);
 	gtk_container_add(GTK_CONTAINER(label0_align), label);
 
@@ -825,7 +825,7 @@ static GtkWidget *create_advanced_tab()
 	/* iconset */
 	combo_icons = gtk_combo_box_new_text();
 	g_object_set_data(G_OBJECT(adv_vbox), "combo_icons", combo_icons);
-	label = gtk_label_new(_("Select icon set"));
+	label = gtk_label_new(_("Selected icon set"));
 	gtk_container_add(GTK_CONTAINER(label3_align), label);
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 2, 3);
@@ -869,7 +869,7 @@ static GtkWidget *create_advanced_tab()
 
 	/* chat_paned_size */
 	/* ZONK - how to name it ? */
-	label = gtk_label_new(_("Chat window split position"));
+	label = gtk_label_new(_("Chat window split position at :"));
 	chat_paned_size = gtk_spin_button_new_with_range(5, 100, 5);
 	gtk_container_add(GTK_CONTAINER(label4_align), label);
 
@@ -1026,7 +1026,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	tabbox_auto_away = gtk_table_new(1, 3, FALSE);
 	
-	auto_away = gtk_check_button_new_with_label(_("Auto away set after"));
+	auto_away = gtk_check_button_new_with_label(_("Auto away set after:"));
 
 	label1_align = gtk_alignment_new(0.1, 0.5, 0, 0);
 	label = gtk_label_new(_("minutes"));
