@@ -1,6 +1,7 @@
 14.04.2003
 - chat window title contains current status of chatter, now in both
   tabbed and classic mode (GUI/shasta)
+- empty sound_*_file setting prevents from playing the sound (gadu-gadu/shasta)
 
 13.04.2003
 - patch for emoticons window (GUI/Pawe³ Marchewka)
