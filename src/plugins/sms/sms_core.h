@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.17 2004/01/27 01:19:54 shaster Exp $ */
+/* $Id: sms_core.h,v 1.18 2004/06/13 00:37:44 shaster Exp $ */
 
 /* 
  * SMS plugin for GNU Gadu 2 
@@ -68,6 +68,12 @@ enum
 
 enum
 {
+	SMS_METHOD_GET,
+	SMS_METHOD_POST
+};
+
+enum
+{
 	ERR_NONE = 2,
 	ERR_BAD_TOKEN,
 	ERR_READ_TOKEN,
@@ -92,7 +98,7 @@ enum
 
 typedef struct
 {
-	gchar *method;
+	gint method;
 	gchar *host;
 	gchar *url;
 	gchar *url_params;

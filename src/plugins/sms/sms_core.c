@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.38 2004/05/29 00:35:15 shaster Exp $ */
+/* $Id: sms_core.c,v 1.39 2004/06/13 00:37:44 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -137,12 +137,12 @@ gint HTTP_io(HTTPstruct * hdata, int sock_s)
 		return FALSE;
 
 	/* *INDENT-OFF* */
-	if (!strcmp(hdata->method, "POST"))
+	if (hdata->method == SMS_METHOD_POST)
 		io_buf = g_strdup_printf("POST %s%sHTTP/1.0\r\nHost: %s\r\n%s%s%s%s%s%s%s%d\r\n\r\n%s",
 				hdata->url, hdata->url_params, hdata->host, USER_AGENT,
 				ACCEPT, ACCEPT_LANG, ACCEPT_ENCODING, ACCEPT_CHARSET,
 				POST_CONTENT_TYPE, CONTENT_LENGTH, hdata->post_length, hdata->post_data);
-	else if (!strcmp(hdata->method, "GET"))
+	else if (hdata->method == SMS_METHOD_GET)
 		io_buf = g_strdup_printf("GET %s%sHTTP/1.0\r\nHost: %s\r\n%s\r\n\r\n",
 				hdata->url, hdata->url_params, hdata->host, USER_AGENT);
 	else
@@ -167,7 +167,6 @@ void httpstruct_free(HTTPstruct * h)
 	if (h == NULL)
 		return;
 
-	g_free(h->method);
 	g_free(h->host);
 	g_free(h->url);
 	g_free(h->url_params);
@@ -255,7 +254,7 @@ gint send_IDEA(SMS * message)
 	int sock_s;
 
 	HTTP = httpstruct_new();
-	HTTP->method = g_strdup("GET");
+	HTTP->method = SMS_METHOD_GET;
 	HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
 	HTTP->url = g_strdup(GGADU_SMS_IDEA_URL_GET);
 	HTTP->url_params = g_strdup(" ");
@@ -319,7 +318,7 @@ gint send_IDEA(SMS * message)
 	g_free(recv_buff);
 
 	HTTP = httpstruct_new();
-	HTTP->method = g_strdup("GET");
+	HTTP->method = SMS_METHOD_GET;
 	HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
 	HTTP->url = g_strdup(gettoken);
 	HTTP->url_params = g_strdup(" ");
@@ -456,7 +455,7 @@ gpointer send_IDEA_stage2(SMS * message)
 	print_debug("Post data: %s\n", post);
 
 	HTTP = httpstruct_new();
-	HTTP->method = g_strdup("POST");
+	HTTP->method = SMS_METHOD_POST;
 	HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
 	HTTP->url = g_strdup(GGADU_SMS_IDEA_URL_SEND);
 	HTTP->url_params = g_strdup(" ");
@@ -574,7 +573,7 @@ gint send_PLUS(SMS * message)
 	g_free(body);
 
 	HTTP = httpstruct_new();
-	HTTP->method = g_strdup("POST");
+	HTTP->method = SMS_METHOD_POST;
 	HTTP->host = g_strdup(GGADU_SMS_PLUS_HOST);
 	HTTP->url = g_strdup(GGADU_SMS_PLUS_URL);
 	HTTP->url_params = g_strdup(" ");
@@ -656,7 +655,7 @@ gint send_ERA(SMS * message, int *era_left)
 	g_free(era_password);
 
 	HTTP = httpstruct_new();
-	HTTP->method = g_strdup("GET");
+	HTTP->method = SMS_METHOD_GET;
 	HTTP->host = g_strdup(GGADU_SMS_ERA_HOST);
 	HTTP->url = g_strdup(GGADU_SMS_ERA_URL);
 	HTTP->url_params = g_strdup(get);
