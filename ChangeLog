@@ -1,3 +1,7 @@
+15.12.2004
+- dbus plugin update (dbus/krzak)
+- small fixed (krzak)
+
 04.12.2004
 - Reconnect whenever user changes jid || server || resource || proxy in user preferences dialog while being connected. (jabber/mkobierzycki)
 

@@ -140,7 +140,7 @@ static gboolean check_idle_time()
 			GGaduStatusPrototype *sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
 			if (sp && ggadu_is_in_status(sp->status, protocol->away_status))
 			{
-			    gchar *message = g_strdup(ggadu_config_var_get(handler, "message"));
+/*			    gchar *message = g_strdup(ggadu_config_var_get(handler, "message")); */
 			    GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, NULL, NULL);
 			    GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
 			    gint newstatus =  (gint)protocol->online_status->data;
@@ -150,7 +150,7 @@ static gboolean check_idle_time()
 			    dialog->optlist = g_slist_append(dialog->optlist, kv);
 			    dialog->user_data = ggadu_find_status_prototype(protocol,newstatus);
 			    signal_emit(GGadu_PLUGIN_NAME, "change status descr", dialog, plugin->name);
-			    g_free(message);
+/*			    g_free(message); */
 			}
 		    }
 		    plugins = plugins->next;
@@ -201,13 +201,13 @@ static void my_signal_receive(gpointer name, gpointer signal_ptr)
 					print_debug("%s - changing var setting message to %s\n", GGadu_PLUGIN_NAME, kv->value);
 					utf = from_utf8("ISO-8859-2", kv->value);
 					ggadu_config_var_set(handler, "message", utf);
+					g_free(utf);
 					break;
 
 				}
 				entries = entries->next;
 			}
 			ggadu_config_save(handler);
-			g_free(utf);
 		}
 		GGaduDialog_free(dialog);
 	}
