@@ -1,3 +1,6 @@
+20.01.2005
+- look for skins in .gg2/skins and datadir/skins
+
 19.01.2005
 - fixes realted to GGaduStatusPrototype (krzak)
 - config->configdir in all plugins (krzak)

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.109 2005/01/19 21:02:11 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.110 2005/01/20 16:03:50 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -454,11 +454,23 @@ gboolean gui_read_skin_data(GUISkinData *skin)
 	
 	if (!ggadu_config_var_get(gui_handler, "skin"))
 	    return FALSE;
+	    
 	
-	path = g_build_filename(config->configdir, "skins","main.txt", NULL);
-
+	path = g_build_filename(config->configdir, "skins",ggadu_config_var_get(gui_handler, "skin"),"main.txt", NULL);
+	skindir = g_build_filename(config->configdir, "skins",ggadu_config_var_get(gui_handler, "skin"), NULL);
 	print_debug("ridink %s\n", path);
 	f = fopen(path, "r");
+	
+	if (!f)
+	{
+	    g_free(path);
+	    g_free(skindir);
+	    
+	    path = g_build_filename(PACKAGE_DATA_DIR, "skins",ggadu_config_var_get(gui_handler, "skin"),"main.txt", NULL);
+	    skindir = g_build_filename(config->configdir, "skins",ggadu_config_var_get(gui_handler, "skin"), NULL);
+	    print_debug("ridink %s\n", path);
+	    f = fopen(path, "r");
+	}
 	
 	if (!f)
 	{
