@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.202 2004/10/28 15:53:08 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.203 2004/10/28 17:31:36 thrulliq Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1661,7 +1661,7 @@ void start_plugin()
 	print_debug("%s : start_plugin\n", GGadu_PLUGIN_NAME);
 	p = g_new0(GGaduProtocol, 1);
 	p->display_name = g_strdup("Gadu-Gadu");
-	p->protocol_handler_str = g_strdup("gg://");
+	p->protocol_uri = g_strdup("gg://");
 	p->img_filename = g_strdup("gadu-gadu.png");
 	p->statuslist = status_init();
 	p->offline_status = g_slist_append(p->offline_status, (gint *) GG_STATUS_NOT_AVAIL);

@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.14 2004/10/28 11:33:36 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.15 2004/10/28 17:31:33 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -134,7 +134,7 @@ typedef struct
 typedef struct
 {
     gchar *display_name;
-    gchar *protocol_handler_str;/* gg://  icq:// tlen://  */
+    gchar *protocol_uri; 	/* URI for protocols eg.: gg://  icq:// tlen://  */
     gchar *img_filename;	/* ¶cie¿ka do obrazka z etykiet± na zak³adkê */
     gchar *status_description;	/* current description - description of current status */
     GSList *statuslist;		/* lista dostêpnych statusów danego protoko³u */

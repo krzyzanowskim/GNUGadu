@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.13 2004/10/28 15:53:08 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.14 2004/10/28 17:31:36 thrulliq Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -68,7 +68,7 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 		{
 			GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
 			if (plugin && plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
-			    !ggadu_strcasecmp(plugin->protocol->protocol_handler_str, contactURIhandler))
+			    !ggadu_strcasecmp(plugin->protocol->protocol_uri, contactURIhandler))
 			{
 				GGaduContact *k = NULL;
 				DBusMessage *return_message = dbus_message_new_method_return(message);
@@ -144,8 +144,8 @@ static DBusHandlerResult org_freedesktop_im_getProtocols(DBusConnection * connec
 
 			if (p)
 			{
-				print_debug("proto: %s", p->protocol_handler_str);
-				dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->protocol_handler_str, DBUS_TYPE_INVALID);
+				print_debug("proto: %s", p->protocol_uri);
+				dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->protocol_uri, DBUS_TYPE_INVALID);
 			}
 
 			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
@@ -190,7 +190,7 @@ static DBusHandlerResult org_freedesktop_im_openChat(DBusConnection * connection
 		{
 			GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
 			if (plugin && plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
-			    !ggadu_strcasecmp(plugin->protocol->protocol_handler_str, contactURIhandler))
+			    !ggadu_strcasecmp(plugin->protocol->protocol_uri, contactURIhandler))
 			{
 				GGaduMsg *msg = g_new0(GGaduMsg, 1);
 				DBusMessage *return_message = dbus_message_new_method_return(message);

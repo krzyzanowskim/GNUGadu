@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.125 2004/10/22 07:47:52 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.126 2004/10/28 17:31:35 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -797,6 +797,7 @@ static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * eve
 			}
 		}
 	}
+	
 	return FALSE;
 }
 
