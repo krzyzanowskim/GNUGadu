@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.h,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: GUI_plugin.h,v 1.2 2003/11/06 19:17:59 thrulliq Exp $ */
 #ifndef GGadu_GUI_PLUGIN_H
 #define GGadu_GUI_PLUGIN_H 1
 
@@ -14,6 +14,8 @@ GtkWidget *create_status_menu(gui_protocol *gp, GtkWidget *status_image);
 void gui_main_window_create(gboolean visible);
 
 void gui_build_default_menu();
+
+void gui_build_default_toolbar();
 
 void gui_msg_receive(GGaduSignal *signal);
 

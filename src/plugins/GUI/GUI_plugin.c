@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.33 2003/10/31 19:44:21 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.34 2003/11/06 19:17:58 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -34,6 +34,7 @@ extern gboolean tree;
 extern GtkItemFactory *item_factory;
 
 GtkWidget *main_menu_bar = NULL;
+GtkWidget *main_tool_bar = NULL;
 GtkWidget *status_hbox = NULL;
 GtkWidget *view_container = NULL;
 
@@ -345,7 +346,7 @@ void gui_quit (GtkWidget * widget, gpointer user_data)
 
 gboolean gui_main_window_delete (GtkWidget * window, GdkEvent * event, gpointer user_data)
 {
-    GGaduPlugin *p = find_plugin_by_pattern ("docklet*");
+    GGaduPlugin *p = (GGaduPlugin *) find_plugin_by_pattern ("docklet*");
     print_debug ("delete event\n");
     if (!p)
       {
@@ -364,7 +365,8 @@ gboolean gui_main_window_delete (GtkWidget * window, GdkEvent * event, gpointer 
  */
 void gui_main_window_create (gboolean visible)
 {
-    GtkWidget *main_vbox = NULL;
+    GtkWidget *main_vbox;
+    GtkWidget *toolbar_handle_box;
     GdkPixbuf *image;
     gint width, height;
     gint top, left;
@@ -406,8 +408,12 @@ void gui_main_window_create (gboolean visible)
     gdk_pixbuf_unref (image);
 
     main_vbox = gtk_vbox_new (FALSE, 0);
-
+    
+    toolbar_handle_box = gtk_handle_box_new();
+    gtk_container_add(GTK_CONTAINER(toolbar_handle_box), main_tool_bar);
+    
     gtk_box_pack_start (GTK_BOX (main_vbox), main_menu_bar, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (main_vbox), toolbar_handle_box, FALSE, FALSE, 0);
 
 //    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gui_main_window_destroy), NULL);
     g_signal_connect (G_OBJECT (window), "delete-event", G_CALLBACK (gui_main_window_delete), NULL);
@@ -562,6 +568,16 @@ void gui_build_default_menu ()
     gtk_item_factory_create_items (item_factory, Nmenu_items, menu_items, NULL);
 
     main_menu_bar = gtk_item_factory_get_widget (item_factory, "<main>");
+}
+
+void gui_build_default_toolbar ()
+{
+    main_tool_bar = gtk_toolbar_new();
+    gtk_toolbar_set_style(GTK_TOOLBAR(main_tool_bar), GTK_TOOLBAR_ICONS);
+    gtk_toolbar_set_icon_size(GTK_TOOLBAR(main_tool_bar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+    
+    gtk_toolbar_insert_stock(GTK_TOOLBAR(main_tool_bar), GTK_STOCK_PREFERENCES, NULL, NULL,  (GtkSignalFunc)gui_preferences, NULL, 0);
+    gtk_toolbar_insert_stock(GTK_TOOLBAR(main_tool_bar), GTK_STOCK_QUIT, NULL, NULL, (GtkSignalFunc)gui_quit, NULL, 0);
 }
 
 /*

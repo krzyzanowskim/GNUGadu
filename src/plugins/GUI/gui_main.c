@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.24 2003/10/31 19:44:22 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.25 2003/11/06 19:17:59 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -233,6 +233,7 @@ void start_plugin()
     GSList *sigdata = NULL;
     
     gui_build_default_menu();
+    gui_build_default_toolbar();
 
     if (config_var_get(gui_handler, "tree"))
 	tree = TRUE;
