@@ -1,4 +1,4 @@
-# $Revision: 1.21 $, $Date: 2004/09/16 08:10:08 $
+# $Revision: 1.22 $, $Date: 2004/10/21 13:32:38 $
 #
 # Conditional build: 
 %bcond_without	arts
@@ -10,8 +10,8 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.0.6
-Release:	3
+Version:	2.2.0
+Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
@@ -27,7 +27,7 @@ BuildRequires:	glib2-devel  >= 2.2.0
 BuildRequires:	gtk+2-devel  >= 2.4.0
 BuildRequires:	libtlen-devel
 BuildRequires:	libtool
-BuildRequires:	loudmouth-devel >= 0.16-4
+BuildRequires:	loudmouth-devel >= 0.17.1
 BuildRequires:	openssl-devel >= 0.9.7d
 %{?with_perl:BuildRequires:	perl-devel}
 %{?with_gtkspell:BuildRequires:	gtkspell-devel}
@@ -324,14 +324,12 @@ Make possible exchange data with other applications.
 %description plugin-remote -l es
 Permite intercambiar los datos con otras aplicaciones.
 
-
 %description plugin-remote -l pl
 Wtyczka umo¿liwiaj±ca wymianê informacji z innymi aplikacjami.
 
-
 %package plugin-history-external
 Summary:	Allow to view GNU Gadu chat history
-Summary(pl):	Pozwala przegl±daæ historiê rozmów GNU Gadu.
+Summary(pl):	Przegl±danie historii rozmów GNU Gadu
 Group:		Applications/Communications
 Provides:	%{name}-history-external = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-history-external
@@ -339,15 +337,15 @@ Requires:	gtk+2
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description plugin-history-external
-Allow to view GNU Gadu chat history
+Allow to view GNU Gadu chat history.
 
 %description plugin-history-external -l pl
-Pozwala przegl±daæ historiê rozmów GNU Gadu.
+Wtyczka pozwalaj±ca przegl±daæ historiê rozmów GNU Gadu.
 
 %package plugin-update
 Summary:	Check for new GNU Gadu newer version
 Summary(es):	Verifica si hay versiones nuevas de GNU Gadu
-Summary(pl):	Sprawdza czy jest dostêpna nowsza wersja GNU Gadu
+Summary(pl):	Sprawdzanie dostêpno¶ci nowszej wersji GNU Gadu
 Group:		Applications/Communications
 Provides:	%{name}-update = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-update
@@ -360,7 +358,7 @@ Check for new GNU Gadu newer version.
 Verifica si hay nuevas versiones de GNU Gadu.
 
 %description plugin-update -l pl
-Sprawdza czy jest dostêpna nowsza wersja GNU Gadu
+Wtyczka sprawdzaj±ca, czy jest dostêpna nowsza wersja GNU Gadu.
 
 %package themes
 Summary:	Themes for GNU Gadu 2 GUI
@@ -383,7 +381,6 @@ Motywy graficzne dla GUI GNU Gadu 2.
 %setup -q
 
 %build
-rm -f missing
 %{__gettextize}
 %{__libtoolize}
 %{__aclocal} -I src/plugins/gadu_gadu/libgadu/m4
@@ -552,8 +549,17 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.21  2004/09/16 08:10:08  krzyzak
-- sync. with PLD CVS
+Revision 1.22  2004/10/21 13:32:38  krzyzak
+- up to 2.2.0
+
+Revision 1.121  2004/10/07 12:49:19  qboosh
+- desc cosmetics
+
+Revision 1.120  2004/09/27 11:03:20  ankry
+- removed unnecessary BR: libstdc++-devel
+
+Revision 1.119  2004/09/26 08:32:56  ankry
+- BR: libstdc++-devel (by Arkadiusz Chomicki)
 
 Revision 1.118  2004/09/15 09:27:21  krzak
 - change subpackages with plugins to %{name}-plugin-foo
