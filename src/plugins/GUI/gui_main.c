@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.62 2004/10/22 07:47:53 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.63 2004/10/22 20:53:00 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -133,7 +133,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	g_free(path);
 
 	ggadu_config_var_add_with_default(gui_handler, "theme", VAR_STR, g_strdup("default"));
-	ggadu_config_var_add(gui_handler, "emot", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "emot", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(gui_handler, "icons", VAR_STR);
 	ggadu_config_var_add(gui_handler, "tree", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "chat_window_auto_raise", VAR_BOOL);

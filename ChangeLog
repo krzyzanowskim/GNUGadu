@@ -2,6 +2,7 @@
 - close chat window on ESC option (mkobierzycki/GUI)
 - fixed reading malformed userlist (gadu-gadu/krzak)
 - escape string config variables (core/krzak)
+- rel. 2.2.1
 
 20.10.2004
 - default font set to -*-*-*-r-*-*-20-*-*-*-*-*-iso8859-2

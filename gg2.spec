@@ -1,4 +1,4 @@
-# $Revision: 1.22 $, $Date: 2004/10/21 13:32:38 $
+# $Revision: 1.23 $, $Date: 2004/10/22 20:52:57 $
 #
 # Conditional build: 
 %bcond_without	arts
@@ -10,7 +10,7 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.2.0
+Version:	2.2.1
 Release:	1
 Epoch:		3
 License:	GPL v2+
@@ -549,6 +549,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.23  2004/10/22 20:52:57  krzyzak
+- bugfix release 2.2.1
+
 Revision 1.22  2004/10/21 13:32:38  krzyzak
 - up to 2.2.0
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-10-21 13:11+0200\n"
+"POT-Creation-Date: 2004-10-22 22:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,28 +126,28 @@ msgstr ""
 msgid "Show/hide descriptions on userlist"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:754 src/plugins/GUI/GUI_plugin.c:822
+#: src/plugins/GUI/GUI_plugin.c:754 src/plugins/GUI/GUI_plugin.c:834
 #, c-format
 msgid "New message from %s"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:795 src/plugins/GUI/GUI_plugin.c:996
+#: src/plugins/GUI/GUI_plugin.c:795 src/plugins/GUI/GUI_plugin.c:1008
 msgid "GNU Gadu"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:587 src/plugins/GUI/gui_search.c:189
+#: src/plugins/GUI/gui_chat.c:603 src/plugins/GUI/gui_search.c:189
 msgid "_Close"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:815
+#: src/plugins/GUI/gui_chat.c:831
 msgid "_Send"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:915
+#: src/plugins/GUI/gui_chat.c:931
 msgid "Chat Window"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1083
+#: src/plugins/GUI/gui_chat.c:1099
 #, c-format
 msgid ""
 "Error initializing spell checking: \n"
@@ -155,35 +155,35 @@ msgid ""
 "Try install appropriate language support with aspell"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1172
+#: src/plugins/GUI/gui_chat.c:1188
 msgid "Send a message"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1173
+#: src/plugins/GUI/gui_chat.c:1189
 msgid "Send message with enter"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1174
+#: src/plugins/GUI/gui_chat.c:1190
 msgid "Close a window"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1175
+#: src/plugins/GUI/gui_chat.c:1191
 msgid "Clear the buffer"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1176
+#: src/plugins/GUI/gui_chat.c:1192
 msgid "Stick to all virtual desktops"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1177
+#: src/plugins/GUI/gui_chat.c:1193
 msgid "Find a contact"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1195
+#: src/plugins/GUI/gui_chat.c:1211
 msgid "Emoticons"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1335 src/plugins/GUI/gui_chat.c:1337
+#: src/plugins/GUI/gui_chat.c:1356 src/plugins/GUI/gui_chat.c:1358
 msgid "Me"
 msgstr ""
 
@@ -329,48 +329,52 @@ msgstr ""
 msgid "Chat window height"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:750
+#: src/plugins/GUI/gui_preferences.c:751
 msgid ""
 "\n"
 "Advanced settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:756
+#: src/plugins/GUI/gui_preferences.c:757
 msgid "Auto hide window on start"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:761
+#: src/plugins/GUI/gui_preferences.c:762
 msgid "Notify about status changes inside chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:766
+#: src/plugins/GUI/gui_preferences.c:767
+msgid "'ESC' - close chatwindow"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:772
 msgid "Blink status icon while connecting every:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:779
+#: src/plugins/GUI/gui_preferences.c:785
 msgid "miliseconds"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:795
+#: src/plugins/GUI/gui_preferences.c:801
 msgid "Chat window split position at:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:804
+#: src/plugins/GUI/gui_preferences.c:810
 msgid "percent"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:815
+#: src/plugins/GUI/gui_preferences.c:821
 msgid "Selected theme:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:863
+#: src/plugins/GUI/gui_preferences.c:869
 msgid "Selected icon set:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:959
+#: src/plugins/GUI/gui_preferences.c:968
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1465
-#: src/plugins/tlen/tlen_plugin.c:828 src/plugins/xosd/plugin_xosd.c:412
+#: src/plugins/tlen/tlen_plugin.c:828 src/plugins/xosd/plugin_xosd.c:407
 #: src/plugins/jabber/jabber_plugin.c:1367
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
@@ -378,74 +382,74 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:992
+#: src/plugins/GUI/gui_preferences.c:1001
 msgid "General"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:994
+#: src/plugins/GUI/gui_preferences.c:1003
 msgid "Chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:996
+#: src/plugins/GUI/gui_preferences.c:1005
 msgid "Sound"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:998
+#: src/plugins/GUI/gui_preferences.c:1007
 msgid "Colors"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1000
+#: src/plugins/GUI/gui_preferences.c:1009
 msgid "Fonts"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1002
+#: src/plugins/GUI/gui_preferences.c:1011
 msgid "Advanced"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1004
+#: src/plugins/GUI/gui_preferences.c:1013
 msgid "Plugins manager"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1011
+#: src/plugins/GUI/gui_preferences.c:1020
 msgid ""
 "\n"
 "GUI plugin preferences\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1019
+#: src/plugins/GUI/gui_preferences.c:1028
 msgid "Show only active users"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1022
+#: src/plugins/GUI/gui_preferences.c:1031
 msgid "Tree users list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1025
+#: src/plugins/GUI/gui_preferences.c:1034
 msgid "Expand Tree by default"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1033
+#: src/plugins/GUI/gui_preferences.c:1042
 msgid "Notify about new messages via XOSD"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1038
+#: src/plugins/GUI/gui_preferences.c:1047
 msgid "Show toolbar"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1041
+#: src/plugins/GUI/gui_preferences.c:1050
 msgid "Display contacts descriptions on users list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1046
+#: src/plugins/GUI/gui_preferences.c:1055
 msgid "Auto away set after:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1049
+#: src/plugins/GUI/gui_preferences.c:1058
 msgid "minutes"
 msgstr ""
 
-#: src/plugins/GUI/gui_main.c:188
+#: src/plugins/GUI/gui_main.c:189
 msgid "Unable to read configuration file for plugin GUI, don't worry"
 msgstr ""
 
@@ -514,16 +518,16 @@ msgid ""
 "%s %s</i>"
 msgstr ""
 
-#: src/plugins/docklet/dockapp/dockapp_plugin.c:426
+#: src/plugins/docklet/dockapp/dockapp_plugin.c:427
 msgid "Docklet-dockapp2"
 msgstr ""
 
-#: src/plugins/docklet/dockapp/dockapp_plugin.c:441
+#: src/plugins/docklet/dockapp/dockapp_plugin.c:442
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1532
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1537
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1562
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1566
-#: src/plugins/xosd/plugin_xosd.c:522
+#: src/plugins/xosd/plugin_xosd.c:517
 #: src/plugins/history/external/history_viewer.c:150
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
@@ -1043,51 +1047,51 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:386
+#: src/plugins/xosd/plugin_xosd.c:381
 msgid "XOSD Preferences"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:389
+#: src/plugins/xosd/plugin_xosd.c:384
 msgid "Timestamp"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:390
+#: src/plugins/xosd/plugin_xosd.c:385
 msgid "Colour"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:391
+#: src/plugins/xosd/plugin_xosd.c:386
 msgid "Alignment"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:392
+#: src/plugins/xosd/plugin_xosd.c:387
 msgid "Position"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:393
+#: src/plugins/xosd/plugin_xosd.c:388
 msgid "Number of lines"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:394
+#: src/plugins/xosd/plugin_xosd.c:389
 msgid "Timeout"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:395
+#: src/plugins/xosd/plugin_xosd.c:390
 msgid "Horizontal offset"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:396
+#: src/plugins/xosd/plugin_xosd.c:391
 msgid "Vertical offset"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:397
+#: src/plugins/xosd/plugin_xosd.c:392
 msgid "Shadow offset"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:413
+#: src/plugins/xosd/plugin_xosd.c:408
 msgid "Show messages"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:489
+#: src/plugins/xosd/plugin_xosd.c:484
 msgid "On Screen Display"
 msgstr ""
 
