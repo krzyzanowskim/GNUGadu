@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.h,v 1.2 2004/10/25 15:40:09 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.3 2004/10/25 22:01:31 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -20,9 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#define DBUS_ORG_FREEDESKTOP_IM_SIGNAL_INTERFACE "org.freedesktop.im"
-#define DBUS_ORG_FREEDESKTOP_IM_OBJECT "/org/freedesktop/im"
-
+#define DBUS_ORG_FREEDESKTOP_IM_SERVICE "org.freedesktop.im"
+#define DBUS_ORG_FREEDESKTOP_IM_INTERFACE "org.freedesktop.im.Presence"
+#define DBUS_ORG_FREEDESKTOP_IM_OBJECT "/org/freedesktop/im/Presence"
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE "getPresence"
 
 

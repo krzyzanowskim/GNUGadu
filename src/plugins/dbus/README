@@ -1,0 +1,14 @@
+You have to have 
+
+"dbus-daemon-1 --session"
+
+process running in you system to work it propertly.
+
+you can run it with while you login with script like this:
+
+if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
+  ## if not found, launch a new one 
+  eval `dbus-launch --sh-syntax --exit-with-session`
+  echo "D-BUS per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS"
+fi
+			       

@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.2 2004/10/25 15:40:09 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.3 2004/10/25 22:01:31 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -51,16 +51,31 @@ GGadu_PLUGIN_INIT("dbus", GGADU_PLUGIN_TYPE_MISC);
 
 static void dbus_plugin_unregistered_func(DBusConnection * connection, gpointer user_data)
 {
-    print_debug("plumcium");
+	print_debug("plumcium");
 }
 
-static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+
+static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, DBusMessage * message,
+						  gpointer user_data)
 {
 	DBusError error;
 	dbus_error_init(&error);
-	print_debug("tuptup");
 
-	if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_SIGNAL_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
+	print_debug("DBUS: member=%s path=%s interface=%s type=%d", dbus_message_get_member(message),
+		    dbus_message_get_path(message), 
+		    dbus_message_get_interface(message),
+		    dbus_message_get_type(message));
+
+
+	if (dbus_message_is_signal(message, DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL, "Disconnected"))
+	{
+		print_debug("dbus signal: Disconnected");
+		dbus_error_free(&error);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+
+	if (dbus_message_is_method_call
+	    (message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
 	{
 		gchar *contactURI = NULL;	/* URI of the user which we have to return presence. ex.  gg://13245  */
 		if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
@@ -68,9 +83,9 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 			print_debug("DBUS plugin: looking for %s", contactURI);
 			dbus_free(contactURI);
 		}
+		dbus_error_free(&error);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-	
 
 	dbus_error_free(&error);
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -80,8 +95,9 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 static DBusObjectPathVTable vtable = {
 	dbus_plugin_unregistered_func,
 	dbus_plugin_message_func,
-	NULL	/* internal */
+	NULL,
 };
+
 
 
 
@@ -97,11 +113,12 @@ void start_plugin()
 {
 	/* initialize dbus */
 	DBusConnection *bus = NULL;
-	DBusError dbuserror;
 	GError *error = NULL;
+	DBusError derror;
 
-	dbus_error_init(&dbuserror);
-	bus = dbus_g_connection_get_connection(dbus_g_bus_get(DBUS_BUS_SYSTEM, &error));
+	dbus_g_thread_init();
+
+	bus = dbus_g_connection_get_connection(dbus_g_bus_get(DBUS_BUS_SESSION, &error));
 	if (!bus)
 	{
 		g_warning("Failed to connect to the D-BUS daemon: %s\n", error->message);
@@ -111,15 +128,23 @@ void start_plugin()
 
 	dbus_connection_setup_with_g_main(bus, g_main_loop_get_context(config->main_loop));
 
-	if (!dbus_connection_register_fallback(bus, DBUS_ORG_FREEDESKTOP_IM_OBJECT, &vtable, NULL))
+	dbus_error_init(&derror);
+	dbus_bus_acquire_service(bus, DBUS_ORG_FREEDESKTOP_IM_SERVICE, 0, &derror);
+	if (dbus_error_is_set(&derror))
+	{
+		g_warning("Failed to acquire gossip service.");
+		dbus_error_free(&derror);
+		return;
+	}
+
+	if (!dbus_connection_register_object_path(bus, DBUS_ORG_FREEDESKTOP_IM_OBJECT, &vtable, NULL))
 	{
 		g_warning("Failed to register object path.");
 		return;
 	}
-	print_debug("kurwa");
 
+	return;
 }
-
 
 void destroy_plugin()
 {
