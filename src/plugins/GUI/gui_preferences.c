@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.63 2004/08/20 15:02:54 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.64 2004/08/20 21:15:05 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -726,8 +726,8 @@ static GtkWidget *create_advanced_tab()
 	GtkWidget *label;
 	GtkWidget *tabbox;
 	GtkWidget *label0_align, *label2_align;
-	GtkWidget *combo_theme;
-	gchar *dirname;
+	GtkWidget *combo_theme = NULL;
+	gchar *dirname = NULL;
 	GDir *dir;
 	GtkWidget *adv_vbox = gtk_vbox_new(FALSE, 5);
 	GtkWidget *hbox = gtk_hbox_new(FALSE, 5);
@@ -778,6 +778,7 @@ static GtkWidget *create_advanced_tab()
 	combo_theme = gtk_combo_box_new_text();
 	label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 	g_object_set_data(G_OBJECT(adv_vbox), "combo_theme", combo_theme);
+	
 	label = gtk_label_new(_("Selected theme"));
 	gtk_container_add(GTK_CONTAINER(label2_align), label);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 1, 2);
@@ -794,19 +795,10 @@ static GtkWidget *create_advanced_tab()
 		gchar *theme_current;
 		gchar *theme_name_file;
 		gchar *theme_name;
+		gint theme_current_idx = 0;
+		gint i = 0;
 
 		theme_current = ggadu_config_var_get(gui_handler, "theme");
-		
-/*		if (theme_current && !ggadu_strcasecmp(theme_current,_("default")))
-		{
-		    list_theme = g_list_append(list_theme, theme_current);
-		    gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),theme_current);
-		} else	{
-		    list_theme = g_list_append(list_theme, _("default"));
-		    gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),_("default"));
-		}
-*/		
-
 
 		while ((theme_name_file = (gchar *) g_dir_read_name(dir)) != NULL)
 		{
@@ -815,17 +807,23 @@ static GtkWidget *create_advanced_tab()
 			if (g_str_has_suffix(theme_name_file, ".theme"))
 			{
 				theme_name = g_strndup(theme_name_file, strlen(theme_name_file) - strlen(".theme"));
-				if (!theme_current || ggadu_strcasecmp(theme_name, theme_current))
-				{
-					list_theme = g_list_append(list_theme, g_strdup(theme_name));
-					gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),g_strdup(theme_name));
-				}
+
+				list_theme = g_list_append(list_theme, g_strdup(theme_name));
+				gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),g_strdup(theme_name));
+				
+				if (theme_current && !ggadu_strcasecmp(theme_name,theme_current))
+					theme_current_idx = i;
+				
 				g_free(theme_name);
 			}
+			
+			i++;
 		}
 
 		g_dir_close(dir);
-//		gtk_combo_set_popdown_strings(GTK_COMBO(combo_theme), list_theme);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_theme),theme_current_idx);
+		g_object_set_data(G_OBJECT(combo_theme), "combo_theme_slist", list_theme);
+
 	}
 	
 	/* set */
@@ -1340,9 +1338,16 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "descr_on_list", 
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));
 
+
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_theme");
+		g_return_if_fail(entry != NULL);
+		GSList *combo_theme_slist= g_object_get_data(G_OBJECT(entry), "combo_theme_slist");
+		
 		ggadu_config_var_set(gui_handler, "theme",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(entry)->entry))));
+				     (gpointer) g_strdup(g_slist_nth_data(combo_theme_slist,gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) ));
+
+		g_slist_foreach(combo_theme_slist,(GFunc)g_free,NULL);
+		g_slist_free(combo_theme_slist);				     
 				     
 		ggadu_config_var_set(gui_handler, "icons",
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_icons)->entry))));
@@ -1397,7 +1402,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "sound_msg_in",
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 		
-        entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_in_first");
+		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_in_first");
 		g_return_if_fail(entry != NULL);
 		ggadu_config_var_set(gui_handler, "sound_msg_in_first",
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));

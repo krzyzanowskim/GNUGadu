@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.75 2004/08/19 11:57:11 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.76 2004/08/20 21:15:04 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -984,9 +984,10 @@ void gui_load_theme()
 	themepath = g_build_filename(PACKAGE_DATA_DIR, "themes", themefilename, NULL);
 
 	print_debug("%s : Loading theme from %s\n", "main-gui", themepath);
-	gtk_rc_parse(themepath);
-	gtk_widget_reset_rc_styles(GTK_WIDGET(window));
-	gtk_rc_reparse_all();
+
+    	gtk_rc_parse(themepath);
+	gtk_rc_reset_styles(gtk_settings_get_default());	
+	
 	g_free(themepath);
 	g_free(themefilename);
 }
