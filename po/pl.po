@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.53 2004/04/02 12:39:03 krzyzak Exp $
+# $Id: pl.po,v 1.54 2004/04/02 18:51:59 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-04-02 12:25+0200\n"
+"POT-Creation-Date: 2004-04-02 20:24+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -65,7 +65,7 @@ msgstr "core : próba wy³adowania nie za³adowanej wtyczki %s\n"
 msgid "Couldn't find pixmap file: %s"
 msgstr "Plik z pixmap± nie odnaleziony: %s"
 
-#: src/plugins/GUI/GUI_plugin.c:200
+#: src/plugins/GUI/GUI_plugin.c:130
 msgid ""
 "\n"
 "[not in userlist]"
@@ -73,44 +73,44 @@ msgstr ""
 "\n"
 "[nie ma Ciê w kontaktach]"
 
-#: src/plugins/GUI/GUI_plugin.c:239 src/plugins/GUI/gui_userview.c:705
+#: src/plugins/GUI/GUI_plugin.c:169 src/plugins/GUI/gui_userview.c:715
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/GUI_plugin.c:611
+#: src/plugins/GUI/GUI_plugin.c:664
 msgid "/GNU Gadu/_Preferences"
 msgstr "/GNU Gadu/_Ustawienia"
 
-#: src/plugins/GUI/GUI_plugin.c:612
+#: src/plugins/GUI/GUI_plugin.c:665
 msgid "/GNU Gadu/"
 msgstr "/GNU Gadu/"
 
-#: src/plugins/GUI/GUI_plugin.c:613
+#: src/plugins/GUI/GUI_plugin.c:666
 msgid "/GNU Gadu/_About"
 msgstr "/GNU Gadu/_Informacje o"
 
-#: src/plugins/GUI/GUI_plugin.c:614
+#: src/plugins/GUI/GUI_plugin.c:667
 msgid "/GNU Gadu/_Quit"
 msgstr "/GNU Gadu/Za_koñcz"
 
-#: src/plugins/GUI/GUI_plugin.c:683
+#: src/plugins/GUI/GUI_plugin.c:736
 msgid "Open preferences window"
 msgstr "Otwórz okno ustawieñ"
 
-#: src/plugins/GUI/GUI_plugin.c:685
+#: src/plugins/GUI/GUI_plugin.c:738
 msgid "Exit program"
 msgstr "Wyj¶cie z programu"
 
-#: src/plugins/GUI/GUI_plugin.c:689
+#: src/plugins/GUI/GUI_plugin.c:742
 msgid "Show/hide inactive users"
 msgstr "Poka¿/ukryj nieaktywnych u¿ytkowników"
 
-#: src/plugins/GUI/GUI_plugin.c:693
+#: src/plugins/GUI/GUI_plugin.c:746
 #, fuzzy
 msgid "Show/hide descriptions on userlist"
 msgstr "Poka¿ opisy na li¶cie kontaktów"
 
-#: src/plugins/GUI/GUI_plugin.c:746 src/plugins/GUI/GUI_plugin.c:780
+#: src/plugins/GUI/GUI_plugin.c:799 src/plugins/GUI/GUI_plugin.c:833
 #, c-format
 msgid "New message from %s"
 msgstr "Nowa wiadomo¶æ od %s"
@@ -119,15 +119,15 @@ msgstr "Nowa wiadomo¶æ od %s"
 msgid "_Close"
 msgstr "Za_mknij"
 
-#: src/plugins/GUI/gui_chat.c:741
+#: src/plugins/GUI/gui_chat.c:742
 msgid "_Send"
 msgstr "_Wy¶lij"
 
-#: src/plugins/GUI/gui_chat.c:835
+#: src/plugins/GUI/gui_chat.c:836
 msgid "Chat Window"
 msgstr "Okno rozmowy"
 
-#: src/plugins/GUI/gui_chat.c:1017
+#: src/plugins/GUI/gui_chat.c:1018
 #, c-format
 msgid ""
 "Error initializing spell checking: \n"
@@ -135,11 +135,7 @@ msgid ""
 "Try install appropriate language support with aspell"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1077
-msgid "S_tick"
-msgstr "P_rzypnij"
-
-#: src/plugins/GUI/gui_chat.c:1212 src/plugins/GUI/gui_chat.c:1214
+#: src/plugins/GUI/gui_chat.c:1220 src/plugins/GUI/gui_chat.c:1222
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2135
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2157
 msgid "Me"
@@ -443,7 +439,7 @@ msgid "About"
 msgstr "Informacje o"
 
 #: src/plugins/GUI/gui_dialogs.c:680
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "<b>GNU Gadu %s</b>\n"
 "Copyright (C) 2001-2004 GNU Gadu Team\n"
@@ -466,6 +462,7 @@ msgid ""
 "GammaRay\n"
 "Plavi\n"
 "Dwuziu\n"
+"Infecto\n"
 "see AUTHORS file for details\n"
 "\n"
 "<i>Compile time:\n"
@@ -479,12 +476,12 @@ msgstr ""
 "<b>G³ówni programi¶ci:</b>\n"
 "Igor Popik &lt;thrull@slackware.pl&gt;\n"
 "Marcin Krzy¿anowski &lt;krzak@hakore.com&gt;\n"
-"Jakub 'shasta' Jankowski\n"
 "\n"
 "<b>Autorzy ³atek:</b>\n"
 "Bartosz Zapa³owski\n"
 "Mateusz Papiernik\n"
 "HelDoRe\n"
+"Jakub 'shasta' Jankowski\n"
 "Pawe³ Jan Maczewski\n"
 "\n"
 "<b>Podziêkowania dla:</b>\n"
@@ -492,6 +489,7 @@ msgstr ""
 "Aflinta\n"
 "GammaRay\n"
 "Plavi\n"
+"Infecto\n"
 "szczegó³y w pliku AUTHORS\n"
 "\n"
 "<i>Data kompilacji:\n"
@@ -774,14 +772,13 @@ msgid "Userlist delete failed!"
 msgstr "Przy usuwaniu listy u¿ytkowników wyst±pi³ b³±d!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1216
-#, fuzzy
 msgid "File received succesful"
-msgstr "Plik %s zosta³ pomy¶lnie odebrany"
+msgstr "Plik zosta³ pomy¶lnie odebrany"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1318
 #, c-format
 msgid "%s (%d) wants to send You a file: %s (%d bytes)"
-msgstr ""
+msgstr "%s (%d) chce przes³aæ do ciebie plik: %s (%d bajt[ów])"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1337
 #, c-format
@@ -1562,12 +1559,6 @@ msgstr "Sprawdzanie aktualizacji"
 #: src/plugins/update/update_plugin.c:441
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki update"
-
-#~ msgid "Change User"
-#~ msgstr "Modyfikacja danych kontaktu"
-
-#~ msgid "Add User"
-#~ msgstr "Nowy kontakt"
 
 #~ msgid "Registration failed"
 #~ msgstr "Rejestracja nieudana"

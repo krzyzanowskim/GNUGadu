@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.41 2004/03/28 23:03:43 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.42 2004/04/02 18:52:01 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -683,7 +683,7 @@ void gui_about(GtkWidget * widget, gpointer data)
 				 "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n" "<b>Also:</b>\n"
 				 "Bartosz Zapalowski\n" "Mateusz Papiernik\n" "HelDoRe\n" "Jakub 'shasta' Jankowski\n"
 				 "Pawel Jan Maczewski\n\n" "<b>Thanks to:</b>\n" "Aflinta\n" "GammaRay\n" "Plavi\n"
-				 "Dwuziu\n" "see AUTHORS file for details\n\n" "<i>Compile time:\n%s %s</i>"), VERSION,
+				 "Dwuziu\nInfecto\n" "see AUTHORS file for details\n\n" "<i>Compile time:\n%s %s</i>"), VERSION,
 				__DATE__, __TIME__);
 
 	about_timeout = g_timeout_add(50, timeout, image);

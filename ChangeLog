@@ -2,6 +2,7 @@
 - some changes in chat window button placement (GUI/THrull)
 - keyboard support in userlist - chat init, key up, key down (GUI/THrull)
 - integrate library libgadu into gadu-gadu plugin (krzak)
+- 2.0
 
 30.03.2004
 - dcc ack message (gadu-gadu/thrull/krzak)

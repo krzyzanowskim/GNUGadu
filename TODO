@@ -1,10 +1,8 @@
-BEFORE 2.0:
+AFTER 2.0:
  - register new account (tlen)
  - current status description text somewhere
- !!! some kind of dcc get acknowledge dialog box (gadu-gadu)
 
 Later:
- - userlist tree view doesn't expand/collapse rows while userlist changes (GUI)
  - applying theme should refresh everything (it's not doing that for menubar) (GUI)
  - memory leaks audit (all)
  - conference (jabber)

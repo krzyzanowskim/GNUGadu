@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-04-02 12:25+0200\n"
+"POT-Creation-Date: 2004-04-02 20:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,49 +61,49 @@ msgstr ""
 msgid "Couldn't find pixmap file: %s"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:200
+#: src/plugins/GUI/GUI_plugin.c:130
 msgid ""
 "\n"
 "[not in userlist]"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:239 src/plugins/GUI/gui_userview.c:705
+#: src/plugins/GUI/GUI_plugin.c:169 src/plugins/GUI/gui_userview.c:715
 msgid "(None)"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:611
+#: src/plugins/GUI/GUI_plugin.c:664
 msgid "/GNU Gadu/_Preferences"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:612
+#: src/plugins/GUI/GUI_plugin.c:665
 msgid "/GNU Gadu/"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:613
+#: src/plugins/GUI/GUI_plugin.c:666
 msgid "/GNU Gadu/_About"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:614
+#: src/plugins/GUI/GUI_plugin.c:667
 msgid "/GNU Gadu/_Quit"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:683
+#: src/plugins/GUI/GUI_plugin.c:736
 msgid "Open preferences window"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:685
+#: src/plugins/GUI/GUI_plugin.c:738
 msgid "Exit program"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:689
+#: src/plugins/GUI/GUI_plugin.c:742
 msgid "Show/hide inactive users"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:693
+#: src/plugins/GUI/GUI_plugin.c:746
 msgid "Show/hide descriptions on userlist"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:746 src/plugins/GUI/GUI_plugin.c:780
+#: src/plugins/GUI/GUI_plugin.c:799 src/plugins/GUI/GUI_plugin.c:833
 #, c-format
 msgid "New message from %s"
 msgstr ""
@@ -112,15 +112,15 @@ msgstr ""
 msgid "_Close"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:741
+#: src/plugins/GUI/gui_chat.c:742
 msgid "_Send"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:835
+#: src/plugins/GUI/gui_chat.c:836
 msgid "Chat Window"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1017
+#: src/plugins/GUI/gui_chat.c:1018
 #, c-format
 msgid ""
 "Error initializing spell checking: \n"
@@ -128,11 +128,7 @@ msgid ""
 "Try install appropriate language support with aspell"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1077
-msgid "S_tick"
-msgstr ""
-
-#: src/plugins/GUI/gui_chat.c:1212 src/plugins/GUI/gui_chat.c:1214
+#: src/plugins/GUI/gui_chat.c:1220 src/plugins/GUI/gui_chat.c:1222
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2135
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2157
 msgid "Me"
@@ -434,6 +430,7 @@ msgid ""
 "GammaRay\n"
 "Plavi\n"
 "Dwuziu\n"
+"Infecto\n"
 "see AUTHORS file for details\n"
 "\n"
 "<i>Compile time:\n"

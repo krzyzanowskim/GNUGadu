@@ -1,23 +1,24 @@
-# $Revision: 1.11 $, $Date: 2004/03/09 10:31:28 $
+# $Revision: 1.12 $, $Date: 2004/04/02 18:51:58 $
 #
 # Conditional build:
 %bcond_with	arts
 %bcond_without	perl
 %bcond_without	esd
+%bcond_without	gtkspell
 #
-%define		_pre	pre6
 Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
 Version:	2.0
-Release:	0.%{_pre}.1
+Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
 #Source0:	http://gg.tiwek.com/gg2/snapshots/%{name}-%{_snap}.tar.bz2
-Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}%{_pre}.tar.bz2
-# Source0-md5:	0e24e1420d3b85822b871af953e12df6
+#Source0:	http://osdn.dl.sourceforge.net/ggadu/%{name}-%{version}%{_pre}.tar.bz2
+Source0:	http://osdn.dl.sourceforge.net/ggadu/gg2-2.0.tar.gz
+# Source0-md5:	1d44788e6fb7b6c47453e2a0ad104c54
 URL:		http://www.gnugadu.org/
 %{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
@@ -26,16 +27,15 @@ BuildRequires:	automake >= 1.7
 BuildRequires:	gettext-devel >= 0.11.0
 BuildRequires:	glib2-devel  >= 2.2.0
 BuildRequires:	gtk+2-devel  >= 2.2.0
-BuildRequires:	intltool
-BuildRequires:	libgadu-devel >= 4:1.4
 BuildRequires:	libtlen-devel
 BuildRequires:	libtool
-BuildRequires:	loudmouth-devel >= 0.13.1
-BuildRequires:	openssl-devel
+BuildRequires:	loudmouth-devel >= 0.15.1
+BuildRequires:	openssl-devel >= 0.9.7d
 %{?with_perl:BuildRequires:	perl-devel}
+%{?with_gtkspell:BuildRequires:	gtkspell-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	xosd-devel   >= 2.0.0
-Requires:		gg2-ui
+Requires:	gg2-ui
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -335,11 +335,11 @@ Temas para el GUI de GNU Gadu 2.
 Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
-%setup -q -n %{name}-%{version}%{_pre}
+%setup -q -n %{name}-%{version}
 
 %build
 rm -f missing
-intltoolize --copy --force
+%{__gettextize}
 %{__libtoolize}
 %{__aclocal}
 %{__automake}
@@ -361,7 +361,8 @@ intltoolize --copy --force
  	--with-external \
  	--with-update \
 	--with%{!?with_arts:out}-arts \
-	--%{?with_perl:enable}%{!?with_perl:disable}-perl \
+	--with%{!?with_gtkspell:out}-gtkspell \
+	--%{?with_perl:with}%{!?with_perl:without}-perl \
  	--with-remote
 
 %{__make}
@@ -373,10 +374,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT%{_desktopdir}
-install gg2.desktop $RPM_BUILD_ROOT%{_desktopdir}
-install -d $RPM_BUILD_ROOT%{_pixmapsdir}
-install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/sounds
-install $RPM_BUILD_ROOT%{_datadir}/%{name}/pixmaps/icon.png $RPM_BUILD_ROOT%{_pixmapsdir}/%{name}.png
+install gg2.desktop $RPM_BUILD_ROOT%{_desktopdir}/gg2.desktop
 
 %find_lang %{name} --all-name --with-gnome
 
@@ -501,11 +499,40 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.11  2004/03/09 10:31:28  krzyzak
-http://www.gnugadu.org
+Revision 1.12  2004/04/02 18:51:58  krzyzak
+- 2.0
 
-Revision 1.10  2004/01/14 19:43:20  krzyzak
-- update
+Revision 1.94  2004/03/19 23:46:26  ankry
+- massive change: BR openssl-devel >= 0.9.7d
+
+Revision 1.93  2004/03/14 08:58:53  krzak
+- up to 2.0pre8
+- bcond without_gtkspell
+- removed emoticons-fixup_and_tlen.patch - already in sources
+
+Revision 1.92  2004/03/10 06:26:33  gotar
+- fixed URL
+
+Revision 1.91  2004/03/10 00:09:34  krzak
+- URL: http://www.gnugadu.org
+
+Revision 1.90  2004/02/22 08:49:33  gotar
+- added emoticons* patch, release 0.pre7.2.
+
+Revision 1.89  2004/02/21 23:12:44  krzak
+- BR: loudmouth >= 0.15.1
+
+Revision 1.88  2004/02/21 23:08:16  krzak
+- up to 2.0pre7
+
+Revision 1.87  2004/01/27 10:33:55  tiwek
+--release up to rebuild with new libloudmouth
+
+Revision 1.86  2004/01/15 12:33:56  tiwek
+- s/TryExec/Exec in desktop file
+
+Revision 1.85  2004/01/14 21:04:28  krzak
+- version 2.0pre6
 
 Revision 1.84  2004/01/11 21:02:18  krzak
 - up to version 2.0pre5
