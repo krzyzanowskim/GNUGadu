@@ -1,4 +1,5 @@
-#include <stdio.h>/* $Id: plugins.c,v 1.9 2003/12/20 23:17:18 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.10 2004/01/03 17:23:27 thrulliq Exp $ */
+#include <stdio.h>
 #include <glib.h>
 #include <gmodule.h>
 #include <dlfcn.h>
@@ -20,33 +21,36 @@ gboolean plugin_at_list (gchar * name)
     GIOChannel *ch = NULL;
     GString *buffer = g_string_new (NULL);
     gchar *filename;
-
+    gint lines = 0;
+    
     filename = g_build_filename (config->configdir, "modules.load", NULL);
 
     ch = g_io_channel_new_file (filename, "r", NULL);
 
     g_free (filename);
 
-    if (!ch)
-      {
+    if (!ch) {
 	  g_string_free (buffer, TRUE);
 	  return TRUE;
-      }
-
-    while (g_io_channel_read_line_string (ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
-      {
-	  if (!g_strncasecmp (buffer->str, name, buffer->len - 1))
-	    {
-		g_string_free (buffer, TRUE);
-		return TRUE;
-	    }
-      }
-
+    }
+    while (g_io_channel_read_line_string (ch, buffer, NULL, NULL) != G_IO_STATUS_EOF) {
+	if (buffer->str && *buffer->str == '\n') {
+	    continue;
+	}
+	if (!g_strncasecmp (buffer->str, name, buffer->len - 1)) {
+	    g_string_free (buffer, TRUE);
+	    return TRUE;
+	}
+	lines++;
+    }
     g_io_channel_shutdown (ch, TRUE, NULL);
-
     g_string_free (buffer, TRUE);
+    
+    if (!lines)
+	return TRUE;
+
     return FALSE;
-};
+}
 
 /*
  * Laduje modul o podanej sciezce (path) oraz nazwie (name)
@@ -420,31 +424,27 @@ GSList *get_list_modules_load ()
 
     ch = g_io_channel_new_file (g_build_filename (config->configdir, "modules.load", NULL), "r", NULL);
 
-    /* ugly hack: no modules.load file, load all plugins */
-    if (!ch)
-      {
+    if (ch) {
+        while (g_io_channel_read_line_string (ch, buffer, NULL, NULL) != G_IO_STATUS_EOF) {
 	  tmp = config->plugins;
-	  while (tmp)
-	    {
-		plugin = (GGaduPlugin *) tmp->data;
-		ret = g_slist_append (ret, plugin);
-		tmp = tmp->next;
-	    }
-	  return ret;
-      }
-
-    while (g_io_channel_read_line_string (ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
-      {
-	  tmp = config->plugins;
-	  while (tmp)
-	    {
+	  while (tmp) {
 		plugin = (GGaduPlugin *) tmp->data;
 		if (!g_strncasecmp (buffer->str, plugin->name, buffer->len - 1))
 		    ret = g_slist_append (ret, plugin);
 		tmp = tmp->next;
 	    }
-      }
-
-    g_io_channel_shutdown (ch, TRUE, NULL);
+        }
+        g_io_channel_shutdown (ch, TRUE, NULL);
+    }
+    
+    /* ugly hack: no modules.load file, load all plugins */
+    if (ret == NULL) {
+	tmp = config->plugins;
+	while (tmp) {
+	    plugin = (GGaduPlugin *) tmp->data;
+	    ret = g_slist_append (ret, plugin);
+	    tmp = tmp->next;
+	}
+    }
     return ret;
 }

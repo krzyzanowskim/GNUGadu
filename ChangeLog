@@ -2,6 +2,7 @@
 - fixed strang baheviour when show/hide inactive button pressed many times (GUI/THrull)
 - non-existent emoticons will be ignored (GUI/THrull)
 - work in progress with jabber protocol plugin (jabber/krzak)
+- if modules_load is empty all plugins will be loaded (lib/THrull)
 
 29.12.2003
 - read ~/.gg2/emoticons.def first, if this fails, read default one (GUI/shasta)
