@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.137 2004/12/23 15:30:02 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.138 2004/12/25 21:11:51 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1431,6 +1431,7 @@ static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler *handl
 	GGaduDialog *dialog;
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber Services"), "");
+	ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
 	
 	/* add checking */
 	
@@ -1494,7 +1495,7 @@ GGaduMenu *build_jabber_menu()
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 //	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show _ignored"), user_show_ignored_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Personal _data"), user_own_vcard_action, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Services d_iscovery"), jabber_services_discovery_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Service d_iscovery"), jabber_services_discovery_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	account=ggadu_menu_new_item(_("Account"), NULL, NULL);
 	ggadu_menu_add_submenu(account, ggadu_menu_new_item(_("R_egister account"), jabber_register_account_dialog, NULL));
