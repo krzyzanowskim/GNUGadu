@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.34 2004/02/17 23:20:19 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.35 2004/02/21 22:26:50 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -473,7 +473,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 	GtkTreeModel *model;
 	gboolean valid;
 	gboolean found = FALSE;
-
+	
 	g_return_if_fail(gp != NULL);
 	g_return_if_fail(n != NULL);
 
@@ -650,6 +650,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 				   g_strdup_printf("%s (%d/%d)", gp->p->display_name, gui_get_active_users_count(gp),
 						   g_slist_length(gp->userlist)), -1);
 		g_free(tmp);
+
 	}
 }
 
@@ -658,15 +659,20 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 	GtkTreeIter parent_iter;
 	GtkTreeIter users_iter;
 	GSList *tmplist = NULL;
-
+	gboolean row_expanded = FALSE;
+	GtkTreePath *path = NULL;
+	
 	g_return_if_fail(gp != NULL);
 
-	gui_user_view_clear(gp);
 
 	if (tree)
 	{
 		gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(users_treestore), &parent_iter, gp->tree_path);
+		path = gtk_tree_model_get_path(GTK_TREE_MODEL(users_treestore), &parent_iter);
+		row_expanded = gtk_tree_view_row_expanded(GTK_TREE_VIEW(treeview), path);
 	}
+
+	gui_user_view_clear(gp);
 
 	tmplist = gp->userlist;
 	while (tmplist)
@@ -721,6 +727,11 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 				   g_strdup_printf("%s (%d/%d)", gp->p->display_name, gui_get_active_users_count(gp),
 						   g_slist_length(gp->userlist)), -1);
 		g_free(tmp);
+		
+		if (row_expanded)
+		    gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), path, TRUE);
+
+		gtk_tree_path_free(path);
 	}
 	else
 	{
