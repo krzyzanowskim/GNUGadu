@@ -1,6 +1,11 @@
-You have to have 
+To get DBUS operational you need to start system bus service at system 
+startup:
 
-"dbus-daemon-1 --session"
+# dbus-daemon-1 --system
+
+And then for every user session:
+
+$ dbus-daemon-1 --session
 
 process running in you system to work it propertly.
 
