@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.146 2005/03/09 13:11:13 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.147 2005/03/09 14:02:36 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -249,6 +249,7 @@ gboolean on_key_press_event_chat_window(GtkWidget * widget, GdkEventKey * event,
 
 void on_clear_clicked(GtkWidget * button, gpointer user_data)
 {
+	GtkTextBuffer *buf;
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	gui_chat_session *session = NULL;
 	GtkWidget *textview = NULL;
@@ -267,7 +268,7 @@ void on_clear_clicked(GtkWidget * button, gpointer user_data)
 		textview = g_object_get_data(G_OBJECT(session->chat), "history");
 	}
 
-	GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
+	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
 	gtk_text_buffer_set_text(buf, "", -1);
 }
 

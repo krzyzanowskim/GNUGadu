@@ -1,4 +1,4 @@
-/* $Id: ignore.c,v 1.12 2005/01/19 21:02:16 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.13 2005/03/09 14:02:43 krzyzak Exp $ */
 
 /* 
  * Ignore plugin code for GNU Gadu 2 
@@ -102,10 +102,11 @@ static void my_signal_receive(gpointer name, gpointer signal_ptr)
 				{
 				case GGADU_IGNORE_ADD_ID:
 					{
+						gchar *ignored_list_prev;
+						gchar *ignored_list_after = NULL;
 						GGaduContact *k = g_new0(GGaduContact, 1);
 						k->id = g_strdup(kv->value);
-						gchar *ignored_list_prev = ggadu_config_var_get(ignore_handler, "list");
-						gchar *ignored_list_after = NULL;
+						ignored_list_prev = ggadu_config_var_get(ignore_handler, "list");
 
 						ignored_list_after = ggadu_add_ignored_contact(ignored_list_prev, k);
 						if (ignored_list_after)
@@ -142,10 +143,11 @@ static void my_signal_receive(gpointer name, gpointer signal_ptr)
 				{
 				case GGADU_IGNORE_REMOVE_ID:
 					{
+						gchar *ignored_list_prev;
+						gchar *ignored_list_after = NULL;
 						GGaduContact *k = g_new0(GGaduContact, 1);
 						k->id = g_strdup(kv->value);
-						gchar *ignored_list_prev = ggadu_config_var_get(ignore_handler, "list");
-						gchar *ignored_list_after = NULL;
+						ignored_list_prev = ggadu_config_var_get(ignore_handler, "list");
 
 						ignored_list_after = ggadu_remove_ignored_contact(ignored_list_prev, k);
 						if (ignored_list_after)

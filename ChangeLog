@@ -1,3 +1,9 @@
+09.03.2005
+- ggadu_strchomp() allways return newly-allocated string (core/krzak)
+- update preferences for skins support (GUI/krzak)
+- update libgadu (gadu-gadu/krzak)
+- update for gcc 2.9x by freebsd port (krzak)
+
 07.03.2005
 - Basic implementation of JEP-0030 (Service Discovery). (mkobierzycki/jabber)
 - Implemented `<os>' node handling - JEP-0092 (Software Version) (mkobierzycki/jabber)

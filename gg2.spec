@@ -1,4 +1,4 @@
-# $Revision: 1.26 $, $Date: 2005/01/05 13:24:13 $
+# $Revision: 1.27 $, $Date: 2005/03/09 14:02:23 $
 #
 # Conditional build: 
 %bcond_without	arts
@@ -11,7 +11,7 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.2.4
+Version:	2.2.5
 Release:	1
 Epoch:		3
 License:	GPL v2+
@@ -613,6 +613,10 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.27  2005/03/09 14:02:23  krzyzak
+- update libgadu (gadu-gadu/krzak)
+- update for gcc 2.9x by freebsd port (krzak)
+
 Revision 1.26  2005/01/05 13:24:13  krzyzak
 - 2.2.4
 

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.243 2005/03/09 12:55:55 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.244 2005/03/09 14:02:40 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -425,6 +425,9 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	uint32_t *uins;
 	GGaduMsg *msg = NULL;
 	gint i, j;
+	GSList *list;
+	GSList *us;
+	gchar *recipients_line = NULL;
 
 	/* w przypadku bledu/utraty polaczenia postap tak jak w przypadku disconnect */
 	if (!session || !(e = gg_watch_fd(session)) || (condition & G_IO_ERR) ||
@@ -592,9 +595,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		}
 
-		GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
-		GSList *us = list;
-		gchar *recipients_line = NULL;
+		list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
+		us = list;
 
 		while (us)
 		{
@@ -703,6 +705,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 				if (k)
 				{
+					gchar *status = NULL;
 					ip_addr.s_addr = n->remote_ip;
 					if (inet_ntoa(ip_addr) && (ggadu_strcasecmp(inet_ntoa(ip_addr), "0.0.0.0")))
 					{
@@ -712,8 +715,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 					if (e->type == GG_EVENT_NOTIFY_DESCR)
 					{
+						gchar *chompstr = ggadu_strchomp(e->event.notify_descr.descr);
+						
 						g_free(k->status_descr);
-						k->status_descr = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify_descr.descr));
+						k->status_descr = ggadu_convert("CP1250", "UTF-8", chompstr);
+						
+						g_free(chompstr);
 					}
 
 					k->status = n->status;
@@ -721,7 +728,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 					/* Zapiszmy sobie zmiane opisu do pliku historii */
 
-					gchar *status = NULL;
 					if ((k->status == GG_STATUS_AVAIL) || (k->status == GG_STATUS_AVAIL_DESCR))
 						status = g_strdup_printf("avail");
 					else if ((k->status == GG_STATUS_BUSY) || (k->status == GG_STATUS_BUSY_DESCR))
