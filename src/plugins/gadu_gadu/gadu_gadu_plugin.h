@@ -1,9 +1,9 @@
-/* $Id: gadu_gadu_plugin.h,v 1.29 2004/10/28 11:18:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.30 2004/12/20 09:15:19 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

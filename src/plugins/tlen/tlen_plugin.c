@@ -1,9 +1,9 @@
-/* $Id: tlen_plugin.c,v 1.80 2004/12/15 17:51:44 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.81 2004/12/20 09:15:41 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

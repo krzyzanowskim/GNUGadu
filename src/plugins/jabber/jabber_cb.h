@@ -1,9 +1,9 @@
-/* $Id: jabber_cb.h,v 1.12 2004/08/30 11:46:52 mkobierzycki Exp $ */
+/* $Id: jabber_cb.h,v 1.13 2004/12/20 09:15:20 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

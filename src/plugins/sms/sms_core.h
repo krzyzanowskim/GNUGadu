@@ -1,10 +1,10 @@
-/* $Id: sms_core.h,v 1.18 2004/06/13 00:37:44 shaster Exp $ */
+/* $Id: sms_core.h,v 1.19 2004/12/20 09:15:38 krzyzak Exp $ */
 
 /* 
  * SMS plugin for GNU Gadu 2 
  * 
  * Copyright (C) 2003 Bartlomiej Pawlak 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

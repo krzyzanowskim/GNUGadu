@@ -1,9 +1,9 @@
-/* $Id: dockapp_plugin.c,v 1.25 2004/10/22 14:32:00 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.26 2004/12/20 09:15:17 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

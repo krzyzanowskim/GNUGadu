@@ -1,9 +1,9 @@
-/* $Id: plugin_sound_external.c,v 1.23 2004/11/18 12:01:35 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.24 2004/12/20 09:15:40 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

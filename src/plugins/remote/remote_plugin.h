@@ -1,9 +1,9 @@
-/* $Id: remote_plugin.h,v 1.3 2004/01/28 23:41:35 shaster Exp $ */
+/* $Id: remote_plugin.h,v 1.4 2004/12/20 09:15:38 krzyzak Exp $ */
 
 /* 
  * remote plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

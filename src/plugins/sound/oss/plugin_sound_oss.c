@@ -1,11 +1,11 @@
-/* $Id: plugin_sound_oss.c,v 1.15 2004/11/12 11:26:27 krzyzak Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.16 2004/12/20 09:15:41 krzyzak Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
  * 
  * Originally written by Igor Truszkowski <pol128@polsl.gliwice.pl>
  *
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

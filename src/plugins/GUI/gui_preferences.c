@@ -1,9 +1,9 @@
-/* $Id: gui_preferences.c,v 1.84 2004/11/19 17:38:40 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.85 2004/12/20 09:15:14 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

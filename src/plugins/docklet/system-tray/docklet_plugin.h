@@ -1,9 +1,9 @@
-/* $Id: docklet_plugin.h,v 1.4 2004/02/14 12:34:27 thrulliq Exp $ */
+/* $Id: docklet_plugin.h,v 1.5 2004/12/20 09:15:18 krzyzak Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

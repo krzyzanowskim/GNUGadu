@@ -1,9 +1,9 @@
-/* $Id: gui_search.c,v 1.8 2004/10/19 10:51:27 krzyzak Exp $ */
+/* $Id: gui_search.c,v 1.9 2004/12/20 09:15:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

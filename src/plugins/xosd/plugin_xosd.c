@@ -1,9 +1,9 @@
-/* $Id: plugin_xosd.c,v 1.34 2004/12/15 17:15:50 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.35 2004/12/20 09:15:43 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
  *
- * Copyright (C) 2003-2004 GNU Gadu Team
+ * Copyright (C) 2003-2005 GNU Gadu Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

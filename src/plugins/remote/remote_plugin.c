@@ -1,9 +1,9 @@
-/* $Id: remote_plugin.c,v 1.21 2004/10/25 14:03:37 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.22 2004/12/20 09:15:21 krzyzak Exp $ */
 
 /* 
  * remote plugin for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2004 GNU Gadu Team 
+ * Copyright (C) 2003-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

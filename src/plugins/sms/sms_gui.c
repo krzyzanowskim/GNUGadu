@@ -1,10 +1,10 @@
-/* $Id: sms_gui.c,v 1.64 2004/12/15 17:44:42 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.65 2004/12/20 09:15:38 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
  *
  * Copyright (C) 2003 Bartlomiej Pawlak
- * Copyright (C) 2003-2004 GNU Gadu Team
+ * Copyright (C) 2003-2005 GNU Gadu Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
