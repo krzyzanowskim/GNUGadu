@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.106 2004/01/08 22:29:05 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.107 2004/01/09 09:50:04 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -170,7 +170,7 @@ void gadu_gadu_enable_dcc_socket (gboolean state)
 gpointer gadu_gadu_login (gpointer desc, gint status)
 {
     struct gg_login_params p;
-    gchar *serveraddr = (gchar *) ggadu_config_var_get (handler, "server");
+    gchar *serveraddr = g_strdup((gchar *) ggadu_config_var_get (handler, "server"));
     gchar **serv_addr = NULL;
 
     if (connected)
