@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.44 2004/01/20 01:25:27 krzyzak Exp $
+dnl $Id: configure.in,v 1.45 2004/01/20 20:46:28 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -10,11 +10,10 @@ AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
-AC_PROG_CC
 AC_PROG_CPP
+AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
-AC_PROG_INTLTOOL
 
 AC_PATH_PROG(GMAKE, gmake, no)
 
@@ -43,6 +42,8 @@ AC_STDC_HEADERS
 AC_C_CONST
 AC_STRUCT_TM
 AC_C_BIGENDIAN
+dnl AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
+dnl AC_CHECK_FUNCS(bswap_32 bswap_16)
 
 AC_TYPE_SIGNAL
 AC_FUNC_STRFTIME
@@ -387,11 +388,6 @@ if test "x$with_update" = "xyes"; then
 	else
 	want_update=no
 fi
-
-dnl AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
-dnl AC_CHECK_FUNCS(bswap_32 bswap_16)
-dnl AC_C_BIGENDIAN
-
 
 AM_CONDITIONAL(BUILD_GUI, test "$want_gui" = "yes")
 AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")

@@ -61,9 +61,6 @@ if test "$DIE" -eq 1; then
         exit 1
 fi
 
-echo "intltoolize"
-intltoolize --force --copy --automake
-
 echo "aclocal"
 $ACLOCAL $ACPATH || exit 1
 
