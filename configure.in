@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.39 2003/12/27 17:32:01 thrulliq Exp $
+dnl $Id: configure.in,v 1.40 2003/12/28 21:15:03 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -132,7 +132,7 @@ want_docklet_system_tray=no
 want_docklet_dockapp=no
 want_all=no
 
-AC_ARG_WITH(all_plugins, [  --with-all_plugins	  Build all plugins		default=no])
+AC_ARG_WITH(all_plugins, [  --with-all-plugins	  Build all plugins		default=no])
 if test x$with_all_plugins = xyes; then
     with_gui=yes
     with_gadu=yes
@@ -498,7 +498,7 @@ echo especially without gui plugin is probably useless for you!
 echo Check \"./configure --help\" to see how to enable some plugins
 echo
 echo You may enable all plugins with:
-echo \"./configure --with-all_plugins\"
+echo \"./configure --with-all-plugins\"
 echo "*************************************************************"
 echo Please check README file for requirements !!!
 echo "*************************************************************"
