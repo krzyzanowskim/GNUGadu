@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.5 2003/04/03 11:32:55 zapal Exp $ */
+/* $Id: main.c,v 1.6 2003/04/03 12:58:14 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -97,7 +97,10 @@ void start_plugins_ordered()
 
   ch = g_io_channel_new_file(g_build_filename(config->configdir,"modules.load",NULL),"r",NULL);
 
-  if (!ch) return;
+  if (!ch) {
+    start_plugins();
+    return;
+  }
 
   while (g_io_channel_read_line_string(ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
   {
