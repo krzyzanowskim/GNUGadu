@@ -1,7 +1,7 @@
 25.03.2003
 - some labels are noe selectable (GUI/THrull)
 - segv fixed in gui_user_view_refresh (GUI/THrull)
-- available only for friends oiption (gadu-gadu/THrull)
+- available only for friends option (gadu-gadu/THrull)
 
 24.03.2003
 - you can login to gg with custom status, not only ONLINE (gadu-gadu/krzak)
