@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.18 2004/02/17 09:29:52 krzyzak Exp $ */
+/* $Id: main.c,v 1.19 2004/03/27 08:23:22 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -153,10 +153,10 @@ gboolean gnu_gadu_init(gpointer data)
     config = g_new0(GGaduConfig, 1);
 
     /* configure directory */
-    if (g_getenv("CONFIG_DIR"))
-	config->configdir = g_build_filename(g_getenv("HOME"), g_getenv("CONFIG_DIR"), "gg2", NULL);
+    if (g_getenv("HOME_ETC"))
+	config->configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
     else
-	config->configdir = g_build_filename(g_getenv("HOME"), ".gg2", NULL);
+	config->configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
     mkdir(config->configdir, 0700);
     config->repos = g_new0(GGaduRepo, 1);

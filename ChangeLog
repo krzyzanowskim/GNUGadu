@@ -1,3 +1,6 @@
+27.03.2004
+- fixed HOME_ETC support, removed CONFIG_DIR support (krzak/all)
+
 24.03.2004
 - change "chat_window_auto_raise" to not focus after raise but it will not raise on actual active screen, window manager decide where to raise it. (GUI/krzak)
 

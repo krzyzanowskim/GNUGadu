@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.19 2004/02/17 09:29:54 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.20 2004/03/27 08:23:22 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -602,11 +602,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "dockapp_protocol", VAR_STR);
 	ggadu_config_var_add(handler, "dockapp_visible", VAR_BOOL);
 
-	if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-		this_configdir =
-			g_build_filename(g_get_home_dir(),
-					 g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg",
-					 NULL);
+	if (g_getenv("HOME_ETC"))
+		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg", NULL);
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg", NULL);
 

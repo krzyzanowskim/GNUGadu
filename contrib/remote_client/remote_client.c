@@ -1,4 +1,4 @@
-/* $Id: remote_client.c,v 1.5 2004/01/28 23:39:21 shaster Exp $ */
+/* $Id: remote_client.c,v 1.6 2004/03/27 08:23:21 krzyzak Exp $ */
 
 /* 
  * Example: client for GNU Gadu 2 remote plugin
@@ -56,9 +56,9 @@ int remote_init(void)
     char *katalog = NULL;
     int yes = 1;
 
-    if (getenv("CONFIG_DIR"))
+    if (getenv("HOME_ETC"))
     {
-	char *tmp = getenv("CONFIG_DIR");
+	char *tmp = getenv("HOME_ETC");
 	katalog = malloc(strlen(tmp) + 2);
 	if (!katalog)
 	    abort();

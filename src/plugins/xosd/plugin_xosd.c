@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.27 2004/02/17 09:30:06 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.28 2004/03/27 08:23:25 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -503,10 +503,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "pos", VAR_STR);
 	ggadu_config_var_add(handler, "numlines", VAR_INT);
 
-	if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_get_home_dir(),
-					 g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2",
-					 NULL);
+	if (g_getenv("HOME_ETC"))
+		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 

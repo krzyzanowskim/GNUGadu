@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.20 2004/02/17 09:30:05 krzyzak Exp $ */
+/* $Id: update_plugin.c,v 1.21 2004/03/27 08:23:24 krzyzak Exp $ */
 
 /*  
  * Update plugin for GNU Gadu 2  
@@ -422,8 +422,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	update_handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Update checker"));
 
 	print_debug("%s : read configuration\n", GGadu_PLUGIN_NAME);
-	if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2", NULL);
+	if (g_getenv("HOME_ETC"))
+		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 

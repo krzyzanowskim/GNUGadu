@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.15 2004/02/17 09:30:03 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.16 2004/03/27 08:23:24 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -139,8 +139,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     register_signal(handler, "sound play file");
     register_signal(handler, "update config");
 
-    if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2", NULL);
+    if (g_getenv("HOME_ETC"))
+	this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
     else
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 

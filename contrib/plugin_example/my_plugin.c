@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.9 2004/02/14 16:46:38 krzyzak Exp $ */
+/* $Id: my_plugin.c,v 1.10 2004/03/27 08:23:21 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -146,8 +146,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     UPDATE_CONFIG_SIG = register_signal(handler, "update config");
 
 
-    if (g_getenv("CONFIG_DIR"))
-	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR"), "gg2", NULL);
+    if (g_getenv("HOME_ETC"))
+	this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
     else
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 

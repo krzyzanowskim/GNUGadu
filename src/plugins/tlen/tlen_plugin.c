@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.62 2004/02/17 16:12:26 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.63 2004/03/27 08:23:24 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -669,11 +669,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
 
-	if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-		this_configdir =
-			g_build_filename(g_get_home_dir(),
-					 g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "tlen",
-					 NULL);
+	if (g_getenv("HOME_ETC"))
+		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "tlen", NULL);
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".tlen", NULL);
 

@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.53 2004/03/13 15:13:49 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.54 2004/03/27 08:23:24 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -187,11 +187,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	print_debug("%s : read configuration\n", GGadu_PLUGIN_NAME);
 
-	if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-		this_configdir =
-			g_build_filename(g_get_home_dir(),
-					 g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2",
-					 NULL);
+	if (g_getenv("HOME_ETC"))
+		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 

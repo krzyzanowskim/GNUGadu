@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.49 2004/03/13 07:44:19 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.50 2004/03/27 08:23:22 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -123,11 +123,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	register_signal_receiver((GGaduPlugin *) gui_handler, (signal_func_ptr) gui_signal_receive);
 
-	if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-		this_configdir =
-			g_build_filename(g_get_home_dir(),
-					 g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2",
-					 NULL);
+	if (g_getenv("HOME_ETC"))
+		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 

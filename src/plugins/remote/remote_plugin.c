@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.18 2004/02/17 09:29:59 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.19 2004/03/27 08:23:23 krzyzak Exp $ */
 
 /* 
  * remote plugin for GNU Gadu 2 
@@ -683,8 +683,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Remote control"));
 
 
-    if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2", NULL);
+    if (g_getenv("HOME_ETC"))
+	this_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
     else
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
