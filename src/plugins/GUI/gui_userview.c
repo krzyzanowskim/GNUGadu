@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.12 2003/06/13 00:17:19 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.13 2003/06/14 20:39:43 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -179,7 +179,7 @@ void gui_list_add(gui_protocol *gp)
     	notebook = gtk_notebook_new();
     	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_RIGHT);
     	gtk_box_pack_start(GTK_BOX(view_container), notebook, TRUE, TRUE, 0);
-	gtk_widget_show(notebook);
+    	gtk_widget_show(notebook);
     }
 
     users_liststore = gtk_list_store_new (3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER);
@@ -258,6 +258,8 @@ void gui_list_add(gui_protocol *gp)
     g_object_set_data(G_OBJECT(gp->add_info_label), "add_info_label_desc", add_info_label_desc);
 
     gp->users_liststore = users_liststore;
+    
+
 }
 
 void gui_tree_add(gui_protocol *gp) 
@@ -664,6 +666,7 @@ void gui_user_view_register(gui_protocol *gp)
 	gui_tree_add(gp);
 }
 
+/* ZONK */
 static void destroy_view_widgets() 
 {
     GList *children, *tmplist;
@@ -695,7 +698,7 @@ void gui_user_view_refresh()
     
     print_debug("refreshing user view\n");
 
-    destroy_view_widgets();
+    destroy_view_widgets(); /* ZONK crash */
     
     notebook = NULL;
 
@@ -714,7 +717,7 @@ void gui_user_view_refresh()
 	gui_user_view_add_userlist(gp);
 	tmplist = tmplist->next;
     }
-    
+  
     if (tree && config_var_get(gui_handler, "expand"))
 	gtk_tree_view_expand_all(GTK_TREE_VIEW(treeview));
 }

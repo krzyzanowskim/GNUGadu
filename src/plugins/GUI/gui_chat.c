@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.43 2003/06/13 00:17:19 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.44 2003/06/14 20:39:43 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -88,14 +88,14 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
 	      GtkWidget *chat = NULL;
 
 	      /* do not segfault here, thankyou. */
-	      if (!chat_notebook)
+/*	      if (!chat_notebook)
 		{
 		    gui_remove_all_chat_sessions (protocols);
 		    gtk_widget_destroy (chat_window);
 		    chat_window = NULL;
 		    return;
 		}
-
+*/
 	      if (!user_data)
 		{
 		    nr = gtk_notebook_get_current_page (GTK_NOTEBOOK (chat_notebook));
@@ -142,10 +142,11 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
 	      if (!session)
 		{
 		    /* fuck me plenty... */
-		    gui_remove_all_chat_sessions (protocols);
+/*		    gui_remove_all_chat_sessions (protocols);
 		    gtk_widget_destroy (chat_window);
 		    chat_window = NULL;
 		    return;
+*/
 		}
 	      plugin_name = g_object_get_data (G_OBJECT (session->chat), "plugin_name");
 	      if (!plugin_name)

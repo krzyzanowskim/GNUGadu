@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.64 2003/06/11 17:49:18 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.65 2003/06/14 20:39:44 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1834,13 +1834,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	        return;
 	    }
 
-        if (signal->name == GET_CURRENT_STATUS_SIG) {
+        if (signal->name == GET_CURRENT_STATUS_SIG) 
+	{
 	    if (session) 
 		signal->data_return = (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->status ^ GG_STATUS_FRIENDS_MASK : session->status);
 	    else
 		signal->data_return = (gpointer) GG_STATUS_NOT_AVAIL;
-		
-
 	}
 }
 
