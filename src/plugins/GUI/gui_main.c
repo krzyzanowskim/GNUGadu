@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.31 2004/01/11 12:47:07 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.32 2004/01/11 13:06:21 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -131,6 +131,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     ggadu_config_var_add(gui_handler, "blink_interval", VAR_INT);
     ggadu_config_var_add(gui_handler, "auto_away", VAR_BOOL);
     ggadu_config_var_add(gui_handler, "auto_away_interval", VAR_INT);
+    ggadu_config_var_add(gui_handler, "use_username", VAR_BOOL);
 
     if (!ggadu_config_read(gui_handler))
         g_warning(_("Unable to read configuration file for plugin GUI"));

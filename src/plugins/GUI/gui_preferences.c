@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.38 2004/01/11 12:23:58 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.39 2004/01/11 13:06:21 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -577,6 +577,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     GtkWidget *auto_away;
     GtkWidget *auto_away_interval;
     GtkWidget *chat_paned_size;
+    GtkWidget *use_username;
     GtkWidget *tabbox;
     GtkWidget *label0_align, *label1_align, *label2_align, *label3_align, *label4_align, *label5_align, *label6_align;
     GDir *dir;
@@ -681,6 +682,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     hide_toolbar = gtk_check_button_new_with_label (_("Show toolbar"));
     gtk_box_pack_start (GTK_BOX (vbox), hide_toolbar, FALSE, FALSE, 0);
 
+    use_username = gtk_check_button_new_with_label (_("Use username instead of \"Me\" in chat window"));
+    gtk_box_pack_start (GTK_BOX (vbox), use_username, FALSE, FALSE, 0);
+
     blink = gtk_check_button_new_with_label (_("Blink status"));
     gtk_box_pack_start (GTK_BOX (vbox), blink, FALSE, FALSE, 0);
 
@@ -688,6 +692,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_box_pack_start (GTK_BOX (vbox), auto_away, FALSE, FALSE, 0);
 
     tabbox = gtk_table_new (8, 2, FALSE);
+
     gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
     gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
     gtk_box_pack_start (GTK_BOX (general_vbox), tabbox, FALSE, FALSE, 0);
@@ -799,6 +804,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     if (ggadu_config_var_get (gui_handler, "chat_paned_size"))
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (chat_paned_size),
 				   (gint) ggadu_config_var_get (gui_handler, "chat_paned_size"));
+
+    if (ggadu_config_var_get (gui_handler, "use_username"))
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (use_username), TRUE);
 
     if (ggadu_config_var_get (gui_handler, "send_on_enter"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (send_on_enter), TRUE);
@@ -920,6 +928,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
 	  ggadu_config_var_set (gui_handler, "chat_window_height",
 			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (chatwindowheight)));
+
+	  ggadu_config_var_set (gui_handler, "use_username",
+			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (use_username)));
 
 	  ggadu_config_var_set (gui_handler, "blink_interval",
 			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (blink_interval)));
