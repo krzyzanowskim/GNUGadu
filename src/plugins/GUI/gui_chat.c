@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.37 2003/06/05 20:21:16 zapal Exp $ 
+ * $Id: gui_chat.c,v 1.38 2003/06/06 13:42:10 zapal Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -308,24 +308,7 @@ void on_send_clicked (GtkWidget * button, gpointer user_data)
 	    }
 
 	  gp = gui_find_protocol (plugin_name, protocols);
-	  if (gp)
-	    {
-		gint status = (gint) signal_emit ("main-gui",
-						  "get current status",
-						  NULL,
-						  plugin_name);
-		if (gp->aaway_timer > 0)
-		    g_source_remove (gp->aaway_timer);
-		gp->aaway_timer = -1;
-		if (is_in_status (status, gp->p->online_status) &&
-		    config_var_get (gui_handler, "auto_away"))
-		  {
-		      gp->aaway_timer =
-			  g_timeout_add (config_var_get (gui_handler, "auto_away_interval")
-					 ? ((gint) config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000,
-					 auto_away_func, gp);
-		  }
-	    }
+	  auto_away_start (gp);
 
 	  signal_emit ("main-gui", "send message", msg, plugin_name);
       }

@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.23 2003/06/05 20:21:17 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.24 2003/06/06 13:42:10 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -337,10 +337,8 @@ void handle_disconnected(GGaduSignal *signal)
       g_source_remove (gp->blinker);
     gp->blinker = -1;
     
-    if (gp->aaway_timer > 0)
-      g_source_remove (gp->aaway_timer);
-    gp->aaway_timer = -1;
-      
+    auto_away_stop (gp);
+
     image = create_pixbuf(sp->image);
     model = (tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore);
     
@@ -436,15 +434,7 @@ void handle_status_changed(GGaduSignal *signal)
     gp->blinker_image1 = NULL;
     gp->blinker_image2 = NULL;
     
-     if (is_in_status (status, gp->p->online_status) &&
-	 config_var_get (gui_handler, "auto_away"))
-    {
-      gp->aaway_timer = g_timeout_add (
-	  config_var_get (gui_handler, "auto_away_interval") ?
-	  ((gint) config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000,
-	  auto_away_func, gp);
-    } else
-      gp->aaway_timer = -1;
+    auto_away_start (gp);
 }
 
 void notify_callback (gchar *repo_name, gpointer key, gint actions)
@@ -465,6 +455,33 @@ void notify_callback (gchar *repo_name, gpointer key, gint actions)
 
   gui_user_view_notify (gp, n);
   g_free (n);
+}
+
+void auto_away_start (gui_protocol *gp)
+{
+  int status;
+
+  auto_away_stop (gp);
+  if (!gp)
+    return;
+  
+  status = (gint)signal_emit ("main-gui", "get current status", NULL, gp->plugin_name);
+  if (is_in_status (status, gp->p->online_status) &&
+      config_var_get (gui_handler, "auto_away"))
+  {
+    gp->aaway_timer = g_timeout_add (
+	config_var_get (gui_handler, "auto_away_interval") ?
+	((gint) config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000, auto_away_func, gp);
+  }
+}
+
+void auto_away_stop (gui_protocol *gp)
+{
+  if (!gp)
+    return;
+  if (gp->aaway_timer > 0)
+    g_source_remove (gp->aaway_timer);
+  gp->aaway_timer = -1;
 }
 
 gboolean auto_away_func (gpointer data)

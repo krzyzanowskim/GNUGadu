@@ -1,6 +1,7 @@
-/* $Id: gui_handlers.h,v 1.10 2003/06/04 21:07:06 shaster Exp $ */
+/* $Id: gui_handlers.h,v 1.11 2003/06/06 13:42:10 zapal Exp $ */
 
 #include "signals.h"
+#include "gui_main.h"
 
 void handle_add_user_window(GGaduSignal *signal);
 void handle_show_dialog(GGaduSignal *signal);
@@ -35,4 +36,6 @@ void handle_null(GGaduSignal *signal);
 
 void notify_callback (gchar *repo_name, gpointer key, gint actions);
 
+void auto_away_start (gui_protocol *gp);
+void auto_away_stop (gui_protocol *gp);
 gboolean auto_away_func (gpointer data);
