@@ -59,6 +59,16 @@ void jabber_login (enum states status)
 
     connection = lm_connection_new (server);
 
+    if (config_var_get (jabber_handler, "use_ssl")) {
+	if (lm_connection_supports_ssl ()) {
+	    lm_connection_set_use_ssl (connection, 1);
+	    lm_connection_set_port (connection, LM_CONNECTION_DEFAULT_PORT_SSL);
+	} else {
+	    print_debug ("SSL not supported by loudmouth.\n");
+	    signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
+	}
+    }
+
     if (!iq_handler) iq_handler = lm_message_handler_new (iq_cb, NULL, NULL);
     if (!iq_roster_handler) iq_roster_handler = lm_message_handler_new (iq_roster_cb, NULL, NULL);
     if (!presence_handler) presence_handler = lm_message_handler_new (presence_cb, NULL, NULL);
