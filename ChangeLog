@@ -1,3 +1,7 @@
+03.12.2003
+- fixed strang baheviour when show/hide inactive button pressed many times (GUI/THrull)
+- non-existent emoticons will be ignored (GUI/THrull)
+
 29.12.2003
 - read ~/.gg2/emoticons.def first, if this fails, read default one (GUI/shasta)
 

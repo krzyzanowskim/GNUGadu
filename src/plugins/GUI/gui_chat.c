@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.50 2003/12/20 23:17:19 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.51 2004/01/03 15:30:22 thrulliq Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -474,27 +474,27 @@ static void on_emoticons_clicked (GtkWidget * button, gpointer user_data)
 	    {
 		GtkTooltips *tip;
 		gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
-		widget = GTK_WIDGET (create_image (gemo->file));
+		widget = create_image (gemo->file);
 		event_box = gtk_event_box_new ();
+		if (widget) {
+			if (count >= MAX_EMOTICONS_IN_ROW) {
+			    hbox = gtk_hbox_new (TRUE, 0);
+		    	    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+		    	    count = 0;
+			}
 
-		if (count >= MAX_EMOTICONS_IN_ROW)
-		  {
-		      hbox = gtk_hbox_new (TRUE, 0);
-		      gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-		      count = 0;
-		  }
+			gtk_container_add (GTK_CONTAINER (event_box), widget);
+			gtk_box_pack_start (GTK_BOX (hbox), event_box, FALSE, FALSE, 0);
+			gtk_widget_set_usize (event_box, 60, 30);
 
-		gtk_container_add (GTK_CONTAINER (event_box), widget);
-		gtk_box_pack_start (GTK_BOX (hbox), event_box, FALSE, FALSE, 0);
-		gtk_widget_set_usize (event_box, 60, 30);
-
-		tip = gtk_tooltips_new ();
-		gtk_tooltips_set_tip (tip, event_box, gemo->emoticon, gemo->file);
-		g_signal_connect (event_box, "button_press_event", G_CALLBACK (on_emoticon_press_event), gemo);
+			tip = gtk_tooltips_new ();
+			gtk_tooltips_set_tip (tip, event_box, gemo->emoticon, gemo->file);
+			g_signal_connect (event_box, "button_press_event", G_CALLBACK (on_emoticon_press_event), gemo);
+			count++;
+		}
 		emottmp = emottmp->next;
-		count++;
-	    }
 
+	    }
 	  g_slist_free (emotlist);
       }
 
