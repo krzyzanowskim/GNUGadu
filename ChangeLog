@@ -1,3 +1,7 @@
+03.10.2004
+- fix in gadu-gadu when receive notification about status from contact  
+  not listed on userslist (gadu-gadu/krzak)
+  
 02.10.2004
 - dbus-im-openchat-wrapper and GNOME schemas moved to OFI Project as
   ofi-openchat-wrapper (krzak)
