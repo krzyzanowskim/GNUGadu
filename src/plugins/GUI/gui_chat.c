@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.94 2004/04/09 17:47:33 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.95 2004/04/09 22:57:06 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1209,6 +1209,14 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 
 	g_return_if_fail(history != NULL);
 
+	if (chat && self && !msg) {
+	    GtkWidget *input = g_object_get_data(G_OBJECT(chat), "input");
+	    GtkWidget *window = gtk_widget_get_ancestor(chat, GTK_TYPE_WINDOW);
+	    if (!GTK_WIDGET_VISIBLE(window))
+		gtk_widget_show(window);
+	    gtk_widget_grab_focus(input);
+	}
+	
 	if (!chat || !msg)
 		return;
 	

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.69 2004/04/09 21:19:03 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.70 2004/04/09 22:57:05 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -755,7 +755,7 @@ void gui_msg_receive(GGaduSignal * signal)
 	gui_protocol *gp = NULL;
 	gchar *soundfile = NULL;
 
-	if (!signal || !msg || !msg)
+	if (!signal || !msg)
 	{
 		print_debug("main-gui : gui_msg_receive : ((msg == NULL) || (msg->id == NULL) || (signal == NULL) - return !!!!");
 		return;
@@ -816,9 +816,9 @@ void gui_msg_receive(GGaduSignal * signal)
 			GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
 		        if (!GTK_WIDGET_VISIBLE(window)) {
 				if (showwindow) {
-				    GtkWidget *input = g_object_get_data(G_OBJECT(session->chat), "input");
-				    //if (ggadu_config_var_get(gui_handler, "chat_window_auto_raise"))
-				    //	gtk_widget_grab_focus(input);
+/*				    GtkWidget *input = g_object_get_data(G_OBJECT(session->chat), "input");
+				    if (!msg->message || ggadu_config_var_get(gui_handler, "chat_window_auto_raise"))
+					gtk_widget_grab_focus(input);*/
 				    gtk_widget_show_all(window);
 				} else if (msg->message && find_plugin_by_pattern("docklet-*")) {
     				    invisible_chats = g_slist_append(invisible_chats, session->chat);
