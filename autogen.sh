@@ -62,7 +62,7 @@ if test "$DIE" -eq 1; then
 fi
 
 echo "intltoolize"
-intltoolize --force --automake
+intltoolize --force --copy --automake
 
 echo "aclocal"
 $ACLOCAL $ACPATH || exit 1
@@ -71,7 +71,7 @@ echo "libtoolize"
 libtoolize --force --copy --automake || exit 1
 
 echo "automake"
-$AUTOMAKE --add-missing || exit 1
+$AUTOMAKE --force --copy --add-missing || exit 1
 
 echo "autoconf"
 autoconf || exit 1
