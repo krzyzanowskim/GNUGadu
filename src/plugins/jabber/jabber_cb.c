@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.19 2004/01/07 23:49:16 thrulliq Exp $ */
+/* $Id: jabber_cb.c,v 1.20 2004/01/07 23:50:11 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -16,7 +16,7 @@ void connection_auth_cb (LmConnection * connection, gboolean success, gint * sta
 	if (!success)
 	{
 		print_debug ("jabber: Authentication failed.\n");
-        signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
+    		signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
 		signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
 		return;
 	}
@@ -55,7 +55,7 @@ void connection_open_result_cb (LmConnection * connection, gboolean success, gin
 	     (LmResultFunction) connection_auth_cb, status, NULL, NULL))
 	{
 		print_debug ("jabber: lm_connection_authenticate() failed.\n");
-        signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
+    		signal_emit ("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
 	}
 
 	g_free (jid);
