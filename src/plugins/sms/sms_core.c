@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.22 2003/11/09 12:55:05 shaster Exp $ */
+/* $Id: sms_core.c,v 1.23 2003/11/09 14:49:50 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -36,6 +36,8 @@
 #include "dialog.h"
 #include "sms_gui.h"
 #include "sms_core.h"
+
+extern char *idea_token_path;
 
 /* URLencoding code by Ahmad Baitalmal <ahmad@bitbuilder.com>
  * with tweaks by Jakub Jankowski <shasta@atn.pl>
@@ -116,19 +118,22 @@ int sms_connect(gchar * sms_info, gchar * sms_host, int *sock_s)
 }
 
 /* POST/GET handling */
-int HTTP_io(HTTPstruct hdata, int sock_s)
+int HTTP_io(HTTPstruct *hdata, int sock_s)
 {
     gchar *io_buf = NULL;
 
+    if (hdata == NULL)
+	return FALSE;
+
     /* *INDENT-OFF* */
-    if (!strcmp(hdata.method, "POST"))
+    if (!strcmp(hdata->method, "POST"))
 	io_buf = g_strdup_printf("POST %s%sHTTP/1.0\r\nHost: %s\r\n%s%s%s%s%s%s%s%d\r\n\r\n%s",
-			    hdata.url, hdata.url_params, hdata.host, USER_AGENT,
+			    hdata->url, hdata->url_params, hdata->host, USER_AGENT,
 			    ACCEPT, ACCEPT_LANG, ACCEPT_ENCODING, ACCEPT_CHARSET,
-			    POST_CONTENT_TYPE, CONTENT_LENGTH, hdata.post_length, hdata.post_data);
-    else if (!strcmp(hdata.method, "GET"))
+			    POST_CONTENT_TYPE, CONTENT_LENGTH, hdata->post_length, hdata->post_data);
+    else if (!strcmp(hdata->method, "GET"))
 	io_buf = g_strdup_printf("GET %s%sHTTP/1.0\r\nHost: %s\r\n%s\r\n\r\n",
-			    hdata.url, hdata.url_params, hdata.host, USER_AGENT);
+			    hdata->url, hdata->url_params, hdata->host, USER_AGENT);
     else
 	io_buf = g_strdup("GET /c-programming-howto.html HTTP/1.0\r\n\r\n");
     /* *INDENT-ON* */
@@ -140,6 +145,25 @@ int HTTP_io(HTTPstruct hdata, int sock_s)
     return TRUE;
 }
 
+HTTPstruct *httpstruct_new(void)
+{
+    HTTPstruct *h = g_new0(HTTPstruct, 1);
+    return h;
+}
+                                                                                                    
+void httpstruct_free(HTTPstruct *h)
+{
+    if (h == NULL)
+        return;
+                                                                                                    
+    g_free(h->method);
+    g_free(h->host);
+    g_free(h->url);
+    g_free(h->url_params);
+    g_free(h->post_data);
+    g_free(h);
+}
+                                                                                                    
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
 gboolean IDEA_logo(gpointer user_data)
 {
@@ -148,7 +172,7 @@ gboolean IDEA_logo(gpointer user_data)
     ggadu_dialog_callback_signal(d, "get token");
     d->user_data = user_data;
 
-    ggadu_dialog_add_entry(&(d->optlist), 0, "", VAR_IMG, IDEA_GFX, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), 0, "", VAR_IMG, idea_token_path, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), 1, _("Enter token text"), VAR_STR, NULL, VAR_FLAG_NONE);
 
     signal_emit("sms", "gui show dialog", d, "main-gui");
@@ -203,18 +227,23 @@ int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * 
     gchar *buf = NULL;
     gint i = 0, j, k, retries = 3;
     FILE *idea_logo;
-    HTTPstruct HTTP;
+    HTTPstruct *HTTP = NULL;
     int sock_s;
+
+    HTTP = httpstruct_new();
+    HTTP->method = g_strdup("GET");
+    HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
+    HTTP->url = g_strdup(GGADU_SMS_IDEA_URL_GET);
+    HTTP->url_params = g_strdup(" ");
 
 get_mainpage:
     /* pobranie adresu do obrazka */
     if (sms_connect("IDEA", "213.218.116.131", &sock_s))
+    {
+	httpstruct_free(HTTP);
 	return ERR_SERVICE;
+    }
 
-    strcpy(HTTP.method, "GET");
-    strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
-    strcpy(HTTP.url, GGADU_SMS_IDEA_URL_GET);
-    strcpy(HTTP.url_params, " ");
     HTTP_io(HTTP, sock_s);
 
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
@@ -233,9 +262,14 @@ get_mainpage:
 	if (--retries > 0)
 	    goto get_mainpage;
 	else
+	{
+	    httpstruct_free(HTTP);
 	    return ERR_GATEWAY;
+	}
     } else
 	retries = 3;
+
+    httpstruct_free(HTTP);
 
     if (!(buf = g_strstr_len(recv_buff, i, "rotate_token.aspx?token=")))
     {
@@ -259,14 +293,19 @@ get_mainpage:
     gettoken = g_strconcat("/", "rotate_token.aspx?token=", token, NULL);
     g_free(recv_buff);
 
+    HTTP = httpstruct_new();
+    HTTP->method = g_strdup("GET");
+    HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
+    HTTP->url = g_strdup(gettoken);
+    HTTP->url_params = g_strdup(" ");
+
 get_token:
     if (sms_connect("IDEA", GGADU_SMS_IDEA_HOST, &sock_s))
+    {
+	httpstruct_free(HTTP);
 	return ERR_SERVICE;
+    }
 
-    strcpy(HTTP.method, "GET");
-    strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
-    strcpy(HTTP.url, gettoken);
-    strcpy(HTTP.url_params, " ");
     HTTP_io(HTTP, sock_s);
 
     i = 0;
@@ -286,12 +325,17 @@ get_token:
 	    goto get_token;
 	else
 	{
+	    httpstruct_free(HTTP);
 	    g_free(gettoken);
 	    g_free(token);
 	    return ERR_GATEWAY;
 	}
-    } else
+    }
+    else
+    {
+	httpstruct_free(HTTP);
 	g_free(gettoken);
+    }
 
     for (j = 0; j < i; j++)
     {
@@ -311,8 +355,8 @@ get_token:
 	recv_buff[k] = recv_buff[k + j];
     recv_buff[k] = 0;
 
-    /* oops, bail out if IDEA_GFX cannot be written. */
-    if (!(idea_logo = fopen(IDEA_GFX, "w")))
+    /* oops, bail out if idea_token_path cannot be written. */
+    if (!(idea_logo = fopen(idea_token_path, "w")))
     {
 	g_free(token);
 	g_free(recv_buff);
@@ -345,7 +389,7 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     gchar *p = NULL;
     gchar temp[2];
     gint i, retries = 3;
-    HTTPstruct HTTP;
+    HTTPstruct *HTTP = NULL;
     int sock_s;
 
     p = g_strstr_len(user_data, strlen(user_data), "&RECIPIENT=");
@@ -361,23 +405,26 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     post = g_strconcat((gchar *) user_data, "&pass=", pass, "&respInfo=2", NULL);
 
     /* is there any better place for this? */
-    unlink(IDEA_GFX);
+    unlink(idea_token_path);
+
+    HTTP = httpstruct_new();
+    HTTP->method = g_strdup("POST");
+    HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
+    HTTP->url = g_strdup(GGADU_SMS_IDEA_URL_SEND);
+    HTTP->url_params = g_strdup(" ");
+    HTTP->post_data = g_strdup(post);
+    HTTP->post_length = strlen(post);
 
 send_sms:
     if (sms_connect("IDEA", "213.218.116.131", &sock_s))
     {
 	sms_warning(sms_number, _("Cannot connect!"));
+	httpstruct_free(HTTP);
 	g_free(post);
 	g_free(sms_number);
 	return FALSE;
     }
 
-    strcpy(HTTP.method, "POST");
-    strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
-    strcpy(HTTP.url, GGADU_SMS_IDEA_URL_SEND);
-    strcpy(HTTP.url_params, " ");
-    strcpy(HTTP.post_data, post);
-    HTTP.post_length = strlen(post);
     HTTP_io(HTTP, sock_s);
 
     i = 0;
@@ -396,12 +443,17 @@ send_sms:
 	    goto send_sms;
 	else
 	{
+	    httpstruct_free(HTTP);
 	    g_free(post);
 	    g_free(sms_number);
 	    return ERR_GATEWAY;
 	}
-    } else
+    }
+    else
+    {
+	httpstruct_free(HTTP);
 	g_free(post);
+    }
 
     if (g_strstr_len(recv_buff, i, "SMS zosta³ wys³any"))
 	sms_message(sms_number, _("SMS has been sent"));
@@ -437,7 +489,7 @@ int send_PLUS(const gchar * sms_sender, const gchar * sms_number, const gchar * 
     gchar tprefix[4];
     gchar temp[2];
     int i = 0, ret = ERR_UNKNOWN;
-    HTTPstruct HTTP;
+    HTTPstruct *HTTP = NULL;
     int sock_s;
 
     if (sms_connect("PLUS", GGADU_SMS_PLUS_HOST, &sock_s))
@@ -452,13 +504,15 @@ int send_PLUS(const gchar * sms_sender, const gchar * sms_number, const gchar * 
 		"&tekst=", ggadu_sms_urlencode(g_strdup(sms_body)), NULL);
     /* *INDENT-ON* */
 
-    strcpy(HTTP.method, "POST");
-    strcpy(HTTP.host, GGADU_SMS_PLUS_HOST);
-    strcpy(HTTP.url, GGADU_SMS_PLUS_URL);
-    strcpy(HTTP.url_params, " ");
-    strcpy(HTTP.post_data, post);
-    HTTP.post_length = strlen(post);
+    HTTP = httpstruct_new();
+    HTTP->method = g_strdup("POST");
+    HTTP->host = g_strdup(GGADU_SMS_PLUS_HOST);
+    HTTP->url = g_strdup(GGADU_SMS_PLUS_URL);
+    HTTP->url_params = g_strdup(" ");
+    HTTP->post_data = g_strdup(post);
+    HTTP->post_length = strlen(post);
     HTTP_io(HTTP, sock_s);
+    httpstruct_free(HTTP);
     g_free(post);
 
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
@@ -490,7 +544,7 @@ int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * s
     gchar temp[2];
     int i = 0;
     int ret = ERR_UNKNOWN;
-    HTTPstruct HTTP;
+    HTTPstruct *HTTP;
     int sock_s;
 
     if (sms_connect("ERA", GGADU_SMS_ERA_HOST, &sock_s))
@@ -506,11 +560,13 @@ int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * s
 		"&minute=", "&hour= ", NULL);
     /* *INDENT-ON* */
 
-    strcpy(HTTP.method, "GET");
-    strcpy(HTTP.host, GGADU_SMS_ERA_HOST);
-    strcpy(HTTP.url, GGADU_SMS_ERA_URL);
-    strcpy(HTTP.url_params, get);
+    HTTP = httpstruct_new();
+    HTTP->method = g_strdup("GET");
+    HTTP->host = g_strdup(GGADU_SMS_ERA_HOST);
+    HTTP->url = g_strdup(GGADU_SMS_ERA_URL);
+    HTTP->url_params = g_strdup(get);
     HTTP_io(HTTP, sock_s);
+    httpstruct_free(HTTP);
     g_free(get);
 
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);

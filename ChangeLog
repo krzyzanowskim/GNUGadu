@@ -1,5 +1,8 @@
 9.11.2003
 - added show/hide inactive button to toolbar (GUI/THrull)
+- networking code cleanup (sms/shasta)
+- don't use static buffers in HTTPstruct (sms/shasta)
+- write idea token in this_configdir, not /tmp/ (sms/shasta)
 
 7.11.2003
 - sending to IDEA fixed (sms/shasta)

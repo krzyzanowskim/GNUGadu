@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.28 2003/09/21 16:38:14 shaster Exp $ */
+/* $Id: sms_gui.c,v 1.29 2003/11/09 14:49:50 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -33,6 +33,7 @@
 GGaduPlugin *sms_handler;
 GSList *smslist = NULL;
 gchar *this_configdir = NULL;
+gchar *idea_token_path = NULL;
 
 GGaduProtocol *p;
 static GGaduMenu *menu_smsmenu;
@@ -186,6 +187,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
     if (!config_read(sms_handler))
 	g_warning(_("Unable to read config file for plugin sms"));
+
+    idea_token_path = g_build_filename(this_configdir, IDEA_GFX, NULL);
 
     register_signal_receiver((GGaduPlugin *) sms_handler, (signal_func_ptr) signal_receive);
 
@@ -526,6 +529,8 @@ void destroy_plugin()
     }
 
     unregister_extension_for_plugins(ext);
+
+    g_free(idea_token_path);
 
 //    signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
     signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");

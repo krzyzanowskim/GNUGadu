@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.12 2003/10/12 12:32:20 shaster Exp $ */
+/* $Id: sms_core.h,v 1.13 2003/11/09 14:49:50 shaster Exp $ */
 
 #ifndef SMS_CORE_PLUGIN_H
 #define SMS_CORE_PLUGIN_H 1
@@ -23,7 +23,7 @@
 
 #define GGADU_SMS_RECVBUFF_LEN 32768
 
-#define IDEA_GFX "/tmp/idea_token.gfx"
+#define IDEA_GFX "/idea_token.gfx"
 #define GGADU_SMS_IDEA_TOKENLEN 36
 #define RESERVED_CHARS	"!\"'()*+-.<>[]\\^_`{}|~\t#;/?:&=+,$% \r\n\v\x7f"
 
@@ -71,11 +71,11 @@ gchar *ggadu_sms_append_char(gchar * url_string, gchar char_to_append, gboolean 
 
 typedef struct
 {
-    char method[6];
-    char host[1024];
-    char url[1024];
-    char url_params[1024];
-    char post_data[4096];
+    char *method;
+    char *host;
+    char *url;
+    char *url_params;
+    char *post_data;
     int post_length;
 } HTTPstruct;
 
