@@ -1,3 +1,6 @@
+23.08.2003
+- load plugins in order that you set in plugins manager (core/GUI/krzak)
+
 22.07.2003
 - wm_class form chat window (kaneda/GUI).
 
@@ -15,7 +18,7 @@
 - added search by email (jabber/zapal)
 
 26.06.2003
-- some fixes, mostly in gui_chat.c (it's still so f*** ugly) (krzak/GUI)
+- some fixes, mostly in gui_chat.c (it's still so f*** ugly) (GUI/krzak)
 - autoloading perl scripts is now working (fixed path handling) (core/zapal)
 
 25.06.2003
