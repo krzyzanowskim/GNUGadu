@@ -23,8 +23,8 @@ gg2_SOURCES = main.c \
 	perl_embed.c \
 	perl_embed.h
 
-gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\" $(PERL_OPTION_CFLAGS)
+gg2_CFLAGS = $(PERL_OPTION_CFLAGS) -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\" 
 
-gg2_LDADD = -ldl $(PERL_OPTION_LDFLAGS) 
+gg2_LDADD = $(PERL_OPTION_LDFLAGS) -ldl 
 #      AC_SUBST(PERL_OPTION_LIBS)
 
