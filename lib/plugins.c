@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.18 2004/08/01 22:09:03 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.19 2004/08/01 22:29:11 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -411,6 +411,26 @@ void register_extension_for_plugins(GGaduPluginExtension * ext)
 
 		plugins = plugins->next;
 	}
+}
+
+void register_extension_for_plugin(GGaduPluginExtension * ext, gint plugin_type)
+{
+	GSList *plugins;
+
+	if ((!ext) || (!config))
+		return;
+
+	plugins = config->plugins;
+
+	while (plugins)
+	{
+		GGaduPlugin *handler = (GGaduPlugin *) plugins->data;
+
+		if ((handler) && handler->type == plugin_type)
+			handler->extensions = g_slist_append(handler->extensions, ext);
+
+		plugins = plugins->next;
+	}
 
 }
 
@@ -428,7 +448,7 @@ void unregister_extension_for_plugins(GGaduPluginExtension * ext)
 	{
 		GGaduPlugin *handler = (GGaduPlugin *) plugins->data;
 
-		g_slist_remove((GSList *) handler->extensions, ext);
+		handler->extensions = g_slist_remove((GSList *) handler->extensions, ext);
 
 /*		extensions = handler->extensions;
 	

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.178 2004/08/01 22:09:04 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.179 2004/08/01 22:29:11 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1794,8 +1794,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if ((gboolean) ggadu_config_var_get(handler, "dcc"))
 			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send File"), send_file_action, NULL));
 			
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 		ggadu_menu_add_user_menu_extensions(umenu,handler);
-		
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), user_change_user_action, NULL));

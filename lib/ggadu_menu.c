@@ -1,4 +1,4 @@
-/* $Id: ggadu_menu.c,v 1.3 2004/08/01 22:09:03 krzyzak Exp $ */
+/* $Id: ggadu_menu.c,v 1.4 2004/08/01 22:29:11 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -179,16 +179,24 @@ void ggadu_menu_print(GGaduMenu * node, gchar * p)
 void ggadu_menu_add_user_menu_extensions(GGaduMenu * menu, GGaduPlugin *handler)
 {
 	GSList *ext_list = ggadu_get_extensions_list(handler);
-	
-	while (ext_list)
+	GGaduMenu *extmenu = NULL;
+
+	if (g_slist_length(ggadu_get_extensions_list(handler))>0)
 	{
-	    GGaduPluginExtension *ext = ext_list->data;
+		extmenu = ggadu_menu_new_item(_("Extensions"), NULL, NULL);
+		while (ext_list)
+		{
+		    GGaduPluginExtension *ext = ext_list->data;
 	    
-	    if (ggadu_extension_get_type(ext) == GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE)
-		ggadu_menu_add_submenu(menu, ggadu_menu_new_item((gpointer) ext->txt, ext->callback, NULL));
+		    if (ggadu_extension_get_type(ext) == GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE)
+			    ggadu_menu_add_submenu(extmenu, ggadu_menu_new_item((gpointer) ext->txt, ext->callback, NULL));
 		
-	    ext_list = ext_list->next;
+		    ext_list = ext_list->next;
+		}
+	
+	    ggadu_menu_add_submenu(menu, extmenu);
 	}
+	
 }
 
 /*

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.83 2004/08/01 21:05:05 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.84 2004/08/01 22:29:13 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -282,6 +282,8 @@ GGaduMenu *build_userlist_menu(void)
 	ggadu_menu_add_submenu(listmenu,
 			       ggadu_menu_new_item(_("Remove authorization"), user_remove_auth_from, NULL));
 	ggadu_menu_add_submenu(menu, listmenu);
+
+	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
 	
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));

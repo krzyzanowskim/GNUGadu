@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.56 2004/06/27 13:57:05 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.57 2004/08/01 22:29:13 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -558,7 +558,7 @@ void start_plugin()
 	ext->callback = sms_send_sms;
 	ext->txt = _("Send SMS");
 
-	register_extension_for_plugins(ext);
+	register_extension_for_plugin(ext,GGADU_PLUGIN_TYPE_PROTOCOL);
 }
 
 void destroy_plugin()

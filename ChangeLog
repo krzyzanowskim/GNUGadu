@@ -2,6 +2,7 @@
 - ggadu_save_history() as a base for history in every plugin, to keep similar
   history format
 - contrib/gghist nice history viewer prototype send by Kazik <kazik.cz@interia.pl>
+- ggadu_menu_add_user_menu_extensions(..) to get extensions easy
   
 28.07.2004
 - fixed fd leak (sound-oss/HelDoRe)
