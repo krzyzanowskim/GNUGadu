@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.21 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.22 2004/05/30 19:29:13 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -24,581 +24,384 @@
 #include <config.h>
 #endif
 
+#include <glib.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <X11/Xlib.h>
 #include <gdk/gdkx.h>
-#include <glib.h>
-
-#include "ggadu_types.h"
-#include "plugins.h"
-#include "signals.h"
-#include "ggadu_support.h"
-#include "ggadu_conf.h"
-#include "ggadu_repo.h"
-#include "ggadu_dialog.h"
-#include "ggadu_menu.h"
-
+#include <X11/Xlib.h>
+#include <gg2_core.h>
 #include "dockapp_plugin.h"
+
 
 GGaduPlugin *handler;
 
-GtkWidget *status_dockapp = NULL;	/* main dockapp window */
-GtkWidget *icon_dockapp = NULL;
-GdkPixmap *launch_pixmap;	/* pixmap with content of window */
-GdkPixmap *launch_mask;		/* mask of dockapp window */
-GdkGC *dock_gc;			/* dockapp graphics context */
-GdkColormap *cmap;
-GdkColor somecol;
+GdkGC *gc;
+GtkWidget *da = NULL;
+GdkPixmap *launch_pixmap;
+GtkWidget *status_dockapp = NULL;
+GtkTooltips *tips;
+char *tip;
+
+//kolory
+static GdkColor clUnk =    { 0,  3000, 30000,  3000 };
+static GdkColor clred =    { 0, 65535,  3000,  3000 };
+static GdkColor clAway =   { 0, 65535,  3000, 65535 };
+static GdkColor clblack =  { 0,     0,     0,     0 };
+static GdkColor clwhite =  { 0, 65535, 65535, 65535 };
+static GdkColor clOnline = { 0,  3000,  3000, 65535 };
+static GdkColor clOffline= { 0, 65535,  3000,  3000 };
+
+
+static gchar *this_configdir = NULL;
+
+//Przyciski
 GdkPixbuf *icon1_img;
 GdkPixbuf *icon2_img;
-/*
-GdkPixbuf *icon3_img;
-*/
-guint blinker_id = 0;		/* id of blinker timer */
-guint blink_no = 0;		/* show or hide new message icon (even=show, odd=dont show) */
+GdkRectangle icon1 = { 5, 4, 16, 16 };
+GdkRectangle icon2 = { 25, 4, 16, 16 };
+GdkRectangle btnred = {42, 5, 13, 15 };
 
-/* number of visible nicks in dockapp window */
 #define NNICK 3
-gchar prev_nick[NNICK][10] = { "\0\0\0\0\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0" };
+gchar prev_nick[NNICK][10] = { "\0\0\0\0\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0"};
 guint prev_status[NNICK] = { 0, 0, 0 };
 
-static GdkColor white = { 0, 65535, 65535, 65535 };
-static GdkColor black = { 0, 0, 0, 0 };
-static GdkColor clBg = { 0, 65535, 65000, 60000 };	/* background color */
-static GdkColor clOffline = { 0, 65535, 3000, 3000 };	/* offline */
-static GdkColor clAway = { 0, 65535, 3000, 65535 };	/* away */
-static GdkColor clOnline = { 0, 3000, 3000, 65535 };	/* online */
-static GdkColor clUnk = { 0, 3000, 30000, 3000 };	/* unknown */
-
-/* 3 icons: position and size */
-GdkRectangle icon1 = { 5, 4, 16, 16 };
-GdkRectangle icon2 = { 23, 4, 16, 16 };
-GdkRectangle icon3 = { 41, 4, 16, 16 };
-
-static GGaduMenu *dockapp_menu;
-static gchar *this_configdir = NULL;
+guint blinker_id = 0;           /* id of blinker timer */
+guint blink_no = 0;             /* show or hide new message icon (even=show, odd=dont show) */
 
 GGadu_PLUGIN_INIT(DOCKLET_PLUGIN_NAME, GGADU_PLUGIN_TYPE_MISC);
 
-/* the same like docklet_create_pixbuf */
-GdkPixbuf *dockapp_create_pixbuf(const gchar * directory, const gchar * filename)
-{
-	gchar *found_filename = NULL;
-	GdkPixbuf *pixbuf = NULL;
-	GSList *dir = NULL;
-	gchar *iconsdir = NULL;
 
-	print_debug("%s: dockapp_create_pixbuf - %s %s\n", GGadu_PLUGIN_NAME, directory, filename);
-
-	if (!filename || !filename[0])
-		return NULL;
-
-	/* We first try any pixmaps directories set by the application. */
-	dir = g_slist_prepend(dir, PACKAGE_DATA_DIR "/pixmaps");
-	dir = g_slist_prepend(dir, PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef GGADU_DEBUG
-	dir = g_slist_prepend(dir, PACKAGE_SOURCE_DIR "/pixmaps");
-	dir = g_slist_prepend(dir, PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
-#endif
-
-	if (directory)
-	{
-		iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", directory, NULL);
-		dir = g_slist_prepend(dir, iconsdir);
-	}
-
-	while (dir)
-	{
-		found_filename = check_file_exists((gchar *) dir->data, filename);
-
-		if (found_filename)
-			break;
-
-		dir = dir->next;
-	}
-
-	/* If we haven't found the pixmap, try the source directory. */
-	if (!found_filename)
-		found_filename = check_file_exists("../pixmaps", filename);
-
-	if (!found_filename)
-	{
-		g_warning(_("Couldn't find pixmap file: %s"), filename);
-		g_slist_free(dir);
-		g_free(iconsdir);
-		return NULL;
-	}
-
-	pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
-
-	g_free(found_filename);
-	g_slist_free(dir);
-	g_free(iconsdir);
-
-	return pixbuf;
+//Koñczy pracê plugina, funkcja exportowana - musi byc
+void destroy_plugin(){
+    print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+    gtk_widget_destroy(da);    
+    gtk_widget_destroy(status_dockapp);    
+    g_object_unref(launch_pixmap);
+    launch_pixmap = NULL;
+    g_object_unref(gc);
+    gc = NULL;
 }
 
-/* Redraw pixmap with content on dockapp window */
-void redraw_dockapp()
-{
-	print_debug("%s : redraw_dockapp\n", GGadu_PLUGIN_NAME);
-	gdk_draw_pixmap(icon_dockapp->window, dock_gc, launch_pixmap, 0, 0, 0, 0, 64, 64);
-}
 
-/* Draw pixmap */
-void draw_pixmap()
-{
-	GdkFont *font;
-	int i;
-	print_debug("%s : draw_pixmap\n", GGadu_PLUGIN_NAME);
-
-	/* draw a background */
-	gdk_gc_set_foreground(dock_gc, &clBg);
-	gdk_draw_rectangle(launch_pixmap, dock_gc, TRUE, 3, 3, 57, 57);
-
-	/* draw icons */
-	if (icon1_img != NULL)
-		gdk_draw_pixbuf(launch_pixmap, dock_gc, icon1_img, 0, 0, icon1.x, icon1.y, icon1.width, icon1.height,
-				GDK_RGB_DITHER_NONE, 0, 0);
-	/* draw 'new message' icon */
-	if ((icon2_img != NULL) && ((blink_no % 2) == 1))
-		gdk_draw_pixbuf(launch_pixmap, dock_gc, icon2_img, 0, 0, icon2.x, icon2.y, icon2.width, icon2.height,
-				GDK_RGB_DITHER_NONE, 0, 0);
-
-	font = gdk_font_load("-misc-fixed-medium-r-normal-*-10-*-*-*-*-*-iso8859-2");
-
-	/* set color and draw notify (last 3 nicks) */
-	for (i = 0; i < NNICK; i++)
-	{
-		switch (prev_status[i])
-		{
-		case GGADU_DOCKAPP_STATUS_OFFLINE:
-			gdk_gc_set_foreground(dock_gc, &clOffline);
-			break;
-		case GGADU_DOCKAPP_STATUS_AWAY:
-			gdk_gc_set_foreground(dock_gc, &clAway);
-			break;
-		case GGADU_DOCKAPP_STATUS_ONLINE:
-			gdk_gc_set_foreground(dock_gc, &clOnline);
-			break;
-		default:
-			gdk_gc_set_foreground(dock_gc, &clUnk);
-		}
-		gdk_draw_text(launch_pixmap, font, dock_gc, 6, 34 + (i * 10), prev_nick[i], strlen(prev_nick[i]));
-	}
-	gdk_font_unref(font);
-}
-
-/* from gg1: return true if clicked inside btn rectangle */
+//Sprawdza czy x,y znajduje sie wewnatrz prostokata
 int btn_clicked(GdkRectangle * btn, int x, int y)
 {
-	return (x >= btn->x && x <= btn->x + btn->width && y >= btn->y && y <= btn->y + btn->height);
+    return (x >= btn->x && x <= btn->x + btn->width && y >= btn->y && y <= btn->y + btn->height);
 }
 
-/* do something if clicked on dockapp */
+
+//Narysuj wszystko z launcz_pixmap na ekran
+void redraw(){
+gdk_draw_pixmap(da->window, gc, launch_pixmap, 0, 0, 0, 0, 64, 64);
+} 
+
+
+
+
+
+//Przerysowuje elementy dynamiczne pixmapy
+void draw_pixmap(){
+
+    //tlo ikony
+    gdk_gc_set_rgb_fg_color(gc, &clwhite);
+    gdk_draw_rectangle(launch_pixmap,gc,TRUE, 3, 3, 57, 57);
+    
+    //Rysuje ikonki
+    if (icon1_img != NULL)
+    gdk_draw_pixbuf(launch_pixmap,gc,icon1_img, 0, 0, icon1.x, icon1.y, icon1.width, icon1.height,GDK_RGB_DITHER_NONE, 0, 0);
+        
+    // draw 'new message' icon 
+    if ((icon2_img != NULL)&&((blink_no % 2) == 1))
+    gdk_draw_pixbuf(launch_pixmap,gc, icon2_img, 0, 0, icon2.x,icon2.y, icon2.width, icon2.height,GDK_RGB_DITHER_NONE, 0, 0);
+
+    int i;
+    GdkFont *font;
+    
+    //Wyswietl 3 nicki w kolorach zalenych od statusu
+    font = gdk_font_load("-misc-fixed-bold-r-normal-*-15-*-*-*-*-*-iso8859-2");
+    gdk_gc_set_rgb_fg_color(gc, &clred);
+    gdk_draw_text(launch_pixmap, font, gc,42,17, "X",1);    
+    
+    font = gdk_font_load("-misc-fixed-medium-r-normal-*-10-*-*-*-*-*-iso8859-2");    
+    for (i = 0; i < NNICK; i++)
+        {
+            switch (prev_status[i])
+	    {
+            case GGADU_DOCKAPP_STATUS_OFFLINE: gdk_gc_set_rgb_fg_color(gc, &clOffline); break;
+            case GGADU_DOCKAPP_STATUS_AWAY:    gdk_gc_set_rgb_fg_color(gc, &clAway);    break;
+            case GGADU_DOCKAPP_STATUS_ONLINE:  gdk_gc_set_rgb_fg_color(gc, &clOnline); break;
+            default: gdk_gc_set_rgb_fg_color(gc, &clUnk);
+            }
+        gdk_draw_text(launch_pixmap, font, gc,6,34 + (i*10), prev_nick[i], strlen(prev_nick[i]));
+	}
+
+
+    gdk_font_unref(font);
+    gdk_gc_set_rgb_fg_color(gc, &clblack);    
+}
+
+
+//Obsluga zdarzen klikniecia
 void dockapp_clicked(GtkWidget * widget, GdkEventButton * ev, gpointer data)
 {
-	/* left button clicked */
-	if (ev->button == 1)
+    print_debug("%s : mouse button clicked\n", GGadu_PLUGIN_NAME);
+    /* on icon1 or icon2 ? */
+    if (btn_clicked(&btnred, ev->x, ev->y)) 
 	{
-		print_debug("%s : left button clicked\n", GGadu_PLUGIN_NAME);
-
-		/* on icon1 or icon2 ? */
-		if (btn_clicked(&icon1, ev->x, ev->y) || btn_clicked(&icon2, ev->x, ev->y))
-		{
-			/* yes: stop blinking and hide 'new message' icon, redraw dockapp,
-			 * say GUI to show invisible chats or main window */
-			if (blinker_id > 0)
-			{
-				g_source_remove(blinker_id);
-				blinker_id = 0;
-			}
-			blink_no = 0;
-			if (icon2_img != NULL)
-			{
-				g_object_unref(icon2_img);
-				icon2_img = NULL;
-			}
-			draw_pixmap();
-			redraw_dockapp();
-			signal_emit_full(GGadu_PLUGIN_NAME, "gui show invisible chats", NULL, "main-gui", NULL);
-		}
+        destroy_plugin();
 	}
+        else
+        {
+        /* yes: stop blinking and hide 'new message' icon, redraw dockapp,
+         * say GUI to show invisible chats or main window */
+        if (blinker_id > 0){ g_source_remove(blinker_id); blinker_id = 0; }
+        blink_no = 0;            
+	if (icon2_img != NULL){ g_object_unref(icon2_img); icon2_img = NULL; }
+	draw_pixmap();
+        redraw();
+        signal_emit_full(GGadu_PLUGIN_NAME, "gui show invisible chats", NULL, "main-gui", NULL);
+        }
+}
+
+//zaladuj rysunek subdir -podkatalog PACKAGE_DATA_DIR
+GdkPixbuf *dockapp_create_pixbuf(const gchar * directory, const gchar * filename)
+{
+gchar *path=NULL;
+GdkPixbuf *pixbuf=NULL;
+
+if (!check_file_exists(directory, filename))
+		{
+                g_warning(_("Couldn't find pixmap file: %s"), filename);
+		return NULL;
+		}
+		
+path=g_build_filename(directory, filename, NULL);
+print_debug("dockapp_create_pixbuf %s",path);
+pixbuf=gdk_pixbuf_new_from_file(path,NULL);
+g_free(path);
+return pixbuf;
+
 }
 
 /* function run from blinker timer */
 gboolean msgicon_blink(gpointer data)
 {
-	print_debug("%s: msgicon_blink\n", GGadu_PLUGIN_NAME);
-	/* if blinking decrease number and redraw dockapp */
-	if (blink_no > 1)
-	{
-		blink_no--;
-		draw_pixmap();
-		redraw_dockapp();
-		return TRUE;	/* timer still running */
-	}
-	/* else stop timer */
-	return FALSE;
+        print_debug("%s: msgicon_blink\n", GGadu_PLUGIN_NAME);
+        /* if blinking decrease number and redraw dockapp */
+        if (blink_no > 1)
+        {
+                blink_no--;
+                draw_pixmap();
+                redraw();
+                return TRUE;    /* timer still running */
+        }
+        /* else stop timer */
+        return FALSE;
 }
 
-/* create dockapp preferences window */
-gpointer dockapp_preferences_action()
-{
-	GSList *pluginlist_names = NULL;	/* list of plugins */
-	gpointer key = NULL, index = NULL;
-	gchar *utf = NULL, *current_proto;
-	GGaduProtocol *proto;
-	GGaduDialog *dialog = NULL;
-	gint count = 0;
-
-	/* prepare list of protocol plugins */
-	current_proto = ggadu_config_var_get(handler, "dockapp_protocol");
-	if (current_proto)
-		pluginlist_names = g_slist_append(pluginlist_names, current_proto);
-	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key);
-
-	while (index)
-	{
-		/* key == name but better find display_name */
-		proto = ggadu_repo_find_value("_protocols_", key);
-		utf = to_utf8("ISO-8859-2", proto->display_name);
-		if (!current_proto || ggadu_strcasecmp(utf, current_proto))
-		{
-			pluginlist_names = g_slist_append(pluginlist_names, utf);
-			count++;
-		}
-		index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key, index);
-	}
-
-	/* create dialog */
-	dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("Dockapp plugin configuration"),"update config");
-
-	/* plugin_visible=(int)*ggadu_config_var_get(handler,"dockapp_visible"); */
-	
-	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_CONFIG_VISIBLE, _("Visible"), VAR_BOOL,
-			       ggadu_config_var_get(handler, "dockapp_visible"), VAR_FLAG_NONE);
-
-	if (count > 0)
-		ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_CONFIG_PROTOCOL, _("Protocol"), VAR_LIST,
-				       pluginlist_names, VAR_FLAG_NONE);
-
-
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
-
-	g_slist_free(pluginlist_names);
-	return NULL;
-}
-
-/* create menu for this plugin */
-GGaduMenu *build_plugin_menu()
-{
-	GGaduMenu *root = ggadu_menu_create();
-	GGaduMenu *item_gg = ggadu_menu_add_item(root, "Dockapp", NULL, NULL);
-
-	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), dockapp_preferences_action, NULL));
-
-	return root;
-}
-
-/* Create dockapp window */
-void create_dockapp()
-{
-	XWMHints wmhints;
-	GdkGC *mask_gc;		/* graphics context of mask */
-	int *visible;
-
-	print_debug("%s : create_dockapp\n", GGadu_PLUGIN_NAME);
-
-	/* all colors used in dockapp must be here */
-	cmap = gdk_colormap_get_system();
-	gdk_colormap_alloc_color(cmap, &white, FALSE, TRUE);
-	gdk_colormap_alloc_color(cmap, &black, FALSE, TRUE);
-	gdk_colormap_alloc_color(cmap, &clBg, FALSE, TRUE);
-	gdk_colormap_alloc_color(cmap, &clOffline, FALSE, TRUE);
-	gdk_colormap_alloc_color(cmap, &clAway, FALSE, TRUE);
-	gdk_colormap_alloc_color(cmap, &clOnline, FALSE, TRUE);
-	gdk_colormap_alloc_color(cmap, &clUnk, FALSE, TRUE);
-
-	/* prepare dockapp window */
-	status_dockapp = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_wmclass(GTK_WINDOW(status_dockapp), "GM_Statusdockapp", "gg2");
-	gtk_window_set_title(GTK_WINDOW(status_dockapp), "GNU Gadu 2");
-	gtk_widget_set_size_request(status_dockapp, 64, 64);
-	gtk_window_set_resizable(GTK_WINDOW(status_dockapp), FALSE);
-	gtk_window_set_type_hint(GTK_WINDOW(status_dockapp), GDK_WINDOW_TYPE_HINT_DOCK);
-	gtk_widget_set_app_paintable(status_dockapp, TRUE);
-	gtk_widget_realize(status_dockapp);
-
-	/* create the icon */
-	icon_dockapp = gtk_event_box_new();
-	gtk_widget_set_usize(GTK_WIDGET(icon_dockapp), 64, 64);
-	gtk_container_add(GTK_CONTAINER(status_dockapp), icon_dockapp);
-
-	/* must be before realize */
-	gtk_widget_set_events(icon_dockapp, GDK_BUTTON_PRESS_MASK | GDK_EXPOSURE_MASK);
-	g_signal_connect(G_OBJECT(icon_dockapp), "button-press-event", G_CALLBACK(dockapp_clicked), NULL);
-	g_signal_connect(G_OBJECT(icon_dockapp), "expose-event", G_CALLBACK(redraw_dockapp), NULL);
-
-	gtk_widget_realize(icon_dockapp);
-
-	/* create the pixmap and the mask */
-	launch_mask = gdk_pixmap_new(status_dockapp->window, 64, 64, 1);
-	launch_pixmap = gdk_pixmap_new(status_dockapp->window, 64, 64, -1);
-
-	/* create graphic contexts */
-	dock_gc = gdk_gc_new(icon_dockapp->window);
-	mask_gc = gdk_gc_new(launch_mask);
-
-	/* draw the icon mask */
-	gdk_gc_set_foreground(mask_gc, &black);
-	gdk_draw_rectangle(launch_mask, mask_gc, TRUE, 0, 0, -1, -1);
-	gdk_gc_set_foreground(mask_gc, &white);
-	gdk_draw_rectangle(launch_mask, mask_gc, TRUE, 3, 3, 57, 57);
-
-	draw_pixmap();
-
-	gtk_widget_shape_combine_mask(status_dockapp, launch_mask, 0, 0);
-	gtk_widget_shape_combine_mask(icon_dockapp, launch_mask, 0, 0);
-
-	redraw_dockapp();
-
-	/* set up some special hints for window maker */
-	wmhints.initial_state = WithdrawnState;
-	wmhints.flags = StateHint;
-	XSetWMHints(GDK_DISPLAY(), GDK_WINDOW_XWINDOW(status_dockapp->window), &wmhints);
-	gdk_window_set_icon(status_dockapp->window, icon_dockapp->window, NULL, NULL);
-	gdk_window_set_group(status_dockapp->window, status_dockapp->window);
-
-	visible = (int *) ggadu_config_var_get(NULL, "dockapp_visible");
-
-	gtk_widget_show_all(icon_dockapp);
-	gtk_widget_show_all(status_dockapp);
-
-	if (visible == NULL || *visible == FALSE)
-		gtk_widget_hide(status_dockapp);
-}
-
-/* do when user notify changed */
-void notify_callback(gchar * repo_name, gpointer key, gint actions)
-{
-	gchar *dockapp_protocol, *utf;
-	GGaduContact *k = NULL;
-	GGaduProtocol *p = NULL;
-	int i;
-	gpointer key2 = NULL, index = NULL;
-
-	print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
-
-	/* stop if no dockapp_protocol set or notify from other protocol */
-	dockapp_protocol = ggadu_config_var_get(handler, "dockapp_protocol");
-	if (!dockapp_protocol || ggadu_strcasecmp(dockapp_protocol, repo_name))
-		return;
-
-	/* stop if unknown contact */
-	if ((k = ggadu_repo_find_value(repo_name, key)) == NULL)
-		return;
-
-	/* shift existent notifies */
-	for (i = 0; i < NNICK - 1; i++)
-	{
-		g_strlcpy(prev_nick[i], prev_nick[i + 1], 9);
-		prev_status[i] = prev_status[i + 1];
-	}
-
-	/* add new notify */
-	g_strlcpy(prev_nick[NNICK - 1], (k->nick != NULL) ? k->nick : k->id, 9);
-
-	/* find protocol in repo */
-	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2);
-	while (index)
-	{
-		p = ggadu_repo_find_value("_protocols_", key2);
-		utf = to_utf8("ISO-8859-2", p->display_name);
-		if (!ggadu_strcasecmp(utf, dockapp_protocol))
-			break;
-		index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2, index);
-	}
-
-	if (!index)
-		return;		/* unknown protocol */
-
-	/* search for status online */
-	if (g_slist_find(p->online_status, (gint *) k->status) != NULL)
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_ONLINE;
-	/* search for status away */
-	else if (g_slist_find(p->away_status, (gint *) k->status) != NULL)
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_AWAY;
-	/* search for status offline */
-	else if (g_slist_find(p->offline_status, (gint *) k->status) != NULL)
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_OFFLINE;
-	/* not found? set unknown status */
-	else
-		prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_UNKNOWN;
-
-	draw_pixmap();
-	redraw_dockapp();
-}
 
 void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
 	GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 	GSList *sigdata = (GSList *) signal->data;
 
-	print_debug("%s : receive signal %d\n", GGadu_PLUGIN_NAME, signal->name);
+        //gchar *s1 = g_strdup(g_slist_nth_data(sigdata, 0));		
+        //gchar *s2 = g_strdup(g_slist_nth_data(sigdata, 1));			
+        //gchar *s3 = g_strdup(g_slist_nth_data(sigdata, 2));			
 
-	/* my status changed */
-	if (signal->name == g_quark_from_static_string("dockapp status changed"))
-	{
-		gchar *plugin_name = g_strdup(g_slist_nth_data(sigdata, 0));
-		/* stop if wrong protocol */
-		if (g_strcasecmp(plugin_name, "gadu-gadu"))
-		{
-			g_free(plugin_name);
-			return;
-		}
-		icon1_img = g_slist_nth_data(sigdata, 1);
-		draw_pixmap();
-		redraw_dockapp();
-		g_free(plugin_name);
-		return;
-	}
+	//print_debug("************************[ DOCKAPP SIGNAL ]********************************");
+	print_debug("%s : receive signal %d %s\n", GGadu_PLUGIN_NAME, signal->name,g_quark_to_string(signal->name));
+	//print_debug("s1=%s\n",s1);
+	//print_debug("s2=%s\n",s2);	
+	//print_debug("s3=%s\n",s3);	
+	//print_debug("***************************************************************************");		
+	
+        if (signal->name == g_quark_from_static_string("docklet set default icon"))
+            {
+	    gchar *directory = g_build_filename(PACKAGE_DATA_DIR,"pixmaps","icons",g_strdup(g_slist_nth_data(sigdata, 0)),NULL);
+            gchar *filename = g_strdup(g_slist_nth_data(sigdata, 1));
 
-	/* new message received */
-	if (signal->name == g_quark_from_static_string("docklet set icon"))
-	{
-		gchar *directory = g_strdup(g_slist_nth_data(sigdata, 0));
-		gchar *filename = g_strdup(g_slist_nth_data(sigdata, 1));
+	    icon1_img=dockapp_create_pixbuf(directory,filename);
+	    draw_pixmap();
+	    redraw();
+	    g_free(filename);
+	    g_free(directory);	    	    
+	    }		
 
-		if (filename)
-		{
-			/* destroy old and create new icon */
-			if (icon2_img != NULL)
-				g_object_unref(icon2_img);
-			icon2_img = dockapp_create_pixbuf(directory, filename);
-			/* stop previous blinker if exists */
-			if (blinker_id > 0)
-				g_source_remove(blinker_id);
-			/* blink 2 times */
-			blink_no = 5;
-			blinker_id = g_timeout_add(500, (GtkFunction) msgicon_blink, NULL);
 
-			draw_pixmap();
-			redraw_dockapp();
-
-			/* something (GUI plugin?) need to receive some data to not display chat window */
-			signal->data_return = icon2_img;
-
-		}
-		g_free(directory);
-		g_free(filename);
-		return;
-	}
-
-	/* read new settings, remember and save */
-	if (signal->name == g_quark_from_static_string("update config"))
-	{
-		GGaduDialog *dialog = signal->data;
-
-		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
-		{
-			GSList *tmplist = ggadu_dialog_get_entries(dialog);
-			while (tmplist)
-			{
-				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
-				switch (kv->key)
-				{
-				case GGADU_DOCKAPP_CONFIG_VISIBLE:
-				{
-					print_debug("changing visible setting to %d\n", kv->value);
-					ggadu_config_var_set(handler, "dockapp_visible", kv->value);
-					if (kv->value)
-						gtk_widget_show_all(status_dockapp);
-					else
-						gtk_widget_hide(status_dockapp);
-					break;
-				}
-				case GGADU_DOCKAPP_CONFIG_PROTOCOL:
-				{
-					gchar *iso = NULL;
-					gchar *val = ((GSList *)kv->value)->data;
-					int i;
-
-					if (!val)
-						break;
-
-					print_debug("changing var setting dockapp_protocol to %s\n", val);
-					iso = from_utf8("ISO-8859-2", val);
-					if (ggadu_config_var_get(handler, "dockapp_protocol"))
-					{
-						if (ggadu_strcasecmp
-						    (ggadu_config_var_get(handler, "dockapp_protocol"), iso))
-						{
-							/* dockapp_plugin really changed, clear existent notifies */
-							for (i = 0; i < NNICK; i++)
-								g_strlcpy(prev_nick[i], "\0\0\0\0\0\0\0\0\0\0", 9);
-						};
-					}
-					ggadu_config_var_set(handler, "dockapp_protocol", iso);
-					break;
-				}
-				}
-				tmplist = tmplist->next;
-			}
-			ggadu_config_save(handler);
-			draw_pixmap();
-			redraw_dockapp();
-		}
-		GGaduDialog_free(dialog);
-		return;
-	}
+        /* my status changed */
+        if (signal->name == g_quark_from_static_string("docklet set icon"))
+            {
+	    gchar *directory = g_build_filename(PACKAGE_DATA_DIR,"pixmaps",NULL);
+            gchar *filename = g_strdup(g_slist_nth_data(sigdata, 1));
+	    gchar *msg=g_strdup(g_slist_nth_data(sigdata, 2));
+	    icon2_img=dockapp_create_pixbuf(directory,filename);
+	                            
+	    // stop previous blinker if exists             
+	    if (blinker_id > 0)   g_source_remove(blinker_id);
+            // blink 2 times
+            blink_no = 5;
+            blinker_id = g_timeout_add(500, (GtkFunction) msgicon_blink, NULL);
+	    gtk_tooltips_set_tip(GTK_TOOLTIPS(tips),status_dockapp,msg,"");
+	    draw_pixmap();
+	    redraw();
+	    g_free(filename);
+	    g_free(directory);	    	    
+            return;
+            }	
+	
+        /* my status changed */
+        if (signal->name == g_quark_from_static_string("dockapp status changed"))
+            {
+            gchar *plugin_name = g_strdup(g_slist_nth_data(sigdata, 0));
+            /* stop if wrong protocol */
+            if (g_strcasecmp(plugin_name, "gadu-gadu"))  { g_free(plugin_name); return;}
+            icon1_img = g_slist_nth_data(sigdata, 1);
+            draw_pixmap();
+            redraw();
+            g_free(plugin_name);
+            return;
+            }	
 }
 
+/* do when user notify changed */
+void notify_callback(gchar * repo_name, gpointer key, gint actions)
+{
+        int i;
+        GGaduContact *k = NULL;
+        GGaduProtocol *p = NULL;	
+        gchar *dockapp_protocol, *utf;
+        gpointer key2 = NULL, index = NULL;
+
+        print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
+
+        /* stop if no dockapp_protocol set or notify from other protocol */
+        dockapp_protocol = ggadu_config_var_get(handler, "dockapp_protocol");
+        if (!dockapp_protocol || ggadu_strcasecmp(dockapp_protocol, repo_name)) return;
+
+        /* stop if unknown contact */
+        if ((k = ggadu_repo_find_value(repo_name, key)) == NULL) return;
+
+        /* shift existent notifies */
+        for (i = 0; i < NNICK - 1; i++)
+            {
+            g_strlcpy(prev_nick[i], prev_nick[i + 1], 9);
+            prev_status[i] = prev_status[i + 1];
+	    }
+
+        /* add new notify */
+        g_strlcpy(prev_nick[NNICK - 1], (k->nick != NULL) ? k->nick : k->id, 9);
+
+        /* find protocol in repo */
+        index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2);
+        while (index)
+    	    {
+            p = ggadu_repo_find_value("_protocols_", key2);
+            utf = to_utf8("ISO-8859-2", p->display_name);
+            if (!ggadu_strcasecmp(utf, dockapp_protocol)) break;
+	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2, index);
+	    }
+
+        if (!index) return;             /* unknown protocol */
+
+        /* search for status online */
+        if (g_slist_find(p->online_status, (gint *) k->status) != NULL)
+                prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_ONLINE;
+        /* search for status away */
+        else if (g_slist_find(p->away_status, (gint *) k->status) != NULL)
+                prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_AWAY;
+        /* search for status offline */
+        else if (g_slist_find(p->offline_status, (gint *) k->status) != NULL)
+                prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_OFFLINE;
+        /* not found? set unknown status */
+        else
+                prev_status[NNICK - 1] = GGADU_DOCKAPP_STATUS_UNKNOWN;
+
+        draw_pixmap();
+        redraw();
+}
+
+
+
+//Funkcja startowa pluginu, exportowana,musi byc
 void start_plugin()
 {
-	print_debug("%s : start\n", GGadu_PLUGIN_NAME);
+    print_debug("%s : start\n", GGadu_PLUGIN_NAME);
+    
+    //Etykietki
+    tips=gtk_tooltips_new();	
 
-	/* create and register menu for this plugin */
-	dockapp_menu = build_plugin_menu();
-	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", dockapp_menu, "main-gui");
+    
+    //Tworzy okno glowne programu
+    status_dockapp = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+    gtk_widget_set_size_request(status_dockapp,64,64);
+    gtk_window_set_title(GTK_WINDOW(status_dockapp), "GNU Gadu 2");
+    gtk_window_set_resizable(GTK_WINDOW(status_dockapp), FALSE);
+    gtk_window_set_wmclass(GTK_WINDOW(status_dockapp), "GM_window", "gg2");
+    gtk_window_set_type_hint(GTK_WINDOW(status_dockapp), GDK_WINDOW_TYPE_HINT_DOCK);
+    gtk_widget_set_app_paintable(status_dockapp, TRUE);    
 
-	create_dockapp();
+    gtk_tooltips_set_tip(GTK_TOOLTIPS(tips),status_dockapp,"Kliknij aby ukryæ Program","ppp");
 
-	/* signals */
-	/* my status changed */
-/*
-    register_signal(handler, "dockapp status changed");
-*/
-	/* status of some user changed */
-/*
-    register_signal(handler, "dockapp user notify");
-*/
-
-	register_signal(handler, "update config");
+    gtk_widget_realize(status_dockapp);
 
 
-	/* join to docklet signal */
-	/* message received */
-	register_signal(handler, "docklet set icon");
+    
+    //tworzy obszar rysowania
+    da = gtk_drawing_area_new ();
+    gtk_widget_set_size_request (da, 64, 64);
+    gtk_widget_set_events(da, GDK_BUTTON_PRESS_MASK | GDK_EXPOSURE_MASK);
+    g_signal_connect (G_OBJECT (da), "expose_event", G_CALLBACK (redraw), NULL);
+    g_signal_connect(G_OBJECT(da), "button-press-event", G_CALLBACK(dockapp_clicked),NULL);
+    gtk_container_add(GTK_CONTAINER(status_dockapp),da);
+    gtk_tooltips_set_tip(GTK_TOOLTIPS(tips),da,"ppp","ppp");    
+    
+    gtk_widget_realize(da);
 
-	ggadu_repo_watch_add(NULL, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT, notify_callback);
+    //Opcje graficzne okna
+    gc = gdk_gc_new(da->window);
+    //Pixmapa - na niej nalezy wykonywac wszystkie rysunki
+    //A dopiero potem przerysowaæ za pomoc± redraw()
+    launch_pixmap = gdk_pixmap_new(da->window, 64, 64, -1);
+
+    //Rysuje tlo ikony
+    gdk_gc_set_rgb_fg_color(gc, &clblack);
+    gdk_draw_rectangle(launch_pixmap,gc,TRUE, 0, 0, -1, -1);
+
+
+    draw_pixmap();
+    redraw();
+    
+    //Windowmaker hints - tu sprowadza okno do ikony
+    XWMHints wmhints;    
+    wmhints.initial_state = WithdrawnState;
+    wmhints.flags = StateHint;
+    XSetWMHints(GDK_DISPLAY(), GDK_WINDOW_XWINDOW(status_dockapp->window), &wmhints);
+    gdk_window_set_icon(status_dockapp->window, da->window, NULL, NULL);
+    gdk_window_set_group(status_dockapp->window, status_dockapp->window);
+
+    //Pokaz widgety
+    gtk_widget_show_all(da);
+    gtk_widget_show_all(status_dockapp);
+    
+    //rejestracja sygnalow
+    register_signal(handler, "update config");
+    register_signal(handler, "docklet set icon");
+    register_signal(handler, "docklet set default icon");
+    ggadu_repo_watch_add(NULL, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT, notify_callback);
 }
+
 
 /* Initialize dockapp plugin. Return plugin handler */
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
 	gchar *path = NULL;
-
 	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
-	/* Gtk have to be initialized */
 	gtk_init(NULL, NULL);
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);	/* It must be here */
-	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("WindowMaker Dockapp"));
+	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Docklet-dockapp2"));
 	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
-
-	/* configure plugin */
 	ggadu_config_var_add(handler, "dockapp_protocol", VAR_STR);
 	ggadu_config_var_add(handler, "dockapp_visible", VAR_BOOL);
 
@@ -617,37 +420,4 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	return handler;
 }
 
-void destroy_plugin()
-{
-	print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
-	gtk_widget_destroy(status_dockapp);
-	g_object_unref(launch_pixmap);
-	launch_pixmap = NULL;
-	g_object_unref(launch_mask);
-	launch_mask = NULL;
-	g_object_unref(dock_gc);
-	dock_gc = NULL;
-	g_object_unref(cmap);
-	cmap = NULL;
-	g_object_unref(icon1_img);
-	icon1_img = NULL;
-	g_object_unref(icon2_img);
-	icon2_img = NULL;
-/*
-    g_object_unref(icon3_img);
-    icon3_img = NULL;
-*/
-	if (dockapp_menu)
-	{
-		signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", dockapp_menu, "main-gui");
-		ggadu_menu_free(dockapp_menu);
-	}
 
-	/* remove blinker function if exist */
-	if (blinker_id > 0)
-	{
-		g_source_remove(blinker_id);
-		blinker_id = 0;
-	}
-	blink_no = 0;
-}
