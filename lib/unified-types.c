@@ -1,4 +1,4 @@
-/* $Id: unified-types.c,v 1.1 2003/06/03 21:30:11 krzyzak Exp $ */
+/* $Id: unified-types.c,v 1.2 2003/06/21 03:57:35 krzyzak Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_FREE_H
 #define GGadu_UNIFIED_TYPES_FREE_H
 
@@ -71,31 +71,6 @@ void GGaduKeyValue_free(GGaduKeyValue *kv)
     g_free(kv->value);
     g_free(kv->description);
     g_free(kv);
-}
-
-void GGaduDialog_free(GGaduDialog *d)
-{
-    GSList *e = NULL;
-    
-    if (!d) return;
-    return;
-    g_free(d->title);
-    g_free(d->callback_signal);
-    
-    e = d->optlist;
-    while (e) 
-    {
-	GGaduKeyValue *kv = (GGaduKeyValue *)e->data;
-//	g_free(kv->value);
-	g_free(kv->description);
-	g_free(e->data);
-//	GGaduKeyValue_free(kv);
-	e = e->next;
-    }
-    g_slist_free(d->optlist);
-
-    g_free(d);
-    return;
 }
 
 #endif

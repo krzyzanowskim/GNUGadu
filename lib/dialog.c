@@ -1,10 +1,11 @@
-/* $Id: dialog.c,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
+/* $Id: dialog.c,v 1.2 2003/06/21 03:57:35 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
 
+#include "dialog.h"
 #include "support.h"
 #include "gg-types.h"
 #include "unified-types.h"
@@ -12,7 +13,6 @@
 GGaduDialog *ggadu_dialog_new() {
     return g_new0(GGaduDialog,1);
 }
-
 
 void ggadu_dialog_add_entry(
 		      GSList **prefs, 
@@ -48,4 +48,29 @@ void ggadu_dialog_set_type(GGaduDialog *d, gint type)
 {
     g_return_if_fail(d != NULL);
     d->type = type;
+}
+
+void GGaduDialog_free(GGaduDialog *d)
+{
+    GSList *e = NULL;
+    
+    if (!d) return;
+    return;
+    g_free(d->title);
+    g_free(d->callback_signal);
+    
+    e = d->optlist;
+    while (e) 
+    {
+	GGaduKeyValue *kv = (GGaduKeyValue *)e->data;
+//	g_free(kv->value);
+	g_free(kv->description);
+	g_free(e->data);
+//	GGaduKeyValue_free(kv);
+	e = e->next;
+    }
+    g_slist_free(d->optlist);
+
+    g_free(d);
+    return;
 }
