@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.67 2004/08/02 12:18:58 krzyzak Exp $
+# $Id: pl.po,v 1.68 2004/08/02 12:20:52 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -51,22 +51,20 @@ msgid "GNU Gadu 2"
 msgstr "GNU Gadu 2"
 
 #: contrib/gghist/gghist.c:291
-#, fuzzy
 msgid "_First page"
-msgstr "Imiê"
+msgstr "_Pierwsza strona"
 
 #: contrib/gghist/gghist.c:294
 msgid "_Previous page"
-msgstr ""
+msgstr "P_oprzednia strona"
 
 #: contrib/gghist/gghist.c:297
 msgid "_Next page"
-msgstr ""
+msgstr "_Nastêpna strona"
 
 #: contrib/gghist/gghist.c:300
-#, fuzzy
 msgid "_Last page"
-msgstr "Nazwisko"
+msgstr "_Ostatnia strona"
 
 #: contrib/gghist/gghist.c:303 src/plugins/GUI/gui_chat.c:581
 #: src/plugins/GUI/gui_search.c:189
