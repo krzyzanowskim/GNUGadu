@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.28 2004/01/19 20:26:02 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.29 2004/01/19 20:43:02 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -183,7 +183,7 @@ void gui_list_add(gui_protocol * gp)
 
 	if (!notebook)
 	{
-		print_debug("no notebook, creating new one\n");
+		print_debug("no notebook, creating new one");
 		notebook = gtk_notebook_new();
 		gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_RIGHT);
 		gtk_box_pack_start(GTK_BOX(view_container), notebook, TRUE, TRUE, 0);
@@ -231,10 +231,13 @@ void gui_list_add(gui_protocol * gp)
 	/* cos co jest oznaczone jakos p->offine_status przez protocol */
 	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
-	sp = gui_find_status_prototype(gp->p, status);
-
-	if (sp == NULL)
-		sp = gui_find_status_prototype(gp->p, (status) ? status : *(int *) &gp->p->offline_status->data);
+	if (!(sp = gui_find_status_prototype(gp->p, status)))
+	{
+		if (status)
+			sp = gui_find_status_prototype(gp->p, status);
+		else if (gp->p->offline_status)
+			sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+	}
 
 	if (sp)
 	{
@@ -295,7 +298,13 @@ void gui_tree_add(gui_protocol * gp)
 
 	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
-	sp = gui_find_status_prototype(gp->p, status);
+	if (!(sp = gui_find_status_prototype(gp->p, status)))
+	{
+		if (status)
+			sp = gui_find_status_prototype(gp->p, status);
+		else if (gp->p->offline_status)
+			sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+	}
 
 	if (sp)
 	{
@@ -305,13 +314,7 @@ void gui_tree_add(gui_protocol * gp)
 				 gp);
 		gtk_box_pack_start(GTK_BOX(status_hbox), gp->statuslist_eventbox, FALSE, FALSE, 2);
 		gtk_widget_show_all(gp->statuslist_eventbox);
-	} 
-	/* ZONK what is it for ? nothing use "sp" after that 
-	else if (gp->p->offline_status) 
-	{  
-		sp = gui_find_status_prototype(gp->p, (status) ? status : *(int *) &gp->p->offline_status->data);
-	} 
-	*/
+	}
 
 	gp->add_info_label = g_object_get_data(G_OBJECT(treeview), "add_info_label");
 
@@ -485,8 +488,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 					if (!ggadu_strcasecmp(k->nick, k->id))
 						tmp = g_strdup_printf(_("%s %s"), k->id, (sp ? st : ""));
 					else
-						tmp = g_strdup_printf(_("%s (%s) %s"), k->nick, k->id,
-								      (sp ? st : ""));
+						tmp = g_strdup_printf(_("%s (%s) %s"), k->nick, k->id, (sp ? st : ""));
 
 					gtk_window_set_title(GTK_WINDOW(window), tmp);
 					g_free(tmp);
@@ -497,10 +499,9 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 					GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(window), "chat_notebook");
 					guint curr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
 					guint nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook), session->chat);
-					gchar *tmp =
-						g_strdup_printf("%s %s",
-								ggadu_strcasecmp(k->nick, k->id) ? k->nick : k->id,
-								(sp ? st : ""));
+					gchar *tmp = g_strdup_printf("%s %s",
+								     ggadu_strcasecmp(k->nick, k->id) ? k->nick : k->id,
+								     (sp ? st : ""));
 
 					g_object_set_data_full(G_OBJECT(session->chat), "tab_window_title_char",
 							       g_strdup(tmp), g_free);
