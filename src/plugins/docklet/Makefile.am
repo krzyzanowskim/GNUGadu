@@ -8,11 +8,7 @@ libdocklet_plugin_la_CFLAGS = $(GTK_CFLAGS)
 libdocklet_plugin_la_SOURCES = docklet_plugin.c \
     docklet_plugin.h \
     eggtrayicon.c \
-    egg-marshal.c \
-    eggtrayicon.h \
-    eggmarshalers.h    
-    
-#    eggtraymanager.c
+    eggtrayicon.h
     
 
 libdocklet_plugin_la_LIBADD = ../../plugins.lo \
