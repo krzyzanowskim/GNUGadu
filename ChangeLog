@@ -1,3 +1,7 @@
+19.08.2004
+- fixed prev button (gghist/krzak)
+- a little changes in preferences tabs (GUI/krzak)
+
 18.08.2004
 - building plugins and other features is enabled now by default (not all)
   but you can disable it with --without-foo, in addition is some library
