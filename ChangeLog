@@ -2,6 +2,7 @@
 - blink statuslist while connecting (GUI/zapal)
 - SMS protocol is now shown in status list (sms/zapal)
 - auto away support (gadu-gadu/jabber/tlen/GUI/zapal)
+- contact list now shows zero active users after disconnection (GUI/zapal)
 
 23.05.2003
 - birthyear search criterion added (gadu-gadu/shasta)
