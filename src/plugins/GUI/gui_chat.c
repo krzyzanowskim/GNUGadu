@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.122 2004/10/15 14:38:52 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.123 2004/10/15 14:42:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1335,9 +1335,10 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 		{
 		    GdkPixbuf *image = NULL;
 		    image = create_pixbuf(GGADU_MSG_ICON_FILENAME);
-		    gtk_window_set_icon(GTK_WINDOW(chat_window), image);
+		    gtk_window_set_icon(GTK_WINDOW(window), image);
 		    gdk_pixbuf_unref(image);
 		    g_object_set_data(G_OBJECT(window),"new-message-mark",(gpointer) TRUE);
+		    print_debug("changing icon to msg");
 		}
 	    }
 	}
