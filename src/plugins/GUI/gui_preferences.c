@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.31 2004/01/07 20:53:42 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.32 2004/01/07 21:22:21 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -94,6 +94,11 @@ static void enable_toggled (GtkCellRendererToggle * cell, gchar * path_str, gpoi
     plugins_updated = TRUE;
 }
 
+static void row_changed (GtkTreeModel *treemodel, GtkTreePath *arg1, GtkTreeIter *arg2, gpointer user_data)
+{
+    plugins_updated = TRUE;
+}
+
 GtkWidget *gui_plugins_mgr_tab ()
 {
     GtkWidget *vbox;
@@ -107,7 +112,8 @@ GtkWidget *gui_plugins_mgr_tab ()
     
     vbox = gtk_vbox_new (FALSE, 0);
     store = gtk_tree_store_new (PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
-
+    g_signal_connect(G_OBJECT(store), "row-changed", G_CALLBACK (row_changed), NULL); 
+    
 /* zaladowane pluginy na poczzatku wedle kolejnosci zadanej w pliku modules.load */
     while (modules_load)
       {
