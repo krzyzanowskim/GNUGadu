@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.156 2004/02/17 20:42:16 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.157 2004/03/12 15:14:27 shaster Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -810,11 +810,11 @@ gpointer user_change_user_action(gpointer user_data)
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) users->data;
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Change contact informations"), "change user");
-	ggadu_dialog_add_entry(dialog, GGADU_ID, "GG#", VAR_STR, k->id, VAR_FLAG_INSENSITIVE);
-	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nick"), VAR_STR, k->nick, VAR_FLAG_SENSITIVE);
-	ggadu_dialog_add_entry(dialog, GGADU_FIRST_NAME, _("First Name"), VAR_STR, k->first_name, VAR_FLAG_SENSITIVE);
-	ggadu_dialog_add_entry(dialog, GGADU_LAST_NAME, _("Last Name"), VAR_STR, k->last_name, VAR_FLAG_SENSITIVE);
-	ggadu_dialog_add_entry(dialog, GGADU_MOBILE, _("Phone"), VAR_STR, k->mobile, VAR_FLAG_SENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_ID, "GG#", VAR_STR, k->id ? k->id : "", VAR_FLAG_INSENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nick"), VAR_STR, k->nick ? k->nick : "", VAR_FLAG_SENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_FIRST_NAME, _("First Name"), VAR_STR, k->first_name ? k->first_name : "", VAR_FLAG_SENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_LAST_NAME, _("Last Name"), VAR_STR, k->last_name ? k->last_name : "", VAR_FLAG_SENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_MOBILE, _("Phone"), VAR_STR, k->mobile ? k->mobile : "", VAR_FLAG_SENSITIVE);
 	/* wywoluje okienko zmiany usera */
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
