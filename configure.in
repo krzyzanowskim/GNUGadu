@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.123 2005/03/06 21:43:42 mkobierzycki Exp $
+dnl $Id: configure.in,v 1.124 2005/03/07 10:04:29 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.4])
 
@@ -17,9 +17,9 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 
 if test `uname -s` = "Linux"; then
- 	AC_DEFINE_UNQUOTED(OS_NAME,`uname -o`)
+ 	AC_DEFINE_UNQUOTED(OS_NAME,"`uname -o`")
 else
-	AC_DEFINE_UNQUOTED(OS_NAME,`uname -sr`)
+	AC_DEFINE_UNQUOTED(OS_NAME,"`uname -sr`")
 fi
 
 if test `uname -s` = "Darwin"; then
