@@ -11,7 +11,7 @@
 
 #include "remote_client.h"
 
-const char *pth_unix = ".gg2/.gg2_remote";
+const char *pth_unix = "gg2/.gg2_remote";
 char *sock_path;
 int sck = -1;
 
@@ -31,20 +31,41 @@ int przybinduj (void)
 int remote_init (void)
 {
   struct passwd *pw;
+  char *katalog = NULL;
   int yes = 1;
 
-  pw = getpwuid (getuid ());
-  if (pw == NULL)
-    return -1;
+  if (getenv ("CONFIG_DIR"))
+  {
+    char *tmp = getenv ("CONFIG_DIR");
+    katalog = malloc (strlen (tmp) + 2);
+    if (!katalog)
+      abort ();
+    strcpy (katalog, tmp);
+    katalog[strlen (tmp)] = '/';
+  } else
+  {
+    pw = getpwuid (getuid ());
+    if (pw == NULL)
+      return -1;
+    
+    katalog = malloc (strlen (pw->pw_dir) + 3);
+    if (!katalog)
+      abort ();
+    strcpy (katalog, pw->pw_dir);
+    katalog[strlen (pw->pw_dir) - 1] = '/';
+    katalog[strlen (pw->pw_dir)    ] = '.';
+  }
+  
 
   /* tu by sie przydalo sprawdzanie poprawnosci pw->pw_dir */
-  sock_path = malloc (strlen (pw->pw_dir) + 1 + strlen (pth_unix) + 1);
+  sock_path = malloc (strlen (katalog) + strlen (pth_unix) + 1);
   if (!sock_path)
     abort ();
-  strcpy (sock_path, pw->pw_dir);
-  strcpy (sock_path + strlen (pw->pw_dir) + 1, pth_unix);
-  sock_path[strlen (pw->pw_dir)] = '/';
-
+  strcpy (sock_path, katalog);
+  strcpy (sock_path + strlen (katalog), pth_unix);
+  
+  free (katalog);
+  
   sck = socket (PF_UNIX, SOCK_DGRAM, 0);
   if (sck == -1)
     goto abort;
