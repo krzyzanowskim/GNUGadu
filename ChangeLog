@@ -1,5 +1,6 @@
 15.06.2003
-- fix in gg2_core.h
+- fix in gg2_core.h (core/krzak)
+- more fixes in gtkanimlabel.c (GUI/krzak)
 
 14.06.2003
 - fixes in gtkanimlabel.c (finalizer segfault), and small fixes in GUI (GUI/krzak)

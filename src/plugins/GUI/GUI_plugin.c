@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.21 2003/06/13 00:17:19 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.22 2003/06/15 15:32:43 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -163,7 +163,7 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		}
 		
 		markup_id = g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s</span>", k->id, ip?ip:"");
-		markup_desc = g_strdup_printf("<span size=\"small\">%s</span>", (k->status_descr) ?  desc_text : "");
+		markup_desc = (k->status_descr) ? g_strdup_printf("<span size=\"small\">%s</span>",desc_text) : NULL;
 
 		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),k->status_descr,"caption");
 	    } else {
@@ -174,7 +174,7 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		sp = gui_find_status_prototype(gp->p, status);
 
 		markup_id = g_strdup_printf("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
-		markup_desc = g_strdup_printf("<span size=\"small\"><b>%s</b></span>", (sp) ? sp->description : _("(None)"));
+		markup_desc = (sp) ? g_strdup_printf("<span size=\"small\"><b>%s</b></span>",sp->description) : _("(None)");
 		is_desc = TRUE;
 		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),NULL,"caption");
 	    }

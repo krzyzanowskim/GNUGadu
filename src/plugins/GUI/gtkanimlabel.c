@@ -17,6 +17,8 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
 #include <pango/pango.h>
@@ -148,13 +150,17 @@ void gtk_anim_label_set_text (GtkAnimLabel * anim_label, const gchar * txt)
     g_return_if_fail (anim_label != NULL);
     g_return_if_fail (GTK_IS_ANIM_LABEL (anim_label));
 
-    if (txt == NULL)
-	return;
 
-    if (anim_label->txt)
+    if (anim_label->txt) {
 	g_free (anim_label->txt);
+    }
 
-    anim_label->txt = g_strdup (txt);
+    if ((txt == NULL) || (strlen(txt) <= 0)) {
+    	return;
+    }
+    
+    if (txt != NULL)
+        anim_label->txt = g_strdup (txt);
 
     if (anim_label->auto_reset)
 	anim_label->pos_x = 0;
@@ -163,11 +169,13 @@ void gtk_anim_label_set_text (GtkAnimLabel * anim_label, const gchar * txt)
       {
 	  g_object_unref (G_OBJECT (anim_label->layout));
 	  anim_label->layout = NULL;
+	  anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : g_strdup (""));
       }
     else
       {
 	  anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : g_strdup (""));
       }
+
 
     gtk_widget_queue_resize (GTK_WIDGET (anim_label));
 }
@@ -218,13 +226,17 @@ static void gtk_anim_label_size_request (GtkWidget * widget, GtkRequisition * re
     g_return_if_fail (GTK_IS_ANIM_LABEL (widget));
     g_return_if_fail (requisition != NULL);
 
+
     anim_label = GTK_ANIM_LABEL (widget);
+    
+    requisition->width = 1;
+    requisition->height = 1;
 
-    anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : g_strdup (""));
-    pango_layout_get_extents (anim_label->layout, NULL, &prect);
-
-    requisition->width = 10;
-    requisition->height = PANGO_PIXELS (prect.height);
+    if (anim_label->layout && GTK_WIDGET_MAPPED(widget) && (strlen(anim_label->txt) > 0)) {
+      pango_layout_get_extents (anim_label->layout, NULL, &prect);
+      requisition->height = PANGO_PIXELS (prect.height);
+      return;
+    }
 }
 
 
@@ -402,6 +414,6 @@ static void anim_label_create_layout (GtkAnimLabel * anim_label, const gchar * t
       {
 	  anim_label->layout = gtk_widget_create_pango_layout (GTK_WIDGET (anim_label), txt);
 	  pango_layout_set_markup (anim_label->layout, txt, -1);
-	  pango_layout_set_alignment (anim_label->layout, anim_label->alignment);
+	  /* pango_layout_set_alignment (anim_label->layout, anim_label->alignment); */
       }
 }
