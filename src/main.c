@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.6 2003/04/03 12:58:14 krzyzak Exp $ */
+/* $Id: main.c,v 1.7 2003/04/05 12:32:35 zapal Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -87,6 +87,27 @@ void load_available_modules() {
 	g_dir_close(directory);
 };
 
+void start_plugins()
+{
+	GSList 	*tmp	= NULL;
+	GGaduPlugin *plugin = NULL;
+	void (*start_plugin)();
+	
+	tmp = config->plugins;
+
+	while (tmp) 
+	{
+	plugin = (GGaduPlugin *) tmp->data;
+	
+	start_plugin = plugin->start_plugin;
+	
+	if (start_plugin != NULL)
+		start_plugin();
+	
+	tmp = tmp->next;
+	}
+}
+
 void start_plugins_ordered()
 {
   GIOChannel *ch = NULL;
@@ -120,28 +141,6 @@ void start_plugins_ordered()
 
   g_io_channel_shutdown(ch,TRUE,NULL);
 }
-
-void start_plugins()
-{
-	GSList 	*tmp	= NULL;
-	GGaduPlugin *plugin = NULL;
-	void (*start_plugin)();
-	
-	tmp = config->plugins;
-
-	while (tmp) 
-	{
-	plugin = (GGaduPlugin *) tmp->data;
-	
-	start_plugin = plugin->start_plugin;
-	
-	if (start_plugin != NULL)
-		start_plugin();
-	
-	tmp = tmp->next;
-	}
-}
-
 gboolean gnu_gadu_init(gpointer data)
 {
 	config = g_new0(GGaduConfig,1);
