@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.27 2003/06/24 18:14:34 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.28 2003/06/24 18:52:32 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -231,6 +231,7 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 	  g_free (markup_desc);
 	  g_free (desc_text);
 	  g_free (ip);
+	  return FALSE;
       }
 
     if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3))
@@ -249,7 +250,6 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 	      (GTK_TREE_VIEW (widget), event->x, event->y, &treepath, &treevc, NULL, NULL))
 	      return FALSE;
 
-	  gtk_tree_model_get_iter (model, &iter, treepath);
 
 	  if (!tree)
 	    {
@@ -260,15 +260,15 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 	    {
 		GGaduContact *k = NULL;
 
+	  	gtk_tree_model_get_iter (model, &iter, treepath);
 		gtk_tree_model_get (model, &iter, 2, &k, -1);
 
 		if (k)
 		  gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 3, &gp, -1);
-		/* ZONK if !k (and therefore !gp) */
-		plugin_name = gp->plugin_name;
 	    }
 
-	  umenu = signal_emit ("main-gui", "get user menu", selectedusers, plugin_name);
+	  if (gp && gp->plugin_name && selectedusers)
+	  	umenu = signal_emit ("main-gui", "get user menu", selectedusers, gp->plugin_name);
 	  
 	  if (!umenu) return FALSE;
 	  
