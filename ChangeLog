@@ -1,5 +1,5 @@
 12.01.2005
-- close #139
+- close #139 - tlen sefgault while change status (tlen/krzak)
 
 10.01.2005
 - support for protocol: instead protocol:// (krzak)
