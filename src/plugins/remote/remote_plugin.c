@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.5 2003/04/02 19:09:36 zapal Exp $ */
+/* $Id: remote_plugin.c,v 1.6 2003/04/04 15:17:35 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -311,27 +311,28 @@ void signal_recv(gpointer name, gpointer signal_ptr)
   {
     GGaduDialog *d = signal->data;
     GSList *tmplist = d->optlist;
-    
-    while (tmplist)
-    {
-      GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-      switch (kv->key)
-      {
-	case REMOTE_CONFIG_SAME_UID:
-	    print_debug("change same_uid to %d\n",kv->value);
-	    config_var_set(handler, "same_uid", kv->value);
-	    break;
-	case REMOTE_CONFIG_SAME_GID:
-	    print_debug("change same_gid to %d\n",kv->value);
-	    config_var_set(handler, "same_gid", kv->value);
-	    break;
-      }
-      tmplist = tmplist->next;
-    }
+    if (d->response == GGADU_OK) {
+	while (tmplist)
+	{
+        GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+        switch (kv->key)
+        {
+	    case REMOTE_CONFIG_SAME_UID:
+	        print_debug("change same_uid to %d\n",kv->value);
+	        config_var_set(handler, "same_uid", kv->value);
+	        break;
+	    case REMOTE_CONFIG_SAME_GID:
+	        print_debug("change same_gid to %d\n",kv->value);
+	        config_var_set(handler, "same_gid", kv->value);
+		break;
+        }
+        tmplist = tmplist->next;
+	}
     config_save(handler);
+    read_remote_config ();
+    }
     GGaduDialog_free(d);
 
-    read_remote_config ();
     return;
   }
 

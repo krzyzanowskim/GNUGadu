@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.3 2003/04/03 21:28:05 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.4 2003/04/04 15:17:31 thrulliq Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -111,8 +111,7 @@ typedef struct {
 typedef struct {
     gchar *title;
     gchar *callback_signal;
-    gchar *callback_cancel_signal;
-    gint result;
+    gint response;
     GSList *optlist; // lista elementów GGaduKeyValue
     gpointer user_data;
     gint type;

@@ -1,3 +1,4 @@
+/* $Id: dialog.c,v 1.3 2003/04/04 15:17:30 thrulliq Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,7 +17,7 @@ GGaduDialog *ggadu_dialog_new() {
 void ggadu_dialog_add_entry(
 		      GSList **prefs, 
 		      gint key, 
-		      gchar *desc, 
+		      const gchar *desc, 
 		      gint type, 
 		      gpointer value, 
 		      gint flags)

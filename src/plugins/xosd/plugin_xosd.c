@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.6 2003/04/04 06:58:12 shaster Exp $ */
+/* $Id: plugin_xosd.c,v 1.7 2003/04/04 15:17:40 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -79,40 +79,43 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
         {
             GGaduDialog *d = signal->data;
             GSList *tmplist = d->optlist;
-            while (tmplist) 
-            {
-                GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-                switch (kv->key)
-                {
-                    case GGADU_XOSD_CONFIG_COLOUR:
-                        print_debug("changing var setting colour to %s\n", kv->value);
-                        config_var_set(handler, "colour", kv->value);
-                        break;
-                    case GGADU_XOSD_CONFIG_NUMLINES:
-                        print_debug("changing var setting numlines to %d\n", kv->value);
-                        config_var_set(handler, "numlines", kv->value);
-                        break;
-                    case GGADU_XOSD_CONFIG_TIMEOUT:
-                        print_debug("changing var setting timeout to %d\n", kv->value);
-                        config_var_set(handler, "timeout", kv->value);
-                        break;
-                    case GGADU_XOSD_CONFIG_TIMESTAMP:
-                        print_debug("changing var setting timestamp to %d\n", kv->value);
-                        config_var_set(handler, "timestamp", kv->value);
-                        break;
-                    case GGADU_XOSD_CONFIG_ALIGN:
-                        print_debug("changing var setting align to %s\n", kv->value);
-                        config_var_set(handler, "align", kv->value);
-                        break;
-                    case GGADU_XOSD_CONFIG_POS:
-                        print_debug("changing var setting pos to %s\n", kv->value);
-                        config_var_set(handler, "pos", kv->value);
-                        break;
-                }
-                tmplist = tmplist->next;
-            }
-            config_save(handler);
-            set_configuration();
+	    
+	    if (d->response == GGADU_OK) {
+        	while (tmplist) 
+        	{
+            	    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+            	    switch (kv->key)
+            	    {
+                	case GGADU_XOSD_CONFIG_COLOUR:
+                    	    print_debug("changing var setting colour to %s\n", kv->value);
+                    	    config_var_set(handler, "colour", kv->value);
+                    	    break;
+                	case GGADU_XOSD_CONFIG_NUMLINES:
+                    	    print_debug("changing var setting numlines to %d\n", kv->value);
+                    	    config_var_set(handler, "numlines", kv->value);
+                    	    break;
+                	case GGADU_XOSD_CONFIG_TIMEOUT:
+                    	    print_debug("changing var setting timeout to %d\n", kv->value);
+                    	    config_var_set(handler, "timeout", kv->value);
+                    	    break;
+                	case GGADU_XOSD_CONFIG_TIMESTAMP:
+                    	    print_debug("changing var setting timestamp to %d\n", kv->value);
+                    	    config_var_set(handler, "timestamp", kv->value);
+                    	    break;
+                	case GGADU_XOSD_CONFIG_ALIGN:
+                    	    print_debug("changing var setting align to %s\n", kv->value);
+                    	    config_var_set(handler, "align", kv->value);
+                    	    break;
+                	case GGADU_XOSD_CONFIG_POS:
+                    	    print_debug("changing var setting pos to %s\n", kv->value);
+                    	    config_var_set(handler, "pos", kv->value);
+                    	    break;
+            	    }
+            	    tmplist = tmplist->next;
+        	}
+        	config_save(handler);
+        	set_configuration();
+	    }
             GGaduDialog_free(d); 
             return;
         }

@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.1 2003/04/03 09:12:18 thrulliq Exp $ */
+/* $Id: plugin_sound_external.c,v 1.2 2003/04/04 15:17:37 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -49,15 +49,18 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
             GGaduDialog *d = signal->data;
             GSList *tmplist = d->optlist;
-            while (tmplist) 
-            {
-                GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-                switch (kv->key)
-                {
-                    case GGADU_SE_CONFIG_PLAYER:
-                        print_debug("changing var setting player to %s\n", kv->value);
-                        config_var_set(handler, "player", kv->value);
-                        break;
+	    
+	    if (d->response == GGADU_OK) {
+	        while (tmplist) 
+        	{
+    	    	    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+            	    switch (kv->key)
+            	    {
+                	case GGADU_SE_CONFIG_PLAYER:
+                    	    print_debug("changing var setting player to %s\n", kv->value);
+                    	    config_var_set(handler, "player", kv->value);
+                    	    break;
+		    }
 		}
 		tmplist = tmplist->next;
 	    }

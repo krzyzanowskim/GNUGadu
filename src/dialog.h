@@ -1,3 +1,5 @@
+/* $Id: dialog.h,v 1.4 2003/04/04 15:17:30 thrulliq Exp $ */
+
 #ifndef GGadu_DIALOG_H
 #define GGadu_DIALOG_H
 

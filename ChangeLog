@@ -1,4 +1,5 @@
 4.04.2003
+- modification of dialogs and response result method (core/most plugins/THrull)
 - gg2sms contacts converter in /contrib (krzak)
 - Alignment/position of XOSD box are configurable now (xosd/shasta)
 

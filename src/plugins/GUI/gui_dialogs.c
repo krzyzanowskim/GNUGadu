@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.12 2003/04/03 21:28:06 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.13 2003/04/04 15:17:31 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -224,15 +224,14 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
     GGaduDialog *d = signal->data;
     GSList *kvlist = d->optlist;
 
-    if (resid == GTK_RESPONSE_OK) {
 
-	while (kvlist) 
-	{
-	    GGaduKeyValue *kv = (GGaduKeyValue *)kvlist->data;
-	    
-	    
-	    switch (kv->type) {
-		case VAR_STR: {
+    while (kvlist) 
+    {
+        GGaduKeyValue *kv = (GGaduKeyValue *)kvlist->data;
+    
+        switch (kv->type) {
+	    case VAR_STR: 
+			{
 			    gchar *tmp = (gchar *)g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
 			    if (strlen(tmp) > 0)
 	    			kv->value = (gpointer)tmp;
@@ -242,13 +241,13 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 			    }
 			}
 			break;
-		case VAR_INT:
+	    case VAR_INT:
 			kv->value = (gpointer)atoi(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
 			break;
-		case VAR_BOOL:
+	    case VAR_BOOL:
 			kv->value = (gpointer)gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(kv->user_data));
 			break;
-		case VAR_FILE_CHOOSER: {
+	    case VAR_FILE_CHOOSER: {
 			gchar *tmp = NULL;
 			GtkWidget *hbox = (GtkWidget *)kv->user_data;
 			GtkWidget *entry = (GtkWidget *)g_object_get_data(G_OBJECT(hbox),"txt_entry");
@@ -262,27 +261,36 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 			    }
 			}
 			break;
-		case VAR_IMG:
+	    case VAR_IMG:
 			kv->value = NULL;
 			break;
-		case VAR_LIST:
+	    case VAR_LIST:
 			kv->value = gtk_editable_get_chars(GTK_EDITABLE(GTK_COMBO(kv->user_data)->entry), 0, -1);
 			break;
-
 	    }
 	    kvlist = kvlist->next;
-	}
-	
-	signal_emit("main-gui", d->callback_signal, d, signal->source_plugin_name);
-	
-    } else if (resid == GTK_RESPONSE_CANCEL) {
-    
-	if (d && d->callback_cancel_signal)
-	    signal_emit("main-gui", d->callback_cancel_signal, d, signal->source_plugin_name);
-	    
-	GGaduDialog_free(d);	
     }
-
+    
+    switch (resid) {
+	case GTK_RESPONSE_OK:
+	    d->response = GGADU_OK;
+	    break;
+	case GTK_RESPONSE_CANCEL:
+	    d->response = GGADU_CANCEL;
+	    break;
+	case GTK_RESPONSE_YES:
+	    d->response = GGADU_YES;
+	    break;
+	case GTK_RESPONSE_NO:
+	    d->response = GGADU_NO;
+	    break;
+	default:
+	    d->response = GGADU_NONE;
+	    break;
+    } 
+    
+    signal_emit("main-gui", d->callback_signal, d, signal->source_plugin_name);
+	
     GGaduSignal_free(signal);
     gtk_widget_destroy(GTK_WIDGET(dialog));
 }

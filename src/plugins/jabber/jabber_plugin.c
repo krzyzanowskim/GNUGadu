@@ -89,26 +89,22 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	{ 
 	    GGaduDialog *d = signal->data;
 	    GGaduStatusPrototype *sp = d->user_data;
-	    
-	    if (connected && sp) 
-	    {
-		GGaduKeyValue *kv = NULL;
-		
-		if (d->optlist) 
+	    if (d->response == GGADU_OK) {
+		if (connected && sp) 
 		{
-		kv = (GGaduKeyValue *)d->optlist->data;
-		jabber_presence(jabber_session, sp->status, kv->value);
-		signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
-
+		    GGaduKeyValue *kv = NULL;
+		
+		    if (d->optlist) 
+		    {
+			kv = (GGaduKeyValue *)d->optlist->data;
+			jabber_presence(jabber_session, sp->status, kv->value);
+			signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
+		    }
 		}
-	    }
-	    
+	    }	    
 	    GGaduDialog_free(d);
-	    
 	    return;
 	}
-
-
 
 	if (!ggadu_strcasecmp(signal->name,"send message")) 
 	{
@@ -134,30 +130,31 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 	    GGaduDialog *d = signal->data;
 	    GSList *tmplist = d->optlist;
 	    
-	    while (tmplist) 
-	    {
-		GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-		
-		switch (kv->key) 
+	    if (d->response == GGADU_OK) {
+	        while (tmplist) 
 		{
-		    case GGADU_JID:
+		    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+		
+		    switch (kv->key) 
+		    {
+			case GGADU_JID:
 				    print_debug("changing var setting jid to %s\n", kv->value);
 				    config_var_set(jabber_handler, "jid", kv->value);
 				    break;
-		    case GGADU_JID_PASSWORD:
+			case GGADU_JID_PASSWORD:
 				    print_debug("changing var setting password to %s\n", kv->value);
 				    config_var_set(jabber_handler, "password", kv->value);
 				    break;
-		    case GGADU_JID_AUTOCONNECT:
+			case GGADU_JID_AUTOCONNECT:
 				    print_debug("changing var setting autoconnect to %d\n", kv->value);
 				    config_var_set(jabber_handler, "autoconnect", kv->value);
 				    break;
+		    }
+		    tmplist = tmplist->next;
 		}
-		tmplist = tmplist->next;
+	    
+		config_save(jabber_handler);
 	    }
-	    
-	    config_save(jabber_handler);
-	    
 	    GGaduDialog_free(d);
 	    
 	    return;

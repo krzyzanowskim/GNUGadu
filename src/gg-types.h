@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.5 2003/04/03 21:28:05 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.6 2003/04/04 15:17:30 thrulliq Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -50,6 +50,7 @@ enum {
 };
 
 enum {
+    GGADU_NONE,
     GGADU_OK,
     GGADU_CANCEL,
     GGADU_YES,

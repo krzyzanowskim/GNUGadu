@@ -245,23 +245,25 @@ void signal_receive(gpointer name, gpointer signal_ptr)
         GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;
 	
-	while (tmplist)
-	{
-	    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-	    switch (kv->key)
+	if (d->response == GGADU_OK) {
+	    while (tmplist)
 	    {
-		case GGADU_SMS_CONFIG_SENDER:
-		    print_debug("change default sender to %s\n",kv->value);
-		    config_var_set(sms_handler, "sender", kv->value);
-		    break;
-		case GGADU_SMS_CONFIG_EXTERNAL:
-		    print_debug("change external program to %d\n",kv->value);
-		    config_var_set(sms_handler, "external", kv->value);
-		    break;
+		GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+	        switch (kv->key)
+		{
+		    case GGADU_SMS_CONFIG_SENDER:
+		        print_debug("change default sender to %s\n",kv->value);
+		        config_var_set(sms_handler, "sender", kv->value);
+		        break;
+		    case GGADU_SMS_CONFIG_EXTERNAL:
+		        print_debug("change external program to %d\n",kv->value);
+		        config_var_set(sms_handler, "external", kv->value);
+		        break;
+		}
+		tmplist = tmplist->next;
 	    }
-	    tmplist = tmplist->next;
+	    config_save(sms_handler);
 	}
-	config_save(sms_handler);
         GGaduDialog_free(d);
 	
 	return;
@@ -321,43 +323,42 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	GSList *tmplist = d->optlist;
 	gboolean old_external = (gboolean)config_var_get(sms_handler, "external");
 	gchar *sender_temp;
-
-	while (tmplist)
-	{
-	    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-	    switch (kv->key)
+	
+	if (d->response == GGADU_OK) {
+	    while (tmplist)
 	    {
-		case GGADU_SMS_CONFIG_SENDER:
-		    sender_temp = g_strdup(kv->value);
-		    break;
-		case GGADU_SMS_CONFIG_EXTERNAL:
-		    config_var_set(sms_handler, "external", kv->value);
-		    break;
-		case GGADU_SMS_CONFIG_NUMBER:
-		    config_var_set(sms_handler, "number", kv->value);
-		    break;
-		case GGADU_SMS_CONFIG_BODY:
-		    config_var_set(sms_handler, "body", kv->value);
-		    break;
+		GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+		switch (kv->key)
+	        {
+	    	    case GGADU_SMS_CONFIG_SENDER:
+	    	        sender_temp = g_strdup(kv->value);
+			break;
+		    case GGADU_SMS_CONFIG_EXTERNAL:
+		        config_var_set(sms_handler, "external", kv->value);
+		        break;
+		    case GGADU_SMS_CONFIG_NUMBER:
+		        config_var_set(sms_handler, "number", kv->value);
+		        break;
+		    case GGADU_SMS_CONFIG_BODY:
+		        config_var_set(sms_handler, "body", kv->value);
+		        break;
+		}
+		tmplist = tmplist->next;
 	    }
-	    tmplist = tmplist->next;
-	}
-        GGaduDialog_free(d);
-	method = GGADU_SMS_METHOD_POPUP;
-	send_sms((gboolean)config_var_get(sms_handler, "external"),
+	    method = GGADU_SMS_METHOD_POPUP;
+	    send_sms((gboolean)config_var_get(sms_handler, "external"),
 		 sender_temp,
 		 config_var_get(sms_handler, "number"),
 		 config_var_get(sms_handler, "body"));
 
 //        g_free(sender_temp);
-	config_var_set(sms_handler, "external", (gpointer)old_external);
-	config_save(sms_handler);
+	    config_var_set(sms_handler, "external", (gpointer)old_external);
+	    config_save(sms_handler);
+	}
 
+        GGaduDialog_free(d);
 	return;
     }
-
-
-
 
     if (!ggadu_strcasecmp(signal->name,"add user"))
     {
@@ -385,8 +386,6 @@ void signal_receive(gpointer name, gpointer signal_ptr)
     signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", smslist, "main-gui");
 
     save_smslist();    
-
-
     return;
     }
 
@@ -441,18 +440,17 @@ void signal_receive(gpointer name, gpointer signal_ptr)
         GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;
 	gchar *temp = NULL;
-	
-	while (tmplist)
-	{
-	    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-	    if (kv->key == 1)
-		temp = kv->value;
-	    tmplist = tmplist->next;
+	if (d->response == GGADU_OK) {
+	    while (tmplist)
+	    {
+		GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+		if (kv->key == 1)
+		    temp = kv->value;
+		tmplist = tmplist->next;
+	    }
+	    send_IDEA_stage2(temp, d->user_data);
 	}
-
-	send_IDEA_stage2(temp, d->user_data);
         GGaduDialog_free(d);
-	return;
     }
 }
 

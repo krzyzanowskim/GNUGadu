@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.9 2003/04/02 18:40:39 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.10 2003/04/04 15:17:38 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -765,32 +765,31 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    GGaduDialog *d = signal->data;
 	    GSList *tmplist = d->optlist;
 	    
-	    while (tmplist) 
-	    {
-		GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
-		
-		switch (kv->key) 
+	    if (d->response == GGADU_OK) {
+		while (tmplist) 
 		{
-		    case TLEN_TLEN_UIN:
+		    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+		
+		    switch (kv->key) 
+		    {
+			case TLEN_TLEN_UIN:
 				    print_debug("changing var setting uin to %s\n", kv->value);
 				    config_var_set(handler, "login", kv->value);
 				    break;
-		    case TLEN_TLEN_PASSWORD:
+			case TLEN_TLEN_PASSWORD:
 				    print_debug("changing var setting password to %s\n", kv->value);
 				    config_var_set(handler, "password", kv->value);
 				    break;
-		    case TLEN_TLEN_AUTOCONNECT:
+			case TLEN_TLEN_AUTOCONNECT:
 				    print_debug("changing var setting autoconnect to %d\n", kv->value);
 				    config_var_set(handler, "autoconnect", kv->value);
 				    break;
+		    }
+		    tmplist = tmplist->next;
 		}
-		tmplist = tmplist->next;
+	        config_save(handler);
 	    }
-	    
-	    config_save(handler);
-	    
 	    GGaduDialog_free(d);
-	    
 	    return;
 	}
 	
@@ -799,18 +798,20 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    GGaduDialog *d = signal->data;
 	    GGaduStatusPrototype *sp = d->user_data;
 	    
-	    if (connected == FALSE)
-	    {
-		login((gpointer)TLEN_STATUS_AVAILABLE);
-	    }
-	    else if (connected && sp)
-	    {
-		GGaduKeyValue *kv = NULL;
-		if (d->optlist)
+	    if (d->response == GGADU_OK) {
+		if (connected == FALSE)
 		{
-		    kv = (GGaduKeyValue *)d->optlist->data;
-		    tlen_presence(session, sp->status, kv->value);
-		    description = g_strdup(kv->value);
+		    login((gpointer)TLEN_STATUS_AVAILABLE);
+	        }
+		else if (connected && sp)
+		{
+		    GGaduKeyValue *kv = NULL;
+		    if (d->optlist)
+		    {
+		        kv = (GGaduKeyValue *)d->optlist->data;
+			tlen_presence(session, sp->status, kv->value);
+			description = g_strdup(kv->value);
+		    }
 		}
 	    }
 	    GGaduDialog_free(d);
@@ -893,18 +894,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	if (!ggadu_strcasecmp(signal->name,"search")) {
             GGaduDialog *d = signal->data;
     	    GSList *tmplist = d->optlist;
-		
 	    struct tlen_pubdir *req;
 
-	    if (!(req = tlen_new_pubdir())) {
-	    	GGaduDialog_free(d);
-		return;
-	    }
-			
-	    while (tmplist) {
-		GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
+	    if (d->response == GGADU_OK) {
+	    
+		if (!(req = tlen_new_pubdir())) {
+	    	    GGaduDialog_free(d);
+		    return;
+		}
+
+		while (tmplist) {
+		    GGaduKeyValue *kv = (GGaduKeyValue *)tmplist->data;
 				
-		switch (kv->key) {  
+		    switch (kv->key) {  
 			case GGADU_SEARCH_FIRSTNAME:
 		    	    	    if (kv->value && *(gchar*)kv->value)
 					req->firstname = g_strdup(kv->value);
@@ -934,9 +936,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 
 		if (!(tlen_search(session, req)))
 	    	    signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Error! Cannot perform search!")),"main-gui");
-					
-		GGaduDialog_free(d);
 		tlen_free_pubdir(req);
+	    }
+	    GGaduDialog_free(d);
 	}
 	
 	if (!ggadu_strcasecmp(signal->name, "get current status")) {
