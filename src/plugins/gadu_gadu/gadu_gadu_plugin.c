@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.92 2003/11/19 18:14:35 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.93 2003/11/25 21:16:17 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -633,10 +633,6 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	      
 	      print_debug("GG_EVENT_STATUS");
 
-/*	      print_debug ("%s : GG_EVENT_STATUS : %d %s\n", GGadu_PLUGIN_NAME, e->event.status.uin,
-			   e->event.status.descr);
-*/
-//	      ggadu_convert ("CP1250", "UTF-8", e->event.status60.descr, desc_utf8);
 	      ggadu_convert ("CP1250", "UTF-8", ((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr), desc_utf8);
 	      notify = g_new0 (GGaduNotify, 1);
 	      notify->id = g_strdup_printf ("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
