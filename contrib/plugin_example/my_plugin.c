@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.5 2004/01/17 00:44:57 shaster Exp $ */
+/* $Id: my_plugin.c,v 1.6 2004/01/20 00:16:21 krzyzak Exp $ */
 /*
 
 	This is example plugin based on sound-external plugin
@@ -26,10 +26,10 @@ GGadu_PLUGIN_INIT("my-plugin", GGADU_PLUGIN_TYPE_MISC);
 gpointer ggadu_play_file(gpointer user_data)
 {
     gchar *cmd;
-    if (!config_var_get(handler, "player"))
+    if (!ggadu_config_var_get(handler, "player"))
 	return NULL;
 
-    cmd = g_strdup_printf("%s %s", (char *) config_var_get(handler, "player"), (gchar *) user_data);
+    cmd = g_strdup_printf("%s %s", (char *) ggadu_config_var_get(handler, "player"), (gchar *) user_data);
 
     system(cmd);
     g_free(cmd);
@@ -60,7 +60,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 
-    print_debug("%s : receive signal %d\n", GGadu_PLUGIN_NAME, signal->name);
+    print_debug("%s : receive signal %d", GGadu_PLUGIN_NAME, signal->name);
 
     if (signal->name == SOUND_PLAY_FILE_SIG)
     {
@@ -84,13 +84,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 		case GGADU_SE_CONFIG_PLAYER:
 		    print_debug("changing var setting player to %s\n", kv->value);
-		    config_var_set(handler, "player", kv->value);
+		    ggadu_config_var_set(handler, "player", kv->value);
 		    break;
 		}
 		tmplist = tmplist->next;
 	    }
 	}
-	config_save(handler);
+	ggadu_config_save(handler);
 	GGaduDialog_free(d);
     }
 }
@@ -138,9 +138,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
     g_free(this_configdir);
 
-    config_var_add(handler, "player", VAR_STR);
+    ggadu_config_var_add(handler, "player", VAR_STR);
 
-    if (!config_read(handler))
+    if (!ggadu_config_read(handler))
 	g_warning(_("Unable to read configuration file for plugin %s"), "");
 
     register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
@@ -151,7 +151,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
 
-    print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+    print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
 
     if (menu_pluginmenu)
     {
