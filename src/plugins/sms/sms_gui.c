@@ -53,6 +53,7 @@ gpointer sms_preferences (gpointer user_data)
     
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer)config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer)config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SHOW_IN_STATUS, _("Show plugin in status list (needs reload)"), VAR_BOOL, (gpointer)config_var_get(sms_handler, "show_in_status"), VAR_FLAG_NONE);
     
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
@@ -181,6 +182,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     config_var_add(sms_handler,"number", VAR_STR);
     config_var_add(sms_handler,"body", VAR_STR);
     config_var_add(sms_handler,"external", VAR_BOOL);
+    config_var_add(sms_handler, "show_in_status", VAR_BOOL);
 
     if (!config_read(sms_handler))
 	g_warning(_("Unable to read config file for plugin sms"));
@@ -217,6 +219,10 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		        print_debug("change external program to %d\n",kv->value);
 		        config_var_set(sms_handler, "external", kv->value);
 		        break;
+		    case GGADU_SMS_CONFIG_SHOW_IN_STATUS:
+			print_debug("change show_in_status to %d\n", kv->value);
+			config_var_set (sms_handler, "show_in_status", kv->value);
+			break;
 		}
 		tmplist = tmplist->next;
 	    }
@@ -444,7 +450,7 @@ void start_plugin()
     p->img_filename = g_strdup("sms.png");
     
     p->statuslist = button_send();
-    p->offline_status = 2;
+    p->offline_status = config_var_get (sms_handler, "show_in_status") ? 2:3;
 
     print_debug("%s : start_plugin\n",GGadu_PLUGIN_NAME);
     register_signal(sms_handler, "update config");
