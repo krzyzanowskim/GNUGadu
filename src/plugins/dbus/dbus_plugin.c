@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.8 2004/10/28 09:44:14 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.9 2004/10/28 10:22:05 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -88,6 +88,7 @@ static DBusHandlerResult org_freedesktop_im_getProtocols(DBusConnection * connec
 	}
 	/* not sure if it works that way, but just trying */
 	dbus_connection_send(connection, return_message, NULL);
+	dbus_message_unref(return_message);
 
 	dbus_error_free(&error);
 	return DBUS_HANDLER_RESULT_HANDLED;
@@ -102,9 +103,6 @@ static void dbus_plugin_unregistered_func(DBusConnection * connection, gpointer 
 
 static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, DBusMessage * message, gpointer user_data)
 {
-	DBusError error;
-	dbus_error_init(&error);
-
 	print_debug("DBUS: member=%s path=%s interface=%s type=%d", dbus_message_get_member(message),
 		    dbus_message_get_path(message), dbus_message_get_interface(message), dbus_message_get_type(message));
 
@@ -112,11 +110,9 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 	if (dbus_message_is_signal(message, DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL, "Disconnected"))
 	{
 		print_debug("dbus signal: Disconnected");
-		dbus_error_free(&error);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 
-	/* getProtocols */
 	if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS))
 	{
 		return org_freedesktop_im_getProtocols(connection, message, user_data);
@@ -126,7 +122,6 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 		return org_freedesktop_im_getPresence(connection, message, user_data);
 	}
 
-	dbus_error_free(&error);
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
