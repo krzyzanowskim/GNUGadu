@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.70 2003/06/16 21:39:56 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.71 2003/06/16 21:46:47 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -336,7 +336,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
     static gint prev_check = GG_CHECK_READ;
 
     /* w przypadku b³êdu/utraty po³±czenia post±p tak jak w przypadku disconnect */
-    if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) || ((condition & G_IO_HUP) && session->state != GG_STATE_READING_KEY))
+    if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) || ((condition & G_IO_HUP) && (session->state != GG_STATE_CONNECTING_GG)))
       {
 	  connected = FALSE;
 
@@ -347,7 +347,8 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	    }
 	  else
 	    {
-		gchar *txt = g_strdup (_("Disconnected1"));
+//		gchar *txt = g_strdup (_("Disconnected1"));
+		gchar *txt = g_strdup_printf (_("Disconnected %d"), session->state);
 		ggadu_gadu_gadu_disconnect_msg (txt);
 		connect_count = 0;
 		g_free (txt);
@@ -588,13 +589,13 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	  if (session->check == GG_CHECK_READ)
 	    {
 		print_debug ("GG_CHECK_READ\n");
-		watch = g_io_add_watch (source, G_IO_IN | G_IO_ERR, test_chan, NULL);
+		watch = g_io_add_watch (source, G_IO_IN | G_IO_ERR | G_IO_HUP, test_chan, NULL);
 		return FALSE;
 	    }
 
 	  if (session->check == GG_CHECK_WRITE)
 	    {
-		watch = g_io_add_watch (source, G_IO_OUT | G_IO_ERR, test_chan, NULL);
+		watch = g_io_add_watch (source, G_IO_OUT | G_IO_ERR | G_IO_HUP, test_chan, NULL);
 		print_debug ("GG_CHECK_WRITE\n");
 		return FALSE;
 	    }
