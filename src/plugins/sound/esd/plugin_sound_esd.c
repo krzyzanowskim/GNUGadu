@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_esd.c,v 1.4 2004/01/11 12:52:04 krzyzak Exp $ */
+/* $Id: plugin_sound_esd.c,v 1.5 2004/01/11 13:08:05 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -42,7 +42,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 	    gchar *filename = signal->data;
 	    
-	    if (filename != NULL)
+	    if ((filename != NULL) && g_file_test(filename,G_FILE_TEST_IS_REGULAR))
 	    {
 		g_thread_create(ggadu_play_file, filename, FALSE, NULL);
 	    }
