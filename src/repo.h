@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.4 2003/04/13 18:13:06 zapal Exp $ */
+/* $Id: repo.h,v 1.5 2003/04/14 16:39:33 zapal Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
@@ -107,9 +107,6 @@ gboolean ggadu_repo_watch_del (gchar *repo_name, gint actions, gint types, watch
 
 gboolean ggadu_repo_watch_value_add (gchar *repo_name, gpointer key, gint actions, watch_ptr callback);
 gboolean ggadu_repo_watch_value_del (gchar *repo_name, gpointer key, gint actions, watch_ptr callback);
-
-gboolean ggadu_repo_watch_values_add (gchar *repo_name, gint actions, gint types, watch_ptr callback);
-gboolean ggadu_repo_watch_values_del (gchar *repo_name, gint actions, gint types, watch_ptr callback);
 
 gboolean ggadu_repo_watch_clear_callback (watch_ptr callback);
 
