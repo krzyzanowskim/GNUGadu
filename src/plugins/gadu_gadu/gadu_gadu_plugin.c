@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.61 2003/06/09 00:20:37 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.62 2003/06/09 00:47:32 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1298,7 +1298,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 
-        print_debug("%s : receive signal %d\n",GGadu_PLUGIN_NAME,signal->name);
+        print_debug("%s : receive signal %d %s\n",GGadu_PLUGIN_NAME,signal->name, g_quark_to_string(signal->name));
 
 	if (signal->name == g_quark_from_static_string("exit")) { 
 	    //exit_signal_handler(); 
@@ -1501,7 +1501,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	}
 
 	
-	if (signal->name == g_quark_from_static_string("hange status")) 
+	if (signal->name == g_quark_from_static_string("change status")) 
 	{ 
 	    GGaduStatusPrototype *sp = signal->data;
 	    
