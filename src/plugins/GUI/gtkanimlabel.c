@@ -190,17 +190,9 @@ gtk_anim_label_size_request (GtkWidget *widget, GtkRequisition *requisition)
 	
 	anim_label = GTK_ANIM_LABEL(widget);
 
-/*	if (!anim_label->layout) {
-		anim_label->layout = gtk_widget_create_pango_layout (GTK_WIDGET (anim_label), (anim_label->txt) ? anim_label->txt : "");
-		pango_layout_set_markup (anim_label->layout, (anim_label->txt) ? anim_label->txt : "", -1);
-	}
-*/
 	anim_label_create_layout(anim_label, (anim_label->txt) ? anim_label->txt : "");
 	pango_layout_get_extents (anim_label->layout, NULL, &prect);
 	
-/*	requisition->width = PANGO_PIXELS (prect.width);
-	requisition->height = PANGO_PIXELS (prect.height);
-*/
 	requisition->width = 10;
 	requisition->height = PANGO_PIXELS (prect.height);
 }
@@ -230,6 +222,7 @@ gtk_anim_label_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 static gint
 gtk_anim_label_expose (GtkWidget *widget, GdkEventExpose *event)
 {
+	GdkPixmap *pixmap = NULL;
 	GtkAnimLabel *anim_label;
 	
 	g_return_val_if_fail (widget != NULL, FALSE);
@@ -238,20 +231,25 @@ gtk_anim_label_expose (GtkWidget *widget, GdkEventExpose *event)
 	
 	anim_label = GTK_ANIM_LABEL(widget);
 	
-	gdk_window_clear_area (widget->window, 0,0, widget->allocation.width, widget->allocation.height);
-	
 	anim_label_create_layout(anim_label, (anim_label->txt) ? anim_label->txt : "");
+
+	pixmap = gdk_pixmap_new (widget->window, widget->allocation.width, widget->allocation.height, -1);	
 	
-	gdk_draw_layout(widget->window,
+	gdk_draw_rectangle (pixmap, widget->style->bg_gc[widget->state], TRUE, 0, 0, widget->allocation.width, widget->allocation.height);
+	gdk_draw_layout(pixmap,
 			widget->style->fg_gc[widget->state],
 			anim_label->pos_x,0,
 			anim_label->layout);
+			
+	gdk_draw_drawable (widget->window, widget->style->bg_gc[widget->state], pixmap, 0, 0, 0, 0, widget->allocation.width, widget->allocation.height);
+
 	
 	return FALSE;
 }
 
 static gint anim_label_timeout_callback (gpointer user_data)
 {
+	GdkPixmap *pixmap = NULL;
 	GtkAnimLabel *anim_label = NULL;
 	GtkWidget *widget = NULL;
 	PangoRectangle prect;
@@ -259,10 +257,11 @@ static gint anim_label_timeout_callback (gpointer user_data)
 	g_return_val_if_fail (user_data != NULL,FALSE);
 	g_return_val_if_fail (GTK_IS_ANIM_LABEL(user_data),FALSE);
 	
-	
 	anim_label = GTK_ANIM_LABEL(user_data);
+
 	if (anim_label->animate == FALSE) return FALSE;
 	
+
 	widget = GTK_WIDGET(anim_label);
 	anim_label->pos_x = anim_label->pos_x - 1;
 	
@@ -270,13 +269,16 @@ static gint anim_label_timeout_callback (gpointer user_data)
 	
 	if ( (anim_label->pos_x + (PANGO_PIXELS(prect.width))) < 1) 
 		anim_label->pos_x = widget->allocation.width - 1;
+
+	pixmap = gdk_pixmap_new (widget->window, widget->allocation.width, widget->allocation.height, -1);	
 	
-	gdk_window_clear_area (widget->window, 0,0, widget->allocation.width, widget->allocation.height);
-	gdk_draw_layout(widget->window,
+	gdk_draw_rectangle (pixmap, widget->style->bg_gc[widget->state], TRUE, 0, 0, widget->allocation.width, widget->allocation.height);
+	gdk_draw_layout(pixmap,
 			widget->style->fg_gc[widget->state],
 			anim_label->pos_x,0,
 			anim_label->layout);
 			
+	gdk_draw_drawable (widget->window, widget->style->bg_gc[widget->state], pixmap, 0, 0, 0, 0, widget->allocation.width, widget->allocation.height);
 	return TRUE;
 }
 
@@ -292,7 +294,6 @@ gtk_anim_label_animate	(GtkAnimLabel *anim_label, gboolean state)
 		g_source_remove(anim_label->timeout_source); /* or g_source_destroy ??? */
 	}
 	
-//	if ((state == TRUE) && (GTK_WIDGET_VISIBLE(GTK_WIDGET(anim_label))))
 	if (state == TRUE)
 	{
 		anim_label->timeout_source = g_timeout_add(anim_label->timeout_value,anim_label_timeout_callback,anim_label);
