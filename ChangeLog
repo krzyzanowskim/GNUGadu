@@ -1,3 +1,7 @@
+05.07.2003
+- fallback to defaults if xosd_set_* fails for some reason (xosd/shasta)
+- more code cleanups (xosd/shasta)
+
 01.07.2003
 - VAR_FONT_CHOOSER, VAR_COLOUR_CHOOSER (core/GUI/shasta)
 - allow setting xosd messages color via preferences dialog (xosd/shasta)

@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.h,v 1.3 2003/07/01 10:05:17 shaster Exp $ */
+/* $Id: plugin_xosd.h,v 1.4 2003/07/05 18:27:15 shaster Exp $ */
 #ifndef PLUGIN_XOSD_H
 #define PLGUIN_XOSD_H 1
 
@@ -15,6 +15,8 @@
 #define GGADU_XOSD_DEFAULT_SHADOW_OFFSET 1
 #define GGADU_XOSD_DEFAULT_HORIZONTAL_OFFSET 0
 #define GGADU_XOSD_DEFAULT_VERTICAL_OFFSET 0
+#define GGADU_XOSD_DEFAULT_ALIGN XOSD_center
+#define GGADU_XOSD_DEFAULT_POS XOSD_top
 
 enum
 {

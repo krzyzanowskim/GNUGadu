@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.14 2003/07/01 10:05:17 shaster Exp $ */
+/* $Id: plugin_xosd.c,v 1.15 2003/07/05 18:27:15 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -39,6 +39,7 @@ gint ALIGN;
 gint POS;
 
 int fine = 1;
+int timer = -1;
 GGaduPlugin *handler;
 xosd *osd = NULL;
 
@@ -46,10 +47,11 @@ GGaduMenu *menu_pluginmenu;
 
 GGadu_PLUGIN_INIT("xosd", GGADU_PLUGIN_TYPE_MISC);
 
-gint get_align(void)
+/* helper */
+gint ggadu_xosd_get_align(void)
 {
     gchar *conf_align = (gchar *) config_var_get(handler, "align");
-    gint result = XOSD_center;	/* defaults to XOSD_center */
+    gint result = GGADU_XOSD_DEFAULT_ALIGN;	/* defaults to XOSD_center */
 
     if (conf_align)
     {
@@ -68,10 +70,11 @@ gint get_align(void)
     return result;
 }
 
-gint get_pos(void)
+/* helper */
+gint ggadu_xosd_get_pos(void)
 {
     gchar *conf_pos = (gchar *) config_var_get(handler, "pos");
-    gint result = XOSD_top;	/* defaults to XOSD_top */
+    gint result = GGADU_XOSD_DEFAULT_POS;	/* defaults to XOSD_top */
 
     if (conf_pos)
     {
@@ -92,7 +95,6 @@ gint get_pos(void)
 
 void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
-    gchar *w = NULL;
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 
     print_debug("%s : receive signal %d\n", GGadu_PLUGIN_NAME, signal->name);
@@ -161,29 +163,34 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
     if (signal->name == g_quark_from_static_string("xosd show message"))
     {
-	gchar *msg = signal->data;
-	from_utf8("ISO8859-2", msg, w);
+	gchar *data = signal->data;
 
 	if (fine)
 	{
+	    gchar *w, *msg;
 	    gpointer ts;
 
-	    if (xosd_is_onscreen(osd))
-		xosd_hide(osd);
+	    from_utf8("ISO8859-2", data, w);
 
-	    xosd_scroll(osd, 1);
 	    if (((ts = config_var_get(handler, "timestamp")) != NULL) && ((gboolean) ts == TRUE))
+		msg = g_strdup_printf("[%s] %s", get_timestamp(0), w);
+	    else
+		msg = g_strdup(w);
+
+	    if (timer != -1)
 	    {
-		gchar *ww = NULL;
-		ww = g_strconcat("[", get_timestamp(0), "] ", w, NULL);
-		g_free(w);
-		w = ww;
+		g_source_remove(timer);
+		timer = -1;
+		if (xosd_is_onscreen(osd))
+		    xosd_hide(osd);
 	    }
 
-	    xosd_display(osd, xosd_get_number_lines(osd) - 1, XOSD_string, w);
-	}
+	    xosd_scroll(osd, 1);
+	    xosd_display(osd, xosd_get_number_lines(osd) - 1, XOSD_string, msg);
 
-	g_free(w);
+	    g_free(w);
+	    g_free(msg);
+	}
 
 	return;
     }
@@ -200,24 +207,29 @@ gint set_configuration(void)
     SHADOW_OFFSET = GGADU_XOSD_DEFAULT_SHADOW_OFFSET;
     HORIZONTAL_OFFSET = GGADU_XOSD_DEFAULT_HORIZONTAL_OFFSET;
     VERTICAL_OFFSET = GGADU_XOSD_DEFAULT_VERTICAL_OFFSET;
+    ALIGN = ggadu_xosd_get_align();
+    POS = ggadu_xosd_get_pos();
 
-    /* Read configuration of the xosd from config file (f.e. ~/.gg2/xosd)
-     * The variables are:
-     *  numlines (int)
-     *  font ["-adobe-helvetica-bold-r-normal--24-240-75-75-p-138,-*-*-*-R-Normal--*-180-100-100-*-*,-*-*-*-*-*--*-*-*-*-*-*", ...]
-     *  colour (hex triplet)
-     *  timeout (int)
-     *  shadow_offset (int)
-     *  horizontal_offset (int)
-     *  vertical_offset (int)
-     *  align ["right", "center", "left"]
-     *  pos ["top", "bottom", "middle"]
-     */
     if (!config_var_check(handler, "numlines"))
 	print_debug("xosd: No numlines config found, setting default\n");
     else
 	NUMLINES = (gint) config_var_get(handler, "numlines");
 
+    if (NUMLINES < 1)
+    {
+	print_debug("xosd: NUMLINES < 1?! Are you nuts?!\n");
+	NUMLINES = (gint) GGADU_XOSD_DEFAULT_NUMLINES;
+    }
+
+    if (osd)
+    {
+	if (xosd_is_onscreen(osd))
+	    xosd_hide(osd);
+
+	xosd_destroy(osd);
+    }
+
+    /* create new xosd box */
     osd = xosd_create(NUMLINES);
 
     if (!osd)
@@ -259,39 +271,65 @@ gint set_configuration(void)
     else
 	VERTICAL_OFFSET = (gint) config_var_get(handler, "vertical_offset");
 
-    ALIGN = get_align();
-    POS = get_pos();
-
     /* *INDENT-OFF* */
     print_debug("FONT=%s COLOUR=%s TIMEOUT=%d SHADOW_OFFSET=%d HORIZONTAL_OFFSET=%d VERTICAL_OFFSET=%d ALIGN=%d POS=%d\n", FONT, COLOUR, TIMEOUT, SHADOW_OFFSET, HORIZONTAL_OFFSET, VERTICAL_OFFSET, ALIGN, POS);
     /* *INDENT-ON* */
 
-    xosd_set_font(osd, FONT);
-    xosd_set_colour(osd, COLOUR);
-    xosd_set_timeout(osd, TIMEOUT);
-    xosd_set_shadow_offset(osd, SHADOW_OFFSET);
-    xosd_set_horizontal_offset(osd, HORIZONTAL_OFFSET);
-    xosd_set_vertical_offset(osd, VERTICAL_OFFSET);
-    xosd_set_align(osd, ALIGN);
-    xosd_set_pos(osd, POS);
+    /* Fallback to defaults if something fails */
+    if (xosd_set_font(osd, FONT) == -1)
+	xosd_set_font(osd, GGADU_XOSD_DEFAULT_FONT);
+
+    if (xosd_set_colour(osd, COLOUR) == -1)
+	xosd_set_colour(osd, GGADU_XOSD_DEFAULT_COLOUR);
+
+    if (xosd_set_timeout(osd, TIMEOUT) == -1)
+	xosd_set_timeout(osd, GGADU_XOSD_DEFAULT_TIMEOUT);
+
+    if (xosd_set_shadow_offset(osd, SHADOW_OFFSET) == -1)
+	xosd_set_shadow_offset(osd, GGADU_XOSD_DEFAULT_SHADOW_OFFSET);
+
+    if (xosd_set_horizontal_offset(osd, HORIZONTAL_OFFSET) == -1)
+	xosd_set_horizontal_offset(osd, GGADU_XOSD_DEFAULT_HORIZONTAL_OFFSET);
+
+    if (xosd_set_vertical_offset(osd, VERTICAL_OFFSET) == -1)
+	xosd_set_vertical_offset(osd, GGADU_XOSD_DEFAULT_VERTICAL_OFFSET);
+
+    if (xosd_set_align(osd, ALIGN) == -1)
+	xosd_set_align(osd, GGADU_XOSD_DEFAULT_ALIGN);
+
+    if (xosd_set_pos(osd, POS) == -1)
+	xosd_set_pos(osd, GGADU_XOSD_DEFAULT_POS);
+
+    /* Say hello again */
+    xosd_display(osd, 0, XOSD_string, GGADU_XOSD_WELCOME_STRING);
 
     return 1;
 }
 
 gboolean osd_hide_window(gpointer user_data)
 {
-    xosd_hide(osd);
+    if (xosd_is_onscreen(osd))
+	xosd_hide(osd);
+
+    timer = -1;
+
     return FALSE;
 }
 
 gpointer osd_show_messages(gpointer user_data)
 {
+    if (timer != -1)
+	return NULL;
+
     if (xosd_is_onscreen(osd))
 	xosd_hide(osd);
 
     xosd_show(osd);
-    g_timeout_add((config_var_get(handler, "timeout") ? (guint) config_var_get(handler, "timeout") * 1000 : 3000),
-		  osd_hide_window, NULL);
+
+    timer =
+	g_timeout_add((config_var_get(handler, "timeout") ? (guint) config_var_get(handler, "timeout") * 1000 : 3000),
+		      osd_hide_window, NULL);
+
     return NULL;
 }
 
@@ -300,10 +338,10 @@ gpointer osd_preferences(gpointer user_data)
     GGaduDialog *d = NULL;
     GSList *align_list = NULL;
     GSList *pos_list = NULL;
-    gint align_cur = get_align();
-    gint pos_cur = get_pos();
+    gint align_cur = ggadu_xosd_get_align();
+    gint pos_cur = ggadu_xosd_get_pos();
 
-    print_debug("%s: Preferences\n", "X OSD");
+    print_debug("%s: Preferences\n", "XOSD");
 
     /* current setting first, then all the rest */
     if (align_cur == XOSD_left)
@@ -324,21 +362,20 @@ gpointer osd_preferences(gpointer user_data)
 	pos_list = g_slist_append(pos_list, "middle");
     else if (pos_cur == XOSD_bottom)
 	pos_list = g_slist_append(pos_list, "bottom");
+
     pos_list = g_slist_append(pos_list, "top");
     pos_list = g_slist_append(pos_list, "middle");
     pos_list = g_slist_append(pos_list, "bottom");
 
     d = ggadu_dialog_new();
-    ggadu_dialog_set_title(d, _("X OSD Preferences"));
+    ggadu_dialog_set_title(d, _("XOSD Preferences"));
     ggadu_dialog_callback_signal(d, "update config");
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
 
     /* *INDENT-OFF* */
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_COLOUR_CHOOSER, (gpointer) COLOUR, VAR_FLAG_NONE);
-/* not yet
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
- */
+//    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer) NUMLINES, VAR_FLAG_NONE);
@@ -356,7 +393,7 @@ gpointer osd_preferences(gpointer user_data)
 GGaduMenu *build_plugin_menu()
 {
     GGaduMenu *root = ggadu_menu_create();
-    GGaduMenu *item_gg = ggadu_menu_add_item(root, "X OSD", NULL, NULL);
+    GGaduMenu *item_gg = ggadu_menu_add_item(root, "XOSD", NULL, NULL);
     ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), osd_preferences, NULL));
     ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Show messages"), osd_show_messages, NULL));
 
@@ -475,6 +512,22 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+
+    if (timer != -1)
+    {
+	g_source_remove(timer);
+	timer = -1;
+    }
+
+    /* free willy! */
+    if (osd)
+    {
+	if (xosd_is_onscreen(osd))
+	    xosd_hide(osd);
+
+	xosd_destroy(osd);
+    }
+
     if (menu_pluginmenu)
     {
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
