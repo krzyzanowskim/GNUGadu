@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: support.c,v 1.2 2003/04/06 13:10:46 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -16,6 +16,38 @@
 #include <sys/stat.h>
 #include <time.h>
 #include "support.h"
+#include "unified-types.h"
+
+void set_userlist_status(gchar *id, gint status, gchar *status_descr, GSList *userlist)
+{
+    GSList *slistmp = userlist;
+    
+    if (slistmp == NULL) return;
+    
+    print_debug("set_userlist_status : id = %s, status = %d\n",id,status); 
+    
+    while (slistmp) 
+    { 
+		GGaduContact *k = slistmp->data;
+	
+		if ((k != NULL) && (!ggadu_strcasecmp(id,k->id))) {
+	    	k->status = status;
+	    
+			if (k->status_descr) {
+				g_free(k->status_descr);
+				k->status_descr = NULL;
+			}
+	    
+			if (status_descr)
+				ggadu_convert("CP1250","UTF-8",status_descr,k->status_descr);
+
+	    break;
+		}
+	slistmp = slistmp->next;
+	}
+}
+
+
 
 gboolean str_has_suffix (const gchar  *str, const gchar  *suffix) {
   int str_len = 0;

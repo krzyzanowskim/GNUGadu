@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: support.h,v 1.2 2003/04/06 13:10:46 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -88,6 +88,8 @@
 
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
 
+void set_userlist_status(gchar *id, gint status, gchar *status_descr, GSList *userlist);
+
 gboolean str_has_suffix (const gchar  *str, const gchar  *suffix);
 
 void print_debug_raw(const gchar *func, const char *format, ...);
@@ -110,4 +112,3 @@ const char *itoa(long int i);
 gboolean write_line_to_file(gchar *path,gchar *line,gchar *enc);
 
 #endif
-

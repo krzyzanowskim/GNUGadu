@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.10 2003/04/04 15:17:38 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.11 2003/04/06 13:10:48 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -79,28 +79,6 @@ gboolean ping(gpointer data)
     return TRUE;
 }
 
-void set_userlist_status(gchar *id, gint status, gchar *status_descr)
-{
-    GSList *slistmp = userlist;
-    
-    while (slistmp) {
-	GGaduContact *k = slistmp->data;
-	if (k != NULL) {
-	    print_debug("set_userlist_status : id = %s, k->id = %s, status %d\n",id,k->id,status);
-	    if (!ggadu_strcasecmp(id, k->id)) {
-		k->status = status;
-		if (k->status_descr) {
-		    g_free(k->status_descr);
-		    k->status_descr = NULL;
-		}
-		if (status_descr)
-		    ggadu_convert("CP1250","UTF-8", status_descr, k->status_descr);
-	        break;
-	    }
-	}
-	slistmp = slistmp->next;
-    }
-}
 
 void handle_search_item(struct tlen_pubdir *item)
 {
@@ -307,7 +285,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 
 
 		print_debug("STATUS IN EVENT: %d\n",e->presence->status);
-		set_userlist_status(notify->id, notify->status, e->presence->description);
+		set_userlist_status(notify->id, notify->status, e->presence->description, userlist);
 		signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 		break;
 		

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.19 2003/04/05 21:37:05 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.20 2003/04/06 13:10:47 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -182,35 +182,6 @@ gboolean gadu_gadu_ping(gpointer data)
     return TRUE;    
 }
 
-void set_userlist_status(gchar *id, gint status, gchar *status_descr)
-{
-    GSList *slistmp = userlist;
-    
-    if (slistmp == NULL) return;
-    
-    print_debug("set_userlist_status : id = %s, status = %d\n",id,status); 
-    
-    while (slistmp) 
-    { 
-		GGaduContact *k = slistmp->data;
-	
-		if ((k != NULL) && (!ggadu_strcasecmp(id,k->id))) {
-	    	k->status = status;
-	    
-			if (k->status_descr) {
-				g_free(k->status_descr);
-				k->status_descr = NULL;
-			}
-	    
-			if (status_descr)
-				ggadu_convert("CP1250","UTF-8",status_descr,k->status_descr);
-
-	    break;
-		}
-	slistmp = slistmp->next;
-	}
-}
-
 void handle_search_event(struct gg_event *e)
 {
     gg_pubdir50_t res = e->event.pubdir50;
@@ -388,7 +359,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			    notify = g_new0(GGaduNotify,1);
 			    notify->id = g_strdup_printf("%d",n->uin);
 			    notify->status = n->status;
-			    set_userlist_status(notify->id, n->status, NULL);
+			    set_userlist_status(notify->id, n->status, NULL, userlist);
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 			    /* signal_emit(GGadu_PLUGIN_NAME, "xosd show message",g_strdup_printf("%s - %s",k->nick,sp->description),"xosd"); */
 
@@ -408,7 +379,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			    notify->id = g_strdup_printf("%d",n->uin);
 
 			    notify->status = n->status;
-			    set_userlist_status(notify->id, n->status, e->event.notify_descr.descr);
+			    set_userlist_status(notify->id, n->status, e->event.notify_descr.descr,userlist);
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
 			    n++;
@@ -421,7 +392,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			notify = g_new0(GGaduNotify,1);
 			notify->id = g_strdup_printf("%d",e->event.status.uin);
 			notify->status = e->event.status.status;
-			set_userlist_status(notify->id, notify->status, e->event.status.descr);
+			set_userlist_status(notify->id, notify->status, e->event.status.descr,userlist);
 			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 			break;
 

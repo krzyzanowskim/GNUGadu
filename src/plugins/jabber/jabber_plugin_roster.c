@@ -31,31 +31,6 @@ gint user_in_userlist(gpointer ula, gpointer cona)
 	return 0;
 }
 
-void set_userlist_status(gchar *id, gint status, gchar *status_descr)
-{
-	GSList *slistmp = userlist;
-    
-	while (slistmp) {
-		GGaduContact *k = slistmp->data;
-			
-		if (k && (!ggadu_strcasecmp(id, k->id))) {
-				k->status = status;
-				
-				if (k->status_descr) {
-					g_free(k->status_descr);
-					k->status_descr = NULL;
-				}
-				
-				if (status_descr)
-					k->status_descr = g_strdup(status_descr);
-				
-				break;
-		}
-
-	slistmp = slistmp->next;
-	}
-}
-
 void remove_roster(char *jid)
 {
 	iks *x,*y,*z;
@@ -87,7 +62,7 @@ void roster_update_presence(ikspak *pak)
 	notify->id = g_strdup(iks_id_printx(pak->from,id_print));
 	notify->status = pak->show;
 	
-	set_userlist_status(notify->id, notify->status, iks_find_cdata(pak->x,"status"));
+	set_userlist_status(notify->id, notify->status, iks_find_cdata(pak->x,"status"), userlist);
 	
 	signal_emit("jabber","gui notify",notify,"main-gui");
 }
@@ -98,46 +73,46 @@ void roster_update_item(iks *x, gint type)
 	GGaduContact *k = NULL;
 
 	if (!x) return;
-			
+	
 	if (type == J_ROSTER_REMOVE) {
-		gchar *jid = iks_find_attrib(x, "jid");
-		GSList *l = userlist;
-			
-		while (l) {
-			GGaduContact *k = (GGaduContact *)l->data;
+				gchar *jid = iks_find_attrib(x, "jid");
+				GSList *l = userlist;
 		
-			if (!g_strcasecmp(k->id,jid)) {
-				g_slist_remove(userlist,k);
-				remove_roster(jid);
-				GGaduContact_free(k);
-				userlist_changed = TRUE;
-				return;
-			}
+				while (l) {
+					GGaduContact *k = (GGaduContact *)l->data;
+		
+					if (!g_strcasecmp(k->id,jid)) {
+						g_slist_remove(userlist,k);
+						remove_roster(jid);
+						GGaduContact_free(k);
+						userlist_changed = TRUE;
+						return;
+					}
 
-		l = l->next;
+				l = l->next;
+				}
+		}
+		
+//	if (type == J_ROSTER_TO || J_ROSTER_FROM || J_ROSTER_BOTH	) {
+	if ((type == J_ROSTER_BOTH)	 || (type == J_ROSTER_NONE)) {
+				gchar *id = iks_find_attrib(x, "jid");
+		
+				if(!id) return;
+
+				k = g_new0(GGaduContact, 1);
+				k->id = g_strdup(id);
+				k->nick = g_strdup(id); 
+				k->status = (type == J_ROSTER_BOTH) ? JABBER_STATUS_UNAVAILABLE : JABBER_STATUS_WAIT_SUBSCRIBE;
+	    
+				if (!user_in_userlist(userlist,k)) {
+					userlist_changed = TRUE;
+					userlist = g_slist_append(userlist, k);
+				} else 
+					GGaduContact_free(k);
 		}
 
-    return;	
-	}
-	
-	if (type == J_ROSTER_TO || J_ROSTER_FROM || J_ROSTER_BOTH) {
-		gchar *id = iks_find_attrib(x, "jid");
-	    
-		if(!id) return;
-
-		k = g_new0(GGaduContact, 1);
-		k->id = g_strdup(id);
-		k->nick = g_strdup(id); 
-		k->status = JABBER_STATUS_UNAVAILABLE;
-	    
-		if (!user_in_userlist(userlist,k)) {
-			userlist_changed = TRUE;
-			userlist = g_slist_append(userlist, k);
-		} else GGaduContact_free(k);
-
-	return;
-	}
 }
+
 
 void roster_update(ikspak *pak)
 {
@@ -215,8 +190,17 @@ void presence_parse(ikspak *pak)
 
 		case IKS_TYPE_SUBSCRIBE: {
 			GGaduDialog *d = ggadu_dialog_new();
+//			GGaduNotify *notify = g_new0(GGaduNotify,1);
 
 			id = pak->from;
+
+//			notify->id = g_strdup_printf("%s@%s",id->user,id->server);
+//			notify->status = JABBER_STATUS_WAIT_SUBSCRIBE;
+		
+//			set_userlist_status(notify->id, notify->status, NULL, userlist);
+		
+//			signal_emit("jabber","gui notify",notify,"main-gui");
+			
 			from = g_strdup_printf(_("User : %s@%s \nwants to SUBSCRIBE your presence"),id->user,id->server);
 			
 			ggadu_dialog_set_title(d, _("Confirmation"));

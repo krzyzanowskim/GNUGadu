@@ -56,11 +56,9 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 
 	if (!ggadu_strcasecmp(signal->name,"jabber subscribe")) { 
 		GGaduDialog *d = signal->data;
+		iksid *id = d->user_data;
 			
-		if (d->response == GGADU_OK) {
-				iksid *id = d->user_data;
-				
-				if (id) {
+		if ((d->response == GGADU_OK) && (id)) {
 					iks *x = NULL;
 						
 					x = iks_make_pres(IKS_TYPE_SUBSCRIBED, 0, iks_id_printx(id,id_print), NULL);
@@ -70,8 +68,12 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 					x = iks_make_pres(IKS_TYPE_SUBSCRIBE, 0, iks_id_printx(id,id_print), NULL);
 					iks_send(jabber_session->parser, x);
 					iks_delete(x);
-				}
-		}	    
+		
+		} else if (d->response == GGADU_CANCEL) {
+				gchar *jid = g_strdup_printf("%s@%s",id->user,id->server);
+				remove_roster(jid);
+				g_free(jid);
+		}		
 		
 		GGaduDialog_free(d);
 		return;
@@ -268,6 +270,7 @@ gpointer user_remove_user_action(gpointer user_data)
 			iks_send(jabber_session->parser, x);
 			iks_delete(x);
 			remove_roster(k->id);
+
 			GGaduContact_free(k);
 		}
 	
@@ -306,6 +309,9 @@ void register_userlist_menu() {
 
 gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 {
+
+	if (!jabber_session) return FALSE;
+			
 	iks_recv(jabber_session->parser,0);
 		
 	if (updatewatch(jabber_session)==FALSE) {
@@ -402,7 +408,13 @@ GSList *status_init()
     list = g_slist_append(list, sp);
     sp++;
 
-    return list;
+    sp->status = JABBER_STATUS_WAIT_SUBSCRIBE;
+    sp->description = g_strdup(_("Subscribe"));
+    sp->image = g_strdup("jabber-subscribe.png");
+		sp->receive_only = TRUE;
+    list = g_slist_append(list, sp);
+
+		return list;
 }
 
 gpointer user_preferences_action(gpointer user_data)
