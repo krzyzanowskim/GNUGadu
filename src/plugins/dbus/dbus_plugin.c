@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.10 2004/10/28 11:18:35 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.11 2004/10/28 11:33:37 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -74,7 +74,6 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 				{
 					print_debug("DBUS getPresence: search %s in protocol: %s", contactURIdata, contactURIhandler);
 					signal_emit(p->display_name, "gui get user", NULL, "main-gui");
-					
 				}
 
 				index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);

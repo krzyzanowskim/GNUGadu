@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.13 2004/10/28 11:18:34 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.14 2004/10/28 11:33:36 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -215,7 +215,7 @@ typedef struct
 
     gboolean all_plugins_loaded;	/* TRUE if all plugins are loaded */
     GSList *all_available_plugins;	/* wszystkie dostepne, zainstalowane w systemie pluginy */
-    GSList *plugins;		/* lista pluginow */
+    GSList *loaded_plugins;			/* lista za³adowanych pluginow */
 
     gchar *configdir;		/* katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2) */
 

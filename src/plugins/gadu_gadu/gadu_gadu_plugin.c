@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.199 2004/10/28 11:18:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.200 2004/10/28 11:33:38 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1906,7 +1906,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		/* dupa */
 		GGaduContact *k = NULL;
 		gchar *id = (gchar *)signal->data;
-		if ((k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id))))
+		if (id && (k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id))))
 		{
 		    /* return copy of GGaduContact */
 		    signal->data_return = GGaduContact_copy(k);

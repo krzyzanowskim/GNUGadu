@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.23 2004/10/25 14:03:33 krzyzak Exp $ */
+/* $Id: main.c,v 1.24 2004/10/28 11:33:37 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -100,7 +100,7 @@ void start_plugins()
     GGaduPlugin *plugin = NULL;
     void (*start_plugin) ();
 
-    tmp = config->plugins;
+    tmp = config->loaded_plugins;
 
     while (tmp)
     {

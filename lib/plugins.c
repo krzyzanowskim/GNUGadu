@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.23 2004/10/19 11:21:09 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.24 2004/10/28 11:33:36 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -146,7 +146,7 @@ gboolean load_plugin(gchar * path)
 		}
 	}
 
-	if (g_slist_find(config->plugins, ggadu_plugin_name()))
+	if (g_slist_find(config->loaded_plugins, ggadu_plugin_name()))
 	{
 		print_debug("core: ekhm... plugin %s is already loaded\n", path);
 		dlclose(handler);
@@ -230,7 +230,7 @@ void unload_plugin(gchar * name)
 
 	/* waÅ¼ne - nie tykaæ listy dostêpnych modu³ów */
 	/* wypierdzielamy plugin z listy w³±czonych pluginów */
-	config->plugins = g_slist_remove(config->plugins, plugin_handler);
+	config->loaded_plugins = g_slist_remove(config->loaded_plugins, plugin_handler);
 
 	/* nie tykaæ name */
 /*
@@ -348,7 +348,7 @@ GGaduPlugin *register_plugin(gchar * name, gchar * desc)
 	plugin_handler->name = g_strdup(name);
 	plugin_handler->description = g_strdup(desc);
 
-	config->plugins = g_slist_append(config->plugins, plugin_handler);
+	config->loaded_plugins = g_slist_append(config->loaded_plugins, plugin_handler);
 
 	return (GGaduPlugin *) plugin_handler;
 }
@@ -360,7 +360,7 @@ GGaduPlugin *register_plugin(gchar * name, gchar * desc)
 
 GGaduPlugin *find_plugin_by_name(gchar * name)
 {
-	GSList *tmp = (config) ? config->plugins : NULL;
+	GSList *tmp = (config) ? config->loaded_plugins : NULL;
 	GGaduPlugin *plugin_handler = NULL;
 
 	if (name == NULL)
@@ -385,7 +385,7 @@ GGaduPlugin *find_plugin_by_name(gchar * name)
  */
 GSList *find_plugin_by_pattern(gchar * pattern)
 {
-	GSList *tmp = config->plugins;
+	GSList *tmp = config->loaded_plugins;
 	GGaduPlugin *plugin_handler = NULL;
 	GSList *found_list = NULL;
 
@@ -415,7 +415,7 @@ void register_extension_for_plugins(GGaduPluginExtension * ext)
 	if ((!ext) || (!config))
 		return;
 
-	plugins = config->plugins;
+	plugins = config->loaded_plugins;
 
 	while (plugins)
 	{
@@ -435,7 +435,7 @@ void register_extension_for_plugin(GGaduPluginExtension * ext, gint plugin_type)
 	if ((!ext) || (!config))
 		return;
 
-	plugins = config->plugins;
+	plugins = config->loaded_plugins;
 
 	while (plugins)
 	{
@@ -457,7 +457,7 @@ void unregister_extension_for_plugins(GGaduPluginExtension * ext)
 	if ((!ext) || (!config))
 		return;
 
-	plugins = config->plugins;
+	plugins = config->loaded_plugins;
 
 	while (plugins)
 	{
@@ -533,7 +533,7 @@ GSList *get_list_modules_load()
 	{
 		while (g_io_channel_read_line_string(ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
 		{
-			tmp = config->plugins;
+			tmp = config->loaded_plugins;
 			while (tmp)
 			{
 				plugin = (GGaduPlugin *) tmp->data;
@@ -551,7 +551,7 @@ GSList *get_list_modules_load()
 	/* ugly hack: no modules.load file, load all plugins */
 	if (ret == NULL)
 	{
-		tmp = config->plugins;
+		tmp = config->loaded_plugins;
 		while (tmp)
 		{
 			plugin = (GGaduPlugin *) tmp->data;

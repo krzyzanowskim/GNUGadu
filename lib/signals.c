@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.23 2004/10/25 15:07:48 krzyzak Exp $ */
+/* $Id: signals.c,v 1.24 2004/10/28 11:33:36 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -151,7 +151,7 @@ void hook_signal(GGaduSigID q_name,
 
 GGaduSignalinfo *find_signal(gpointer signal_name)
 {
-	GSList *tmp = config->plugins;
+	GSList *tmp = config->loaded_plugins;
 	GGaduPlugin *plugin_handler = NULL;
 	GSList *signals_list = NULL;
 	GGaduSignalinfo *signalinfo = NULL;
@@ -188,7 +188,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 {
 	GGaduPlugin *dest = NULL;
 	GGaduPlugin *src = NULL;
-	GSList *tmp = config->plugins;
+	GSList *tmp = config->loaded_plugins;
 	GSList *hooks = config->signal_hooks;
 	void (*hook_func) (GGaduSignal *, void (*)(GGaduSignal *, gchar *, void *perl)) = NULL;
 
