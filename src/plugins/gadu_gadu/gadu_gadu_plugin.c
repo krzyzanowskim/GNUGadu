@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.20 2003/04/06 13:10:47 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.21 2003/04/07 20:02:43 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1448,7 +1448,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
     	    GSList *tmplist = d->optlist;
 	    gg_pubdir50_t req;
 	    
-	    if (d->response == GGADU_OK) {
+	    if ((d->response == GGADU_OK) || (d->response == GGADU_NONE))  {
 
 		if (!(req = gg_pubdir50_new(GG_PUBDIR50_SEARCH))) {
 		    GGaduDialog_free(d);
