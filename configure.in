@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.85 2004/08/30 11:57:13 krzyzak Exp $
+dnl $Id: configure.in,v 1.86 2004/09/02 12:43:59 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.5.1])
 
@@ -387,10 +387,11 @@ fi
 
 AC_ARG_WITH(esd, [  --without-esd		  Build esd sound plugin	default=yes])
 if test "x$with_esd" != "xno"; then
+
     with_esd=yes
     have_libesd=no
-    AM_PATH_ESD(0.2.7 ,have_libesd=yes,
-    [AC_MSG_ERROR([*** sound support for esd need EsounD installed (http://www.tux.org/~ricdude/EsounD.html) ***])])
+    
+    AM_PATH_ESD(0.2.7 ,have_libesd=yes,[AC_MSG_ERROR([*** sound support for esd need EsounD installed http://www.tux.org/~ricdude/EsounD.html ***])])
     
     if test "$have_libesd" = yes; then
 	AC_SUBST(ESD_CFLAGS)

@@ -1,3 +1,7 @@
+02.09.2004
+- set wrap mode to GTK_WRAP_WORD_CHAR (GUI/krzak)
+  close #62
+
 30.08.2004
 - Changing own password implemented (JEP-0077); Minor fixes. (jabber/mkobierzycki)
 

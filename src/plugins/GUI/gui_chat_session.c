@@ -1,4 +1,4 @@
-/* $Id: gui_chat_session.c,v 1.11 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: gui_chat_session.c,v 1.12 2004/09/02 12:44:00 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -283,7 +283,7 @@ GtkWidget *gui_chat_session_create_gtk_widget(GUIChatSession * gcs)
     gtk_widget_set_name(GTK_WIDGET(history), "GGHistory");
 
     gtk_text_view_set_editable(GTK_TEXT_VIEW(history), FALSE);
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(history), GTK_WRAP_CHAR);
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(history), GTK_WRAP_WORD_CHAR);
     gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(history), FALSE);
     gtk_text_view_set_left_margin(GTK_TEXT_VIEW(history), 2);
 
@@ -321,7 +321,7 @@ GtkWidget *gui_chat_session_create_gtk_widget(GUIChatSession * gcs)
      */
     input = gtk_text_view_new();
     gtk_widget_set_name(GTK_WIDGET(input), "GGInput");
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(input), GTK_WRAP_WORD);
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(input), GTK_WRAP_WORD_CHAR);
     gtk_text_view_set_left_margin(GTK_TEXT_VIEW(input), 2);
 
     gtk_widget_ref(input);
