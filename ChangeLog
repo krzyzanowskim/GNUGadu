@@ -1,8 +1,16 @@
+19.02.2005
+- Added option `Autoconnect with status: FOO' to preferences dialog. (mkobierzycki/jabber)
+
+17.02.2005
+- Added `Resource' field to `(Contact info)/Software' dialog. (mkobierzycki/jabber)
+- Show preferences dialog while trying to connect without (jid || password), closes #167 (mkobierzycki/jabber)
+
 16.02.2005
 - fluxbox compatibility and improvements for dockapp plugin by Andrzej Kurzeja (krzak/dockapp)
 - irc-style messages in chat window - option (keneda at bohater.net/GUI)
-- Added `Resource' field to `(Contact info)/Software' dialog. (mkobierzycki/Jabber)
-- Show preferences dialog while trying to connect without (jid || password), closes #167 (mkobierzycki/Jabber)
+- Slightly reworked the way that signal `gui status changed' is handled (mkobierzycki/GUI)
+- Show current status description in tooltip - now works with jabber
+  and tlen plugin also (mkobierzycki/GUI)
 
 04.02.2005
 - automake 1.9, 1.8 and at least unspecified used by autogen sutff (krzak)
