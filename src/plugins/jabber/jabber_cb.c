@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.80 2004/12/27 14:21:03 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.81 2004/12/27 14:22:40 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -675,9 +675,10 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		if (!(node = lm_message_node_get_child(message->node, "error")))
 		{
 			print_debug("jabber: weird roster.");
-			lm_message_node_unref(node);
+/*			lm_message_node_unref(node);
 			g_slist_free(list);
 			return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+*/			
 		}
 /*
 		signal_emit("jabber", "gui show warning",
