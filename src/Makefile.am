@@ -17,7 +17,9 @@ gg2_SOURCES = main.c \
 	menu.c \
 	menu.h \
 	dialog.c \
-	dialog.h
+	dialog.h \
+	repo.c \
+	repo.h
 
 gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\"
 
