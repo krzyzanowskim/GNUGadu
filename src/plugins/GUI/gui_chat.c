@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.74 2004/02/14 21:07:09 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.75 2004/02/14 21:41:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -540,6 +540,7 @@ static void on_chat_find_clicked(GtkWidget * button, gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, session->id, VAR_FLAG_NONE);
 
+	dialog->response=GGADU_OK;
 	signal_emit("main-gui", "search", dialog, plugin_name);
 }
 
