@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.4 2003/03/28 22:14:56 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.5 2003/04/03 08:07:17 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -449,6 +449,7 @@ void gui_msg_receive(GGaduSignal *signal)
 		    sigdata = g_slist_append(sigdata, (gpointer)"new-msg.png");
 		    sigdata = g_slist_append(sigdata, _("You Have Message"));
 
+		    showwindow = config_var_get(gui_handler, "chat_window_auto_show") ? TRUE:FALSE;
 		    if (!showwindow) {
 		        if (signal_emit_full("main-gui", "docklet set icon",sigdata, NULL, (gpointer)g_slist_free) == NULL) {
 		    	    showwindow = TRUE;

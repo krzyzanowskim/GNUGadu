@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.4 2003/04/02 22:42:35 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.5 2003/04/03 08:07:19 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -381,6 +381,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *tree;
 	GtkWidget *expand;
 	GtkWidget *chatstyle;
+	GtkWidget *chatwindowshow;
 	GtkWidget *chatwindowraise;
 	GtkWidget *usexosdfornewmsgs;
 	GtkWidget *send_on_enter;
@@ -455,6 +456,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	chatstyle = gtk_check_button_new_with_label(_("Tabbed chat window style"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatstyle, FALSE, FALSE, 0);
 
+	chatwindowshow = gtk_check_button_new_with_label(_("Automaticaly show chat window"));
+	gtk_box_pack_start(GTK_BOX(vbox), chatwindowshow, FALSE, FALSE, 0);
+
 	chatwindowraise = gtk_check_button_new_with_label(_("Automaticaly raise chat window"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatwindowraise, FALSE, FALSE, 0);
 
@@ -510,6 +514,10 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chatstyle),
 					     FALSE);
 	}
+
+	if (config_var_get(gui_handler, "chat_window_auto_show"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chatwindowshow),
+					     TRUE);
 
 	if (config_var_get(gui_handler, "chat_window_auto_raise"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chatwindowraise),
@@ -624,6 +632,11 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 			       (gpointer)
 			       gtk_toggle_button_get_active
 			       (GTK_TOGGLE_BUTTON(chatstyle)));
+		
+		config_var_set(gui_handler, "chat_window_auto_show",
+			       (gpointer)
+			       gtk_toggle_button_get_active
+			       (GTK_TOGGLE_BUTTON(chatwindowshow)));
 
 		config_var_set(gui_handler, "chat_window_auto_raise",
 			       (gpointer)
