@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.8 2003/05/04 10:22:47 zapal Exp $ */
+/* $Id: plugins.c,v 1.9 2003/06/02 09:49:44 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -319,30 +319,31 @@ void config_var_add(GGaduPlugin *handler, gchar *name, gint type)
 
 void config_var_set(GGaduPlugin *handler, gchar *name, gpointer val)
 {
-    GSList *tmp = handler->variables;
-    GGaduVar *var = NULL;
+    GSList *tmp = NULL;
     
-//    if ((name == NULL) || (val == NULL) || (handler == NULL)) return;
-    if ((name == NULL) || (handler == NULL)) return;
+    if ((name == NULL) || (handler == NULL) || (handler->variables == NULL)) return;
+    
+    tmp = handler->variables;
     
     while (tmp) 
     {
-	var = (GGaduVar *)tmp->data;
-
-	if (!ggadu_strcasecmp(var->name, name)) 
+	GGaduVar *var = (GGaduVar *)tmp->data;
+	
+	if ((var != NULL) && (var->name != NULL) && (!ggadu_strcasecmp(var->name, name))) 
 	{
 	
 	    if (val == NULL) {
 		var->ptr = NULL;
 		break;
 	    }
+	    
 	    print_debug("VAR \"%s\"\n",var->name);
 	    switch (var->type) 
 	    {
 		case VAR_STR:
 		case VAR_IMG: // VAR_IMG is a path to image file
 		case VAR_LIST:
-		    print_debug("VAR_STR %s %d\n",val,strlen(val));
+		    print_debug("VAR_STR %s\n",(gchar *)val);
 		    if (*(gchar *)val == 1)
 			var->ptr = (gpointer) base64_decode(g_strstrip((gchar *)val+1));
 		        else 
@@ -360,7 +361,6 @@ void config_var_set(GGaduPlugin *handler, gchar *name, gpointer val)
 	    
 	}
 	tmp = tmp->next;
-	
     }
 }
 
