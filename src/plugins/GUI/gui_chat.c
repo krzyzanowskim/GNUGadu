@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.44 2003/06/14 20:39:43 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.45 2003/06/22 14:33:02 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -21,9 +21,9 @@ extern GSList *emoticons;
 extern GSList *invisible_chats;
 extern GGaduPlugin *gui_handler;
 
-GtkWidget *chat_window = NULL;
+static GtkWidget *chat_window = NULL;
 
-void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * page, guint page_num, gpointer user_data)
+static void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * page, guint page_num, gpointer user_data)
 {
     GtkWidget *chat_notebook = NULL;
     GtkWidget *chat = NULL;
@@ -62,14 +62,14 @@ void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * page, gui
     print_debug ("gui_chat_notebook_switch\n");
 }
 
-void on_destroy_chat_window (GtkWidget * chat, gpointer user_data)
+static void on_destroy_chat_window (GtkWidget * chat, gpointer user_data)
 {
     print_debug ("on_destroy_chat_window\n");
     gui_remove_all_chat_sessions (protocols);
     chat_window = NULL;
 }
 
-void on_destroy_chat (GtkWidget * button, gpointer user_data)
+static void on_destroy_chat (GtkWidget * button, gpointer user_data)
 {
     gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
     gui_chat_session *session = NULL;
@@ -165,7 +165,7 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
     print_debug ("main-gui : chat : zwalniam session\n");
 }
 
-gboolean on_press_event_switching_tabs (gpointer object, GdkEventKey * event, gpointer user_data)
+static gboolean on_press_event_switching_tabs (gpointer object, GdkEventKey * event, gpointer user_data)
 {
     gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
 
@@ -187,43 +187,6 @@ gboolean on_press_event_switching_tabs (gpointer object, GdkEventKey * event, gp
       }
 
     return FALSE;
-}
-
-gboolean on_input_press_event (gpointer object, GdkEventKey * event, gpointer user_data)
-{
-    gui_chat_session *s = user_data;
-
-    if ((event->keyval == 65293) && (config_var_get (gui_handler, "send_on_enter")))
-      {
-	  print_debug ("main-gui : chat : wcisnieto Enter \n");
-	  on_send_clicked (s->chat, user_data);
-	  return TRUE;
-      }
-
-    return (event->state & GDK_CONTROL_MASK) ? on_press_event_switching_tabs (object, event, user_data) : FALSE;
-}
-
-void on_stick_clicked (GtkWidget * button, gpointer user_data)
-{
-    gui_chat_session *s = user_data;
-    gboolean q = FALSE;
-    GtkWidget *win = NULL;
-
-    if ((!s) || (!s->chat)) return;
-    
-    q = (gboolean) g_object_get_data (G_OBJECT (s->chat), "stick");
-    win = g_object_get_data (G_OBJECT (s->chat), "top_window");
-
-    if (q)
-      {
-	  g_object_set_data (G_OBJECT (s->chat), "stick", (gpointer) FALSE);
-	  gtk_window_unstick (GTK_WINDOW (win));
-      }
-    else
-      {
-	  g_object_set_data (G_OBJECT (s->chat), "stick", (gpointer) TRUE);
-	  gtk_window_stick (GTK_WINDOW (win));
-      }
 }
 
 void on_autosend_clicked (GtkWidget * button, gpointer user_data)
@@ -258,7 +221,7 @@ void on_autosend_clicked (GtkWidget * button, gpointer user_data)
       }
 }
 
-void on_send_clicked (GtkWidget * button, gpointer user_data)
+static void on_send_clicked (GtkWidget * button, gpointer user_data)
 {
     gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
     gui_chat_session *session = NULL;
@@ -328,7 +291,47 @@ void on_send_clicked (GtkWidget * button, gpointer user_data)
     gtk_widget_grab_focus (GTK_WIDGET (input));
 }
 
-void on_emoticon_press_event (GtkWidget * event_box, GdkEventButton * event, gpointer user_data)
+
+static gboolean on_input_press_event (gpointer object, GdkEventKey * event, gpointer user_data)
+{
+    gui_chat_session *s = user_data;
+
+    if ((event->keyval == 65293) && (config_var_get (gui_handler, "send_on_enter")))
+      {
+	  print_debug ("main-gui : chat : wcisnieto Enter \n");
+	  on_send_clicked (s->chat, user_data);
+	  return TRUE;
+      }
+
+    return (event->state & GDK_CONTROL_MASK) ? on_press_event_switching_tabs (object, event, user_data) : FALSE;
+}
+
+static void on_stick_clicked (GtkWidget * button, gpointer user_data)
+{
+    gui_chat_session *s = user_data;
+    gboolean q = FALSE;
+    GtkWidget *win = NULL;
+
+    if ((!s) || (!s->chat)) return;
+    
+    q = (gboolean) g_object_get_data (G_OBJECT (s->chat), "stick");
+    win = g_object_get_data (G_OBJECT (s->chat), "top_window");
+
+    if (q)
+      {
+	  g_object_set_data (G_OBJECT (s->chat), "stick", (gpointer) FALSE);
+	  gtk_window_unstick (GTK_WINDOW (win));
+      }
+    else
+      {
+	  g_object_set_data (G_OBJECT (s->chat), "stick", (gpointer) TRUE);
+	  gtk_window_stick (GTK_WINDOW (win));
+      }
+}
+
+
+
+static void on_emoticon_press_event (GtkWidget * event_box, GdkEventButton * event, gpointer user_data)
 {
     GtkWidget *input;
     GtkWidget *emoticons_window;
@@ -355,7 +358,7 @@ void on_emoticon_press_event (GtkWidget * event_box, GdkEventButton * event, gpo
     gtk_widget_destroy (emoticons_window);
 }
 
-gboolean find_emoticon (gchar * name, GSList * here)
+static gboolean find_emoticon (gchar * name, GSList * here)
 {
     GSList *tmp = here;
 
@@ -372,7 +375,7 @@ gboolean find_emoticon (gchar * name, GSList * here)
     return FALSE;
 }
 
-void on_emoticons_clicked (GtkWidget * button, gpointer user_data)
+static void on_emoticons_clicked (GtkWidget * button, gpointer user_data)
 {
     gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
     GtkWidget *emoticons_window = NULL;
@@ -496,7 +499,7 @@ void on_emoticons_clicked (GtkWidget * button, gpointer user_data)
     gtk_widget_show_all (emoticons_window);
 }
 
-void on_chat_find_clicked (GtkWidget * button, gpointer user_data)
+static void on_chat_find_clicked (GtkWidget * button, gpointer user_data)
 {
     gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
     GGaduDialog *d = ggadu_dialog_new ();
@@ -588,7 +591,7 @@ void gui_chat_update_tags ()
       }
 }
 
-gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * event, gpointer user_data)
+static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * event, gpointer user_data)
 {
 
     if (event->send_event == FALSE)

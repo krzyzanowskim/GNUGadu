@@ -99,7 +99,7 @@ static void gtk_anim_label_init (GtkAnimLabel * anim_label)
     anim_label->txt = NULL;
     anim_label->layout = NULL;
     anim_label->timeout_value = 100;
-    anim_label->pos_x = 0;
+    anim_label->pos_x = anim_label->misc.xpad;
     anim_label->auto_reset = TRUE;
     anim_label->alignment = PANGO_ALIGN_LEFT;
     anim_label->auto_animate = TRUE;
@@ -268,15 +268,16 @@ static void gtk_anim_label_size_request (GtkWidget * widget, GtkRequisition * re
 
     anim_label = GTK_ANIM_LABEL (widget);
 
-    requisition->width = 1;
-    requisition->height = 1;
+    requisition->width = anim_label->misc.xpad * 2;
+    requisition->height = anim_label->misc.ypad * 2;
 
     if (anim_label->layout && GTK_WIDGET_MAPPED (widget) && (anim_label->txt) && (strlen (anim_label->txt) > 0))
       {
 	  pango_layout_get_extents (anim_label->layout, NULL, &prect);
-	  requisition->height = PANGO_PIXELS (prect.height);
+	  requisition->height += PANGO_PIXELS (prect.height);
 	  return;
       }
+
 }
 
 
@@ -290,6 +291,8 @@ static void gtk_anim_label_size_allocate (GtkWidget * widget, GtkAllocation * al
 
     widget->allocation = *allocation;
 
+    (* GTK_WIDGET_CLASS (parent_class)->size_allocate) (widget, allocation);
+  
     if (GTK_WIDGET_REALIZED (widget))
       {
 	  gdk_window_move_resize (widget->window, allocation->x, allocation->y, allocation->width, allocation->height);
@@ -477,7 +480,7 @@ static void anim_label_create_pixmap (GtkAnimLabel * anim_label)
 			PANGO_PIXELS (prect.width) + 5, PANGO_PIXELS (prect.height));
 
     /* maluje na niej tekst */
-    gdk_draw_layout (anim_label->pixmap, widget->style->fg_gc[widget->state], 0, 0, anim_label->layout);
+    gdk_draw_layout (anim_label->pixmap, widget->style->fg_gc[widget->state], anim_label->misc.xpad, anim_label->misc.ypad, anim_label->layout);
 
 }
 

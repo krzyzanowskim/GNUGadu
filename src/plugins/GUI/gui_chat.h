@@ -1,4 +1,4 @@
-/* $Id: gui_chat.h,v 1.2 2003/04/08 21:35:18 krzyzak Exp $ */
+/* $Id: gui_chat.h,v 1.3 2003/06/22 14:33:02 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_CHAT_H
 #define GGadu_GUI_PLUGIN_CHAT_H 1
@@ -11,10 +11,6 @@
 #define DEFAULT_FONT "Sans"
 
 GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id, gboolean visible);
-
-gui_chat_session *gui_session_find(gui_protocol *gp, gchar *id);
-
-void on_send_clicked(GtkWidget *button, gpointer user_data);
 
 void gui_chat_append(GtkWidget *chat, gpointer msg, gboolean self);
 
