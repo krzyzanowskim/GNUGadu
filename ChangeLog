@@ -1,5 +1,6 @@
 04.01.2005
 - auto-away is independent for every protocol (aaway/krzak)
+- description is visible in protocol status tooltip (GUI/krzak)
 
 03.01.2005
 - ggadu_spawn() can parse %s argument. (krzak)
