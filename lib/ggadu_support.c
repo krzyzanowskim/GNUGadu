@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.13 2004/10/28 14:03:55 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.14 2004/11/17 11:14:49 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -33,6 +33,20 @@
 #include <time.h>
 #include "ggadu_support.h"
 
+/*#define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1 ? s1 : "",-1) , g_utf8_casefold(s2 ? s2 : "",-1))*/
+
+gint ggadu_strcasecmp(const gchar *s1,const gchar *s2)
+{
+    gint ret = 0;
+    gchar *casefold1 = g_utf8_casefold(s1 ? s1 : "",-1);
+    gchar *casefold2 = g_utf8_casefold(s2 ? s2 : "",-1);
+    
+    ret = g_utf8_collate(casefold1,casefold2);
+
+    g_free(casefold1);
+    g_free(casefold2);
+    return ret;
+}
 
 gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
 {
@@ -51,6 +65,10 @@ gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
 		}
 		out = g_strdup(text);
 	}
+	
+	if (err)
+	    g_error_free(err);
+	    
 	return out;
 }
 

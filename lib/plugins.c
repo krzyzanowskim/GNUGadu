@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.24 2004/10/28 11:33:36 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.25 2004/11/17 11:14:49 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -37,7 +37,7 @@
 gboolean plugin_at_list(gchar * name)
 {
 	GIOChannel *ch = NULL;
-	GString *buffer = g_string_new(NULL);
+	GString *buffer = NULL;
 	gchar *filename;
 	gint lines = 0;
 	gchar *pattern_start = g_utf8_strchr(name,g_utf8_strlen(name,-1),'-');
@@ -46,11 +46,14 @@ gboolean plugin_at_list(gchar * name)
 	{
 		gint pattern_length = g_utf8_strlen(name,-1) - g_utf8_strlen(pattern_start,-1);
 		gchar *pattern = g_strndup(name,pattern_length);
-		if (find_plugin_by_pattern(g_strconcat(pattern,"*",NULL)))
+		gchar *pattern_concat = g_strconcat(pattern,"*",NULL);
+		if (find_plugin_by_pattern(pattern_concat))
 		{	
 		    g_free(pattern);
+		    g_free(pattern_concat);
 		    return FALSE;
 		}
+		g_free(pattern_concat);
 		g_free(pattern);
 	}	
 	
@@ -59,10 +62,10 @@ gboolean plugin_at_list(gchar * name)
 	g_free(filename);
 	if (!ch)
 	{
-		g_string_free(buffer, TRUE);
 		return TRUE;
 	}
 	
+	buffer =  g_string_new(NULL);
 	while (g_io_channel_read_line_string(ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
 	{
 		if (buffer->str && *buffer->str == '\n')
@@ -79,9 +82,9 @@ gboolean plugin_at_list(gchar * name)
 		lines++;
 	}
 	
+	g_string_free(buffer, TRUE);
 	g_io_channel_shutdown(ch, TRUE, NULL);
 	g_io_channel_unref(ch);
-	g_string_free(buffer, TRUE);
 	
 	if (!lines)
 		return TRUE;

@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.c,v 1.3 2004/10/28 11:18:31 krzyzak Exp $ */
+/* $Id: ggadu_types.c,v 1.4 2004/11/17 11:14:49 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -59,8 +59,9 @@ void GGaduContact_free(GGaduContact * k)
 GGaduContact *GGaduContact_copy(GGaduContact * k)
 {
 	GGaduContact *kdest;
+	
 	if (k == NULL)
-		return;
+		return NULL;
 		
 	kdest = g_new0(GGaduContact,1);
 
