@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.90 2005/01/02 14:58:29 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.91 2005/01/04 09:16:06 aflinta Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -722,7 +722,7 @@ static GtkWidget *create_chat_tab()
 	/* chat_paned_size */
 	/* ZONK - how to name it ? */
 
-	label = gtk_label_new(_("Split window at: (percent)"));
+	label = gtk_label_new(_("Window split (percent):"));
 	label3_align = gtk_alignment_new(0, 0.5, 0, 0);
 	chat_paned_size = gtk_spin_button_new_with_range(5, 100, 5);
 	gtk_container_add(GTK_CONTAINER(label3_align), label);
