@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.85 2004/12/22 16:34:15 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.86 2004/12/22 16:54:34 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -362,6 +362,20 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 						msg->message = to_utf8("ISO-8859-2", _("You received sound alert"));
 						msg->class = TLEN_CHAT;
 
+						/* check if ignored */
+						{
+							GGaduContact *ki = g_new0(GGaduContact, 1);
+
+							ki->id = g_strdup(msg->id);
+							if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
+							{
+								GGaduMsg_free(msg);
+								GGaduContact_free(ki);
+								break;
+							}
+
+							GGaduContact_free(ki);
+						}
 
 						signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
 
@@ -396,6 +410,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
 				{
 					GGaduMsg_free(msg);
+					GGaduContact_free(ki);
 					break;
 				}
 

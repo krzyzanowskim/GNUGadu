@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.216 2004/12/22 16:24:16 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.217 2004/12/22 16:54:28 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -493,6 +493,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		    if (signal_emit(GGadu_PLUGIN_NAME, "ignore check contact", ki, "ignore*"))
 		    {
 			GGaduMsg_free(msg);
+			GGaduContact_free(ki);
 			break;
 		    }
 	
