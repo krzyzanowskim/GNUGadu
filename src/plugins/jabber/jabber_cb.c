@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.57 2004/08/30 11:46:52 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.58 2004/08/31 06:32:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -34,6 +34,9 @@ extern jabber_data_type jabber_data;
 
 void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, gpointer user_data)
 {
+	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
+	g_static_mutex_lock(&connect_mutex);
+
 	lm_connection_unregister_message_handler(connection, iq_handler, LM_MESSAGE_TYPE_IQ);
 	iq_handler = NULL;
 	lm_connection_unregister_message_handler(connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ);
@@ -65,6 +68,8 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("An unknown Jabber error")), "main-gui");
 	}
 
+	g_static_mutex_unlock(&connect_mutex);
+	g_thread_exit(0);
 }
 
 LmHandlerResult register_register_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * msg,
@@ -668,7 +673,7 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		child = child->next;
 	}
 
-	signal_emit_from_thread("jabber", "gui send userlist", NULL, "main-gui");
+	signal_emit("jabber", "gui send userlist", NULL, "main-gui");
 
 	/* ZONK ask everybowy from the list about their status, do we need it ? */
 	if (first_time)
