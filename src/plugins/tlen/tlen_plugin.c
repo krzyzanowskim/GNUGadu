@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.87 2004/12/28 17:48:08 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.88 2004/12/29 02:08:58 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -1010,13 +1010,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				{
 					/* w kv->value jest opis, w utf8 */
 					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
-
-					if (kv)
+					
+					if (kv && kv->value && (strlen(kv->value) > 0))
 					{
-//                                          ggadu_set_protocol_status_description(p, from_utf8("ISO-8859-2", kv->value));
-
 						/* ustaw nowy opis w sesji  ZONK free */
 						tlen_presence(session, sp->status, from_utf8("ISO-8859-2", kv->value));
+					} else {
+						g_free(sp->status_description);
+						sp->status_description = NULL;
 					}
 
 					/* uaktualnij GUI */
@@ -1210,8 +1211,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		else
 			sp = ggadu_find_status_prototype(p, TLEN_STATUS_UNAVAILABLE);
 		
-		if (session && session->description)
+		if (session && session->description && (strlen(session->description) > 0))
 		    sp->status_description = g_strdup(session->description);
+		else
+		    sp->status_description = NULL;
 			
 		signal->data_return = sp;
 	}

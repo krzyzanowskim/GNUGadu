@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.143 2004/12/28 17:48:07 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.144 2004/12/29 02:08:55 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -650,12 +650,20 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			{
 				kv = (GGaduKeyValue *) ggadu_dialog_get_entries(dialog)->data;
 
-				if (kv)
+				g_free(jabber_data.description);
+				jabber_data.description = NULL;
+				
+				if (kv && kv->value && (strlen(kv->value) > 0))
 				{
 					if (jabber_data.description)
 						g_free(jabber_data.description);
+						
 					jabber_data.description = g_strdup(kv->value);
+				} else {
+				    g_free(sp->status_description);
+				    sp->status_description = NULL;
 				}
+				
 				jabber_change_status(sp->status);
 			}
 		}
@@ -692,7 +700,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			
 		if (jabber_data.description)
 		    sp->status_description = g_strdup(jabber_data.description);
-			
+		else
+		    sp->status_description = NULL;
+		    	
 		signal->data_return = sp;
 	}
 	else if (signal->name == SEND_MESSAGE_SIG)
