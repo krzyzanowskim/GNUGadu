@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.39 2004/01/17 00:44:59 shaster Exp $ */
+/* $Id: gui_handlers.c,v 1.40 2004/01/17 11:57:52 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -254,17 +254,8 @@ void handle_send_userlist(GGaduSignal * signal)
     gui_protocol *gp = gui_find_protocol(signal->source_plugin_name, protocols);
 
     /* repo support hmmm */
-    index = ggadu_repo_value_first(gp->plugin_name, REPO_VALUE_CONTACT, (gpointer *) & key);
-    while (index)
-    {
-	ktmp = ggadu_repo_find_value(gp->plugin_name, key);
-
-	print_debug("Add from repo: %s", ktmp->id);
-	userlist_from_repo = g_slist_append(userlist_from_repo, ktmp);
-
-	index = ggadu_repo_value_next(gp->plugin_name, REPO_VALUE_CONTACT, (gpointer *) & key, index);
-    }
-
+	userlist_from_repo = ggadu_repo_get_as_slist(gp->plugin_name,REPO_VALUE_CONTACT);
+	
     if (gp && (gp->users_liststore || users_treestore))
     {
 	gp->userlist = userlist_from_repo;
