@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.18 2003/06/09 18:24:34 shaster Exp $ */
+/* $Id: sms_gui.c,v 1.19 2003/06/09 18:49:55 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -159,7 +159,6 @@ GGaduMenu *sms_menu()
     GGaduMenu *item = ggadu_menu_add_item(root, "SMS", NULL, NULL);
 
     ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Add Contact"), sms_add_contact, NULL));
-    ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
     ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Preferences"), sms_preferences, NULL));
 
     return root;

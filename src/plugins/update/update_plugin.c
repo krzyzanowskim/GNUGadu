@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.5 2003/06/09 18:24:32 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.6 2003/06/09 18:49:57 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -283,8 +283,8 @@ GGaduMenu *update_menu()
     GGaduMenu *root = ggadu_menu_create();
     GGaduMenu *item = ggadu_menu_add_item(root, "Update", NULL, NULL);
 
-    ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Check for updates"), update_menu_check, NULL));
     ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Preferences"), update_preferences, NULL));
+    ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Check for updates"), update_menu_check, NULL));
 
     return root;
 }
