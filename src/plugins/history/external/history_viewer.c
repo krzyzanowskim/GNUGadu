@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.2 2004/08/02 11:42:01 krzyzak Exp $ */
+/* $Id: history_viewer.c,v 1.3 2004/08/03 21:59:29 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -34,19 +34,6 @@ static GGaduPluginExtension *ext = NULL;	/* extension to handle vie hisatory fro
 
 GGadu_PLUGIN_INIT("history-external", GGADU_PLUGIN_TYPE_MISC);
 
-/*gpointer ggadu_play_file(gpointer user_data)
-{
-    gchar *cmd;
-    if (!ggadu_config_var_get(handler, "player"))
-	return NULL;
-
-    cmd = g_strdup_printf("%s %s", (char *) ggadu_config_var_get(handler, "player"), (gchar *) user_data);
-
-    system(cmd);
-    g_free(cmd);
-    return NULL;
-}
-*/
 gpointer history_external_preferences(gpointer user_data)
 {
     GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("External History Viewer Preferences"),"update config");
@@ -68,14 +55,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
     print_debug("%s : receive signal %d", GGadu_PLUGIN_NAME, signal->name);
 
-/*    if (signal->name == SOUND_PLAY_FILE_SIG)
-    {
-	gchar *filename = signal->data;
-
-	if (filename != NULL)
-	    g_thread_create(ggadu_play_file, filename, FALSE, NULL);
-    }
-*/
     if (signal->name == UPDATE_CONFIG_SIG)
     {
 	GGaduDialog *dialog = signal->data;

@@ -242,13 +242,12 @@ int main(int argc, char **argv)
 
 	gtk_init(&argc, &argv);
 
-	g_print("GNU Gadu History Prototype Reader\n" "Version 0.07\n" "e-mail: <kazik.cz@interia.pl>\n"
-		"GG: 3781462\n");
+	g_print("GNU Gadu History Prototype Reader version 0.07\ne-mail: kazik.cz@interia.pl, GG: 3781462\n");
 
 	if (argc != 2)
-		g_error("Please enter path to the history file\n" "For example:\n" "%s /home/coth/.gg/history/1234567\n"
-			"%s /root/.gg/history/7654321\n", argv[0], argv[0]);
-
+	{
+		g_error("\nPlease enter path to the history file, for example:\n" "%s /home/coth/.gg2/history/1234567\n%s /root/.gg2/history/7654321\n", argv[0], argv[0]);
+	}
 
 #ifdef GGADU_DEBUG
 	g_print("Opening file..\n");
