@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.39 2004/06/13 00:37:44 shaster Exp $ */
+/* $Id: sms_core.c,v 1.40 2004/06/28 10:14:30 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -435,13 +435,13 @@ gpointer send_IDEA_stage2(SMS * message)
 	}
 	
 	/* Cut-off prefixes. 'just-in-case' */
-	if (g_str_has_prefix(message->number, "+"))
+	if (g_str_has_prefix(sms_number, "+"))
 		sms_number++;
 
-	if (g_str_has_prefix(message->number, "48"))
+	if (g_str_has_prefix(sms_number, "48"))
 		sms_number += 2;
 
-	if (g_str_has_prefix(message->number, "0"))
+	if (g_str_has_prefix(sms_number, "0"))
 		sms_number++;
 
 	sender = ggadu_sms_urlencode(g_strdup(message->sender));
@@ -549,13 +549,13 @@ gint send_PLUS(SMS * message)
 	}
 
 	/* Cut-off prefixes. 'just-in-case' */
-	if (g_str_has_prefix(message->number, "+"))
+	if (g_str_has_prefix(sms_number, "+"))
 		sms_number++;
 
-	if (g_str_has_prefix(message->number, "48"))
+	if (g_str_has_prefix(sms_number, "48"))
 		sms_number += 2;
 
-	if (g_str_has_prefix(message->number, "0"))
+	if (g_str_has_prefix(sms_number, "0"))
 		sms_number++;
 
 	strncpy(tprefix, sms_number, 3);
@@ -628,13 +628,13 @@ gint send_ERA(SMS * message, int *era_left)
 	}
 
 	/* Cut-off prefixes. 'just-in-case' */
-	if (g_str_has_prefix(message->number, "+"))
+	if (g_str_has_prefix(sms_number, "+"))
 		sms_number++;
 
-	if (g_str_has_prefix(message->number, "48"))
+	if (g_str_has_prefix(sms_number, "48"))
 		sms_number += 2;
 
-	if (g_str_has_prefix(message->number, "0"))
+	if (g_str_has_prefix(sms_number, "0"))
 		sms_number++;
 
 	sender = ggadu_sms_urlencode(g_strdup(message->sender));
