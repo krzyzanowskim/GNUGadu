@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.2 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: plugins.h,v 1.3 2003/08/23 19:52:48 krzyzak Exp $ */
 #ifndef GGadu_PROTOCOLS_H
 #define GGadu_PROTOCOLS_H 1
 
@@ -53,5 +53,7 @@ void unregister_extension_for_plugins(GGaduPluginExtension *ext);
 GGaduPlugin *find_plugin_by_name(gchar *name);
 
 GSList *find_plugin_by_pattern(gchar *pattern);
+
+GSList *get_list_modules_load();
 
 #endif

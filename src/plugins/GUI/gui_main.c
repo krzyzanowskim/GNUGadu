@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.22 2003/06/25 22:11:04 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.23 2003/08/23 19:52:49 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -52,7 +52,6 @@ gui_signal_handler handlers[] = {
 	{"unauth request accepted", handle_null},
 	{"gui show warning", handle_show_warning},
 	{"gui show message", handle_show_message},
-//	{"gui notify", handle_notify},
 	{"gui disconnected", handle_disconnected},
 	{"gui show search results", handle_show_search_results},
 	{"gui status changed", handle_status_changed},
@@ -63,7 +62,6 @@ void gui_signal_receive(gpointer name, gpointer signal_ptr)
 {
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
 	gui_signal_handler *h;
-//	gdk_threads_enter();
 
 	print_debug("%s : receive signal %d\n","main-gui",signal->name);
 	
@@ -72,7 +70,6 @@ void gui_signal_receive(gpointer name, gpointer signal_ptr)
 			(h->handler_func)(signal);
 			
 	}
-//	gdk_threads_leave();
 }
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr) 
@@ -152,12 +149,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     
     /* przesyla cala liste kontaktow */
     register_signal(gui_handler,"gui send userlist");
-    
-    /* 
-     * SIGNAL : gui notify
-     * powiadamia o zmianie statusu
-     */
-//    register_signal(gui_handler,"gui notify");
     
     /* 
      * SIGNAL : gui msg receive

@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.9 2003/07/01 10:03:39 shaster Exp $ */
+/* $Id: gg-types.h,v 1.10 2003/08/23 19:52:48 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -91,7 +91,7 @@ typedef struct {
 typedef struct {
     gchar *name; 			// nazwa zmiennej
     gint type;				// typ
-    gpointer ptr;			// wska¼nik gdzie bêdzie przechowywana 
+    gpointer ptr;			// wskaÅºnik gdzie bÄ™dzie przechowywana 
 } GGaduVar;
 
 /* 
@@ -100,8 +100,8 @@ typedef struct {
  */ 
 typedef struct {
     gchar *display_name;
-    gchar *img_filename;	//¶cie¿ka do obrazka z etykiet± na zak³adkê
-    GSList *statuslist;		// lista dostêpnych statusów danego protoko³u
+    gchar *img_filename;	//Å›cieÅ¼ka do obrazka z etykietÄ… na zakÅ‚adkÄ™
+    GSList *statuslist;		// lista dostÄ™pnych statusÃ³w danego protokoÅ‚u
     GSList *offline_status;	// ktory status oznacza offline
     GSList *away_status;	// ktory status oznacza away (NULL = brak)
     GSList *online_status;	// ktory status oznacza online
@@ -149,7 +149,7 @@ typedef struct {
     
     void (*signal_receive_func)(gpointer,gpointer); // wskaznik na receiver signali
     void (*destroy_plugin)();			// wskaznik na zwalniacza plugina
-    void (*start_plugin)();			// wskaznik na funkcjê startuj±c± plugina
+    void (*start_plugin)();			// wskaznik na funkcjÄ™ startujÄ…cÄ… plugina
 } GGaduPlugin;
 
 
@@ -164,23 +164,22 @@ typedef struct {
 typedef struct {
 	/* globalnie niezalezne od protokolu */
 	gboolean send_on_enter;
-	guint main_on_start;		// poka¿ g³ówne okno po uruchomieniu programu
+	guint main_on_start;		// pokaÅ¼ gÅ‚Ã³wne okno po uruchomieniu programu
 	guint width;
 	guint height;
 	gint pos_x;
 	gint pos_y;
 	GSList *all_available_plugins;	// wszystkie dostepne, zainstalowane w systemie pluginy
-	GSList *plugins;		// lista protokolow 
+	GSList *plugins;		// lista pluginow
 
 	gchar  *configdir;		// katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2)
 	GSList *waiting_signals;
 	GSList *signal_hooks;
 	gboolean all_plugins_loaded;
 	GMainLoop *main_loop;
-	
-	GSource *signals_source;
 
 	gpointer repos;
+
 } GGaduConfig;
 
 /*
