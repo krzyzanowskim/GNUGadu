@@ -1,3 +1,6 @@
+14.05.2003
+- don't build arts/oss plugins without usable headers (configure/shasta)
+
 07.05.2003
 - show user ip (gadu-gadu/GUI/Sebo)
 - initial perl support (core/zapal)

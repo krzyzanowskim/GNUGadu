@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.11 2003/05/07 14:51:09 krzyzak Exp $
+dnl $Id: configure.in,v 1.12 2003/05/14 21:26:22 shaster Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -129,6 +129,7 @@ if test x$with_all_plugins = xyes; then
     with_docklet=yes
     with_esd=yes
     with_oss=yes
+    with_arts=yes
     with_sms=yes
     with_remote=yes
     with_external=yes
@@ -284,17 +285,24 @@ fi
 
 AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
 if test "x$with_arts" = "xyes"; then 
+    have_soundserverh=no
     AC_PROG_CXX
+    AC_CHECK_HEADERS(arts/soundserver.h, have_soundserverh=yes, have_soundserverh=no)
 
-    ARTS_CXXFLAGS="$CXXFLAGS -I/usr/include/kde -I/opt/kde/include -I/usr/X11R6/include"
-    ARTS_LIBS="-L/opt/kde/lib -L/usr/X11R6/lib -lstdc++ -lartsflow_idl -mcop -lartsflow -lartswavplayobject"
-    AC_SUBST(ARTS_LIBS)
-    AC_SUBST(ARTS_CXXFLAGS)
+    if test "$have_soundserverh" = yes; then
+
+	ARTS_CXXFLAGS="$CXXFLAGS -I/usr/include/kde -I/opt/kde/include -I/usr/X11R6/include"
+	ARTS_LIBS="-L/opt/kde/lib -L/usr/X11R6/lib -lstdc++ -lartsflow_idl -mcop -lartsflow -lartswavplayobject"
+	AC_SUBST(ARTS_LIBS)
+	AC_SUBST(ARTS_CXXFLAGS)
 
     
-    AC_SUBST(CXX, $CC)
-    AC_SUBST(CXXFLAGS)
-    want_arts=yes
+	AC_SUBST(CXX, $CC)
+	AC_SUBST(CXXFLAGS)
+	want_arts=yes
+    else
+	want_arts=no
+    fi
 else
     AM_CONDITIONAL(am__fastdepCXX, test yes = "$want_arts")
     want_arts=no
@@ -302,11 +310,16 @@ fi
 
 AC_ARG_WITH(oss, [  --with-oss		  Build OSS sound plugin	default=no])
 if test "x$with_oss" = "xyes"; then
-    AC_CHECK_HEADERS(sys/soundcard.h)
-    want_oss=yes
+    have_soundcardh=no
+    AC_CHECK_HEADERS(sys/soundcard.h, have_soundcardh=yes, have_soundcardh=no)
+    if test "$have_soundcardh" = yes; then
+	want_oss=yes
+    else
+	want_oss=no
+    fi
 fi
 
-AC_ARG_WITH(external, [  --with-external		  Build external player sound plugin	default=no])
+AC_ARG_WITH(external, [  --with-external	  Build external player sound plugin	default=no])
 if test "x$with_external" = "xyes"; then
     want_external=yes
 fi
