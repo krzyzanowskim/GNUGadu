@@ -335,6 +335,8 @@ int main(int argc, char **argv)
 #ifdef GGADU_DEBUG
 	g_print("Reading offsets of lines..%d\n", lines);
 	g_print("Found %d lines, and read %d of 'em\n", lines, get_lines(fd, list));
+#else
+	get_lines(fd,list);
 #endif
 
 	/* last page ? */
