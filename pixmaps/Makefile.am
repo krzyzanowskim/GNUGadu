@@ -32,6 +32,8 @@ pixmap_DATA = \
     jabber-online.png \
     jabber.png \
     jabber-xa.png \
+    jabber-noauth.png \
+    jabber-auth-from.png \
     new-msg.png \
     offline.png \
     online.png \
