@@ -1,9 +1,10 @@
-#include <string.h>
+/* $Id: jabber_cb.c,v 1.19 2004/01/07 23:49:16 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
+#include <string.h>
 #include "ggadu_conf.h"
 #include "jabber_cb.h"
 #include "jabber_protocol.h"

@@ -1,3 +1,5 @@
+/* $Id: jabber_cb.h,v 1.4 2004/01/07 23:49:16 thrulliq Exp $ */
+
 #ifndef JABBER_CB_H
 #define JABBER_CB_H 1
 

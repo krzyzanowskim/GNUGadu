@@ -1,3 +1,5 @@
+/* $Id: jabber_login.c,v 1.17 2004/01/07 23:49:16 thrulliq Exp $ */
+
 #include <string.h>
 
 #include "ggadu_conf.h"

@@ -1,3 +1,5 @@
+/* $Id: jabber_plugin.h,v 1.17 2004/01/07 23:49:17 thrulliq Exp $ */
+
 #ifndef JABBER_PLUGIN_H
 #define JABBER_PLUGIN_H 1
 

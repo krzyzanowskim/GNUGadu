@@ -1,3 +1,5 @@
+/* $Id: jabber_protocol.c,v 1.14 2004/01/07 23:49:17 thrulliq Exp $ */
+
 #include <loudmouth/loudmouth.h>
 #include <string.h>
 

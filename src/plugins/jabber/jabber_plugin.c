@@ -1,3 +1,5 @@
+/* $Id: jabber_plugin.c,v 1.46 2004/01/07 23:49:17 thrulliq Exp $ */
+
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
  */

@@ -1,3 +1,5 @@
+/* $Id: jabber_protocol.h,v 1.7 2004/01/07 23:49:17 thrulliq Exp $ */
+
 #ifndef JABBER_PROTOCOL_H
 #define JABBER_PROTOCOL_H 1
 
