@@ -21,6 +21,8 @@ gg2_SOURCES = main.c \
 	repo.c \
 	repo.h
 
-gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\"
+gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\" $(PERL_OPTION_CFLAGS)
 
-gg2_LDADD = -ldl
+gg2_LDADD = -ldl $(PERL_OPTION_LDFLAGS) 
+#      AC_SUBST(PERL_OPTION_LIBS)
+
