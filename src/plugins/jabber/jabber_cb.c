@@ -340,6 +340,13 @@ LmHandlerResult message_cb (LmMessageHandler *handler, LmConnection *connection,
   msg->message = g_strdup (lm_message_node_get_value (body));
   
   signal_emit ("jabber", "gui msg receive", msg, "main-gui");
+
+  if (config_var_get (jabber_handler, "log"))
+  {
+    gchar *line = g_strdup_printf ("\n:: %s (%s) ::\n%s\n", msg->id ,get_timestamp(0), msg->message);
+    ggadu_jabber_save_history (msg->id, line);
+    g_free (line);
+  }
   
   lm_message_unref (message);
 

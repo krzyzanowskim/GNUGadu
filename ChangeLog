@@ -1,6 +1,7 @@
 23.09.2003
 - add basic history functionality, same as in gadu-gadu plugin (tlen/shasta)
 - fix(?) adding users from search results (tlen/shasta)
+- add basic history functionality, same as in gadu-gadu plugin (jabber/shasta)
 
 22.09.2003
 - another bunch of fixes and code cleanups (sms/shasta)

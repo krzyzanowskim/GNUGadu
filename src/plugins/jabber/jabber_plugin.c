@@ -56,6 +56,60 @@ GGaduContact *user_in_list (gchar *jid, GSList *list)
   return NULL;
 }
 
+void ggadu_jabber_save_history (gchar *to, gchar *txt)
+{
+    gchar *dir = g_build_filename(config->configdir, "jabber_history", NULL);
+    gchar *path = g_build_filename(config->configdir, "jabber_history", (to ? to : "UNKOWN"), NULL);
+
+    print_debug("inside logging: dir:%s, path:%s\n\n", dir, path);
+
+    if (!g_file_test (dir, G_FILE_TEST_IS_DIR))
+        mkdir (dir, 0700);
+
+    write_line_to_file (path, txt, "ISO-8859-2");
+
+    g_free (path);
+    g_free (dir);
+}
+
+gpointer user_view_history_action (gpointer user_data)
+{
+    gsize length, terminator;
+    GIOChannel *ch = NULL;
+    gchar *line = NULL;
+    gchar *path = NULL;
+    GString *hist_buf = g_string_new (NULL);
+    GSList *users = (GSList *) user_data;
+    GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
+
+    if (!k)
+        return NULL;
+
+    path = g_build_filename (config->configdir, "jabber_history", k->id, NULL);
+    ch = g_io_channel_new_file (path, "r", NULL);
+    g_free (path);
+
+    if (!ch)
+        return NULL;
+
+    g_io_channel_set_encoding (ch, "ISO-8859-2", NULL);
+
+    while (g_io_channel_read_line (ch, &line, &length, &terminator, NULL) != G_IO_STATUS_EOF)
+      {
+          if (line != NULL)
+              g_string_append (hist_buf, line);
+      }
+      
+    g_io_channel_shutdown (ch, TRUE, NULL);
+
+    signal_emit (GGadu_PLUGIN_NAME, "gui show window with text", hist_buf->str, "main-gui");
+
+    g_string_free (hist_buf, TRUE);
+
+    return NULL;
+}
+
+
 gpointer user_chat_action (gpointer user_data)
 {
   GSList *users = (GSList *)user_data;
@@ -157,6 +211,7 @@ GGaduMenu *build_userlist_menu (void)
   GGaduMenu *menu = ggadu_menu_create ();
 
   ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Chat"),   user_chat_action, NULL));
+  ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("View History"), user_view_history_action, NULL));
   ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Add"),    user_add_action, NULL));
   ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Edit"),   user_edit_action, NULL));
   ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Remove"), user_remove_action, NULL));
@@ -188,6 +243,10 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 	case GGADU_JABBER_PASSWORD:
 	  print_debug ("changing password to %s\n", kv->value);
 	  config_var_set (jabber_handler, "password", kv->value);
+	  break;
+	case GGADU_JABBER_LOG:
+	  print_debug ("changing log to %d\n", kv->value);
+	  config_var_set (jabber_handler, "log", kv->value);
 	  break;
 	case GGADU_JABBER_AUTOCONNECT:
 	  print_debug ("changing autoconnect to %d\n", kv->value);
@@ -248,6 +307,13 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
       result = lm_connection_send (connection, m, &error);
       if (!result)
 	print_debug ("jabber: Can't send!\n");
+      else if (config_var_get(jabber_handler, "log"))
+      {
+	gchar *line = g_strdup_printf(_("\n:: Me (%s) ::\n%s\n"), get_timestamp (0), msg->message);
+	ggadu_jabber_save_history (msg->id, line);
+	g_free (line);
+      }
+
       lm_message_unref (m);
     }
   } else if (signal->name == g_quark_from_static_string ("add user"))
@@ -532,6 +598,9 @@ gpointer user_preferences_action (gpointer user_data)
   ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_PASSWORD,
       _("Password"), VAR_STR,
       config_var_get (jabber_handler, "password"), VAR_FLAG_PASSWORD);
+  ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_LOG,
+      _("Log chats to history file"), VAR_BOOL,
+      config_var_get (jabber_handler, "history"), VAR_FLAG_NONE);
   ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_AUTOCONNECT,
       _("Autoconnect on startup"), VAR_BOOL,
       config_var_get (jabber_handler, "autoconnect"), VAR_FLAG_NONE);
@@ -618,6 +687,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 
   config_var_add (jabber_handler, "jid", VAR_STR);
   config_var_add (jabber_handler, "password", VAR_STR);
+  config_var_add (jabber_handler, "log", VAR_BOOL);
   config_var_add (jabber_handler, "autoconnect", VAR_BOOL);
   config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
   config_var_add (jabber_handler, "resource", VAR_STR);

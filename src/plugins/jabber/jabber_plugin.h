@@ -15,6 +15,7 @@
 enum {
   GGADU_JABBER_JID,
   GGADU_JABBER_PASSWORD,
+  GGADU_JABBER_LOG,
   GGADU_JABBER_AUTOCONNECT,
   GGADU_JABBER_USESSL,
   GGADU_JABBER_RESOURCE
@@ -62,6 +63,8 @@ extern gint connected;
 
 extern enum states jabber_status;
 extern gchar *status_descr;
+
+void ggadu_jabber_save_history (gchar *to, gchar *txt);
 
 GGaduContact *user_in_list (gchar *jid, GSList *list);
 
