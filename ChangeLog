@@ -1,3 +1,8 @@
+28.09.2003
+- load all plugins if there's no modules.load. this fixes a nasty bug,
+  (affecting mostly new users, without ~/.gg2) where gg2 could eat 100% cpu
+  trying to read nonexistant modules.load file. (lib/shasta)
+
 27.09.2003
 - FREE MALLOCS! [strajk edyszyn] (sms/update/shasta)
 

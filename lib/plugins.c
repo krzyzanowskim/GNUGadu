@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.6 2003/09/21 16:37:00 shaster Exp $ */
+/* $Id: plugins.c,v 1.7 2003/09/27 22:35:09 shaster Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -417,6 +417,7 @@ gboolean config_read (GGaduPlugin * plugin_handler)
 
     f = fopen (path, "r");
 
+    g_free (path);
 
     if (!f)
       {
@@ -457,7 +458,6 @@ gboolean config_read (GGaduPlugin * plugin_handler)
       }
 
     fclose (f);
-    g_free (path);
 
     return TRUE;
 }
@@ -477,7 +477,12 @@ gboolean config_save (GGaduPlugin * plugin_handler)
     ch_dest = g_io_channel_new_file (path_dest, "w", NULL);
 
     if (!ch_dest)
+    {
+	g_free(path);
+	g_free(path_dest);
 	return FALSE;
+    }
+
     g_io_channel_set_encoding (ch_dest, NULL, NULL);
 
     while (tmp)
@@ -553,7 +558,9 @@ gboolean config_save (GGaduPlugin * plugin_handler)
 
     if (rename (path_dest, path) == -1)
       {
-	  print_debug ("Failed to rename tmp to config_file");
+	  print_debug ("Failed to rename %s to %s", path_dest, path);
+	  g_free (path);
+	  g_free (path_dest);
 	  return FALSE;
       }
 
@@ -736,6 +743,19 @@ GSList *get_list_modules_load ()
     GGaduPlugin *plugin = NULL;
 
     ch = g_io_channel_new_file (g_build_filename (config->configdir, "modules.load", NULL), "r", NULL);
+
+    /* ugly hack: no modules.load file, load all plugins */
+    if (!ch)
+      {
+	  tmp = config->plugins;
+	  while (tmp)
+	    {
+		plugin = (GGaduPlugin *) tmp->data;
+		ret = g_slist_append (ret, plugin);
+		tmp = tmp->next;
+	    }
+	  return ret;
+      }
 
     while (g_io_channel_read_line_string (ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
       {
