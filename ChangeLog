@@ -1,5 +1,6 @@
 3.11.2003
 - configure does not stop with an error when libgadu or loudmouth not found (THrull)
+- aRts headers search with "artsc-config" (krzak)
 
 31.10.2003
 - NEW docklet-dockapp plugin (by emvi) 
