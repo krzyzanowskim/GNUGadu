@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.89 2004/09/16 11:27:14 krzyzak Exp $
+dnl $Id: configure.in,v 1.90 2004/09/17 09:14:45 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.6])
 
@@ -199,7 +199,7 @@ dnl with_docklet_system_tray=yes
 dnl with_docklet_dockapp=yes
 dnl with_perl=no
 
-AC_ARG_WITH(all_plugins, [  --with-all-plugins	  Build all plugins with all features		default=no])
+AC_ARG_WITH(all_plugins, [  --with-all-plugins	  Build all plugins with all features])
 if test x$with_all_plugins = xyes; then
     with_gui=yes
     with_gghist=yes
@@ -221,7 +221,7 @@ if test x$with_all_plugins = xyes; then
 #    with_perl=yes
 fi
 
-AC_ARG_WITH(perl, [  --with-perl		  perl support			default=disabled])
+AC_ARG_WITH(perl, [  --with-perl		  perl support])
 if test x$with_perl = xyes; then
     AC_PATH_PROG(perlpath, perl)
     AC_PATH_PROG(sedpath, sed)
@@ -259,7 +259,7 @@ dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
 dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
 dnl fi
 
-AC_ARG_WITH(gghist, [  --without-gghist		  Build gghist		default=yes])
+AC_ARG_WITH(gghist, [  --without-gghist		  Build gghist])
 if test "x$with_gghist" != "xno"; then 
     with_gghist=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
@@ -269,7 +269,7 @@ else
     with_gghist=no
 fi
 
-AC_ARG_WITH(gui, [  --without-gui		  Build gtk2 GUI plugin		default=yes])
+AC_ARG_WITH(gui, [  --without-gui		  Build gtk2 GUI plugin	])
 if test "x$with_gui" != "xno"; then 
     with_gui=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.4.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
@@ -279,7 +279,7 @@ else
     with_gui=no
 fi
 
-AC_ARG_WITH(gtkspell, [  --without-gtkspell	  Build GUI plugin with gtkspell support 	default=yes])
+AC_ARG_WITH(gtkspell, [  --without-gtkspell	  Build GUI plugin with gtkspell support])
 if test "x$with_gtkspell" != "xno"; then 
     with_gtkspell=yes
     PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],with_gtkspell=no)
@@ -297,8 +297,8 @@ else
     with_gtkspell=no
 fi
 
-AC_ARG_WITH(gadu, [  --without-gadu		  Build gadu-gadu plugin	default=yes])
-AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu default=no])
+AC_ARG_WITH(gadu, [  --without-gadu		  Build gadu-gadu plugin])
+AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu])
 
 if test "x$with_external_libgadu" = "xyes"; then 
     PKG_CHECK_MODULES(LIBGADU,libgadu,with_external_libgadu=yes,AC_MSG_ERROR($GTK_PKG_ERRORS))
@@ -331,7 +331,7 @@ else
     with_gadu=no
 fi
 
-AC_ARG_WITH(tlen, [  --without-tlen		  Build tlen plugin		default=yes])
+AC_ARG_WITH(tlen, [  --without-tlen		  Build tlen plugin])
 if test "x$with_tlen" != "xno"; then 
     with_tlen=yes
     AC_CHECK_LIB([tlen], [tlen_set_hub_blocking], with_tlen=yes, with_tlen=no)
@@ -346,7 +346,7 @@ else
     with_tlen=no
 fi
 
-AC_ARG_WITH(jabber, [  --without-jabber		  Build jabber plugin		default=yes])
+AC_ARG_WITH(jabber, [  --without-jabber		  Build jabber plugin])
 if test "x$with_jabber" != "xno"; then 
     with_jabber=yes
     PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.17, [],with_jabber=no)
@@ -375,7 +375,7 @@ else
     with_jabber=no
 fi
 
-AC_ARG_WITH(xosd, [  --without-xosd		  Build XOSD plugin		default=yes])
+AC_ARG_WITH(xosd, [  --without-xosd		  Build XOSD plugin])
 if test "x$with_xosd" != "xno"; then 
     with_xosd=yes
     AC_PATH_PROG(xosd_config_script, xosd-config, "none")
@@ -401,14 +401,14 @@ else
     with_xosd=no
 fi
 
-AC_ARG_WITH(sms, [  --without-sms		  Build sms plugin		default=yes])
+AC_ARG_WITH(sms, [  --without-sms		  Build sms plugin])
 if test "x$with_sms" != "xno"; then 
 	with_sms=yes
     else
 	with_sms=no
 fi
 
-AC_ARG_WITH(remote, [  --without-remote		  Build remote plugin		default=yes])
+AC_ARG_WITH(remote, [  --without-remote		  Build remote plugin])
 if test "x$with_remote" != "xno"; then 
 	with_remote=yes
 else
@@ -416,7 +416,7 @@ else
 fi
 
 
-AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build docklet plugin		default=yes])
+AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build docklet plugin])
 if test "x$with_docklet_system_tray" != "xno"; then 
     with_docklet_system_tray=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_system_tray=no)
@@ -429,7 +429,7 @@ else
     with_docklet_system_tray=no
 fi
 
-AC_ARG_WITH(docklet_dockapp, [  --without-docklet-dockapp	  Build dockapp plugin		default=yes])
+AC_ARG_WITH(docklet_dockapp, [  --without-docklet-dockapp	  Build dockapp plugin])
 if test "x$with_docklet_dockapp" != "xno"; then 
     with_docklet_dockapp=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_dockapp=no)
@@ -442,7 +442,7 @@ else
     with_docklet_dockapp=no
 fi
 
-AC_ARG_WITH(esd, [  --without-esd		  Build esd sound plugin	default=yes])
+AC_ARG_WITH(esd, [  --without-esd		  Build esd sound plugin])
 if test "x$with_esd" != "xno"; then
 
     with_esd=yes
@@ -461,7 +461,7 @@ else
     with_esd=no
 fi
 
-AC_ARG_WITH(arts, [  --without-arts		  Build aRts! sound plugin	default=yes])
+AC_ARG_WITH(arts, [  --without-arts		  Build aRts! sound plugin])
 if test "x$with_arts" != "xno"; then 
     with_arts=yes
 
@@ -487,35 +487,7 @@ else
      with_arts=no
 fi
 
-dnl AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
-dnl AC_ARG_WITH(arts-prefix, [  --with-arts-prefix=PREFIX	Prefix where aRts! is installed (optional)], arts_prefix="$withval", arts_prefix="")
-dnl if test "x$with_arts" = "xyes"; then 
-dnl     AC_PROG_CXX
-dnl     if test "$arts_prefix" != ""; then
-dnl 	arts_include_path="-I$arts_prefix/include"
-dnl 	arts_libs_path="-L$arts_prefix/lib"
-dnl     fi
-dnl     
-dnl     have_arts=no
-dnl     CFLAGS="$CFLAGS $arts_include_path"
-dnl     CPPFLAGS="$CPPLAGS $arts_include_path"
-dnl     AC_CHECK_HEADERS(arts/artsversion.h, have_arts=yes,
-dnl     [AC_MSG_ERROR([*** sound support for aRts! - unable to find aRts! headers ***])],-)
-dnl 
-dnl     if test "x$have_arts" = "xyes"; then
-dnl         ARTS_CXXFLAGS="$CXXFLAGS $arts_include_path"
-dnl 	ARTS_LIBS="-lartsflow -lartswavplayobject $arts_libs_path"
-dnl 	AC_SUBST(ARTS_LIBS)
-dnl 	AC_SUBST(ARTS_CXXFLAGS)
-dnl 	AC_SUBST(CXX, $CC)
-dnl 	AC_SUBST(CXXFLAGS)
-dnl     fi
-dnl else
-dnl     AM_CONDITIONAL(am__fastdepCXX, test yes = "$with_arts")
-dnl     with_arts=no
-dnl fi
-
-AC_ARG_WITH(oss, [  --without-oss		  Build OSS sound plugin	default=yes])
+AC_ARG_WITH(oss, [  --without-oss		  Build OSS sound plugin])
 if test "x$with_oss" != "xno"; then
     with_oss=yes
     have_soundcardh=no
@@ -530,21 +502,21 @@ else
     with_oss=no
 fi
 
-AC_ARG_WITH(external, [  --without-external	  Build external player sound plugin	default=yes])
+AC_ARG_WITH(external, [  --without-external	  Build external player sound plugin])
 if test "x$with_external" != "xno"; then
     with_external=yes
 else
     with_external=no
 fi
 
-AC_ARG_WITH(history_external_viewer, [  --without-history-external-viewer	  Build external history plugin	default=yes])
+AC_ARG_WITH(history_external_viewer, [  --without-history-external-viewer	  Build external history plugin])
 if test "x$with_history_external_viewer" != "xno"; then
     with_history_external_viewer=yes
 else
     with_history_external_viewer=no
 fi
 
-AC_ARG_WITH(update, [  --without-update		  Build update plugin		default=yes])
+AC_ARG_WITH(update, [  --without-update		  Build update plugin])
 if test "x$with_update" != "xno"; then 
 	with_update=yes
 else
