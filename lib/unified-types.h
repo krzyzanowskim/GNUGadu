@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.1 2003/06/03 21:30:11 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.2 2003/06/14 22:27:28 shaster Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -112,6 +112,8 @@ typedef struct {
     
     gpointer 	user_data;
 } GGaduKeyValue;
+
+void GGaduKeyValue_free(GGaduKeyValue *kv);
 
 typedef struct {
     gchar *title;
