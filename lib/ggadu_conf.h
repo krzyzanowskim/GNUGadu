@@ -1,3 +1,5 @@
+/* $Id: */
+
 #ifndef GGadu_CONF_H
 #define GGadu_CONF_H 1
 
