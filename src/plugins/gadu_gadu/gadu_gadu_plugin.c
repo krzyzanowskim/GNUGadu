@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.138 2004/01/26 10:45:46 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.139 2004/01/27 01:09:18 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -909,7 +909,7 @@ gpointer register_account(gpointer data)
 	{
 		print_debug("gg_register3() failed!\n");
 		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show warning", 
-			g_strdup(_("Registration process failed")), "main-gui");
+			g_strdup(_("Registration failed.")), "main-gui");
 	}
 	else
 	{
@@ -2228,8 +2228,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 					while (tmp)
 					{
-						gchar *line = g_strdup_printf(_("<- (%s) Me :: %s\n"), get_timestamp(0),
-									      msg->message);
+						gchar *line = g_strdup_printf("<- (%s) %s :: %s\n", get_timestamp(0),
+									      _("Me"), msg->message);
 						ggadu_gg_save_history((gchar *) tmp->data, line);
 						g_free(line);
 						tmp = tmp->next;
@@ -2252,8 +2252,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					gchar *line = g_strdup_printf(_("<- (%s) Me :: %s\n"), get_timestamp(0),
-								      msg->message);
+					gchar *line = g_strdup_printf("<- (%s) %s :: %s\n", get_timestamp(0),
+								      _("Me"), msg->message);
 					ggadu_gg_save_history(msg->id, line);
 					g_free(line);
 				}

@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.29 2004/01/19 20:43:02 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.30 2004/01/27 01:08:03 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -486,9 +486,9 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 					gchar *tmp = NULL;
 
 					if (!ggadu_strcasecmp(k->nick, k->id))
-						tmp = g_strdup_printf(_("%s %s"), k->id, (sp ? st : ""));
+						tmp = g_strdup_printf("%s %s", k->id, (sp ? st : ""));
 					else
-						tmp = g_strdup_printf(_("%s (%s) %s"), k->nick, k->id, (sp ? st : ""));
+						tmp = g_strdup_printf("%s (%s) %s", k->nick, k->id, (sp ? st : ""));
 
 					gtk_window_set_title(GTK_WINDOW(window), tmp);
 					g_free(tmp);
