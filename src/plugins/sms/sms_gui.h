@@ -1,4 +1,4 @@
-/* $Id: sms_gui.h,v 1.6 2003/09/12 09:31:13 shaster Exp $ */
+/* $Id: sms_gui.h,v 1.7 2003/09/21 14:08:31 shaster Exp $ */
 
 #ifndef SMS_PLUGIN_H
 #define SMS_PLUGIN_H 1
@@ -6,6 +6,9 @@
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
 #endif
+
+#define GGADU_SMS_MAXLEN_NUMBER	20
+#define GGADU_SMS_MAXLEN_NICK	100
 
 enum
 {
@@ -31,14 +34,13 @@ enum
     GGADU_SMS_METHOD_CHAT
 };
 
-gchar *SENDER;
 gint method;
 
-GGaduPlugin *initialize_plugin (gpointer conf_ptr);
-void signal_receive (gpointer name, gpointer signal_ptr);
-void start_plugin ();
-void destroy_plugin ();
-void load_smslist ();
-void save_smslist ();
+GGaduPlugin *initialize_plugin(gpointer conf_ptr);
+void signal_receive(gpointer name, gpointer signal_ptr);
+void start_plugin();
+void destroy_plugin();
+void load_smslist();
+void save_smslist();
 
 #endif
