@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.28 2003/05/28 07:43:02 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.29 2003/06/01 00:37:53 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -634,7 +634,7 @@ gpointer user_preferences_action(gpointer user_data)
 
     ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_UIN, _("Tlen login"), VAR_STR, config_var_get(handler, "login"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_PASSWORD, _("Password"), VAR_STR, config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-    ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_AUTOCONNECT, _("Auto connect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), TLEN_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
     
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
         
