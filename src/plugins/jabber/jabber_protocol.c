@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.44 2005/01/27 16:42:59 mkobierzycki Exp $ */
+/* $Id: jabber_protocol.c,v 1.45 2005/02/16 13:24:15 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -87,6 +87,23 @@ void jabber_change_status(GGaduStatusPrototype *sp, gboolean keep_desc)
 	
 	status = sp->status;
 	
+	/* Just a simple esthetic functionality */
+	if((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && sp->status == JABBER_STATUS_UNAVAILABLE)
+	{
+		GGaduStatusPrototype *sp_temp = ggadu_find_status_prototype(p, jabber_data.status);
+
+		sp_temp->status = JABBER_STATUS_UNAVAILABLE;
+		if(sp_temp->status_description)
+		{
+		    g_free(sp_temp->status_description);
+		    sp_temp->status_description = NULL;
+		}
+
+		signal_emit("jabber", "gui status changed", sp_temp, "main-gui");
+		GGaduStatusPrototype_free(sp_temp);
+		return;
+	}
+
 	if (status == JABBER_STATUS_UNAVAILABLE)
 	{
 		lm_connection_close(jabber_data.connection, NULL);
@@ -102,9 +119,6 @@ void jabber_change_status(GGaduStatusPrototype *sp, gboolean keep_desc)
 		return;
 	}
 
-	/* Just a simple esthetic functionality */
-	if((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status == JABBER_STATUS_DESCR))
-		signal_emit("jabber", "gui status changed", (gpointer) JABBER_STATUS_UNAVAILABLE, "main-gui");
 	
 	if (jabber_data.connection && !lm_connection_is_authenticated(jabber_data.connection))
 	{
@@ -146,8 +160,12 @@ void jabber_change_status(GGaduStatusPrototype *sp, gboolean keep_desc)
 	    if(sp->status_description) g_free(sp->status_description);
 	    sp->status_description = g_strdup(jabber_data.description);
 	}
-	g_free(jabber_data.description);
-	jabber_data.description = NULL;
+
+	if(jabber_data.description)
+	{
+	    g_free(jabber_data.description);
+	    jabber_data.description = NULL;
+	}
 
 	if (sp->status_description)
 	{
@@ -165,7 +183,7 @@ void jabber_change_status(GGaduStatusPrototype *sp, gboolean keep_desc)
 	else
 	{
 		jabber_data.status = status;
-		signal_emit("jabber", "gui status changed", (gpointer) status, "main-gui");
+		signal_emit("jabber", "gui status changed", sp, "main-gui");
 	}
 	lm_message_unref(m);
 	print_debug("jabber_change_status end");

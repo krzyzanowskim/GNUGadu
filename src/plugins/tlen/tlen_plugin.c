@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.96 2005/02/01 10:50:16 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.97 2005/02/16 13:24:18 mkobierzycki Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -278,9 +278,24 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			break;
 
 		case TLEN_EVENT_ENDROSTER:
-			tlen_presence(session, (int) loginstatus, "");
-			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", loginstatus, "main-gui");
-			signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
+			{
+			    GGaduStatusPrototype *sp_temp = ggadu_find_status_prototype(p, session->status);
+
+			    sp_temp->status = (int) loginstatus;
+
+			    if(sp_temp->status_description)
+			        g_free(sp_temp->status_description);
+
+			    sp_temp->status_description =
+				    session->description ? to_utf8("ISO-8859-2", session->description) : NULL;
+
+			    tlen_presence(session, (int) loginstatus, "");
+
+			    signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp_temp, "main-gui");
+			    GGaduStatusPrototype_free(sp_temp);
+
+			    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
+			}
 			break;
 
 		case TLEN_EVENT_SUBSCRIBE:
@@ -905,19 +920,31 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr dialog", _sp);
 				desc_utf = to_utf8("ISO-8859-2", session->description);
 				ggadu_dialog_add_entry(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
-				g_free(desc_utf);
 
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _sp->status, "main-gui");
+
+				g_free(desc_utf);
+
+			        /*if(_sp->status_description)
+			    	    g_free(_sp->status_description);
+
+			    	_sp->status_description = desc_utf ? g_strdup(desc_utf) : NULL;
+
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", _sp, "main-gui");*/
 			}
 			else
 			{
 				tlen_presence(session, sp->status, session->description);
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+			        if(sp->status_description)
+			    	    g_free(sp->status_description);
+
+			    	sp->status_description = session->description ? to_utf8("ISO-8859-2", session->description) : NULL;
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp, "main-gui");
 			}
 		}
 		else if (sp && sp->status != TLEN_STATUS_UNAVAILABLE && sp->status != TLEN_STATUS_DESC)
 			ggadu_tlen_login((gpointer) sp->status);
+
 		return;
 	}
 
@@ -925,7 +952,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 		GGaduDialog *d = signal->data;
 		GGaduStatusPrototype *sp = d->user_data;
-
+		
 		if (ggadu_dialog_get_response(d) == GGADU_OK)
 		{
 			if (connected == FALSE)
@@ -943,16 +970,23 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					{
 						/* ustaw nowy opis w sesji  ZONK free */
 						tlen_presence(session, sp->status, from_utf8("ISO-8859-2", kv->value));
-					} else {
+					} else
+					{
 						g_free(sp->status_description);
 						sp->status_description = NULL;
+						tlen_presence(session, sp->status, NULL);
 					}
 
 					/* uaktualnij GUI */
-					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+		        		if(sp->status_description)
+		    	    		    g_free(sp->status_description);
+
+		    	    		sp->status_description = kv->value ? g_strdup(kv->value) : NULL;
+					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp, "main-gui");
 				}
 			}
 		}
+
 		GGaduDialog_free(d);
 		return;
 	}

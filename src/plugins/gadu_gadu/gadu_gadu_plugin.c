@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.239 2005/01/26 12:46:21 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.240 2005/02/16 13:24:16 mkobierzycki Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -446,6 +446,10 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	case GG_EVENT_CONN_SUCCESS:
 		{
 			GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
+			GGaduStatusPrototype *sp_temp = ggadu_find_status_prototype(p,
+					(session->status & GG_STATUS_FRIENDS_MASK)
+					? (session->status ^ GG_STATUS_FRIENDS_MASK)
+					: session->status);
 			print_debug("GG_EVENT_CONN_SUCCESS");
 
 			connected = TRUE;
@@ -471,8 +475,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				signal_emit(GGadu_PLUGIN_NAME, "sound play file", ggadu_config_var_get(handler, "sound_app_file"), "sound*");
 
 			/* *INDENT-OFF* */
-			signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
-					(gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status), "main-gui");
+			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp_temp, "main-gui");
+			GGaduStatusPrototype_free(sp_temp);
 			/* *INDENT-ON* */
 
 			ggadu_config_var_set(handler, "server", g_strdup_printf("%s:%d", inet_ntoa(*((struct in_addr *) &session->server_addr)), session->port));
@@ -2173,11 +2177,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				g_free(desc_cp);
 
 				print_debug("changed to %d %d %d %d", internal_status, sp->status, GG_STATUS_NOT_AVAIL, GG_STATUS_NOT_AVAIL_DESCR);
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp, "main-gui");
 			}
 			else if (gg_change_status(session, internal_status) != -1)
 			{
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp, "main-gui");
 			}
 			else
 			{
