@@ -1,4 +1,4 @@
-/* $Id: repo.c,v 1.5 2003/05/07 10:59:35 zapal Exp $ */
+/* $Id: repo.c,v 1.6 2003/05/10 11:44:32 zapal Exp $ */
 
 #include <glib.h>
 
@@ -11,6 +11,18 @@ extern GGaduConfig *config;
 
 const gint REPO_mask       = REPO_ACTION_NEW | REPO_ACTION_DEL | REPO_ACTION_CHANGE;
 const gint REPO_value_mask = REPO_ACTION_VALUE_NEW | REPO_ACTION_VALUE_DEL | REPO_ACTION_VALUE_CHANGE;
+
+gint silent_job = 0;
+
+void ggadu_repo_disable_notification ()
+{
+  silent_job = 1;
+}
+
+void ggadu_repo_enable_notification ()
+{
+  silent_job = 0;
+}
 
 /********************************************************************
  *                         PRIVATE STUFF                            *
@@ -72,6 +84,12 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
 
   print_debug ("repo: repo_name = '%s', key = '%p', actions = '%d', types = '%d'\n", repo_name, key, actions, types);
 
+  if (silent_job)
+  {
+    print_debug ("repo: I was told to shut up.\n");
+    return;
+  }
+  
   /* Wysy³amy ¿±dania w kolejno¶ci od najbardziej szczegó³owych do
    * najbardziej ogólnych. Na pierwszy rzut id± patrza³ki na poszczególne
    * warto¶ci.
@@ -145,6 +163,9 @@ void ggadu_repo_watch_notify (gchar *repo_name, gpointer key, gint actions, gint
       list = list->next;
     }
   }
+
+  if (completed)
+    g_slist_free (completed);
 
   return;
 }

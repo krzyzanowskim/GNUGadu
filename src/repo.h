@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.5 2003/04/14 16:39:33 zapal Exp $ */
+/* $Id: repo.h,v 1.6 2003/05/10 11:44:32 zapal Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
@@ -42,6 +42,9 @@ enum {
   
   REPO_VALUE_ANY     = INT_MAX
 };
+
+void ggadu_repo_disable_notification ();
+void ggadu_repo_enable_notification ();
 
 gboolean ggadu_repo_add (gchar *repo_name);
 gboolean ggadu_repo_add_value (gchar *repo_name, gpointer key, gpointer value, gint type);
