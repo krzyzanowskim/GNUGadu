@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.4 2003/06/21 03:57:35 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.5 2003/06/28 15:19:36 zapal Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -52,7 +52,8 @@ enum {
     GGADU_SEARCH_BIRTHYEAR,
     GGADU_SEARCH_GENDER,
     GGADU_SEARCH_ACTIVE,
-    GGADU_SEARCH_ID
+    GGADU_SEARCH_ID,
+    GGADU_SEARCH_EMAIL
 };
 
 

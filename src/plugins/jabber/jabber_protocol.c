@@ -138,10 +138,9 @@ void action_search_form (LmConnection *connection, LmMessage *message, gpointer 
       ggadu_dialog_add_entry (&(d->optlist), GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
     if (child_nick)
       ggadu_dialog_add_entry (&(d->optlist), GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
-/*
     if (child_email)
       ggadu_dialog_add_entry (&(d->optlist), GGADU_SEARCH_EMAIL, _("Email:"), VAR_STR, NULL, VAR_FLAG_NONE);
-*/
+
     signal_emit ("jabber", "gui show dialog", d, "main-gui");
   }
 }
