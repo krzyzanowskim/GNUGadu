@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.61 2004/12/22 15:56:26 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.62 2004/12/27 12:12:22 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -635,7 +635,8 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 				descr = g_strdup_printf("(%s)", k->status_descr);
 
 			gtk_tree_sortable_sort_column_changed(GTK_TREE_SORTABLE(model));
-			if (find_plugin_by_name("xosd"))
+			
+			if (find_plugin_by_name("xosd") && (gint) ggadu_config_var_get(gui_handler, "use_xosd_for_status_change") == TRUE)
 			{
 				signal_emit("main-gui", "xosd show message",
 					    g_strdup_printf("%s - %s %s", k->nick, sp->description,

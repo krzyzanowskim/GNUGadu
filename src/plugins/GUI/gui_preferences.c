@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.86 2004/12/26 23:26:09 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.87 2004/12/27 12:12:22 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -949,6 +949,7 @@ void gui_preferences(GtkWidget * widget, gpointer data
 	GtkWidget *tree;
 	GtkWidget *expand;
 	GtkWidget *usexosdfornewmsgs = NULL;
+	GtkWidget *usexosdforstatuschange = NULL;
 	GtkWidget *show_toolbar;
 	GtkWidget *descr_on_list;
 	GtkWidget *tabbox;
@@ -1037,6 +1038,9 @@ void gui_preferences(GtkWidget * widget, gpointer data
 	{
 		usexosdfornewmsgs = gtk_check_button_new_with_label(_("Notify about new messages via XOSD"));
 		gtk_box_pack_start(GTK_BOX(vbox), usexosdfornewmsgs, FALSE, FALSE, 0);
+
+ 		usexosdforstatuschange = gtk_check_button_new_with_label(_("Notify about status change via XOSD"));
+ 		gtk_box_pack_start(GTK_BOX(vbox), usexosdforstatuschange, FALSE, FALSE, 0);
 	}
 
 
@@ -1179,6 +1183,9 @@ void gui_preferences(GtkWidget * widget, gpointer data
 		if (ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs"))
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs), TRUE);
 
+ 	if (usexosdforstatuschange)
+ 		if (ggadu_config_var_get(gui_handler, "use_xosd_for_status_change"))
+ 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usexosdforstatuschange), TRUE);
 
 	if (ggadu_config_var_get(gui_handler, "show_toolbar"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_toolbar), TRUE);
@@ -1289,8 +1296,10 @@ void gui_preferences(GtkWidget * widget, gpointer data
 
 		if (usexosdfornewmsgs)
 			ggadu_config_var_set(gui_handler, "use_xosd_for_new_msgs", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs)));
-
-
+			
+ 		if (usexosdforstatuschange)
+ 			ggadu_config_var_set(gui_handler, "use_xosd_for_status_change", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usexosdforstatuschange)));
+			
 		ggadu_config_var_set(gui_handler, "show_toolbar", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_toolbar)));
 
 		ggadu_config_var_set(gui_handler, "descr_on_list", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));
