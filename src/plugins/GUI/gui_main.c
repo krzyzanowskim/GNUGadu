@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.47 2004/02/29 17:57:58 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.48 2004/02/29 23:35:51 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -161,7 +161,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(gui_handler, "msg_out_body_color", VAR_STR);
 	ggadu_config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
 	ggadu_config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
-	ggadu_config_var_add(gui_handler, "hide_toolbar", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "show_toolbar", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in", VAR_STR,
 					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_out", VAR_STR,
@@ -178,7 +178,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(gui_handler, "auto_away_interval", VAR_INT);
 	ggadu_config_var_add(gui_handler, "use_username", VAR_BOOL);
 	ggadu_config_var_add_with_default(gui_handler, "descr_on_list", VAR_BOOL, (gpointer) TRUE);
-
 
 	if (!ggadu_config_read(gui_handler))
 		g_warning(_("Unable to read configuration file for plugin GUI"));

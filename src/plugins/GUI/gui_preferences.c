@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.52 2004/02/29 17:57:58 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.53 2004/02/29 23:35:51 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -698,7 +698,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *expand;
 	GtkWidget *usexosdfornewmsgs = NULL;
 	GtkWidget *hide_on_start;
-	GtkWidget *hide_toolbar;
+	GtkWidget *show_toolbar;
 	GtkWidget *blink;
 	GtkWidget *blink_interval;
 	GtkWidget *auto_away;
@@ -797,8 +797,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	hide_on_start = gtk_check_button_new_with_label(_("Auto hide on start"));
 	gtk_box_pack_start(GTK_BOX(vbox), hide_on_start, FALSE, FALSE, 0);
 
-	hide_toolbar = gtk_check_button_new_with_label(_("Show toolbar"));
-	gtk_box_pack_start(GTK_BOX(vbox), hide_toolbar, FALSE, FALSE, 0);
+	show_toolbar = gtk_check_button_new_with_label(_("Show toolbar"));
+	gtk_box_pack_start(GTK_BOX(vbox), show_toolbar, FALSE, FALSE, 0);
 
 	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on user list"));
 	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
@@ -852,6 +852,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "emot"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 
+	print_debug("baaas? %d\n", ggadu_config_var_get(gui_handler, "show_toolbar"));
+	print_debug("baaas? active %d\n", ggadu_config_var_get(gui_handler, "show_active"));
+	
 	if (ggadu_config_var_get(gui_handler, "show_active"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_active), TRUE);
 
@@ -944,8 +947,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "hide_on_start"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_on_start), TRUE);
 
-	if (!ggadu_config_var_get(gui_handler, "hide_toolbar"))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_toolbar), TRUE);
+	if (ggadu_config_var_get(gui_handler, "show_toolbar"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_toolbar), TRUE);
 
 	if (ggadu_config_var_get(gui_handler, "descr_on_list"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(descr_on_list), TRUE);
@@ -1124,8 +1127,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "hide_on_start",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(hide_on_start)));
 
-		ggadu_config_var_set(gui_handler, "hide_toolbar",
-				     (gpointer) ! gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(hide_toolbar)));
+		ggadu_config_var_set(gui_handler, "show_toolbar",
+				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_toolbar)));
 
 		ggadu_config_var_set(gui_handler, "descr_on_list", 
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));

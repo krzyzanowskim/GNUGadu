@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.15 2004/02/29 17:57:57 thrulliq Exp $ */
+/* $Id: ggadu_conf.c,v 1.16 2004/02/29 23:35:51 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -224,19 +224,24 @@ gboolean ggadu_config_read(GGaduPlugin * plugin_handler)
 
 		if ((v = ggadu_find_variable(plugin_handler, line)) != NULL)
 		{
-			if (v->type == VAR_INT)
+			if (v->type == VAR_INT || v->type == VAR_BOOL)
 				ggadu_config_var_set(plugin_handler, line, (gpointer) atoi(val));
 
 			if (v->type == VAR_STR || v->type == VAR_IMG)
 				ggadu_config_var_set(plugin_handler, line, val);
-
-			if (v->type == VAR_BOOL)
+			
+			/* FIXME? Do we really need to have this? */
+		      /*if (v->type == VAR_BOOL)
 			{
+				gboolean bval = FALSE;
+				
 				if (!g_str_has_prefix("on", val))
-					val = g_strdup("1");
+					bval = TRUE;
+				else
+					bval = (atoi(val)) ? TRUE : FALSE;
 
-				ggadu_config_var_set(plugin_handler, line, (gpointer) atoi(val));
-			}
+				ggadu_config_var_set(plugin_handler, line, (gpointer) bval);
+			}*/
 		}
 
 	}
@@ -292,16 +297,19 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 			}
 
 			if ((var->type == VAR_INT || var->type == VAR_BOOL) && (var->ptr != NULL))
-				line1 = g_strdup_printf("%s %d\n", var->name, (int) var->ptr);
+				line1 = g_strdup_printf("%s %d\n", var->name, (gint) var->ptr);
 
 
-			if (line1)
-			{
-				print_debug("%s %d\n", line1, var->type);
-				g_io_channel_write_chars(ch_dest, line1, -1, &bytes_written, NULL);
-			}
+		} else if (var->type == VAR_BOOL || var->type == VAR_INT) {
+			line1 = g_strdup_printf("%s %d\n", var->name, (gint) var->ptr);
+			g_io_channel_write_chars(ch_dest, line1, -1, &bytes_written, NULL);
 		}
-		g_free(line1);
+
+		if (line1) {
+			print_debug("%s %d\n", line1, var->type);
+			g_io_channel_write_chars(ch_dest, line1, -1, &bytes_written, NULL);
+			g_free(line1);
+		}
 
 		tmp = tmp->next;
 	}

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.56 2004/02/17 20:42:15 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.57 2004/02/29 23:35:51 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -463,7 +463,7 @@ void gui_main_window_create(gboolean visible)
 		gtk_widget_show_all(GTK_WIDGET(window));
 	}
 
-	if (ggadu_config_var_get(gui_handler, "hide_toolbar"))
+	if (!ggadu_config_var_get(gui_handler, "show_toolbar"))
 		gtk_widget_hide(toolbar_handle_box);
 
 	if (tree)
@@ -879,12 +879,9 @@ void gui_reload_images()
 	GSList *sigdata = NULL;
 
 	/* Shouldn't be here but anyway... */
-	if (ggadu_config_var_get(gui_handler, "hide_toolbar"))
-	{
+	if (!ggadu_config_var_get(gui_handler, "show_toolbar")) {
 		gtk_widget_hide(toolbar_handle_box);
-	}
-	else
-	{
+	} else {
 		gtk_widget_show(toolbar_handle_box);
 	}
 /*
