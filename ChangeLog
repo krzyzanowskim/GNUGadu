@@ -1,3 +1,8 @@
+24.09.2004
+- "remote" plugin do not build by default anymore
+  this plugin propably do not work as it should anymore, there were 
+  no update since a long time.
+
 23.09.2004
 - rewriten sound-oss plugin (krzak/oss)
 - mark chat window title with "*" if somebody talk to us (krzak/GUI)

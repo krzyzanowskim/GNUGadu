@@ -1,11 +1,10 @@
-dnl $Id: configure.in,v 1.91 2004/09/22 22:30:48 krzyzak Exp $
+dnl $Id: configure.in,v 1.92 2004/09/24 09:18:33 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.6])
 
 AC_INIT(gg2,[gg2_version])
 AM_INIT_AUTOMAKE([gg2],[gg2_version])
 AC_CONFIG_HEADERS(config.h)
-#AC_CONFIG_HEADERS(config.h src/plugins/gadu_gadu/libgadu/lib/libgadu-config.h)
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
@@ -408,11 +407,11 @@ if test "x$with_sms" != "xno"; then
 	with_sms=no
 fi
 
-AC_ARG_WITH(remote, [  --without-remote		  Build remote plugin])
-if test "x$with_remote" != "xno"; then 
-	with_remote=yes
-else
+AC_ARG_WITH(remote, [  --with-remote		  Build remote plugin])
+if test "x$with_remote" != "xyes"; then 
 	with_remote=no
+else
+	with_remote=yes
 fi
 
 
