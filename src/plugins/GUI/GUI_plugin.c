@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.3 2003/03/28 20:49:30 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.4 2003/03/28 22:14:56 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -336,14 +336,14 @@ void change_status(GPtrArray *ptra)
 {
     GGaduStatusPrototype *sp = g_ptr_array_index(ptra, 0);
     gchar *plugin_source = g_ptr_array_index(ptra, 1);
-    GtkWidget *status_image = g_ptr_array_index(ptra, 2);
-    GtkWidget *image = create_image(sp->image);
+//    GtkWidget *status_image = g_ptr_array_index(ptra, 2);
+//    GtkWidget *image = create_image(sp->image);
     
-    gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), gtk_image_get_pixbuf(GTK_IMAGE(image)));
-    gtk_widget_destroy(image);
+//    gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), gtk_image_get_pixbuf(GTK_IMAGE(image)));
+//    gtk_widget_destroy(image);
 
     signal_emit("main-gui","change status", sp, plugin_source);
-    
+    /* ZONK */    
     /* te tablice "ptra" kiedys tam mozna zwolic, ale nie mozna tutaj */
 }
 

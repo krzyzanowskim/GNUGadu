@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.9 2003/03/25 08:31:21 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.10 2003/03/28 22:15:00 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -666,16 +666,19 @@ gboolean user_exists(gchar *id)
 void import_userlist(gchar *list)
 {
 	gchar **all, **tmp;
-    
 	all = g_strsplit(list, "\r\n", 1000);
 	tmp = all;
-    
+	
 	while (*tmp) {
 		gchar *first_name, *last_name, *nick, *comment, *mobile, *group, *uin;
 		gchar **l = NULL;
 		GGaduContact *k;
-	
-		l = g_strsplit(*tmp++, ";", 11);
+		print_debug("pointer %p -> %p\n", tmp, *tmp);
+		l = g_strsplit(*tmp, ";", 12);
+		tmp++;
+
+		if (!l[0])
+		    continue;
 		
 		first_name = l[0];
 		last_name = l[1];
@@ -684,8 +687,9 @@ void import_userlist(gchar *list)
 		group = l[5];
 		uin = l[6];
 		comment = l[7];
-
-		if ((!uin || !*uin) && (!mobile || !*mobile))
+		
+		print_debug("dupa %s %p %p\n", uin, uin, mobile);
+		if ((!uin) && (!mobile))
 			continue;
 
 		if (user_exists(uin))
@@ -695,11 +699,9 @@ void import_userlist(gchar *list)
 
 		k->id = uin ? g_strdup(uin) : g_strdup("");
 		
-		print_debug("%s\n", uin);    
-		
 		k->first_name = g_strdup(first_name);
 		k->last_name = g_strdup(last_name);
-		k->nick = (strlen(nick) == 0) ? g_strconcat(first_name," ",last_name,NULL) : g_strdup(nick);
+		k->nick = (!strlen(nick)) ? g_strconcat(first_name," ",last_name,NULL) : g_strdup(nick);
 		k->comment = g_strdup(comment);
 		k->mobile = g_strdup(mobile);
 		k->group = g_strdup(group);
@@ -708,10 +710,10 @@ void import_userlist(gchar *list)
 		userlist = g_slist_append(userlist, k);
 		
 		if (connected && session)
-	    gg_add_notify(session,atoi(k->id));
+		    gg_add_notify(session,atoi(k->id));
 		
 		g_strfreev(l);
-		
+		print_debug("dupa end %s\n", uin);
     }
     
     signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
