@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.17 2004/03/01 13:49:55 thrulliq Exp $ */
+/* $Id: ggadu_conf.c,v 1.18 2004/03/27 20:47:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -296,13 +296,12 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 				}
 			}
 
-			if ((var->type == VAR_INT || var->type == VAR_BOOL) && (var->ptr != NULL))
+			if (var->type == VAR_INT || var->type == VAR_BOOL)
 				line1 = g_strdup_printf("%s %d\n", var->name, (gint) var->ptr);
 
 
 		} else if (var->type == VAR_BOOL || var->type == VAR_INT) {
 			line1 = g_strdup_printf("%s %d\n", var->name, (gint) var->ptr);
-			g_io_channel_write_chars(ch_dest, line1, -1, &bytes_written, NULL);
 		}
 
 		if (line1) {
