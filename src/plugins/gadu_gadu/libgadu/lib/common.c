@@ -1,4 +1,4 @@
-/* $Id: common.c,v 1.3 2004/08/04 21:50:51 krzyzak Exp $ */
+/* $Id: common.c,v 1.4 2004/10/08 07:57:38 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -694,7 +694,7 @@ static int gg_crc32_initialized = 0;
  */
 static void gg_crc32_make_table()
 {
-	uint32_t h = 0;
+	uint32_t h = 1;
 	int i, j;
 
 	memset(gg_crc32_table, 0, sizeof(gg_crc32_table));
