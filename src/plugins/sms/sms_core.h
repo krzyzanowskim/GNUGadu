@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.8 2003/09/22 11:09:01 shaster Exp $ */
+/* $Id: sms_core.h,v 1.9 2003/09/24 05:30:25 shaster Exp $ */
 
 #ifndef SMS_CORE_PLUGIN_H
 #define SMS_CORE_PLUGIN_H 1
@@ -7,7 +7,7 @@
 #define GGADU_SMS_PLUS_URL 	"/sms/sendsms.php"
 
 #define GGADU_SMS_IDEA_HOST 	"sms.idea.pl"
-#define GGADU_SMS_IDEA_URL_GET 	"/default.aspx"
+#define GGADU_SMS_IDEA_URL_GET 	"/"
 #define GGADU_SMS_IDEA_URL_SEND	"/sendsms.aspx"
 
 #define GGADU_SMS_ERA_HOST 	"www.eraomnix.pl"
