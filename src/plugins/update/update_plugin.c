@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.12 2004/01/11 15:25:43 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.13 2004/01/13 00:05:39 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -70,11 +70,9 @@ gchar *update_get_current_version(gboolean show)
 	if (show)
 	{
 	    if (update_use_xosd())
-		signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Unknown host: %s"), server),
-			    "xosd");
+		signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Unknown host: %s"), server), "xosd");
 	    else
-		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf(_("Unknown host: %s"), server),
-			    "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf(_("Unknown host: %s"), server), "main-gui");
 	}
 	return NULL;
     }
@@ -136,8 +134,8 @@ gchar *update_get_current_version(gboolean show)
 		signal_emit(GGadu_PLUGIN_NAME, "xosd show message",
 			    g_strdup(_("Server-side error during update check")), "xosd");
 	    else
-		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Server-side error during update check")),
-			    "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", 
+			    g_strdup(_("Server-side error during update check")), "main-gui");
 	}
 	g_free(recv_buff);
 	return NULL;
@@ -250,11 +248,9 @@ gpointer update_check_real(gboolean show)
     if (update_compare(reply, version) > 0)
     {
         if (update_use_xosd())
-		signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Update available: %s"), reply),
-			    "xosd");
+		signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Update available: %s"), reply), "xosd");
 	    else
-		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("Update available: %s"), reply),
-			    "main-gui");
+		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("Update available: %s"), reply), "main-gui");
     } else if (show) {
     	if (update_use_xosd())
 	    signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup(_("No updates available")), "xosd");
@@ -277,7 +273,8 @@ void _update_check_real(gboolean show)
 /* for g_timeout_add */
 gboolean update_check(gpointer data)
 {
-    _update_check_real(TRUE);
+    /* don't notify about 'no updates found' unless we're using xosd */
+    _update_check_real(update_use_xosd() ? TRUE : FALSE);
 
     /* never ending story ;) */
     return TRUE;
@@ -313,7 +310,8 @@ gpointer update_preferences(gpointer user_data)
     ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_ON_STARTUP, _("Check for updates on startup"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_on_startup"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_AUTOMATICALLY, _("Check for updates automatically"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_automatically"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_INTERVAL, _("Check interval (minutes)"), VAR_INT, (gpointer) ggadu_config_var_get(update_handler, "check_interval"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_USE_XOSD, _("Use XOSD instead of dialog boxes"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "use_xosd"), VAR_FLAG_NONE);
+    if (find_plugin_by_name("xosd"))
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_USE_XOSD, _("Use XOSD instead of dialog boxes"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "use_xosd"), VAR_FLAG_NONE);
     /* *INDENT-ON* */
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
