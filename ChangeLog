@@ -1,3 +1,7 @@
+11.01.2004
+- use username instead of 'Me' (option) (GUI/Thrull)
+- new tab in preferences... (Chat Window) (GUI/Thrull)
+
 10.01.2004
 - fixed sound preferences icon, docklet new message improved a bit (GUI/Maciek Gorniak)
 - ggadu_config_var_add_with_default() allow to specify default value for variable (core/krzak)
