@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.47 2005/02/19 19:54:10 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.h,v 1.48 2005/02/23 15:28:57 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -125,6 +125,14 @@ typedef struct
 	gboolean update_config;
 } GGaduJabberRegister;
 
+typedef struct
+{
+	gchar *jid;
+	gchar *client;
+	gchar *version;
+	gchar *os;
+} GGaduJabberSoftware;
+
 extern GGaduPlugin *jabber_handler;
 extern GGaduProtocol *p;
 extern LmMessageHandler *iq_handler;
@@ -140,6 +148,7 @@ typedef struct
     gint status;
     gchar *description;
     GSList *actions;
+    GSList *software;
     LmConnection *connection;
     LmProxy *proxy;
 } jabber_data_type;
@@ -148,5 +157,7 @@ gpointer jabber_register_account_dialog(gpointer user_data);
 gpointer jabber_services_discovery_action(gpointer user_data);
 gpointer user_preferences_action(gpointer user_data);
 
+void software_slist_free(void);
+void GGaduJabberSoftware_free(GGaduJabberSoftware *data);
 
 #endif

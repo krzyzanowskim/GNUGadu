@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.157 2005/02/19 19:54:09 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.158 2005/02/23 15:28:54 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -65,6 +65,7 @@ static GQuark USER_EDIT_VCARD_SIG;
 static GQuark USER_SHOW_VCARD_SIG;
 static GQuark USER_CHANGE_PASSWORD_SIG;
 static GQuark USER_GET_SOFTWARE_SIG;
+static GQuark EXIT_SIG;
 
 jabber_data_type jabber_data;
 
@@ -201,38 +202,31 @@ static gpointer user_vcard_action(gpointer user_data)
 
 static gpointer user_get_software_action(gpointer user_data)
 {
-	LmMessage *m;
-	LmMessageNode *node;
-	GSList *user = (GSList *) user_data;
-	GGaduContact *k = (GGaduContact *) user->data;
-	GGaduContact *k0;
-	GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
-	gchar *string0, *string1;
-
-	while (roster)
+	GSList *temp = jabber_data.software;
+	GGaduContact *k = ((GSList *) user_data)->data;
+	gchar *string = g_strdup_printf(_("Software used by %s:"), k->id);
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user get software");
+	
+	while(temp)
 	{
-		k0 = roster->data;
-		if (!strcmp(k->id, k0->id))
-			break;
+	    if(!ggadu_strcmp(k->id, ((GGaduJabberSoftware *)temp->data)->jid))
+	        break;
 
-		roster = roster->next;
+	    temp = temp->next;
 	}
+	
+	ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_CLIENT, _("Client"), VAR_STR,
+			       ((GGaduJabberSoftware *)temp->data)->client, VAR_FLAG_INSENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_VERSION, _("Version"), VAR_STR,
+			       ((GGaduJabberSoftware *)temp->data)->version, VAR_FLAG_INSENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_OS, _("Operating System"), VAR_STR,
+			       ((GGaduJabberSoftware *)temp->data)->os, VAR_FLAG_INSENSITIVE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR, k->resource,
+			       VAR_FLAG_INSENSITIVE);
 
-	string0 = g_strconcat(k0->id, "/", k0->resource, NULL);
-	m = lm_message_new_with_sub_type(string0, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
-	string1 = g_strconcat(ggadu_config_var_get(jabber_handler, "jid"), "/",
-			      ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler, "resource") : JABBER_DEFAULT_RESOURCE, NULL);
-	lm_message_node_set_attribute(m->node, "from", string1);
-	lm_message_node_set_attribute(m->node, "id", "version_1");
-	node = lm_message_node_add_child(m->node, "query", NULL);
-	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:version");
-	print_debug(lm_message_node_to_string(m->node));
-	lm_connection_send(jabber_data.connection, m, NULL);
-	lm_message_unref(m);
-
-	g_free(string0);
-	g_free(string1);
-	g_slist_free(roster);
+	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
+	g_free(string);
 
 	return NULL;
 }
@@ -1187,6 +1181,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		}
 		GGaduDialog_free(dialog);
+	} else if(signal->name == EXIT_SIG)
+	{
+	    software_slist_free();
+	    return;
 	}
 
 	if (signal->name == USER_REMOVE_SIG)
@@ -1485,6 +1483,7 @@ void start_plugin()
 	USER_SHOW_VCARD_SIG = register_signal(jabber_handler, "user show vcard");
 	USER_CHANGE_PASSWORD_SIG = register_signal(jabber_handler, "user change password");
 	USER_GET_SOFTWARE_SIG = register_signal(jabber_handler, "user get software");
+	EXIT_SIG = register_signal(jabber_handler, "exit");
 
 	jabbermenu = build_jabber_menu();
 
@@ -1545,6 +1544,8 @@ void destroy_plugin()
 {
 	print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
 
+	software_slist_free();
+
 	if (jabbermenu)
 	{
 		signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", jabbermenu, "main-gui");
@@ -1554,4 +1555,27 @@ void destroy_plugin()
 	ggadu_repo_del_value("_protocols_", p);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
+}
+
+void software_slist_free(void)
+{
+	GSList *temp = jabber_data.software;
+
+	while(temp)
+	{
+	    if(temp->data) GGaduJabberSoftware_free(temp->data);
+	    temp = temp->next;
+	}
+
+	if(jabber_data.software) g_slist_free(jabber_data.software);
+}
+
+void GGaduJabberSoftware_free(GGaduJabberSoftware *data)
+{
+    if(data->jid) g_free(data->jid);
+    if(data->client) g_free(data->client);
+    if(data->version) g_free(data->version);
+    if(data->os) g_free(data->os);
+
+    g_free(data);
 }

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.83 2005/02/17 19:29:21 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.84 2005/02/23 15:28:51 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -339,6 +339,13 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 				break;
 			}
 
+			if(oldstatus == JABBER_STATUS_UNAVAILABLE &&
+		           (g_slist_find(p->online_status, (gpointer) k->status) ||
+			    g_slist_find(p->away_status, (gpointer) k->status)))
+			{
+			    jabber_get_version(k);
+			}
+
 			if ((k->status != oldstatus) || (olddescr != k->status_descr))
 			{
 				ggadu_repo_change_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
@@ -391,6 +398,8 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 	LmMessage *m;
 	gchar *from;
 
+	print_debug("jabber : %s", lm_message_node_to_string(message->node));
+
 	if (!(node = lm_message_node_get_child(message->node, "query")))
 	{
 		print_debug("jabber : weird roster : %s", lm_message_node_to_string(message->node));
@@ -421,35 +430,47 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 
 	if(lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_RESULT)
 	{
-		gchar *string = g_strdup_printf(_("Software used by %s:"),
-				                lm_message_node_get_attribute(message->node, "from"));
-		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user get software");
-		gchar **vec   = NULL;
 		LmMessageNode *node;
-		
-		vec = g_strsplit(lm_message_node_get_attribute(message->node, "from"), "/", 2);
+		GSList *temp = jabber_data.software;
+		gchar *jid = (gchar *) lm_message_node_get_attribute(message->node, "from");
 
-		ggadu_dialog_set_flags(dialog, GGADU_DIALOG_FLAG_ONLY_OK);
+		if(strchr(jid, '/'))
+		    strchr(jid, '/')[0] = 0;
+
+		while(temp)
+		{
+		    if(!ggadu_strcmp(((GGaduJabberSoftware*) temp->data)->jid, jid))
+		        break;
+
+		    temp = temp->next;
+		}
+
 		node = lm_message_node_find_child(message->node, "name");
-		ggadu_dialog_add_entry(dialog, GGADU_JABBER_CLIENT, _("Client"), VAR_STR,
-				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_INSENSITIVE);
+		if(((GGaduJabberSoftware*) temp->data)->client)
+		{
+		    g_free(((GGaduJabberSoftware*) temp->data)->client);
+		    ((GGaduJabberSoftware*) temp->data)->client = NULL;
+		}
+		if(node && lm_message_node_get_value(node))
+		    ((GGaduJabberSoftware*) temp->data)->client = g_strdup(lm_message_node_get_value(node));
+
 		node = lm_message_node_find_child(message->node, "version");
-		ggadu_dialog_add_entry(dialog, GGADU_JABBER_VERSION, _("Version"), VAR_STR,
-				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_INSENSITIVE);
+		if(((GGaduJabberSoftware*) temp->data)->version)
+		{
+		    g_free(((GGaduJabberSoftware*) temp->data)->version);
+		    ((GGaduJabberSoftware*) temp->data)->version = NULL;
+		}
+		if(node && lm_message_node_get_value(node))
+		    ((GGaduJabberSoftware*) temp->data)->version = g_strdup(lm_message_node_get_value(node));
+
 		node = lm_message_node_find_child(message->node, "os");
-		ggadu_dialog_add_entry(dialog, GGADU_JABBER_OS, _("Operating System"), VAR_STR,
-				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
-				       VAR_FLAG_INSENSITIVE);
-		ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
-				       vec ? vec[1] : NULL, VAR_FLAG_INSENSITIVE);
-
-		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
-
-		if(vec)
-		    g_strfreev(vec);
-		g_free(string);
+		if(((GGaduJabberSoftware*) temp->data)->os)
+		{
+		    g_free(((GGaduJabberSoftware*) temp->data)->os);
+		    ((GGaduJabberSoftware*) temp->data)->os = NULL;
+		}
+		if(node && lm_message_node_get_value(node))
+		    ((GGaduJabberSoftware*) temp->data)->os = g_strdup(lm_message_node_get_value(node));
 	}
 	
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
@@ -808,6 +829,10 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		{
 			LmMessage *m;
 			GGaduContact *k = (GGaduContact *) list3->data;
+
+			jabber_data.software = g_slist_prepend(jabber_data.software, NULL);
+			(jabber_data.software)->data = g_new0(GGaduJabberSoftware, 1);
+			((GGaduJabberSoftware *) (jabber_data.software)->data)->jid = g_strdup(k->id);
 
 			m = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_PROBE);
 			lm_connection_send(connection, m, NULL);

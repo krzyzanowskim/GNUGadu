@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.45 2005/02/16 13:24:15 mkobierzycki Exp $ */
+/* $Id: jabber_protocol.c,v 1.46 2005/02/23 15:28:57 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -23,6 +23,7 @@
 #include <loudmouth/loudmouth.h>
 #include <string.h>
 
+#include "ggadu_conf.h"
 #include "jabber_protocol.h"
 #include "jabber_plugin.h"
 #include "jabber_login.h"
@@ -189,6 +190,43 @@ void jabber_change_status(GGaduStatusPrototype *sp, gboolean keep_desc)
 	print_debug("jabber_change_status end");
 }
 
+void jabber_get_version(gpointer user_data)
+{
+	LmMessage *m;
+	LmMessageNode *node;
+	GGaduContact *k = user_data;
+	GGaduContact *k0;
+	GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+	gchar *string0, *string1;
+
+	while (roster)
+	{
+		k0 = roster->data;
+		if (!ggadu_strcmp(k->id, k0->id))
+			break;
+
+		roster = roster->next;
+	}
+
+	string0 = g_strconcat(k0->id, "/", k0->resource, NULL);
+	m = lm_message_new_with_sub_type(string0, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+	string1 = g_strconcat(ggadu_config_var_get(jabber_handler, "jid"), "/",
+			      ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler, "resource") : JABBER_DEFAULT_RESOURCE, NULL);
+	lm_message_node_set_attribute(m->node, "from", string1);
+	lm_message_node_set_attribute(m->node, "id", "version_1");
+	node = lm_message_node_add_child(m->node, "query", NULL);
+	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:version");
+	print_debug(lm_message_node_to_string(m->node));
+	lm_connection_send(jabber_data.connection, m, NULL);
+	lm_message_unref(m);
+
+	g_free(string0);
+	g_free(string1);
+	g_slist_free(roster);
+
+	return;
+}
+
 void jabber_fetch_roster(gpointer user_data)
 {
 	LmMessage *m = NULL;
@@ -292,3 +330,4 @@ void action_search_result(LmConnection * connection, LmMessage * message, gpoint
 		signal_emit("jabber", "gui show search results", list, "main-gui");
 	}
 }
+
