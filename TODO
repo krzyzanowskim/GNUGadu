@@ -3,15 +3,15 @@ BEFORE 2.0:
  - userlist tree view doesn't expand/collapse rows while userlist changes (GUI)
  - applying theme should refresh everything (it's not doing that for menubar) (GUI)
  ? some kind of dcc get acknowledge dialog box (gadu-gadu)
-(done)- Jabber SSL
 
 Later:
 - current status description text somewhere
 - memory leaks audit (all)
-(done) sound configuration (all)
-(done) authorization dialogs (jabber/tlen)
 - jabber confference (jabber)
 
+(done)- Jabber SSL
+(done)- sound configuration (all)
+(done)- authorization dialogs (jabber/tlen)
 (done)- docklet menu (??)
 (done)- jabber search (jabber)
 (done)- docklet should work in wmaker as dockapp (docklet)

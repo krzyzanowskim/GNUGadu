@@ -1,0 +1,1 @@
+SUBDIRS = bubble classic ghosts modern rozgwiazda tlen-3d

@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.42 2004/01/11 14:15:16 shaster Exp $
+dnl $Id: configure.in,v 1.43 2004/01/19 19:55:28 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -47,7 +47,7 @@ AC_C_BIGENDIAN
 AC_TYPE_SIGNAL
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([memset mkdir strcasecmp strchr])
+AC_CHECK_FUNCS([memset mkdir strcasecmp strchr strlen])
 
 
 ALL_LINGUAS="pl"
@@ -63,6 +63,7 @@ if test "x$GCC" = "xyes"; then
    CFLAGS="$CFLAGS -Wall -Wno-uninitialized -Wchar-subscripts -Wnested-externs -Wpointer-arith -Wno-sign-compare"
 fi
 
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
@@ -462,6 +463,17 @@ src/plugins/sound/external/Makefile
 src/plugins/sms/Makefile
 src/plugins/remote/Makefile
 src/plugins/update/Makefile
+pixmaps/Makefile
+pixmaps/emoticons/Makefile
+pixmaps/icons/Makefile
+pixmaps/icons/bubble/Makefile
+pixmaps/icons/classic/Makefile
+pixmaps/icons/ghosts/Makefile
+pixmaps/icons/modern/Makefile
+pixmaps/icons/rozgwiazda/Makefile
+pixmaps/icons/tlen-3d/Makefile
+sounds/Makefile
+themes/Makefile
 po/Makefile.in
 ])
 
