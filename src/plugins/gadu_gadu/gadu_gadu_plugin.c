@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.126 2004/01/18 21:13:25 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.127 2004/01/19 20:56:42 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -512,7 +512,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 		{
 			gchar *hist_line =
-				g_strdup_printf("%s (%s) :: %s\n", msg->id, get_timestamp(msg->time), msg->message);
+				g_strdup_printf("(%s) %s :: %s\n", get_timestamp(msg->time), msg->id, msg->message);
 			ggadu_gg_save_history(msg->id, hist_line);
 			g_free(hist_line);
 		}
@@ -2071,7 +2071,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					while (tmp)
 					{
 						gchar *line =
-							g_strdup_printf(_("Me (%s) :: %s\n"), get_timestamp(0),
+							g_strdup_printf(_("(%s) Me :: %s\n"), get_timestamp(0),
 									msg->message);
 						ggadu_gg_save_history((gchar *) tmp->data, line);
 						g_free(line);
@@ -2095,7 +2095,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					gchar *line = g_strdup_printf(_("Me (%s) :: %s\n"), get_timestamp(0),
+					gchar *line = g_strdup_printf(_("(%s) Me :: %s\n"), get_timestamp(0),
 								      msg->message);
 					ggadu_gg_save_history(msg->id, line);
 					g_free(line);
