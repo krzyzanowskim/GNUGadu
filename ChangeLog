@@ -1,3 +1,6 @@
+17.05.2004
+- reorganisation menu order suggested by Piotr Smyrak (gadu/tlen/jabber/krzak)
+
 08.05.2004
 - ggadu_config_set_filename create directory if do not exist yet (core/krzak)
 

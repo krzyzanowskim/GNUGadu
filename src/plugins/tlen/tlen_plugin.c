@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.64 2004/05/04 21:39:12 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.65 2004/05/17 11:46:44 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -901,16 +901,20 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == g_quark_from_static_string("get user menu"))
 	{
 		GGaduMenu *umenu = ggadu_menu_create();
-		GGaduMenu *listmenu = NULL;
+		/* GGaduMenu *listmenu = NULL; */
 
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
-
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
+		/*
 		listmenu = ggadu_menu_new_item(_("List"), NULL, NULL);
 		ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"), user_add_user_action, NULL));
 		ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
+		*/
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
+		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), user_add_user_action, NULL));
 
-		ggadu_menu_add_submenu(umenu, listmenu);
+		/* ggadu_menu_add_submenu(umenu, listmenu); */
 
 		ggadu_menu_print(umenu, NULL);
 

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.76 2004/05/17 11:24:29 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.77 2004/05/17 11:46:43 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -287,19 +287,24 @@ GGaduMenu *build_userlist_menu(void)
 	GGaduMenu *listmenu;
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_ask_remove_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add New"), user_add_action, NULL));
-
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
+	
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
 	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Send authorization to"), user_resend_auth_to, NULL));
 	ggadu_menu_add_submenu(listmenu,
 			       ggadu_menu_new_item(_("Request authorization from"), user_rerequest_auth_from, NULL));
+	ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(listmenu,
 			       ggadu_menu_new_item(_("Remove authorization"), user_remove_auth_from, NULL));
-
 	ggadu_menu_add_submenu(menu, listmenu);
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
+	
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_ask_remove_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add New"), user_add_action, NULL));
+
 
 	return menu;
 }
