@@ -42,8 +42,12 @@ if BUILD_REMOTE
 REMOTE=remote
 endif
 
+if BUILD_UPDATE
+UPDATE=update
+endif
 
-SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE)
+
+SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE)
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)/$(pkglibdir)
