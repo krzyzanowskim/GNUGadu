@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.184 2004/08/18 12:38:24 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.185 2004/08/22 14:39:41 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1062,9 +1062,19 @@ gchar *userlist_dump()
 	while (us)
 	{
 		gchar *line = NULL;
+		GGaduContact *k_tmp = g_new0(GGaduContact, 1);
 		GGaduContact *k = (GGaduContact *) us->data;
-		line = g_strdup_printf("%s;%s;%s;%s;%s;%s;%s;\r\n", k->first_name, k->last_name, k->nick, k->nick,
-				       k->mobile, k->group, k->id);
+		
+		k_tmp->first_name = g_strescape(k->first_name ? k->first_name : "", "");
+		k_tmp->last_name = g_strescape(k->last_name ? k->last_name : "", "");
+		k_tmp->nick = g_strescape(k->nick ? k->nick : "","");
+		k_tmp->group = g_strescape(k->group ? k->group : "","");
+		
+		line = g_strdup_printf("%s;%s;%s;%s;%s;%s;%s;\r\n", k_tmp->first_name, k_tmp->last_name, k_tmp->nick, k_tmp->nick,
+				       k->mobile, k_tmp->group, k->id);
+		
+		GGaduContact_free(k_tmp);
+		
 		if (!dump)
 		{
 			dump = g_strdup(line);
@@ -1715,7 +1725,7 @@ void start_plugin()
 	REGISTER_ACCOUNT = register_signal(handler, "register account");
 	USER_REMOVE_USER_SIG = register_signal(handler, "user remove user action");
 	
-	load_contacts("ISO-8859-2");
+	load_addressbook_file("ISO-8859-2");
 	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 	test();			/* ?! */
 	if (ggadu_config_var_get(handler, "autoconnect") && !connected)
@@ -2497,7 +2507,7 @@ void destroy_plugin()
 }
 
 
-void load_contacts(gchar * encoding)
+void load_addressbook_file(gchar * encoding)
 {
 	FILE *fp;
 	GGaduContact *k = NULL;

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.26 2004/08/04 20:43:49 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.27 2004/08/22 14:39:41 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -106,13 +106,13 @@ void gadu_gadu_enable_dcc_socket(gboolean state);
 
 void wyjdz_signal_handler();
 
-void load_contacts(gchar * encoding);
+void load_addressbook_file(gchar * encoding);
+void save_addressbook_file();
 
 gboolean import_userlist(gchar * list);
 
 void test();
 
-void save_addressbook_file();
 
 gpointer user_preferences_action(gpointer user_data);
 
