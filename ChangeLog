@@ -1,3 +1,6 @@
+27.05.2004
+- some forgotten unref's (GUI/THrull)
+
 25.05.2004
 - fixed chat window latency with emoticons turned on (GUI/THrull)
 

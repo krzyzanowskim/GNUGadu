@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.97 2004/05/25 16:26:33 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.98 2004/05/27 19:37:41 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1342,7 +1342,10 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		}
 		emottmp = emottmp->next;
 	}
-
+	
+	//g_object_unref(mark_append);
+//	g_object_unref(mark_start);
+	
 	if (((gint) ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
 	    (GTK_WIDGET_VISIBLE(chat)))
 	    {
