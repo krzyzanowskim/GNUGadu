@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.73 2004/02/17 16:12:25 thrulliq Exp $ */
+/* $Id: jabber_plugin.c,v 1.74 2004/02/22 22:57:14 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -235,11 +235,12 @@ gpointer user_rerequest_auth_from(gpointer user_data)
 {
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = NULL;
+	LmMessage *m = NULL;
 	
 	if (!user) return NULL;
 	
 	k = (GGaduContact *) user->data;
-	LmMessage *m = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
+	m = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
 	lm_connection_send(connection, m, NULL);
 	lm_message_unref(m);
 	return NULL;
