@@ -1,3 +1,6 @@
+24.01.2004
+- massive memory leaks fixes, minor code cleanups (gadu-gadu/shasta)
+
 23.01.2004
 - clear others description/ip after disconnect (gadu-gadu/shasta)
 
