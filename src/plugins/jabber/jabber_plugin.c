@@ -472,6 +472,7 @@ void start_plugin()
 	p->statuslist = status_init();
 	p->offline_status = JABBER_STATUS_UNAVAILABLE;
 	p->away_status = g_slist_append (p->away_status, (gint*)JABBER_STATUS_AWAY);
+	p->online_status = g_slist_append (p->online_status, (gint *)JABBER_STATUS_AVAILABLE);
 
 	ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
     

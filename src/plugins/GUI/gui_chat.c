@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.36 2003/06/05 14:44:51 shaster Exp $ 
+ * $Id: gui_chat.c,v 1.37 2003/06/05 20:21:16 zapal Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -317,7 +317,7 @@ void on_send_clicked (GtkWidget * button, gpointer user_data)
 		if (gp->aaway_timer > 0)
 		    g_source_remove (gp->aaway_timer);
 		gp->aaway_timer = -1;
-		if (status != gp->p->offline_status && !is_in_status (status, gp->p->away_status) &&
+		if (is_in_status (status, gp->p->online_status) &&
 		    config_var_get (gui_handler, "auto_away"))
 		  {
 		      gp->aaway_timer =

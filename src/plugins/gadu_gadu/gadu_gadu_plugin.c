@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.58 2003/06/03 09:04:59 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.59 2003/06/05 20:21:18 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1253,6 +1253,8 @@ void start_plugin()
 	p->statuslist = status_init();
 	p->offline_status = GG_STATUS_NOT_AVAIL;
 	p->away_status = g_slist_append (p->away_status, (gint*)GG_STATUS_BUSY);
+	p->online_status = g_slist_append (p->online_status, (gint*)GG_STATUS_AVAIL);
+	p->online_status = g_slist_append (p->online_status, (gint*)GG_STATUS_AVAIL_DESCR);
 	
 	ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 	

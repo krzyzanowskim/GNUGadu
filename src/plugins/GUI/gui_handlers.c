@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.22 2003/06/04 21:07:06 shaster Exp $ */
+/* $Id: gui_handlers.c,v 1.23 2003/06/05 20:21:17 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -436,8 +436,7 @@ void handle_status_changed(GGaduSignal *signal)
     gp->blinker_image1 = NULL;
     gp->blinker_image2 = NULL;
     
-     if (status != gp->p->offline_status &&
-	 !is_in_status (status, gp->p->away_status) &&
+     if (is_in_status (status, gp->p->online_status) &&
 	 config_var_get (gui_handler, "auto_away"))
     {
       gp->aaway_timer = g_timeout_add (

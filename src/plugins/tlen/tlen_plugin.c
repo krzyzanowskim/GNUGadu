@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.32 2003/06/04 20:48:02 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.33 2003/06/05 20:21:21 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -690,6 +690,7 @@ void start_plugin()
 	p->statuslist = status_init();
 	p->offline_status = TLEN_STATUS_UNAVAILABLE;
 	p->away_status = g_slist_append (p->away_status, (gint *)TLEN_STATUS_AWAY);
+	p->online_status = g_slist_append (p->online_status, (gint *)TLEN_STATUS_AVAILABLE);
 
 	handler->protocol = p;
 
