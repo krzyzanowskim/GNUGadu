@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.65 2004/06/07 09:50:03 krzyzak Exp $
+dnl $Id: configure.in,v 1.66 2004/06/10 16:21:17 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.2])
 
@@ -208,7 +208,7 @@ if test "x$with_gtkspell" = "xyes"; then
 fi
 
 AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
-AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu (default=no)])
+AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu default=no])
 
 want_external_libgadu=no
 if test "x$with_external_libgadu" = "xyes"; then 
@@ -222,14 +222,21 @@ AM_CONDITIONAL(EXTERNAL_LIBGADU, test "$want_external_libgadu" = "yes")
 if test "x$with_gadu" = "xyes"; then 
     want_gadu=yes
     if test "x$want_external_libgadu" = "xno"; then
-	AC_CHECK_OPENSSL
-	if test "x$have_openssl" = "xyes"; then
+    
+	
+	if test "x$without_openssl" != "xyes"; then
+	
+	    AC_CHECK_OPENSSL
+	    
+	    if test "x$have_openssl" = "xno"; then
+		AC_MSG_ERROR([unable to find openssl required for included libgadu])
+	    fi
+	    
 	    AC_SUBST(OPENSSL_LIBS)
 	    AC_SUBST(OPENSSL_INCLUDES)
-	    AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
-	else
-	    AC_MSG_ERROR([unable to find openssl required for included libgadu])
 	fi
+	AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
+	
     fi
 fi
 
