@@ -1,3 +1,6 @@
+18.02.2004
+- if you configure for external sound plugin only, it will build now. (Pav Lucistni)
+
 17.02.2004
 - leak stop, get_timestamp returns static string (THrull)
 - some mem leaks (THrull)

@@ -38,6 +38,10 @@ if BUILD_SOUND_OSS
 SOUND=sound
 endif
 
+if BUILD_SOUND_EXTERNAL
+SOUND=sound
+endif
+
 if BUILD_SMS
 SMS=sms
 endif
