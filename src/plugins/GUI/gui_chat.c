@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.46 2003/06/25 22:11:04 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.47 2003/07/22 16:47:55 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -60,6 +60,8 @@ static void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * pa
 					   txt);
 	  gtk_window_set_title (GTK_WINDOW (chat_window), txt2);
 	  gtk_label_set_markup (GTK_LABEL (lb), markup);
+	  gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
+	  
 	  g_free (markup);
       }
 
@@ -752,6 +754,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 		    gdk_pixbuf_unref (image);
 
 		    gtk_window_set_title (GTK_WINDOW (chat_window), _("Chat Window"));
+		    gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
 
 		    chat_notebook = gtk_notebook_new ();
 		    g_object_set_data (G_OBJECT (chat_window), "chat_notebook", chat_notebook);
@@ -839,6 +842,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	      gdk_pixbuf_unref (image);
 
 	      gtk_window_set_title (GTK_WINDOW (chat_window), g_strdup (wintitle));
+	      gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
 
 	      gtk_box_pack_start (GTK_BOX (vbox), vbox_in_out, TRUE, TRUE, 0);
 	      gtk_box_pack_end (GTK_BOX (vbox), hbox_buttons, FALSE, FALSE, 0);
