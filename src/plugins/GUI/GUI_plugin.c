@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.103 2005/01/05 18:17:16 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.104 2005/01/05 18:32:40 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -477,7 +477,6 @@ gboolean gui_read_skin_data(GUISkinData *skin)
 			gchar **fields = g_strsplit(line, ",", 7);
 			
 			print_debug("skin main.txt BKG is: %s\n", fields[1]);
-			g_print("skin main.txt BKG is: %s\n", fields[1]);
 			
 			skin->bkg = g_build_filename(skindir, fields[1], NULL);
 			
