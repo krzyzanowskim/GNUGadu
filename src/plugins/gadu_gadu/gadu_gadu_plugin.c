@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.196 2004/10/19 10:51:27 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.197 2004/10/22 08:02:12 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2495,7 +2495,7 @@ void load_addressbook_file(gchar * encoding)
 		buf = to_utf8(encoding, line);
 		l = g_strsplit(buf, ";", 11);
 		g_free(buf);
-		if (!l[0])
+		if (!l[0] || !l[6])
 		{		/* ZONK */
 			g_strfreev(l);
 			continue;
@@ -2504,7 +2504,7 @@ void load_addressbook_file(gchar * encoding)
 		last_name = l[1];
 		nick = l[2];
 		nick2 = l[3];
-		mobile = l[4];
+    		mobile = l[4];
 		group = l[5];
 		uin = l[6];
 		/* comment = l[6]; */
