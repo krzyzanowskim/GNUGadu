@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.5 2003/04/03 09:22:43 thrulliq Exp $ */
+/* $Id: plugin_xosd.c,v 1.6 2003/04/04 06:58:12 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -31,12 +31,48 @@ GGaduMenu *menu_pluginmenu;
 
 GGadu_PLUGIN_INIT("xosd", GGADU_PLUGIN_TYPE_MISC);
 
+gint get_align(void) {
+    gchar *conf_align = (gchar *) config_var_get(handler, "align");
+    gint result = XOSD_center;	/* defaults to XOSD_center */
+
+    if (conf_align) {
+	if (!ggadu_strcasecmp(conf_align, "left"))
+	    result = XOSD_left;
+	else if (!ggadu_strcasecmp(conf_align, "right"))
+	    result = XOSD_right;
+	else if (!ggadu_strcasecmp(conf_align, "center"))
+	    result = XOSD_center;
+	else
+	    print_debug ("xosd: No align variable found, setting default\n");
+    } else
+	print_debug ("xosd: No align variable found, setting default\n");
+
+    return result;
+}
+
+gint get_pos(void) {
+    gchar *conf_pos = (gchar *) config_var_get(handler, "pos");
+    gint result = XOSD_top;	/* defaults to XOSD_top */
+
+    if (conf_pos) {
+	if (!ggadu_strcasecmp(conf_pos, "top"))
+	    result = XOSD_top;
+	else if (!ggadu_strcasecmp(conf_pos, "bottom"))
+	    result = XOSD_bottom;
+	else if (!ggadu_strcasecmp(conf_pos, "middle"))
+	    result = XOSD_middle;
+	else
+	    print_debug ("xosd: No pos variable found, setting default\n");
+    } else
+	print_debug ("xosd: No pos variable found, setting default\n");
+
+    return result;
+}
+
 void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	gchar *w = NULL;
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
-/*	gchar *p1;
-	gchar *p2;
-*/	
+
         print_debug("%s : receive signal %s\n",GGadu_PLUGIN_NAME,(gchar *)signal->name);
         
         if (!ggadu_strcasecmp(signal->name,"update config"))
@@ -64,28 +100,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
                         print_debug("changing var setting timestamp to %d\n", kv->value);
                         config_var_set(handler, "timestamp", kv->value);
                         break;
-/*                    case GGADU_XOSD_CONFIG_ALIGN:
-                        if (kv->value == 0)
-                            p1 = "left";
-                        else if (kv->value == 1)
-                            p1 = "center";
-                        else if (kv->value == 2)
-                            p1 = "right";
-                        else break;
-                        print_debug("changing var setting align to %s\n", p1);
-                        print_debug(" ALIGN = %s\n", p1);
-                        config_var_set("align", p1, handler);
+                    case GGADU_XOSD_CONFIG_ALIGN:
+                        print_debug("changing var setting align to %s\n", kv->value);
+                        config_var_set(handler, "align", kv->value);
                         break;
                     case GGADU_XOSD_CONFIG_POS:
-                        switch ((gint)kv->value) {
-                            case 0: p2 = "top"; break;
-                            case 1: p2 = "bottom"; break;
-                            case 2: p2 = "middle"; break;
-                        }
-                        print_debug("changing var setting pos to %s\n", p2);
-                        config_var_set("pos", p2, handler);
+                        print_debug("changing var setting pos to %s\n", kv->value);
+                        config_var_set(handler, "pos", kv->value);
                         break;
-*/
                 }
                 tmplist = tmplist->next;
             }
@@ -120,10 +142,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
     return;
 }
 
-gint set_configuration () {
-    gchar *conf = (gchar *)config_var_get(handler, "align");
-    gchar *conf1 = (gchar *)config_var_get(handler, "pos");
-
+gint set_configuration (void) {
     /* * * * Default set * * * */
     
     NUMLINES = 5;
@@ -132,8 +151,10 @@ gint set_configuration () {
     TIMEOUT = 2;
     SHADOW_OFFSET = 1;
     SCROLLLINES = 1;
-    ALIGN = XOSD_center;
-    POS = XOSD_top;
+
+/* no need for these two, get_{align|pos} does it for us. */
+/*  ALIGN = XOSD_center;
+    POS = XOSD_top; */
 
     /* * * * Read configuration of the xosd from config file (f.e. ~/.gg2/xosd)
              The variables are:
@@ -192,29 +213,11 @@ gint set_configuration () {
     } else {
         SCROLLLINES =  (gint) config_var_get(handler, "scrolllines");
     }
-    if (conf) {
-	if (!ggadu_strcasecmp(conf, "left"))
-	    ALIGN = XOSD_left;
-	else if (!ggadu_strcasecmp(conf, "right"))
-	    ALIGN = XOSD_right;
-	else if (!ggadu_strcasecmp(conf, "center"))
-	    ALIGN = XOSD_center;
-	else
-    	    print_debug ("xosd: No align config found, setting default\n");
-    }
-    
-    if (conf1) {
-	if (!ggadu_strcasecmp(conf1, "top"))
-	    POS = XOSD_top;
-	else if (!ggadu_strcasecmp(conf1, "bottom"))
-	    POS = XOSD_bottom;
-	else if (!ggadu_strcasecmp(conf1, "middle"))
-	    POS = XOSD_middle;
-	else
-    	    print_debug ("xosd: No pos config found, setting default\n");
-    }
-    
-    print_debug ("FONT=%s COLOUR=%s TIMEOUT=%d SHADOW_OFFSET=%d SCROLLLINES=%d ALIGN=%d POS=%d", FONT, COLOUR, TIMEOUT, SHADOW_OFFSET, SCROLLLINES, ALIGN, POS);
+
+    ALIGN = get_align();
+    POS = get_pos();
+
+    print_debug ("FONT=%s COLOUR=%s TIMEOUT=%d SHADOW_OFFSET=%d SCROLLLINES=%d ALIGN=%d POS=%d\n", FONT, COLOUR, TIMEOUT, SHADOW_OFFSET, SCROLLLINES, ALIGN, POS);
     xosd_set_font(osd, FONT);
     xosd_set_colour(osd, COLOUR);
     xosd_set_timeout(osd, TIMEOUT);
@@ -229,18 +232,47 @@ gint set_configuration () {
 gpointer osd_preferences (gpointer user_data)
 {
     GGaduDialog *d = NULL;
+    GSList *align_list = NULL;
+    GSList *pos_list = NULL;
+    gint align_cur = get_align();
+    gint pos_cur = get_pos();
+
     print_debug ("%s: Preferences\n", "X OSD");
+
     d = ggadu_dialog_new();
     ggadu_dialog_set_title(d,_("X OSD Preferences"));
     ggadu_dialog_callback_signal(d,"update config");
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
-    
+
+    /* current setting first, then all the rest */
+    if (align_cur == XOSD_left)
+	align_list = g_slist_append(align_list, "left");
+    else if (align_cur == XOSD_center)
+	align_list = g_slist_append(align_list, "center");
+    else if (align_cur == XOSD_right)
+	align_list = g_slist_append(align_list, "right");
+
+    align_list = g_slist_append(align_list, "left");
+    align_list = g_slist_append(align_list, "center");
+    align_list = g_slist_append(align_list, "right");
+
+    /* current setting first, then all the rest */
+    if (pos_cur == XOSD_top)
+	pos_list = g_slist_append(pos_list, "top");
+    else if (pos_cur == XOSD_middle)
+	pos_list = g_slist_append(pos_list, "middle");
+    else if (pos_cur == XOSD_bottom)
+	pos_list = g_slist_append(pos_list, "bottom");
+    pos_list = g_slist_append(pos_list, "top");
+    pos_list = g_slist_append(pos_list, "middle");
+    pos_list = g_slist_append(pos_list, "bottom");
+
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_STR, (gpointer)COLOUR, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer)NUMLINES, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMEOUT, _("Timeout"), VAR_INT, (gpointer)TIMEOUT, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer)config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
-//    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_ALIGN, _("Align \n[left=0 center=1 right=2]"), VAR_INT, ALIGN, VAR_FLAG_NONE);
-//    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_POS, _("Position \n[top=0 bottom=1 middle=2]"), VAR_INT, POS, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
     
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
     

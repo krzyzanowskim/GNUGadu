@@ -1,3 +1,6 @@
+4.04.2003
+- Alignment/position of XOSD box are configurable now (xosd/shasta)
+
 3.04.2003
 - it's possible get cancel response from dialog (d->callback_cancel_signal) and GGADU_DIALOG_YES_NO type added (core/GUI/krzak)
 - replace images with gtk stock images :) (GUI/krzak)
