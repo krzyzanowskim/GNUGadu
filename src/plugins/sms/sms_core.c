@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.21 2003/11/07 22:57:18 shaster Exp $ */
+/* $Id: sms_core.c,v 1.22 2003/11/09 12:55:05 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -36,12 +36,6 @@
 #include "dialog.h"
 #include "sms_gui.h"
 #include "sms_core.h"
-
-int sock_s;
-struct sockaddr_in servAddr;
-struct hostent *h;
-HTTPstruct HTTP;
-
 
 /* URLencoding code by Ahmad Baitalmal <ahmad@bitbuilder.com>
  * with tweaks by Jakub Jankowski <shasta@atn.pl>
@@ -86,56 +80,43 @@ gchar *ggadu_sms_append_char(gchar * url_string, gchar char_to_append, gboolean 
     return new_string;
 }
 
-void sms_disconnect(void)
+/* laczenie sie z wybranym hostem, zwraca -1 przy b³edzie, inaczej 0 */
+int sms_connect(gchar * sms_info, gchar * sms_host, int *sock_s)
 {
-    if (sock_s >= 0)
-	close(sock_s);
-
-    sock_s = -1;
-
-    return;
-}
-
-/* laczenie sie z wybranym hostem */
-int sms_connect(gchar * sms_info, gchar * sms_host)
-{
-    int sock_r;
+    struct hostent *h;
+    struct sockaddr_in servAddr;
+    int sock_r = -1;
 
     if ((h = gethostbyname(sms_host)) == NULL)
     {
 	print_debug("%s : Unknown host\n", sms_info);
-	return FALSE;
+	return sock_r;
     }
 
-    /* close any remaining socket. */
-    sms_disconnect();
-
-    sock_s = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock_s < 0)
+    *sock_s = socket(AF_INET, SOCK_STREAM, 0);
+    if (*sock_s < 0)
     {
 	print_debug("%s : Cannot open socket\n", sms_info);
-	sock_s = -1;
-	return FALSE;
+	return sock_r;
     }
 
     servAddr.sin_family = AF_INET;
     servAddr.sin_port = htons(80);
     servAddr.sin_addr = *((struct in_addr *) h->h_addr);
     bzero(&(servAddr.sin_zero), 8);
-    sock_r = connect(sock_s, (struct sockaddr *) &servAddr, sizeof (struct sockaddr));
+    sock_r = connect(*sock_s, (struct sockaddr *) &servAddr, sizeof (struct sockaddr));
 
     if (sock_r < 0)
     {
 	print_debug("%s : Cannot connect\n", sms_info);
-	sms_disconnect();
-	return FALSE;
+	close(*sock_s);
     }
 
-    return TRUE;
+    return sock_r;
 }
 
 /* POST/GET handling */
-int HTTP_io(HTTPstruct hdata)
+int HTTP_io(HTTPstruct hdata, int sock_s)
 {
     gchar *io_buf = NULL;
 
@@ -222,17 +203,19 @@ int send_IDEA(const gchar * sms_sender, const gchar * sms_number, const gchar * 
     gchar *buf = NULL;
     gint i = 0, j, k, retries = 3;
     FILE *idea_logo;
+    HTTPstruct HTTP;
+    int sock_s;
 
 get_mainpage:
     /* pobranie adresu do obrazka */
-    if (!sms_connect("IDEA", "213.218.116.131"))
+    if (sms_connect("IDEA", "213.218.116.131", &sock_s))
 	return ERR_SERVICE;
 
     strcpy(HTTP.method, "GET");
     strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
     strcpy(HTTP.url, GGADU_SMS_IDEA_URL_GET);
     strcpy(HTTP.url_params, " ");
-    HTTP_io(HTTP);
+    HTTP_io(HTTP, sock_s);
 
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
 
@@ -240,7 +223,7 @@ get_mainpage:
     while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
-    sms_disconnect();
+    close(sock_s);
 
     print_debug("\n=======retries left: %d=====\nIDEA RECVBUFF1: %s\n\n", retries-1, recv_buff);
 
@@ -277,14 +260,14 @@ get_mainpage:
     g_free(recv_buff);
 
 get_token:
-    if (!sms_connect("IDEA", GGADU_SMS_IDEA_HOST))
+    if (sms_connect("IDEA", GGADU_SMS_IDEA_HOST, &sock_s))
 	return ERR_SERVICE;
 
     strcpy(HTTP.method, "GET");
     strcpy(HTTP.host, GGADU_SMS_IDEA_HOST);
     strcpy(HTTP.url, gettoken);
     strcpy(HTTP.url_params, " ");
-    HTTP_io(HTTP);
+    HTTP_io(HTTP, sock_s);
 
     i = 0;
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
@@ -292,7 +275,7 @@ get_token:
     while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
-    sms_disconnect();
+    close(sock_s);
 
     print_debug("\n============retries left: %d=================\nIDEA RECVBUFF2: %s\n\n", retries, recv_buff);
 
@@ -362,6 +345,8 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     gchar *p = NULL;
     gchar temp[2];
     gint i, retries = 3;
+    HTTPstruct HTTP;
+    int sock_s;
 
     p = g_strstr_len(user_data, strlen(user_data), "&RECIPIENT=");
     sms_number = g_strndup(p + 11, 9);
@@ -379,7 +364,7 @@ int send_IDEA_stage2(gchar * pass, gpointer user_data)
     unlink(IDEA_GFX);
 
 send_sms:
-    if (!sms_connect("IDEA", "213.218.116.131"))
+    if (sms_connect("IDEA", "213.218.116.131", &sock_s))
     {
 	sms_warning(sms_number, _("Cannot connect!"));
 	g_free(post);
@@ -393,14 +378,14 @@ send_sms:
     strcpy(HTTP.url_params, " ");
     strcpy(HTTP.post_data, post);
     HTTP.post_length = strlen(post);
-    HTTP_io(HTTP);
+    HTTP_io(HTTP, sock_s);
 
     i = 0;
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
     while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
-    sms_disconnect();
+    close(sock_s);
 
     print_debug("\n============retries left: %d===================\nIDEA RECVBUFF3: %s\n\n", retries, recv_buff);
 
@@ -452,8 +437,10 @@ int send_PLUS(const gchar * sms_sender, const gchar * sms_number, const gchar * 
     gchar tprefix[4];
     gchar temp[2];
     int i = 0, ret = ERR_UNKNOWN;
+    HTTPstruct HTTP;
+    int sock_s;
 
-    if (!sms_connect("PLUS", GGADU_SMS_PLUS_HOST))
+    if (sms_connect("PLUS", GGADU_SMS_PLUS_HOST, &sock_s))
 	return ERR_SERVICE;
 
     strncpy(tprefix, sms_number, 3);
@@ -471,14 +458,14 @@ int send_PLUS(const gchar * sms_sender, const gchar * sms_number, const gchar * 
     strcpy(HTTP.url_params, " ");
     strcpy(HTTP.post_data, post);
     HTTP.post_length = strlen(post);
-    HTTP_io(HTTP);
+    HTTP_io(HTTP, sock_s);
     g_free(post);
 
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
     while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
-    sms_disconnect();
+    close(sock_s);
 
     if (!strlen(recv_buff))
 	ret = ERR_SERVICE;
@@ -503,8 +490,10 @@ int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * s
     gchar temp[2];
     int i = 0;
     int ret = ERR_UNKNOWN;
+    HTTPstruct HTTP;
+    int sock_s;
 
-    if (!sms_connect("ERA", GGADU_SMS_ERA_HOST))
+    if (sms_connect("ERA", GGADU_SMS_ERA_HOST, &sock_s))
 	return ERR_SERVICE;
 
     /* *INDENT-OFF* */
@@ -521,14 +510,14 @@ int send_ERA(const gchar * sms_sender, const gchar * sms_number, const gchar * s
     strcpy(HTTP.host, GGADU_SMS_ERA_HOST);
     strcpy(HTTP.url, GGADU_SMS_ERA_URL);
     strcpy(HTTP.url_params, get);
-    HTTP_io(HTTP);
+    HTTP_io(HTTP, sock_s);
     g_free(get);
 
     recv_buff = g_malloc0(GGADU_SMS_RECVBUFF_LEN);
     while (recv(sock_s, temp, 1, MSG_WAITALL) && i < GGADU_SMS_RECVBUFF_LEN)
 	recv_buff[i++] = temp[0];
 
-    sms_disconnect();
+    close(sock_s);
 
     if (!strlen(recv_buff))
     {
