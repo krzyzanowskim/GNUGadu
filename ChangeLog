@@ -1,5 +1,6 @@
 26.01.2005
 - skins config update (GUI/THrull)
+- fixed "offline with description" while "private" mode is enabled (gadu-gadu/krzak)
 
 20.01.2005
 - look for skins in .gg2/skins and datadir/skins
