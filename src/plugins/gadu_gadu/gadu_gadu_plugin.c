@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.86 2003/10/27 21:46:20 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.87 2003/11/14 18:08:13 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -232,6 +232,8 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
     p.async = 1;
     p.status = status;
     p.status_descr = desc;
+    /* ZONK this is to remove just to work with libgadu 1.4 */
+    p.protocol_version = GG_DEFAULT_PROTOCOL_VERSION;
 
     if ((gint) config_var_get (handler, "private") == 1)
 	p.status |= GG_STATUS_FRIENDS_MASK;
