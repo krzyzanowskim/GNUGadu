@@ -8,6 +8,7 @@
 <!ENTITY signals_main-gui SYSTEM "signals_main-gui.sgml">
 <!ENTITY signals_docklet SYSTEM "signals_docklet.sgml">
 <!ENTITY signals_gadu-gadu SYSTEM "signals_gadu-gadu.sgml">
+<!ENTITY signals_icq SYSTEM "signals_icq.sgml">
 <!ENTITY signals_jabber SYSTEM "signals_jabber.sgml">
 <!ENTITY signals_remote SYSTEM "signals_remote.sgml">
 <!ENTITY signals_sms SYSTEM "signals_sms.sgml">

@@ -1,0 +1,187 @@
+<?xml version='1.0'?>
+<chapter><title>repo</title>
+
+<sect1><title>Wprowadzenie</title>
+<para>Repo jest składnicą różnych danych. Przechowuje kontakty, ustawienia,
+listę zarejestrowanych protokołów, odpowiednich dla nich stanów itp.
+Od zwykłych GSList różni się tym, że jest scentralizowane i pozwala na
+(heh, nie daje wyboru ;)) wysyłanie powiadomień o zmianach.</para>
+
+<para>Pisząc "Repo" mam na myśli interfejs, kod odpowiedzialny za powyższe.
+Natomiast przez "repo" rozumiem pojedyncze repozytorium, które np. przechowuje
+wszystkie dane dla pluginu gadu-gadu.
+</para>
+</sect1>
+
+<sect1><title>Dodawanie i usuwanie repo</title>
+<sect2><title>Dodawanie repo</title>
+<para>Aby móc korzystać z danego repo, należy je najpierw utworzyć.
+Robimy to za pomocą funkcji <function>ggadu_repo_add()</function>, podając
+jako argument nazwę repo (jest to zwykły ciąg znaków):</para>
+
+<programlisting>
+ggadu_repo_add ("gadu-gadu");
+</programlisting>
+
+<para>Funkcja zwraca TRUE w przypadku powodzenia lub FALSE, gdy wystąpi
+błąd.</para>
+
+<para>Jako nazwy repo należy używać nazwy podanej przy rejestracji protokołu
+lub nazwy pluginu. Nie jest to w zasadzie obowiązkowe dla pluginów nie będących
+protokołami, ale jakiś porządek warto zachować. Dla protokołów jest to
+wymagane, ponieważ GUI musi wiedzieć mając samą nazwę repo, w którym
+protokole nastąpiła zmiana.</para>
+</sect2>
+
+<sect2><title>Usuwanie repo</title>
+<para>Usunięcie repo wiąże się z usunięciem wszystkich wartości znajdujących
+się w nim. Jest ono wykonywane za pomocą funkcji
+<function>ggadu_repo_del()</function>:</para>
+
+<programlisting>
+ggadu_repo_del ("gadu-gadu");
+</programlisting>
+
+<para>Funkcja zwraca TRUE lub FALSE odpowiednio dla powodzenia lub
+niepowodzenia.</para>
+
+</sect2>
+</sect1>
+
+<sect1><title>Wartości</title>
+<sect2><title>Dodawanie wartości</title>
+<para>Wartości dodajemy za pomocą funkcji
+<function>ggadu_repo_add_value()</function>:</para>
+
+<programlisting>
+GGaduContact *k;
+... // do k wstawiamy dane kontaktu
+ggadu_repo_add_value ("gadu-gadu", k->id, k, REPO_VALUE_CONTACT);
+</programlisting>
+
+<para>Powyższe dodaje do "gadu-gadu", kontakt (REPO_VALUE_CONTACT)
+o kluczu k->id oraz wartości k.</para>
+
+<table frame="all"><title>Typy wartości w repo</title>
+<tgroup cols='2' align="center" colsep='1' rowsep='1'>
+<colspec colname='Typ'/>
+<colspec colname='Opis'/>
+<thead>
+  <row>
+    <entry align="center">Typ</entry>
+    <entry align="center">Opis</entry>
+  </row>
+</thead>
+
+<tbody>
+  <row>
+    <entry><computeroutput>REPO_VALUE_CONTACT</computeroutput></entry>
+    <entry>Wartość jest strukturą typu <xref linkend="GGaduContact"/> *,
+    natomiast klucz jest wartością <type>id</type> tejże struktury.</entry>
+  </row>
+  <row>
+    <entry><computeroutput>REPO_VALUE_SETTING</computeroutput></entry>
+    <entry>Wartość jest ustawieniem.</entry>
+  </row>
+  <row>
+    <entry><computeroutput>REPO_VALUE_PROTOCOL</computeroutput></entry>
+    <entry>Wartość jest strukturą typu <xref linkend="GGaduProtocol"/> *,
+    natomiast klucz jest wartością <type>display_name</type> tejże
+    struktury. Jest to praktycznie używane tylko w repo "_protocols_".</entry>
+  </row>
+  <row>
+    <entry><computeroutput>REPO_VALUE_OTHER</computeroutput></entry>
+    <entry>Wartość i klucz są po prostu wskaźnikami.</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+<para>Jest jeszcze jeden typ, <computeroutput>REPO_VALUE_DC</computeroutput>.
+Jeśli zostanie on podany funkcji <function>ggadu_repo_add_value</function>,
+to jako typ zostanie wzięty domyślny typ
+<computeroutput>REPO_VALUE_OTHER</computeroutput>. Typ
+<computeroutput>REPO_VALUE_DC</computeroutput> jest używany w innej funkcji -
+<function>ggadu_repo_change_value()</function>.</para>
+
+</sect2>
+
+<sect2><title>Usuwanie wartości</title>
+<para>Usuwania wartości dokonujemy w następujący sposób:</para>
+
+<programlisting>
+ggadu_repo_del_value ("gadu-gadu", k->id);
+</programlisting>
+
+</sect2>
+
+</sect1>
+
+<sect1><title>Powiadomienia</title>
+<sect2><title>O co w tym wszystkim chodzi</title>
+<para>Ano o coś fajnego.</para>
+</sect2>
+
+<sect2><title>Dodawanie patrzałki</title>
+<para>Patrzałkę dodajemy za pomocą funkcji
+<function>ggadu_repo_watch_add()</function> oraz
+<function>ggadu_repo_watch_value_add()</function>.</para>
+
+<para>Pierwsza z tych funkcji dodaje patrzałkę zakotwiczoną w podanym
+repo lub na wszystkich repo. Druga dodaje patrzałkę na konkretny klucz
+w danym repo.</para>
+
+<sect3><title>Patrzałka na repo</title>
+<para>Poniższa funkcja tworzy patrzałkę na repo o nazwie "gadu-gadu".
+Powiadomienie jest wysyłane do funkcji <function>callback</function>
+tylko w przypadku dodania nowej wartości oraz zmiany
+lub usunięcia obecnej wartości, pod warunkiem, że jest ona typu
+REPO_VALUE_CONTACT lub REPO_VALUE_SETTING:</para>
+
+<programlisting>
+ggadu_repo_watch_add ("gadu-gadu", REPO_value_mask,
+  REPO_VALUE_CONTACT | REPO_VALUE_SETTING, callback);
+</programlisting>
+
+</sect3>
+
+<sect3><title>Patrzałki na klucz</title>
+<para>Poniższa funkcja tworzy patrzałkę na klucz k->id w repo "gadu-gadu",
+gdy nastąpi akcja REPO_ACTION_VALUE_CHANGE:</para>
+
+<programlisting>
+ggadu_repo_watch_value_add ("gadu-gadu", k->id, REPO_ACTION_VALUE_CHANGE,
+  callback);
+</programlisting>
+
+</sect3>
+
+</sect2>
+
+<sect2><title>Usuwanie patrzałki</title>
+<para>Patrzałki usuwamy funkcjami
+<function>ggadu_repo_watch_del()</function> oraz
+<function>ggadu_repo_watch_value_del()</function>. Są one analogiczne do
+funkcji dodających patrzałki:</para>
+
+<programlisting>
+ggadu_repo_watch_value_del ("gadu-gadu", k->id, REPO_ACTION_VALUE_CHANGE,
+  callback);
+ggadu_repo_watch_del ("gadu-gadu", REPO_ACTION_VALUE_DEL, REPO_VALUE_SETTING,
+  callback);
+</programlisting>
+
+<para>Powyższe usunie dwie patrzałki. Pierwsza z nich to patrzałka na konkretny
+klucz k->id z "gadu-gadu". Ponieważ akcje zostały wyzerowane, patrzałka
+jest zwalniana. Druga patrzałka na całeg repo "gadu-gadu" nie jest zwalniana.
+Od tej pory, callback będzie wywoływany tylko w przypadku dodania klucza lub
+zmodyfikowania wartości, jeśli jest ona typu
+<computeroutput>REPO_VALUE_CONTACT</computeroutput> (z bieżących flag
+usuwane jest <computeroutput>REPO_ACTION_VALUE_DEL</computeroutput> oraz
+<computeroutput>REPO_VALUE_SETTING</computeroutput>).</para>
+
+</sect2>
+
+</sect1>
+
+</chapter>
