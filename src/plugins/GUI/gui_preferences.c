@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.75 2004/08/31 06:54:30 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.76 2004/09/22 22:43:26 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -950,7 +950,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	preferences =
 		gtk_dialog_new_with_buttons(_("Preferences"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT,
+					    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 					    NULL);
 
 	gtk_window_set_resizable(GTK_WINDOW(preferences), FALSE);
