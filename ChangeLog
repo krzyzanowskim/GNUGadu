@@ -1,3 +1,6 @@
+15.10.2004
+- fixed registration procedure, close #86 (gadu-gadu/krzak)
+
 13.10.2004
 - try to reconnect jabber connection three times before disconnect (jabber/krzak)
 - close bug #85 using g_filename_to_utf8 (sound plugins/krzak)

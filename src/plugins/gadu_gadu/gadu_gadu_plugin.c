@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.189 2004/09/10 14:37:18 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.190 2004/10/15 07:53:10 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -954,18 +954,18 @@ gpointer _register_account_action(gpointer user_data)
 
 	g_static_mutex_lock(&register_mutex);
 	h = gg_token(0);
-	t = h->data;
-	if (!t || !h->body)
+	if (!h || !h->body)
 	{
 		print_debug("gg_token() failed\n");
 		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Registration failed.")),
 					"main-gui");
 		gg_token_free(h);
 		g_static_mutex_unlock(&register_mutex);
-		g_thread_exit(NULL);
+		g_thread_exit(0);
 		return NULL;
 	}
-
+	
+	t = h->data;
 	token_image_path = g_build_filename(g_get_tmp_dir(), "register-token.tmp", NULL);
 	print_debug("Gonna write token to %s\n", token_image_path);
 	ch = g_io_channel_new_file(token_image_path, "w", NULL);
