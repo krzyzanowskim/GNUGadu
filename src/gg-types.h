@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.3 2003/04/02 22:42:23 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.4 2003/04/03 11:07:46 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -124,6 +124,11 @@ typedef struct {
 } GGaduPlugin;
 
 
+typedef struct {
+    gchar *name;
+    gchar *path;
+} GGaduPluginFile;
+
 /*
  * GGaduConfig
  */
@@ -135,17 +140,18 @@ typedef struct {
 	guint height;
 	gint pos_x;
 	gint pos_y;
+//	GSList *all_available_plugins;	// wszystkie dostepne, zainstalowane w systemie pluginy
 	GSList *all_available_plugins;	// wszystkie dostepne, zainstalowane w systemie pluginy
 	GSList *plugins;		// lista protokolow 
 
 	gchar  *configdir;		// katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2)
-	gchar  *modulesdir;
 	GSList *waiting_signals;
 	gboolean all_plugins_loaded;
 	GMainLoop *main_loop;
 	
 	GSource *signals_source;
 } GGaduConfig;
+
 
 enum {
     GGADU_OK,

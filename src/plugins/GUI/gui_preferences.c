@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.6 2003/04/03 08:44:21 shaster Exp $ */
+/* $Id: gui_preferences.c,v 1.7 2003/04/03 11:07:48 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -32,6 +32,7 @@ static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path, 
 
 	if (enable) {
 		GIOChannel *ch = (GIOChannel *) data;
+		GSList *all_plugins = config->all_available_plugins;
 
 		if (!ch)
 			return TRUE;
@@ -39,12 +40,14 @@ static gboolean save_selected_plugins(GtkTreeModel * model, GtkTreePath * path, 
 		g_io_channel_write_chars(ch, name, -1, &count, NULL);
 		g_io_channel_write_chars(ch, "\n", -1, &count, NULL);
 		
-		if (!find_plugin_by_name(name)) {
-			gchar *path = g_build_filename(config->modulesdir,name,NULL);
-			gchar *fullpath = g_strconcat(path,".so",NULL);
-			load_plugin(fullpath);
-			g_free(path);
-			g_free(fullpath);
+		while (all_plugins) {
+		    GGaduPluginFile *pf = (GGaduPluginFile *)all_plugins->data;
+		    
+		    if (!g_strcasecmp(pf->name,name) && (!find_plugin_by_name(name))) {
+			load_plugin(pf->path);
+		    }
+		    
+		    all_plugins = all_plugins->next;
 		}
 
 	} else if (name != NULL) {
@@ -75,7 +78,7 @@ static void enable_toggled(GtkCellRendererToggle * cell, gchar * path_str, gpoin
 GtkWidget *gui_plugins_mgr_tab()
 {
 	GtkWidget *vbox;
-	GSList *plugins_list = config->all_available_plugins;
+	GSList *plugins_list = (config) ? config->all_available_plugins : NULL;
 	GtkTreeIter iter;
 	GtkCellRenderer *renderer = NULL;
 	GtkTreeViewColumn *column = NULL;
@@ -85,13 +88,14 @@ GtkWidget *gui_plugins_mgr_tab()
 
 	while (plugins_list) {
 		gboolean tmpvar = FALSE;
+		GGaduPluginFile *pf = (GGaduPluginFile *)plugins_list->data;
 
-		if ((plugins_list) && (plugins_list->data) && (find_plugin_by_name((gchar *) plugins_list->data)))
+		if (find_plugin_by_name((gchar *) pf->name))
 				tmpvar = TRUE;
-
+		
 		gtk_tree_store_append(GTK_TREE_STORE(store), &iter, NULL);
 		gtk_tree_store_set(GTK_TREE_STORE(store), &iter, PLUGINS_MGR_NAME,
-				(gchar *) plugins_list->data,
+				(gchar *) pf->name,
 				PLUGINS_MGR_ENABLE, tmpvar, -1);
 
 		plugins_list = plugins_list->next;

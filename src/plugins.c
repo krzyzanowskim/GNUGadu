@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.4 2003/04/02 22:42:25 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.5 2003/04/03 11:07:46 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -110,7 +110,12 @@ gboolean load_plugin (gchar *path)
     config->plugins = g_slist_append (config->plugins, plugin_handler);
     start_plugin ();
   } else {
-    config->all_available_plugins = g_slist_append(config->all_available_plugins, g_strdup(ggadu_plugin_name ()));
+    GGaduPluginFile *pf = g_new0(GGaduPluginFile,1);
+    
+    pf->name = g_strdup(ggadu_plugin_name ());
+    pf->path = g_strdup(path);
+    
+    config->all_available_plugins = g_slist_append(config->all_available_plugins, pf);
   }
 
   return TRUE;
