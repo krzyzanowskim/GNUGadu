@@ -159,12 +159,12 @@ struct gg_hist_line *formatline(int fd, int offset)
 }
 
 
-gchar *gg_hist_time(int timestamp,gboolean date)
+gchar *gg_hist_time(time_t timestamp,gboolean date)
 {
 	gchar gtmp[32];
 	gchar *gtmp2 = NULL;
 
-	struct tm *ptm = (struct tm *) localtime((const time_t *) &timestamp);
+	struct tm *ptm = (struct tm *) localtime(&timestamp);
 	if (date)
 	    strftime(gtmp, sizeof (gtmp), "%H:%M:%S (%Y-%m-%d)", ptm);
 	else
