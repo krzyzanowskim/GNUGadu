@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.8 2003/04/12 11:05:23 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.9 2003/04/25 07:38:53 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -13,6 +13,7 @@
 #include "plugins.h"
 #include "signals.h"
 #include "support.h"
+#include "repo.h"
 
 #include "GUI_plugin.h"
 #include "gui_support.h"
@@ -52,7 +53,7 @@ gui_signal_handler handlers[] = {
 	{"unauth request accepted", NULL},
 	{"gui show warning", handle_show_warning},
 	{"gui show message", handle_show_message},
-	{"gui notify", handle_notify},
+//	{"gui notify", handle_notify},
 	{"gui disconnected", handle_disconnected},
 	{"gui show search results", handle_show_search_results},
 	{"gui status changed", handle_status_changed},
@@ -148,7 +149,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
      * SIGNAL : gui notify
      * powiadamia o zmianie statusu
      */
-    register_signal(gui_handler,"gui notify");
+//    register_signal(gui_handler,"gui notify");
     
     /* 
      * SIGNAL : gui msg receive
@@ -217,6 +218,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     /* przede wszystkim zmienia ikonki ;) */
     register_signal(gui_handler,"gui status changed"); 
 
+
+    ggadu_repo_watch_add (NULL, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT, notify_callback);
 
     return gui_handler;
 }

@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.9 2003/04/08 09:24:15 thrulliq Exp $ */
+/* $Id: gui_handlers.c,v 1.10 2003/04/25 07:38:52 zapal Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -9,6 +9,7 @@
 #include "signals.h"
 #include "support.h"
 #include "menu.h"
+#include "repo.h"
 #include "GUI_plugin.h"
 #include "gui_chat.h"
 #include "gui_support.h"
@@ -313,4 +314,24 @@ void handle_status_changed(GGaduSignal *signal)
     image = create_pixbuf(sp->image);
     status_image = gtk_bin_get_child(GTK_BIN(gp->statuslist_eventbox));
     gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), image);
+}
+
+void notify_callback (gchar *repo_name, gpointer key, gint actions)
+{
+  gui_protocol *gp = NULL;
+  GGaduContact *k  = NULL;
+  GGaduNotify  *n  = NULL;
+
+  gp  = gui_find_protocol (repo_name, protocols);
+  k   = ggadu_repo_find_value (repo_name, key);
+  
+  g_return_if_fail (gp != NULL);
+  g_return_if_fail (k != NULL);
+  
+  n = g_new0 (GGaduNotify, 1);
+  n->id     = k->id;
+  n->status = k->status;
+
+  gui_user_view_notify (gp, n);
+  g_free (n);
 }

@@ -33,6 +33,7 @@ libGUI_plugin_la_LIBADD = ../../plugins.lo \
     ../../menu.lo \
     ../../dialog.lo \
     ../../unified-types.lo \
+    ../../repo.lo \
     $(GTK_LIBS)
     
 libGUI_plugin_la_LDFLAGS = -module -avoid-version  
