@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.140 2005/01/16 21:52:53 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.141 2005/01/17 21:57:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1326,7 +1326,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	g_free(status_desc);
 	g_free(wintitle);
 	g_free(confer_title);
-//	GGaduStatusPrototype_free(sp);
+	GGaduStatusPrototype_free(sp);
 	return session->chat;
 }
 

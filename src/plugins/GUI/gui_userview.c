@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.65 2005/01/16 21:52:53 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.66 2005/01/17 21:57:35 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -280,12 +280,16 @@ void gui_list_add(gui_protocol * gp)
 
 	/* cos co jest oznaczone jakos p->offine_status przez protocol */
 	print_debug("gui_list_add");
+	// !ZONK should be freed ??
 	sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
 	if (!sp)
 	{
 		if (gp->p->offline_status)
+		{
+			// !ZONK should be freed
 			sp = ggadu_find_status_prototype(gp->p, *(gint *) &gp->p->offline_status->data);
+		}
 		else if (gp->p->statuslist)
 			sp = gp->p->statuslist->data; /* last resord, get dirst status from statuslist */
 	}
@@ -331,14 +335,16 @@ void gui_list_add(gui_protocol * gp)
 	
 	//forcing realize treeview before we render contacts
 	gtk_widget_realize(treeview); 
-	GGaduStatusPrototype_free(sp);
+	
+	// !ZONK take a look 
+	//GGaduStatusPrototype_free(sp);
 }
 
 void gui_tree_add(gui_protocol * gp)
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	GGaduStatusPrototype *sp;
+	GGaduStatusPrototype *sp = NULL;
 
 	g_return_if_fail(gp != NULL);
 
@@ -349,6 +355,8 @@ void gui_tree_add(gui_protocol * gp)
 			   g_strdup_printf("%s (0/0)", gp->p->display_name), 3, gp, -1);
 	gp->tree_path = g_strdup(gtk_tree_model_get_string_from_iter(model, &iter));
 	print_debug("gui_tree_add");
+	
+	// !ZONK should be freed ??
 	sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
 	if (!sp)
@@ -366,8 +374,9 @@ void gui_tree_add(gui_protocol * gp)
 
 	if (ggadu_config_var_get(gui_handler, "expand"))
 		gtk_tree_view_expand_all(GTK_TREE_VIEW(treeview));
-	
-	GGaduStatusPrototype_free(sp);
+		
+//	!ZONK take a look	
+//	GGaduStatusPrototype_free(sp);
 }
 
 void gui_create_tree()
