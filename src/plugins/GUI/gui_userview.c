@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.16 2003/06/20 01:09:03 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.17 2003/06/23 09:05:39 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -221,7 +221,8 @@ void gui_list_add(gui_protocol *gp)
     /* cos co jest oznaczone jakos p->offine_status przez protocol */
 
     status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-    sp = gui_find_status_prototype(gp->p, (status) ? status : *(int*)&gp->p->offline_status->data);
+    sp = gui_find_status_prototype(gp->p, status);
+    /* sp = gui_find_status_prototype(gp->p, (status) ? status : *(int*)&gp->p->offline_status->data); */
 
     if (sp) {
 	gp->statuslist_eventbox = gtk_event_box_new();
