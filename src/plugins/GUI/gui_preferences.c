@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.83 2004/11/19 17:36:24 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.84 2004/11/19 17:38:40 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -950,12 +950,8 @@ void gui_preferences(GtkWidget * widget, gpointer data
 	GtkWidget *expand;
 	GtkWidget *usexosdfornewmsgs = NULL;
 	GtkWidget *show_toolbar;
-//	GtkWidget *auto_away;
-//	GtkWidget *auto_away_interval;
 	GtkWidget *descr_on_list;
 	GtkWidget *tabbox;
-//	GtkWidget *tabbox_auto_away;
-	GtkWidget *label1_align;
 	GtkWidget *entry;
 	GdkPixbuf *windowicon = NULL;
 	gchar *previous_theme = ggadu_config_var_get(gui_handler, "theme");
@@ -1049,23 +1045,6 @@ void gui_preferences(GtkWidget * widget, gpointer data
 
 	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on users list"));
 	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
-
-//	tabbox_auto_away = gtk_table_new(1, 3, FALSE);
-
-//	auto_away = gtk_check_button_new_with_label(_("Auto away set after:"));
-
-/*	label1_align = gtk_alignment_new(0.1, 0.5, 0, 0);
-	label = gtk_label_new(_("minutes"));
-	auto_away_interval = gtk_spin_button_new_with_range(0, 1440, 1);
-	g_signal_connect(auto_away, "toggled", G_CALLBACK(tree_toggled), auto_away_interval);
-	gtk_container_add(GTK_CONTAINER(label1_align), label);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away_interval, 1, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), label1_align, 2, 3, 0, 1);
-
-	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox_auto_away, FALSE, FALSE, 0);
-*/
 
 	tabbox = gtk_table_new(6, 2, FALSE);
 
@@ -1171,15 +1150,6 @@ void gui_preferences(GtkWidget * widget, gpointer data
 	if (ggadu_config_var_get(gui_handler, "chat_window_height"))
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry), (gint) ggadu_config_var_get(gui_handler, "chat_window_height"));
 
-
-/*	if (ggadu_config_var_get(gui_handler, "auto_away"))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(auto_away), TRUE);
-	else
-		gtk_widget_set_sensitive(auto_away_interval, FALSE);
-
-	if (ggadu_config_var_get(gui_handler, "auto_away_interval"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(auto_away_interval), (gint) ggadu_config_var_get(gui_handler, "auto_away_interval"));
-*/
 	entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowshow");
 	g_return_if_fail(entry != NULL);
 
@@ -1307,21 +1277,6 @@ void gui_preferences(GtkWidget * widget, gpointer data
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "blink_interval");
 		ggadu_config_var_set(gui_handler, "blink_interval", (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
 
-
-//		ggadu_config_var_set(gui_handler, "auto_away", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(auto_away)));
-
-/*		ggadu_config_var_set(gui_handler, "auto_away_interval", (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(auto_away_interval)));
-
-		{
-			GSList *list = protocols;
-			while (list)
-			{
-				gui_protocol *gp = (gui_protocol *) list->data;
-				auto_away_start(gp);
-				list = list->next;
-			}
-		}
-*/
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "send_on_enter");
 		g_return_if_fail(entry != NULL);
 

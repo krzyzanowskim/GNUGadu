@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.61 2004/11/19 17:36:24 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.62 2004/11/19 17:38:40 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -50,8 +50,6 @@
 
 GtkTreeIter users_iter;
 GtkItemFactory *item_factory = NULL;
-//static gint auto_away_enabled = FALSE;
-
 extern GtkTreeStore *users_treestore;
 extern GGaduPlugin *gui_handler;
 extern GSList *protocols;
@@ -187,7 +185,6 @@ void handle_register_protocol(GGaduSignal * signal)
 	print_debug("%s: %s protocol registered %s\n", "main-gui", p->display_name, signal->source_plugin_name);
 	gp->plugin_name = g_strdup(signal->source_plugin_name);
 	gp->p = p;
-//	gp->aaway_timer = 0;
 	gp->blinker = -1;
 
 	gui_user_view_register(gp);
@@ -320,8 +317,6 @@ void handle_disconnected(GGaduSignal * signal)
 
 	gp->blinker = -1;
 
-//	auto_away_stop(gp);
-
 	image = create_pixbuf(sp->image);
 	model = (tree) ? GTK_TREE_MODEL(users_treestore) : GTK_TREE_MODEL(gp->users_liststore);
 
@@ -445,8 +440,6 @@ void handle_status_changed(GGaduSignal * signal)
 	gp->blinker_image1 = NULL;
 	gp->blinker_image2 = NULL;
 
-//	auto_away_start(gp);
-	
 	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, sp->description, NULL);
 	
 	print_debug("handle_status_changed end");
@@ -475,59 +468,4 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 	g_free(n);
 }
 
-/*void auto_away_start(gui_protocol * gp)
-{
-	GGaduStatusPrototype *sp = NULL;
 
-	if (!gp || auto_away_enabled) return;
-
-	sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-	
-	if ((sp) && (gp->p) && (gp->p->online_status) && is_in_status(sp->status, gp->p->online_status) && ggadu_config_var_get(gui_handler, "auto_away"))
-	{
-		gint timeout = ggadu_config_var_get(gui_handler, "auto_away_interval") ? ((gint) ggadu_config_var_get(gui_handler, "auto_away_interval") * 60000) : 300000;
-		GSource *source = g_timeout_source_new(timeout);
-
-		print_debug("auto_away_start 3");
-
-		g_source_set_callback(source,auto_away_func,gp,NULL);
-		gp->aaway_timer = g_source_attach(source,NULL);
-		auto_away_enabled = TRUE;
-	}
-}
-
-void auto_away_stop(gui_protocol * gp)
-{
-	if (!gp || !auto_away_enabled) return;
-	print_debug("auto_away_stop");
-	
-	auto_away_enabled = FALSE;
-	g_source_remove(gp->aaway_timer);
-}
-
-gboolean auto_away_func(gpointer data)
-{
-	gui_protocol *gp = (gui_protocol *) data;
-	GGaduStatusPrototype *sp;
-
-	print_debug("auto_away_func");
-
-	if (auto_away_enabled == FALSE) 
-	    return FALSE;
-
-	if (!gp || !gp->p || !gp->p->away_status)
-		return FALSE;
-		
-
-	sp = ggadu_find_status_prototype(gp->p, *(int *) &gp->p->away_status->data);
-
-	if (!sp)
-	{
-		return FALSE;
-	}
-
-	print_debug("auto_away_func: changing status to %d\n", sp->status);
-	signal_emit("main-gui", "change status", sp, gp->plugin_name);
-	return TRUE;
-}
-*/

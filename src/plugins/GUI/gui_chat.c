@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.127 2004/11/19 17:36:23 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.128 2004/11/19 17:38:40 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -357,7 +357,6 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data
 		}
 
 		signal_emit_full("main-gui", "send message", msg, plugin_name, GGaduMsg_free);
-//		auto_away_start(gui_find_protocol(plugin_name, protocols));
 	}
 	else if (tmpmsg)
 	{
