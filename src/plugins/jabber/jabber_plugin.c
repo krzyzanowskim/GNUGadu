@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.122 2004/12/03 09:49:42 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.123 2004/12/03 21:10:57 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -503,13 +503,18 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			GSList *tmplist = ggadu_dialog_get_entries(dialog);
+			gboolean reconn = FALSE;
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
 				switch (kv->key)
 				{
 				case GGADU_JABBER_JID:
-					ggadu_config_var_set(jabber_handler, "jid", kv->value);
+					{
+						if(kv->value != ggadu_config_var_get(jabber_handler, "jid"))
+							reconn = TRUE;
+						ggadu_config_var_set(jabber_handler, "jid", kv->value);
+					}
 					break;
 				case GGADU_JABBER_PASSWORD:
 					ggadu_config_var_set(jabber_handler, "password", kv->value);
@@ -527,13 +532,25 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					ggadu_config_var_set(jabber_handler, "use_ssl", kv->value);
 					break;
 				case GGADU_JABBER_RESOURCE:
-					ggadu_config_var_set(jabber_handler, "resource", kv->value);
+					{
+						if(kv->value != ggadu_config_var_get(jabber_handler, "resource"))
+							reconn = TRUE;
+						ggadu_config_var_set(jabber_handler, "resource", kv->value);
+					}
 					break;
 				case GGADU_JABBER_SERVER:
-					ggadu_config_var_set(jabber_handler, "server", kv->value);
+					{
+						if(kv->value != ggadu_config_var_get(jabber_handler, "server"))
+							reconn = TRUE;
+						ggadu_config_var_set(jabber_handler, "server", kv->value);
+					}
 					break;
 				case GGADU_JABBER_PROXY:
-			       		ggadu_config_var_set(jabber_handler, "proxy", kv->value);
+					{
+						if(kv->value != ggadu_config_var_get(jabber_handler, "proxy"))
+							reconn = TRUE;
+			       			ggadu_config_var_set(jabber_handler, "proxy", kv->value);
+					}
 					break;
 				case GGADU_JABBER_IGNORED:
 			       		ggadu_config_var_set(jabber_handler, "ignored", kv->value);
@@ -542,6 +559,11 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				tmplist = tmplist->next;
 			}
 			ggadu_config_save(jabber_handler);
+			if(reconn && jabber_data.status != JABBER_STATUS_UNAVAILABLE)
+			{
+				lm_connection_close(jabber_data.connection, NULL);
+				g_thread_create(jabber_login_connect, (gpointer) JABBER_STATUS_AVAILABLE, FALSE, NULL);
+			}
 		}
 		GGaduDialog_free(dialog);
 	}

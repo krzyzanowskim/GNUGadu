@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.74 2004/11/29 22:05:27 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.75 2004/12/03 21:10:55 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -101,6 +101,11 @@ void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason,
 	
 	lm_connection_close(connection,NULL);
 
+	/* Just remove all contacts from repo. */
+	if(ggadu_repo_del("jabber"))
+	    ggadu_repo_add("jabber");
+
+	signal_emit_from_thread("jabber", "gui send userlist", NULL, "main-gui");
 	signal_emit_from_thread("jabber", "gui show message", g_strdup(error_message), "main-gui");
 	signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
 
