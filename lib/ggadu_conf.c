@@ -98,7 +98,7 @@ void ggadu_config_var_set (GGaduPlugin * handler, gchar * name, gpointer val)
 {
     GSList *tmp = NULL;
 
-    if ((name == NULL) || (handler == NULL) || (handler->variables == NULL))
+    if ((!name) || (!handler) || (!handler->variables))
 	return;
 
     tmp = handler->variables;
@@ -107,10 +107,10 @@ void ggadu_config_var_set (GGaduPlugin * handler, gchar * name, gpointer val)
       {
 	  GGaduVar *var = (GGaduVar *) tmp->data;
 
-	  if ((var != NULL) && (var->name != NULL) && (!ggadu_strcasecmp (var->name, name)))
+	  if ((var) && (var->name) && (!ggadu_strcasecmp (var->name, name)))
 	    {
 
-		if (val == NULL)
+		if (!val)
 		  {
 		      var->ptr = (var->def) ? var->def : NULL;
 		      break;
@@ -125,7 +125,7 @@ void ggadu_config_var_set (GGaduPlugin * handler, gchar * name, gpointer val)
 
 		      print_debug ("VAR_STR %s\n", (gchar *) val);
 		      
-		      if (strlen((gchar *)val) == 0)
+		      if (val && (strlen((gchar *)val) == 0))
 		      {
 		      	  var->ptr = var->def;
 			  print_debug(" SET DEFAULT : %s\n",(gchar *) val);
@@ -140,7 +140,7 @@ void ggadu_config_var_set (GGaduPlugin * handler, gchar * name, gpointer val)
 		  break;
 		  case VAR_INT:
 		  case VAR_BOOL:
-		      print_debug ("VAR_INT||BOOL %d\n", val);
+		      if (val) print_debug ("VAR_INT||BOOL %d", val);
 		      var->ptr = (gpointer) val;
 		  break;
 		  }

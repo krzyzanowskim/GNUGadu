@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.43 2004/01/11 15:24:14 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.44 2004/01/12 22:34:25 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -673,7 +673,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     GtkWidget *show_active;
     GtkWidget *tree;
     GtkWidget *expand;
-    GtkWidget *usexosdfornewmsgs;
+    GtkWidget *usexosdfornewmsgs = NULL;
     GtkWidget *hide_on_start;
     GtkWidget *hide_toolbar;
     GtkWidget *blink;
@@ -690,7 +690,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gint response = -1;
     gchar *dirname;
 
-    print_debug ("Preferences\n");
+    print_debug ("Preferences");
 
     preferences =
 	gtk_dialog_new_with_buttons (_("Preferences"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -763,8 +763,10 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
     g_signal_connect (tree, "toggled", G_CALLBACK (tree_toggled), expand);
 
-    usexosdfornewmsgs = gtk_check_button_new_with_label (_("Notify about new messages via XOSD"));
-    gtk_box_pack_start (GTK_BOX (vbox), usexosdfornewmsgs, FALSE, FALSE, 0);
+    if (find_plugin_by_name("xosd")) {
+	usexosdfornewmsgs = gtk_check_button_new_with_label (_("Notify about new messages via XOSD"));
+	gtk_box_pack_start (GTK_BOX (vbox), usexosdfornewmsgs, FALSE, FALSE, 0);
+    }
 
     hide_on_start = gtk_check_button_new_with_label (_("Auto hide on start"));
     gtk_box_pack_start (GTK_BOX (vbox), hide_on_start, FALSE, FALSE, 0);
@@ -1069,7 +1071,8 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	  ggadu_config_var_set (gui_handler, "send_on_enter",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (entry)));
 
-	  ggadu_config_var_set (gui_handler, "use_xosd_for_new_msgs",
+	  if (usexosdfornewmsgs)
+	    ggadu_config_var_set (gui_handler, "use_xosd_for_new_msgs",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs)));
 
 	  ggadu_config_var_set (gui_handler, "hide_on_start",
