@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.6 2003/04/05 12:32:35 zapal Exp $ */
+/* $Id: plugins.c,v 1.7 2003/04/29 14:04:11 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -74,7 +74,7 @@ gboolean load_plugin (gchar *path)
   if (!handler)
   {
     print_debug ("core: %s: %s\n", path, dlerror ());
-    g_warning ("%s is not a valid plugin file, load failed!\n", path);
+    g_warning ("%s is not a valid plugin file, load failed! %s\n", path,dlerror());
     return FALSE;
   }
 
