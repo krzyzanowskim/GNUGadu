@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.7 2004/08/02 12:11:53 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.8 2004/09/15 14:45:01 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -259,6 +259,7 @@ typedef struct
     gchar *ip;			/* "IP:PORT" */
     gchar *city;		/* miasto */
     gchar *age;			/* wiek */
+    gchar *resource;		/* zasob */
     gint status;		/* status w postaci liczbowej */
 } GGaduContact;
 
