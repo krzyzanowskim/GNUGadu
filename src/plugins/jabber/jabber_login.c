@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.27 2004/02/01 21:24:37 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.28 2004/05/03 23:11:25 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -78,7 +78,6 @@ void jabber_login(enum states status)
 
 static LmSSLResponse jabber_connection_ssl_func (LmSSL *ssl, LmSSLStatus status, gpointer data)
  {
-	 print_debug("BBBB %d",status);
 	 return LM_SSL_RESPONSE_CONTINUE;
  }
 
@@ -127,7 +126,7 @@ gpointer jabber_login_connect(gpointer status)
 
 	if (!connection || !lm_connection_is_open(connection))
 	{
-		print_debug("jabber: Connecting to %s", server);
+		print_debug("jabber: Connecting to %s with %s", server,jid);
 		connection = lm_connection_new(server);
 	}
 	else if (ggadu_strcasecmp(lm_connection_get_server(connection), server))
@@ -135,7 +134,7 @@ gpointer jabber_login_connect(gpointer status)
 		print_debug("jabber: Changing server to %s", server);
 		lm_connection_close(connection, NULL);
 		lm_connection_set_server(connection, server);
-		lm_connection_set_port(connection,5222);
+		lm_connection_set_port(connection,LM_CONNECTION_DEFAULT_PORT);
 		/* lm_connection_unref(connection); */
 	}
 
@@ -144,7 +143,7 @@ gpointer jabber_login_connect(gpointer status)
 		if (lm_ssl_is_supported())
 		{
 			LmSSL *ssl = lm_ssl_new (NULL,jabber_connection_ssl_func,NULL,NULL);
-			lm_connection_set_port(connection,5223);
+			lm_connection_set_port(connection,LM_CONNECTION_DEFAULT_PORT_SSL);
 			lm_connection_set_ssl(connection,ssl);
 			lm_ssl_unref(ssl);
 		}
@@ -195,6 +194,8 @@ gpointer jabber_login_connect(gpointer status)
 
 
 
+	lm_connection_set_disconnect_function(connection, jabber_disconnect_cb, NULL, NULL);
+	
 	if (!lm_connection_open(connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
 	{
 		print_debug("jabber: lm_connection_open() failed.\n");
@@ -202,7 +203,6 @@ gpointer jabber_login_connect(gpointer status)
 		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Connection failed")), "main-gui");
 	}
 
-	lm_connection_set_disconnect_function(connection, jabber_disconnect_cb, NULL, NULL);
 
 	g_free(jid);
 	g_static_mutex_unlock(&connect_mutex);
