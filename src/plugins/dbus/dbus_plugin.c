@@ -1,7 +1,7 @@
-/* $Id: dbus_plugin.c,v 1.3 2004/10/25 22:01:31 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.4 2004/10/25 22:26:40 krzyzak Exp $ */
 
 /* 
- * Example: plugin code for GNU Gadu 2 
+ * DBUS plugin code for GNU Gadu 2 
  * 
  * Copyright (C) 2001-2004 GNU Gadu Team 
  * 
@@ -19,17 +19,6 @@
  * along with this program; if not, write to the Free Software 
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
-
-/*
-
-	This is example plugin based on sound-external plugin
-	type ./build.sh to build plugin outside the gg2 tree
-	after compile copy to $prefix/lib/gg2/my-plugin.so
-	and should work.
-	
-	NOTE you have to have installed gg2 to compile this plugin
-
-*/
 
 #define DBUS_API_SUBJECT_TO_CHANGE
 
@@ -74,13 +63,15 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 
+	/* getPresence */
 	if (dbus_message_is_method_call
 	    (message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
 	{
-		gchar *contactURI = NULL;	/* URI of the user which we have to return presence. ex.  gg://13245  */
+		/* URI of the user which we have to return presence. ex.  gg://13245  */
+		gchar *contactURI = NULL;
 		if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
 		{
-			print_debug("DBUS plugin: looking for %s", contactURI);
+			print_debug("DBUS getPresence: search %s", contactURI);
 			dbus_free(contactURI);
 		}
 		dbus_error_free(&error);
@@ -97,8 +88,6 @@ static DBusObjectPathVTable vtable = {
 	dbus_plugin_message_func,
 	NULL,
 };
-
-
 
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
@@ -132,14 +121,14 @@ void start_plugin()
 	dbus_bus_acquire_service(bus, DBUS_ORG_FREEDESKTOP_IM_SERVICE, 0, &derror);
 	if (dbus_error_is_set(&derror))
 	{
-		g_warning("Failed to acquire gossip service.");
+		g_warning("DBUS: Failed to acquire IM service. %s",derror.message);
 		dbus_error_free(&derror);
 		return;
 	}
 
 	if (!dbus_connection_register_object_path(bus, DBUS_ORG_FREEDESKTOP_IM_OBJECT, &vtable, NULL))
 	{
-		g_warning("Failed to register object path.");
+		g_warning("DBUS: Failed to register object path.");
 		return;
 	}
 

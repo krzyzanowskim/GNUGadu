@@ -1,7 +1,7 @@
-/* $Id: dbus_plugin.h,v 1.3 2004/10/25 22:01:31 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.4 2004/10/25 22:26:41 krzyzak Exp $ */
 
 /* 
- * Example: plugin code for GNU Gadu 2 
+ * DBUS plugin code for GNU Gadu 2 
  * 
  * Copyright (C) 2001-2004 GNU Gadu Team 
  * 
@@ -25,5 +25,10 @@
 #define DBUS_ORG_FREEDESKTOP_IM_OBJECT "/org/freedesktop/im/Presence"
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE "getPresence"
 
-
+enum
+{
+    IM_PRESENCE_ONLINE,
+    IM_PRESENCE_AWAY,
+    IM_PRESENCE_OFFLINE
+} DBusIMPresence;
 
