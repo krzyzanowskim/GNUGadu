@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.42 2003/06/09 00:59:49 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.43 2003/06/13 00:17:19 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -56,7 +56,7 @@ void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * page, gui
 					   txt);
 	  gtk_window_set_title (GTK_WINDOW (chat_window), txt2);
 	  gtk_label_set_markup (GTK_LABEL (lb), markup);
-	  g_free (markup);
+	  g_free(markup);
       }
 
     print_debug ("gui_chat_notebook_switch\n");
@@ -86,7 +86,6 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
 							    "chat_notebook");
 	      guint nr;
 	      GtkWidget *chat = NULL;
-	      gulong id;
 
 	      /* do not segfault here, thankyou. */
 	      if (!chat_notebook)
@@ -113,16 +112,15 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
 	      session = (gui_chat_session *) g_object_get_data (G_OBJECT (chat), "gui_session");
 	      gp = gui_find_protocol (plugin_name, protocols);
 
-	      id = (gulong) g_object_get_data (G_OBJECT (chat_window), "switch_page_id");
-
-	      g_signal_handler_block (chat_notebook, id);
 	      gtk_notebook_remove_page (GTK_NOTEBOOK (chat_notebook), nr);
-	      g_signal_handler_unblock (chat_notebook, id);
+	      
 
 	      gtk_notebook_set_show_tabs (GTK_NOTEBOOK (chat_notebook),
 					  (gtk_notebook_get_n_pages (GTK_NOTEBOOK (chat_notebook)) <=
 					   1) ? FALSE : TRUE);
 
+	      gtk_widget_queue_draw (GTK_WIDGET (chat_notebook));
+	      
 	      if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (chat_notebook)) <= 0)
 		{
 		    gui_remove_all_chat_sessions (protocols);
@@ -169,8 +167,6 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
 gboolean on_press_event_switching_tabs (gpointer object, GdkEventKey * event, gpointer user_data)
 {
     gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
-
-    print_debug ("kuku\n");
 
     if ((chat_type == CHAT_TYPE_TABBED) && (event->state & GDK_CONTROL_MASK))
       {
@@ -754,7 +750,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 
 	      if (chat_window == NULL)
 		{
-		    gulong id_tmp;
+		    /* gulong id_tmp; */
 		    /*
 		     * GtkAccelGroup *accgroup = gtk_accel_group_new();
 		     * GClosure *accgroupclosure =
@@ -784,10 +780,8 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 		    /*
 		     * ZONK 
 		     */
-		    id_tmp =
-			g_signal_connect (G_OBJECT (chat_notebook), "switch-page",
+		    g_signal_connect (G_OBJECT (chat_notebook), "switch-page",
 					  G_CALLBACK (gui_chat_notebook_switch), NULL);
-		    g_object_set_data (G_OBJECT (chat_window), "switch_page_id", (gpointer) id_tmp);
 
 		    gtk_notebook_popup_enable (GTK_NOTEBOOK (chat_notebook));
 		    g_object_set_data (G_OBJECT (chat_window), "chat_notebook", chat_notebook);
@@ -1193,6 +1187,11 @@ void gui_chat_append (GtkWidget * chat, gpointer msg, gboolean self)
     if (((gint) config_var_get (gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
 	(GTK_WIDGET_VISIBLE (chat)))
 	gtk_window_present (GTK_WINDOW (g_object_get_data (G_OBJECT (chat), "top_window")));
+	
+/*	print_debug("QQQQQ\n");
+    gdk_draw_line (history->window,
+                history->style->fg_gc[GTK_WIDGET_STATE (history)], 0,0, 50,50);
+*/		
 
     g_free (timestamp);
     g_free (header);

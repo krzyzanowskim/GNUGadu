@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.20 2003/06/11 17:49:16 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.21 2003/06/13 00:17:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -20,6 +20,7 @@
 #include "gui_dialogs.h"
 #include "gui_userview.h"
 #include "gui_preferences.h"
+#include "gtkanimlabel.h"
 
 extern GGaduConfig *config;
 extern GGaduPlugin *gui_handler;
@@ -111,10 +112,13 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 	    GtkTreeModel 	*model		= gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
 	    GtkTreeIter 	iter;
 	    GGaduContact 	*k		= NULL;
-	    gchar 		*markup;
+	    gchar 		*markup_id;
+	    gchar 		*markup_desc;
+	    gboolean		is_desc = FALSE;
 	    gchar 		*desc_text	= NULL;
 	    gchar		*ip		= NULL;
 	    GtkTooltips		*tooltip	= NULL;
+	    GtkWidget		*add_info_label_desc = NULL;
 	    
 	    if (!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(widget),event->x,event->y,&treepath,&treevc,NULL,NULL)) 
 		return FALSE;
@@ -153,11 +157,13 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 
 		if (k->status_descr) { 
 		    gchar *desc_esc = g_markup_escape_text(k->status_descr,strlen(k->status_descr));
-	    	    desc_text = g_strdup_printf("\n%s", desc_esc);
+	    	    desc_text = g_strdup_printf("%s", desc_esc);
+		    is_desc = TRUE;
 		    g_free(desc_esc);
 		}
 		
-		markup = g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s%s</span>", k->id, ip?ip:"",(k->status_descr) ?  desc_text : "");
+		markup_id = g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s</span>", k->id, ip?ip:"");
+		markup_desc = g_strdup_printf("<span size=\"small\">%s</span>", (k->status_descr) ?  desc_text : "");
 
 		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),k->status_descr,"caption");
 	    } else {
@@ -167,18 +173,33 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		status = (gint)signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 		sp = gui_find_status_prototype(gp->p, status);
 
-		markup = g_strdup_printf("<span size=\"small\"><b>%s</b>\nStatus: <b>%s</b></span>", gp->p->display_name, (sp) ? sp->description : _("(None)"));
+		markup_id = g_strdup_printf("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
+		markup_desc = g_strdup_printf("<span size=\"small\"><b>%s</b></span>", (sp) ? sp->description : _("(None)"));
+		is_desc = TRUE;
 		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),NULL,"caption");
 	    }
 	    
 	    gtk_tooltips_enable(tooltip);
-	    
-	    gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup);
-	    	    
-	    if (!GTK_WIDGET_VISIBLE(gp->add_info_label))
-		gtk_widget_show(gp->add_info_label);
 
-	    g_free(markup);
+	    gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup_id);
+	    
+	    add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label),"add_info_label_desc");
+	    gtk_anim_label_set_text(GTK_ANIM_LABEL(add_info_label_desc),markup_desc);
+	    gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc),TRUE);
+	    	    
+	    if (!GTK_WIDGET_VISIBLE(gp->add_info_label)) {
+		gtk_widget_show(gp->add_info_label);
+		}
+
+	    if (is_desc) {
+		gtk_widget_show(add_info_label_desc);
+	    } else {
+	    	gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc),FALSE);
+		gtk_widget_hide(add_info_label_desc);
+	    }
+		
+	    g_free(markup_id);
+	    g_free(markup_desc);
 	    g_free(desc_text);
 	    g_free(ip);	    
     }

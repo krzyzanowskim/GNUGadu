@@ -1,3 +1,6 @@
+13.06.2003
+- gtkanimlabel.c widget created, and scrolled descriptions (GUI/krzak)
+
 11.06.2003
 - make it possible to specify more than one offline status (all/zapal)
 

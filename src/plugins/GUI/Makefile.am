@@ -24,7 +24,9 @@ libGUI_plugin_la_SOURCES = gui_main.c \
     gui_handlers.c \
     gui_handlers.h \
     gui_preferences.c \
-    gui_preferences.h
+    gui_preferences.h \
+    gtkanimlabel.c \
+    gtkanimlabel.h
 
     
 libGUI_plugin_la_LIBADD = $(GTK_LIBS) $(top_builddir)/lib/libgg2_core.la

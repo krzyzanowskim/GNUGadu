@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.11 2003/06/11 17:49:16 zapal Exp $ */
+/* $Id: gui_userview.c,v 1.12 2003/06/13 00:17:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -18,6 +18,7 @@
 #include "gui_chat.h"
 #include "gui_support.h"
 #include "gui_dialogs.h"
+#include "gtkanimlabel.h"
 
 extern gboolean tree;
 
@@ -167,6 +168,7 @@ void gui_list_add(gui_protocol *gp)
     GtkWidget *scrolled_window;
     GtkWidget *label;
     GtkWidget *eventbox;
+    GtkWidget *add_info_label_desc;
     gchar *markup;
     gint status;
     
@@ -230,21 +232,30 @@ void gui_list_add(gui_protocol *gp)
     gtk_box_pack_start(GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
     
     gp->add_info_label = gtk_label_new(NULL);
+    
     gtk_label_set_selectable(GTK_LABEL(gp->add_info_label), TRUE);
     gtk_widget_set_size_request(GTK_WIDGET(gp->add_info_label), 0, -1);
     gtk_misc_set_alignment(GTK_MISC(gp->add_info_label), 0, 0.5);
     gtk_misc_set_padding(GTK_MISC(gp->add_info_label), 3, 0);
 
+    add_info_label_desc = gtk_anim_label_new();
+    /* gtk_anim_label_set_alignment(GTK_ANIM_LABEL(add_info_label_desc), PANGO_ALIGN_CENTER); */
+    
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox),gp->add_info_label);
 
     gtk_box_pack_start(GTK_BOX(vbox), eventbox, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), add_info_label_desc, FALSE, FALSE, 0);
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, label);
     
     gtk_widget_show_all(vbox);
     gtk_widget_hide(gp->add_info_label);
+    gtk_widget_hide(add_info_label_desc);
     gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
+    
+    g_object_set_data(G_OBJECT(vbox), "add_info_label", gp->add_info_label);
+    g_object_set_data(G_OBJECT(gp->add_info_label), "add_info_label_desc", add_info_label_desc);
 
     gp->users_liststore = users_liststore;
 }
@@ -286,6 +297,7 @@ void gui_create_tree()
     GtkWidget *vbox;
     GtkWidget *scrolled_window;
     GtkWidget *add_info_label;
+    GtkWidget *add_info_label_desc;
     GtkWidget *eventbox;
     GtkWidget *frame;
     
@@ -320,16 +332,22 @@ void gui_create_tree()
     gtk_widget_set_size_request(GTK_WIDGET(add_info_label), 0, -1);
     gtk_misc_set_alignment(GTK_MISC(add_info_label), 0, 0.5);
     gtk_misc_set_padding(GTK_MISC(add_info_label), 3, 0);
+
+    add_info_label_desc = gtk_anim_label_new();
 	
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox),add_info_label);
 
     gtk_box_pack_start(GTK_BOX(vbox), eventbox, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), add_info_label_desc, FALSE, FALSE, 0);
     
     gtk_widget_show_all(window);
     
     g_object_set_data(G_OBJECT(treeview), "add_info_label", add_info_label);
+    g_object_set_data(G_OBJECT(add_info_label), "add_info_label_desc", add_info_label_desc);
+    
     gtk_widget_hide(add_info_label);
+    gtk_widget_hide(add_info_label_desc);
 }
 
 

@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.2 2003/06/09 00:20:34 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.3 2003/06/13 00:17:19 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -239,16 +239,18 @@ void unload_plugin(gchar *name)
 gpointer config_var_get(GGaduPlugin *handler,gchar *name) 
 {
     GGaduVar *var = NULL;
-    GSList *tmp = handler->variables;
+    GSList *tmp = NULL;
     
     if ((handler == NULL) || (name == NULL) || (handler->variables == NULL)) 
 	return NULL;
+	
+    tmp = handler->variables;
     
     while (tmp) 
     {
 	var = (GGaduVar *)tmp->data;
 	
-	if (!g_strcasecmp(var->name,name)) {
+	if ((var != NULL) && (!g_strcasecmp(var->name,name))) {
 		return var->ptr;
 	}
 	
