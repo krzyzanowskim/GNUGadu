@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.146 2004/02/13 23:56:49 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.147 2004/02/14 13:01:22 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1924,7 +1924,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 		GGaduDialog *dialog = signal->data;
 		
-		if (ggadu_dialog_get_response(dialog) == GGADU_OK && dialog->user_data)
+		if ((ggadu_dialog_get_response(dialog) == GGADU_OK) && dialog->user_data)
 		{
 			GGaduStatusPrototype *sp = dialog->user_data;
 			GGaduKeyValue *kv = NULL;

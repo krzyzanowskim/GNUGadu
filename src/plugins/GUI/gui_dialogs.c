@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.35 2004/02/09 23:28:56 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.36 2004/02/14 13:01:21 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -47,56 +47,6 @@ static GdkPixmap *pixmap = NULL;
 static GdkGC *gc;
 
 static gchar *about_text = NULL;
-
-void gui_add_user_window_response(GtkDialog * dialog, int resid, gpointer user_data)
-{
-	GGaduSignal *signal = (GGaduSignal *) user_data;
-	GSList *kvlist = (GSList *) signal->data;
-
-	if (resid == GTK_RESPONSE_OK)
-	{
-		while (kvlist)
-		{
-			GGaduKeyValue *kv = (GGaduKeyValue *) kvlist->data;
-
-			if ((kv != NULL) && (kv->user_data != NULL))
-				kv->value = (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
-
-			kvlist = kvlist->next;
-		}
-
-		signal_emit("main-gui", "add user", signal->data, signal->source_plugin_name);
-	}
-
-	GGaduSignal_free(signal);
-	gtk_widget_destroy(GTK_WIDGET(dialog));
-}
-
-void gui_change_user_window_response(GtkDialog * dialog, int resid, gpointer user_data)
-{
-	GGaduSignal *signal = (GGaduSignal *) user_data;
-	GSList *kvlist = (GSList *) signal->data;
-
-	if (resid == GTK_RESPONSE_OK)
-	{
-
-		while (kvlist)
-		{
-			GGaduKeyValue *kv = (GGaduKeyValue *) kvlist->data;
-
-			kv->value = (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(kv->user_data)));
-			/* gtk_widget_unref(GTK_WIDGET(kv->user_data)); */
-
-			kvlist = kvlist->next;
-		}
-
-		signal_emit("main-gui", "change user", signal->data, signal->source_plugin_name);
-	}
-
-	GGaduSignal_free(signal);
-	gtk_widget_destroy(GTK_WIDGET(dialog));
-
-}
 
 void gui_dialog_show_filename(GtkWidget * txt_entry)
 {
@@ -349,33 +299,6 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols)
 		gtk_widget_grab_focus(GTK_WIDGET(to_grab_focus));
 
 	return tab;
-}
-
-void gui_user_data_window(gpointer signal, gboolean change)
-{
-	GGaduSignal *sig = (GGaduSignal *) signal;
-	GtkWidget *adduserwindow = NULL;
-	GtkWidget *table;
-
-	adduserwindow =
-		gtk_dialog_new_with_buttons((change) ? _("Change User") : _("Add User"), NULL,
-					    GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
-
-	gtk_window_set_resizable(GTK_WINDOW(adduserwindow), FALSE);
-
-	table = gui_build_dialog_gtk_table((GSList *) sig->data, 1);
-
-	gtk_table_set_row_spacings(GTK_TABLE(table), 7);
-	gtk_table_set_col_spacings(GTK_TABLE(table), 5);
-
-	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(adduserwindow)->vbox), table);
-
-	g_signal_connect(G_OBJECT(adduserwindow), "response",
-			 (change) ? G_CALLBACK(gui_change_user_window_response) :
-			 G_CALLBACK(gui_add_user_window_response), signal_cpy(signal));
-
-	gtk_widget_show_all(adduserwindow);
 }
 
 void gui_dialog_response(GtkDialog * dialog, int resid, gpointer user_data)

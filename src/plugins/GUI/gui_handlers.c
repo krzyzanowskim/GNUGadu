@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.48 2004/01/28 23:40:23 shaster Exp $ */
+/* $Id: gui_handlers.c,v 1.49 2004/02/14 13:01:21 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -60,11 +60,6 @@ extern GtkWidget *window;
 extern gboolean tree;
 extern GSList *invisible_chats;
 
-void handle_add_user_window(GGaduSignal * signal)
-{
-	gui_user_data_window(signal, FALSE);
-}
-
 void handle_show_dialog(GGaduSignal * signal)
 {
 	gui_show_dialog(signal, FALSE);
@@ -78,11 +73,6 @@ void handle_show_window_with_text(GGaduSignal * signal)
 void handle_show_about(GGaduSignal * signal)
 {
 	gui_show_about(signal);
-}
-
-void handle_change_user_window(GGaduSignal * signal)
-{
-	gui_user_data_window(signal, TRUE);
 }
 
 #ifdef PERL_EMBED

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.43 2004/02/08 23:01:59 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.44 2004/02/14 13:01:21 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -57,8 +57,6 @@ static GQuark GUI_REGISTER_MENU_SIG;
 static GQuark GUI_UNREGISTER_MENU_SIG;
 static GQuark GUI_SEND_USERLIST_SIG;
 static GQuark GUI_MSG_RECEIVE_SIG;
-static GQuark GUI_ADD_USER_WINDOW_SIG;
-static GQuark GUI_CHANGE_USER_WINDOW_SIG;
 static GQuark GUI_SHOW_WARNING_SIG;
 static GQuark GUI_SHOW_MESSAGE_SIG;
 static GQuark GUI_DISCONNECTED_SIG;
@@ -77,16 +75,12 @@ void gui_signal_receive(gpointer name, gpointer signal_ptr)
 
 	print_debug("%s : receive signal %d", "main-gui", signal->name);
 
-	if (signal->name == GUI_ADD_USER_WINDOW_SIG)
-		handle_add_user_window(signal);
-	else if (signal->name == GUI_SHOW_DIALOG_SIG)
+	if (signal->name == GUI_SHOW_DIALOG_SIG)
 		handle_show_dialog(signal);
 	else if (signal->name == GUI_SHOW_WINDOW_WITH_TEXT_SIG)
 		handle_show_window_with_text(signal);
 	else if (signal->name == GUI_SHOW_ABOUT_SIG)
 		handle_show_about(signal);
-	else if (signal->name == GUI_CHANGE_USER_WINDOW_SIG)
-		handle_change_user_window(signal);
 	else if (signal->name == GUI_MSG_RECEIVE_SIG)
 		handle_msg_receive(signal);
 	else if (signal->name == GUI_SHOW_INVISIBLE_CHATS_SIG)
@@ -215,12 +209,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 #ifdef PERL_EMBED
 	register_signal_perl("gui msg receive", perl_gui_msg_receive);
 #endif
-
-	/* DEPRECATED */
-	GUI_ADD_USER_WINDOW_SIG = register_signal(gui_handler, "gui add user window");
-	/* DEPRECATED */
-	GUI_CHANGE_USER_WINDOW_SIG = register_signal(gui_handler, "gui change user window");
-
 
 	GUI_SHOW_INVISIBLE_CHATS_SIG = register_signal(gui_handler, "gui show invisible chats");
 
