@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.23 2005/01/18 14:53:13 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.24 2005/01/31 13:57:13 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -757,7 +757,7 @@ gboolean ggadu_spawn(const gchar *command, const gchar *argument_value)
 	
 	if (g_shell_parse_argv(command,&argcp,&argvp,NULL))
 	{
-		GPid childpid;
+		int childpid; // GPid
 		gint i = 0;
 		for (i=0;i<argcp;i++)
 		{
