@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.57 2004/12/06 15:01:27 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.58 2004/12/19 19:40:48 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -153,7 +153,7 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 {
 	GGaduContact *k1, *k2;
 	gchar *d1, *d2;
-	gint p1, p2, s1, s2;
+	gint p1, p2, s1, s2, ret;
 	gui_protocol *gp = user_data;
 
 	gtk_tree_model_get(GTK_TREE_MODEL(model), a, 1, &d1, 2, &k1, -1);
@@ -164,7 +164,6 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 
 	if (!gp)
 		gtk_tree_model_get(GTK_TREE_MODEL(model), a, 3, &gp, -1);
-
 
 	s1 = k1->status;
 	s2 = k2->status;
@@ -178,19 +177,22 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 	    
 	/* je¶li status jest taki sam posortuj alfabetycznie wg. tego co wy¶wietla */
 	if ((s1 == s2))
+	{
+		/*print_debug("%s %d %s %d  %d",d1,s1,d2,s2,ggadu_strcasecmp(d1, d2));*/
 		return ggadu_strcasecmp(d1, d2);
-
+	}
+	
 	/* w innym przypadku sprawd¼ który status jest wy¿ej na li¶cie */
 	p1 = gui_get_status_pos(k1->status, gp);
 	p2 = gui_get_status_pos(k2->status, gp);
 
 
 	if (p1 > p2)
-		return 1;
+		ret = 1;
 	else
-		return -1;
+		ret = -1;
 
-	return 0;
+	return ret;
 }
 
 static void create_protocol_icon(gui_protocol *gp, GGaduStatusPrototype *sp)
@@ -220,7 +222,6 @@ void gui_list_add(gui_protocol * gp)
 	GtkWidget *add_info_label_desc;
 	GtkTreeSelection *selection;
 	gchar *markup;
-//	gint status;
 
 	g_return_if_fail(gp != NULL);
 	if (!gp) return;
@@ -236,9 +237,9 @@ void gui_list_add(gui_protocol * gp)
 
 	users_liststore = gtk_list_store_new(3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER);
 
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(users_liststore), 2, GTK_SORT_ASCENDING);
 	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(users_liststore), 2, (GtkTreeIterCompareFunc) sort_func, gp,
 					NULL);
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(users_liststore), 2, GTK_SORT_ASCENDING);
 
 	model = gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(users_liststore));
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(model));

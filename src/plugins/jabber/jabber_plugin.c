@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.129 2004/12/16 13:31:10 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.130 2004/12/19 19:40:49 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1405,8 +1405,11 @@ static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler *handl
 	n_service = lm_message_node_get_child(nodes_service,"service");
 	while (n_service)
 	{
-	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, lm_message_node_get_attribute(n_service,"name"), VAR_STR,
-				    lm_message_node_get_attribute(n_service,"jid"), VAR_FLAG_INSENSITIVE);
+	    ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID, 
+				    (gpointer)lm_message_node_get_attribute(n_service,"name"), 
+				    VAR_STR,
+				    (gpointer)lm_message_node_get_attribute(n_service,"jid"),
+				    VAR_FLAG_INSENSITIVE);
 	    
 	    print_debug(lm_message_node_to_string(n_service));
 	    n_service = n_service->next;
@@ -1542,7 +1545,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(jabber_handler, "log", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(jabber_handler, "only_friends", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
-	ggadu_config_var_add_with_default(jabber_handler, "resource", VAR_STR, "GNU Gadu");
+	ggadu_config_var_add_with_default(jabber_handler, "resource", VAR_STR, JABBER_DEFAULT_RESOURCE);
 	ggadu_config_var_add(jabber_handler, "proxy", VAR_STR);
 	ggadu_config_var_add_with_default(jabber_handler, "ignored", VAR_STR, "");
 

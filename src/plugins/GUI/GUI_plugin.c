@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.97 2004/11/26 12:40:52 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.98 2004/12/19 19:40:48 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -282,7 +282,6 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3))
 	{
 		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-		GtkItemFactory *ifactory = NULL;
 		GGaduMenu *umenu = NULL;
 		GtkTreeIter iter;
 		GtkTreeSelection *selection;
@@ -327,10 +326,10 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 		if (!umenu)
 			return FALSE;
 
-		ifactory = gtk_item_factory_new(GTK_TYPE_MENU, "<name>", NULL);
 
 		if (selectedusers)
 		{
+			GtkItemFactory *ifactory = gtk_item_factory_new(GTK_TYPE_MENU, "<name>", NULL);
 			gui_produce_menu_for_factory(umenu, ifactory, NULL, selectedusers);
 			gtk_item_factory_popup(ifactory, event->x_root, event->y_root, event->button, event->time);
 		}

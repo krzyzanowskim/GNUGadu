@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.h,v 1.16 2004/11/19 17:38:40 krzyzak Exp $ */
+/* $Id: gui_handlers.h,v 1.17 2004/12/19 19:40:48 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -37,7 +37,6 @@ void handle_register_protocol(GGaduSignal * signal);
 void handle_unregister_protocol(GGaduSignal * signal);
 void handle_register_menu(GGaduSignal * signal);
 void handle_unregister_menu(GGaduSignal * signal);
-void handle_add_user_to_list(GGaduSignal * signal);
 void handle_send_userlist(GGaduSignal * signal);
 void handle_auth_request(GGaduSignal * signal);
 void handle_auth_request_accepted(GGaduSignal * signal);
