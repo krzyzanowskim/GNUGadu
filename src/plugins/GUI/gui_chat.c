@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.113 2004/09/23 09:48:46 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.114 2004/09/23 12:39:29 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1325,7 +1325,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	{
 	    gboolean is_active = FALSE;
 	    GtkWidget *window = gtk_widget_get_ancestor(chat, GTK_TYPE_WINDOW);
-	    g_object_get(G_OBJECT(window),"is-active",&is_active);
+	    g_object_get(G_OBJECT(window),"is-active",&is_active,NULL);
 //dupa	    if (GTK_WIDGET_VISIBLE(window) && !is_active)
 	    if (!is_active)
 	    {
