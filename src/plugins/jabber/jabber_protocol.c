@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.34 2004/11/26 12:40:55 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.35 2004/11/27 18:16:43 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -83,9 +83,9 @@ void jabber_change_status(enum states status)
 	if ((status == jabber_data.status))
 		return;
 		
-	if ((status == JABBER_STATUS_UNAVAILABLE) && lm_connection_close(jabber_data.connection, NULL))
+	if (status == JABBER_STATUS_UNAVAILABLE)
 	{
-		signal_emit("jabber", "gui disconnected", NULL, "main-gui");
+		lm_connection_close(jabber_data.connection, NULL);
 		return;
 	}
 

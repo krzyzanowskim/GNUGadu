@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.72 2004/10/26 10:41:49 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.73 2004/11/27 18:16:43 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -74,8 +74,6 @@ void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason,
 	    lm_connection_unregister_message_handler(connection, message_handler, LM_MESSAGE_TYPE_MESSAGE);
 
 	message_handler = NULL;
-
-	signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
 	
 	if ((reconnect_count < 3) && (reason != LM_DISCONNECT_REASON_OK))
 	{
@@ -101,8 +99,10 @@ void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason,
 		error_message = _("An unknown Jabber error");
 	}
 	
-	signal_emit_from_thread("jabber", "gui show message", g_strdup(error_message), "main-gui");
 	lm_connection_close(connection,NULL);
+
+	signal_emit_from_thread("jabber", "gui show message", g_strdup(error_message), "main-gui");
+	signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
 
 	print_debug("jabber_disconnect_cb 10");
 	g_static_mutex_unlock(&connect_mutex);
