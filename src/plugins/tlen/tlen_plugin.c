@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.22 2003/04/28 09:10:34 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.23 2003/05/02 11:30:38 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -311,7 +311,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 		  l = l->next;
 		}
 		
-		signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
+//		signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 		break;
 		
 		case TLEN_EVENT_GOTSEARCHITEM:

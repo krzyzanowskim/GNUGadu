@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.41 2003/04/28 09:19:38 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.42 2003/05/02 11:30:35 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -399,7 +399,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
     			      }
     			      l = l->next;
     			    }
-			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
+//			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
 			    n++;
 			}
@@ -432,7 +432,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			      l = l->next;
 			    }
 			    
-			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
+//			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
 			    n++;
 			}
@@ -461,7 +461,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			  }
 			  l = l->next;
 			}
-			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
+//			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 			}
 			break;
 

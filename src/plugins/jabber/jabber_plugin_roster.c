@@ -75,7 +75,7 @@ void roster_update_presence(ikspak *pak)
 	  l = l->next;
 	}
 	
-	signal_emit("jabber","gui notify",notify,"main-gui");
+//	signal_emit("jabber","gui notify",notify,"main-gui");
 }
 
 
