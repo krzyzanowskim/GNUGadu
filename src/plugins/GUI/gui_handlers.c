@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.41 2004/01/17 17:20:53 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.42 2004/01/17 19:54:35 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -256,33 +256,6 @@ void handle_send_userlist(GGaduSignal * signal)
 	gui_user_view_add_userlist(gp);
     }
 }
-
-/* ZONK do wywalenia te sygnaly sa  */
-void handle_auth_request(GGaduSignal * signal)
-{
-    GGaduContact *k = signal->data;
-    print_debug("%s chce nas dodac do swojej ksiazki adresowej!", k->id);
-}
-
-void handle_auth_request_accepted(GGaduSignal * signal)
-{
-    GGaduContact *k = signal->data;
-    print_debug("%s zgodzil sie, zebysmy go mieli w swojej ksiazce adresowej!", k->id);
-}
-
-void handle_unauth_request(GGaduSignal * signal)
-{
-    GGaduContact *k = signal->data;
-    print_debug("%s chce nas usunac ze swojej ksiazki adresowej!", k->id);
-}
-
-void handle_unauth_request_accepted(GGaduSignal * signal)
-{
-    GGaduContact *k = signal->data;
-    print_debug("%s zgodzil sie, zebysmy go usuneli ze swojej ksiazki!!", k->id);
-}
-
-/* */
 
 void handle_show_warning(GGaduSignal * signal)
 {

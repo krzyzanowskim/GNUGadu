@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.47 2004/01/17 19:41:13 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.48 2004/01/17 19:54:36 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -336,26 +336,26 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
 			tlen_accept_subscribe(session, k->id);
-			signal_emit(GGadu_PLUGIN_NAME, "auth request", k, "main-gui");
+			/* signal_emit(GGadu_PLUGIN_NAME, "auth request", k, "main-gui"); */
 			break;
 
 		case TLEN_EVENT_SUBSCRIBED:
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
-			signal_emit(GGadu_PLUGIN_NAME, "auth request accepted", k, "main-gui");
+			/* signal_emit(GGadu_PLUGIN_NAME, "auth request accepted", k, "main-gui"); */
 			break;
 
 		case TLEN_EVENT_UNSUBSCRIBE:
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
 			tlen_accept_unsubscribe(session, k->id);
-			signal_emit(GGadu_PLUGIN_NAME, "unauth request", k, "main-gui");
+			/* signal_emit(GGadu_PLUGIN_NAME, "unauth request", k, "main-gui"); */
 			break;
 
 		case TLEN_EVENT_UNSUBSCRIBED:
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
-			signal_emit(GGadu_PLUGIN_NAME, "unauth request accepted", k, "main-gui");
+			/* signal_emit(GGadu_PLUGIN_NAME, "unauth request accepted", k, "main-gui"); */
 			break;
 
 

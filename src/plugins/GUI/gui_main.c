@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.35 2004/01/17 00:44:59 shaster Exp $ */
+/* $Id: gui_main.c,v 1.36 2004/01/17 19:54:35 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -46,12 +46,6 @@ static gui_signal_handler handlers[] = {
     {"gui register menu", handle_register_menu},
     {"gui unregister menu", handle_unregister_menu},
     {"gui send userlist", handle_send_userlist},
-    /* ZONK do wywalenia te sygnaly sa chyba tlen ich uzywa tylko  */
-    {"auth request", handle_auth_request},
-    {"auth request accepted", handle_null},
-    {"unauth request", handle_null},
-    {"unauth request accepted", handle_null},
-    /* */
     {"gui show warning", handle_show_warning},
     {"gui show message", handle_show_message},
     {"gui disconnected", handle_disconnected},
@@ -168,34 +162,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 #endif
     register_signal(gui_handler, "gui register userlist menu");	/* !!! DODAC FREE */
     register_signal(gui_handler, "gui unregister userlist menu");	/* !!! o to chodzi? ;) */
-
-    /* 
-     * SIGNAL : auth request
-     * prosi o autoryzacje (tlen)
-     *
-     */
-    register_signal(gui_handler, "auth request");
-
-    /* 
-     * SIGNAL : unauth request
-     * prosi o deautoryzacje (tlen)
-     *
-     */
-    register_signal(gui_handler, "unauth request");
-
-    /* 
-     * SIGNAL : auth request accepted
-     * Ktos zgodzil sie na nasza prosbe o autoryzacje (tlen)
-     *
-     */
-    register_signal(gui_handler, "auth request accepted");
-
-    /* 
-     * SIGNAL : unauth request accepted
-     * ktos zgodzil sie na nasza prosbe o deautoryzacje (tlen)
-     *
-     */
-    register_signal(gui_handler, "unauth request accepted");
 
     register_signal(gui_handler, "gui add user window");
     register_signal(gui_handler, "gui change user window");
