@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.20 2003/06/01 22:44:40 shaster Exp $ */
+/* $Id: gui_preferences.c,v 1.21 2003/06/02 09:51:06 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -853,11 +853,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		    (gpointer) gtk_spin_button_get_value_as_int
 		    (GTK_SPIN_BUTTON(auto_away_interval)));
 
-/*		config_var_set(gui_handler, "chat_paned_size",
-			       (gpointer)
-			       gtk_toggle_button_get_active
-			       (GTK_TOGGLE_BUTTON(chatwindowraise)));
-*/
 		config_var_set(gui_handler, "send_on_enter",
 			       (gpointer)
 			       gtk_toggle_button_get_active
