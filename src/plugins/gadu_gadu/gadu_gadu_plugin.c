@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.137 2004/01/26 01:47:33 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.138 2004/01/26 10:45:46 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -581,6 +581,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 					ggadu_repo_change_value("gadu-gadu", k->id, k, REPO_VALUE_DC);
 				l = l->next;
 			}
+			GGaduNotify_free(notify);
 		}
 	}
 		break;
@@ -629,6 +630,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 				l = l->next;
 			}
+			GGaduNotify_free(notify);
 			n++;
 		}
 	}
@@ -658,6 +660,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			l = l->next;
 		}
+		GGaduNotify_free(notify);
 	}
 		break;
 

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.53 2004/01/26 10:35:47 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.54 2004/01/26 10:45:45 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -462,8 +462,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			}
 
 			/* natomiast desc_utf8 nie mozna zwolnic, bo mamy takie glupie API */
-			g_free(notify->id);
-			g_free(notify);
+			GGaduNotify_free(notify);
 
 /*
             signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
