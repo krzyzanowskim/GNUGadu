@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.89 2005/01/04 09:41:49 aflinta Exp $
+# $Id: pl.po,v 1.90 2005/01/05 13:07:26 aflinta Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-04 10:19+0100\n"
+"POT-Creation-Date: 2005-01-05 14:05+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: Artur Flinta\n"
 "Language-Team: GNU Gadu Team\n"
@@ -418,8 +418,9 @@ msgstr "Przeglądarka internetowa:"
 
 #: src/plugins/GUI/gui_preferences.c:982 src/plugins/xosd/plugin_xosd.c:407
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
-#: src/plugins/aaway/aaway.c:254 src/plugins/update/update_plugin.c:345
+#: src/plugins/aaway/aaway.c:267 src/plugins/update/update_plugin.c:345
 #: src/plugins/history/external/history_viewer.c:105
+#: src/plugins/sound/external/plugin_sound_external.c:141
 msgid "Preferences"
 msgstr "Ustawienia"
 
@@ -645,9 +646,10 @@ msgstr "Docklet-dockapp2"
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1694
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1719
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1723
-#: src/plugins/xosd/plugin_xosd.c:517 src/plugins/aaway/aaway.c:293
+#: src/plugins/xosd/plugin_xosd.c:517 src/plugins/aaway/aaway.c:307
 #: src/plugins/ignore/ignore.c:305
 #: src/plugins/history/external/history_viewer.c:149
+#: src/plugins/sound/external/plugin_sound_external.c:180
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr "Nie można odczytać pliku z konfiguracją wtyczki %s"
@@ -1938,24 +1940,24 @@ msgstr "Błąd podczas zapisu listy kontaktów!"
 msgid "DBUS interface plugin"
 msgstr "Plugin interfejsu DBUS"
 
-#: src/plugins/aaway/aaway.c:235
+#: src/plugins/aaway/aaway.c:248
 msgid "Auto-Away Preferences"
 msgstr "Ustawienia"
 
 #. gchar *utf = NULL;
-#: src/plugins/aaway/aaway.c:238
+#: src/plugins/aaway/aaway.c:251
 msgid "Enable auto-away"
 msgstr "Włączony automatyczny stan zajętości"
 
-#: src/plugins/aaway/aaway.c:239
+#: src/plugins/aaway/aaway.c:252
 msgid "Auto away after time (minutes)"
 msgstr "Interwał zmiany stanu na zajęty (minuty):"
 
-#: src/plugins/aaway/aaway.c:277
+#: src/plugins/aaway/aaway.c:291
 msgid "Auto Away"
 msgstr "Automatyczny stan zajętości"
 
-#: src/plugins/aaway/aaway.c:290
+#: src/plugins/aaway/aaway.c:304
 msgid "I'm away from computer"
 msgstr "Nie ma mnie przy komputerze"
 
@@ -2089,6 +2091,45 @@ msgstr "Wyświetl _historię"
 #: src/plugins/history/external/history_viewer.c:133
 msgid "External history viewer"
 msgstr "Zewnętrzna przeglądarka historii"
+
+#: src/plugins/sound/arts/plugin_sound_arts.c:59
+msgid "aRts plugin: Error while playing file"
+msgstr "Wtyczka aRts: Błąd podczas odtwarzania pliku"
+
+#: src/plugins/sound/arts/plugin_sound_arts.c:102
+msgid "aRts sound driver"
+msgstr "Sterownik dźwiękowy aRts"
+
+#: src/plugins/sound/esd/plugin_sound_esd.c:54
+msgid "ESD plugin: Error while playing file"
+msgstr "Wtyczka ESD: Błąd podczas odtwarzania pliku"
+
+#: src/plugins/sound/esd/plugin_sound_esd.c:89
+msgid "ESD sound driver"
+msgstr "Sterownik dźwiękowy ESD"
+
+#: src/plugins/sound/external/plugin_sound_external.c:70
+msgid "External sound plugin: Error while playing file"
+msgstr "Zewnętrzna wtyczka dźwiękowa: Błąd podczas odtwarzania pliku"
+
+#: src/plugins/sound/external/plugin_sound_external.c:125
+msgid "External sound preferences"
+msgstr "Ustawienia dźwięku zewnętrznego"
+
+#: src/plugins/sound/external/plugin_sound_external.c:129
+msgid "Player program name"
+msgstr "Nazwa programu odtwarzacza"
+
+#: src/plugins/sound/external/plugin_sound_external.c:161
+msgid "External player sound driver"
+msgstr "Sterownik zewnętrznego odtwarzacza dźwięku"
+
+#: src/plugins/sound/oss/plugin_sound_oss.c:162
+msgid "OSS sound driver"
+msgstr "Sterownik dźwiękowy OSS"
+
+#~ msgid "ESD plugin: Problems while playing file"
+#~ msgstr "Wtyczka ESD: Błąd podczas odtwarzania pliku"
 
 #~ msgid "Chat window width"
 #~ msgstr "Szerokość okna rozmowy"
