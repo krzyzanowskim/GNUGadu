@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.59 2003/06/05 20:21:18 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.60 2003/06/07 10:19:18 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1524,18 +1524,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			sp->status == GG_STATUS_INVISIBLE_DESCR) 
 		    {
 			GGaduDialog *d = ggadu_dialog_new();
-		        GGaduKeyValue *kv = NULL;
+			gchar *reason_c = NULL;
+			
+			to_utf8("ISO-8859-2",config_var_get(handler,"reason"),reason_c);
+			
+			ggadu_dialog_set_title(d, _("Enter status description"));
+			ggadu_dialog_callback_signal(d,"change status descr");
+			ggadu_dialog_add_entry(&(d->optlist), 0, _("Description:"), VAR_STR, (gpointer)reason_c, VAR_FLAG_FOCUS);
 
-			d->title = g_strdup(_("Enter status description"));
-			d->callback_signal = g_strdup("change status descr");
-    
-		        kv = g_new0(GGaduKeyValue,1);
-			kv->description	= g_strdup(_("Description:"));
-			kv->type	= VAR_STR;
-			to_utf8("ISO-8859-2",config_var_get(handler,"reason"),kv->value);
-//			kv->value	= config_var_get(handler,"reason");
-
-			d->optlist = g_slist_append(d->optlist, kv);
 			d->user_data = sp;
 			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 			

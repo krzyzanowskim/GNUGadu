@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.2 2003/06/05 20:20:48 zapal Exp $ */
+/* $Id: gg-types.h,v 1.3 2003/06/07 10:19:15 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -47,7 +47,8 @@ enum {
     VAR_FLAG_NONE         = 1,
     VAR_FLAG_SENSITIVE    = 1 << 2,
     VAR_FLAG_INSENSITIVE  = 1 << 4,
-    VAR_FLAG_PASSWORD     = 1 << 5
+    VAR_FLAG_PASSWORD     = 1 << 5,
+    VAR_FLAG_FOCUS        = 1 << 8
 };
 
 enum {

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.21 2003/05/31 09:49:50 shaster Exp $ */
+/* $Id: gui_dialogs.c,v 1.22 2003/06/07 10:19:16 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -6,6 +6,7 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "unified-types.h"
 #include "dialog.h"
@@ -99,6 +100,7 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
     gint rows = ((ielements + 1) / cols);
     GtkWidget *tab = gtk_table_new(rows, cols, FALSE);
     gint actC = 0, actR = 0;
+    GtkWidget *to_grab_focus = NULL;
     
     while (listtmp) 
     {
@@ -111,15 +113,19 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 			entry = gtk_entry_new();
 			if (kv->value) 
 			    gtk_entry_set_text( GTK_ENTRY(entry), kv->value );
+
+			gtk_entry_set_activates_default(GTK_ENTRY(entry),TRUE);
 			break;
 		case VAR_INT: {
 			entry = gtk_spin_button_new_with_range(0,999999999,1);
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),(gint)kv->value);
+			gtk_entry_set_activates_default(GTK_ENTRY(entry),TRUE);
 			}
 			break;
 		case VAR_INT_WITH_NEGATIVE: {
 			entry = gtk_spin_button_new_with_range(-999999999,999999999,1);
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),(gint)kv->value);
+			gtk_entry_set_activates_default(GTK_ENTRY(entry),TRUE);
 			}
 			break;
 		case VAR_BOOL:
@@ -170,7 +176,10 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 
     	if ((kv->flag & VAR_FLAG_PASSWORD) != 0)
 		gtk_entry_set_visibility( GTK_ENTRY(entry), FALSE);
-	
+
+    	if ((kv->flag & VAR_FLAG_FOCUS) != 0)
+		to_grab_focus = entry;
+
 	kv->user_data = (gpointer)entry;	
         
 	if (need_label) {
@@ -191,6 +200,9 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 
 	listtmp = listtmp->next;
     }
+    
+    if (to_grab_focus)
+    	gtk_widget_grab_focus(GTK_WIDGET(to_grab_focus));
 
     return tab;
 }
@@ -204,6 +216,7 @@ void gui_user_data_window(gpointer signal, gboolean change)
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 						GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
+						
     gtk_window_set_resizable(GTK_WINDOW(adduserwindow), FALSE);
     table = gui_build_dialog_gtk_table((GSList *)sig->data, 1);
     
@@ -375,6 +388,8 @@ void gui_show_dialog(gpointer signal, gboolean change)
 					GTK_DIALOG_DESTROY_WITH_PARENT,
 					GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 					GTK_STOCK_OK,GTK_RESPONSE_OK,NULL);
+					
+    gtk_dialog_set_default_response(GTK_DIALOG(dialog),GTK_RESPONSE_OK);
     gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
     
     if ((windowicon = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME)) != NULL) {
@@ -418,6 +433,13 @@ void gui_show_dialog(gpointer signal, gboolean change)
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), table, TRUE, TRUE, 0);
 
     g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gui_dialog_response), signal_cpy(signal));
+    
+    /* DUPA */
+/*    GtkAccelGroup *accel_group = gtk_accel_group_new();
+    GClosure *gcl = g_cclosure_new(gui_about,signal_cpy(signal),NULL);
+    gtk_accel_group_connect(accel_group, GDK_KP_Enter, GDK_MOD1_MASK , GTK_ACCEL_LOCKED,  gcl);
+    gtk_window_add_accel_group(GTK_WINDOW(dialog),accel_group);
+*/  
 
     gtk_widget_show_all(dialog);
 }

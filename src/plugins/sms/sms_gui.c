@@ -124,8 +124,7 @@ gpointer sms_send_sms (gpointer user_data)
 
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_EXTERNAL, _("Use external program"), VAR_BOOL, (gpointer)config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer)config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer)config_var_get(sms_handler, "body"), VAR_FLAG_NONE);
-    
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer)config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);    
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
     return NULL;
@@ -254,7 +253,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer)config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
 	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_NUMBER, _("Number"), VAR_STR, (gpointer)config_var_get(sms_handler, "number"), VAR_FLAG_NONE);
-	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer)config_var_get(sms_handler, "body"), VAR_FLAG_NONE);
+	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer)config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
     
 	    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 	}
