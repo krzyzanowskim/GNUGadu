@@ -4,5 +4,5 @@
 #include "jabber_plugin.h"
 
 void jabber_login (enum states status);
-
+gpointer jabber_login_connect(gpointer status);
 #endif

@@ -39,33 +39,44 @@ void jabber_login (enum states status)
   else
   {
     /* we haven't connected yet */
+    g_thread_create(jabber_login_connect, (gpointer)status, FALSE, NULL);
+  }
+}
+
+gpointer jabber_login_connect(gpointer status)
+{
+    static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
     gchar *jid;
     gchar *server;
-    
+        
+    g_static_mutex_lock (&connect_mutex);
     if (!(jid = g_strdup (config_var_get (jabber_handler, "jid"))))
     {
       g_warning ("I want jid!");
-      return;
+      g_static_mutex_unlock (&connect_mutex);
+      g_thread_exit(0);
+      return NULL;
     }
     
     server = strchr (jid, '@');
     if (!server++) {
-      signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
-      signal_emit ("jabber", "gui show warning", g_strdup (_("Invalid jid!")), "main-gui");
-      return;
+      signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
+      signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("Invalid jid!")), "main-gui");
+      g_static_mutex_unlock (&connect_mutex);
+      g_thread_exit(0);
+      return NULL;
     }
-    
+
     print_debug ("jabber: Connection to %s.\n", server);
-
     connection = lm_connection_new (server);
-
+    
     if (config_var_get (jabber_handler, "use_ssl")) {
 	if (lm_connection_supports_ssl ()) {
 	    lm_connection_set_use_ssl (connection, 1);
 	    lm_connection_set_port (connection, LM_CONNECTION_DEFAULT_PORT_SSL);
 	} else {
 	    print_debug ("SSL not supported by loudmouth.\n");
-	    signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
+	    signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
 	}
     }
 
@@ -89,8 +100,10 @@ void jabber_login (enum states status)
 	  (LmResultFunction) connection_open_result_cb, (gint *)status, NULL, NULL))
     {
       print_debug ("jabber: lm_connection_open() failed.\n");
-      signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
+      signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
     }
-    g_free (jid);
-  }
+    g_free(jid);
+    g_static_mutex_unlock (&connect_mutex);
+    g_thread_exit(0);
+    return NULL;
 }
