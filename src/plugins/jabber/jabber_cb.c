@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.86 2005/03/04 15:48:49 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.87 2005/03/04 22:07:05 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -424,6 +424,8 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 
 		lm_message_node_add_child(node, "name", "GNU Gadu");
 		lm_message_node_add_child(node, "version", VERSION);
+		if(strlen(OS_NAME))
+		    lm_message_node_add_child(node, "os", OS_NAME);
 
 		lm_connection_send(connection, m, NULL);
 

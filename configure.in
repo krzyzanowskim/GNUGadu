@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.120 2005/03/02 09:15:21 krzyzak Exp $
+dnl $Id: configure.in,v 1.121 2005/03/04 22:07:05 mkobierzycki Exp $
 
 m4_define([gg2_version],[2.2.4])
 
@@ -15,6 +15,7 @@ GTK_MIN_VER="2.4.0"
 GETTEXT_PACKAGE=$PACKAGE
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
+AC_DEFINE_UNQUOTED(OS_NAME,"")
 
 if test `uname -s` = "Darwin"; then
  	AC_DEFINE_UNQUOTED(LIB_SUFFIX,"")

@@ -4,6 +4,7 @@
 #undef LIB_SUFFIX
 #undef PACKAGE
 #undef VERSION
+#undef OS_NAME
 #undef GGADU_DEBUG
 #undef ICONV_CONST
 #undef ENABLE_NLS

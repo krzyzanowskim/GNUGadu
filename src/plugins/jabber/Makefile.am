@@ -12,7 +12,7 @@ libjabber_plugin_la_SOURCES = jabber_plugin.c \
     jabber_cb.c \
     jabber_cb.h
 
-libjabber_plugin_la_CFLAGS = $(JABBER_CFLAGS)
+libjabber_plugin_la_CFLAGS = $(JABBER_CFLAGS) -DOS_NAME=\"$(OS_NAME)\"
 libjabber_plugin_la_LIBADD = $(JABBER_LIBS) $(top_builddir)/lib/libgg2_core.la
 
 
