@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.2 2003/04/06 13:10:46 krzyzak Exp $ */
+/* $Id: support.h,v 1.3 2003/04/12 19:11:34 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -8,6 +8,7 @@
 #endif
 
 #include <time.h>
+#include "unified-types.h"
 /*
  * Standard gettext macros.
  */
@@ -88,7 +89,7 @@
 
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
 
-void set_userlist_status(gchar *id, gint status, gchar *status_descr, GSList *userlist);
+void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist);
 
 gboolean str_has_suffix (const gchar  *str, const gchar  *suffix);
 

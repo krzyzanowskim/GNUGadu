@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.14 2003/04/12 11:05:27 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.15 2003/04/12 19:11:39 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -285,7 +285,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 
 
 		print_debug("STATUS IN EVENT: %d\n",e->presence->status);
-		set_userlist_status(notify->id, notify->status, e->presence->description, userlist);
+		set_userlist_status(notify, e->presence->description, userlist);
 		signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 		break;
 		

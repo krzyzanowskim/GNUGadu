@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.2 2003/04/06 13:10:46 krzyzak Exp $ */
+/* $Id: support.c,v 1.3 2003/04/12 19:11:34 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -18,20 +18,21 @@
 #include "support.h"
 #include "unified-types.h"
 
-void set_userlist_status(gchar *id, gint status, gchar *status_descr, GSList *userlist)
+void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist)
 {
     GSList *slistmp = userlist;
     
     if (slistmp == NULL) return;
     
-    print_debug("set_userlist_status : id = %s, status = %d\n",id,status); 
+    print_debug("set_userlist_status : id = %s, status = %d\n",n->id,n->status); 
     
     while (slistmp) 
     { 
 		GGaduContact *k = slistmp->data;
 	
-		if ((k != NULL) && (!ggadu_strcasecmp(id,k->id))) {
-	    	k->status = status;
+		if ((k != NULL) && (!ggadu_strcasecmp(n->id,k->id))) {
+	    	k->status = n->status;
+				k->ip = n->ip;
 	    
 			if (k->status_descr) {
 				g_free(k->status_descr);

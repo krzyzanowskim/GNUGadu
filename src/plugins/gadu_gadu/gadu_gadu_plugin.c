@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.26 2003/04/12 11:05:26 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.27 2003/04/12 19:11:37 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -355,12 +355,18 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			
 			while (n->uin) 
 			{
-			    print_debug("%s : GG_EVENT_NOTIFY : %d  %d\n",GGadu_PLUGIN_NAME,n->uin,n->status);
-			    
+					struct in_addr ip_addr;
+					
+					ip_addr.s_addr = n->remote_ip;
+
 			    notify = g_new0(GGaduNotify,1);
 			    notify->id = g_strdup_printf("%d",n->uin);
 			    notify->status = n->status;
-			    set_userlist_status(notify->id, n->status, NULL, userlist);
+					notify->ip = g_strdup_printf("%s:%d",inet_ntoa(ip_addr),n->remote_port);
+					
+			    print_debug("%s : GG_EVENT_NOTIFY : %d  %d  %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,notify->ip);
+					
+			    set_userlist_status(notify, NULL, userlist);
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
 			    n++;
@@ -379,7 +385,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			    notify->id = g_strdup_printf("%d",n->uin);
 
 			    notify->status = n->status;
-			    set_userlist_status(notify->id, n->status, e->event.notify_descr.descr,userlist);
+			    set_userlist_status(notify, e->event.notify_descr.descr,userlist);
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
 			    n++;
@@ -392,7 +398,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			notify = g_new0(GGaduNotify,1);
 			notify->id = g_strdup_printf("%d",e->event.status.uin);
 			notify->status = e->event.status.status;
-			set_userlist_status(notify->id, notify->status, e->event.status.descr,userlist);
+			set_userlist_status(notify, e->event.status.descr,userlist);
 			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 			break;
 

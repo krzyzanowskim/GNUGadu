@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.6 2003/04/10 18:11:46 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.7 2003/04/12 19:11:34 krzyzak Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -25,6 +25,7 @@ typedef struct {
     gchar *comment;	// komentarz
     gchar *birthdate;	// data urodzenia
     gchar *status_descr;// opis do statusu
+		gchar *ip; // "IP:PORT"
     gint status;	// status w postaci liczbowej
 } GGaduContact;
 
@@ -76,6 +77,7 @@ void GGaduMsg_free(GGaduMsg *m);
 typedef struct {
     gchar *id;
     unsigned long status;
+		gchar *ip; /* adres ip, nie musi byc ustawiony */
 } GGaduNotify;
 
 void GGaduNotify_free(GGaduNotify *n);
