@@ -2,6 +2,8 @@
 - revolution, internal, signals are not any longer strings, they are GQuark NOW. perl may not work for a while (all/krzak)
 - fixes (all/krzak)
 - perl is working again (core/krzak)
+- load perl scripts from ~/.gg2/perl.scripts directory instead of
+  ~/.gg2/perl.load file
 
 07.06.2003
 - default action on Enter, and VAR_FLAG_FOCUS that foucus selected element (GUI/krzak)
