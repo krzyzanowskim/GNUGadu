@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.15 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: ggadu_support.h,v 1.16 2005/01/03 15:50:59 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -134,6 +134,8 @@ gboolean	ggadu_write_line_to_file(gchar * path, gchar * line, gchar * enc);
 gchar		*check_file_exists(const gchar * directory, const gchar * filename);
 
 GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint status);
+
+gboolean ggadu_spawn(const gchar *command, const gchar *argument_value);
 
 
 /*! @name DEPRECATED */

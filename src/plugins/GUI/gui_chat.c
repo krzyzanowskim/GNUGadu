@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.138 2005/01/03 12:54:54 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.139 2005/01/03 15:51:02 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -804,25 +804,8 @@ static void
 url_clicked_cb(GtkWidget *w, const char *uri)
 {
 	gchar *browser_exec;
-	gchar **argvp;
-	gint  argcp;
-	
 	browser_exec = ggadu_config_var_get(gui_handler, "browser_exec");
-	if (g_shell_parse_argv(browser_exec,&argcp,&argvp,NULL))
-	{
-		GPid childpid;
-		gint i = 0;
-		for (i=0;i<argcp;i++)
-		{
-		    if (!strcmp(argvp[i],"%s"))
-		    {
-			g_free(argvp[i]);
-			argvp[i] = g_strdup(uri);
-		    }
-		}			
-		g_spawn_async(NULL,argvp,NULL,G_SPAWN_SEARCH_PATH,NULL,NULL,&childpid,NULL);
-		g_strfreev(argvp);
-	}
+	ggadu_spawn(browser_exec,uri);
 }
 
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-01-02 05:15+0100\n"
+"POT-Creation-Date: 2005-01-02 16:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -255,186 +255,194 @@ msgstr ""
 msgid "Select file"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:543
+#: src/plugins/GUI/gui_preferences.c:542
 msgid ""
 "\n"
 "Sound settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:548
+#: src/plugins/GUI/gui_preferences.c:547
 msgid "Messages"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:556
+#: src/plugins/GUI/gui_preferences.c:555
 msgid "Incoming message:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:569
+#: src/plugins/GUI/gui_preferences.c:568
 msgid "Initial message:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:582
+#: src/plugins/GUI/gui_preferences.c:581
 msgid "Outgoing message:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:630
+#: src/plugins/GUI/gui_preferences.c:629
 msgid ""
 "\n"
 "Chat window settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:638
+#: src/plugins/GUI/gui_preferences.c:637
 msgid "Tabbed chat window style"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:643
+#: src/plugins/GUI/gui_preferences.c:642
 msgid "Enable emoticons"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:648
+#: src/plugins/GUI/gui_preferences.c:647
 msgid "'Enter' - send message"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:654
+#: src/plugins/GUI/gui_preferences.c:653
 msgid "Allways show new window on new message"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:659
+#: src/plugins/GUI/gui_preferences.c:658
 msgid "Raise window on new message"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:664
+#: src/plugins/GUI/gui_preferences.c:663
 msgid "Use system username instead of \"Me\" in chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:673
+#: src/plugins/GUI/gui_preferences.c:672
 msgid "Spell Checking"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:677
+#: src/plugins/GUI/gui_preferences.c:676
 msgid "Dictionary"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:699
-msgid "Chat window width"
+#: src/plugins/GUI/gui_preferences.c:697
+msgid "More advanced options"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:708
-msgid "Chat window height"
+#: src/plugins/GUI/gui_preferences.c:698
+msgid "Default size of window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:751
+#: src/plugins/GUI/gui_preferences.c:704
+msgid "Width:"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:713
+msgid "Height:"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:725
+msgid "Split window at: (percent)"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:774
 msgid ""
 "\n"
 "Advanced settings\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:757
+#: src/plugins/GUI/gui_preferences.c:780
 msgid "Auto hide window on start"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:762
+#: src/plugins/GUI/gui_preferences.c:785
 msgid "Notify about status changes inside chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:767
+#: src/plugins/GUI/gui_preferences.c:790
 msgid "'ESC' - close chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:772
+#: src/plugins/GUI/gui_preferences.c:795
 msgid "Blink status icon while connecting every:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:785
+#: src/plugins/GUI/gui_preferences.c:808
 msgid "miliseconds"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:801
-msgid "Chat window split position at:"
-msgstr ""
-
-#: src/plugins/GUI/gui_preferences.c:810
-msgid "percent"
-msgstr ""
-
-#: src/plugins/GUI/gui_preferences.c:821
+#: src/plugins/GUI/gui_preferences.c:826
 msgid "Selected theme:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:869
+#: src/plugins/GUI/gui_preferences.c:874
 msgid "Selected icon set:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:965 src/plugins/xosd/plugin_xosd.c:407
+#: src/plugins/GUI/gui_preferences.c:922
+msgid "Web Browser:"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:982 src/plugins/xosd/plugin_xosd.c:407
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/aaway/aaway.c:254 src/plugins/update/update_plugin.c:345
 #: src/plugins/history/external/history_viewer.c:103
 msgid "Preferences"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:999
+#: src/plugins/GUI/gui_preferences.c:1016
 msgid "General"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1001
+#: src/plugins/GUI/gui_preferences.c:1018
 msgid "Chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1003
+#: src/plugins/GUI/gui_preferences.c:1020
 msgid "Sound"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1005
+#: src/plugins/GUI/gui_preferences.c:1022
 msgid "Colors"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1007
+#: src/plugins/GUI/gui_preferences.c:1024
 msgid "Fonts"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1009
+#: src/plugins/GUI/gui_preferences.c:1026
 msgid "Advanced"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1011
+#: src/plugins/GUI/gui_preferences.c:1028
 msgid "Plugins manager"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1018
+#: src/plugins/GUI/gui_preferences.c:1035
 msgid ""
 "\n"
 "GUI plugin preferences\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1027
+#: src/plugins/GUI/gui_preferences.c:1044
 msgid "Tree users list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1030
+#: src/plugins/GUI/gui_preferences.c:1047
 msgid "Expand Tree by default"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1035
+#: src/plugins/GUI/gui_preferences.c:1052
 msgid "Show only active users"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1040
+#: src/plugins/GUI/gui_preferences.c:1057
 msgid "Notify about new messages via XOSD"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1043
+#: src/plugins/GUI/gui_preferences.c:1060
 msgid "Notify about status change via XOSD"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1048
+#: src/plugins/GUI/gui_preferences.c:1065
 msgid "Show toolbar"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:1051
+#: src/plugins/GUI/gui_preferences.c:1068
 msgid "Display contacts descriptions on users list"
 msgstr ""
 
@@ -606,10 +614,6 @@ msgstr ""
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1050
 #: src/plugins/jabber/jabber_plugin.c:1286
 msgid "_Password:"
-msgstr ""
-
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:214
-msgid "_Default reason:"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:215

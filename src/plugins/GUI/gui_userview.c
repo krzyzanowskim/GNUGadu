@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.62 2004/12/27 12:12:22 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.63 2005/01/03 15:51:02 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -211,19 +211,18 @@ static void create_protocol_icon(gui_protocol *gp, GGaduStatusPrototype *sp)
 
 void gui_list_add(gui_protocol * gp)
 {
-	GGaduStatusPrototype *sp;
-	GtkListStore *users_liststore;
-	GtkTreeModel *model;
-	GtkWidget *vbox;
-	GtkWidget *treeview;
-	GtkWidget *scrolled_window;
-	GtkWidget *label;
-	GtkWidget *eventbox;
-	GtkWidget *add_info_label_desc;
-	GtkTreeSelection *selection;
-	gchar *markup;
+	GGaduStatusPrototype *sp = NULL;
+	GtkListStore *users_liststore = NULL;
+	GtkTreeModel *model = NULL;
+	GtkWidget *vbox = NULL;
+	GtkWidget *treeview = NULL;
+	GtkWidget *scrolled_window = NULL;
+	GtkWidget *label = NULL;
+	GtkWidget *eventbox = NULL;
+	GtkWidget *add_info_label_desc = NULL;
+	GtkTreeSelection *selection = NULL;
+	gchar *markup = NULL;
 
-	g_return_if_fail(gp != NULL);
 	if (!gp) return;
 
 	if (!notebook)
@@ -286,7 +285,7 @@ void gui_list_add(gui_protocol * gp)
 	if (!sp)
 	{
 		if (gp->p->offline_status)
-			sp = ggadu_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+			sp = ggadu_find_status_prototype(gp->p, *(gint *) &gp->p->offline_status->data);
 		else if (gp->p->statuslist)
 			sp = gp->p->statuslist->data; /* last resord, get dirst status from statuslist */
 	}

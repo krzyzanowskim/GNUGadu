@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.20 2004/12/28 17:48:04 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.21 2005/01/03 15:50:59 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -713,7 +713,7 @@ GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint statu
 {
 	GSList *tmp = NULL;
 
-	if (gp == NULL)
+	if (!gp || !gp->statuslist)
 		return NULL;
 
 	tmp = gp->statuslist;
@@ -728,3 +728,28 @@ GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint statu
 	return NULL;
 }
 
+gboolean ggadu_spawn(const gchar *command, const gchar *argument_value)
+{
+	gchar **argvp;
+	gint  argcp;
+	gboolean ret = FALSE;
+	
+	if (g_shell_parse_argv(command,&argcp,&argvp,NULL))
+	{
+		GPid childpid;
+		gint i = 0;
+		for (i=0;i<argcp;i++)
+		{
+		    if (!strcmp(argvp[i],"%s"))
+		    {
+			g_free(argvp[i]);
+			argvp[i] = g_strdup(argument_value);
+		    }
+		    print_debug("SPAWN ARG[%d] %s",i,argvp[i]);
+		}			
+		ret = g_spawn_async(NULL,argvp,NULL,G_SPAWN_SEARCH_PATH,NULL,NULL,&childpid,NULL);
+		g_strfreev(argvp);
+	}
+	
+	return ret;
+}

@@ -1,3 +1,8 @@
+03.01.2005
+- ggadu_spawn() can parse %s argument.
+- change default values for executable variables in sound-external, history-viewer
+  now it contains %s at the end. Should be updated in config files.
+
 02.01.2005
 - Happy New Year
 - search element in context menu (gadu-gadu/krzak)

@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.11 2004/12/26 22:23:19 shaster Exp $ */
+/* $Id: history_viewer.c,v 1.12 2005/01/03 15:51:03 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -82,15 +82,17 @@ gpointer show_external_history(gpointer user_data)
 {
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
-	gchar *cmd = g_strdup_printf("%s %s/%s/%s", (gchar *) ggadu_config_var_get(handler, "viewer"), config->configdir, "history", k->id);
+	gchar *path;
 
 	if (!k)
 	{
 		signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("User not selected")), "main-gui");
 		return NULL;
 	}
-
-	g_spawn_command_line_async(cmd, NULL);
+	    
+	path = g_strdup_printf("%s/%s/%s",config->configdir, "history", k->id);
+	ggadu_spawn(ggadu_config_var_get(handler, "viewer"),path);
+	g_free(path);
 	return NULL;
 }
 
@@ -141,7 +143,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "history-external", NULL));
 	g_free(this_configdir);
 
-	ggadu_config_var_add_with_default(handler, "viewer", VAR_STR, g_build_filename(BINDIR, "gghist", NULL));
+	ggadu_config_var_add_with_default(handler, "viewer", VAR_STR, g_build_filename(BINDIR, "gghist %s", NULL));
 
 	if (!ggadu_config_read(handler))
 		g_warning(_("Unable to read configuration file for plugin %s"), "");

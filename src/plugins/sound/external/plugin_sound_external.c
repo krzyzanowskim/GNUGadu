@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.28 2005/01/02 04:38:38 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.29 2005/01/03 15:51:04 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -54,7 +54,6 @@ static gpointer ggadu_play_file(gpointer user_data)
     gchar *cmd_native = NULL;
     gchar *cmd = NULL;
     gsize r,w;
-    int ret;
     
     g_static_mutex_lock(&play_mutex);
     
@@ -64,14 +63,12 @@ static gpointer ggadu_play_file(gpointer user_data)
 	return NULL;
     }
     
-    cmd = g_strdup_printf("\"%s\" \"%s\"", (gchar *) ggadu_config_var_get(handler, "player"), (gchar *)user_data);
+    cmd = g_strdup(ggadu_config_var_get(handler, "player"));
     cmd_native = g_filename_from_utf8(cmd,strlen(cmd),&r,&w,NULL);
 
-//    ret = system(cmd_native); 
-    if (!g_spawn_command_line_async(cmd_native,NULL))
+    if (!ggadu_spawn(cmd_native,(gchar *)user_data))
           signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", _("external sound plugin: Error while playing file"), "main-gui");
     
-	
 /*    if ((WIFSIGNALED(ret) && (WTERMSIG(ret) == SIGINT || WTERMSIG(ret) == SIGQUIT)) || (ret == -1))
     {
     }
@@ -177,7 +174,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
     g_free(this_configdir);
 
-    ggadu_config_var_add(handler, "player", VAR_STR);
+    ggadu_config_var_add_with_default(handler, "player", VAR_STR,"/usr/bin/play %s");
 
     if (!ggadu_config_read(handler))
 	g_warning(_("Unable to read configuration file for plugin %s"), "");
