@@ -5,15 +5,15 @@
 # exactly 11 lines for the formatting to be correct.  It's also customary to
 # leave one space after the ':'.
 
-   |-----handy-ruler------------------------------------------------------|
-gg2: GNU Gadu 2 - a modular, multiprotocol IM client with a GTK2 GUI.
-gg2: 
-gg2: GNU Gadu 2 is a modular instant messaging client with a GUI written
-gg2: in GTK2. It currently supports Gadu-Gadu, Tlen.pl, and Jabber. It is
-gg2: able to load Perl scripts, dock in several window managers, play
-gg2: sounds, talk to other programs via a UNIX socket, send SMS messages
-gg2: to Polish GSM operators, automatically check for updates, and use
-gg2: XOSD for displaying notices.
-gg2: 
-gg2: Project homepage: http://www.gnugadu.org/
-gg2: 
+         |-----handy-ruler------------------------------------------------------|
+gg2-devel: GNU Gadu 2 (modular, multiprotocol IM client with a GTK+ GUI)
+gg2-devel: 
+gg2-devel: GNU Gadu 2 is a modular instant messaging client with a GUI written
+gg2-devel: in GTK+. It currently supports Gadu-Gadu, Tlen.pl, and Jabber. It is
+gg2-devel: able to load Perl scripts, dock in several window managers, play
+gg2-devel: sounds, talk to other programs via a UNIX socket, send SMS messages
+gg2-devel: to Polish GSM operators, automatically check for updates, and use
+gg2-devel: XOSD for displaying notices.
+gg2-devel: 
+gg2-devel: Project homepage: http://www.gnugadu.org/
+gg2-devel: 
