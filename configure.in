@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.40 2003/12/28 21:15:03 krzyzak Exp $
+dnl $Id: configure.in,v 1.41 2003/12/28 21:27:48 thrulliq Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -119,7 +119,6 @@ want_gui=no
 want_gadu=no
 want_tlen=no
 want_jabber=no
-want_oscar_icq=no
 want_xosd=no
 want_sms=no
 want_remote=no
@@ -138,7 +137,6 @@ if test x$with_all_plugins = xyes; then
     with_gadu=yes
     with_tlen=yes
     with_jabber=yes
-    with_oscar_icq=yes
     with_xosd=yes
     with_esd=yes
     with_oss=yes
@@ -263,11 +261,6 @@ if test "x$with_jabber" = "xyes"; then
     fi
     AC_SUBST(JABBER_LIBS)
     AC_SUBST(JABBER_CFLAGS)
-fi
-
-AC_ARG_WITH(oscar_icq, [  --with-oscar_icq		  Build OSCAR/ICQ plugin		default=no])
-if test "x$with_oscar_icq" = "xyes"; then 
-    want_oscar_icq=yes
 fi
 
 AC_ARG_WITH(xosd, [  --with-xosd		  Build XOSD plugin		default=no])
@@ -403,7 +396,6 @@ AM_CONDITIONAL(BUILD_GUI, test "$want_gui" = "yes")
 AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")
 AM_CONDITIONAL(BUILD_TLEN, test "$want_tlen" = "yes")
 AM_CONDITIONAL(BUILD_JABBER, test "$want_jabber" = "yes")
-AM_CONDITIONAL(BUILD_OSCAR_ICQ, test "$want_oscar_icq" = "yes")
 AM_CONDITIONAL(BUILD_XOSD, test "$want_xosd" = "yes")
 AM_CONDITIONAL(BUILD_DOCKLET_SYSTEM_TRAY, test "$want_docklet_system_tray" = "yes")
 AM_CONDITIONAL(BUILD_DOCKLET_DOCKAPP, test "$want_docklet_dockapp" = "yes")
@@ -458,7 +450,6 @@ src/plugins/GUI/Makefile
 src/plugins/gadu_gadu/Makefile
 src/plugins/tlen/Makefile
 src/plugins/jabber/Makefile
-src/plugins/oscar_icq/Makefile
 src/plugins/xosd/Makefile
 src/plugins/docklet/Makefile
 src/plugins/docklet/system-tray/Makefile
@@ -481,7 +472,6 @@ echo Build plugin GUI-GTK2.......... : $want_gui
 echo Build plugin Gadu-Gadu......... : $want_gadu
 echo Build plugin Tlen.pl........... : $want_tlen
 echo Build plugin Jabber............ : $want_jabber
-echo Build plugin OSCAR/ICQ......... : $want_oscar_icq
 echo Build plugin XOSD.............. : $want_xosd
 echo Build plugin sound ESD......... : $want_esd
 echo Build plugin sound aRts........ : $want_arts
