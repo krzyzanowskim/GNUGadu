@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.4 2003/11/26 22:00:36 thrulliq Exp $ */
+/* $Id: docklet_plugin.c,v 1.5 2004/01/07 13:42:04 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -16,6 +16,7 @@
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
+#include "repo.h"
 
 #include "docklet_plugin.h"
 #include "eggtrayicon.h"
@@ -161,6 +162,45 @@ GtkWidget *ggadu_new_item_from_stock(GtkWidget *menu, const char *str, const cha
         return menuitem;
 }
 
+GtkWidget *ggadu_new_item_from_image(GtkWidget *menu, const char *str, const char *icon, GtkSignalFunc sf, gpointer data, guint accel_key, guint accel_mods, char *mod)
+{
+        GtkWidget *menuitem;
+        GtkWidget *image;
+
+        if (icon == NULL)
+            menuitem = gtk_menu_item_new_with_mnemonic(str);
+        else
+            menuitem = gtk_image_menu_item_new_with_mnemonic(str);
+
+        if (menu)
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+        if (sf)
+            g_signal_connect(GTK_OBJECT(menuitem), "activate", sf, data);
+
+        if (icon != NULL) {
+            image = docklet_create_image(NULL, icon);
+            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), image);
+//	    gtk_widget_unref(image);
+        }
+	
+        gtk_widget_show_all(menuitem);
+
+        return menuitem;
+}
+
+void docklet_status_activate(GtkWidget *widget, gpointer user_data) 
+{
+    GGaduStatusPrototype *sp = user_data;
+    GGaduProtocol *p = g_object_get_data(G_OBJECT(widget), "protocol");
+    
+    /* FIXME: this is a dirty hack, because we don't really know target plugin name */
+    
+    if (p && sp)
+	signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
+}
+
+
 void docklet_about(GtkWidget *widget, gpointer user_data) {
     signal_emit(DOCKLET_PLUGIN_NAME, "gui show about", NULL, "main-gui");
 }
@@ -172,8 +212,43 @@ void docklet_quit(GtkWidget *widget, gpointer user_data) {
 
 void docklet_menu(GdkEventButton *event) {
     static GtkWidget *menu = NULL;
-
+    gpointer key, index;
+    
     menu = gtk_menu_new();
+
+    if (ggadu_repo_exists("_protocols_")) {
+	GtkWidget *menuitem;
+	GGaduProtocol *p = NULL;
+	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+
+	while (index) {
+	    p = ggadu_repo_find_value("_protocols_", key);
+	    menuitem = gtk_menu_item_new_with_label(p->display_name);
+	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+	    
+	    if (p->statuslist) {
+		GSList *tmp = p->statuslist;
+		GtkWidget *submenu = gtk_menu_new();
+		GtkWidget *subitem;
+		
+		while (tmp) {
+		    GGaduStatusPrototype *sp = tmp->data;
+		    if (!sp->receive_only) {
+			subitem = ggadu_new_item_from_image(submenu, sp->description, sp->image, G_CALLBACK(docklet_status_activate), sp, 0, 0, 0);
+			g_object_set_data(G_OBJECT(subitem), "protocol", p);
+		    }
+		    tmp = tmp->next;
+		}
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem), submenu);
+	    }
+	}
+	
+	/* separator */
+        menuitem = gtk_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+    }
+
     ggadu_new_item_from_stock(menu, _("About"), GTK_STOCK_DIALOG_INFO, G_CALLBACK(docklet_about), NULL, 0, 0, 0);
     ggadu_new_item_from_stock(menu, _("Quit"), GTK_STOCK_QUIT, G_CALLBACK(docklet_quit), NULL, 0, 0, 0);
     gtk_widget_show_all(menu);
