@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.38 2004/12/29 13:31:18 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.39 2004/12/29 13:32:42 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -70,10 +70,9 @@ void action_roster_remove_result(LmConnection * connection, LmMessage * message,
 	signal_emit("jabber", "gui show message", g_strdup(_("Contact removed from roster")), "main-gui");
 }
 
-//void jabber_change_status(enum states status)
 void jabber_change_status(GGaduStatusPrototype *sp)
 {
-	enum states status = sp->status;
+	enum states status;
 	LmMessage *m = NULL;
 	gchar *show = NULL;
 	gchar *show_away = "away";
@@ -82,6 +81,11 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 	gchar *show_chat = "chat";
 	
 	print_debug("jabber_change_status start");
+	
+	if (!sp)
+	    return;
+	
+	status = sp->status;
 	
 	if ((status == jabber_data.status))
 		return;
