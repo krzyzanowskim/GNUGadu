@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.7 2003/06/09 17:24:15 krzyzak Exp $ */
+/* $Id: signals.c,v 1.8 2003/06/26 19:50:52 zapal Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -92,7 +92,7 @@ void hook_signal (GGaduSigID q_name, void (*hook) (GGaduSignal *signal, void (*p
   GGaduSignalHook *signalhook;
   GSList *list = config->signal_hooks;
   
-  print_debug("hook_signal : %s",g_quark_to_string(q_name));
+  print_debug("hook_signal : %s\n",g_quark_to_string(q_name));
 
   while (list)
   {

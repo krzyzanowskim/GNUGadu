@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.6 2003/06/11 17:49:14 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.7 2003/06/26 19:50:52 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -415,6 +415,7 @@ int perl_load_script (char *script_name)
 	  "$SIG{__WARN__}=sub{print\"$_[0]\n\";};"
 	};
 
+  print_debug ("gotta load %s\n", script_name);
   script = g_new0 (perlscript, 1);
   script->loaded = 0;
   script->filename = g_strdup (script_name);
@@ -429,7 +430,7 @@ int perl_load_script (char *script_name)
 
   execute_perl_one ("load_n_eval", script->filename);
 
-  printf ("aaaa\n");
+  print_debug ("aaaa\n");
   
   return 0;
 };
@@ -476,8 +477,11 @@ gint perl_load_scripts (void)
   
   while ((file = (gchar *)g_dir_read_name (dir)))
   {
+    gchar *real_filename;
     print_debug ("perl: Autoloading script %s\n", file);
-    perl_load_script (file);
+    real_filename = g_build_filename (config->configdir, "perl.scripts", file, NULL);
+    perl_load_script (real_filename);
+    g_free (real_filename);
     print_debug ("perl: %s loaded\n", file);
     loaded++;
   }
