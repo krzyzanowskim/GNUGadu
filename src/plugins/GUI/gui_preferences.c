@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.81 2004/10/22 07:47:53 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.82 2004/11/03 07:53:42 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -128,7 +128,7 @@ GtkWidget *gui_plugins_mgr_tab(
 {
 	GtkWidget *vbox;
 	GSList *plugins_list = (config) ? config->all_available_plugins : NULL;
-	GSList *modules_load = (config) ? get_list_modules_load() : NULL;
+	GSList *modules_load = (config) ? get_list_modules_load(GGADU_PLUGIN_TYPE_ANY) : NULL;
 	GtkTreeIter iter;
 	GtkCellRenderer *renderer = NULL;
 	GtkTreeViewColumn *column = NULL;

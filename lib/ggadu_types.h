@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.15 2004/10/28 17:31:33 thrulliq Exp $ */
+/* $Id: ggadu_types.h,v 1.16 2004/11/03 07:53:41 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -38,7 +38,8 @@ typedef enum
 {
     GGADU_PLUGIN_TYPE_UI = 1,
     GGADU_PLUGIN_TYPE_PROTOCOL,
-    GGADU_PLUGIN_TYPE_MISC
+    GGADU_PLUGIN_TYPE_MISC,
+    GGADU_PLUGIN_TYPE_ANY /* for internal use only */
 } GGaduPluginType;
 
 enum

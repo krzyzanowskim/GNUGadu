@@ -4,6 +4,7 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 #include "dbus_plugin.h"
+#include "libofi.h"
 
 static gboolean send_ping(DBusConnection * bus);
 static void get_protocols(DBusConnection *bus);

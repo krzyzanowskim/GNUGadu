@@ -47,12 +47,16 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <glib.h>
+#include <X11/X.h>
+#include <X11/Xos.h>
+#include <X11/Intrinsic.h>
+#include <X11/Xatom.h>
 
 #include "mozilla-plugin.h"
 
-#define MIME_TYPES_HANDLED  "application/x-instant-messaging"
+#define MIME_TYPES_HANDLED  "text/html"
 #define MOZ_PLUGIN_NAME         "Instant Messaging Support "
-#define MIME_TYPES_DESCRIPTION  MIME_TYPES_HANDLED"::"MOZ_PLUGIN_NAME
+#define MIME_TYPES_DESCRIPTION  MIME_TYPES_HANDLED":tt:"MOZ_PLUGIN_NAME
 #define MOZ_PLUGIN_DESCRIPTION  MOZ_PLUGIN_NAME " Plug-in for Mozilla - This is an experimental plugin \
 	developed as a part of <a href='http://www.gnugadu.org'>GNU Gadu</a> project.\
 	Handle instant messages protocols and do some work with that.\
@@ -81,20 +85,17 @@ void DEBUGM(const char* format, ...) {
 
 char* NPP_GetMIMEDescription(void)
 {
+  DEBUGM("plugin: NPP_getMIMEDescription\n");
   return(MIME_TYPES_DESCRIPTION);
 }
 
 // general initialization and shutdown
-NPError NPP_PluginInitialize()
+NPError NPP_Initialize()
 {
   DEBUGM("plugin: NPP_Initialise\n");
   return NPERR_NO_ERROR;
 }
 
-void NPP_PluginShutdown(void)
-{
-  DEBUGM("plugin: NPP_Shutdown\n");
-}
 
 /* The browser calls this to get the plugin name and description */
 NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value)
@@ -102,15 +103,21 @@ NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value)
   NPError err = NPERR_NO_ERROR;
   DEBUGM("plugin: NPP_GetValue1\n");
   
+//  NPN_GetValue(instance, NPNVDOMElement, NULL);
+
+  
   switch (variable) {
 	case NPPVpluginNameString:
 	    *((char **)value) = MOZ_PLUGIN_NAME;
+	    DEBUGM("fiu\n");
 	break;
 	case NPPVpluginDescriptionString:
 	    *((char **)value) = MOZ_PLUGIN_DESCRIPTION;
+	    DEBUGM("ha\n");
 	break;
 	default:
 	    err = NPERR_GENERIC_ERROR;  
+	    DEBUGM("oh\n");
   }
   return err;
 }
@@ -171,6 +178,7 @@ void NPP_Print(NPP instance, NPPrint* printInfo) {
 
 NPError NPP_SetWindow(NPP instance, NPWindow* window) 
 {
+    DEBUGM("plugin: NPP_SetWindow\n");
     return NPERR_NO_ERROR;
 }
 
@@ -209,5 +217,9 @@ jref NPP_GetJavaClass() {
 	return NULL;
 }
 
-
+int16 NPP_HandleEvent(NPP instance, void *event)
+{
+	DEBUGM("plugin: handle event\n");
+	return 0;
+}
 

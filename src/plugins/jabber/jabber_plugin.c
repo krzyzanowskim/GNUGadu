@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.115 2004/10/28 17:31:39 thrulliq Exp $ */
+/* $Id: jabber_plugin.c,v 1.116 2004/11/03 07:53:45 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1474,6 +1474,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 
 	jabber_data.status = JABBER_STATUS_UNAVAILABLE;
+
 
 	return jabber_handler;
 }

@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.24 2004/10/28 11:33:37 krzyzak Exp $ */
+/* $Id: main.c,v 1.25 2004/11/03 07:53:41 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -117,21 +117,49 @@ void start_plugins()
 
 void start_plugins_ordered()
 {
-    GSList *tmp = NULL;
+    GSList *tmp = NULL, *heap = NULL;
     GGaduPlugin *plugin = NULL;
     void (*start_plugin) ();
     gboolean main_gui_loaded = FALSE;
 
-    tmp = get_list_modules_load();
-
+    heap = get_list_modules_load();
+    tmp = heap;
     while (tmp)
     {
 	plugin = (GGaduPlugin *) tmp->data;
 	start_plugin = plugin->start_plugin;
-	if (start_plugin)
+	if (start_plugin && plugin->type == GGADU_PLUGIN_TYPE_UI)
 	    start_plugin();
 
-	if (!ggadu_strcasecmp(plugin->name, "main-gui"))
+	if (!g_strcasecmp(plugin->name, "main-gui"))
+	    main_gui_loaded = TRUE;
+
+	tmp = tmp->next;
+    }
+
+    tmp = heap;
+    while (tmp)
+    {
+	plugin = (GGaduPlugin *) tmp->data;
+	start_plugin = plugin->start_plugin;
+	if (start_plugin && plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL)
+	    start_plugin();
+
+	if (!g_strcasecmp(plugin->name, "main-gui"))
+	    main_gui_loaded = TRUE;
+
+	tmp = tmp->next;
+    }
+
+    tmp = heap;
+    while (tmp)
+    {
+	plugin = (GGaduPlugin *) tmp->data;
+	start_plugin = plugin->start_plugin;
+	if (start_plugin && plugin->type == GGADU_PLUGIN_TYPE_MISC)
+	    start_plugin();
+
+	if (!g_strcasecmp(plugin->name, "main-gui"))
 	    main_gui_loaded = TRUE;
 
 	tmp = tmp->next;

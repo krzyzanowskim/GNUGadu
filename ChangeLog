@@ -1,3 +1,22 @@
+02.10.2004
+- dbus-im-openchat-wrapper and GNOME schemas moved to OFI Project as
+  ofi-openchat-wrapper (krzak)
+
+31.10.2004
+- warning message if trying sebd nessage while not connected (gadu-gadu/krzak)
+- src/plugins/dbus/dbus-im-openchat-wrapper invoke openChate method :
+  preferred patch for dbus to run services if needed in contrib/patches/dbus-all-services.patch
+  usage:
+    dbus-im-openchat-wrapper protocol://contact_id
+  (dbus/krzak)
+- src/plugins/dbus/dbus-org-freedesktop.im.schemas.in
+  install gconf keys /desktop/gnome/url-handlers/{gg,jabber,tlen}/command
+  to handle protocols by gnome using dbus and org.freedesktop.im interface
+  (dbus/krzak)
+- org.freedesktop.im.GG.service.in -  DBUS service file (dbus/krzak)
+- update src/plugins/dbus/README file with more details (dbus/krzak)
+- load plugins in order: GGADU_PLUGIN_TYPE{UI,PROTOCOL,MISC} (core/krzak)
+
 28.10.2004
 - s/protocol_handler_str/protocol_uri/g (THrull)
 - dbus plugin handle methods

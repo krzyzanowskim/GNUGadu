@@ -1,3 +1,5 @@
+if you use DBUS-0.22 please apply patches from contrib/patches/dbus-all-services.patch to DBUS source.
+
 To get DBUS operational you need to start system bus service at system 
 startup:
 
@@ -17,43 +19,29 @@ if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
   echo "D-BUS per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS"
 fi
 
+or I do prefer start GNOME with "dbus-launch gnome-session" because it allow to activate X based services
 
-#####
+my /etc/X11/Xinit/Xclients:
+------------------------------------------------------------ start --
+# these files are left sitting around by RunWM.
+rm -f /tmp/mwmrc* 2>/dev/null
+# check to see if the user has a preferred desktop
+[ -f /etc/sysconfig/desktop ] && . /etc/sysconfig/desktop
+[ -f ~/.wm_style ] && PREFERRED="`cat ~/.wm_style | tr a-z A-Z`"
+GSESSION="`which gnome-session 2>/dev/null`"
+STARTKDE="`which startkde 2>/dev/null`"
+case "$PREFERRED" in
+	GNOME)
+		[ -x "$GSESSION" ] && exec "/usr/bin/dbus-launch" "$GSESSION"
+		;;
+	KDE)
+		[ -x "$STARTKDE" ] && exec "$STARTKDE"
+		;;
+esac
+# Last, try plain window manager
+exec /usr/X11R6/bin/RunWM
+------------------------------------------------------------ end ---
 
-Protocols handlers:
-
-Tlen.pl		tlen://
-Gadu-Gadu	gg://
-Jabber		jabber://
-AIM		aim://
-ICQ		icq://
-EMAIL		email://
-
-
-##### interface org.freedesktop.im #####
-
-[org.freedesktop.im.getProtocols()]
-    RETURN: 
-	DBUS_TYPE_STRING's with supported protocols list example: gg:// jabber:// icq://
-
-
-[org.freedesktop.im.getPresence( contactURI )]
-    example: jabber://krzak@jabberpl.org
-    
-    RETURN: (DBUS_TYPE_UINT32 DBusIMPresence,
-	     DBUS_TYPE_STRING status_description,
-	     DBUS_TYPE_STRING icon_path)
-    
-	typedef enum
-	{
-	    IM_PRESENCE_NOT_FOUND = 1
-	    IM_PRESENCE_AVAILABLE,
-	    IM_PRESENCE_AWAY,
-	    IM_PRESENCE_OFFLINE
-	} DBusIMPresence;
-	
-	status_description - may be empty string "" [not NULL]
-	icon_path - path to icon of this presence (optional, may be empty string "" [not NULL])
-
-[org.freedesktop.im.openChat( contactURI )]
-    RETURN: (DBUS_TYPE_BOOLEAN result)
+### NOTES ####
+#/desktop/gnome/url-handlers/jabber	""
+#dbus-send --type="method_call" --dest='org.freedesktop.im.GG' /org/freedesktop/im org.freedesktop.im.openChat string:'gg://5074881'

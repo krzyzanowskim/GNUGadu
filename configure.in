@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.99 2004/10/29 15:42:04 krzyzak Exp $
+dnl $Id: configure.in,v 1.100 2004/11/03 07:53:39 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.1])
 
@@ -427,6 +427,7 @@ else
 	if test "$with_dbus" = "no"; then
 	    AC_MSG_ERROR(DBUS_PKG_ERRORS)
 	fi
+
 	AC_SUBST(DBUS_CFLAGS)
 	AC_SUBST(DBUS_LIBS)
 fi
@@ -663,6 +664,7 @@ src/plugins/sound/external/Makefile
 src/plugins/sms/Makefile
 src/plugins/remote/Makefile
 src/plugins/dbus/Makefile
+src/plugins/dbus/org.freedesktop.im.GG.service
 src/plugins/update/Makefile
 src/plugins/history/Makefile
 src/plugins/history/external/Makefile

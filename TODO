@@ -6,3 +6,7 @@ Later:
  - applying theme should refresh everything (it's not doing that for menubar) (GUI)
  - memory leaks audit (all)
  - conference (jabber)
+
+protocol plugins load before the rest (problem with dbus -  have to me loaded before protocols to
+handle all of them not only the first one... don't know why.. signal go but do not show window... seems
+gui plugin problem)

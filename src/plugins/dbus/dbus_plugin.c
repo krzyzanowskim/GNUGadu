@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.14 2004/10/28 17:31:36 thrulliq Exp $ */
+/* $Id: dbus_plugin.c,v 1.15 2004/11/03 07:53:43 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -22,6 +22,10 @@
 
 #define DBUS_API_SUBJECT_TO_CHANGE
 
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -34,6 +38,7 @@
 
 #include "gg2_core.h"
 #include "dbus_plugin.h"
+#include "libofi.h"
 
 GGaduPlugin *plugin_handler = NULL;
 GGadu_PLUGIN_INIT("dbus", GGADU_PLUGIN_TYPE_MISC);
@@ -77,20 +82,20 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 
 				if ((k = signal_emit("dbus", "get user", contactURIdata, plugin->name)))
 				{
-					guint return_status;
+					guint return_status = OFI_IM_PRESENCE_OFFLINE;
 					gchar *status_descr = NULL;
 
 					if (is_in_status(k->status, plugin->protocol->online_status))
 					{
-						return_status = IM_PRESENCE_AVAILABLE;
+						return_status = OFI_IM_PRESENCE_AVAILABLE;
 					}
 					else if (is_in_status(k->status, plugin->protocol->offline_status))
 					{
-						return_status = IM_PRESENCE_OFFLINE;
+						return_status = OFI_IM_PRESENCE_OFFLINE;
 					}
 					else if (is_in_status(k->status, plugin->protocol->away_status))
 					{
-						return_status = IM_PRESENCE_AWAY;
+						return_status = OFI_IM_PRESENCE_AWAY;
 					}
 
 					print_debug("FOUND %d",return_status);
@@ -104,7 +109,7 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 				else
 				{
 					print_debug("NOT FOUND");
-					dbus_message_append_args(return_message, DBUS_TYPE_UINT32, IM_PRESENCE_NOT_FOUND, DBUS_TYPE_STRING, "",DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
+					dbus_message_append_args(return_message, DBUS_TYPE_UINT32, OFI_IM_PRESENCE_NOT_FOUND, DBUS_TYPE_STRING, "",DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
 				}
 				/* I can free here because signal return copy of GGaduContact */
 				dbus_connection_send(connection, return_message, NULL);
@@ -167,8 +172,10 @@ static DBusHandlerResult org_freedesktop_im_openChat(DBusConnection * connection
 	gchar *contactURIhandler = NULL;
 	gchar *contactURIdata = NULL;
 	DBusError error;
+	DBusMessage *return_message = dbus_message_new_method_return(message);
+	gboolean ret = FALSE;
 	dbus_error_init(&error);
-
+	
 	if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
 	{
 		gchar **URItab = NULL;
@@ -193,26 +200,31 @@ static DBusHandlerResult org_freedesktop_im_openChat(DBusConnection * connection
 			    !ggadu_strcasecmp(plugin->protocol->protocol_uri, contactURIhandler))
 			{
 				GGaduMsg *msg = g_new0(GGaduMsg, 1);
-				DBusMessage *return_message = dbus_message_new_method_return(message);
 
-				print_debug("DBUS openChat: open fo %s in protocol: %s", contactURIdata, contactURIhandler);
+				print_debug("DBUS openChat: open for %s in protocol: %s", contactURIdata, contactURIhandler);
 				
 				msg->id = g_strdup_printf("%s", contactURIdata);
 				msg->message = NULL;
 				msg->class = GGADU_CLASS_CHAT;
+				/* debug */ /*signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup("TAK openChat"), "main-gui");*/
 				signal_emit_full(plugin->name, "gui msg receive", msg, "main-gui", GGaduMsg_free);
-
-				dbus_message_append_args(return_message, DBUS_TYPE_BOOLEAN, TRUE, DBUS_TYPE_INVALID);
-				/* I can free here because signal return copy of GGaduContact */
-				dbus_connection_send(connection, return_message, NULL);
-				dbus_message_unref(return_message);
+				ret = TRUE;
+				break;
+			} else if (!plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL))
+			{
+				ret = FALSE;
+				/* debug */ /*signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf("no plugin->protocol %s",plugin->name), "main-gui");*/
 			}
 			plugins = plugins->next;
 		}
-		dbus_free(contactURI);
 		g_strfreev(URItab);
 		g_free(contactURIhandler);
+		dbus_free(contactURI);
 	}
+	
+	dbus_message_append_args(return_message, DBUS_TYPE_BOOLEAN, ret, DBUS_TYPE_INVALID);
+	dbus_connection_send(connection, return_message, NULL);
+	dbus_message_unref(return_message);
 	dbus_error_free(&error);
 	return DBUS_HANDLER_RESULT_HANDLED;
 }
@@ -305,6 +317,7 @@ void start_plugin()
 	print_debug("dbus stared");
 	return;
 }
+
 
 void destroy_plugin()
 {

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.74 2004/10/28 17:31:41 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.75 2004/11/03 07:53:45 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -645,41 +645,6 @@ gpointer user_add_user_action(gpointer user_data)
  * 						PLUGIN STUFF
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-
-GGaduPlugin *initialize_plugin(gpointer conf_ptr)
-{
-	gchar *path = NULL;
-	GGadu_PLUGIN_ACTIVATE(conf_ptr);	/* wazne zeby wywolac to makro w tym miejscu */
-	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
-
-	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, "Tlen protocol");
-
-	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
-
-	if (g_getenv("HOME_ETC"))
-		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "tlen", NULL);
-	else
-		this_configdir = g_build_filename(g_get_home_dir(), ".tlen", NULL);
-
-	mkdir(this_configdir, 0700);
-
-	path = g_build_filename(this_configdir, "config", NULL);
-	ggadu_config_set_filename((GGaduPlugin *) handler, path);
-	g_free(path);
-
-	ggadu_config_var_add(handler, "login", VAR_STR);
-	ggadu_config_var_add(handler, "password", VAR_STR);
-	ggadu_config_var_add(handler, "log", VAR_BOOL);
-	ggadu_config_var_add(handler, "autoconnect", VAR_BOOL);
-	ggadu_config_var_add_with_default(handler, "autoconnect_status", VAR_INT, (gpointer) 2);
-
-	ggadu_config_read(handler);
-
-	ggadu_repo_add("tlen");
-
-	return handler;
-}
-
 GSList *status_init()
 {
 	GSList *list = NULL;
@@ -737,6 +702,41 @@ GSList *status_init()
 
 	return list;
 }
+
+GGaduPlugin *initialize_plugin(gpointer conf_ptr)
+{
+	gchar *path = NULL;
+	GGadu_PLUGIN_ACTIVATE(conf_ptr);	/* wazne zeby wywolac to makro w tym miejscu */
+	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
+
+	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, "Tlen protocol");
+
+	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
+
+	if (g_getenv("HOME_ETC"))
+		this_configdir = g_build_filename(g_getenv("HOME_ETC"), "tlen", NULL);
+	else
+		this_configdir = g_build_filename(g_get_home_dir(), ".tlen", NULL);
+
+	mkdir(this_configdir, 0700);
+
+	path = g_build_filename(this_configdir, "config", NULL);
+	ggadu_config_set_filename((GGaduPlugin *) handler, path);
+	g_free(path);
+
+	ggadu_config_var_add(handler, "login", VAR_STR);
+	ggadu_config_var_add(handler, "password", VAR_STR);
+	ggadu_config_var_add(handler, "log", VAR_BOOL);
+	ggadu_config_var_add(handler, "autoconnect", VAR_BOOL);
+	ggadu_config_var_add_with_default(handler, "autoconnect_status", VAR_INT, (gpointer) 2);
+
+	ggadu_config_read(handler);
+
+	ggadu_repo_add("tlen");
+
+	return handler;
+}
+
 
 void free_search_results()
 {
@@ -846,11 +846,8 @@ void start_plugin()
 	p->offline_status = g_slist_append(p->offline_status, (gint *) TLEN_STATUS_UNAVAILABLE);
 	p->away_status = g_slist_append(p->away_status, (gint *) TLEN_STATUS_AWAY);
 	p->online_status = g_slist_append(p->online_status, (gint *) TLEN_STATUS_AVAILABLE);
-
 	handler->protocol = p;
-
 	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
-
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
 	register_signal(handler, "change status");
