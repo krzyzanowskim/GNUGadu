@@ -76,6 +76,8 @@ void jabber_change_status (enum states status)
 
   if (show)
     lm_message_node_add_child (m->node, "show", show);
+  if (status_descr)
+    lm_message_node_add_child (m->node, "status", status_descr);
   
   print_debug ("STATUS - %d\n", status);
   

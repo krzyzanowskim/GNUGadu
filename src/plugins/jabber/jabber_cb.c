@@ -252,6 +252,14 @@ LmHandlerResult iq_roster_cb (LmMessageHandler *handler, LmConnection *connectio
       rosterlist = g_slist_append (rosterlist, k);
     }
     k->nick = g_strdup (name ? name:jid);
+    node = lm_message_node_get_child (child, "status");
+    if (k->status_descr) {
+      g_free (k->status_descr);
+      k->status_descr = NULL;
+    }
+    if (node) {
+      k->status_descr = g_strdup (lm_message_node_get_value (node));
+    }
     
     if (strcmp (subs, "none") && strcmp (subs, "from"))
     {

@@ -25,7 +25,8 @@ enum states {
   JABBER_STATUS_AWAY,
   JABBER_STATUS_XA,
   JABBER_STATUS_DND,
-  JABBER_STATUS_WAIT_SUBSCRIBE
+  JABBER_STATUS_WAIT_SUBSCRIBE,
+  JABBER_STATUS_DESCR
 };
 
 enum subscription {
@@ -58,6 +59,7 @@ extern GSList *actions;
 extern gint connected;
 
 extern enum states jabber_status;
+extern gchar *status_descr;
 
 GGaduContact *user_in_list (gchar *jid, GSList *list);
 

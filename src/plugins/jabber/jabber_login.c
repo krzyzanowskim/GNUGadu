@@ -68,6 +68,7 @@ void jabber_login (enum states status)
 	  (LmResultFunction) connection_open_result_cb, (gint *)status, g_free, NULL))
     {
       print_debug ("jabber: lm_connection_open() failed.\n");
+      signal_emit ("jabber", "gui disconnected", NULL, "main-gui");
     }
     g_free (jid);
   }

@@ -32,6 +32,7 @@ gint connected = 0;
 
 enum states jabber_status = JABBER_STATUS_UNAVAILABLE;
 
+gchar *status_descr = NULL;
 
 extern GGaduConfig *config;
 GGaduProtocol *p;
@@ -94,11 +95,30 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
     config_save (jabber_handler);
 
     GGaduDialog_free (d);
+  } else if (signal->name == g_quark_from_static_string ("change status descr")) {
+    GGaduDialog *d = signal->data;
+
+    if (d->response == GGADU_OK) {
+      if (status_descr)
+	g_free (status_descr);
+      status_descr = g_strdup (((GGaduKeyValue *)(d->optlist->data))->value);
+      jabber_login (jabber_status);
+    }
   } else if (signal->name == g_quark_from_static_string ("change status")) {
     GGaduStatusPrototype *sp = signal->data;
 
     if (!sp)
       return;
+
+    if (sp->status == JABBER_STATUS_DESCR) {
+      GGaduDialog *d = ggadu_dialog_new ();
+
+      ggadu_dialog_set_title (d, _("Enter status description"));
+      ggadu_dialog_callback_signal (d, "change status descr");
+      ggadu_dialog_add_entry (&d->optlist, 0, _("Description:"), VAR_STR, status_descr, VAR_FLAG_FOCUS);
+      d->user_data = sp;
+      signal_emit ("jabber", "gui show dialog", d, "main-gui");
+    }
 
     jabber_login (sp->status);
   } else if (signal->name == g_quark_from_static_string ("get current status")) {
@@ -203,7 +223,7 @@ GSList *status_init ()
   GSList *list = NULL;
   GGaduStatusPrototype *sp;
 
-  if (!(sp = g_new0 (GGaduStatusPrototype, 6)))
+  if (!(sp = g_new0 (GGaduStatusPrototype, 7)))
     return NULL;
 
   sp->status      = JABBER_STATUS_AVAILABLE;
@@ -229,6 +249,11 @@ GSList *status_init ()
   sp->status      = JABBER_STATUS_UNAVAILABLE;
   sp->description = g_strdup (_("Unavailable"));
   sp->image       = g_strdup ("jabber-offline.png");
+  list = g_slist_append (list, sp++);
+
+  sp->status      = JABBER_STATUS_DESCR;
+  sp->description = g_strdup (_("Set description ..."));
+  sp->image       = g_strdup ("tlen-desc.png");
   list = g_slist_append (list, sp++);
 
   sp->status      = JABBER_STATUS_WAIT_SUBSCRIBE;
