@@ -1,6 +1,7 @@
 18.11.2004
 - sync libgadu with ekg cvs version (gadu-gadu/krzak)
 - close bugs #116,#91,#115
+- 2.2.3
 
 17.11.2004
 - fixed memory leak in ggadu_strcasecmp (changed to function instead macro)
