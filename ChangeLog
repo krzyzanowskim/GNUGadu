@@ -2,6 +2,7 @@
 - uff... GGaduPluginExtension stuff, completly new method using userlist menus, but now it's extensible (core/gadu-gadu/sms/GUI/krzak)
 - fixed handling of other's status description (jabber/zapal)
 - fixed handling of our status description (jabber/zapal)
+- fixed handling contact's presence after addition (jabber/zapal)
 
 21.06.2003
 - fixes in dcc options : [enable/disable] dcc (gadu-gadu/krzak)
