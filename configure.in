@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.105 2004/11/18 09:47:51 krzyzak Exp $
+dnl $Id: configure.in,v 1.106 2004/11/18 10:22:03 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.2])
 
@@ -314,6 +314,12 @@ if test "x$with_gtkspell" != "xno"; then
     if test "$pspell_config" = "none"; then 
     	AC_MSG_ERROR([*** unable to find pspell-config from aspell (http://aspell.net) ***])
     fi
+    
+    AC_CHECK_HEADERS(aspell.h,have_aspellh=yes,have_aspellh=no)
+    if test "$have_aspellh" = no; then
+    	AC_MSG_ERROR([*** Unable to find aspell.h header file, try build --without-gtkspell ***])
+    fi
+
     
     AC_SUBST(GTKSPELL_CFLAGS)
     AC_SUBST(GTKSPELL_LIBS)
