@@ -2,7 +2,26 @@
 
 SUBDIRS = lib src po
 
-EXTRA_DIST = autogen.sh
+EXTRA_DIST = autogen.sh ANNOUNCE AUTHORS ChangeLog COPYING \
+		contrib/example.pl \
+		contrib/gg2sms \
+		contrib/mkgg2snap \
+		contrib/plugin_example/build.sh \
+		contrib/plugin_example/my_plugin.c \
+		contrib/plugin_example/my_plugin.h \
+		contrib/remote_client/Makefile \
+		contrib/remote_client/main.c \
+		contrib/remote_client/remote_client.c \
+		contrib/remote_client/remote_client.h \
+		doc/README.remote \
+		doc/emoticons.def \
+		doc/problems \
+		gg2.desktop \
+		gg2.spec \
+		intltool-extract.in \
+		intltool-merge.in \
+		intltool-update.in
+		
 
 install-data-local:
 	@$(NORMAL_INSTALL)
@@ -88,15 +107,15 @@ dist-hook:
 	    fi \
 	  done \
 	fi
-	if test -d doc; then \
-	  mkdir $(distdir)/doc; \
-	  cp -rfp doc/* $(distdir)/doc; \
+	if test -d doc/gg2-doc; then \
+	  mkdir $(distdir)/doc/gg2-doc; \
+	  for docsf in doc/gg2-doc/*; do \
+	    if test -d $$docsf; then \
+		cp -rp $$docsf $(distdir)/doc/gg2-doc; \
+	    fi \
+	  done \
 	fi
-	if test -d doc; then \
-	  mkdir $(distdir)/contrib; \
-	  cp -rfp contrib/* $(distdir)/contrib; \
-	fi
-	find ./$(distdir) -name "CVS" -type d -exec rm -rf {} \;
+#	find ./$(distdir) -true -name "CVS" -type d -exec rm -rf {} \;
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)

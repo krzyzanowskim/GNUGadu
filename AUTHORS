@@ -10,7 +10,9 @@ CORE and MAINTAINERS :
 	Marcin Krzy¿anowski	<krzak@hakore.com>
 	Igor Popik		<igipop@wsfiz.edu.pl>
 
-
+also :
+	Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
+	Jakub Jankowski
 
 
 ----------------------------------------------------------------
@@ -20,41 +22,41 @@ GUI (gtk+-2)
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
-----------------------------------------------------------------
 Gadu-Gadu	(http://www.gadu-gadu.pl)
-
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
-----------------------------------------------------------------
-Tlen		(http://www.tlen.pl)
 
+Tlen		(http://www.tlen.pl)
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Mateusz Papiernik	<mati@mati.rm.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
-----------------------------------------------------------------
-Jabber		(http://www.jabber.org)
 
+Jabber		(http://www.jabber.org)
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
-----------------------------------------------------------------
+
 Docklet 	
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Mateusz Papiernik	<mati@mati.rm.pl>
 
-----------------------------------------------------------------
 XOSD 		
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 
-----------------------------------------------------------------
+
 Sound-*		
 		: Igor Popik		<igipop@wsfiz.edu.pl>
-----------------------------------------------------------------
+
 remote
 		: Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
-----------------------------------------------------------------
+
 sms
 		: HelDoRe
+		
+update		
+		: Jakub Jankowski
+
 ----------------------------------------------------------------
+
 
 ----------------------------------------------------------------
 -- THANKS FOR---------------------------------------------------

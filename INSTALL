@@ -1,3 +1,18 @@
+To install GNU Gadu 2 :
+
+./configure --help
+
+	see available options
+	after type :
+	
+./configure --some-option --enable-gui
+
+After that you'll see status message. Now you can type 'make' and 'make install'
+
+Have fun.
+
+
+
 Basic Installation.
 ==================
 

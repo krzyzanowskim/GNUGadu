@@ -1,3 +1,6 @@
+10.06.2003
+- 2.0-pre3
+
 09.06.2003
 - revolution, internal, signals are not any longer strings, they are GQuark NOW. perl may not work for a while (all/krzak)
 - fixes (all/krzak)

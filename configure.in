@@ -1,6 +1,6 @@
-dnl $Id: configure.in,v 1.19 2003/06/04 08:53:41 krzyzak Exp $
+dnl $Id: configure.in,v 1.20 2003/06/09 22:25:14 krzyzak Exp $
 
-m4_define([gg2_version],[2.0_CVS])
+m4_define([gg2_version],[2.0-pre3])
 
 AC_INIT(gg2,[gg2_version])
 AM_INIT_AUTOMAKE([gg2],[gg2_version])
@@ -420,8 +420,6 @@ src/plugins/update/Makefile
 po/Makefile.in
 ])
 
-dnl po/gg2.pot
-
 echo
 echo Build plugin GUI-GTK2.......... : $want_gui
 echo Build plugin Gadu-Gadu......... : $want_gadu
@@ -442,6 +440,8 @@ echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 
 echo especially without gui plugin is probably useless for you!
 echo Check \"./configure --help\" to see how to enable some plugins
+echo "*************************************************************"
+echo Please check README file for requirements !!!
 echo "*************************************************************"
 echo
 echo configure complete, now type \"make\"
