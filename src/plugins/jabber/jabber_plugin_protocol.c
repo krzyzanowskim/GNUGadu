@@ -100,8 +100,9 @@ void j_handle_iq(ikspak *pak)
 	if(iks_strcmp(id, "auth") == 0) {
 
 		if(pak->subtype == IKS_TYPE_RESULT) {
-			print_debug("Authorized, fetching roster...\n");
 			iks *x = iks_make_iq(IKS_TYPE_GET, IKS_NS_ROSTER);
+			
+			print_debug("Authorized, fetching roster...\n");
 
 			jabber_session->state = NET_ON;
 			connected = TRUE;
