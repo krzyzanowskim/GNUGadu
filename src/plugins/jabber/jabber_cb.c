@@ -80,12 +80,10 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 
 	if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_SUBSCRIBE)
 	{
-		GGaduDialog *d;
-		gchar *msg;
+		GGaduDialog *d = ggadu_dialog_new ();
+		gchar *msg = g_strdup_printf (_("Person : %s\nwants to subscribe your presence"), jid);
 
-		d = ggadu_dialog_new ();
-		msg = g_strdup_printf (_("User : %s\nwants to subscribe your presence"), jid);
-		ggadu_dialog_set_title (d, _("Confirmation"));
+		ggadu_dialog_set_title (d, _("Subscription request confirmation"));
 		ggadu_dialog_set_type (d, GGADU_DIALOG_YES_NO);
 		ggadu_dialog_callback_signal (d, "jabber subscribe");
 		ggadu_dialog_add_entry (&(d->optlist), 0, msg, VAR_NULL, NULL, VAR_FLAG_NONE);
@@ -96,24 +94,25 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 	}
 	else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_SUBSCRIBED)
 	{
-		gchar *msg = g_strdup_printf (_("%s accepts your subscription"), jid);
+		gchar *msg = g_strdup_printf (_("From %s\nYou are now authorized"), jid);
 		signal_emit ("jabber", "gui show message", msg, "main-gui");
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
-	else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_UNSUBSCRIBE)
+    else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED)
+	{
+		gchar *msg = g_strdup_printf (_("From %s\nYour authorization has been removed!"), jid);
+		signal_emit ("jabber", "gui show message", msg, "main-gui");
+		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+	}
+/*	else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_UNSUBSCRIBE)
 	{
 		gchar *msg = g_strdup_printf (_("%s unsubscribed you from presence"), jid);
 		signal_emit ("jabber", "gui show message", msg, "main-gui");
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
-	}
-	else if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED)
-	{
-		gchar *msg = g_strdup_printf (_("%s won't be on your subscription list."), jid);
-		signal_emit ("jabber", "gui show message", msg, "main-gui");
-		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
-	}
+	} */
 
-	status = lm_message_node_get_child (message->node, "status");
+
+    status = lm_message_node_get_child (message->node, "status");
 	if (status)
 		descr = (gchar *) lm_message_node_get_value (status);
 
@@ -160,6 +159,9 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 
 				break;
 			case LM_MESSAGE_SUB_TYPE_ERROR:
+                k->status = JABBER_STATUS_ERROR;
+                k->status_descr = g_strdup(lm_message_node_get_value (lm_message_node_get_child (message->node, "error")));
+                break;
 			case LM_MESSAGE_SUB_TYPE_UNAVAILABLE:
 				k->status = JABBER_STATUS_UNAVAILABLE;
 
@@ -302,30 +304,8 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		{
             return LM_HANDLER_RESULT_REMOVE_MESSAGE;
         }
-/*			GSList *list = jabber_data.userlist;
-			while (list)
-			{
-				k = (GGaduContact *) list->data;
-            
-				if (!ggadu_strcasecmp (k->id, jid))
-				{
-					//if (k->nick)
-					//	g_free (k->nick);
-                    
-					//jabber_data.userlist = g_slist_remove (jabber_data.userlist, k);
-					//ggadu_repo_del_value ("jabber", k->id);
-					//g_free (k->id);
-					//g_free (k);
-					break;
-				}
-				list = list->next;
-			}
-            //lm_message_node_unref(node);
-            //signal_emit ("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
-			return LM_HANDLER_RESULT_REMOVE_MESSAGE;
-		}
-*/
-        /* co to kurwa jest ? tu sprawdzac raczej czy id=roster_1 bo to jest lista kontaktow */
+
+        /* co to kurwa jest ? tu sprawdzac raczej czy id=roster_1 bo to jest lista kontaktow ? weeeeeee*/
 		if (jabber_data.userlist)
 		{
 			GSList *list = jabber_data.userlist;
@@ -356,9 +336,10 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
          /* pokazuj wszystkie */
 			if (first_seen)
 			{
-				if (!strcmp (subs, "to"))
+/*				if (!strcmp (subs, "to"))
 					k->status = JABBER_STATUS_WAIT_SUBSCRIBE;
 				else
+*/
 					k->status = JABBER_STATUS_UNAVAILABLE;
 			}
 

@@ -45,49 +45,6 @@ void action_roster_remove_result (LmConnection *connection, LmMessage *message, 
     signal_emit ("jabber", "gui show message", g_strdup (_("Contact removed from roster")), "main-gui");
 }
 
-/*void action_subscribe (LmConnection *connection, LmMessage *message, gpointer data)
-{
-  LmMessage *m;
-  LmMessageNode *node;
-  waiting_action *action;
-  gboolean result;
-
-  m = lm_message_new_with_sub_type (g_strdup (data), LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
-  lm_message_node_set_attribute (m->node, "id", "subscribe");
-
-  node = lm_message_node_add_child (m->node, "query", NULL);
-  lm_message_node_set_attribute (node, "xmlns", "jabber:iq:roster");
-  
-  node = lm_message_node_add_child (node, "item", NULL);
-  lm_message_node_set_attribute (node, "jid", data);
-
-  action = action_queue_add("subscribe","result",action_subscribe_result,data);
-  result = lm_connection_send (connection, m, NULL);
-  lm_message_unref (m);
-
-if (!result)
-  {
-    action_queue_del(action);
-    print_debug ("jabber: Can't send.\n");
-  }
-}
-
-void action_subscribe_result (LmConnection *connection, LmMessage *message, gpointer data)
-{
-  LmMessage *m;
-  gboolean result;
-
-  m = lm_message_new_with_sub_type (g_strdup (data), LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
-  lm_message_node_set_attribute (m->node, "id", "subscribe");
-
-  lm_message_node_add_child (m->node, "status", "I would like to subscribe you to my roster.");
-  
-  result = lm_connection_send (connection, m, NULL);
-  lm_message_unref (m);
-  if (!result)
-    print_debug ("jabber: Can't send.\n");
-}
-*/
 void jabber_change_status (enum states status)
 {
   LmMessage *m;

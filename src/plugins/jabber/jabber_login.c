@@ -67,8 +67,12 @@ gpointer jabber_login_connect (gpointer status)
 		return NULL;
 	}
 
-	server = strchr (jid, '@');
-	if (!server++)
+    if (!(server = ggadu_config_var_get (jabber_handler, "server")))
+        {
+        server = strchr (jid, '@') + 1;
+        }
+    
+	if (!server)
 	{
 		signal_emit_from_thread ("jabber", "gui disconnected", NULL, "main-gui");
 		signal_emit_from_thread ("jabber", "gui show warning", g_strdup (_("Invalid jid!")), "main-gui");

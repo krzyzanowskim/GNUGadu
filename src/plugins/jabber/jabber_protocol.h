@@ -3,9 +3,6 @@
 
 #include "jabber_plugin.h"
 
-/*void action_subscribe (LmConnection *connection, LmMessage *message, gpointer data);
-void action_subscribe_result (LmConnection *connection, LmMessage *message, gpointer data);*/
-
 waiting_action* action_queue_add (gchar *id, gchar *type, gpointer action_callback, gchar *data);
 void action_queue_del (waiting_action *action);
 

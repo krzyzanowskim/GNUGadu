@@ -191,6 +191,16 @@ gpointer  user_resend_auth_to (gpointer user_data)
 {
     GSList *user = (GSList *) user_data;
     GGaduContact *k = (GGaduContact *) user->data;
+    LmMessage *m = lm_message_new_with_sub_type (k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBED);
+    lm_connection_send (connection, m, NULL);
+    lm_message_unref(m);
+    return NULL;
+}
+
+gpointer  user_rerequest_auth_from (gpointer user_data)
+{
+    GSList *user = (GSList *) user_data;
+    GGaduContact *k = (GGaduContact *) user->data;
     LmMessage *m = lm_message_new_with_sub_type (k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
     lm_connection_send (connection, m, NULL);
     lm_message_unref(m);
@@ -207,6 +217,8 @@ gpointer  user_remove_auth_from (gpointer user_data)
     return NULL;
 }
 
+
+
 GGaduMenu *build_userlist_menu (void)
 {
     GGaduMenu *menu = ggadu_menu_create ();
@@ -219,7 +231,7 @@ GGaduMenu *build_userlist_menu (void)
 
     listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
     ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Resend authorization to"), user_resend_auth_to, NULL));
-/*    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Rerequest authorization from"), user_remove_auth_from, NULL)); */
+    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Rerequest authorization from"), user_rerequest_auth_from, NULL));
     ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove authorization from"), user_remove_auth_from, NULL));
 
     ggadu_menu_add_submenu(menu, listmenu);
@@ -263,6 +275,9 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 		      break;
 		  case GGADU_JABBER_RESOURCE:
 		      ggadu_config_var_set (jabber_handler, "resource", kv->value);
+		      break;
+		  case GGADU_JABBER_SERVER:
+		      ggadu_config_var_set (jabber_handler, "server", kv->value);
 		      break;
 		  }
 		tmplist = tmplist->next;
@@ -345,8 +360,6 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 	  GSList *kvlist = (GSList *) signal->data;
 	  LmMessage *m;
 	  LmMessageNode *node_query, *node_item;
-	  gboolean result;
-	  waiting_action *action;
 
 	  while (kvlist)
 	    {
@@ -400,26 +413,23 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
     else if (signal->name == g_quark_from_static_string ("jabber subscribe"))
       {
 
-/*	  GGaduDialog *d = signal->data;
-	  gchar *jid = d->user_data;
+        GGaduDialog *d = signal->data;
+        gchar *jid = d->user_data;
+        LmMessage *msg;
 
-	  if (jid && d->response == GGADU_OK)
-	    {
-		LmMessage *msg;
-		gboolean result;
+        if (jid && d->response == GGADU_OK) 
+        {
+            msg = lm_message_new_with_sub_type (jid, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBED);
+        } else if (d->response == GGADU_CANCEL) {
+            msg = lm_message_new_with_sub_type (jid, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED);
+        }
+    
+        lm_connection_send (connection, msg, NULL);
+        lm_message_unref (msg);
+        if (jid)
+            g_free (jid);
+        GGaduDialog_free (d);
 
-		msg = lm_message_new_with_sub_type (jid, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBED);
-		result = lm_connection_send (connection, msg, NULL);
-		lm_message_unref (msg);
-		if (!result)
-		    print_debug ("Ojej\n");
-	    }
-
-	  if (jid)
-	      g_free (jid);
-
-	  GGaduDialog_free (d);
-*/
       }
     else if (signal->name == g_quark_from_static_string ("get user menu"))
       {
@@ -564,9 +574,9 @@ GSList *status_init ()
     sp->image = g_strdup ("tlen-desc.png");
     list = g_slist_append (list, sp++);
 
-    sp->status = JABBER_STATUS_WAIT_SUBSCRIBE;
-    sp->description = g_strdup (_("Subscribe"));
-    sp->image = g_strdup ("jabber-subscribe.png");
+    sp->status = JABBER_STATUS_ERROR;
+    sp->description = g_strdup (_("Error"));
+    sp->image = g_strdup ("jabber-error.png");
     sp->receive_only = TRUE;
     list = g_slist_append (list, sp++);
 
@@ -630,6 +640,9 @@ gpointer user_preferences_action (gpointer user_data)
 
     ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
 			    ggadu_config_var_get (jabber_handler, "resource"), VAR_FLAG_NONE);
+
+  ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_SERVER, _("Server\n(optional)"), VAR_STR,
+			    ggadu_config_var_get (jabber_handler, "server"), VAR_FLAG_NONE);
 
     signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
     return NULL;
@@ -703,6 +716,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 
     ggadu_config_var_add (jabber_handler, "jid", VAR_STR);
     ggadu_config_var_add (jabber_handler, "password", VAR_STR);
+    ggadu_config_var_add (jabber_handler, "server", VAR_STR);
     ggadu_config_var_add (jabber_handler, "log", VAR_BOOL);
     ggadu_config_var_add (jabber_handler, "autoconnect", VAR_BOOL);
     ggadu_config_var_add (jabber_handler, "resource", VAR_STR);
