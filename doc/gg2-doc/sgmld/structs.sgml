@@ -1,0 +1,284 @@
+<?xml version='1.0'?>
+<chapter><title>Struktury</title>
+
+<sect1><title>Wprowadzenie</title>
+<para>Poniżej znajdują się struktury używane przez &gad; wraz z ich
+opisem.</para>
+</sect1>
+
+<sect1><title>gg-types.h</title>
+<sect2 id="GGaduMenuItem" xreflabel="GGaduMenuItem"><title>GGaduMenuItem</title>
+<programlisting>
+typedef struct {
+  gchar    *label; a
+  gpointer data;
+  gpointer callback;
+} GGaduMenuItem;
+</programlisting>
+
+<programlisting>
+typedef GNode GGaduMenu;
+</programlisting>
+
+<para><type>label</type> przechowuje tekst, który jest wyświetlany w menu.
+Znak <quote>_</quote> określa, że następujący po nim znak jest
+tzw. akceleratorem (czyt. skrótem).</para>
+
+</sect2>
+
+<sect2 id="GGaduVar" xreflabel="GGaduVar"><title>GGaduVar</title>
+<programlisting>
+typedef struct {
+  gchar   *name;
+  gint     type;
+  gpointer ptr;
+} GGaduVar;
+</programlisting>
+
+<para><type>label</type> zawiera nazwę zmiennej, <type>type</type> jej typ,
+a <type>ptr</type> wskaźnik do pamięci, gdzie jest/będzie przechowywana
+dana zmienna.</para>
+
+</sect2>
+
+<sect2 id="GGaduProtocol" xreflabel="GGaduProtocol"><title>GGaduProtocol</title>
+<programlisting>
+typedef struct {
+  gchar  *display_name;
+  gchar  *img_filename;
+  GSList *statuslist;
+  gint    offline_status;
+} GGaduProtocol;
+</programlisting>
+
+<para><type>display_name</type> przechowuje nazwę protokołu, która jest
+wyświetlana na liście protokołów. <type>img_filename</type> jest ścieżką
+do obrazka z etykietą na zakładkę (taki pionowy tekst pojawiający się
+na zakładce). <type>statuslist</type> przechowuje listę wszystkich dostępnych
+stanów danego protokołu (np. dostępny, niedostępny, zajęty).
+<type>offline_status</type> określa, który ze stanów oznacza, że protokół
+nie ma połączenia z serwerem (jest w stanie offline).</para>
+
+</sect2>
+
+<sect2 id="GGaduSignal" xreflabel="GGaduSignal"><title>GGaduSignal</title>
+<programlisting>
+typedef struct {
+  gpointer name;
+  gpointer source_plugin_name;
+  gpointer destination_plugin_name;
+  gpointer data;
+  gpointer data_return;
+  gint error;
+  gboolean free_me;
+  void (*free)(gpointer signal);
+} GGaduSignal;
+</programlisting>
+
+<para><type>name</type> przechowuje nazwę sygnału, np.
+<quote>gui show warning</quote>.</para>
+
+<para><type>source_plugin_name</type> przechowuje nazwę pluginu, z którego
+został wysłany sygnał. Służy on m.in. do identyfikacji pluginu, w przypadku
+konieczności wysłania sygnału zwrotnego.</para>
+
+<para><type>destination_plugin_name</type> zawiera nazwę pluginu, który
+otrzyma sygnał. Może to być zwykła nazwa, <type>NULL</type> lub nazwa
+z tzw. wildcard. Jeśli jest to zwykła nazwa (np. <quote>main-gui</quote>), to
+tylko ten plugin otrzyma sygnał. Jeśli <type>destination_plugin_name</type>
+jest równe <type>NULL</type>, to sygnał zostanie wysłany do każdego załadowanego
+pluginu. Jeśli zostało użyta tzw. wildcard (np. <quote>sound*</quote>), to
+sygnał jest wysyłany do każdego pluginu pasującego do maski. Przykładowo, jeśli
+mamy <quote>sound*</quote> oraz załadowane pluginy sound-oss i sound-esd, to
+sygnał zostanie wysłany do tych dwóch pluginów.</para>
+
+<para><type>data</type> przechowuje wskaźnik do danych towarzyszących
+sygnałowi. Jeśli wyborazisz sobie sygnał jako zwykłą funkcję, to
+<type>data</type> będzie argumentem tej funkcji.</para>
+
+<para><type>data_return</type> jest wskaźnikiem do danych zwróconych przez
+funkcję obsługi sygnału. Jeśli znowu uruchomisz wyobraźnię, to
+<type>data_return</type> jest zmienną zwracaną przez funkcję za pośrednictwem
+<function>return</function>.</para>
+
+</sect2>
+
+<sect2 id="GGaduSignalInfo" xreflabel="GGaduSignalInfo"><title>GGaduSignalInfo</title>
+<programlisting>
+typedef struct {
+  gpointer name;
+} GGaduSignalInfo;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduPlugin" xreflabel="GGaduPlugin"><title>GGaduPlugin</title>
+<programlisting>
+typedef struct {
+  guint    type;
+  gchar   *name;
+  gchar   *description;
+  gpointer ptr;
+  void    *plugin_so_handler;
+
+  gchar  *config_file;
+  GSList *variables;
+  GSList *signals;
+
+  GGaduProtocol *protocol;
+
+  void (*signal_receive_func)(gpointer,gpointer);
+  void (*destroy_plugin)();
+  void (*start_plugin)();
+} GGaduPlugin;
+</programlisting>
+
+<para><type>type</type> określa typ pluginu (czy jest to protokół, gui, inny).
+<type>name</type> przechowuje nazwę pluginu. <type>description</type> jest
+krótkim opisem pluginu. <type>ptr</type> to wskaźnik na strukturę
+charakterystyczną dla pluginu (np. protokołu). <type>plugin_so_handler</type>
+jest wskaźnikiem zwróconym przez <function>dlopen</function>.
+</para>
+
+<para><type>config_file</type> określa plik konfiguracyjny danego pluginu.
+<type>variables</type> jest listą zmiennych wczytanych z pliku konfiguracyjnego.
+<type>signals</type> jest listą sygnałów akceptowanych przez plugin.</para>
+
+<para><type>protocol</type> to specyficzna dla każdego pluginu struktura.</para>
+
+<para><function>signal_receive_func</function> jest wskaźnikiem do funkcji
+odbierającej sygnały dla danego pluginu.
+<function>destroy_plugin</function> jest wskaźnikiem do funkcji zwalniającej
+pamięć i czyszczącej po pluginie. <function>start_plugin</function> jest
+wskaźnikiem do funkcji uruchamiającej plugin.</para>
+
+</sect2>
+
+<sect2 id="GGaduPluginFile" xreflabel="GGaduPluginFile"><title>GGaduPluginFile</title>
+<programlisting>
+typedef struct {
+    gchar *name;
+    gchar *path;
+} GGaduPluginFile;
+</programlisting>
+
+<para><type>name</type> jest nazwą pluginu, natomiast <type>path</type>
+ścieżką do pliku so pluginu.</para>
+
+</sect2>
+
+<sect2 id="GGaduConfig" xreflabel="GGaduConfig"><title>GGaduConfig</title>
+<programlisting>
+typedef struct {
+  gboolean send_on_enter;
+  guint main_on_start;
+  guint width;
+  guint height;
+  gint pos_x;
+  gint pos_y;
+  GSList *all_available_plugins;
+  GSList *plugins;
+
+  gchar  *configdir;
+  GSList *waiting_signals;
+  gboolean all_plugins_loaded;
+  GMainLoop *main_loop;
+
+  GSource *signals_source;
+} GGaduConfig;
+</programlisting>
+
+</sect2>
+
+</sect1>
+
+<sect1><title>unified-types.h</title>
+<sect2 id="GGaduContact" xreflabel="GGaduContact"><title>GGaduContact</title>
+<programlisting>
+typedef struct {
+  gchar *id;
+  gchar *first_name;
+  gchar *last_name;
+  gchar *nick;
+  gchar *mobile;
+  gchar *email;
+  gchar *gender;
+  gchar *group;
+  gchar *comment;
+  gchar *birthdate;
+  gchar *status_descr;
+  gint status;
+} GGaduContact;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduMsg" xreflabel="GGaduMsg"><title>GGaduMsg</title>
+<programlisting>
+typedef struct {
+  gchar *id;
+  gchar *message;
+  guint class;
+  guint time;
+
+  GSList *recipients;
+} GGaduMsg;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduNotify" xreflabel="GGaduNotify"><title>GGaduNotify</title>
+<programlisting>
+typedef struct {
+  gchar *id;
+  unsigned long status;
+} GGaduNotify;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduStatusPrototype" xreflabel="GGaduStatusPrototype"><title>GGaduStatusPrototype</title>
+<programlisting>
+typedef struct {
+  guint status;
+  gchar *description;
+  gchar *image;
+  gboolean receive_only;
+} GGaduStatusPrototype;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduKeyValue" xreflabel="GGaduKeyValue"><title>GGaduKeyValue</title>
+<programlisting>
+typedef struct {
+  gint        key;
+  gpointer    value;
+
+  guint       type;
+  guint       flag;
+
+  gchar       *description;
+
+  gpointer    user_data;
+} GGaduKeyValue;
+</programlisting>
+
+</sect2>
+
+<sect2 id="GGaduDialog" xreflabel="GGaduDialog"><title>GGaduDialog</title>
+<programlisting>
+typedef struct {
+  gchar *title;
+  gchar *callback_signal;
+  gint response;
+  GSList *optlist;
+  gpointer user_data;
+  gint type;
+} GGaduDialog;
+</programlisting>
+
+</sect2>
+</sect1>
+
+</chapter>

@@ -1,0 +1,58 @@
+<?xml version='1.0'?>
+<chapter><title>Ikony</title>
+
+<sect1><title>Jakie ikony są obsługiwane</title>
+<para>Dowolne, oby były małe i najlepiej w formacie png lub xpm.</para>
+</sect1>
+
+<sect1><title>Opis ikon</title>
+<para>Poszczególne ikony są prydzielony danym protokołom.
+Znajdują się one w podkatalogu katalogu
+<filename>$PREFIX/share/gg2/pixmaps/icons/</filename> ($PREFIX to
+<filename>/usr</filename>, <filename>/usr/local</filename>, a dokładniej
+to, co podałeś przy configure) o nazwie takiej, jak się ma nazywać zestaw
+ikon.</para>
+
+<para>
+<itemizedlist><title>gadu-gadu</title>
+  <listitem><para><filename>Gadu-Gadu.png</filename></para></listitem>
+  <listitem><para><filename>online.png</filename></para></listitem>
+  <listitem><para><filename>online-descr.png</filename></para></listitem>
+  <listitem><para><filename>away.png</filename></para></listitem>
+  <listitem><para><filename>away-descr.png</filename></para></listitem>
+  <listitem><para><filename>offline.png</filename></para></listitem>
+  <listitem><para><filename>offline-descr.png</filename></para></listitem>
+  <listitem><para><filename>invisible.png</filename></para></listitem>
+  <listitem><para><filename>invisible-descr.png</filename></para></listitem>
+</itemizedlist>
+
+<itemizedlist><title>tlen</title>
+  <listitem><para><filename>Tlen.png</filename></para></listitem>
+  <listitem><para><filename>tlen-online.png</filename></para></listitem>
+  <listitem><para><filename>tlen-away.png</filename></para></listitem>
+  <listitem><para><filename>tlen-offline.png</filename></para></listitem>
+  <listitem><para><filename>tlen-invisible.png</filename></para></listitem>
+  <listitem><para><filename>tlen-beback.png</filename></para></listitem>
+  <listitem><para><filename>tlen-chat.png</filename></para></listitem>
+  <listitem><para><filename>tlen-desc.png</filename></para></listitem>
+  <listitem><para><filename>tlen-occupied.png</filename></para></listitem>
+</itemizedlist>
+
+<itemizedlist><title>jabber</title>
+  <listitem><para><filename>jabber.png</filename></para></listitem>
+  <listitem><para><filename>jabber-online.png</filename></para></listitem>
+  <listitem><para><filename>jabber-away.png</filename></para></listitem>
+  <listitem><para><filename>jabber-offline.png</filename></para></listitem>
+  <listitem><para><filename>jabber-dnd.png</filename></para></listitem>
+  <listitem><para><filename>jabber-xa.png</filename></para></listitem>
+</itemizedlist>
+
+<itemizedlist><title>sms</title>
+  <listitem><para><filename>sms.png</filename></para></listitem>
+  <listitem><para><filename>sms_i.png</filename></para></listitem>
+</itemizedlist>
+</para>
+
+</sect1>
+
+</chapter>

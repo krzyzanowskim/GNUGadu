@@ -1,0 +1,48 @@
+<?xml version='1.0'?>
+<chapter><title>Menu</title>
+
+<sect1><title>Wprowadzenie</title>
+<para>Menu w &gad; jest przechowywane niezależnie od użytego interfejsu.
+Jest ono składowane w strukturze <link linkend="GGaduMenuItem">GGaduMenu</link>.
+Jest to zalecana metoda tworzenie wszelkich rodzjaów menu. Konwersja na menu
+specyficzne dla danego interfejsu (GTK, Qt, ncurses) powinno się odbywać
+jak najpóźniej.</para>
+</sect1>
+
+<sect1><title>Tworzenie menu</title>
+<para>Najpierw tworzymy korzeń:</para>
+
+<programlisting>
+GGaduMenu *root;
+GGaduMenu *item1;
+GGaduMenu *item2;
+
+root = ggadu_menu_create();
+
+item1 = ggadu_menu_new_item("item1", NULL, NULL);
+item2 = ggadu_menu_new_item("item2", NULL, NULL);
+
+ggadu_menu_add_submenu(root, item1);
+ggadu_menu_add_submenu(root, item2);
+
+ggadu_menu_print(root);
+</programlisting>
+
+<para>Funkcja <function>ggadu_menu_print()</function> wyświetla na standardowym
+wyjściu błędów utworzone menu. Ot tak, dla ułatwienia debugowania.</para>
+
+<para>Do każdej pozycji menu, można podłączyć inną pozycję tworząc w ten
+sposób podgałęzie menu.</para>
+
+<programlisting>
+ggadu_menu_add_submenu(<link linkend="GGaduMenuItem">GGaduMenu</link> *to_item, <link linkend="GGaduMenuItem">GGaduMenu</link> *item);
+</programlisting>
+
+<para>Powyższa funkcja podłącza "item" jako podgałąż "to_item".</para>
+
+<para>Jeśli nie jest to wystarczająco jasne, to więcej o funkcjach
+w pliku <filename>menu.h</filename>.</para>
+
+</sect1>
+
+</chapter>

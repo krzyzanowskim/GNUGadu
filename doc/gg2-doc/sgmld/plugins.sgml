@@ -1,0 +1,254 @@
+<?xml version='1.0'?>
+<chapter><title>Pluginy</title>
+
+<sect1><title>Dlaczego pluginy</title>
+<para>Bo tak.</para>
+</sect1>
+
+
+<sect1><title>Tworzenie pluginów</title>
+<para>Po przeczytaniu tego rozdziału powinieneś wiedzieć jak napisać własny
+plugin.</para>
+
+<para>Pluginy mogą być ładowane podczas startu lub już po uruchomieniu programu
+(czyt. podczas jego działania). Mogą też być odładowane podczas działania, co
+oznacza, że należy zwalniać każdą przydzieloną pamięć. I cholera macie się
+tego trzymać, a nie później będziemy szukali czemu program segaulci lub
+zżera ogromną ilość zasobów!</para>
+
+<para>Jeśli plugin ma być ładowany podczas startu to musi się znajdować
+w katalogu <filename>$HOME/$CONFIG_DIR/gg/modules/</filename>
+lub <filename>$PREFIX/lib/gg2/</filename> i jego nazwa pliku musi być
+zakończona na <filename>.so</filename>.</para>
+
+<sect2><title>Nagłówek pliku</title>
+<para>Nagłówek ma wyglądać tak:</para>
+
+<programlisting>
+#include "../gg-types.h"
+#include "../plugins.h"
+#include "../signals.h"
+#include "../support.h"
+</programlisting>
+
+<para>Po zadeklarowaniu wszystkich zmiennych i stałych globalnych ma się
+znajdować poniższa linia:</para>
+
+<programlisting>
+GGadu_PLUGIN_INIT("main-gui", GGADU_PLUGIN_TYPE_UI);
+</programlisting>
+
+<para>Za main-gui podstawiamy nazwę naszego pluginu (np. "pierd"), a za
+GGadu_PLUGIN_TYPE_GUI jedno z poniższych:</para>
+
+<itemizedlist><title>Typy modułów</title>
+  <listitem><para><type>GGADU_PLUGIN_TYPE_UI</type></para></listitem>
+  <listitem><para><type>GGADU_PLUGIN_TYPE_PROTOCOL</type></para></listitem>
+  <listitem><para><type>GGADU_PLUGIN_TYPE_MISC</type></para></listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2><title>Inicjalizacja modułu</title>
+<para>Każdy moduł musi deklarować funkcję
+<function>initialize_plugin()</function> w następujący sposób:</para>
+
+<programlisting>
+<xref linkend="GGaduPlugin"/> *initialize_plugin(gpointer conf_ptr) {
+  ...
+</programlisting>
+
+<para>Ta funkcja jest wywoływana podczas ładowania modułu. W niej należy
+określić jakie sygnały przyjmuje plugin, wczytać konfigurację itp.</para>
+
+<para>W tej funkcji nie wywołujemy <function>signal_emit_full</function> (czyt.
+nie wysyłamy sygnałów).</para>
+
+<para>W tej funkcji dokonujemy aktywacji pluginu za pomocą poniższego
+polecenia:</para>
+
+<programlisting>
+  GGadu_PLUGIN_ACTIVATE(conf_ptr);
+</programlisting>
+
+<para>Tak ma być i koniec.</para>
+
+<para>Następnie rejestrujemy plugin:</para>
+
+<programlisting>
+gui_handler=(<xref linkend="GGaduPlugin"/> *)register_plugin(GGadu_PLUGIN_NAME,
+"GTK User Interface");
+</programlisting>
+
+<para>Bez powyższego plugin nie będzie istniał jako plugin, czyli będzie
+bezużyteczny. Należy zaznaczyć, że niezarejestrowany plugin może być dobrym
+sposobem zżerania zasobów komputera.</para>
+
+<para>Kolejnym krokiem jest określenie, która funkcja jest odpowiedzialna
+za odbieranie sygnałów:</para>
+
+<programlisting>
+  register_signal_receiver((<xref linkend="GGaduPlugin"/> *)gui_handler,
+			   (signal_func_ptr)gui_signal_receive);
+</programlisting>
+
+<para>Powyższe informuje program, że sygnały należy przekazywać funkcji
+<function>gui_signal_receive</function>.</para>
+
+<para>Rejestrowanie sygnałów jest ważne, ponieważ informuje to program, że
+plugin jest w stanie odebrać dany sygnał. Zarejestrujemy przykładowo
+sygnał <computeroutput>gui register menu</computeroutput>:</para>
+
+<programlisting>
+  register_signal(gui_handler, "gui register menu");
+</programlisting>
+
+<para>Na koniec funkcji <function>initialize_plugin()</function> zwracamy
+utworzony uchwyt pluginu:</para>
+
+<programlisting>
+  return gui_handler;
+}
+</programlisting>
+
+</sect2>
+
+<sect2><title>Startowanie</title>
+<para>Kolejną funkcją, którą plugin musi posiadać jest
+<function>start_plugin()</function>. Jest ona wywoływana po inicjalizacji
+wszystkich modułów. Dopiero w niej można zacząć wysyłać sygnały i takie
+tam.</para>
+
+<programlisting>
+void start_plugin() {
+  ...
+}
+</programlisting>
+
+</sect2>
+
+<sect2><title>Zwalnianie pamięci</title>
+<para>Należy utworzyć funkcję odpowiedzialną za zwalnianie pamięci po
+odładowywanym pluginie. Ma tu być zwalniana cała zaalokowana podczas działania
+pluginu pamięć, bo jak nie to Thrulliq albo zapal będzie wam truł bez
+przerwy.</para>
+
+<programlisting>
+void destroy_plugin()
+{
+  ...
+}
+</programlisting>
+
+</sect2>
+
+<sect2><title>Odbieranie sygnału</title>
+<para>Funkcja odbierająca wszystkie sygnały wysyłane do tego pluginu:</para>
+
+<programlisting>
+void gui_signal_receive(gchar *name, <xref linkend="GGaduSignal"/> *signal_ptr) {
+  ...
+}
+</programlisting>
+
+<para><type>name</type> zawiera nazwę sygnału. <type>signal_ptr</type>
+jest wskaźnikiem do struktury sygnału. O tym w rozdziale o sygnałach.</para>
+
+</sect2>
+
+<sect2><title>Dostępne funkcje, makra</title>
+<para>W pluginie można używać poniższych funkcji, makr (zawsze aktualne dane
+znajdują się w plikach:
+<filename>plugins.h</filename>,
+<filename>signals.h</filename>,
+<filename>support.h</filename>):</para>
+
+<para>Makro <function>GGadu_PLUGIN_NAME</function> zwraca nazwę
+aktualnie używanego pluginu (czyt. tego pluginu).</para>
+
+<para>Funkcja <function>signal_emit_full</function> służąca do wysyłania
+sygnału. Jest opisana w rozdziale o sygnałach.</para>
+
+</sect2>
+
+<sect2><title>Korzystanie z plików konfiguracyjnych</title>
+<para>Jeśli chcesz, żeby plugin korzystał z danych zawartych w pliku
+konfiguracyjnym, to musisz wykonać poniższe czynności.</para>
+
+<para>Najpierw w funkcji <function>initialize_plugin()</function> ustal
+nazwę pliku konfiguracyjnego:</para>
+
+<programlisting>
+  set_config_file_name((<xref linkend="GGaduPlugin"/> *)handler, "/ściezka/do/pliku/konfiguracyjnego");
+</programlisting>
+
+<para>Następnie określ, jakie zmienne będę wczytane z podanego pliku:</para>
+
+<programlisting>
+  config_var_add(plugin_handler, "uin",      VAR_INT);
+  config_var_add(plugin_handler, "password", VAR_STR);
+  config_var_add(plugin_handler, "dummy",    VAR_INT);
+</programlisting>
+
+<para>Powyższe wczyta wartośći "uin" typu <type>gint</type>, "password" typu
+<type>gchar *</type> oraz "dummy" typu <type>gint</type>.</para>
+
+<para>Zmienne w pliku konfiguracyjnym mają format "&lt;nazwa&gt;
+&lt;wartość&gt;"</para>
+
+<para>Kolejny krok to wywołanie funkcji
+<function>config_read()</function>:</para>
+
+<programlisting>
+  config_read((<xref linkend="GGaduPlugin"/> *)plugin_handler);
+</programlisting>
+
+<para>Zapisanie pliku konfiguracyjnego odbywa się za pomocą funkcji
+<function>config_save()</function>:</para>
+
+<programlisting>
+  config_save((<xref linkend="GGaduPlugin"/> *)plugin_handler);
+</programlisting>
+
+<para>Odczytywanie wartości danej opcji z pliku konfiguracyjnego:</para>
+
+<programlisting>
+  foo = config_var_get(plugin_handler, "uin");
+</programlisting>
+
+<para>przy założeniu, że <type>foo</type> jest typu
+<type>gpointer</type>.</para>
+
+<para>Sprawdzenie jakiego typu jest zmienna z pliku konfiguracyjnego
+(w poniższym przykładzie <type>typ</type> powinien zostać ustawiony
+na <type>VAR_INT</type>):</para>
+
+<programlisting>
+  typ = config_var_get_type(plugin_handler, "uin");
+</programlisting>
+
+<para>Za pomocą funckji <function>config_var_set()</function> ustawiamy
+wartość jednej zmiennej:</para>
+
+<programlisting>
+  config_var_set(plugin_handler, "uin", wartosc);
+</programlisting>
+
+<para>Jeśli chcemy sprawdzić, czy dana zmienna została zadeklarowana
+użyj poniższej funkcji:</para>
+
+<programlisting>
+  config_var_check(plugin_handler, "uin");
+</programlisting>
+
+<para>Ta funkcja, w przeciwieństwie do <function>config_var_get()</function>
+jest poprawną funkcją sprawdzającą, czy dana zmienna została zadeklarowana,
+bowiem zwraca tylko <type>TRUE</type> lub <type>FALSE</type>. Natomiast
+<function>config_var_get()</function> może zwrócić NULL w dwóch przypadkach:
+gdy zmienna nie została zadeklarowana lub jej wartość jest równa NULL.</para>
+
+</sect2>
+
+</sect1>
+
+</chapter>

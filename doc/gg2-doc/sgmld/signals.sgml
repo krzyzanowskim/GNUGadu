@@ -1,0 +1,76 @@
+<?xml version='1.0'?>
+<chapter><title>Sygnały</title>
+
+<sect1><title>Dlaczego sygnały</title>
+<para>
+Z powodu różnych problemów pojawiających się jako wynik korzystania
+z ręcznego ładowania dzielonych bibliotek (czyt. pluginów), dla ułatwienia
+(czyt. umożliwienia) komunikacji między pluginami zostały wprowadzone
+sygnały. Każdy plugin informuje <token>core</token> o tym, jakie sygnały
+chce otrzymywać. Plugin może otrzymać również inne sygnały, ale nie musi.
+Rejestracja sygnałów powoduje, że <token>core</token> wie o tym, że plugin
+posiada obsługę danego sygnału.</para>
+</sect1>
+
+<sect1><title>Jak używać sygnałów</title>
+<para>Zobacz opis <xref linkend="GGaduSignal"/>.</para>
+
+<sect2><title>Rejestracja sygnału</title>
+<para>Żeby plugin mógł otrzymywać dany sygnał, musi o tym poinformować program.
+Może to zrobić za pośrednictwem dwóch funkcji:</para>
+
+<programlisting>
+void register_signal_receiver(<xref linkend="GGaduPlugin"/> *plugin_handler,void
+			      (*sgr)(gpointer,gpointer));
+void register_signal(<xref linkend="GGaduPlugin"/> *plugin_handler,gpointer name);
+</programlisting>
+
+<para>Pierwsza z nich, <function>register_signal_receiver()</function> jest
+wywoływana tylko raz i informuje ona program o tym, którą funkcję należy
+wywołać, gdy plugin otrzymuje sygnał.</para>
+
+<para>Druga funkcja, <function>register_signal()</function> informuje
+o gotowości do odbioru danego sygnału. Nazwa sygnału jest podawana
+jako <type>name</type>.</para>
+
+</sect2>
+
+<sect2><title>Wysyłanie sygnału</title>
+<para>Wysyłanie sygnału odbywa się za pośrednictwem poniższej funkcji:</para>
+
+<programlisting>
+void *signal_emit_full(gpointer src_name, gpointer name, gpointer data,
+		       gpointer dest_name, void (*signal_free) (gpointer));
+</programlisting>
+
+<para><type>src_name</type> określa nazwę pluginu źródłowego.
+<type>name</type> jest nazwą sygnału, natomiast
+<type>dest_name</type> nazwą pluginu docelowego.
+<type>data</type> jest wskaźnikiem do danych towarzyszących
+sygnałowi. <type>signal_free</type> jest wskaźnikiem do
+funkcji zwlaniającej pamięć po <type>data</type> po
+zakończeniu sygnału.</para>
+
+</sect2>
+</sect1>
+
+<sect1><title>Dostępne sygnały</title>
+<para>Poniżej znajduje się lista wszystkich dostępnych sygnałów
+podzielonych na poszczególne pluginy.</para>
+
+&signals_docklet;
+&signals_gadu-gadu;
+&signals_main-gui;
+&signals_jabber;
+&signals_remote;
+&signals_sms;
+&signals_sound-arts;
+&signals_sound-esd;
+&signals_sound-oss;
+&signals_sound-external;
+&signals_tlen;
+&signals_xosd;
+
+</sect1>
+
+</chapter>

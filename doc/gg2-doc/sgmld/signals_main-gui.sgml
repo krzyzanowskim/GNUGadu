@@ -1,0 +1,136 @@
+<?xml version='1.0'?>
+<sect2><title>main-gui</title>
+<table frame="all"><title>Sygnały obsługiwane przez main-gui (GUI-gtk2)</title>
+<tgroup cols='3' align="center" colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colnum='3' colname='Opis'/>
+<thead>
+  <row>
+    <entry align="center">Nazwa sygnału</entry>
+    <entry align="center">Dane</entry>
+    <entry align="center">Opis</entry>
+  </row>
+</thead>
+
+<tbody>
+  <row>
+    <entry><computeroutput>gui add user window</computeroutput></entry>
+    <entry>GSList *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui show dialog</computeroutput></entry>
+    <entry><xref linkend="GGaduDialog"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui show window with text</computeroutput></entry>
+    <entry>gchar *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui change user window</computeroutput></entry>
+    <entry>GSList *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui msg receive</computeroutput></entry>
+    <entry><xref linkend="GGaduMsg"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui show invisible chats</computeroutput></entry>
+    <entry>NULL</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui register protocol</computeroutput></entry>
+    <entry><xref linkend="GGaduProtocol"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui unregister protocol</computeroutput></entry>
+    <entry><xref linkend="GGaduProtocol"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui register menu</computeroutput></entry>
+    <entry><link linkend="GGaduMenuItem">GGaduMenu</link> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui unregister menu</computeroutput></entry>
+    <entry><link linkend="GGaduMenuItem">GGaduMenu</link> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui register userlist menu</computeroutput></entry>
+    <entry><link linkend="GGaduMenuItem">GGaduMenu</link> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui unregister userlist menu</computeroutput></entry>
+    <entry>NULL</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui send userlist</computeroutput></entry>
+    <entry>GSList *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>auth request</computeroutput></entry>
+    <entry><xref linkend="GGaduContact"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>auth request accepted</computeroutput></entry>
+    <entry><xref linkend="GGaduContact"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>unauth request</computeroutput></entry>
+    <entry><xref linkend="GGaduContact"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>unauth request accepted</computeroutput></entry>
+    <entry><xref linkend="GGaduContact"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui show warning</computeroutput></entry>
+    <entry>gchar *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui show message</computeroutput></entry>
+    <entry>gchar *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui notify</computeroutput></entry>
+    <entry><xref linkend="GGaduNotify"/> *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui disconnected</computeroutput></entry>
+    <entry>NULL</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui show search results</computeroutput></entry>
+    <entry>GSList *</entry>
+    <entry></entry>
+  </row>
+  <row>
+    <entry><computeroutput>gui status changed</computeroutput></entry>
+    <entry>gint</entry>
+    <entry></entry>
+  </row>
+</tbody>
+
+</tgroup>
+</table>
+
+</sect2>

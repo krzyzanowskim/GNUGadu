@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<sect2><title>sound-external</title>
+<table frame="all"><title>Sygnały obsługiwane przez sound-external</title>
+<tgroup cols='3' align="center" colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colnum='3' colname='Opis'/>
+<thead>
+  <row>
+    <entry align="center">Nazwa sygnału</entry>
+    <entry align="center">Dane</entry>
+    <entry align="center">Opis</entry>
+  </row>
+</thead>
+
+<tbody>
+  <row>
+    <entry><computeroutput>sound play file</computeroutput></entry>
+    <entry>gchar *</entry>
+    <entry>Odtwarza podany plik dźwiękowy przy użyciu zewnętrznego
+    programu.</entry>
+  </row>
+  <row>
+    <entry><computeroutput>update config</computeroutput></entry>
+    <entry><xref linkend="GGaduDialog"/> *</entry>
+    <entry>Uaktualnia konfigurację na podstawie okienka dialogowego,
+    zawierającego poszczególne ustawienia pluginu.</entry>
+  </row>
+</tbody>
+
+</tgroup>
+</table>
+</sect2>
+

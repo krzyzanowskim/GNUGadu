@@ -1,0 +1,26 @@
+<?xml version='1.0'?>
+<sect2><title>sound-arts</title>
+<table frame="all"><title>Sygnały obsługiwane przez sound-arts</title>
+<tgroup cols='3' align="center" colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colnum='3' colname='Opis'/>
+<thead>
+  <row>
+    <entry align="center">Nazwa sygnału</entry>
+    <entry align="center">Dane</entry>
+    <entry align="center">Opis</entry>
+  </row>
+</thead>
+
+<tbody>
+  <row>
+    <entry><computeroutput>sound play file</computeroutput></entry>
+    <entry>gchar *</entry>
+    <entry>Odtwarza podany plik dźwiękowy przy użyciu serwera dźwięku
+    arts.</entry>
+  </row>
+</tbody>
+
+</tgroup>
+</table>
+</sect2>

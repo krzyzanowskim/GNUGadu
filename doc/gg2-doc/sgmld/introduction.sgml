@@ -1,0 +1,31 @@
+<?xml version='1.0'?>
+<chapter><title>Wprowadzenie</title>
+
+<sect1><title>Po co ten dokument</title>
+<para>
+Jak zaczynałem swoją przygodę z &gad; od drugiej strony, czyli od kuchni
+najbardziej mi przeszkadzał brak jakiejkolwiek dokumentacji. Również
+kod nie posiadał zbyt wielu komentarzy, jednak na szczęście był na
+tyle czytelny, że po pewnym czasie załapałem o co chodzi. Poza tym
+widocznie mam za dużo czasu, a &gad; jest w stanie
+<quote>feature freeze</quote>, więc nie ma co dodawać, jedynie poprawiać
+błędy.</para>
+</sect1>
+
+<sect1><title>Co opisuje ten dokument</title>
+<para>Starałem się opisać jak najwięcej problemów jakie możesz napotkać
+przy rozwijaniu &gad;. Największy nacisk położyłem na obsługę sygnałów,
+bowiem to za ich pośrednictwem najwięcej się dzieje w programie.</para>
+</sect1>
+
+<sect1><title>Jak można pomóc</title>
+<para>Pomóc możesz na wiele sposobów. Najchętniej widziane będą gotowe
+poprawki lub całe rozdziały do tego dokumentu. Jednak nawet wskazanie
+nieścisłości, niejasności lub nieaktualności pewnych informacji jest
+bardzo cenne.</para>
+
+<para>Oczywiście pomóc możesz w samym rozwoju &gad;. Ale o tym nie
+teraz ;).</para>
+</sect1>
+
+</chapter>

@@ -1,0 +1,13 @@
+#! /bin/bash
+
+GG2_SOURCES="/home/bartek/Projekty/poligon/tmp/gg2"
+find "$GG2_SOURCES/src/plugins/" -name *.c -exec perl -e '$plik = $ARGV[0]; $plugin = $plik; $plugin =~ s/.*\/plugins\/([^\/]*).*/$1/;open PLIK, "<$plik"; my @tab; while (<PLIK>) { push @tab, $_; }; foreach (@tab) { if (m/GGadu_PLUGIN_INIT[^(]*\("([^"]*)"[^)]*\)/) { $plugin = $1; break; } }; foreach (@tab) { print "$plugin $1\n" if m/register_signal[ ]*\([^,]*,[^"]*"([^"]*)"\)/;} close PLIK;' '{}' ';' > signals
+
+cat signals | while read plugin sygnal; do
+  grep "<entry><computeroutput>$sygnal</computeroutput></entry>" signals_$plugin.sgml > /dev/null
+  if [ $? -ne 0 ]; then
+    echo "Brak sygna³u '$sygnal' (plugin $plugin)."
+  fi
+done
+
+

@@ -1,0 +1,141 @@
+#! /usr/bin/perl -w
+
+my @structs = ();
+my @tab = ();
+my $plik = "";
+my @struct_code = ();
+my $typedefed = 0;
+
+system "cp structs.sgml structs_auto.sgml";
+
+sub write_2_file($$) {
+  my $struct = shift;
+  my $code_ = shift;
+  my @code = @$code_;
+  my @tabs = ();
+  my $oki = 0;
+  my $ok_sect2 = 0;
+  my $ok_programlisting = 0;
+
+  open PLIK, "<structs_auto.sgml" or die;
+  while (<PLIK>) {
+    push @tabs, $_;
+  }
+  close PLIK;
+
+  open PLIK, ">structs_auto2.sgml" or die;
+
+  foreach (@tabs) {
+    if ($oki) {
+      print PLIK $_;
+    } elsif ($ok_sect2) {
+      if ($ok_programlisting) {
+	if (m/<\/programlisting>/) {
+	  $ok_sect2 = 0;
+	  $ok_programlisting = 0;
+	  print PLIK "</programlisting>\n";
+	  $oki = 1;
+	}
+	next;
+      } elsif (m/<programlisting>/) {
+	$ok_programlisting = 1;
+	print PLIK "<programlisting>\n";
+	foreach (@code) {
+	  print PLIK $_;
+	}
+      }
+    }elsif (m/<sect2 id="$struct" xreflabel="$struct"><title>$struct<\/title>/){
+      print PLIK $_;
+      $ok_sect2 = 1;
+    } else {
+      print PLIK $_;
+    }
+  }
+  close PLIK;
+
+  system "mv structs_auto2.sgml structs_auto.sgml";
+}
+
+sub output_struct($$) {
+  my $struct = shift;
+  my $code_ = shift;
+  my @code = @$code_;
+  my $empty = 0;
+  my $line = "";
+  my $no = 0;
+
+  my @output;
+
+  foreach (@code) {
+    $no++;
+    next if not $_;
+    s/\/\/.*//g;
+    s/\/.*//g;
+    s/[\t]/ /g;
+    s/^[^\w]+/  /g;
+    s/(^$)|([^\w\n;]+$)//g;
+    $line = $_;
+    if (m/^$/) {
+      if ($no eq 2)
+      {
+	$empty = 1;
+	next;
+      } elsif ($empty eq 0) {
+        $empty = 1;
+	push @output, "\n";
+      }
+      next;
+    }
+    push @output, $line;
+    $empty = 0;
+  }
+  write_2_file($struct,\@output);
+}
+open PLIK, "<structs" or die;
+while (<PLIK>) {
+  push @structs, $_;
+}
+close PLIK;
+
+foreach (@structs) {
+  if (m/([^ ]*) (.*)/) {
+    $struct = $2;
+    if ("$plik" ne "$1") {
+      print "Nowy plik $1\n";
+      $plik   = $1;
+
+      splice @tab;
+      open PLIK, "</home/bartek/Projekty/poligon/tmp/gg2/$plik" or die;
+      while (<PLIK>) {
+	push @tab, $_;
+      }
+      close PLIK;
+    }
+
+    splice @struct_code;
+    $typedefed = 0;
+    
+    LINE: foreach (@tab) {
+      next if not $_;
+      if ($typedefed) {
+	if      (m/^}[ ]*$struct/) {
+	  push @struct_code, $_;
+	  print "Mam skubañca - ".$struct.":\n";
+	  output_struct($struct, \@struct_code);
+	  last LINE;
+	} elsif (m/^}/)	{
+	  splice @struct_code;
+	  $typedefed = 0;
+	} else {
+	  push @struct_code, $_;
+	}
+      }
+      if (m/^typedef struct/) {
+	$typedefed = 1;
+	push @struct_code, $_;
+      }
+    }
+  }
+}
+
+

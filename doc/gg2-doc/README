@@ -1,0 +1,34 @@
+Sposób u¿ycia:
+
+Wygenerowanie dokumentcji dla deweloperów:
+# make alld
+
+To samo, ale dla u¿ytkowników:
+# make allu
+
+To samo dla wszystkich:
+# make
+
+Obecnie dostêpne jest tylko dokumentcja dla deweloperów.
+
+
+
+W pliku sgmld/structs wypisane s± struktury, które s± automatycznie wstawiane
+do pliku sgmld/structs_auto.sgml tworzonego na podstawie pliku
+sgmld/structs.sgml.
+
+# cd sgmld
+# ./check_structs
+
+Powy¿sze wstawi struktury do pliku structs_auto.sgml. Je¶li nic siê nie popsuje
+to mo¿na ¶mia³o zast±piæ plik:
+
+# mv structs_auto.sgml structs.sgml
+
+
+Sprawdzanie aktualno¶ci sygna³ów:
+# cd sgmld
+# ./find_signals
+
+Powy¿sze wyrzuci na ekranie listê sygna³ów, które nie zosta³y wylistowane
+w plikach signals*.sgml.

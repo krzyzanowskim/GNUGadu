@@ -1,0 +1,14 @@
+src/gg-types.h GGaduMenuItem
+src/gg-types.h GGaduVar
+src/gg-types.h GGaduProtocol
+src/gg-types.h GGaduSignal
+src/gg-types.h GGaduSignalInfo
+src/gg-types.h GGaduPlugin
+src/gg-types.h GGaduPluginFile
+src/gg-types.h GGaduConfig
+src/unified-types.h GGaduContact
+src/unified-types.h GGaduMsg
+src/unified-types.h GGaduNotify
+src/unified-types.h GGaduStatusPrototype
+src/unified-types.h GGaduKeyValue
+src/unified-types.h GGaduDialog

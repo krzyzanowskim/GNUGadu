@@ -1,0 +1,39 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+  "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+<!ENTITY autor "Bartosz Zapałowski">
+<!ENTITY gad "GNU Gadu2">
+<!ENTITY introduction SYSTEM "introduction.sgml">
+<!ENTITY signals SYSTEM "signals.sgml">
+<!ENTITY signals_main-gui SYSTEM "signals_main-gui.sgml">
+<!ENTITY signals_docklet SYSTEM "signals_docklet.sgml">
+<!ENTITY signals_gadu-gadu SYSTEM "signals_gadu-gadu.sgml">
+<!ENTITY signals_jabber SYSTEM "signals_jabber.sgml">
+<!ENTITY signals_remote SYSTEM "signals_remote.sgml">
+<!ENTITY signals_sms SYSTEM "signals_sms.sgml">
+<!ENTITY signals_sound-arts SYSTEM "signals_sound-arts.sgml">
+<!ENTITY signals_sound-esd SYSTEM "signals_sound-esd.sgml">
+<!ENTITY signals_sound-oss SYSTEM "signals_sound-oss.sgml">
+<!ENTITY signals_sound-external SYSTEM "signals_sound-external.sgml">
+<!ENTITY signals_tlen SYSTEM "signals_tlen.sgml">
+<!ENTITY signals_xosd SYSTEM "signals_xosd.sgml">
+<!ENTITY structs SYSTEM "structs.sgml">
+<!ENTITY icons SYSTEM "icons.sgml">
+<!ENTITY menu SYSTEM "menu.sgml">
+<!ENTITY plugins SYSTEM "plugins.sgml">
+]>
+<book lang="pl">
+<bookinfo>
+<title>Podręcznik dewelopera GNU Gadu2</title>
+<author>
+	<firstname>Bartosz</firstname> 
+	<surname>Zapałowski</surname>
+</author>
+</bookinfo>
+&introduction;
+&icons;
+&structs;
+&signals;
+&menu;
+&plugins;
+</book>
