@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.7 2003/04/14 20:12:13 shaster Exp $ */
+/* $Id: gui_userview.c,v 1.8 2003/04/16 14:40:58 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -408,10 +408,15 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
     	    GdkPixbuf	     *image = NULL;
 	    gchar 	     *descr = NULL;
 	    gui_chat_session *session = gui_session_find(gp, k->id);
-	    gchar 	     *st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
+	    gchar 	     *st = NULL;
 
 	    found = TRUE;
-	    
+
+	    if (k->status_descr)
+		st = g_strdup_printf("- %s (%s)", (sp ? sp->description : ""), k->status_descr);
+	    else
+		st = g_strdup_printf("- %s", (sp ? sp->description : ""));
+
 	    if (session) {
 		gint chat_type = (gint)config_var_get(gui_handler,"chat_type");
 		GtkWidget *window = (GtkWidget *)g_object_get_data(G_OBJECT(session->chat),"top_window");

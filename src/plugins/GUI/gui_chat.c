@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.18 2003/04/14 21:13:49 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.19 2003/04/16 14:40:56 shaster Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -558,6 +558,10 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 		gp = gui_find_protocol(plugin_name, protocols);
 		sp = gui_find_status_prototype(gp->p,k->status);
 		st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
+		if (k->status_descr)
+		    st = g_strdup_printf("- %s (%s)", (sp ? sp->description : ""), k->status_descr);
+		else
+		    st = g_strdup_printf("- %s", (sp ? sp->description : ""));
 	}
 
 	/* create approp. window style - tabbed or stand alone */
