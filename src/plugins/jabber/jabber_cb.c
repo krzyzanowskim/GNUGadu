@@ -182,6 +182,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler *handler, LmConnection *connectio
   LmMessageNode *node;
   LmMessageNode *child;
   int first_time = 0;
+  int first_seen = 1;
 
   if (!rosterlist)
     first_time = 1;
@@ -247,6 +248,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler *handler, LmConnection *connectio
       while (list) {
 	k = (GGaduContact *) list->data;
 	if (!ggadu_strcasecmp (k->id, jid)) {
+	  first_seen = 0;
 	  if (k->nick)
 	    g_free (k->nick);
 	  break;
@@ -262,21 +264,15 @@ LmHandlerResult iq_roster_cb (LmMessageHandler *handler, LmConnection *connectio
       rosterlist = g_slist_append (rosterlist, k);
     }
     k->nick = g_strdup (name ? name:jid);
-    node = lm_message_node_get_child (child, "status");
-    if (k->status_descr) {
-      g_free (k->status_descr);
-      k->status_descr = NULL;
-    }
-    if (node) {
-      k->status_descr = g_strdup (lm_message_node_get_value (node));
-    }
     
     if (strcmp (subs, "none") && strcmp (subs, "from"))
     {
-      if (!strcmp (subs, "to"))
-	k->status = JABBER_STATUS_WAIT_SUBSCRIBE;
-      else
-	k->status = JABBER_STATUS_UNAVAILABLE;
+      if (first_seen) {
+	if (!strcmp (subs, "to"))
+	  k->status = JABBER_STATUS_WAIT_SUBSCRIBE;
+	else
+	  k->status = JABBER_STATUS_UNAVAILABLE;
+      }
       
       if (!g_slist_find (userlist, k))
 	userlist = g_slist_append (userlist, k);
@@ -284,7 +280,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler *handler, LmConnection *connectio
       if (!ggadu_repo_add_value ("jabber", k->id, k, REPO_VALUE_CONTACT))
 	ggadu_repo_change_value ("jabber", k->id, k, REPO_VALUE_DC);
     }
-    
+ 
     child = child->next;
   }
 
