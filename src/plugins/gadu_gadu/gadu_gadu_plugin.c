@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.39 2003/04/25 08:05:14 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.40 2003/04/25 16:30:46 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -388,6 +388,9 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			    print_debug("%s : GG_EVENT_NOTIFY : %d  %d  %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,notify->ip);
 			    
 			    set_userlist_status(notify, NULL, userlist);
+			    
+			    l = userlist;
+			    
      			    while (l) {
     			      GGaduContact *k = (GGaduContact *)l->data;
 
