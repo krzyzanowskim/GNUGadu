@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.101 2004/09/07 10:01:38 aflinta Exp $ */
+/* $Id: jabber_plugin.c,v 1.102 2004/09/07 10:06:08 aflinta Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -403,7 +403,7 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Jabber server for account registration"),
 					       "register get fields");
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
