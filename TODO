@@ -1,5 +1,4 @@
 BEFORE 2.0:
- - "gui show invisible chats" opens new windows. they should grab focus into 'input'. (GUI)
  - userlist tree view doesn't expand/collapse rows while userlist changes (GUI)
  - applying theme should refresh everything (it's not doing that for menubar) (GUI)
  ? some kind of dcc get acknowledge dialog box (gadu-gadu)
@@ -9,6 +8,7 @@ Later:
 - memory leaks audit (all)
 - jabber confference (jabber)
 
+(done) - "gui show invisible chats" opens new windows. they should grab focus into 'input'. (GUI)
 (done)- Jabber SSL
 (done)- sound configuration (all)
 (done)- authorization dialogs (jabber/tlen)

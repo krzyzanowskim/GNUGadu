@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.44 2004/01/21 23:46:07 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.45 2004/01/25 17:15:06 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -158,8 +158,13 @@ void handle_show_invisible_chats(GGaduSignal * signal)
 		{
 			GtkWidget *chat = GTK_WIDGET(tmp->data);
 			GtkWidget *win = g_object_get_data(G_OBJECT(chat), "top_window");
+			GtkWidget *input = g_object_get_data(G_OBJECT(chat), "input");
+
 			if (win)
 				gtk_widget_show_all(win);
+
+			if (input)
+				gtk_widget_grab_focus(GTK_WIDGET(input));
 		}
 		tmp = tmp->next;
 	}

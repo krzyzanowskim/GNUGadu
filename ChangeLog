@@ -1,5 +1,6 @@
 25.01.2004
 - massive memory leaks fixes, minor code cleanups (tlen/sms/update/xosd/shasta)
+- force focus to the input widget on 'gui show invisible chats' (GUI/shasta)
 
 24.01.2004
 - massive memory leaks fixes, minor code cleanups (gadu-gadu/shasta)
