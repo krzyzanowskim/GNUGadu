@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.13 2004/01/17 19:41:12 krzyzak Exp $ */
+/* $Id: support.c,v 1.14 2004/01/17 20:54:32 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -29,7 +29,6 @@ gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
 	{
 		if (err != NULL)
 		{
-			g_assert(out == NULL);
 			g_warning("Unable to convert : %s", err->message);
 			g_error_free(err);
 		}
