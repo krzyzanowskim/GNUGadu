@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.c,v 1.2 2004/09/15 14:51:20 krzyzak Exp $ */
+/* $Id: ggadu_types.c,v 1.3 2004/10/28 11:18:31 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -54,6 +54,33 @@ void GGaduContact_free(GGaduContact * k)
 
 	g_free(k);
 	return;
+}
+
+GGaduContact *GGaduContact_copy(GGaduContact * k)
+{
+	GGaduContact *kdest;
+	if (k == NULL)
+		return;
+		
+	kdest = g_new0(GGaduContact,1);
+
+	kdest->id = g_strdup(k->id);
+	kdest->first_name = g_strdup(k->first_name);
+	kdest->last_name = g_strdup(k->last_name);
+	kdest->nick = g_strdup(k->nick);
+	kdest->mobile = g_strdup(k->mobile);
+	kdest->email = g_strdup(k->email);
+	kdest->gender = g_strdup(k->gender);
+	kdest->group = g_strdup(k->group);
+	kdest->comment = g_strdup(k->comment);
+	kdest->birthdate = g_strdup(k->birthdate);
+	kdest->status = k->status;
+	kdest->status_descr = g_strdup(k->status_descr);
+	kdest->city = g_strdup(k->city);
+	kdest->age = g_strdup(k->age);
+	kdest->resource = g_strdup(k->resource);
+	kdest->gender = g_strdup(k->gender);
+	return kdest;
 }
 
 void GGaduMsg_free(gpointer msg)

@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.9 2004/10/28 10:22:05 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.10 2004/10/28 11:18:35 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -42,15 +42,46 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 {
 	/* URI of the user which we have to return presence. ex.  gg://13245  */
 	gchar *contactURI = NULL;
+	gchar *contactURIhandler = NULL;
+	gchar *contactURIdata = NULL;
 	DBusError error;
 	dbus_error_init(&error);
 
 	if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
 	{
+		GGaduProtocol *p = NULL;
+		gpointer key, index;
+		gchar **URItab = NULL;
+		
+		/* get contactURIhandler from contactURI */
+		URItab = g_strsplit(contactURI,"://",2);
+		if (URItab)
+		{
+		    contactURIhandler=URItab[0];
+		    contactURIdata=URItab[1];
+		}
+
 		print_debug("DBUS getPresence: search %s", contactURI);
+
+		if (ggadu_repo_exists("_protocols_"))
+		{
+			index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+			while (index)
+			{
+				p = ggadu_repo_find_value("_protocols_", key);
+
+				if (p && ggadu_strcasecmp(p->protocol_handler_str,contactURIhandler))
+				{
+					print_debug("DBUS getPresence: search %s in protocol: %s", contactURIdata, contactURIhandler);
+					signal_emit(p->display_name, "gui get user", NULL, "main-gui");
+					
+				}
+
+				index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+			}
+		}
 		dbus_free(contactURI);
 	}
-
 	dbus_error_free(&error);
 	return DBUS_HANDLER_RESULT_HANDLED;
 }

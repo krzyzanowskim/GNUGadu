@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.198 2004/10/28 09:44:14 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.199 2004/10/28 11:18:36 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1682,6 +1682,7 @@ void start_plugin()
 	ADD_USER_SIG = register_signal(handler, "add user");
 	CHANGE_USER_SIG = register_signal(handler, "change user");
 	UPDATE_CONFIG_SIG = register_signal(handler, "update config");
+	GET_USER_SIG = register_signal(handler, "get user");
 	SEARCH_SIG = register_signal(handler, "search");
 	EXIT_SIG = register_signal(handler, "exit");
 	ADD_USER_SEARCH_SIG = register_signal(handler, "add user search");
@@ -1898,6 +1899,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		}
 		GGaduDialog_free(dialog);
 		return;
+	}
+
+	if (signal->name == GET_USER_SIG)
+	{
+		/* dupa */
+		GGaduContact *k = NULL;
+		gchar *id = (gchar *)signal->data;
+		if ((k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id))))
+		{
+		    /* return copy of GGaduContact */
+		    signal->data_return = GGaduContact_copy(k);
+		}
+		
 	}
 
 	if (signal->name == CHANGE_USER_SIG)

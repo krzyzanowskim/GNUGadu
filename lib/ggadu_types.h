@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.12 2004/10/28 09:44:13 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.13 2004/10/28 11:18:34 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -265,7 +265,9 @@ typedef struct
     gint status;		/* status w postaci liczbowej */
 } GGaduContact;
 
-void GGaduContact_free(GGaduContact * k);
+void 	      GGaduContact_free(GGaduContact * k);
+GGaduContact *GGaduContact_copy(GGaduContact * k);
+
 
 /*
  *	Klasy wiadomo¶ci

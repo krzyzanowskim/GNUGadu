@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.28 2004/08/29 11:13:03 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.29 2004/10/28 11:18:36 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -48,6 +48,7 @@ static GQuark CHANGE_STATUS_SIG;
 static GQuark CHANGE_STATUS_DESCR_SIG;
 static GQuark SEND_MESSAGE_SIG;
 static GQuark ADD_USER_SIG;
+static GQuark GET_USER_SIG;
 static GQuark CHANGE_USER_SIG;
 static GQuark UPDATE_CONFIG_SIG;
 static GQuark SEARCH_SIG;
