@@ -19,7 +19,6 @@ EXTRA_DIST = \
 	contrib/remote_client/remote_client.c \
 	contrib/remote_client/remote_client.h \
 	doc/README.remote \
-	doc/emoticons.def \
 	doc/problems \
 	gg2.desktop \
 	gg2.spec \
