@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.37 2004/01/11 12:07:55 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.38 2004/01/11 12:23:58 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -669,7 +669,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     chatwindowraise = gtk_check_button_new_with_label (_("Automatically raise chat window"));
     gtk_box_pack_start (GTK_BOX (vbox), chatwindowraise, FALSE, FALSE, 0);
 
-    send_on_enter = gtk_check_button_new_with_label (_("Send messages after 'Enter' button pressed"));
+    send_on_enter = gtk_check_button_new_with_label (_("'Enter' - send message"));
     gtk_box_pack_start (GTK_BOX (vbox), send_on_enter, FALSE, FALSE, 0);
 
     usexosdfornewmsgs = gtk_check_button_new_with_label (_("Notify about new messages via XOSD"));
@@ -687,8 +687,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     auto_away = gtk_check_button_new_with_label (_("Auto away"));
     gtk_box_pack_start (GTK_BOX (vbox), auto_away, FALSE, FALSE, 0);
 
-    tabbox = gtk_table_new (7, 2, FALSE);
+    tabbox = gtk_table_new (8, 2, FALSE);
     gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
+    gtk_table_set_col_spacings (GTK_TABLE (tabbox), 5);
     gtk_box_pack_start (GTK_BOX (general_vbox), tabbox, FALSE, FALSE, 0);
 
     label = gtk_label_new (_("Blink interval"));
@@ -696,14 +697,14 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_container_add (GTK_CONTAINER (label2_align), label);
 
     gtk_table_attach_defaults (GTK_TABLE (tabbox), label2_align, 0, 1, 0, 1);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), blink_interval, 1, 2, 0, 1);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), blink_interval, 0, 1, 1, 2);
     g_signal_connect (blink, "toggled", G_CALLBACK (tree_toggled), blink_interval);
 
-    label = gtk_label_new (_("Auto away interval\n(minutes)"));
+    label = gtk_label_new (_("Auto away interval (minutes)"));
     auto_away_interval = gtk_spin_button_new_with_range (0, 1440, 1);
     gtk_container_add (GTK_CONTAINER (label3_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label3_align, 0, 1, 1, 2);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label3_align, 1, 2, 0, 1);
     gtk_table_attach_defaults (GTK_TABLE (tabbox), auto_away_interval, 1, 2, 1, 2);
     g_signal_connect (auto_away, "toggled", G_CALLBACK (tree_toggled), auto_away_interval);
 
@@ -712,36 +713,36 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_container_add (GTK_CONTAINER (label0_align), label);
 
     gtk_table_attach_defaults (GTK_TABLE (tabbox), label0_align, 0, 1, 2, 3);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowwidth, 1, 2, 2, 3);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowwidth, 0, 1, 3, 4);
 
     label = gtk_label_new (_("Chat window height"));
     chatwindowheight = gtk_spin_button_new_with_range (50, 1000, 10);
     gtk_container_add (GTK_CONTAINER (label1_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label1_align, 0, 1, 3, 4);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label1_align, 1, 2, 2, 3);
     gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowheight, 1, 2, 3, 4);
 
     /* ZONK - how to name it ? */
-    label = gtk_label_new (_("Chat window split size\n(percent)"));
+    label = gtk_label_new (_("Chat window split size (percent)"));
     chat_paned_size = gtk_spin_button_new_with_range (0, 100, 5);
     gtk_container_add (GTK_CONTAINER (label4_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label4_align, 0, 1, 4, 5);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chat_paned_size, 1, 2, 4, 5);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label4_align, 0, 2, 4, 5);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), chat_paned_size, 0, 2, 5, 6);
 
     combo_theme = gtk_combo_new ();
     label = gtk_label_new (_("Select theme"));
     gtk_container_add (GTK_CONTAINER (label5_align), label);
     
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label5_align, 0, 1, 5, 6);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_theme, 1, 2, 5, 6);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label5_align, 0, 1, 6, 7);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_theme, 1, 2, 6, 7);
 
     combo_icons = gtk_combo_new ();
     label = gtk_label_new (_("Select icon set"));
     gtk_container_add (GTK_CONTAINER (label6_align), label);
     
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label6_align, 0, 1, 6, 7);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_icons, 1, 2, 6, 7);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label6_align, 0, 1, 7, 8);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), combo_icons, 1, 2, 7, 8);
 
     if (ggadu_config_var_get (gui_handler, "emot"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (emotic), TRUE);
