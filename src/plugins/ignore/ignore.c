@@ -1,4 +1,4 @@
-/* $Id: ignore.c,v 1.5 2004/12/25 14:47:43 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.6 2004/12/26 14:00:33 krzyzak Exp $ */
 
 /* 
  * Ignore: plugin code for GNU Gadu 2 
@@ -28,7 +28,7 @@
 #include "ignore.h"
 
 static GGaduPlugin *ignore_handler;
-static GGaduPluginExtension *ext_in, *ext_un;
+static GGaduPluginExtension *ext_in;
 static GGaduMenu *menu_ignoremenu;
 
 GGadu_PLUGIN_INIT("ignore-main", GGADU_PLUGIN_TYPE_MISC);
@@ -79,7 +79,7 @@ static gchar *ggadu_remove_ignored_contact(gchar * ignored_list, GGaduContact * 
 
 	if (!k || !ignored_list || !k->id)
 		return NULL;
-	
+
 	searchk = g_strconcat(k->id, ":", NULL);
 	if (g_strrstr(ignored_list, searchk))
 	{
@@ -95,42 +95,41 @@ static gchar *ggadu_remove_ignored_contact(gchar * ignored_list, GGaduContact * 
 	return ret;
 }
 
-
-static gpointer ignore_ignore_contact(gpointer selected_contacts)
+static gpointer ignore_un_ignore_action(gpointer selected_contacts)
 {
-	GSList *users = (GSList *) selected_contacts;
-	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
+	GSList *users = NULL;
+	gchar *ignored_list_prev = NULL;
 	gchar *ignored_list_after = NULL;
-	gchar *ignored_list_prev = ggadu_config_var_get(ignore_handler, "list");
 
-	print_debug("ignore action %s", k->id);
-	ignored_list_after = ggadu_add_ignored_contact(ignored_list_prev, k);
-
-	if (ignored_list_after)
+	users = (GSList *) selected_contacts;
+	while (users)
 	{
-		ggadu_config_var_set(ignore_handler, "list", ignored_list_after);
-		ggadu_config_save(ignore_handler);
-		g_free(ignored_list_prev);
+		GGaduContact *k = (GGaduContact *) users->data;
+		
+		ignored_list_prev = ggadu_config_var_get(ignore_handler, "list");
+		ignored_list_after = NULL;
+
+		print_debug("(Un)Ignore action %s", k->id);
+
+		if (!g_strrstr(ignored_list_prev, k->id))
+		{
+			ignored_list_after = ggadu_add_ignored_contact(ignored_list_prev, k);
+		}
+		else
+		{
+			ignored_list_after = ggadu_remove_ignored_contact(ignored_list_prev, k);
+		}
+
+		if (ignored_list_after)
+		{
+			ggadu_config_var_set(ignore_handler, "list", ignored_list_after);
+			g_free(ignored_list_prev);
+		}
+
+		users = users->next;
 	}
-	return NULL;
-}
 
-static gpointer ignore_unignore_contact(gpointer selected_contacts)
-{
-	GSList *users = (GSList *) selected_contacts;
-	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
-	gchar *ignored_list_after = NULL;
-	gchar *ignored_list_prev = ggadu_config_var_get(ignore_handler, "list");
-
-	print_debug("unignore action %s", k->id);
-
-	ignored_list_after = ggadu_remove_ignored_contact(ignored_list_prev, k);
-	if (ignored_list_after)
-	{
-		ggadu_config_var_set(ignore_handler, "list", ignored_list_after);
-		ggadu_config_save(ignore_handler);
-		g_free(ignored_list_prev);
-	}
+	ggadu_config_save(ignore_handler);
 	return NULL;
 }
 
@@ -149,24 +148,18 @@ static gpointer ignore_show_list(gpointer user_data)
 	return NULL;
 }
 
+
 /* MAIN */
 void start_plugin()
 {
 	GGaduMenu *item_gg;
 
-	GGaduPluginExtension *ext_in, *ext_un;
+	GGaduPluginExtension *ext_in;
 	ext_in = g_new0(GGaduPluginExtension, 1);
 	ext_in->type = GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE;
-	ext_in->callback = ignore_ignore_contact;
-	ext_in->txt = _("_Ignore");
+	ext_in->callback = ignore_un_ignore_action;
+	ext_in->txt = _("(Un)I_gnore");
 	register_extension_for_plugin(ext_in, GGADU_PLUGIN_TYPE_PROTOCOL);
-
-	ext_un = g_new0(GGaduPluginExtension, 1);
-	ext_un->type = GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE;
-	ext_un->callback = ignore_unignore_contact;
-	ext_un->txt = _("_UnIgnore");
-	register_extension_for_plugin(ext_un, GGADU_PLUGIN_TYPE_PROTOCOL);
-
 
 	menu_ignoremenu = ggadu_menu_create();
 	item_gg = ggadu_menu_add_item(menu_ignoremenu, _("_Ignore"), NULL, NULL);
@@ -174,7 +167,7 @@ void start_plugin()
 /*
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_List"), ignore_show_list, NULL));
-*/	
+*/
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_ignoremenu, "main-gui");
 }
@@ -211,13 +204,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
 	print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
-	
+
 	if (ext_in)
 		unregister_extension_for_plugins(ext_in);
 
-	if (ext_un)
-		unregister_extension_for_plugins(ext_un);
-
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_ignoremenu, "main-gui");
-	
+
 }

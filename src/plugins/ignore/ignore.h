@@ -1,4 +1,4 @@
-/* $Id: ignore.h,v 1.2 2004/12/22 16:24:18 krzyzak Exp $ */
+/* $Id: ignore.h,v 1.3 2004/12/26 14:00:33 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef GGADU_IGNORE_PLUGINH
+#ifndef GGADU_IGNORE_PLUGIN_H
 #define GGADU_IGNORE_PLUGIN_H 1
 
 
