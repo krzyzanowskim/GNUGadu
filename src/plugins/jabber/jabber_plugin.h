@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.24 2004/02/14 16:46:56 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.25 2004/02/15 14:11:19 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -44,7 +44,8 @@ enum
     GGADU_JABBER_RESOURCE,
     GGADU_JABBER_SERVER,
     GGADU_JABBER_USERNAME,
-	GGADU_JABBER_UPDATE_CONFIG
+	GGADU_JABBER_UPDATE_CONFIG,
+	GGADU_JABBER_REQUEST_AUTH_FROM
 };
 
 enum states

@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.25 2004/02/14 16:46:56 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.26 2004/02/15 14:11:19 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -51,11 +51,7 @@ void action_queue_del(waiting_action * action)
 
 void action_roster_add_result(LmConnection * connection, LmMessage * message, gpointer id)
 {
-	LmMessage *m = lm_message_new_with_sub_type(id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
 	signal_emit("jabber", "gui show message", g_strdup(_("Roster list updated")), "main-gui");
-	lm_connection_send(connection, m, NULL);
-	lm_message_unref(m);
-
 }
 
 void action_roster_fetch_result(LmConnection * connection, LmMessage * message, gpointer user_data)

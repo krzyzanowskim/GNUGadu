@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.c,v 1.1 2004/02/14 16:46:53 krzyzak Exp $ */
+/* $Id: ggadu_dialog.c,v 1.2 2004/02/15 14:11:18 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -38,6 +38,8 @@ GGaduDialog *ggadu_dialog_new_full(guint type, gchar * title, gchar * callback_s
 	ggadu_dialog_set_title(dialog, title);
 	ggadu_dialog_set_type(dialog, type);
 	dialog->user_data = user_data;
+	dialog->response = GGADU_OK;
+	dialog->optlist = NULL;
 	return dialog;
 }
 
@@ -92,7 +94,7 @@ void ggadu_dialog_set_title(GGaduDialog * dialog, const gchar * title)
 
 const gchar *ggadu_dialog_get_title(GGaduDialog * dialog)
 {
-	g_return_if_fail(dialog != NULL);
+	g_return_val_if_fail(dialog != NULL,NULL);
 	return dialog->title;
 }
 
