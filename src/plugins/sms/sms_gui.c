@@ -549,7 +549,12 @@ void save_smslist()
     if (fp) {
 	while (smu){
 	    GGaduContact *k = (GGaduContact *)smu->data;
-	    fprintf(fp,"%s %s\n",k->nick,k->mobile);
+	    char *t;
+    
+	    /* Podmiana srednikow na przecinki */
+	    for ( t=k->nick; *t; t++) if (*t == ';') *t = ',';
+	    
+	    fprintf(fp,"%s;%s\n",k->nick,k->mobile);
 	    smu=smu->next;
 	}
     }
@@ -581,7 +586,7 @@ void load_smslist()
     nick = g_malloc0(100);
     mobile = g_malloc0(20);
     
-    while ((fscanf(fp,"%s %s\n",nick,mobile)) != EOF) {
+    while ( fscanf(fp,"%[^;];%[^\n]\n",nick,mobile) != EOF) {
         k = g_new0(GGaduContact, 1);
 	k->nick = g_strdup(nick);
 	k->mobile = g_strdup(mobile);
