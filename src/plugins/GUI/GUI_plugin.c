@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.77 2004/08/23 13:56:32 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.78 2004/08/24 12:04:30 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -56,7 +56,6 @@ extern GtkItemFactory *item_factory;
 extern GSList *invisible_chats;
 
 GtkWidget *main_menu_bar = NULL;
-GtkWidget *main_toolbar = NULL;
 GtkWidget *toolbar_handle_box = NULL;
 GtkWidget *status_hbox = NULL;
 GtkWidget *view_container = NULL;
@@ -724,7 +723,7 @@ gpointer show_hide_descriptions(GtkWidget * widget, gpointer user_data)
 void gui_build_default_toolbar()
 {
 	toolbar_handle_box = gtk_handle_box_new();
-	main_toolbar = gtk_toolbar_new();
+	GtkWidget *main_toolbar = gtk_toolbar_new();
 
 	gtk_container_add(GTK_CONTAINER(toolbar_handle_box), main_toolbar);
 
@@ -1002,12 +1001,6 @@ void gui_reload_images()
 {
 	GSList *sigdata = NULL;
 
-	/* Shouldn't be here but anyway... */
-	if (!ggadu_config_var_get(gui_handler, "show_toolbar")) {
-		gtk_widget_hide(toolbar_handle_box);
-	} else {
-		gtk_widget_show(toolbar_handle_box);
-	}
 /*
     gui_user_view_refresh();
 */

@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.72 2004/08/23 13:56:33 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.73 2004/08/24 12:04:31 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -44,6 +44,8 @@ GtkWidget *list = NULL;
 
 extern GSList *protocols;
 extern GGaduPlugin *gui_handler;
+extern GtkWidget *toolbar_handle_box;
+
 
 static gboolean plugins_updated = FALSE;
 
@@ -1440,7 +1442,13 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		
 		if (ggadu_strcasecmp(previous_icons,ggadu_config_var_get(gui_handler, "icons")))
 		    gui_reload_images();
-		
+
+		if (!ggadu_config_var_get(gui_handler, "show_toolbar")) {
+	    	    gtk_widget_hide(toolbar_handle_box);
+		} else {
+		    gtk_widget_show(toolbar_handle_box);
+		}
+
 		gui_user_view_refresh();
 		gui_chat_update_tags();
 	}

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.108 2004/08/22 12:26:52 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.109 2004/08/24 12:04:31 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1135,30 +1135,32 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_box_pack_start_defaults(GTK_BOX(bs_hbox), bs_label);
 	gtk_box_pack_end(GTK_BOX(bs_hbox), bs_image, FALSE, FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(button_send), bs_hbox);
+	gtk_button_set_focus_on_click(GTK_BUTTON(button_send),FALSE);
 
 	button_autosend = gtk_toggle_button_new();
 	gtk_container_add(GTK_CONTAINER(button_autosend), create_image("arrow.png"));
+	gtk_button_set_focus_on_click(GTK_BUTTON(button_autosend),FALSE);
 
 	button_find = gtk_button_new();
 	bas_image = gtk_image_new();
 	gtk_image_set_from_stock(GTK_IMAGE(bas_image), "gtk-find", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_find), bas_image);
+	gtk_button_set_focus_on_click(GTK_BUTTON(button_find),FALSE);
 
 	button_close = gtk_button_new_from_stock("gtk-close");
+	gtk_button_set_focus_on_click(GTK_BUTTON(button_close),FALSE);
+	
 	button_stick = gtk_toggle_button_new();
 	bas_image = create_image("push-pin.png");
 	gtk_container_add(GTK_CONTAINER(button_stick), bas_image);
+	gtk_button_set_focus_on_click(GTK_BUTTON(button_stick),FALSE);
 
 	button_clear = gtk_button_new();
 	bas_image = gtk_image_new();
 	gtk_image_set_from_stock(GTK_IMAGE(bas_image), "gtk-clear", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_clear), bas_image);
+	gtk_button_set_focus_on_click(GTK_BUTTON(button_clear),FALSE);
 
-	//_with_mnemonic(_("S_tick"));
-
-	/* gtk_button_set_relief(GTK_BUTTON(button_autosend), GTK_RELIEF_NONE);
-	   gtk_button_set_relief(GTK_BUTTON(button_send), GTK_RELIEF_NONE);
-	   gtk_button_set_relief(GTK_BUTTON(button_close), GTK_RELIEF_NONE); */
 	gtk_button_set_relief(GTK_BUTTON(button_find), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_clear), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_stick), GTK_RELIEF_NONE);
@@ -1188,6 +1190,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	{
 		button_emoticons = gtk_button_new();
 		gtk_button_set_relief(GTK_BUTTON(button_emoticons), GTK_RELIEF_NONE);
+		gtk_button_set_focus_on_click (GTK_BUTTON(button_emoticons),FALSE);
 
 		gtk_container_add(GTK_CONTAINER(button_emoticons), create_image("emoticon.gif"));
 
