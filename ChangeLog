@@ -1,5 +1,6 @@
 26.10.2004
 - fix exit if set unavailable in jabber plugin (krzak/jabber)
+- update pl translation (THrull)
 
 25.10.2004
 - initial DBUS plugin (krzak)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-10-22 22:34+0200\n"
+"POT-Creation-Date: 2004-10-26 17:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgid ""
 " \t***************************\n"
 msgstr ""
 
-#: src/main.c:195
+#: src/main.c:196
 msgid "GNU Gadu 2"
 msgstr ""
 
@@ -594,8 +594,8 @@ msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:834
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:848
-#: src/plugins/tlen/tlen_plugin.c:635 src/plugins/jabber/jabber_cb.c:475
-#: src/plugins/jabber/jabber_cb.c:542 src/plugins/sms/sms_gui.c:88
+#: src/plugins/tlen/tlen_plugin.c:635 src/plugins/jabber/jabber_cb.c:473
+#: src/plugins/jabber/jabber_cb.c:540 src/plugins/sms/sms_gui.c:88
 #: src/plugins/sms/sms_gui.c:106
 msgid "Nick"
 msgstr ""
@@ -626,7 +626,7 @@ msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:878
 #: src/plugins/tlen/tlen_plugin.c:809 src/plugins/jabber/jabber_plugin.c:1326
-#: src/plugins/jabber/jabber_cb.c:153
+#: src/plugins/jabber/jabber_cb.c:151
 msgid "Password"
 msgstr ""
 
@@ -711,7 +711,7 @@ msgid "Password:"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:984
-#: src/plugins/jabber/jabber_cb.c:158
+#: src/plugins/jabber/jabber_cb.c:156
 msgid "Update settings on success?"
 msgstr ""
 
@@ -1305,27 +1305,27 @@ msgstr ""
 msgid "Unable to read configuration file for plugin jabber"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:94
+#: src/plugins/jabber/jabber_cb.c:93
 msgid "Jabber disconnected"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:96
+#: src/plugins/jabber/jabber_cb.c:95
 msgid "Connection to the Jabber server timed out"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:98
+#: src/plugins/jabber/jabber_cb.c:97
 msgid "Connection hung up"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:100
+#: src/plugins/jabber/jabber_cb.c:99
 msgid "Generic error somewhere in the transport layer"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:102
+#: src/plugins/jabber/jabber_cb.c:101
 msgid "An unknown Jabber error"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:122
+#: src/plugins/jabber/jabber_cb.c:120
 #, c-format
 msgid ""
 "Account:\n"
@@ -1333,160 +1333,160 @@ msgid ""
 "created"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:132
+#: src/plugins/jabber/jabber_cb.c:130
 msgid "Username not available"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:146
+#: src/plugins/jabber/jabber_cb.c:144
 msgid "Register Jabber account"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:151
+#: src/plugins/jabber/jabber_cb.c:149
 msgid "Username"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:155 src/plugins/jabber/jabber_cb.c:471
-#: src/plugins/jabber/jabber_cb.c:538
+#: src/plugins/jabber/jabber_cb.c:153 src/plugins/jabber/jabber_cb.c:469
+#: src/plugins/jabber/jabber_cb.c:536
 msgid "Full name"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:157 src/plugins/jabber/jabber_cb.c:512
-#: src/plugins/jabber/jabber_cb.c:570
+#: src/plugins/jabber/jabber_cb.c:155 src/plugins/jabber/jabber_cb.c:510
+#: src/plugins/jabber/jabber_cb.c:568
 msgid "E-mail"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:220
+#: src/plugins/jabber/jabber_cb.c:218
 msgid "Jabber authentication failed"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:254
+#: src/plugins/jabber/jabber_cb.c:252
 msgid "Subscription request confirmation"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:255
+#: src/plugins/jabber/jabber_cb.c:253
 #, c-format
 msgid ""
 "Person : %s\n"
 "wants to subscribe your presence"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:264
+#: src/plugins/jabber/jabber_cb.c:262
 #, c-format
 msgid ""
 "From %s\n"
 "You are now authorized"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:270
+#: src/plugins/jabber/jabber_cb.c:268
 #, c-format
 msgid ""
 "From %s\n"
 "Your authorization has been removed!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:421
+#: src/plugins/jabber/jabber_cb.c:419
 #, c-format
 msgid "Software used by %s:"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:429
+#: src/plugins/jabber/jabber_cb.c:427
 msgid "Client"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:433
+#: src/plugins/jabber/jabber_cb.c:431
 msgid "Version"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:437
+#: src/plugins/jabber/jabber_cb.c:435
 msgid "Operating System"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:459
+#: src/plugins/jabber/jabber_cb.c:457
 msgid "Personal info:"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:463 src/plugins/jabber/jabber_cb.c:530
+#: src/plugins/jabber/jabber_cb.c:461 src/plugins/jabber/jabber_cb.c:528
 msgid "First name"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:467 src/plugins/jabber/jabber_cb.c:534
+#: src/plugins/jabber/jabber_cb.c:465 src/plugins/jabber/jabber_cb.c:532
 msgid "Last name"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:479 src/plugins/jabber/jabber_cb.c:546
+#: src/plugins/jabber/jabber_cb.c:477 src/plugins/jabber/jabber_cb.c:544
 msgid "Homepage"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:486
+#: src/plugins/jabber/jabber_cb.c:484
 msgid "Birthday"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:488
+#: src/plugins/jabber/jabber_cb.c:486
 msgid "Month"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:490
+#: src/plugins/jabber/jabber_cb.c:488
 msgid "Year"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:496 src/plugins/jabber/jabber_cb.c:554
+#: src/plugins/jabber/jabber_cb.c:494 src/plugins/jabber/jabber_cb.c:552
 msgid "Organization"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:500 src/plugins/jabber/jabber_cb.c:558
+#: src/plugins/jabber/jabber_cb.c:498 src/plugins/jabber/jabber_cb.c:556
 msgid "Telephone number"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:504 src/plugins/jabber/jabber_cb.c:562
+#: src/plugins/jabber/jabber_cb.c:502 src/plugins/jabber/jabber_cb.c:560
 msgid "Locality"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:508 src/plugins/jabber/jabber_cb.c:566
+#: src/plugins/jabber/jabber_cb.c:506 src/plugins/jabber/jabber_cb.c:564
 msgid "Country"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:523
+#: src/plugins/jabber/jabber_cb.c:521
 #, c-format
 msgid "%s's personal info:"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:550
+#: src/plugins/jabber/jabber_cb.c:548
 msgid "Birth date"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:596
+#: src/plugins/jabber/jabber_cb.c:594
 msgid "Password successfully changed"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:604
+#: src/plugins/jabber/jabber_cb.c:602
 msgid "User is not authorized"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:607
+#: src/plugins/jabber/jabber_cb.c:605
 msgid "Password change is not allowed by the server"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:610
+#: src/plugins/jabber/jabber_cb.c:608
 msgid "You are not registered with the server"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:622
+#: src/plugins/jabber/jabber_cb.c:620
 msgid "Account successfully removed"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:639
+#: src/plugins/jabber/jabber_cb.c:637
 msgid "You are not allowed to remove this account"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:642
+#: src/plugins/jabber/jabber_cb.c:640
 msgid "This account was not registered"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:645
+#: src/plugins/jabber/jabber_cb.c:643
 msgid "You are not registered with this server"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:681
+#: src/plugins/jabber/jabber_cb.c:679
 #, c-format
 msgid "Error: %s (code %s)"
 msgstr ""
@@ -1495,15 +1495,15 @@ msgstr ""
 msgid "Check you Jabber ID in properties!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_login.c:63 src/plugins/jabber/jabber_login.c:77
+#: src/plugins/jabber/jabber_login.c:62 src/plugins/jabber/jabber_login.c:75
 msgid "Invalid jid!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_login.c:158
+#: src/plugins/jabber/jabber_login.c:155
 msgid "SSL not supported by loudmouth"
 msgstr ""
 
-#: src/plugins/jabber/jabber_login.c:218
+#: src/plugins/jabber/jabber_login.c:215
 msgid "Unable to open connection"
 msgstr ""
 
@@ -1733,6 +1733,10 @@ msgstr ""
 #: src/plugins/sms/sms_gui.c:597 src/plugins/sms/sms_gui.c:626
 #: src/plugins/sms/sms_gui.c:637
 msgid "Writing userlist failed!"
+msgstr ""
+
+#: src/plugins/dbus/dbus_plugin.c:97
+msgid "DBUS interface plugin"
 msgstr ""
 
 #: src/plugins/update/update_plugin.c:95 src/plugins/update/update_plugin.c:97
