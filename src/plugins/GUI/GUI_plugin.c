@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.8 2003/04/21 16:07:27 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.9 2003/04/28 14:17:33 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -131,31 +131,38 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 	    
 	    
 	    gtk_tree_model_get(model,&iter,2,&k,-1);
-	    
-	    if (!k) {
-		gtk_widget_hide(gp->add_info_label);
+	    if (!gp)
 		return FALSE;
-	    }
 
-	    if (k->status_descr) {
-	    	gchar *desc_esc = g_markup_escape_text(k->status_descr,strlen(k->status_descr));
-		desc_text = g_strdup_printf("\n%s", desc_esc);
-		g_free(desc_esc);
-	    }
-
-	    markup = g_strdup_printf("<span size=\"small\">Id: <b>%s</b>%s</span>", k->id, (k->status_descr) ?  desc_text : "");
-
-	    if (gp == NULL) print_debug("MAAAAAC %s\n",plugin_name);
-	    gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup);
-
-	    
 	    tooltip = gtk_tooltips_new();
-	    gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),k->status_descr,"caption");
+
+	    if (k) {
+		if (k->status_descr) { 
+		    gchar *desc_esc = g_markup_escape_text(k->status_descr,strlen(k->status_descr));
+	    	    desc_text = g_strdup_printf("\n%s", desc_esc);
+		    g_free(desc_esc);
+		}
+		
+		markup = g_strdup_printf("<span size=\"small\">Id: <b>%s</b>%s</span>", k->id, (k->status_descr) ?  desc_text : "");
+
+		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),k->status_descr,"caption");
+	    } else {
+		GGaduStatusPrototype *sp;
+		gint status;
+		
+		status = (gint)signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+		sp = gui_find_status_prototype(gp->p, status);
+
+		markup = g_strdup_printf("<span size=\"small\"><b>%s</b>\nStatus: <b>%s</b></span>", gp->p->display_name, sp->description);
+		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),NULL,"caption");
+	    }
+	    
 	    gtk_tooltips_enable(tooltip);
 	    
+	    gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup);
+	    	    
 	    if (!GTK_WIDGET_VISIBLE(gp->add_info_label))
 		gtk_widget_show(gp->add_info_label);
-
 
 	    g_free(markup);
 	    g_free(desc_text);
