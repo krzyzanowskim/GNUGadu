@@ -2,7 +2,7 @@
 - --without-openssl disable OpenSSL support with included libgadu (krzak)
 - fixed conneferce chats initialization (krzak/gadu-gadu)
 - use .gg2/gadu_gadu file as a configuration file, but also read .gg/config for first time (gadu-gadu/krzak)
-- notify stats changech in chat window, close #43 (GUI/shasta/krzak)
+- notify status changes in chat window, close #43 (GUI/shasta/krzak)
 
 08.06.2004
 - emoticons window is not created every time, only once in every chat window. (krzak/GUI)
