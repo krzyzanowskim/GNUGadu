@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.134 2004/12/26 23:20:20 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.135 2004/12/27 21:11:05 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -911,7 +911,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 			GtkWidget *tab_label_hbox = NULL;
 			GtkWidget *tab_label_txt = NULL;
 			GtkWidget *tab_label_close = NULL;
-			GtkWidget *tab_label_close_image = gtk_image_new_from_pixbuf(NULL);	/* empty */
+			GtkWidget *tab_label_close_image = NULL;	/* empty */
 
 			if (chat_window == NULL)
 			{
@@ -953,20 +953,19 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 			 */
 			wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s %s", k ? k->nick : id, (sp) ? status_desc : "");
 
-			tab_label_hbox = gtk_hbox_new(FALSE, FALSE);
+			tab_label_hbox = gtk_hbox_new(TRUE, 0);
 			tab_label_txt = gtk_label_new(title);
 			tab_label_close = gtk_button_new();
 
 			gtk_button_set_relief(GTK_BUTTON(tab_label_close), GTK_RELIEF_NONE);
 			g_signal_connect(tab_label_close, "clicked", G_CALLBACK(on_destroy_chat), session);
 
-			gtk_widget_set_usize(GTK_WIDGET(tab_label_close), 12, 1);
-
-			gtk_image_set_from_stock(GTK_IMAGE(tab_label_close_image), "gtk-close", GTK_ICON_SIZE_MENU);
+			tab_label_close_image = gtk_image_new_from_stock("gtk-close",GTK_ICON_SIZE_MENU);
 			gtk_container_add(GTK_CONTAINER(tab_label_close), GTK_WIDGET(tab_label_close_image));
 
-			gtk_box_pack_start_defaults(GTK_BOX(tab_label_hbox), tab_label_txt);
-			gtk_box_pack_start_defaults(GTK_BOX(tab_label_hbox), tab_label_close);
+			gtk_widget_set_size_request(GTK_WIDGET(tab_label_close),20,16);
+			gtk_box_pack_start(GTK_BOX(tab_label_hbox), tab_label_txt,FALSE,TRUE,0);
+			gtk_box_pack_start(GTK_BOX(tab_label_hbox), tab_label_close,FALSE,FALSE,0);
 
 			g_object_set_data(G_OBJECT(session->chat), "tab_label_txt", tab_label_txt);
 			g_object_set_data_full(G_OBJECT(session->chat), "tab_label_txt_char", g_strdup(title), g_free);
