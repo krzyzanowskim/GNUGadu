@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.234 2005/01/04 08:51:43 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.235 2005/01/07 20:50:41 aflinta Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -215,7 +215,7 @@ static gpointer user_preferences_action(gpointer user_data)
 		tmplist = tmplist->next;
 	}
 
-	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, ggadu_config_var_get(handler, "uin"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_ID, _("GG#:"), VAR_INT, ggadu_config_var_get(handler, "uin"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_PASSWORD, _("_Password:"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
 /*	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, ggadu_config_var_get(handler, "reason"), VAR_FLAG_NONE);*/
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for _friends"), VAR_BOOL, ggadu_config_var_get(handler, "private"), VAR_FLAG_NONE);
@@ -1091,7 +1091,7 @@ static gpointer search_action(gpointer user_data)
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("_Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_CITY, _("_City:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_BIRTHYEAR, _("_Birthyear:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("_GG#"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("_GG#:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("G_ender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ACTIVE, _("_Search only for active users"), VAR_BOOL, NULL, VAR_FLAG_NONE);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
