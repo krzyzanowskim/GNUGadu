@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.158 2005/02/23 15:28:54 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.159 2005/03/06 23:29:02 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1353,39 +1353,30 @@ gpointer user_preferences_action(gpointer user_data)
 
 static LmHandlerResult jabber_services_discovery_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer user_data)
 {
-	LmMessageNode *node;
-	LmMessageNode *nodes_service;
-	LmMessageNode *n_service;
-	/* add checking */
-	node = lm_message_get_node(message);
-	/* before JEP-0030 style */
-	nodes_service = lm_message_node_get_child(node, "service");
-	if (nodes_service) 
+	LmMessageNode *node = message->node;
+	
+	print_debug(lm_message_node_to_string(node));
+	
+	node = lm_message_node_find_child(node, "item");
+	if(node) 
 	{
 	    signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", jabbermenu, "main-gui");
 	    jabbermenu = build_jabber_menu();
-		n_service = lm_message_node_get_child(nodes_service, "service");
-		while (n_service)
-		{
-/*
-			ggadu_dialog_add_entry(dialog, GGADU_JABBER_JID,
-					       (gpointer) lm_message_node_get_attribute(n_service, "name"),
-					       VAR_STR, (gpointer) lm_message_node_get_attribute(n_service, "jid"), VAR_FLAG_INSENSITIVE);
-*/    			
 
-			ggadu_menu_add_submenu(jabber_services_discovery_menu,
-					       ggadu_menu_new_item( (gchar *)lm_message_node_get_attribute(n_service, "name"),
-					    			    jabber_services_discovery_action,
-								    NULL)
-					       );
+	    while (node)
+	    {
+		gchar *string = g_strconcat((gchar *)lm_message_node_get_attribute(node, "name"), " (",
+				            (gchar *)lm_message_node_get_attribute(node, "jid"), ")", NULL);
+
+		ggadu_menu_add_submenu(jabber_services_discovery_menu, ggadu_menu_new_item(string, NULL, NULL));
 			
-			print_debug(lm_message_node_to_string(n_service));
-			n_service = n_service->next;
-		}
-	    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
-	    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+		g_free(string);
+		node = node->next;
+	    }
 
+	    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
 	}
+
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
 
@@ -1405,13 +1396,15 @@ gpointer jabber_services_discovery_action(gpointer user_data)
 	lm_message_node_set_attribute(msg->node, "to", lm_connection_get_server(jabber_data.connection));
 
 	node = lm_message_node_add_child(msg->node, "query", NULL);
-	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:browse");
+	lm_message_node_set_attribute(node, "xmlns", "http://jabber.org/protocol/disco#items");
 
 	message_handler = lm_message_handler_new(jabber_services_discovery_handler, NULL, NULL);
 
+	print_debug(lm_message_node_to_string(msg->node));
 	lm_connection_send_with_reply(jabber_data.connection, msg, message_handler, NULL);
 	lm_message_unref(msg);
 	lm_message_handler_unref(message_handler);
+
 	return NULL;
 }
 
