@@ -1,6 +1,6 @@
 07.05.2003
 - show user ip (gadu-gadu/GUI/Sebo)
-- perl support initial (core/Zapal)
+- initial perl support (core/zapal)
 
 06.05.2003
 - fixed initial status invisible set (gadu-gadu/krzak)
