@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.91 2005/01/10 09:39:13 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.92 2005/01/12 09:08:22 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -1204,14 +1204,15 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		else
 			sp = ggadu_find_status_prototype(p, TLEN_STATUS_UNAVAILABLE);
 		
-		g_free(sp->status_description);
 		
-		if (session && session->description && (strlen(session->description) > 0))
+		if (sp && session && session->description && (strlen(session->description) > 0))
 		{
+		    g_free(sp->status_description);
 		    sp->status_description = g_strdup(session->description);
 		}
 		else
 		{
+		    g_free(sp->status_description);
 		    sp->status_description = NULL;
 		}
 			
