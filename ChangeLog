@@ -1,3 +1,6 @@
+23.08.2004
+- 2.0.5.1 bugfix release - now jabber plugin compile and work with pre/post loudmouth 0.16
+
 22.08.2004
 - tlen-3d icons set as default, current tlen icons set as tlen-classic (core/krzak)
 - close bug #76 (gadu-gadu/krzak)
