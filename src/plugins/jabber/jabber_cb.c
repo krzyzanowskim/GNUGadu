@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.24 2004/01/10 16:43:30 shaster Exp $ */
+/* $Id: jabber_cb.c,v 1.25 2004/01/10 19:35:52 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -272,6 +272,21 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		first_time = 1;
 
 	print_debug ("%s", lm_message_node_to_string (message->node));
+
+	/* verbose error reporting */
+	if (lm_message_get_sub_type (message) == LM_MESSAGE_SUB_TYPE_ERROR)
+	{
+		if (!(node = lm_message_node_get_child (message->node, "error")))
+		{
+			print_debug ("jabber: weird roster.");
+			lm_message_node_unref(node);
+			return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+		}
+		signal_emit("jabber", "gui show warning", g_strdup_printf(_("Error: %s (code %s)"), 
+			lm_message_node_get_value (node), lm_message_node_get_attribute (node, "code")), "main-gui");
+		lm_message_node_unref(node);
+		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+	}
 
 	if (lm_message_get_sub_type (message) != LM_MESSAGE_SUB_TYPE_SET &&
 	    lm_message_get_sub_type (message) != LM_MESSAGE_SUB_TYPE_RESULT)

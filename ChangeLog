@@ -4,6 +4,7 @@
 - default colors blue and brown for msg_header_color,msg_out_header_color (GUI/krzak)
 - trivial 'log' variable fix (jabber/shasta)
 - fixed segfaults with malformed 'jid' and 'server' settings (jabber/shasta)
+- more verbose error reporting [sort of] (jabber/shasta)
 
 09.01.2004
 - sms plugin uses threads now for network operations (sms/shasta)
