@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.83 2004/10/13 14:47:53 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.84 2004/10/14 12:02:27 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -77,7 +77,7 @@ void set_selected_users_list(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 void nick_list_row_changed2(GtkTreeModel *model,GtkTreePath *path, GtkTreeIter *iter, gpointer user_data)
 {
     print_debug("nick_list_row_changed2");
-    nick_list_row_changed(NULL,model,path,FALSE,user_data);
+//    nick_list_row_changed(NULL,model,path,FALSE,user_data);
 }
 
 gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean cur_sel, gpointer user_data)

@@ -1,5 +1,7 @@
 To compile all plugins you need:
 
+- gcc-c   C compiler
+- gcc-c++ (for aspell)
 - automake 1.7 or better
 - libtool 1.4e or better
 
@@ -12,6 +14,7 @@ To compile all plugins you need:
 - audiofile (http://www.68k.org/~michael/audiofile)
 - aRts! (http://www.arts-project.org)
 - gtkspell - http://gtkspell.sourceforge.net
+- openssl (http://www.openssl.org)
 
 WARNING: perl support and remote plugin will compile/work only on Linux!
 

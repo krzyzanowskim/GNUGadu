@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.76 2004/09/22 22:43:26 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.77 2004/10/14 12:02:27 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -597,7 +597,6 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *label;
 	GtkWidget *hbox;
 	GtkWidget *tabbox;
-	GtkWidget *tabbox_spell;
 	GtkWidget *emotic;
 	GtkWidget *send_on_enter;
 	GtkWidget *chatstyle;
@@ -607,6 +606,7 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *chatwindowraise;
 	GtkWidget *use_username;
 #ifdef USE_GTKSPELL
+	GtkWidget *tabbox_spell;
 	GtkWidget *use_spell;
 	GtkWidget *combo_spell;
 	GtkWidget *label3_align;
