@@ -35,7 +35,7 @@ gpointer jabber_login(gpointer data)
 		}
 	}
     
-	if (!jabber_session->id) {
+//	if (!jabber_session->id) {
 
 		if (!config_var_get(jabber_handler,"jid")) {
 			signal_emit("jabber", "gui show warning",g_strdup(_("Please check configuration file")),"main-gui");	    
@@ -45,7 +45,7 @@ gpointer jabber_login(gpointer data)
 		jabber_session->id = iks_id_new(NULL,g_strdup(config_var_get(jabber_handler,"jid")));
 		jabber_session->id->resource = g_strdup("GNU Gadu 2");
 		jabber_session->state = NET_OFF;
-	}
+//	}
 
 	print_debug("loguje sie to jabber_plugin %s %s\n",config_var_get(jabber_handler, "jid"), config_var_get(jabber_handler, "password"));
 
