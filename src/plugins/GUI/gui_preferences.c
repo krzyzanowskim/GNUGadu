@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.9 2003/04/04 08:58:35 zapal Exp $ */
+/* $Id: gui_preferences.c,v 1.10 2003/04/04 14:04:32 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -6,6 +6,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include "support.h"
+#include "signals.h"
 #include "plugins.h"
 #include "gui_preferences.h"
 #include "gui_support.h"
