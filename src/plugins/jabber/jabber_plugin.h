@@ -66,9 +66,4 @@ typedef struct {
 
 void ggadu_jabber_save_history (gchar *to, gchar *txt);
 
-GGaduContact *user_in_list (gchar *jid, GSList *list);
-
-/*#define user_in_userlist(x) user_in_list (x, userlist)
-   #define user_in_rosterlist(x) user_in_list (x, rosterlist)*/
-
 #endif

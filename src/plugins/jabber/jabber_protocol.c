@@ -25,9 +25,24 @@ void action_queue_del (waiting_action *action)
   g_free (action);
 }
 
-void action_roster_add_result (LmConnection *connection, LmMessage *message, gpointer data)
+void action_roster_add_result (LmConnection *connection, LmMessage *message, gpointer id)
 {
-    signal_emit ("jabber", "gui show message", g_strdup (_("Contact added")), "main-gui");
+    LmMessage *m = lm_message_new_with_sub_type (id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
+    signal_emit ("jabber", "gui show message", g_strdup (_("Roster list updated")), "main-gui");
+    lm_connection_send (connection, m, NULL);
+    lm_message_unref(m);
+
+}
+
+void action_roster_remove_result (LmConnection *connection, LmMessage *message, gpointer data)
+{
+    gchar *id = (gchar *)data;
+
+    jabber_data.userlist = ggadu_userlist_remove_id(jabber_data.userlist, id);
+    ggadu_repo_del_value ("jabber", id);
+    //GGaduContact_free(k);
+    signal_emit ("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
+    signal_emit ("jabber", "gui show message", g_strdup (_("Contact removed from roster")), "main-gui");
 }
 
 /*void action_subscribe (LmConnection *connection, LmMessage *message, gpointer data)

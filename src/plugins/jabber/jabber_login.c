@@ -121,7 +121,7 @@ gpointer jabber_login_connect (gpointer status)
         lm_connection_register_message_handler (connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE,
 							LM_HANDLER_PRIORITY_NORMAL);
     }
-    
+   
     
 	if (!message_handler) {
 		message_handler = lm_message_handler_new (message_cb, NULL, NULL);

@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.4 2003/12/20 23:17:18 krzyzak Exp $ */
+/* $Id: support.h,v 1.5 2004/01/05 00:05:33 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -94,6 +94,10 @@
 gboolean is_in_status (gint status, GSList *list);
 
 void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist);
+
+GSList *ggadu_userlist_remove_id(GSList *userlist, gchar *id);
+
+GGaduContact *ggadu_find_contact_in_userlist (GSList * list,gchar * id);
 
 gboolean str_has_suffix (const gchar  *str, const gchar  *suffix);
 

@@ -12,7 +12,8 @@ void action_queue_del (waiting_action *action);
 void jabber_change_status (enum states status);
 void jabber_fetch_roster (void);
 
-void action_roster_add_result (LmConnection *connection, LmMessage *message, gpointer data);
+void action_roster_add_result (LmConnection *connection, LmMessage *message, gpointer id);
+void action_roster_remove_result (LmConnection *connection, LmMessage *message, gpointer data);
 
 void action_search_form (LmConnection *connection, LmMessage *message, gpointer data);
 void action_search_result (LmConnection *connection, LmMessage *message, gpointer data);

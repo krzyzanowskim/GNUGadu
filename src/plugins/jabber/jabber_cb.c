@@ -164,9 +164,7 @@ LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connecti
 				k->status = JABBER_STATUS_UNAVAILABLE;
 
 				if (descr)
-				{
 					k->status_descr = g_strdup (descr);
-				}
 
 				break;
 			}
@@ -284,9 +282,7 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 
 	while (child)
 	{
-		gchar *jid;
-		gchar *name;
-		gchar *subs;
+		gchar *jid, *name, *subs;
 		GGaduContact *k = NULL;
 
 		jid = (gchar *) lm_message_node_get_attribute (child, "jid");
@@ -299,30 +295,33 @@ LmHandlerResult iq_roster_cb (LmMessageHandler * handler, LmConnection * connect
 		if (strchr (jid, '/'))
 			strchr (jid, '/')[0] = '\0';
 
-		print_debug ("jabber: roster: %s -> %s with %s\n", jid, name, subs);
+		print_debug ("jabber: roster: %s -> %s with %s", jid, name, subs);
 
-/*		if (!strcmp (subs, "remove"))
+        /* REMOVE */
+		if (subs && (!strcmp (subs, "remove")))
 		{
-			GSList *list = jabber_data.rosterlist;
+            return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+        }
+/*			GSList *list = jabber_data.userlist;
 			while (list)
 			{
 				k = (GGaduContact *) list->data;
-				print_debug ("%p\n", k, jid);
+            
 				if (!ggadu_strcasecmp (k->id, jid))
 				{
-					if (k->nick)
-						g_free (k->nick);
+					//if (k->nick)
+					//	g_free (k->nick);
                     
-					jabber_data.rosterlist = g_slist_remove (jabber_data.rosterlist, k);
-					jabber_data.userlist = g_slist_remove (jabber_data.userlist, k);
-					ggadu_repo_del_value ("jabber", k->id);
-					g_free (k->id);
-					g_free (k);
+					//jabber_data.userlist = g_slist_remove (jabber_data.userlist, k);
+					//ggadu_repo_del_value ("jabber", k->id);
+					//g_free (k->id);
+					//g_free (k);
 					break;
 				}
 				list = list->next;
 			}
-            lm_message_node_unref(node);
+            //lm_message_node_unref(node);
+            //signal_emit ("jabber", "gui send userlist", jabber_data.userlist, "main-gui");
 			return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 		}
 */

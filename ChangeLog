@@ -1,3 +1,9 @@
+04.12.2003
+- more work with jabber protocol plugin, soon will be finished (jabber/krzak)
+- ggadu_userlist_remove_id(GSList *userlist, gchar *id);
+  GGaduContact *ggadu_find_contact_in_userlist (GSList * list,gchar * id);
+  (support.c) (core/krzak)
+
 03.12.2003
 - fixed strang baheviour when show/hide inactive button pressed many times (GUI/THrull)
 - non-existent emoticons will be ignored (GUI/THrull)

@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.8 2003/11/25 23:52:30 krzyzak Exp $ */
+/* $Id: support.c,v 1.9 2004/01/05 00:05:31 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -66,7 +66,41 @@ void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist)
 	}
 }
 
+GSList *ggadu_userlist_remove_id(GSList *userlist, gchar *id) {
 
+    GSList *slistmp = userlist;
+    
+    g_return_val_if_fail (userlist != NULL, NULL);
+    g_return_val_if_fail (id != NULL, NULL);
+
+    while (slistmp) 
+    { 
+	GGaduContact *k = slistmp->data;
+	
+        if (!ggadu_strcasecmp(k->id,id)) {
+            return g_slist_remove(userlist,k);
+        }
+    slistmp = slistmp->next;
+    }
+
+    return NULL;	
+}
+
+GGaduContact *ggadu_find_contact_in_userlist (GSList * list,gchar * id)
+{
+    GSList *tmp = list;
+    GGaduContact *k;
+
+    while (list)
+      {
+	  k = (GGaduContact *) tmp->data;
+	  if (!ggadu_strcasecmp (k->id, id))
+	      return k;
+	  list = list->next;
+      }
+
+    return NULL;
+}
 
 gboolean str_has_suffix (const gchar  *str, const gchar  *suffix) {
   int str_len = 0;
@@ -443,5 +477,3 @@ gpointer ggadu_find_extension(GGaduPlugin *handler,gint type)
 	
 	return NULL;
 }
-
-
