@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.63 2005/01/03 15:51:02 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.64 2005/01/04 15:38:20 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -390,7 +390,7 @@ void gui_create_tree()
 					NULL);
 
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(users_treestore));
-	
+	gtk_widget_set_name(GTK_WIDGET(treeview),"GGaduTreeView");
 	model = GTK_TREE_MODEL(users_treestore);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model), 3, GTK_SORT_ASCENDING);
 	
