@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.132 2004/12/26 00:10:53 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.133 2004/12/26 13:23:50 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1174,9 +1174,12 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 				   gdk_x11_get_xatom_by_name_for_display(display, "_NET_NUMBER_OF_DESKTOPS"),
 				   0, G_MAXLONG, False, XA_CARDINAL, &type, &format, &nitems, &bytes_after, &data);
 
-		print_debug("WIRTUALNYCH DESKTOPOW JEST %d", data[0]);
-		number_of_workspaces = data[0];
-		XFree(data);
+		if (data)
+		{
+		    number_of_workspaces = data[0];
+		    print_debug("WIRTUALNYCH DESKTOPOW JEST %d", data[0]);
+		    XFree(data);
+		}
 	}
 
 	if (number_of_workspaces > 1)
