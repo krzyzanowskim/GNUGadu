@@ -1,3 +1,6 @@
+1.03.2003
+- we don't need change icon signal anymore (tlen/gui/THrull)
+
 31.03.2003
 - real fix of change status icon works with GG_STATUS_FRIENDS_MASK (gui/jabber/gadu-gadu/THrull)
 - fixed change status icon (tlen/gadu-gadu/jabber/krzak)

@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.4 2003/04/01 00:24:29 thrulliq Exp $ */
+/* $Id: gui_handlers.c,v 1.5 2003/04/01 09:15:40 thrulliq Exp $ */
 
 #include <gtk/gtk.h>
 
@@ -269,26 +269,6 @@ void handle_disconnected(GGaduSignal *signal)
     gtk_tree_sortable_sort_column_changed(GTK_TREE_SORTABLE(model));
 }
 	
-void handle_change_icon(GGaduSignal *signal)
-{
-    gui_protocol	 *gp = NULL;
-    GdkPixbuf		 *image = NULL;
-    GtkWidget		 *status_image;
-    GGaduStatusPrototype *sp = signal->data;
-
-    gp = gui_find_protocol(signal->source_plugin_name,protocols);
-		
-    g_return_if_fail(gp != NULL);
-    	    
-    image = create_pixbuf(sp->image);
-
-    /* zmiana obrazka na porzadany */
-    status_image = gtk_bin_get_child(GTK_BIN(gp->statuslist_eventbox));
-	    
-    gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), image);
-}
-
-
 void handle_show_search_results(GGaduSignal *signal)
 {
     GSList *list = signal->data;
@@ -306,7 +286,6 @@ void handle_status_changed(GGaduSignal *signal)
     gp = gui_find_protocol(signal->source_plugin_name,protocols);
     g_return_if_fail(gp != NULL);
 
-//    status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
     sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status);
     g_return_if_fail(sp != NULL);
     	    

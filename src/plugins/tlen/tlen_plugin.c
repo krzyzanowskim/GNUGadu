@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.5 2003/04/01 00:24:32 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.6 2003/04/01 09:15:42 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -708,7 +708,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		{    
 		    GGaduDialog *d = ggadu_dialog_new();
 		    GGaduKeyValue *kv = NULL; 
-		    GGaduStatusPrototype *status;
+		    GGaduStatusPrototype *_sp;
 		    GSList *tmp = NULL;
 		    
 		    /* Wyszukiwanie StatusPrototype :-D */
@@ -723,7 +723,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 			
 			    if ((sp) && (sp->status == session->status))
 			    {
-				status = sp;
+				_sp = sp;
 				break;
 			    }
 			    
@@ -744,9 +744,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		    kv->type = VAR_STR;
 		    
 		    d->optlist = g_slist_append(d->optlist, kv);
-		    d->user_data = status;
+		    d->user_data = _sp;
 		    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
-		    signal_emit(GGadu_PLUGIN_NAME, "gui change icon", status, "main-gui");    
+		    signal_emit(GGadu_PLUGIN_NAME, "gui status changed", _sp->status, "main-gui"); 
 		}
 		else 
 		{

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.3 2003/03/24 19:05:18 zapal Exp $ */
+/* $Id: gui_main.c,v 1.4 2003/04/01 09:15:41 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -54,7 +54,6 @@ gui_signal_handler handlers[] = {
 	{"gui notify", handle_notify},
 	{"gui disconnected", handle_disconnected},
 	{"gui show search results", handle_show_search_results},
-	{"gui change icon", handle_change_icon},
 	{"gui status changed", handle_status_changed},
 	{NULL, NULL}
 };
@@ -207,12 +206,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     register_signal(gui_handler,"gui disconnected"); 
     register_signal(gui_handler,"gui show dialog"); 
     
-    /*
-     * SIGNAL : gui change icon
-     * zmienia ikone statusu na ta z dostarzonego StatusPrototype
-     */
-    register_signal(gui_handler,"gui change icon"); 
-
     /* pokazuje okno z tekstem przeslanym, nic wiêcej */
     register_signal(gui_handler,"gui show window with text"); 
 
