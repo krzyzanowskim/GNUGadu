@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.49 2004/01/10 13:59:53 shaster Exp $ */
+/* $Id: jabber_plugin.c,v 1.50 2004/01/10 19:38:46 shaster Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -589,12 +589,21 @@ gpointer user_search_action (gpointer user_data)
 	  return NULL;
       }
 
+    /* try 'search_server' from config */
     if (!(server = ggadu_config_var_get (jabber_handler, "search_server")))
       {
-	  server = ggadu_config_var_get (jabber_handler, "jid");
-	  if (server && (server = strchr (server, '@')))
-		server++;
+	  /* if not, try 'server' from config */
+	  if (!(server = ggadu_config_var_get (jabber_handler, "server")))
+	    {
+		/* if not, search for server in 'jid' */
+		server = ggadu_config_var_get (jabber_handler, "jid");
+		if (server && (server = g_strstr_len (server, strlen(server), "@")))
+		  server++;
+	    }
       }
+
+    if (!server || !*server)
+	server = NULL;
 
     d = ggadu_dialog_new ();
     ggadu_dialog_set_title (d, _("Jabber search: server"));
