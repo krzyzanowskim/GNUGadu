@@ -1,5 +1,6 @@
 14.01.2004
 - fixed msg_body_color variable saving (GUI/THrull)
+- fixes with reconnect and private mode (gadu-gadu/krzak)
 
 13.01.2004
 - fixed connecting using HUB server to get Gadu-Gadu server IP address (gadu-gadu/krzak)
