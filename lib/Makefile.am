@@ -31,9 +31,9 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gg2_core.pc
 
 all:
-	@echo "/* This file is generated automatically. Do not edit. */\n" > $(top_builddir)/lib/gg2_core.h
-	@echo "#ifndef GG2_CORE_H\n" >> $(top_builddir)/lib/gg2_core.h
-	@echo "#define GG2_CORE_H\n" >> $(top_builddir)/lib/gg2_core.h
+	@echo "/* This file is generated automatically. Do not edit. */" > $(top_builddir)/lib/gg2_core.h
+	@echo "#ifndef GG2_CORE_H" >> $(top_builddir)/lib/gg2_core.h
+	@echo "#define GG2_CORE_H" >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/config.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/gg-types.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/dialog.h >> $(top_builddir)/lib/gg2_core.h
@@ -44,4 +44,4 @@ all:
 	@cat $(top_builddir)/lib/plugins.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/signals.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/unified-types.h >> $(top_builddir)/lib/gg2_core.h
-	@echo "#endif\n" >> $(top_builddir)/lib/gg2_core.h
+	@echo "#endif" >> $(top_builddir)/lib/gg2_core.h
