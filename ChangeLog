@@ -1,3 +1,6 @@
+27.03.2003
+- sms fix for ERA (Heldore)
+
 25.03.2003
 - some labels are noe selectable (GUI/THrull)
 - segv fixed in gui_user_view_refresh (GUI/THrull)
