@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.41 2004/09/28 14:01:33 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.42 2004/10/13 10:51:29 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -42,6 +42,7 @@ gpointer jabber_login_connect(gpointer status)
 	gchar *server = NULL;
 
 	g_static_mutex_lock(&connect_mutex);
+	
 	if (!(jid = g_strdup(ggadu_config_var_get(jabber_handler, "jid"))))
 	{
 		g_warning("I want jid!");

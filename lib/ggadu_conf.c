@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.23 2004/09/29 13:22:16 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.24 2004/10/13 10:51:28 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -400,7 +400,7 @@ void ggadu_config_set_filename(GGaduPlugin * plugin_handler, gchar * config_file
 	print_debug("core : config_init_register for %s\n", plugin_handler->name);
 	
 	dir = g_path_get_dirname(config_file);
-	if (!g_file_test(dir,G_FILE_TEST_EXISTS) || !g_file_test(dir,G_FILE_TEST_IS_DIR))
+	if (!g_file_test(dir,G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
 	{
 	    mkdir(dir,0700);
 	}

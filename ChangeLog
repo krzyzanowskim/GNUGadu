@@ -1,3 +1,6 @@
+13.10.2004
+- try to reconnect jabber connection three times before disconnect (jabber/krzak)
+
 08.10.2004
 - chat window change icon to notify about new message (GUI/krzak)
 - fixed begin conference chat using ctrl or shift modifier (GUI/krzak)
