@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.h,v 1.6 2004/12/20 09:15:17 krzyzak Exp $ */
+/* $Id: dockapp_plugin.h,v 1.7 2005/02/17 16:52:43 andyx_x Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -30,6 +30,16 @@ enum
 {
     GGADU_DOCKAPP_CONFIG_PROTOCOL,
     GGADU_DOCKAPP_CONFIG_VISIBLE
+};
+
+enum 
+{
+	GGADU_DOCKAPP_PROTOCOL,
+	GGADU_DOCKAPP_USERFONT,	
+	GGADU_DOCKAPP_COLOR_ONLINE,
+	GGADU_DOCKAPP_COLOR_AWAY,	
+	GGADU_DOCKAPP_COLOR_OFFLINE,	
+	GGADU_DOCKAPP_COLOR_BACK,	
 };
 
 #define GGADU_DOCKAPP_STATUS_ONLINE	1

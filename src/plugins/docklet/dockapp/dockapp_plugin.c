@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.28 2005/02/16 12:10:33 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.29 2005/02/17 16:52:43 andyx_x Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -35,6 +35,7 @@
 
 
 GGaduPlugin *handler;
+static gchar *dockapp_configdir = NULL;
 
 GdkGC *gc;
 GtkWidget *da = NULL;
@@ -53,6 +54,7 @@ static GdkColor clAway = { 0, 65535, 3000, 65535 };
 static GdkColor clblack = { 0, 0, 0, 0 };
 static GdkColor clOnline = { 0, 3000, 3000, 65535 };
 static GdkColor clOffline = { 0, 65535, 3000, 3000 };
+static GdkColor clBackground = { 0, 0, 0, 0 };
 
 
 //Przyciski
@@ -265,17 +267,78 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == g_quark_from_static_string("dockapp status changed"))
 	{
 		gchar *plugin_name = g_strdup(g_slist_nth_data(sigdata, 0));
-		/* stop if wrong protocol */
-//		if (ggadu_strcasecmp(plugin_name, "gadu-gadu"))
-//		{
-//			g_free(plugin_name);
-//			return;
-//		}
+		/* stop if no protocol */
+		if (ggadu_strcasecmp(plugin_name, "None") == 0)
+		{
+			g_free(plugin_name);
+			return;
+		}
 		icon1_img = g_slist_nth_data(sigdata, 1);
 		draw_pixmap();
 		redraw();
 		g_free(plugin_name);
 		return;
+	}
+
+	/* update config */
+	if (signal->name == g_quark_from_static_string("update config"))
+	{
+		GGaduDialog *dialog = signal->data;
+		GSList *tmplist = ggadu_dialog_get_entries(dialog); 
+		
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
+		{
+			while (tmplist)
+			{
+				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
+
+				switch (kv->key)
+				{
+					case GGADU_DOCKAPP_USERFONT:
+					print_debug("changing var setting userfont to %s\n", kv->value);
+					ggadu_config_var_set(handler, "userfont", kv->value);
+					gtk_widget_modify_font(da,pango_font_description_from_string(kv->value));
+					gdk_window_shape_combine_mask((da->window), source_mask, 0, 0);
+					break; 		
+					
+					case GGADU_DOCKAPP_PROTOCOL:
+					print_debug("changing var setting protocol to %s\n", ((GSList *) kv->value)->data);
+					ggadu_config_var_set(handler, "protocol", ((GSList *) kv->value)->data);
+					break; 		
+					
+					case GGADU_DOCKAPP_COLOR_ONLINE:
+					print_debug("changing var setting online color to %s\n", kv->value);
+					ggadu_config_var_set(handler, "color_online", kv->value);
+					gdk_color_parse (kv->value, &clOnline);
+					break; 		
+					
+					case GGADU_DOCKAPP_COLOR_AWAY:
+					print_debug("changing var setting away color to %s\n", kv->value);
+					ggadu_config_var_set(handler, "color_away", kv->value);
+					gdk_color_parse (kv->value, &clAway);
+					break; 		
+
+					case GGADU_DOCKAPP_COLOR_OFFLINE:
+					print_debug("changing var setting offline color to %s\n", kv->value);
+					ggadu_config_var_set(handler, "color_offline", kv->value);
+					gdk_color_parse (kv->value, &clOffline);
+					break; 		
+					
+					case GGADU_DOCKAPP_COLOR_BACK:
+					print_debug("changing var setting back color to %s\n", kv->value);
+					ggadu_config_var_set(handler, "color_back", kv->value);
+					gdk_color_parse (kv->value, &clBackground);
+					break; 		
+
+				}
+				
+				tmplist = tmplist->next;
+			}
+			
+			ggadu_config_save(handler);
+			draw_pixmap();
+			redraw();
+		}
 	}
 }
 
@@ -292,10 +355,9 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 	print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
 
 	/* stop if no dockapp_protocol set or notify from other protocol */
-	// skoro nie ma jeszcze konfiguracyjnego okienka
-//	dockapp_protocol = ggadu_config_var_get(handler, "dockapp_protocol");
-//	if (!dockapp_protocol || ggadu_strcasecmp(dockapp_protocol, repo_name))
-//		return;
+	dockapp_protocol = ggadu_config_var_get(handler, "protocol");
+	if (!dockapp_protocol || ( ggadu_strcasecmp(dockapp_protocol, "All")  && ggadu_strcasecmp(dockapp_protocol, repo_name  )))
+		return;
 
 	/* stop if unknown contact */
 	if ((k = ggadu_repo_find_value(repo_name, key)) == NULL)
@@ -303,12 +365,13 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 
 
 	/* find protocol in repo */
+	
 	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2);
 	while (index)
 	{
 		p = ggadu_repo_find_value("_protocols_", key2);
 		utf = to_utf8("ISO-8859-2", p->display_name);
-		if (!ggadu_strcasecmp(utf, dockapp_protocol))
+		if (!ggadu_strcasecmp(utf, repo_name))
 			break;
 		index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2, index);
 	}
@@ -358,6 +421,47 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 	redraw();
 }
 
+gpointer user_preferences_action(gpointer user_data)
+{
+	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Dockapp plugin configuration"), "update config"); 
+	GSList *protocol_names = NULL;g_slist_append(protocol_names, "All" );
+	gpointer key2 = NULL, index = NULL;	
+	gchar * utf;
+	GGaduProtocol *p = NULL;
+
+
+	protocol_names = g_slist_append(protocol_names, "All" );	
+	if ( strcmp(ggadu_config_var_get(handler, "protocol"),"All" ) == 0 ) 
+		protocol_names = g_slist_prepend(protocol_names, "All" );		
+	
+	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2);
+	while (index)
+	{
+		p = ggadu_repo_find_value("_protocols_", key2);
+		utf = to_utf8("ISO-8859-2", p->display_name);
+		index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *) & key2, index);
+		protocol_names = g_slist_append(protocol_names, utf);		
+		if ( strcmp(ggadu_config_var_get(handler, "protocol"),utf ) == 0 ) 
+			protocol_names = g_slist_prepend(protocol_names, utf );		
+		
+	}
+	protocol_names = g_slist_append(protocol_names,"None");	
+	if ( strcmp(ggadu_config_var_get(handler, "protocol"),"None" ) == 0 ) 
+		protocol_names = g_slist_prepend(protocol_names, "None" );		
+
+	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_PROTOCOL, _("Notify on protocol"), VAR_LIST, protocol_names, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_USERFONT, _("User status font"), VAR_FONT_CHOOSER, ggadu_config_var_get(handler, "userfont"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_COLOR_ONLINE, _("Online status color"), VAR_COLOUR_CHOOSER, ggadu_config_var_get(handler, "color_online"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_COLOR_AWAY, _("Away status color"), VAR_COLOUR_CHOOSER, ggadu_config_var_get(handler, "color_away"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_COLOR_OFFLINE, _("Offline status color"), VAR_COLOUR_CHOOSER, ggadu_config_var_get(handler, "color_offline"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_DOCKAPP_COLOR_BACK, _("Background color"), VAR_COLOUR_CHOOSER, ggadu_config_var_get(handler, "color_back"), VAR_FLAG_ADVANCED);
+
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui"); 	
+
+	g_slist_free(protocol_names); 
+
+	return NULL;
+}
 
 
 //Funkcja startowa pluginu, exportowana,musi byc
@@ -395,19 +499,24 @@ void start_plugin()
 	pText = gtk_widget_create_pango_layout(da,NULL);
 	gtk_widget_realize(da);
 
-
+	//ustwawiamy kolory
+	gdk_color_parse (ggadu_config_var_get(handler, "color_online"), &clOnline);
+	gdk_color_parse (ggadu_config_var_get(handler, "color_away"), &clAway);
+	gdk_color_parse (ggadu_config_var_get(handler, "color_offline"), &clOffline);
+	gdk_color_parse (ggadu_config_var_get(handler, "color_back"), &clBackground);
 
 	//Opcje graficzne okna
 	gc = gdk_gc_new(da->window);
 	
 	// pixmapa zawierajaca to z czego bedziemy kopiowac	oraz maske dockapp-a
 	source_pixmap = gdk_pixmap_create_from_xpm_d((status_dockapp->window), &(source_mask), NULL, dockapp_xpm); 		
-	gtk_widget_modify_font(da,pango_font_description_from_string("Sans bold 16"));			
+	gdk_gc_set_rgb_fg_color(gc, &clBackground);
+	gdk_draw_rectangle(source_pixmap, gc, TRUE, 4, 4, 56, 56);	
+	gtk_widget_modify_font(da,pango_font_description_from_string("Sans bold 16"));
 	pText = gtk_widget_create_pango_layout(da,"X");
-	pango_layout_set_text (pText,"X",-1);
 	gdk_gc_set_rgb_fg_color(gc, &clred);
 	gdk_draw_layout(source_pixmap,gc, btnred.x , btnred.y, pText);
-	gtk_widget_modify_font(da,pango_font_description_from_string("Sans 10"));	
+	gtk_widget_modify_font(da,pango_font_description_from_string(ggadu_config_var_get(handler, "userfont")));
 	
 	//Pixmapa - na niej nalezy wykonywac wszystkie rysunki
 	//A dopiero potem przerysowaæ za pomoc± redraw()
@@ -442,6 +551,14 @@ void start_plugin()
 	register_signal(handler, "docklet set icon");
 	register_signal(handler, "docklet set default icon");
 	ggadu_repo_watch_add(NULL, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT, notify_callback);
+
+	GGaduMenu *root = ggadu_menu_create();
+	GGaduMenu *item_tl = ggadu_menu_add_item(root, "_Dockapp", NULL, NULL);
+		
+	ggadu_menu_add_submenu(item_tl, ggadu_menu_new_item(_("_Preferences"), user_preferences_action, NULL));
+
+	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", root, "main-gui"); 	
+
 }
 
 
@@ -455,12 +572,24 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);	/* It must be here */
 	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Docklet-dockapp2"));
 	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
-	ggadu_config_var_add(handler, "dockapp_protocol", VAR_STR);
-	ggadu_config_var_add(handler, "dockapp_visible", VAR_BOOL);
-
-	path = g_build_filename(config->configdir, "config", NULL);
+	
+	if (g_getenv("HOME_ETC"))
+		dockapp_configdir = g_build_filename(g_getenv("HOME_ETC"), "gg2", NULL);
+	else
+		dockapp_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL); 	
+	
+	path = g_build_filename(dockapp_configdir, "dockapp", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
 	g_free(path);
+	
+	ggadu_config_var_add_with_default(handler, "protocol", VAR_STR, "All");
+//	ggadu_config_var_add(handler, "visible", VAR_BOOL);
+	ggadu_config_var_add_with_default(handler, "userfont", VAR_STR, "Sans 10");
+	ggadu_config_var_add_with_default(handler, "color_online", VAR_STR, "#0B0BFF");
+	ggadu_config_var_add_with_default(handler, "color_away", VAR_STR, "#FF0BFF");	
+	ggadu_config_var_add_with_default(handler, "color_offline", VAR_STR, "#FF0B0B");
+	ggadu_config_var_add_with_default(handler, "color_back", VAR_STR, "#EAEA75");
+	
 	if (!ggadu_config_read(handler))
 		g_warning(_("Unable to read configuration file for plugin %s"), GGadu_PLUGIN_NAME);
 
