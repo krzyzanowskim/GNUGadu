@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.h,v 1.6 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: GUI_plugin.h,v 1.7 2004/10/13 14:47:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -34,6 +34,8 @@ gboolean nick_list_pressed(GtkWidget * widget, GdkEventKey * event, gpointer use
 gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath *arg1, GtkTreeViewColumn *arg2, gpointer user_data);
 
 gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean cur_sel, gpointer user_data);
+
+void nick_list_row_changed2(GtkTreeModel *treemodel,GtkTreePath *arg1,GtkTreeIter *arg2,gpointer user_data);
 
 GtkWidget *create_status_menu(gui_protocol * gp, GtkWidget * status_image);
 

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.82 2004/10/08 12:22:05 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.83 2004/10/13 14:47:53 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -74,6 +74,12 @@ void set_selected_users_list(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 
 }
 
+void nick_list_row_changed2(GtkTreeModel *model,GtkTreePath *path, GtkTreeIter *iter, gpointer user_data)
+{
+    print_debug("nick_list_row_changed2");
+    nick_list_row_changed(NULL,model,path,FALSE,user_data);
+}
+
 gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean cur_sel, gpointer user_data)
 {
     GtkTreeIter iter;
@@ -88,17 +94,18 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
     gchar *plugin_name = NULL;
     GGaduContact *k = NULL;
         
+    print_debug("nick_list_row_changed");
     gtk_tree_model_get_iter(model, &iter, path);
 
     if (!tree)
-	{
+    {
 		plugin_name = g_object_get_data(G_OBJECT(user_data), "plugin_name");
 		gp = gui_find_protocol(plugin_name, protocols);
-	}
-	else
-	{
+    }
+    else
+    {
 		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 3, &gp, -1);
-	}
+    }
 
 	gtk_tree_model_get(model, &iter, 2, &k, -1);
 
@@ -153,7 +160,9 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 		{
 			GGaduStatusPrototype *sp;
 			gint status;
+			
 			print_debug("nick_list_row_changed");
+			
 			status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 			sp = gui_find_status_prototype(gp->p, (gint) status);
 

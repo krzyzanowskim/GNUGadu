@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.49 2004/09/28 14:01:32 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.50 2004/10/13 14:47:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -230,6 +230,7 @@ void gui_list_add(gui_protocol * gp)
 	gint status;
 
 	g_return_if_fail(gp != NULL);
+	if (!gp) return;
 
 	if (!notebook)
 	{
@@ -247,6 +248,8 @@ void gui_list_add(gui_protocol * gp)
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(users_liststore), 2, GTK_SORT_ASCENDING);
 
 	model = gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(users_liststore));
+	g_signal_connect(G_OBJECT(model),"row-changed",G_CALLBACK(nick_list_row_changed2),users_liststore);
+	
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(model));
 	g_object_unref(model);
 
@@ -257,7 +260,7 @@ void gui_list_add(gui_protocol * gp)
 
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 	gtk_tree_selection_set_select_function(selection, nick_list_row_changed, users_liststore, NULL);
-
+	
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(treeview), FALSE);
 
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), GTK_SELECTION_MULTIPLE);
@@ -347,6 +350,7 @@ void gui_tree_add(gui_protocol * gp)
 	g_return_if_fail(gp != NULL);
 
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+
 	gtk_tree_store_append(GTK_TREE_STORE(users_treestore), &iter, NULL);
 	gtk_tree_store_set(GTK_TREE_STORE(users_treestore), &iter, 0, NULL, 1,
 			   g_strdup_printf("%s (0/0)", gp->p->display_name), 3, gp, -1);
@@ -381,6 +385,7 @@ void gui_create_tree()
 	GtkWidget *add_info_label_desc;
 	GtkWidget *eventbox;
 	GtkWidget *frame;
+	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 	
 	vbox = gtk_vbox_new(FALSE, 0);
@@ -395,6 +400,9 @@ void gui_create_tree()
 					NULL);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(users_treestore), 3, GTK_SORT_ASCENDING);
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(users_treestore));
+	model = GTK_TREE_MODEL(users_treestore);
+	g_signal_connect(G_OBJECT(model),"row-changed",G_CALLBACK(nick_list_row_changed2),users_treestore);
+	
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(treeview), FALSE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), GTK_SELECTION_MULTIPLE);
 

@@ -1,4 +1,4 @@
-/* $Id: gtkanimlabel.c,v 1.13 2004/01/28 23:40:02 shaster Exp $ */
+/* $Id: gtkanimlabel.c,v 1.14 2004/10/13 14:47:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -519,8 +519,6 @@ static gint gtk_anim_label_button_press(GtkWidget * widget, GdkEventButton * eve
 
 	char *plain = (char *) pango_layout_get_text(anim_label->layout);
 	gtk_clipboard_set_text(gtk_widget_get_clipboard(GTK_WIDGET(anim_label), GDK_SELECTION_CLIPBOARD), plain, -1);
-
-	g_print("BUTTON PRESS %s\n", plain);
     }
 
     return FALSE;
