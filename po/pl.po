@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.56 2004/04/06 21:52:47 krzyzak Exp $
+# $Id: pl.po,v 1.57 2004/04/09 21:19:02 thrulliq Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-04-02 20:24+0200\n"
+"POT-Creation-Date: 2004-04-09 00:20+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -66,7 +66,7 @@ msgstr "core : próba wy³adowania nie za³adowanej wtyczki %s\n"
 msgid "Couldn't find pixmap file: %s"
 msgstr "Nie mo¿na odnale¼æ pliku piksmapy: %s"
 
-#: src/plugins/GUI/GUI_plugin.c:130
+#: src/plugins/GUI/GUI_plugin.c:129
 msgid ""
 "\n"
 "[not in userlist]"
@@ -74,43 +74,43 @@ msgstr ""
 "\n"
 "[nie ma Ciê w kontaktach]"
 
-#: src/plugins/GUI/GUI_plugin.c:169 src/plugins/GUI/gui_userview.c:715
+#: src/plugins/GUI/GUI_plugin.c:168 src/plugins/GUI/gui_userview.c:715
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/GUI_plugin.c:664
+#: src/plugins/GUI/GUI_plugin.c:663
 msgid "/GNU Gadu/_Preferences"
 msgstr "/GNU Gadu/_Ustawienia"
 
-#: src/plugins/GUI/GUI_plugin.c:665
+#: src/plugins/GUI/GUI_plugin.c:664
 msgid "/GNU Gadu/"
 msgstr "/GNU Gadu/"
 
-#: src/plugins/GUI/GUI_plugin.c:666
+#: src/plugins/GUI/GUI_plugin.c:665
 msgid "/GNU Gadu/_About"
 msgstr "/GNU Gadu/_Informacje o"
 
-#: src/plugins/GUI/GUI_plugin.c:667
+#: src/plugins/GUI/GUI_plugin.c:666
 msgid "/GNU Gadu/_Quit"
 msgstr "/GNU Gadu/Za_koñcz"
 
-#: src/plugins/GUI/GUI_plugin.c:736
+#: src/plugins/GUI/GUI_plugin.c:735
 msgid "Open preferences window"
 msgstr "Otwiera okno ustawieñ"
 
-#: src/plugins/GUI/GUI_plugin.c:738
+#: src/plugins/GUI/GUI_plugin.c:737
 msgid "Exit program"
 msgstr "Koñczy dzia³anie programu"
 
-#: src/plugins/GUI/GUI_plugin.c:742
+#: src/plugins/GUI/GUI_plugin.c:741
 msgid "Show/hide inactive users"
 msgstr "Wy¶wietla/ukrywa nieaktywnych u¿ytkowników"
 
-#: src/plugins/GUI/GUI_plugin.c:746
+#: src/plugins/GUI/GUI_plugin.c:745
 msgid "Show/hide descriptions on userlist"
 msgstr "Wy¶wietla/ukrywa opisy na li¶cie kontaktów"
 
-#: src/plugins/GUI/GUI_plugin.c:799 src/plugins/GUI/GUI_plugin.c:833
+#: src/plugins/GUI/GUI_plugin.c:798 src/plugins/GUI/GUI_plugin.c:836
 #, c-format
 msgid "New message from %s"
 msgstr "Nowa wiadomo¶æ od %s"
@@ -138,7 +138,7 @@ msgstr ""
 "%s\n"
 "Zainstaluj wsparcie dla odpowiedniego jêzyka w aspell"
 
-#: src/plugins/GUI/gui_chat.c:1220 src/plugins/GUI/gui_chat.c:1222
+#: src/plugins/GUI/gui_chat.c:1221 src/plugins/GUI/gui_chat.c:1223
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2135
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2157
 msgid "Me"
@@ -277,7 +277,7 @@ msgstr "Automatyczne otwieranie okna rozmowy"
 
 #: src/plugins/GUI/gui_preferences.c:636
 msgid "Automatically raise chat window"
-msgstr "Automatyczne otwieranie okna rozmowy"
+msgstr "Automatyczne przywo³ywanie okna rozmowy"
 
 #: src/plugins/GUI/gui_preferences.c:641
 msgid "Use username instead of \"Me\" in chat window"

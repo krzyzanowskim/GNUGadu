@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-04-02 20:24+0200\n"
+"POT-Creation-Date: 2004-04-09 00:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,49 +61,49 @@ msgstr ""
 msgid "Couldn't find pixmap file: %s"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:130
+#: src/plugins/GUI/GUI_plugin.c:129
 msgid ""
 "\n"
 "[not in userlist]"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:169 src/plugins/GUI/gui_userview.c:715
+#: src/plugins/GUI/GUI_plugin.c:168 src/plugins/GUI/gui_userview.c:715
 msgid "(None)"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:664
+#: src/plugins/GUI/GUI_plugin.c:663
 msgid "/GNU Gadu/_Preferences"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:665
+#: src/plugins/GUI/GUI_plugin.c:664
 msgid "/GNU Gadu/"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:666
+#: src/plugins/GUI/GUI_plugin.c:665
 msgid "/GNU Gadu/_About"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:667
+#: src/plugins/GUI/GUI_plugin.c:666
 msgid "/GNU Gadu/_Quit"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:736
+#: src/plugins/GUI/GUI_plugin.c:735
 msgid "Open preferences window"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:738
+#: src/plugins/GUI/GUI_plugin.c:737
 msgid "Exit program"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:742
+#: src/plugins/GUI/GUI_plugin.c:741
 msgid "Show/hide inactive users"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:746
+#: src/plugins/GUI/GUI_plugin.c:745
 msgid "Show/hide descriptions on userlist"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:799 src/plugins/GUI/GUI_plugin.c:833
+#: src/plugins/GUI/GUI_plugin.c:798 src/plugins/GUI/GUI_plugin.c:836
 #, c-format
 msgid "New message from %s"
 msgstr ""
@@ -128,7 +128,7 @@ msgid ""
 "Try install appropriate language support with aspell"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1220 src/plugins/GUI/gui_chat.c:1222
+#: src/plugins/GUI/gui_chat.c:1221 src/plugins/GUI/gui_chat.c:1223
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2135
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2157
 msgid "Me"
