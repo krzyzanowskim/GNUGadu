@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.67 2004/01/21 23:46:07 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.68 2004/01/22 22:34:15 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -1003,17 +1003,17 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	button_close = gtk_button_new_from_stock("gtk-close");
 	button_stick = gtk_toggle_button_new_with_mnemonic(_("S_tick"));
 
-	gtk_button_set_relief(GTK_BUTTON(button_autosend), GTK_RELIEF_NONE);
+	/* gtk_button_set_relief(GTK_BUTTON(button_autosend), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_send), GTK_RELIEF_NONE);
-	gtk_button_set_relief(GTK_BUTTON(button_close), GTK_RELIEF_NONE);
+	gtk_button_set_relief(GTK_BUTTON(button_close), GTK_RELIEF_NONE); */
 	gtk_button_set_relief(GTK_BUTTON(button_find), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_stick), GTK_RELIEF_NONE);
 
-	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_autosend, FALSE, FALSE, 0);
-	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_send, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_close, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 10);
-	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_autosend, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(hbox_buttons), button_send, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_close, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 10);
+	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 0);
 
 
 	g_object_set_data(G_OBJECT(session->chat), "autosend_button", button_autosend);
