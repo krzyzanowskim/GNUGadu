@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.2 2004/05/25 16:26:33 thrulliq Exp $ */
+/* $Id: ggadu_types.h,v 1.3 2004/05/25 16:37:54 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -127,7 +127,6 @@ typedef struct
  */
 typedef struct
 {
-    gint current_status;
     gchar *display_name;
     gchar *img_filename;	/* ¶cie¿ka do obrazka z etykiet± na zak³adkê */
     GSList *statuslist;		/* lista dostêpnych statusÃ³w danego protoko³u */
