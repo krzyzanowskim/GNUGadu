@@ -1,9 +1,9 @@
-/* $Id: ignore.c,v 1.6 2004/12/26 14:00:33 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.7 2004/12/26 22:26:11 shaster Exp $ */
 
 /* 
  * Ignore: plugin code for GNU Gadu 2 
  * 
- * Copyright (C) 2001-2004 GNU Gadu Team 
+ * Copyright (C) 2001-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

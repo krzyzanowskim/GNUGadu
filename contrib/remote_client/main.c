@@ -1,9 +1,9 @@
-/* $Id: main.c,v 1.3 2004/01/28 23:39:12 shaster Exp $ */
+/* $Id: main.c,v 1.4 2004/12/26 22:23:15 shaster Exp $ */
 
 /* 
  * Example: client for GNU Gadu 2 remote plugin 
  * 
- * Copyright (C) 2001-2004 GNU Gadu Team 
+ * Copyright (C) 2001-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

@@ -1,9 +1,9 @@
-/* $Id: dbus_plugin.h,v 1.10 2004/11/03 07:53:43 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.11 2004/12/26 22:23:19 shaster Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
  * 
- * Copyright (C) 2001-2004 GNU Gadu Team 
+ * Copyright (C) 2001-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

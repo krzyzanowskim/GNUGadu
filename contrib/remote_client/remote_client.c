@@ -1,9 +1,9 @@
-/* $Id: remote_client.c,v 1.6 2004/03/27 08:23:21 krzyzak Exp $ */
+/* $Id: remote_client.c,v 1.7 2004/12/26 22:23:15 shaster Exp $ */
 
 /* 
  * Example: client for GNU Gadu 2 remote plugin
  * 
- * Copyright (C) 2001-2004 GNU Gadu Team 
+ * Copyright (C) 2001-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 

@@ -1,9 +1,9 @@
-/* $Id: ggadu_repo.c,v 1.2 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_repo.c,v 1.3 2004/12/26 22:23:16 shaster Exp $ */
 
 /* 
  * GNU Gadu 2 
  * 
- * Copyright (C) 2001-2004 GNU Gadu Team 
+ * Copyright (C) 2001-2005 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 
