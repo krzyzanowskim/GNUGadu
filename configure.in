@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.14 2003/05/30 13:08:56 shaster Exp $
+dnl $Id: configure.in,v 1.15 2003/06/02 10:32:04 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -12,25 +12,33 @@ AC_SUBST(VERSION)
 
 AC_PROG_CC
 AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_INTLTOOL
+
+AC_PATH_PROG(GMAKE, gmake, no)
+
+if test "x$GMAKE" = "xno"; then
+	AC_PATH_PROG(MAKE, make, no)
+
+	if test "x$MAKE" = "xno"; then
+		AC_MSG_ERROR([make ])
+	fi
+else
+	MAKE="$GMAKE"
+fi
 
 AC_DISABLE_STATIC
 
-AC_PROG_INTLTOOL
-
 AM_PROG_LIBTOOL
-
-LIBTOOL="$LIBTOOL --silent"
-
-AC_PROG_INSTALL
-
-AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 AC_PROG_AWK
 
+LIBTOOL="$LIBTOOL --silent"
+
 AC_HEADER_STDC
 AC_STDC_HEADERS
-
 
 AC_C_CONST
 AC_STRUCT_TM
