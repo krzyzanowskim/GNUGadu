@@ -1,3 +1,6 @@
+11.06.2004
+- timestamping notices (GUI/shasta)
+
 10.06.2004
 - --without-openssl disable OpenSSL support with included libgadu (krzak)
 - fixed conneferce chats initialization (krzak/gadu-gadu)

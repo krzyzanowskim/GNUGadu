@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.101 2004/06/11 01:25:33 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.102 2004/06/11 13:33:02 shaster Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1345,7 +1345,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	}
 	 else
 	{
-		notice_message_txt = g_strdup_printf("*** ");
+		notice_message_txt = g_strdup_printf("%s *** ", get_timestamp(0));
 		gtk_text_buffer_insert_with_tags_by_name(buf, &iter, notice_message_txt, -1, self ? "outgoing_header" : "incoming_header",
 						 NULL);
 		g_free(notice_message_txt);
