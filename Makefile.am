@@ -22,7 +22,9 @@ EXTRA_DIST = \
 	doc/emoticons.def \
 	doc/problems \
 	gg2.desktop \
-	gg2.spec
+	gg2.spec \
+	gg2-devel.SlackBuild \
+	slack-desc
 #	config.rpath
 #	mkinstalldirs
 		
