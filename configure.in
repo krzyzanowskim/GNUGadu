@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.54 2004/04/02 12:39:03 krzyzak Exp $
+dnl $Id: configure.in,v 1.55 2004/04/02 16:43:21 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -215,7 +215,11 @@ if test "x$with_gadu" = "xyes"; then
     PKG_CHECK_MODULES(OSSL,openssl,[],[])
     prev=`pwd`
     cd src/plugins/gadu_gadu/libgadu
-    ./configure || exit 1
+    
+    (
+    ./configure CFLAGS="$CFLAGS" || exit 1
+    )
+    
     cd $prev
 dnl 
 dnl 	if test "$want_gadu" = "no"; then 

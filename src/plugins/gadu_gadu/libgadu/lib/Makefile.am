@@ -1,6 +1,5 @@
 pkgdir = $(libdir)
 pkg_LTLIBRARIES = libgadu.la
-noinst_LIBRARIES =
 
 libgadu_ladir = $(includedir)
 libgadu_la_SOURCES = common.c \
@@ -10,11 +9,17 @@ libgadu_la_SOURCES = common.c \
 	libgadu.c \
 	obsolete.c \
 	pubdir50.c \
-	pubdir.c
+	pubdir.c \
+	compat.h \
+	libgadu-config.h \
+	libgadu.h
+
+
+EXTRA_DIST=libgadu-config.h.in
 	
-	
-libgadu_la_HEADERS = compat.h libgadu-config.h libgadu.h
-libgadu_la_CFLAGS = @CFLAGS_LIBGADU@ -I. -I.. -Wall
+#libgadu_la_HEADERS = libgadu.h
+#noinst_libgadu_la_HEADERS = libgadu.h
+libgadu_la_CFLAGS = @CFLAGS_LIBGADU@ -I. -I. -I$(top_srcdir)/src/plugins/gadu_gadu/libgadu/lib -I$(top_srcdir)/src/plugins/gadu_gadu/libgadu -Wall
 
 libgadu_la_LIBADD = @LIBS_LIBGADU@
-libgadu_la_LDFLAGS = -version-info 3:0:0
+libgadu_la_LDFLAGS = -version-info 3:0:0 -static

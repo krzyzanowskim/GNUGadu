@@ -26,7 +26,6 @@ EXTRA_DIST = \
 #	config.rpath
 #	mkinstalldirs
 		
-
 dist-hook:
 	if test -d doc/gg2-doc; then \
 	  mkdir $(distdir)/doc/gg2-doc; \
@@ -42,3 +41,7 @@ libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
 ACLOCAL_AMFLAGS = -I m4
+
+all: config.h
+	(cd $(top_srcdir)/src/plugins/gadu_gadu/libgadu/; make)
+	$(MAKE) $(AM_MAKEFLAGS) all-recursive
