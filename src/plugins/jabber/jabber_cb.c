@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.40 2004/05/18 14:55:57 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.41 2004/05/21 07:54:40 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -57,8 +57,8 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 	lm_connection_unregister_message_handler(connection, message_handler, LM_MESSAGE_TYPE_MESSAGE);
 	message_handler = NULL;
 	
+	jabber_data.status = JABBER_STATUS_UNAVAILABLE;
 	signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
-	jabber_data.connected = 0;
 
 }
 
@@ -117,14 +117,10 @@ void connection_auth_cb(LmConnection * connection, gboolean success, gpointer st
 {
 	if (!success)
 	{
-		signal_emit("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");
-		signal_emit("jabber", "gui disconnected", NULL, "main-gui");
 		lm_connection_close(connection, NULL);
-		jabber_data.connected = 0;
 		return;
 	}
 
-	jabber_data.connected = 2;
 	print_debug("jabber: Authentication succeeded. Changing status...\n");
 	jabber_fetch_roster(status);
 }
@@ -136,12 +132,9 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
 
 	if (!success)
 	{
-		print_debug("jabber: Connection failed.\n");
-		signal_emit("jabber", "gui disconnected", NULL, "main-gui");
+		jabber_disconnect_cb(jabber_data.connection,LM_DISCONNECT_REASON_OK, NULL);
 		return;
 	}
-
-	jabber_data.connected = 1;
 
 	jid = g_strdup(ggadu_config_var_get(jabber_handler, "jid"));
 	if ((tmp = g_strstr_len(jid, strlen(jid), "@")) != NULL)

@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.28 2004/05/18 14:55:57 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.29 2004/05/21 07:54:40 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -77,21 +77,22 @@ void jabber_change_status(enum states status)
 	gchar *show_xa = "xa";
 	gchar *show_dnd = "dnd";
 	gchar *show_chat = "chat";
-
-	if ((status == jabber_data.status) && (!jabber_data.status_descr))
+	
+	/*if ((status == jabber_data.status) && (!jabber_data.status_descr))*/
+	if ((status == jabber_data.status))
 		return;
 		
+	if ((status == JABBER_STATUS_UNAVAILABLE) && lm_connection_close(jabber_data.connection, NULL))
+	{
+		signal_emit("jabber", "gui disconnected", NULL, "main-gui");
+		return;
+	}
+
 	/* connect if switched to any other than unavailable */	
 	if ((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status != JABBER_STATUS_UNAVAILABLE) && 
 	    (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection) || !lm_connection_is_authenticated(jabber_data.connection)))
 	{
 		g_thread_create(jabber_login_connect, (gpointer) status, FALSE, NULL);
-		return;
-	}
-	
-	if ((status == JABBER_STATUS_UNAVAILABLE) && lm_connection_close(jabber_data.connection, NULL))
-	{
-		signal_emit("jabber", "gui disconnected", NULL, "main-gui");
 		return;
 	}
 	

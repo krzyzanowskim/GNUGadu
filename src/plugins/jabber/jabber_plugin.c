@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.78 2004/05/18 14:55:57 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.79 2004/05/21 07:54:40 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -195,7 +195,7 @@ gpointer user_remove_action(gpointer user_data)
 
 		if (k)
 		{
-			if (jabber_data.connected == 2)
+			if (lm_connection_is_authenticated(jabber_data.connection))
 			{
 				LmMessage *m;
 				LmMessageNode *node;
@@ -409,7 +409,6 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				g_free(jabber_data.status_descr);
 
 			jabber_data.status_descr = g_strdup(((GGaduKeyValue *) (d->optlist->data))->value);
-			/*jabber_login(jabber_data.status);*/
 			jabber_change_status(jabber_data.status);
 		}
 	}
@@ -429,12 +428,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
 						VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
-			/*jabber_login(jabber_data.status);*/
 			jabber_change_status(jabber_data.status);
 			return;
 		}
 
-		/*jabber_login(sp->status);*/
 		jabber_change_status(sp->status);
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
@@ -445,7 +442,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 	{
 		GGaduMsg *msg = signal->data;
 
-		if (msg && jabber_data.connected == 2)
+		if (msg && lm_connection_is_authenticated(jabber_data.connection))
 		{
 			LmMessage *m;
 			gboolean result;
@@ -748,7 +745,7 @@ gpointer user_search_action(gpointer user_data)
 	GGaduDialog *dialog = NULL;
 	gchar *server;
 
-	if (jabber_data.connected != 2)
+	if (!lm_connection_is_authenticated(jabber_data.connection))
 	{
 		signal_emit("jabber", "gui show warning", g_strdup(_("You have to be connected to perform searching!")),
 			    "main-gui");
@@ -858,11 +855,10 @@ void start_plugin()
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
 
-	if (ggadu_config_var_get(jabber_handler, "autoconnect") && !jabber_data.connected)
+	if (ggadu_config_var_get(jabber_handler, "autoconnect"))
 	{
 		print_debug("jabber: autoconneting");
 		jabber_change_status(JABBER_STATUS_AVAILABLE);
-		/*jabber_login(JABBER_STATUS_AVAILABLE);*/
 	}
 
 }
@@ -877,6 +873,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	jabber_handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Jabber protocol"));
 
 	register_signal_receiver(jabber_handler, (signal_func_ptr) jabber_signal_recv);
+	ggadu_repo_add("jabber");
 
 	path = g_build_filename(config->configdir, "jabber", NULL);
 	ggadu_config_set_filename(jabber_handler, path);
@@ -896,7 +893,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	if (!ggadu_config_read(jabber_handler))
 		g_warning(_("Unable to read configuration file for plugin jabber"));
 
-	ggadu_repo_add("jabber");
 
 	jabber_data.status = JABBER_STATUS_UNAVAILABLE;
 
