@@ -1,3 +1,6 @@
+19.05.2003
+- fixed reason encoding in config (gadu-gadu/shasta)
+
 15.05.2003
 - kludge for tlen plugin strange behaviour, taking login() from libutil
   (thus, segfaulting). Changed login() to ggadu_tlen_login() (tlen/shasta)

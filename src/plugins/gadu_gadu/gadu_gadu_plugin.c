@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.51 2003/05/10 18:21:01 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.52 2003/05/19 20:41:45 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1544,7 +1544,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	
 	    	    GGaduKeyValue *kv = NULL;
 		    if (d->optlist) {
-			gchar *desc_utf = NULL, *desc_cp = NULL;
+			gchar *desc_utf = NULL, *desc_cp = NULL, *desc_iso = NULL;
 			gint _status = sp->status;
 		    
 			if (config_var_get(handler, "private")) 
@@ -1555,11 +1555,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			print_debug(" %d %d\n ",GG_STATUS_INVISIBLE_DESCR,sp->status);
 		    
 			desc_utf = kv->value;
+			/* do sesji */
 			from_utf8("CP1250",desc_utf,desc_cp);
-			config_var_set(handler, "reason", desc_cp);
+			/* do konfiga */
+			from_utf8("ISO-8859-2",desc_utf,desc_iso);
+			config_var_set(handler, "reason", desc_iso);
+
 			if (!gg_change_status_descr(session, _status, desc_cp))
 			    signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
 			g_free(desc_cp);
+			g_free(desc_iso);
 		    }
 		
 		    if (sp->status == GG_STATUS_NOT_AVAIL_DESCR) {
@@ -1618,21 +1623,21 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    config_var_set(handler, "autoconnect", kv->value);
 				    break;
 			case GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS: {
-						/* change string description to int value depending on current locales so it cannot be hardcoded eh.. */
-						GSList *statuslist_tmp = p->statuslist;
-						gint val = -1;
-						
-						while (statuslist_tmp) {
-								GGaduStatusPrototype *sp = (GGaduStatusPrototype *)statuslist_tmp->data;
-								if (!g_strcasecmp(sp->description,kv->value)) {
-										val = sp->status;
-								}
-								statuslist_tmp = statuslist_tmp->next;
-						}
+				    /* change string description to int value depending on current locales so it cannot be hardcoded eh.. */
+				    GSList *statuslist_tmp = p->statuslist;
+				    gint val = -1;
+
+				    while (statuslist_tmp) {
+					GGaduStatusPrototype *sp = (GGaduStatusPrototype *)statuslist_tmp->data;
+					if (!g_strcasecmp(sp->description,kv->value)) {
+					    val = sp->status;
+					}
+					statuslist_tmp = statuslist_tmp->next;
+				    }
 						
 				    print_debug("changing var setting status to %d\n", val);
 				    config_var_set(handler, "status", (gpointer)val);
-						}
+				    }
 				    break;
 			case GGADU_GADU_GADU_CONFIG_REASON:
 				    {
