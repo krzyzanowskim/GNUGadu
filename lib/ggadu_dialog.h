@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.8 2004/09/17 09:19:17 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.9 2004/10/18 15:03:15 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -45,13 +45,15 @@ typedef struct
 {
 	gchar *title;
 	gchar *callback_signal;
-	gint response;
 	GSList *optlist;	/* List of GGaduKeyValue's */
 	gpointer user_data;
 	gint type;
 	guint flags; /* GGaduDialogFlags */
 	
 	gboolean(*watch_func) (gpointer);
+	
+	/* private */
+	gint response;
 } GGaduDialog;
 
 #define ggadu_dialog_new(type, title, callback_signal) \

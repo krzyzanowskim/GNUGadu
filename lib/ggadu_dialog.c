@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.c,v 1.7 2004/05/24 14:28:13 krzyzak Exp $ */
+/* $Id: ggadu_dialog.c,v 1.8 2004/10/18 15:03:14 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -42,6 +42,7 @@ GGaduDialog *ggadu_dialog_new_full(guint type, gchar * title, gchar * callback_s
 	return dialog;
 }
 
+/* preselected option have to be added at the top of list in VAR_LIST */
 void ggadu_dialog_add_entry(GGaduDialog * dialog, gint key, gchar * desc, gint type, gpointer value, gint flags)
 {
 	GGaduKeyValue *kv = g_new0(GGaduKeyValue, 1);
@@ -60,6 +61,7 @@ void ggadu_dialog_add_entry(GGaduDialog * dialog, gint key, gchar * desc, gint t
 
 	dialog->optlist = g_slist_append(ggadu_dialog_get_entries(dialog), kv);
 }
+
 
 GSList *ggadu_dialog_get_entries(GGaduDialog * dialog)
 {

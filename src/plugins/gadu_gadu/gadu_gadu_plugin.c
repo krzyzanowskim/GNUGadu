@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.193 2004/10/15 14:14:39 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.194 2004/10/18 15:03:16 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -860,11 +860,15 @@ gpointer user_preferences_action(gpointer user_data)
 	while (tmplist)
 	{
 		GGaduStatusPrototype *sp = tmplist->data;
+		
 		if ((!sp->receive_only) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR) &&
 		    (sp->status != GG_STATUS_NOT_AVAIL))
 			statuslist_names = g_list_append(statuslist_names, sp->description);
+			
+		/* set selected as first in list */
 		if (sp->status == (gint) ggadu_config_var_get(handler, "status"))
 			statuslist_names = g_list_prepend(statuslist_names, sp->description);
+			
 		tmplist = tmplist->next;
 	}
 
