@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.103 2004/06/25 20:37:33 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.104 2004/06/29 20:21:47 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -792,6 +792,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	GtkWidget *bas_image;
 	GtkWidget *bs_hbox = gtk_hbox_new(FALSE, 0);
 	GtkWidget *bs_label = gtk_label_new_with_mnemonic(_("_Send"));
+	GtkTooltips *tips = gtk_tooltips_new();
 	GtkTextBuffer *buf = NULL;
 	gchar *wintitle = NULL;
 	gchar *confer_title = NULL;
@@ -1158,6 +1159,13 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_clear, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_stick, FALSE, FALSE, 2);
 	gtk_box_pack_end(GTK_BOX(hbox_buttons), button_find, FALSE, FALSE, 0);
+	
+	gtk_tooltips_set_tip(tips, button_send, _("Send"), "");
+	gtk_tooltips_set_tip(tips, button_autosend, _("Auto send"), "");
+	gtk_tooltips_set_tip(tips, button_close, _("Close"), "");
+	gtk_tooltips_set_tip(tips, button_clear, _("Clear"), "");
+	gtk_tooltips_set_tip(tips, button_stick, _("Stick"), "");
+	gtk_tooltips_set_tip(tips, button_find, _("Find"), "");
 
 
 	g_object_set_data(G_OBJECT(session->chat), "autosend_button", button_autosend);
@@ -1174,6 +1182,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		gtk_container_add(GTK_CONTAINER(button_emoticons), create_image("emoticon.gif"));
 
 		gtk_box_pack_start(GTK_BOX(hbox_buttons), button_emoticons, FALSE, FALSE, 0);
+		gtk_tooltips_set_tip(tips, button_emoticons, _("Emoticons"), "");
 		g_signal_connect(button_emoticons, "clicked", G_CALLBACK(on_emoticons_clicked), session);
 	}
 
