@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.92 2004/09/24 09:18:33 krzyzak Exp $
+dnl $Id: configure.in,v 1.93 2004/10/06 08:07:51 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.6])
 
@@ -285,7 +285,7 @@ if test "x$with_gtkspell" != "xno"; then
     if test "$with_gtkspell" = "no"; then 
     	AC_MSG_ERROR([*** unable to find gtkspell (http://gtkspell.sourceforge.net) ***])
     fi
-    AC_PATH_PROG(pspell-config,pspell_config,"none")
+    AC_PATH_PROG(pspell_config,pspell-config,"none")
     if test "$pspell_config" = "none"; then 
     	AC_MSG_ERROR([*** unable to find pspell-config from aspell (http://aspell.net) ***])
     fi
