@@ -12,7 +12,7 @@ CORE and MAINTAINERS :
 
 also :
 	Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
-	Jakub Jankowski
+	Jakub Jankowski		<shasta@atn.pl>
 
 
 ----------------------------------------------------------------
@@ -53,13 +53,13 @@ sms
 		: HelDoRe
 		
 update		
-		: Jakub Jankowski
+		: Jakub Jankowski	<shasta@atn.pl>
 
 ----------------------------------------------------------------
 
 
 ----------------------------------------------------------------
--- THANKS FOR---------------------------------------------------
+-- THANKS FOR --------------------------------------------------
 ----------------------------------------------------------------
 Aflinta - gettext patch, testing
 Dwuziu  - testing
