@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.41 2003/06/09 00:55:36 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.42 2003/06/09 00:59:49 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -25,23 +25,30 @@ GtkWidget *chat_window = NULL;
 
 void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * page, guint page_num, gpointer user_data)
 {
-    GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (chat_window), "chat_notebook");
+    GtkWidget *chat_notebook = NULL;
     GtkWidget *chat = NULL;
     GtkWidget *lb = NULL;
     gchar *txt = NULL;
     gchar *txt2 = NULL;
+    
+    if (chat_window)
+    	chat_notebook = g_object_get_data (G_OBJECT (chat_window), "chat_notebook");
+	else return;
 
     if ((chat_notebook) && (chat_window))
 	chat = (GtkWidget *) gtk_notebook_get_nth_page (GTK_NOTEBOOK (chat_notebook), page_num);
+	else return;
 
     if (chat)
 	lb = g_object_get_data (G_OBJECT (chat), "tab_label_txt");
+	else return;
 
     if (lb)
       {
 	  txt = (gchar *) g_object_get_data (G_OBJECT (chat), "tab_label_txt_char");
 	  txt2 = (gchar *) g_object_get_data (G_OBJECT (chat), "tab_window_title_char");
       }
+	  else return;
 
     if ((txt != NULL) && (chat_window != NULL) && (lb != NULL) && (txt2 != NULL))
       {
