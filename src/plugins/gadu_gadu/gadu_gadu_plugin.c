@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.111 2004/01/11 14:42:31 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.112 2004/01/13 20:14:23 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -170,47 +170,53 @@ void gadu_gadu_enable_dcc_socket (gboolean state)
 gpointer gadu_gadu_login (gpointer desc, gint status)
 {
     struct gg_login_params p;
-    gchar *serveraddr = g_strdup((gchar *) ggadu_config_var_get (handler, "server"));
-    gchar **serv_addr = NULL;
+    gchar *server_addr_config = (gchar *) ggadu_config_var_get (handler, "server");
+    gchar *server_addr_ip = NULL;
+    gchar **server_addr_split = NULL;
 
-    if (connected)
-      {
+    if (connected) {
 	  gg_logoff (session);
 	  gg_free_session (session);
 	  connected = FALSE;
 	  return FALSE;
-      }
+    }
 
     gadu_gadu_enable_dcc_socket (TRUE);
 
     memset (&p, 0, sizeof (p));
-
     p.server_port = GG_DEFAULT_PORT;
-    if (!serveraddr)
-    {
-	serveraddr = g_strdup ("0.0.0.0");
-    }
+    p.uin = (int) ggadu_config_var_get (handler, "uin");
+    p.password = (gchar *) ggadu_config_var_get (handler, "password");
+    p.async = 1;
+    p.status_descr = desc;
+
+    if ((gint) ggadu_config_var_get (handler, "private") == 1)
+	p.status |= GG_STATUS_FRIENDS_MASK;
     else
+	p.status = status;
+
+    /* set server ip and port number */    
+    if (ggadu_config_var_check (handler, "server")) 
     {
-	  serv_addr = g_strsplit (serveraddr, ":", 2);
-
-	  if (serv_addr)
-	    {
-	    	if (serveraddr) 
-			g_free(serveraddr);
-			
-		serveraddr = g_strdup(serv_addr[0]);
-
-		if (serv_addr[1] != NULL)
-		    p.server_port = g_strtod (serv_addr[1], NULL);
-		else
-		    p.server_port = GG_DEFAULT_PORT;
-		    
-		g_strfreev(serv_addr);
-	    }
+	if ((server_addr_split = g_strsplit (server_addr_config, ":", 2)))
+	{
+	    if (server_addr_split[0]) server_addr_ip = g_strdup(server_addr_split[0]);
+	    if (server_addr_split[1]) p.server_port = g_strtod (server_addr_split[1], NULL);
+	    g_strfreev(server_addr_split);
+	}
+	
+    } else {
+	server_addr_ip = g_strdup ("0.0.0.0");
     }
 
-    /* jesli jest proxy zerzniete z ekg */
+    if (server_addr_ip)
+	p.server_addr = inet_addr (server_addr_ip);
+	
+    print_debug("server : %s %d",server_addr_ip,p.server_port);
+
+    g_free(server_addr_ip);
+
+    /* proxy setting taken from EKG project */
     if (ggadu_config_var_check (handler, "proxy"))
       {
 	  char **auth = array_make ((gchar *) ggadu_config_var_get (handler, "proxy"), "@", 0, 0, 0);
@@ -236,18 +242,6 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 
       }
 
-    p.uin = (int) ggadu_config_var_get (handler, "uin");
-    p.password = (gchar *) ggadu_config_var_get (handler, "password");
-    p.async = 1;
-    p.status = status;
-    p.status_descr = desc;
-
-    if ((gint) ggadu_config_var_get (handler, "private") == 1)
-	p.status |= GG_STATUS_FRIENDS_MASK;
-
-    if (serveraddr != NULL)
-	p.server_addr = inet_addr (serveraddr);
-
     if (!p.uin || (!p.password || !*p.password))
       {
 	  user_preferences_action (NULL);
@@ -260,21 +254,23 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	  return NULL;
       }
 
-    print_debug ("loguje sie GG# %d do serwera %s %d, status %d\n", (gint) ggadu_config_var_get (handler, "uin"), serveraddr,
-		 p.server_port, status);
-
-    g_free (serveraddr);
+    print_debug ("loguje sie - GG# %d status %d", (gint) ggadu_config_var_get (handler, "uin"), status);
 
     if (!(session = gg_login (&p)))
       {
-	  print_debug ("%s \t\t connection failed\n", GGadu_PLUGIN_NAME);
+	  print_debug ("%s \t\t connection failed", GGadu_PLUGIN_NAME);
 	  ggadu_gadu_gadu_disconnect_msg (NULL);
 	  return NULL;
       }
 
     /* do tego chyba przydal by sie jakis nasz wrapper choc tak naprawde nie jest potrzebny */
     source_chan = g_io_channel_unix_new (session->fd);
-    watch = g_io_add_watch (source_chan, G_IO_IN | G_IO_ERR | G_IO_HUP, test_chan, NULL);
+    
+//    if (!p.server_addr)
+//        watch = g_io_add_watch (source_chan, G_IO_IN | G_IO_ERR | G_IO_HUP | G_IO_OUT, test_chan, NULL);
+//    else
+	watch = g_io_add_watch (source_chan, G_IO_IN | G_IO_ERR | G_IO_HUP, test_chan, NULL);
+	
     return NULL;
 }
 
@@ -363,17 +359,17 @@ void ggadu_gg_save_history (gchar * to, gchar * txt)
 gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 {
     struct gg_event *e = NULL;
+    static gint prev_check = GG_CHECK_READ;
     GSList *slistmp = NULL;
     uint32_t *uins;
     GGaduNotify *notify = NULL;
     GGaduMsg *msg = NULL;
-    gint i, j;
     GSList *l = userlist;
-    static gint prev_check = GG_CHECK_READ;
+    gint i, j;
 
     /* w przypadku bledu/utraty polaczenia postap tak jak w przypadku disconnect */
     if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) ||
-	((condition & G_IO_HUP) && (session->state != GG_STATE_CONNECTING_GG)))
+	((condition & G_IO_HUP) && ((session->state != GG_STATE_CONNECTING_GG) && (session->check != GG_CHECK_WRITE)) ))
       {
 	  connected = FALSE;
 

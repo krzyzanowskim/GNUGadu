@@ -1,3 +1,6 @@
+13.01.2004
+- fixed connecting using HUB server to get Gadu-Gadu server IP address (gadu-gadu/krzak)
+
 12.01.2004
 - really fixed segfault when resizing chat window in tabbed mode (GUI/THrull)
 - resize chat window will grow history window instead input (GUI/Grzegorz Dabrowski)
