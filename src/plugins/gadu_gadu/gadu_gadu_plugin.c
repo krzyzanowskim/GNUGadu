@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.73 2003/06/19 18:04:56 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.74 2003/06/21 01:34:54 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -33,16 +33,17 @@ extern GGaduConfig *config;
 GGaduPlugin *handler;
 
 struct gg_session *session;
-struct gg_dcc *dcc_socket_get = NULL;
+struct gg_dcc *dcc_session_get = NULL;
+
+static gchar *dcc_send_request_filename = NULL;	/* nazwa pliku do wyslania */
 
 static gint connect_count = 0;
 
 static guint watch = 0;
+static guint watch_dcc_file = 0;
 gint http_watch = 0;
 
 GIOChannel *source_chan = NULL;
-GIOChannel *dcc_channel_send = NULL;
-GIOChannel *dcc_channel_get = NULL;
 
 gboolean connected = FALSE;
 
@@ -89,18 +90,18 @@ void ggadu_gadu_gadu_disconnect ()
       {
 	  GGaduContact *k = tmplist->data;
 	  if (k->status != GG_STATUS_NOT_AVAIL)
-	  {
-		  print_debug ("\t%s\n", k->id);
-		  k->status = GG_STATUS_NOT_AVAIL;
-		  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
-	  }
+	    {
+		print_debug ("\t%s\n", k->id);
+		k->status = GG_STATUS_NOT_AVAIL;
+		ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+	    }
 	  tmplist = tmplist->next;
       }
 
 //    ggadu_repo_enable_notification ();
 
     signal_emit (GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
-    
+
 }
 
 void ggadu_gadu_gadu_disconnect_msg (gchar * txt)
@@ -150,14 +151,18 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	  return FALSE;
       }
 
-    if (!dcc_socket_get)
+    if (!dcc_session_get)
       {
-	  dcc_socket_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
-	  gg_dcc_ip = inet_addr ("255.255.255.255");
-	  gg_dcc_port = dcc_socket_get->port;
+	  GIOChannel *dcc_channel_get = NULL;
 
-	  dcc_channel_get = g_io_channel_unix_new (dcc_socket_get->fd);
-	  watch = g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN | G_IO_HUP, test_chan_dcc, dcc_socket_get);
+	  dcc_session_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
+	  gg_dcc_ip = inet_addr ("255.255.255.255");
+	  gg_dcc_port = dcc_session_get->port;
+
+	  dcc_channel_get = g_io_channel_unix_new (dcc_session_get->fd);
+	  watch_dcc_file =
+	      g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc_get, dcc_session_get);
+
       }
 
     memset (&p, 0, sizeof (p));
@@ -340,7 +345,8 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
     static gint prev_check = GG_CHECK_READ;
 
     /* w przypadku b³êdu/utraty po³±czenia post±p tak jak w przypadku disconnect */
-    if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) || ((condition & G_IO_HUP) && (session->state != GG_STATE_CONNECTING_GG)))
+    if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) ||
+	((condition & G_IO_HUP) && (session->state != GG_STATE_CONNECTING_GG)))
       {
 	  connected = FALSE;
 
@@ -424,7 +430,39 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
       case GG_EVENT_MSG:
 	  print_debug ("you have message!\n");
 	  print_debug ("from: %d\n", e->event.msg.sender);
-	  print_debug ("body: %s\n", e->event.msg.message);
+	  print_debug ("Type: %d\n", e->event.msg.msgclass);
+
+	  if (e->event.msg.msgclass == GG_CLASS_CHAT)
+	    {
+		print_debug ("body: %s\n", e->event.msg.message);
+	    }
+	  else
+	      /* dcc part */
+	  if ((e->event.msg.msgclass == GG_CLASS_CTCP))
+	    {
+		struct gg_dcc *d = NULL;
+		gchar *idtmp = g_strdup_printf ("%d", e->event.msg.sender);
+		gchar **addr_arr = NULL;
+		GGaduContact *k = NULL;
+
+		print_debug ("somebody want to send us a file\n");
+
+		k = ggadu_repo_find_value ("gadu-gadu", idtmp);
+
+		addr_arr = g_strsplit (k->ip, ":", 2);
+
+		if (!addr_arr[0] || !addr_arr[1])
+		    return TRUE;
+
+		d = gg_dcc_get_file (inet_addr (addr_arr[0]), atoi (addr_arr[1]),
+				     (gint) config_var_get (handler, "uin"), e->event.msg.sender);
+
+		g_free (idtmp);
+		g_free (addr_arr[0]);
+		g_free (addr_arr[1]);
+		break;
+	    }
+	  /* end of dcc part */
 
 	  msg = g_new0 (GGaduMsg, 1);
 	  msg->id = g_strdup_printf ("%d", e->event.msg.sender);
@@ -563,7 +601,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		    GGaduContact *k = (GGaduContact *) l->data;
 
 		    if (!g_strcasecmp (k->id, notify->id))
-			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+			ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 
 		    l = l->next;
 		}
@@ -1098,80 +1136,186 @@ gpointer delete_userlist_action (gpointer user_data)
     return NULL;
 }
 
-gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer data)
+gboolean test_chan_dcc_get (GIOChannel * source, GIOCondition condition, gpointer data)
 {
     struct gg_event *e = NULL;
     struct gg_dcc *d = data;
 
     if (!(e = gg_dcc_watch_fd (d)))
       {
-	  return FALSE;
+	  if (d->type != GG_SESSION_DCC_SOCKET)
+	    {
+		gg_free_dcc (d);
+		print_debug("qylazimy staq albercik\n");
+		return FALSE;
+	    }
       }
 
     switch (e->type)
       {
+
       case GG_EVENT_DCC_NEW:
 	  {
 	      GIOChannel *ch = NULL;
-	      struct gg_dcc *dcc = e->event.dcc_new;
-	      print_debug ("GG_EVENT_DCC_NEW %ld\n", (guint32) d->uin);
-	      ch = g_io_channel_unix_new (dcc->fd);
-	      g_io_add_watch (ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc, dcc);
-	      gg_dcc_free (d);
-	      return FALSE;
-	  }
-	  break;
-      case GG_EVENT_DCC_CLIENT_ACCEPT:
-	  print_debug ("GG_EVENT_DCC_CLIENT_ACCEPT %ld\n", (guint32) d->uin);
-//                              if (d->uin != (gint)config_var_get(handler,"uin")) {
-//                                      gg_dcc_free(d);
-//                                      return FALSE;
-//                              }
-	  break;
-      case GG_EVENT_DCC_NEED_FILE_INFO:
-	  print_debug ("GG_EVENT_DCC_NEED_FILE_INFO\n");
-//                              return FALSE;
-	  break;
-      case GG_EVENT_DCC_NEED_FILE_ACK:
-	  {
-	      struct gg_file_info file_info = d->file_info;
-	      gchar *filename = file_info.filename;
-	      print_debug ("GG_EVENT_DCC_NEED_FILE_ACK %s\n", filename);
+	      struct gg_dcc *dcc_new = e->event.dcc_new;
 
+	      print_debug ("GG_EVENT_DCC_NEW %ld\n", (guint32) d->uin);
+	      ch = g_io_channel_unix_new (dcc_new->fd);
+	      watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc, dcc_new);
 	  }
+	  e->event.dcc_new = NULL;
+	  gg_event_free (e);
 	  break;
-      case GG_EVENT_DCC_DONE:
-	  print_debug ("GG_EVENT_DCC_DONE\n");
-	  gg_dcc_free (d);
-	  return FALSE;
-	  break;
+
       case GG_EVENT_DCC_ERROR:
 	  print_debug ("GG_EVENT_DCC_ERROR\n");
+
 	  switch (e->event.dcc_error)
 	    {
 	    case GG_ERROR_DCC_HANDSHAKE:
 		print_debug ("dcc_error_handshake\n");
-		if (d->state != GG_STATE_READING_ACK)
-		    return FALSE;
 		break;
 	    case GG_ERROR_DCC_NET:
 		print_debug ("dcc_error_network\n");
-		gg_dcc_free (d);
-		return FALSE;
 		break;
 	    case GG_ERROR_DCC_REFUSED:
 		print_debug ("dcc_error_refused\n");
-		gg_dcc_free (d);
-		return FALSE;
 		break;
 	    default:
 		print_debug ("dcc_error_unknown\n");
 		break;
 	    }
+
+	  gg_event_free (e);
+	  /* gg_dcc_free (d);              WHYYYYYYYYYYYYYYY
+	  return FALSE; */
 	  break;
       }
 
-    gg_event_free (d->event);
+	  if (d->check == GG_CHECK_READ)
+	    {
+		print_debug ("GG_CHECK_READ DCC_GET\n");
+		watch_dcc_file = g_io_add_watch (source, G_IO_IN | G_IO_ERR , test_chan_dcc_get, d);
+		return FALSE;
+	    }
+
+	  if (d->check == GG_CHECK_WRITE)
+	    {
+		print_debug ("GG_CHECK_WRITE DCC_GET\n");
+		watch_dcc_file = g_io_add_watch (source, G_IO_OUT | G_IO_ERR, test_chan_dcc_get, d);
+		return FALSE;
+	    }
+
+    return TRUE;
+}
+
+
+gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer data)
+{
+    struct gg_event *e = NULL;
+    struct gg_dcc *d = data;
+    static gint prev_check = -1;
+
+    if (!(e = gg_dcc_watch_fd (d)))
+      {
+	  if (d->type != GG_SESSION_DCC_SOCKET)
+	    {
+		gg_free_dcc (d);
+		print_debug("qylazimy staq albercik\n");
+		return FALSE;
+	    }
+      }
+
+    switch (e->type)
+      {
+      case GG_EVENT_DCC_CLIENT_ACCEPT:
+	  print_debug ("GG_EVENT_DCC_CLIENT_ACCEPT %ld %ld %ld\n", (guint32) d->uin, (guint32) d->peer_uin,
+		       config_var_get (handler, "uin"));
+	  gg_event_free (e);
+	  break;
+
+      case GG_EVENT_DCC_CALLBACK:
+	  print_debug ("GG_EVENT_DCC_CALLBACK\n");
+	  gg_dcc_set_type (d, GG_SESSION_DCC_SEND);
+	  gg_event_free (e);
+	  break;
+ 
+      case GG_EVENT_DCC_NEED_FILE_INFO:
+	  print_debug ("GG_EVENT_DCC_NEED_FILE_INFO\n");
+	  gg_dcc_fill_file_info (d, dcc_send_request_filename);
+	  gg_event_free (e);
+	  break;
+
+      case GG_EVENT_DCC_NEED_FILE_ACK: /* dotyczy odbierania plikow */
+	  {
+	      struct gg_file_info file_info = d->file_info;
+	      gchar *filename = file_info.filename;
+
+	      print_debug ("GG_EVENT_DCC_NEED_FILE_ACK %s\n", filename);
+
+	  }
+	  gg_event_free (e);
+	  break;
+
+      case GG_EVENT_DCC_DONE:
+	  print_debug ("GG_EVENT_DCC_DONE\n");
+	  gg_event_free (e);
+	  gg_dcc_free (d);
+	  signal_emit (GGadu_PLUGIN_NAME, "gui show message",g_strdup (_("File sent succesful")), "main-gui");
+	  return FALSE;
+	  break;
+
+      case GG_EVENT_DCC_ERROR:
+	  print_debug ("GG_EVENT_DCC_ERROR\n");
+
+	  switch (e->event.dcc_error)
+	    {
+	    case GG_ERROR_DCC_HANDSHAKE:
+		print_debug ("dcc_error_handshake\n");
+		if (d->state == GG_STATE_READING_FILE_ACK) {
+			signal_emit (GGadu_PLUGIN_NAME, "gui show message",g_strdup (_("File refused")), "main-gui");
+	  		gg_event_free (e);
+	  		gg_dcc_free (d);
+	  		return FALSE;
+		}
+		break;
+	    case GG_ERROR_DCC_NET:
+		print_debug ("dcc_error_network\n");
+		break;
+	    case GG_ERROR_DCC_REFUSED:
+		print_debug ("dcc_error_refused\n");
+		signal_emit (GGadu_PLUGIN_NAME, "gui show message",g_strdup (_("File refused")), "main-gui");
+		break;
+	    default:
+		print_debug ("dcc_error_unknown\n");
+		break;
+	    }
+
+	  gg_event_free (e);
+	  /* gg_dcc_free (d);           WHYYYYYYYYYYY
+	  return FALSE; */
+	  break;
+      }
+
+    if (prev_check != d->check)
+      {
+	  prev_check = d->check;
+
+	  if (d->check == GG_CHECK_READ)
+	    {
+		print_debug ("GG_CHECK_READ DCC\n");
+		watch_dcc_file = g_io_add_watch (source, G_IO_IN | G_IO_ERR , test_chan_dcc, d);
+		return FALSE;
+	    }
+
+	  if (d->check == GG_CHECK_WRITE)
+	    {
+		print_debug ("GG_CHECK_WRITE DCC\n");
+		watch_dcc_file = g_io_add_watch (source, G_IO_OUT | G_IO_ERR, test_chan_dcc, d);
+		return FALSE;
+	    }
+      } 
+
     return TRUE;
 }
 
@@ -1180,9 +1324,31 @@ gpointer send_file_action (gpointer user_data)
     GSList *users = (GSList *) user_data;
     GGaduContact *k = (GGaduContact *) users->data;
     GGaduDialog *d = NULL;
+    gint port;
+    gchar **addr_arr = NULL;
 
-    if (!k->ip || g_str_has_prefix (k->ip, "0.0.0.0"))
+    if (!connected || !k->ip || g_str_has_prefix (k->ip, "0.0.0.0"))
+      {
+	  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("You cannot send file to this person")),
+		       "main-gui");
+	  return NULL;
+      }
+
+    addr_arr = g_strsplit (k->ip, ":", 2);
+
+    if (!addr_arr[0] || !addr_arr[1])
 	return NULL;
+
+    port = atoi (addr_arr[1]);
+
+    if (port < 1)
+      {
+	  g_free (addr_arr[0]);
+	  g_free (addr_arr[1]);
+	  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("You cannot send file to this person")),
+		       "main-gui");
+	  return NULL;
+      }
 
     d = ggadu_dialog_new ();
 
@@ -1191,6 +1357,8 @@ gpointer send_file_action (gpointer user_data)
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONTACT, NULL, VAR_NULL, k, VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_SELECTED_FILE, _("Select File :"), VAR_FILE_CHOOSER, NULL,
 			    VAR_FLAG_NONE);
+
+    d->user_data = (gpointer) atoi ((char *) k->id);
 
     signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
@@ -1454,12 +1622,13 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 	  GSList *tmplist = d->optlist;
 
 	  gint uin = (gint) config_var_get (handler, "uin");
-	  struct gg_dcc *socket = NULL;
+	  struct gg_dcc *dcc_file_session = NULL;
 	  gchar **addr_arr = NULL;
 	  gint port = 0;
 	  guint32 ip = 0;
 	  gchar *filename = NULL;
 	  GGaduContact *k = NULL;
+	  GIOChannel *dcc_channel_file = NULL;
 
 	  if (d->response != GGADU_OK)
 	      return;
@@ -1496,18 +1665,30 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 	  print_debug ("SEND TO IP : %s %d\n", addr_arr[0], port);
 
 	  if (port <= 10)
-	      return;
+	    {
+		gg_dcc_request (session, (guint32) d->user_data);
+		dcc_send_request_filename = filename;
 
-	  socket = gg_dcc_send_file (ip, port, uin, atoi (k->id));
+	    }
+	  else
+	    {
 
-	  if (!socket)
-	      return;
+		dcc_file_session = gg_dcc_send_file (ip, port, uin, atoi (k->id));
 
-	  gg_dcc_fill_file_info (socket, filename);
+		if (!dcc_file_session)
+		    return;
 
-	  dcc_channel_send = g_io_channel_unix_new (socket->fd);
-	  g_io_add_watch (dcc_channel_send, G_IO_OUT | G_IO_ERR | G_IO_IN, test_chan_dcc, socket);
+		gg_dcc_fill_file_info (dcc_file_session, filename);
 
+		dcc_channel_file = g_io_channel_unix_new (dcc_file_session->fd);
+		watch_dcc_file =
+		    g_io_add_watch (dcc_channel_file, G_IO_OUT | G_IO_IN | G_IO_ERR, test_chan_dcc, dcc_file_session);
+	    }
+
+	  g_free (addr_arr[0]);
+	  g_free (addr_arr[1]);
+
+	  return;
       }
 
 

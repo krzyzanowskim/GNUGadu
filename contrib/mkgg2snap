@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 
 cd /tmp
 cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/ggadu co gg2

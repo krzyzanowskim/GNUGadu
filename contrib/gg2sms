@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! /usr/bin/perl
 
 # Konwersja danych o numerach adresowych z listy uzytkownikow  pluginu gadu-gadu
 # do listu pluginu SMS
