@@ -1,3 +1,6 @@
+09.03.2004
+- http://www.gnugadu.org
+
 29.02.2004
 - GUI user list can now show user descriptions under nicknames (THrull/GUI)
 - fixed fscked ggadu_config_var_set/add with use of default values (THrull/core)

@@ -1,4 +1,4 @@
-# $Revision: 1.10 $, $Date: 2004/01/14 19:43:20 $
+# $Revision: 1.11 $, $Date: 2004/03/09 10:31:28 $
 #
 # Conditional build:
 %bcond_with	arts
@@ -18,7 +18,7 @@ Group:		Applications/Communications
 #Source0:	http://gg.tiwek.com/gg2/snapshots/%{name}-%{_snap}.tar.bz2
 Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}%{_pre}.tar.bz2
 # Source0-md5:	0e24e1420d3b85822b871af953e12df6
-URL:		http://www.gadu.gnu.pl/
+URL:		http://www.gnugadu.org/
 %{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.7
@@ -501,6 +501,9 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
+Revision 1.11  2004/03/09 10:31:28  krzyzak
+http://www.gnugadu.org
+
 Revision 1.10  2004/01/14 19:43:20  krzyzak
 - update
 

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.39 2004/02/17 09:29:54 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.40 2004/03/09 10:31:40 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -673,7 +673,7 @@ void gui_about(GtkWidget * widget, gpointer data)
 	about_text =
 		g_strdup_printf(_
 				("<b>GNU Gadu %s</b>\n" "Copyright (C) 2001-2004 GNU Gadu Team\n" "License: GPL\n"
-				 "Homepage: http://www.gadu.gnu.pl/\n\n" "<b>Main Programmers:</b>\n"
+				 "Homepage: http://www.gnugadu.org/\n\n" "<b>Main Programmers:</b>\n"
 				 "Igor Popik &lt;thrull@slackware.pl&gt;\n"
 				 "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n" "<b>Also:</b>\n"
 				 "Bartosz Zapalowski\n" "Mateusz Papiernik\n" "HelDoRe\n" "Jakub 'shasta' Jankowski\n"
