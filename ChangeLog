@@ -3,6 +3,7 @@
 
 11.12.2003
 - userlist import/export work again (gadu-gadu/krzak)
+- threading enabled for jabber plugin (jabber/THrull)
 - userlist menu order changed (gadu-gadu/krzak)
 - setting status description fixes (jabber/krzak)
 - dockapp fixes (jarwyp/dockapp)
@@ -16,7 +17,7 @@
 - small fixes (emvi)
 
 25.11.2003
-- DEVEL <=>  HEAD merge (Thrull)
+- DEVEL <=>  HEAD merge (THrull)
 
 19.11.2003
 - fixed status notify with libgadu 1.4 (gadu-gadu/krzak) 
