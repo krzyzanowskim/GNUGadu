@@ -7,6 +7,7 @@ lib/ggadu_dialog.c
 src/plugins/GUI/GUI_plugin.c
 src/plugins/GUI/gui_chat.c
 src/plugins/GUI/gui_preferences.c
+src/plugins/GUI/gtkimhtml.c
 src/plugins/GUI/gui_main.c
 src/plugins/GUI/gui_search.c
 src/plugins/GUI/gui_userview.c
@@ -27,4 +28,5 @@ src/plugins/sms/sms_gui.c
 src/plugins/dbus/dbus_plugin.c
 src/plugins/aaway/aaway.c
 src/plugins/update/update_plugin.c
+src/plugins/ignore/ignore.c
 src/plugins/history/external/history_viewer.c
