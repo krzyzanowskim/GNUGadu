@@ -46,7 +46,7 @@ Dockapp		: emvi			<wamarek@poczta.onet.pl>
 
 XOSD 		
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
-
+		: Jakub Jankowski	<shasta@atn.pl>
 
 Sound-*		
 		: Igor Popik		<igipop@wsfiz.edu.pl>
@@ -55,6 +55,7 @@ remote
 		: Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
 
 sms
+		: Jakub Jankowski	<shasta@atn.pl>
 		: HelDoRe
 		
 update		

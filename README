@@ -9,7 +9,7 @@ To compile all plugins you need:
 - libtlen (http://www.libtlen.eu.org) - Tlen
 - Loudmouth 0.13 or newer (http://www.imendio.com/projects/loudmouth/) - Jabber
 - xosd (http://ignavus.net/software.html) - XOSD
-- esound (http://www.tux.org/~ricdude/EsounD.html
+- esound (http://www.tux.org/~ricdude/EsounD.html - sound-esd
 
 WARNING: perl support and remote plugin will compile/work only on Linux!
 

@@ -7,11 +7,12 @@ BEFORE 2.0:
 
 Later:
 - current status description text somewhere
-- docklet menu (??)
 - memory leaks audit (all)
 - sound configuration (all)
 - authorization dialogs (jabber/tlen)
 - jabber confference (jabber)
+
+(done)- docklet menu (??)
 (done)- jabber search (jabber)
 (done)- docklet should work in wmaker as dockapp (docklet)
 (done)- status caption not necessary in utf8 (gadu-gadu)
