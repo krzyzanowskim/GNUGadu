@@ -108,8 +108,6 @@ static gboolean check_idle_time()
 			{
 			    GGaduStatusPrototype *sp2;
 			    gchar *message = NULL;
-			    GGaduDialog *dialog;
-			    GGaduKeyValue *kv;
 			    gint newstatus;
 
 			    if (sp->status_description)
@@ -120,23 +118,12 @@ static gboolean check_idle_time()
 				message = g_strdup(ggadu_config_var_get(handler, "message"));
 			    }
 
-			    dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, NULL, NULL);
-			    
-			    kv = g_new0(GGaduKeyValue, 1);
-			    kv->value = (gpointer) g_strdup(message);
-			    kv->type = VAR_STR;
-			    
 			    newstatus = (gint)protocol->away_status->data;
-			    
-			    dialog->response = GGADU_OK;
-			    dialog->optlist = g_slist_append(dialog->optlist, kv);
-			    
 			    sp2 = ggadu_find_status_prototype(protocol, newstatus);
 			    sp2->status_description = message;
-			    dialog->user_data = sp2;
 			    
 			    print_debug("change from %d to %d",sp->status,newstatus);
-			    signal_emit(GGadu_PLUGIN_NAME, "change status descr", dialog, plugin->name);
+			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
 			    
 			    away_enabled = TRUE;
 			    
@@ -163,52 +150,23 @@ static gboolean check_idle_time()
 			if (sp && ggadu_is_in_status(sp->status, protocol->away_status))
 			{
 			    gchar *message = NULL;
-			    GGaduDialog *dialog;
-			    GGaduKeyValue *kv;
 			    GGaduStatusPrototype *sp2;
 			    gint newstatus;
 
-/*			    if (sp->status_description && 
-			        !strstr(sp->status_description,ggadu_config_var_get(handler, "message")))
-			    {
-				message = g_strdup(sp->status_description);
-			    }
-			    else if (!message_back || (strlen(message_back) <= 0))
-			    {
-				message = NULL;
-			    }
-			    else
-			    {
-				message = g_strdup(message_back);
-			    }
-*/
 			    if (sp->status_description && 
 			        !strstr(sp->status_description,ggadu_config_var_get(handler, "message")))
 			    {
 				message = g_strdup(sp->status_description);
 			    }
-//			    else
-//			    {
-//				message = ggadu_config_var_get(handler, "message");
-//			    }
-			    
-			    kv = g_new0(GGaduKeyValue, 1);
-			    kv->value = (gpointer) g_strdup(message);
-			    kv->type = VAR_STR;
-			    
-			    dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, NULL, NULL);
-			    dialog->response = GGADU_OK;
-			    dialog->optlist = g_slist_append(dialog->optlist, kv);
 			    
 			    newstatus = (gint)protocol->online_status->data;
 			    
 			    sp2 = ggadu_find_status_prototype(protocol, newstatus);
 			    sp2->status_description = message;
-			    dialog->user_data = sp2;
 			    
 			    
 			    print_debug("change from %d to %d",sp->status,newstatus);
-			    signal_emit(GGadu_PLUGIN_NAME, "change status descr", dialog, plugin->name);
+ 			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
 //			    g_free(message); 
 			}
 		    }
