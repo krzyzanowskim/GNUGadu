@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.2 2003/11/05 10:46:29 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.3 2003/11/25 23:41:59 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -275,9 +275,6 @@ GtkWidget *create_docklet()
 	gtk_container_add(GTK_CONTAINER(docklet), eventbox);
 	
 	g_signal_connect(G_OBJECT(docklet),"button_press_event",G_CALLBACK(docklet_clicked_cb),pixmap);
-	g_signal_connect(G_OBJECT(docklet), "destroy", G_CALLBACK(docklet_destroyed_cb), NULL);
-
-	g_object_ref(G_OBJECT(docklet));
 
 	gtk_widget_show_all(docklet);
 	

@@ -1,3 +1,5 @@
+/* $Id: dockapp_plugin.h,v 1.3 2003/11/25 23:40:30 thrulliq Exp $ */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
