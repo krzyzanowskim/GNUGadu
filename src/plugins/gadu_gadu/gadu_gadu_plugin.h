@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.7 2003/04/13 21:29:37 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.8 2003/06/09 01:20:46 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -7,7 +7,21 @@
 #  include <config.h>
 #endif
 
-enum {
+static GQuark CHANGE_STATUS_SIG;
+static GQuark CHANGE_STATUS_SIG;
+static GQuark CHANGE_STATUS_DESCR_SIG;
+static GQuark SEND_MESSAGE_SIG;
+static GQuark ADD_USER_SIG;
+static GQuark CHANGE_USER_SIG;
+static GQuark UPDATE_CONFIG_SIG;
+static GQuark SEARCH_SIG;
+static GQuark EXIT_SIG;
+static GQuark ADD_USER_SEARCH_SIG;
+static GQuark GET_CURRENT_STATUS_SIG;
+static GQuark SEND_FILE_SIG;
+
+enum
+{
     GGADU_GADU_GADU_CONFIG_ID,
     GGADU_GADU_GADU_CONFIG_PASSWORD,
     GGADU_GADU_GADU_CONFIG_SERVER,
@@ -19,34 +33,34 @@ enum {
     GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS,
     GGADU_GADU_GADU_CONFIG_REASON,
     GGADU_GADU_GADU_CONFIG_FRIENDS_MASK,
-		GGADU_GADU_GADU_SELECTED_FILE,
-		GGADU_GADU_GADU_CONTACT
+    GGADU_GADU_GADU_SELECTED_FILE,
+    GGADU_GADU_GADU_CONTACT
 };
 
-GGaduPlugin *initialize_plugin(gpointer conf_ptr);
+GGaduPlugin *initialize_plugin (gpointer conf_ptr);
 
-gpointer config_init_plugin(GGaduPlugin *plugin_handler);
+gpointer config_init_plugin (GGaduPlugin * plugin_handler);
 
-gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data);
+gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data);
 
-gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data);
+gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer data);
 
-void my_signal_receive(gpointer name, gpointer signal_ptr);
+void my_signal_receive (gpointer name, gpointer signal_ptr);
 
-void start_plugin();
+void start_plugin ();
 
-void destroy_plugin();
+void destroy_plugin ();
 
-gpointer gadu_gadu_login(gpointer desc, gint status);
+gpointer gadu_gadu_login (gpointer desc, gint status);
 
-void wyjdz_signal_handler();
+void wyjdz_signal_handler ();
 
-void load_contacts(gchar *encoding);
+void load_contacts (gchar * encoding);
 
-void test();
+void test ();
 
-void save_addressbook_file(gpointer userlist);
+void save_addressbook_file (gpointer userlist);
 
-gpointer user_preferences_action(gpointer user_data);
+gpointer user_preferences_action (gpointer user_data);
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.62 2003/06/09 00:47:32 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.63 2003/06/09 01:20:46 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1265,17 +1265,17 @@ void start_plugin()
 	
 	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_pluginmenu, "main-gui");
 
-	register_signal(handler,"change status");
-	register_signal(handler,"change status descr");
-	register_signal(handler,"send message");
-	register_signal(handler,"add user");
-	register_signal(handler,"change user");
-	register_signal(handler,"update config");
-	register_signal(handler,"search");
-	register_signal(handler,"exit");
-	register_signal(handler,"add user search");
-	register_signal(handler,"get current status");
-	register_signal(handler,"send file");
+	CHANGE_STATUS_SIG = register_signal(handler,"change status");
+	CHANGE_STATUS_DESCR_SIG = register_signal(handler,"change status descr");
+	SEND_MESSAGE_SIG = register_signal(handler,"send message");
+	ADD_USER_SIG = register_signal(handler,"add user");
+	CHANGE_USER_SIG = register_signal(handler,"change user");
+	UPDATE_CONFIG_SIG = register_signal(handler,"update config");
+	SEARCH_SIG = register_signal(handler,"search");
+	EXIT_SIG = register_signal(handler,"exit");
+	ADD_USER_SEARCH_SIG = register_signal(handler,"add user search");
+	GET_CURRENT_STATUS_SIG = register_signal(handler,"get current status");
+	SEND_FILE_SIG = register_signal(handler,"send file");
 	
 	load_contacts("ISO-8859-2");
 
@@ -1300,12 +1300,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
         print_debug("%s : receive signal %d %s\n",GGadu_PLUGIN_NAME,signal->name, g_quark_to_string(signal->name));
 
-	if (signal->name == g_quark_from_static_string("exit")) { 
+	if (signal->name == EXIT_SIG) { 
 	    //exit_signal_handler(); 
 	    return;
 	}
 
-	if (signal->name == g_quark_from_static_string("send file")) { 
+	if (signal->name == SEND_FILE_SIG) { 
 		GGaduDialog *d = signal->data;
 		GSList *tmplist = d->optlist;
 	
@@ -1361,7 +1361,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	}
 
 
-	if (signal->name == g_quark_from_static_string("add user")) { 
+	if (signal->name == ADD_USER_SIG) { 
 	    GGaduContact *k = g_new0(GGaduContact,1);
 	    GSList *kvlist = (GSList *)signal->data;
 
@@ -1416,7 +1416,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    return;
 	}
 
-	if (signal->name == g_quark_from_static_string("add user search")) { 
+	if (signal->name == ADD_USER_SEARCH_SIG) { 
 	    GGaduContact *k = signal->data;
 
 	    /* initial status for added person */
@@ -1434,7 +1434,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	}
 
 
-	if (signal->name == g_quark_from_static_string("change user")) 
+	if (signal->name == CHANGE_USER_SIG) 
 	{ 
 	    GGaduContact *k = g_new0(GGaduContact,1);
 	    GSList *kvlist = (GSList *)signal->data;
@@ -1501,7 +1501,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	}
 
 	
-	if (signal->name == g_quark_from_static_string("change status")) 
+	if (signal->name == CHANGE_STATUS_SIG) 
 	{ 
 	    GGaduStatusPrototype *sp = signal->data;
 	    
@@ -1558,7 +1558,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    return;
 	}
 
-	if (signal->name == g_quark_from_static_string("change status descr")) 
+	if (signal->name == CHANGE_STATUS_DESCR_SIG) 
 	{ 
 	    GGaduDialog *d = signal->data;
 	    GGaduStatusPrototype *sp = d->user_data;
@@ -1602,7 +1602,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	}
 	
 
-	if (signal->name == g_quark_from_static_string("update config")) 
+	if (signal->name == UPDATE_CONFIG_SIG) 
 	{ 
 	    GGaduDialog *d = signal->data;
 	    GSList *tmplist = d->optlist;
@@ -1684,7 +1684,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    return;
 	}
 	
-	if (signal->name == g_quark_from_static_string("send message")) 
+	if (signal->name == SEND_MESSAGE_SIG) 
 	{ 
 	    GGaduMsg *msg = signal->data;
 
@@ -1747,7 +1747,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    }
 	}	
 
-        if (signal->name == g_quark_from_static_string("search")) 
+        if (signal->name == SEARCH_SIG) 
         {	 
             GGaduDialog *d = signal->data;
     	    GSList *tmplist = d->optlist;
@@ -1833,7 +1833,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	        return;
 	    }
 
-        if (signal->name == g_quark_from_static_string("get current status")) {
+        if (signal->name == GET_CURRENT_STATUS_SIG) {
 	    if (session) 
 		signal->data_return = (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->status ^ GG_STATUS_FRIENDS_MASK : session->status);
 	    else
