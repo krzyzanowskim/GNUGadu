@@ -1,25 +1,35 @@
-/* $Id: plugin_xosd.h,v 1.2 2003/06/09 18:24:33 shaster Exp $ */
-#include <glib.h>
+/* $Id: plugin_xosd.h,v 1.3 2003/07/01 10:05:17 shaster Exp $ */
+#ifndef PLUGIN_XOSD_H
+#define PLGUIN_XOSD_H 1
 
-gint set_configuration ();
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
-enum {
+#define GGADU_XOSD_WELCOME_STRING "GNU Gadu 2"
+
+#define GGADU_XOSD_DEFAULT_FONT "-misc-fixed-bold-r-*-*-15-*-*-*-*-*-*-2"
+#define GGADU_XOSD_DEFAULT_COLOUR "#FFFF00"
+#define GGADU_XOSD_DEFAULT_NUMLINES 5
+#define GGADU_XOSD_DEFAULT_TIMEOUT 5
+#define GGADU_XOSD_DEFAULT_SHADOW_OFFSET 1
+#define GGADU_XOSD_DEFAULT_HORIZONTAL_OFFSET 0
+#define GGADU_XOSD_DEFAULT_VERTICAL_OFFSET 0
+
+enum
+{
     GGADU_XOSD_CONFIG_COLOUR,
     GGADU_XOSD_CONFIG_NUMLINES,
     GGADU_XOSD_CONFIG_FONT,
     GGADU_XOSD_CONFIG_TIMEOUT,
     GGADU_XOSD_CONFIG_SHADOW_OFFSET,
+    GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET,
+    GGADU_XOSD_CONFIG_VERTICAL_OFFSET,
     GGADU_XOSD_CONFIG_ALIGN,
     GGADU_XOSD_CONFIG_POS,
-    GGADU_XOSD_CONFIG_SCROLLLINES,
     GGADU_XOSD_CONFIG_TIMESTAMP
 };
 
-gint NUMLINES;
-gchar *FONT;
-gchar *COLOUR;
-gint TIMEOUT;
-gint SHADOW_OFFSET;
-gint SCROLLLINES;
-gint ALIGN;
-gint POS;
+gint set_configuration(void);
+
+#endif /* PLUGIN_XOSD_H */
