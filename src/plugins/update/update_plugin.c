@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.8 2003/09/27 13:50:00 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.9 2003/11/25 23:34:26 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -230,14 +230,14 @@ int update_compare(const gchar * servers, const gchar * ours)
 /* compares. show == FALSE will disable any gui/xosd notices
  * returns -1 on error, 0 if no updates found, 1 if update found
  */
-int update_check_real(gboolean show)
+gpointer update_check_real(gboolean show)
 {
     gchar *reply = update_get_current_version(show);
-    gchar *version = NULL;
-    int i, result = 0;
-
+    gchar *version; 
+    int i;
+    
     if (reply == NULL)
-	return -1;
+	return NULL;
 
     version = g_strdup(VERSION);
     /* hack for _CVS */
@@ -248,28 +248,35 @@ int update_check_real(gboolean show)
     /* compare, notice if something new was found */
     if (update_compare(reply, version) > 0)
     {
-	if (show)
-	{
-	    if (update_use_xosd())
-		signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Update available: %s"), reply),
+        if (update_use_xosd())
+		signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup_printf(_("Update available: %s"), reply),
 			    "xosd");
 	    else
-		signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("Update available: %s"), reply),
+		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("Update available: %s"), reply),
 			    "main-gui");
-	}
-	result = 1;
+    } else if (show) {
+    	if (update_use_xosd())
+	    signal_emit_from_thread(GGadu_PLUGIN_NAME, "xosd show message", g_strdup(_("No updates available")), "xosd");
+	else
+	    signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("No updates available")), "main-gui");
     }
 
     g_free(reply);
     g_free(version);
 
-    return result;
+    g_thread_exit(0);
+    return NULL;
+}
+
+void _update_check_real(gboolean show) 
+{
+    g_thread_create(update_check_real, (gpointer)show, FALSE, NULL);
 }
 
 /* for g_timeout_add */
 gboolean update_check(gpointer data)
 {
-    update_check_real(TRUE);
+    _update_check_real(TRUE);
 
     /* never ending story ;) */
     return TRUE;
@@ -278,20 +285,13 @@ gboolean update_check(gpointer data)
 /* called with menu-click */
 gpointer update_menu_check(gpointer data)
 {
-    if (update_check_real(TRUE) == 0)
-    {
-	if (update_use_xosd())
-	    signal_emit(GGadu_PLUGIN_NAME, "xosd show message", g_strdup(_("No updates available")), "xosd");
-	else
-	    signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("No updates available")), "main-gui");
-    }
-
+    _update_check_real(TRUE);
     return NULL;
 }
 
 gboolean update_check_on_startup(gpointer data)
 {
-    update_check_real(TRUE);
+    _update_check_real(TRUE);
 
     /* it's called ONCE. */
     return FALSE;
