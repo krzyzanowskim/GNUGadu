@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.88 2005/03/07 10:04:53 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.89 2005/03/09 13:01:36 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -357,6 +357,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 		temp = temp->next;
 	}
 
+	g_free(descr);
 	g_slist_free(list);
 	g_strfreev(tab);
 	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
