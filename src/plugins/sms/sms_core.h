@@ -27,7 +27,7 @@ typedef struct
     char Url[1024];
     char Url_Params[1024];
     char Post_Data[4096];
-    int  Post_Lenght;
+    int  Post_Length;
 } HTTPstruct;
 
 #endif

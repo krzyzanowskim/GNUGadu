@@ -1,3 +1,6 @@
+04.05.2003
+- sms plugin pretend to be Galeon, code cleanups, fixes for idea centertel - did it break anything? (sms/shasta)
+
 02.05.2003
 - do not install pixmaps/icons/CVS (Makefile/shasta)
 
