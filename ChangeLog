@@ -1,7 +1,8 @@
 03.01.2005
-- ggadu_spawn() can parse %s argument.
+- ggadu_spawn() can parse %s argument. (krzak)
 - change default values for executable variables in sound-external, history-viewer
-  now it contains %s at the end. Should be updated in config files.
+  now it contains %s at the end. Should be updated in config files. (krzak)
+- "Open in browser" is first item after click at link. (krzak)
 
 02.01.2005
 - Happy New Year

@@ -1661,16 +1661,6 @@ gboolean tag_event(GtkTextTag *tag, GObject *imhtml, GdkEvent *event, GtkTextIte
 			}
 			else
 			{
-				/* Copy Link Location */
-				img = gtk_image_new_from_stock(GTK_STOCK_COPY,
-											   GTK_ICON_SIZE_MENU);
-				item = gtk_image_menu_item_new_with_mnemonic(
-					_("_Copy Link Location"));
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), img);
-				g_signal_connect(G_OBJECT(item), "activate",
-								 G_CALLBACK(url_copy), tempdata->url);
-				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
 				/* Open Link in Browser */
 				img = gtk_image_new_from_stock(GTK_STOCK_JUMP_TO,
 											   GTK_ICON_SIZE_MENU);
@@ -1679,6 +1669,16 @@ gboolean tag_event(GtkTextTag *tag, GObject *imhtml, GdkEvent *event, GtkTextIte
 				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), img);
 				g_signal_connect(G_OBJECT(item), "activate",
 								 G_CALLBACK(url_open), tempdata);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+				/* Copy Link Location */
+				img = gtk_image_new_from_stock(GTK_STOCK_COPY,
+											   GTK_ICON_SIZE_MENU);
+				item = gtk_image_menu_item_new_with_mnemonic(
+					_("_Copy Link Location"));
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), img);
+				g_signal_connect(G_OBJECT(item), "activate",
+								 G_CALLBACK(url_copy), tempdata->url);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			}
 
