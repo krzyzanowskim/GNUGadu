@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.74 2003/06/21 01:34:54 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.75 2003/06/21 02:15:33 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -894,7 +894,7 @@ gchar *userlist_dump (GSList * list)
 	  GGaduContact *k = (GGaduContact *) us->data;
 
 	  line =
-	      g_strdup_printf ("%s;%s;%s;%s;%s;%s;%s;;;;;\r\n", k->first_name, k->last_name, k->nick, k->comment,
+	      g_strdup_printf ("%s;%s;%s;%s;%s;%s;%s\r\n", k->first_name, k->last_name, k->nick, k->nick,
 			       k->mobile, k->group, k->id);
 
 	  if (!dump)
@@ -2264,7 +2264,7 @@ void load_contacts (gchar * encoding)
       {
 	  gchar *buf = NULL;
 	  gchar **l;
-	  gchar *first_name, *last_name, *nick, *comment, *mobile, *group, *uin;
+	  gchar *first_name, *last_name, *nick, *nick2/*, *comment */, *mobile, *group, *uin;
 
 	  if (line[0] == '#' || !strcmp (g_strstrip (line), ""))
 	      continue;
@@ -2277,10 +2277,11 @@ void load_contacts (gchar * encoding)
 	  first_name = l[0];
 	  last_name = l[1];
 	  nick = l[2];
+	  nick2 = l[3];
 	  mobile = l[4];
 	  group = l[5];
 	  uin = l[6];
-	  comment = l[7];
+	  /* comment = l[6]; */
 
 	  if ((!uin || !*uin) && (!mobile || !*mobile))
 	      continue;
@@ -2291,8 +2292,13 @@ void load_contacts (gchar * encoding)
 	  k->id = uin ? g_strdup (uin) : g_strdup ("");
 	  k->first_name = g_strdup (first_name);
 	  k->last_name = g_strdup (last_name);
-	  k->nick = (strlen (nick) == 0) ? g_strconcat (first_name, " ", last_name, NULL) : g_strdup (nick);
-	  k->comment = g_strdup (comment);
+
+	  	if (strlen(nick2) == 0)
+	  		k->nick = (strlen (nick) == 0) ? g_strconcat (first_name, " ", last_name, NULL) : g_strdup (nick);
+		else
+			k->nick = g_strdup(nick2);
+
+	  /* k->comment = g_strdup (comment); */
 	  k->mobile = g_strdup (mobile);
 	  k->group = g_strdup (group);
 	  k->status = GG_STATUS_NOT_AVAIL;
