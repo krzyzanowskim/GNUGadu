@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.78 2003/06/23 09:18:42 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.79 2003/06/26 21:44:55 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -640,7 +640,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
     gg_free_event (e);
 
-    if (prev_check != session->check)
+    if (session && prev_check != session->check)
       {
 	  prev_check = session->check;
 	  if (session->check == GG_CHECK_READ)

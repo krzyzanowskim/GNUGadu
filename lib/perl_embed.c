@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.7 2003/06/26 19:50:52 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.8 2003/06/26 21:44:54 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -372,6 +372,54 @@ static XS (XS_GGadu_repo_watch_userlist)
   XSRETURN (0);
 }
 
+static XS (XS_GGadu_find_user_id)
+{
+  char *id;
+  char *protocol;
+  char *interest;
+  int junk;
+  gpointer index;
+  GGaduContact *k;
+  gchar *key;
+  dXSARGS;
+
+  items = items;
+
+  id = SvPV (ST(0), junk);
+  protocol = SvPV (ST(1), junk);
+  interest = SvPV (ST(2), junk);
+
+  print_debug ("Finding id='%s' in '%s'\n", id, protocol);
+
+  index = ggadu_repo_value_first (protocol, REPO_VALUE_CONTACT, (gpointer *)&key);
+  while (index) {
+    k = ggadu_repo_find_value (protocol, key);
+    print_debug ("id='%s', k->id='%s'\n", id, k->id);
+#define ODDAJ(x,y) if (y) XST_mPV(x,y); else XST_mPV(x,"<unset>")
+    if (!ggadu_strcasecmp (id, k->id)) {
+      ODDAJ (0, k->id);
+      ODDAJ (1, k->first_name);
+      ODDAJ (2, k->last_name);
+      ODDAJ (3, k->nick);
+      ODDAJ (4, k->mobile);
+      ODDAJ (5, k->email);
+      ODDAJ (6, k->gender);
+      ODDAJ (7, k->group);
+      ODDAJ (8, k->comment);
+      ODDAJ (9, k->birthdate);
+      ODDAJ (10, k->status_descr);
+      ODDAJ (11, k->ip);
+      ODDAJ (12, k->city);
+      ODDAJ (13, k->age);
+      XST_mIV (14, k->status);
+      XSRETURN (15);
+    }
+    index = ggadu_repo_value_next (protocol, REPO_VALUE_CONTACT, (gpointer *)&key, index);
+  }
+
+  XSRETURN (0);
+}
+
 static void xs_init (pTHX)
 {
   char *file = __FILE__;
@@ -384,6 +432,7 @@ static void xs_init (pTHX)
   newXS ("GGadu::hello", XS_GGadu_hello, "GGadu");
   newXS ("GGadu::signal_hook", XS_GGadu_signal_hook, "GGadu");
   newXS ("GGadu::repo_watch_userlist", XS_GGadu_repo_watch_userlist, "GGadu");
+  newXS ("GGadu::find_user_id", XS_GGadu_find_user_id, "GGadu");
 }
 
 int perl_load_script (char *script_name)
