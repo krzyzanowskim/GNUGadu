@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.8 2003/06/26 21:44:54 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.9 2003/09/22 17:17:47 krzyzak Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -176,13 +176,11 @@ void hook_handler (GGaduSignal *signal, void (*perl_func) (GGaduSignal *, gchar 
     {
       hook = (signal_hook *) list_hooks->data;
 
-//      if (!ggadu_strcasecmp (signal->name, hook->name))
       if (signal->name == hook->q_name)
       {
 	PERL_SET_CONTEXT (script->perl);
 	my_perl = script->perl;
 	perl_func (signal, hook->func, (void *) script->perl);
-	print_debug("!!!!qrwa mac\n");
       }
       
       list_hooks = list_hooks->next;

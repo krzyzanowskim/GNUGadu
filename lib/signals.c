@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.8 2003/06/26 19:50:52 zapal Exp $ */
+/* $Id: signals.c,v 1.9 2003/09/22 17:17:47 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -170,7 +170,6 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	    {
 	      (void *) hook_func = (void *) list->data;
 	      hook_func (tmpsignal, hook->perl_handler);
-	      print_debug("DO IT\n");
 	      list = list->next;
 	    }
 	    break;
