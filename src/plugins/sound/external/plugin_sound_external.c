@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.24 2004/12/20 09:15:40 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.25 2004/12/23 12:53:24 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -41,12 +41,12 @@
 #include "ggadu_dialog.h"
 #include "plugin_sound_external.h"
 
-GGaduPlugin *handler;
-GGaduMenu *menu_pluginmenu = NULL;
+static GGaduPlugin *handler;
+static GGaduMenu *menu_pluginmenu = NULL;
 
 GGadu_PLUGIN_INIT("sound-external", GGADU_PLUGIN_TYPE_MISC);
 
-gpointer ggadu_play_file(gpointer user_data)
+static gpointer ggadu_play_file(gpointer user_data)
 {
     static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
     gchar *cmd_native = NULL;
@@ -63,7 +63,7 @@ gpointer ggadu_play_file(gpointer user_data)
     }
     
     cmd = g_strdup_printf("\"%s\" \"%s\"", (gchar *) ggadu_config_var_get(handler, "player"), (gchar *)user_data);
-    cmd_native = g_filename_from_utf8(cmd,-1,&r,&w,NULL);
+    cmd_native = g_filename_from_utf8(cmd,strlen(cmd),&r,&w,NULL);
 
     ret = system(cmd_native); 
 	
@@ -71,11 +71,11 @@ gpointer ggadu_play_file(gpointer user_data)
     {
       signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", _("external sound plugin: Error while playing file"), "main-gui");
     }
-	
-    g_free(cmd_native);
-    g_free(cmd);
     
     g_static_mutex_unlock(&play_mutex);
+    
+    g_free(cmd_native);
+    g_free(cmd);
     return NULL;
 }
 
@@ -119,7 +119,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 }
 
 
-gpointer se_preferences(gpointer user_data)
+static gpointer se_preferences(gpointer user_data)
 {
     GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Sound external preferences"), "update config");
 
@@ -133,7 +133,7 @@ gpointer se_preferences(gpointer user_data)
     return NULL;
 }
 
-GGaduMenu *build_plugin_menu()
+static GGaduMenu *build_plugin_menu()
 {
     GGaduMenu *root = ggadu_menu_create();
     GGaduMenu *item_gg = ggadu_menu_add_item(root, "Sound", NULL, NULL);

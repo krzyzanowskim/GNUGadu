@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_esd.c,v 1.17 2004/12/20 09:15:40 krzyzak Exp $ */
+/* $Id: plugin_sound_esd.c,v 1.18 2004/12/23 12:53:23 krzyzak Exp $ */
 
 /* 
  * sound-ESD plugin for GNU Gadu 2 
@@ -34,13 +34,13 @@
 #include "ggadu_menu.h"
 #include "ggadu_support.h"
 
-GGaduPlugin *handler;
+static GGaduPlugin *handler;
 
 GGadu_PLUGIN_INIT("sound-esd", GGADU_PLUGIN_TYPE_MISC);
 
 static GQuark SOUND_PLAY_FILE_SIG;
 
-gpointer ggadu_play_file(gpointer filename)
+static gpointer ggadu_play_file(gpointer filename)
 {
     static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
     gchar *filename_native = NULL;
@@ -59,7 +59,7 @@ gpointer ggadu_play_file(gpointer filename)
     return NULL;
 }
 
-void my_signal_receive(gpointer name, gpointer signal_ptr)
+static void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 

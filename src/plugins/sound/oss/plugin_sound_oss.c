@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.16 2004/12/20 09:15:41 krzyzak Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.17 2004/12/23 12:53:25 krzyzak Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
@@ -43,7 +43,7 @@
 #include "ggadu_menu.h"
 #include "ggadu_support.h"
 
-GGaduPlugin *handler;
+static GGaduPlugin *handler;
 
 GGadu_PLUGIN_INIT("sound-oss", GGADU_PLUGIN_TYPE_MISC);
 
@@ -115,7 +115,7 @@ static gint oss_play_file(gchar *filename)
 }
 
 
-gpointer ggadu_play_file(gpointer filename)
+static gpointer ggadu_play_file(gpointer filename)
 {
     static GStaticMutex play_mutex = G_STATIC_MUTEX_INIT;
     gsize r,w;
