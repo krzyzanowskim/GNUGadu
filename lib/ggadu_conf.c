@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.13 2004/02/17 16:12:22 thrulliq Exp $ */
+/* $Id: ggadu_conf.c,v 1.14 2004/02/17 20:42:14 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -340,12 +340,11 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 	ch = g_io_channel_new_file(path, "r", NULL);
 	if (ch)
 	{
-
 		g_io_channel_set_encoding(ch, NULL, NULL);
 
 		while (g_io_channel_read_line(ch, &line, &length, &terminator_pos, NULL) != G_IO_STATUS_EOF)
 		{
-			if (!g_str_has_prefix(line, "#"))
+			if (line && !g_str_has_prefix(line, "#"))
 			{
 				gchar **spl = g_strsplit(line, " ", 5);
 
@@ -370,7 +369,7 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 	}
 
 	g_io_channel_shutdown(ch_dest, TRUE, NULL);
-	g_io_channel_unref(ch);
+	g_io_channel_unref(ch_dest);
 	
 	if (rename(path_dest, path) == -1)
 	{

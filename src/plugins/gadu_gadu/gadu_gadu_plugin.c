@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.155 2004/02/17 19:40:29 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.156 2004/02/17 20:42:16 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -606,27 +606,26 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				gchar *id = g_strdup_printf("%d", n->uin);
 				GGaduContact *k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id));
 				struct in_addr ip_addr;
-				gchar *strIP = NULL;
 
-				ip_addr.s_addr = n->remote_ip;
-				strIP = inet_ntoa(ip_addr);	/* cannot be freed it staically allocated memory */
-				if (strIP && (ggadu_strcasecmp(strIP, "0.0.0.0")))
+				if (k)
 				{
-					g_free(k->ip);
-					k->ip = g_strdup_printf("%s:%d", strIP, n->remote_port);
-				}
+					ip_addr.s_addr = n->remote_ip;
+					if (inet_ntoa(ip_addr) && (ggadu_strcasecmp(inet_ntoa(ip_addr), "0.0.0.0")))
+					{
+						g_free(k->ip);
+						k->ip = g_strdup_printf("%s:%d", inet_ntoa(ip_addr), n->remote_port);
+					}
 
-				if (e->type == GG_EVENT_NOTIFY_DESCR)
-				{
-					g_free(k->status_descr);
-					k->status_descr =
-						ggadu_convert("CP1250", "UTF-8",
-							      ggadu_strchomp(e->event.notify_descr.descr));
-				}
+					if (e->type == GG_EVENT_NOTIFY_DESCR)
+					{
+						g_free(k->status_descr);
+						k->status_descr = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify_descr.descr));
+					}
 
-				k->status = n->status;
-				ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k,
-							REPO_VALUE_DC);
+					k->status = n->status;
+					ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k,REPO_VALUE_DC);
+				}
+				
 				g_free(id);
 				n++;
 			}

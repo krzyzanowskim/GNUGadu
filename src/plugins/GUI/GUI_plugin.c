@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.55 2004/02/17 16:12:23 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.56 2004/02/17 20:42:15 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -377,6 +377,7 @@ gboolean gui_main_window_delete(GtkWidget * window, GdkEvent * event, gpointer u
 	print_debug("delete event\n");
 	if (!p)
 	{
+		if (window)
 		gui_quit(window, NULL);
 	}
 	else
@@ -859,10 +860,10 @@ void gui_config_emoticons()
 
 void gui_load_theme()
 {
-	gchar *themepath;
-	gchar *themefilename;
+	gchar *themepath = NULL;
+	gchar *themefilename = NULL;
 
-	themefilename = g_strconcat(ggadu_config_var_get(gui_handler, "theme"), ".theme", NULL);
+	themefilename = g_strconcat(ggadu_config_var_get(gui_handler, "theme") ? ggadu_config_var_get(gui_handler, "theme") : "", ".theme", NULL);
 	themepath = g_build_filename(PACKAGE_DATA_DIR, "themes", themefilename, NULL);
 
 	print_debug("%s : Loading theme from %s\n", "main-gui", themepath);
