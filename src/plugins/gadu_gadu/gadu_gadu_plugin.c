@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.34 2003/04/14 16:23:55 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.35 2003/04/14 17:25:28 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -255,7 +255,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 	GGaduNotify *notify = NULL;
 	GGaduMsg *msg = NULL;
 	gint    i,j;
-	GSList *l;
+	GSList *l = userlist;
 
     /* w przypadku b³êdu/utraty po³±czenia post±p tak jak w przypadku disconnect */
 	if (!(e = gg_watch_fd(session)) || (condition & G_IO_ERR) || (condition & G_IO_HUP)) {
