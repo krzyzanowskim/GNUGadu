@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.57 2004/01/11 15:31:05 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.58 2004/01/11 16:04:36 thrulliq Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -605,9 +605,9 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
     if (event->send_event == FALSE)
       {
 	  gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
-	  gui_chat_session *session = user_data;
-	  GtkWidget *paned = g_object_get_data (G_OBJECT (session->chat), "paned");
-	  GtkWidget *hbox_buttons = g_object_get_data (G_OBJECT (session->chat), "hbox_buttons");
+	  GtkWidget *chat = (chat_type == CHAT_TYPE_TABBED) ? user_data : ((gui_chat_session *)user_data)->chat;
+	  GtkWidget *paned = g_object_get_data (G_OBJECT (chat), "paned");
+	  GtkWidget *hbox_buttons = g_object_get_data (G_OBJECT (chat), "hbox_buttons");
 	  gint percent = (gint) ggadu_config_var_get (gui_handler, "chat_paned_size");
 
 	  if ((paned != NULL) && (GTK_IS_PANED (paned)))
@@ -623,7 +623,7 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
 		      if (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook)))
 			{
 			    GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook),
-									   GTK_WIDGET (session->chat));
+									   GTK_WIDGET (chat));
 			    GtkRequisition rbnl;
 
 			    gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
@@ -633,11 +633,11 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
 		  }
 
 		r.height = event->height;
-		gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
+		if (hbox_buttons)
+			gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
 		position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
 		gtk_paned_set_position (GTK_PANED (paned), (gint) position);
 	    }
-
       }
     return FALSE;
 }
@@ -1041,8 +1041,6 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  gtk_paned_set_position (GTK_PANED (paned), (gint) position);
 
       }
-
-    g_signal_connect (chat_window, "configure-event", G_CALLBACK (window_resize_signal), session);
     g_signal_connect (button_autosend, "clicked", G_CALLBACK (on_autosend_clicked), session);
     g_signal_connect (button_send, "clicked", G_CALLBACK (on_send_clicked), session);
     g_signal_connect (button_stick, "toggled", G_CALLBACK (on_stick_clicked), session);
@@ -1053,8 +1051,10 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
       case CHAT_TYPE_TABBED:
 	  g_signal_connect (button_close, "clicked", G_CALLBACK (on_destroy_chat), NULL);
 	  g_signal_connect (chat_window, "destroy", G_CALLBACK (on_destroy_chat_window), NULL);
+	  g_signal_connect (chat_window, "configure-event", G_CALLBACK (window_resize_signal), vbox_in_out);
 	  break;
       case CHAT_TYPE_CLASSIC:
+          g_signal_connect (chat_window, "configure-event", G_CALLBACK (window_resize_signal), session);
 	  g_signal_connect_swapped (button_close, "clicked", G_CALLBACK (gtk_widget_destroy), chat_window);
 	  g_signal_connect (chat_window, "destroy", G_CALLBACK (on_destroy_chat), session);
 	  break;
