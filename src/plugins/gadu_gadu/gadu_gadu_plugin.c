@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.145 2004/02/11 21:57:28 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.146 2004/02/13 23:56:49 thrulliq Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1787,7 +1787,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			GSList *ulisttmp = userlist;
-			GGaduContact *k = g_new0(GGaduContact, 1);	/* do not free it please */
+			GGaduContact *k = g_new0(GGaduContact, 1);
 			GSList *kvlist = ggadu_dialog_get_entries(dialog);
 
 			while (kvlist)
@@ -1822,12 +1822,22 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				{
 					/* zmiana danych */
 					ggadu_repo_del_value("gadu-gadu", ktmp->id);
+					
+					/* SOMEBODY FIX IT PLEASE !!!*/
+					g_free(ktmp->id);
+					g_free(ktmp->nick);
+					g_free(ktmp->first_name);
+					g_free(ktmp->last_name);
+					g_free(ktmp->mobile);
+					
 					ktmp->id = k->id;
 					ktmp->first_name = k->first_name;
 					ktmp->last_name = k->last_name;
 					ktmp->nick = k->nick;
 					ktmp->mobile = k->mobile;
 					ggadu_repo_add_value("gadu-gadu", ktmp->id, ktmp, REPO_VALUE_CONTACT);
+					
+					g_free(k);
 					break;
 				}
 				ulisttmp = ulisttmp->next;
