@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.51 2004/10/13 13:34:29 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.52 2004/10/15 09:10:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -50,24 +50,28 @@ static gchar *about_text = NULL;
 
 void gui_dialog_show_filename(GtkWidget * txt_entry)
 {
-	GtkWidget *file_selector = NULL;
+	GtkWidget *file_chooser = NULL;
 	GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data(G_OBJECT(txt_entry), "kv");
 	gchar *filename = NULL;
 	gint response;
 
-	file_selector = gtk_file_selection_new(_("Select file"));
-
-	response = gtk_dialog_run(GTK_DIALOG(file_selector));
+	file_chooser = gtk_file_chooser_dialog_new(_("Select file"),GTK_WINDOW(window),
+						    GTK_FILE_CHOOSER_ACTION_OPEN,
+						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						    GTK_STOCK_OK, GTK_RESPONSE_OK,
+						    NULL);
+							    
+	response = gtk_dialog_run(GTK_DIALOG(file_chooser));
 
 	if (response == GTK_RESPONSE_OK)
 	{
 		gsize r,w;
-		filename = g_filename_to_utf8( gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selector)),-1,&r,&w,NULL);
+		filename = g_filename_to_utf8( gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser)),-1,&r,&w,NULL);
 		gtk_entry_set_text(GTK_ENTRY(txt_entry), filename);
 		kv->value = (gpointer) filename;
 	}
 
-	gtk_widget_destroy(file_selector);
+	gtk_widget_destroy(file_chooser);
 }
 
 /* Does not work as expected yet. Need to know how to make it

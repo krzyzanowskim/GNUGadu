@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.77 2004/10/14 12:02:27 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.78 2004/10/15 09:10:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -495,25 +495,36 @@ static GtkWidget *create_fonts_tab()
 static void show_file_select_dialog(GtkWidget * widget, gpointer user_data)
 {
 	GtkWidget *entry = (GtkWidget *) user_data;
-	GtkWidget *file_selector = NULL;
-	gchar *filename = NULL;
+	GtkWidget *file_chooser = NULL;
+	GtkFileFilter *file_filter = NULL;
+	const gchar *_filename = NULL;
+	const gchar *filename = NULL;
 	gint response;
-	const gchar *_filename;
-
-	file_selector = gtk_file_selection_new(_("Select file"));
+	
+	file_chooser = gtk_file_chooser_dialog_new(_("Select file"),NULL,
+						   GTK_FILE_CHOOSER_ACTION_OPEN,
+						   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						   GTK_STOCK_OK, GTK_RESPONSE_OK,
+						   NULL);
+						   
 	_filename = gtk_entry_get_text(GTK_ENTRY(entry));
+	
 	if (_filename && *_filename)
-		gtk_file_selection_set_filename(GTK_FILE_SELECTION(file_selector), _filename);
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(file_chooser), _filename);
+		
+	file_filter = gtk_file_filter_new();
+	gtk_file_filter_add_mime_type(file_filter,"audio/x-wav");
+	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(file_chooser),file_filter);
 
-	response = gtk_dialog_run(GTK_DIALOG(file_selector));
+	response = gtk_dialog_run(GTK_DIALOG(file_chooser));
 
 	if (response == GTK_RESPONSE_OK)
 	{
-		filename = (gchar *) gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_selector));
+		filename = (gchar *) gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
 		gtk_entry_set_text(GTK_ENTRY(entry), filename);
 	}
 
-	gtk_widget_destroy(file_selector);
+	gtk_widget_destroy(file_chooser);
 }
 
 static GtkWidget *create_sound_tab()

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.190 2004/10/15 07:53:10 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.191 2004/10/15 09:10:54 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -384,8 +384,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		return FALSE;
 	}
 
-	print_debug("QQ");
-	
 	switch (e->type)
 	{
 	case GG_EVENT_NONE:

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.119 2004/10/13 18:19:53 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.120 2004/10/15 09:10:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -47,7 +47,7 @@ static void gui_chat_notebook_switch(GtkWidget * notebook, GtkNotebookPage * pag
 	GtkWidget *chat = NULL;
 	GtkWidget *lb = NULL;
 	gchar *txt = NULL;
-	gchar *txt2 = NULL;
+	const gchar *txt2 = NULL;
 
 	if (chat_window)
 		chat_notebook = g_object_get_data(G_OBJECT(chat_window), "chat_notebook");
@@ -67,7 +67,7 @@ static void gui_chat_notebook_switch(GtkWidget * notebook, GtkNotebookPage * pag
 	if (lb)
 	{
 		txt = (gchar *) g_object_get_data(G_OBJECT(chat), "tab_label_txt_char");
-		txt2 = (gchar *) g_object_get_data(G_OBJECT(chat), "tab_window_title_char");
+		txt2 = (const gchar *) g_strdup(g_object_get_data(G_OBJECT(chat), "tab_window_title_char"));
 	}
 	else
 		return;
@@ -885,7 +885,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		status_desc = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
 
 		if ((k->status_descr) && (strlen(k->status_descr) > 0))
-			status_desc = g_strdup_printf("- %s (%s)", k->status_descr, (sp ? sp->description : ""));
+			status_desc = g_strdup_printf("- %s (%s)", (sp ? sp->description : ""), k->status_descr);
 		else
 			status_desc = g_strdup_printf("- %s", (sp ? sp->description : ""));
 	}
