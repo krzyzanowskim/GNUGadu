@@ -1,4 +1,4 @@
-/* $Id: gui_chat.h,v 1.6 2004/03/09 20:58:42 krzyzak Exp $ */
+/* $Id: gui_chat.h,v 1.7 2004/03/12 13:01:48 shaster Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -24,7 +24,9 @@
 #define GGadu_GUI_PLUGIN_CHAT_H 1
 
 #include <gtk/gtk.h>
+#ifdef USE_GTKSPELL
 #include <gtkspell/gtkspell.h>
+#endif /* USE_GTKSPELL */
 #include "gui_main.h"
 
 #define MAX_EMOTICONS_IN_ROW 8
