@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.3 2003/03/23 17:58:31 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.4 2003/03/31 18:19:03 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -253,7 +253,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 	    
 	    case TLEN_EVENT_ENDROSTER:
 		tlen_presence(session, (int)loginstatus, "");
-		signal_emit(GGadu_PLUGIN_NAME, "gui status changed", NULL, "main-gui");
+		signal_emit(GGadu_PLUGIN_NAME, "gui status changed", loginstatus, "main-gui");
 		signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
 		break;
 	    
@@ -751,6 +751,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		else
 		{
 		    tlen_presence(session, sp->status, description);
+				signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
+
 		}
 	    }
 	    else if (sp && sp->status != TLEN_STATUS_UNAVAILABLE && sp->status != TLEN_STATUS_DESC) 
@@ -956,4 +958,3 @@ void destroy_plugin() {
     }
 
 }
-

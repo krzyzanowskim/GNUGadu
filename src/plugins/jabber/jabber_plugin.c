@@ -98,6 +98,8 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 		{
 		kv = (GGaduKeyValue *)d->optlist->data;
 		jabber_presence(jabber_session, sp->status, kv->value);
+		signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
+
 		}
 	    }
 	    
@@ -197,6 +199,8 @@ void jabber_signal_receive(gpointer name, gpointer signal_ptr) {
 		} 
 		else if (sp->status == JABBER_STATUS_AVAILABLE) {
 		    jabber_presence(jabber_session, sp->status, NULL);
+				signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
+
 		}
 	    } else if (sp && sp->status != JABBER_STATUS_UNAVAILABLE) {
 		g_thread_create(login,(gpointer)sp->status,FALSE,NULL);

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.11 2003/03/28 22:30:44 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.12 2003/03/31 18:18:47 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1285,6 +1285,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			if (gg_change_status(session, _status) == -1) {
 			    signal_emit(GGadu_PLUGIN_NAME, "gui show warning",g_strdup(_("Unable to change status")),"main-gui");
 			    print_debug("zjebka podczas change_status %d\n",sp->status);
+			} else {
+					signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
 			}
 		    }
 		    
@@ -1329,7 +1331,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		    desc_utf = kv->value;
 		    from_utf8("CP1250",desc_utf,desc_cp);
 		    config_var_set(handler, "reason", desc_cp);
-		    gg_change_status_descr(session, _status, desc_cp);
+		    if (!gg_change_status_descr(session, _status, desc_cp))
+					signal_emit(GGadu_PLUGIN_NAME,"gui status changed",(gpointer)sp->status,"main-gui");
+
 		    g_free(desc_cp);
 		}
 		
