@@ -1,3 +1,6 @@
+25.03.2003
+- available only for friends oiption (gadu-gadu/THrull)
+
 24.03.2003
 - you can login to gg with custom status, not only ONLINE (gadu-gadu/krzak)
 - fixed userlist support (gadu-gadu/krzak)
@@ -6,9 +9,9 @@
 - default sound files path (gadu-gadu/krzak)
 - little fixes in chat window (GUI/krzak)
 - GGaduDialog's have types now, eg. d->type GGADU_DIALOG_CONFIG will be
-  displayed as config dialog (preferences icon) (GUI/Thrull)
+  displayed as config dialog (preferences icon) (GUI/THrull)
 - added function gui_user_view_unregister to use with dynamic plugin
-  unloading, but is not working now (GUI/Thrull)
+  unloading, but is not working now (GUI/THrull)
 
 20.03.2003
 - Sourceforge CVS 
