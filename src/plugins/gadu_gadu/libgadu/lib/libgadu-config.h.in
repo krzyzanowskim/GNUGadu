@@ -3,26 +3,52 @@
 #ifndef __GG_LIBGADU_CONFIG_H
 #define __GG_LIBGADU_CONFIG_H
 
+#include <config.h>
+
 /* Defined if libgadu was compiled for bigendian machine. */
+#ifndef BIGENDIAN
 #undef __GG_LIBGADU_BIGENDIAN
+#else
+#define __GG_LIBGADU_BIGENDIAN 1
+#endif
+
+/* Defined if libgadu was compiled and linked with TLS support. */
+#ifndef HAVE_OPENSSL
+#undef __GG_LIBGADU_HAVE_OPENSSL
+#else
+#define __GG_LIBGADU_HAVE_OPENSSL 1
+#endif
+
+/* Defined if this machine has va_copy(). */
+#ifndef HAVE_VA_COPY
+#undef __GG_LIBGADU_HAVE_VA_COPY
+#else
+#define __GG_LIBGADU_HAVE_VA_COPY 1
+#endif
+
+/* Defined if this machine has __va_copy(). */
+#ifndef HAVE___VA_COPY
+#undef __GG_LIBGADU_HAVE___VA_COPY
+#else
+#define __GG_LIBGADU_HAVE___VA_COPY 1
+#endif
 
 /* Defined if libgadu was compiled and linked with pthread support. */
 #undef __GG_LIBGADU_HAVE_PTHREAD
 
 /* Defined if this machine has C99-compiliant vsnprintf(). */
+#ifndef HAVE_C99_VSNPRINTF
 #undef __GG_LIBGADU_HAVE_C99_VSNPRINTF
-
-/* Defined if this machine has va_copy(). */
-#undef __GG_LIBGADU_HAVE_VA_COPY
-
-/* Defined if this machine has __va_copy(). */
-#undef __GG_LIBGADU_HAVE___VA_COPY
+#else
+#define __GG_LIBGADU_HAVE_C99_VSNPRINTF 1
+#endif
 
 /* Defined if this machine supports long long. */
+#ifndef HAVE_LONG_LONG
 #undef __GG_LIBGADU_HAVE_LONG_LONG
-
-/* Defined if libgadu was compiled and linked with TLS support. */
-#undef __GG_LIBGADU_HAVE_OPENSSL
+#else
+#define __GG_LIBGADU_HAVE_LONG_LONG 1
+#endif
 
 /* Include file containing uintXX_t declarations. */
 #include <stdint.h>

@@ -1,7 +1,8 @@
-dnl $Id: configure.in,v 1.7 2004/04/22 09:26:03 krzyzak Exp $
+dnl $Id: configure.in,v 1.8 2004/09/16 11:27:16 krzyzak Exp $
 
 AC_INIT(lib/libgadu.h)
-AM_INIT_AUTOMAKE([libgadu],[1.4])
+AM_INIT_AUTOMAKE([libgadu],[1.5])
+AC_CONFIG_HEADERS(lib/libgadu-config.h)
 AC_PREREQ(2.50)
 
 dnl AC_SUBST(CFLAGS_LIBGADU)

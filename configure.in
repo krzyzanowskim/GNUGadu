@@ -1,10 +1,11 @@
-dnl $Id: configure.in,v 1.88 2004/09/12 18:56:25 krzyzak Exp $
+dnl $Id: configure.in,v 1.89 2004/09/16 11:27:14 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.6])
 
 AC_INIT(gg2,[gg2_version])
 AM_INIT_AUTOMAKE([gg2],[gg2_version])
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS(config.h)
+#AC_CONFIG_HEADERS(config.h src/plugins/gadu_gadu/libgadu/lib/libgadu-config.h)
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
@@ -48,6 +49,62 @@ AC_STDC_HEADERS
 AC_C_CONST
 AC_STRUCT_TM
 AC_C_BIGENDIAN
+
+AC_MSG_CHECKING([for long long])
+AC_TRY_COMPILE([],
+[
+	long long a = 1LL;
+	unsigned long long b = 1LL;
+], [
+	AC_MSG_RESULT([yes])
+	AC_DEFINE([HAVE_LONG_LONG])
+])
+
+AC_MSG_CHECKING([for va_copy])
+AC_TRY_LINK([#include <stdarg.h>], [va_list a, b; va_copy(a, b);], 
+[
+	AC_MSG_RESULT([yes])
+	AC_DEFINE([HAVE_VA_COPY])
+], [
+	AC_MSG_RESULT([no])
+])
+
+AC_MSG_CHECKING([for __va_copy])
+AC_TRY_LINK([#include <stdarg.h>], [va_list a, b; __va_copy(a, b);], 
+[
+	AC_MSG_RESULT([yes])
+	AC_DEFINE([HAVE___VA_COPY])
+], [
+	AC_MSG_RESULT([no])
+])
+
+AC_ARG_WITH(c99-vsnprintf,
+  [  --with-c99-vsnprintf    Target system has C99-compatible vsnprintf()])
+
+if test "x$with_c99_vsnprintf" = "xyes"; then
+	AC_DEFINE([HAVE_C99_VSNPRINTF])
+fi
+
+if test "x$with_c99_vsnprintf" = "x"; then
+	AC_MSG_CHECKING([for C99-compatible vsnprintf()])
+	AC_TRY_RUN(
+	[
+		#include <stdio.h>
+		int main()
+		{
+			char tmp;
+			return (snprintf(&tmp, sizeof(tmp), "test") != 4);
+		}
+	], [
+		AC_MSG_RESULT([yes])
+		AC_DEFINE([HAVE_C99_VSNPRINTF])
+	], [
+		AC_MSG_RESULT([no])
+	])
+fi
+
+
+
 dnl AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
 dnl AC_CHECK_FUNCS(bswap_32 bswap_16)
 

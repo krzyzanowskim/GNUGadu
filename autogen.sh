@@ -94,6 +94,9 @@ $AUTOMAKE --no-force --copy --add-missing || exit 1
 echo "autoconf"
 autoconf || exit 1
 
+#echo "autoheader"
+#autoheader || exit 1
+
 prev=`pwd`
 cd src/plugins/gadu_gadu/libgadu
 ./autogen.sh

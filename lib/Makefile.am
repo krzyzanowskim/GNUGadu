@@ -27,7 +27,7 @@ libgg2_core_la_SOURCES = \
 libgg2_core_la_HEADERS = gg2_core.h
 
 libgg2_core_la_LIBADD = $(PERL_OPTION_LDFLAGS) -ldl 
-libgg2_core_la_LDFLAGS = -version-info 2:0:6
+libgg2_core_la_LDFLAGS = -version-info 2:1:0
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gg2_core.pc

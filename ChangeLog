@@ -1,3 +1,6 @@
+16.09.2004
+- fixes of configuration options used with included libgadu (krzak)
+
 12.09.2004
 - Implemented probing software version (JEP-0092) (mkobierzycki/jabber)
 
