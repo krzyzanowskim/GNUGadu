@@ -1,3 +1,6 @@
+18.01.2004
+- reordered buttons in chat window (GUI/krzak)
+
 17.01.2004
 - mass code indentation (shasta)
 - mass code cleanups - do not use C++-style comments (shasta)
