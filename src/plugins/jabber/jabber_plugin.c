@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.102 2004/09/07 10:06:08 aflinta Exp $ */
+/* $Id: jabber_plugin.c,v 1.103 2004/09/07 15:10:38 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1316,9 +1316,9 @@ GGaduMenu *build_jabber_menu()
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Add Contact"), user_add_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Search for friends"), user_search_action, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Personal data"), user_own_vcard_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
 	account=ggadu_menu_new_item(_("Account"), NULL, NULL);

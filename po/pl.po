@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.74 2004/09/07 14:59:19 krzyzak Exp $
+# $Id: pl.po,v 1.75 2004/09/07 15:10:38 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-09-07 15:38+0200\n"
+"POT-Creation-Date: 2004-09-07 17:04+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -139,19 +139,19 @@ msgstr "Wy¶wietla/ukrywa opisy na li¶cie kontaktów"
 msgid "New message from %s"
 msgstr "Nowa wiadomo¶æ od %s"
 
-#: src/plugins/GUI/gui_chat.c:585 src/plugins/GUI/gui_search.c:189
+#: src/plugins/GUI/gui_chat.c:587 src/plugins/GUI/gui_search.c:189
 msgid "_Close"
 msgstr "Za_mknij"
 
-#: src/plugins/GUI/gui_chat.c:798
+#: src/plugins/GUI/gui_chat.c:800
 msgid "_Send"
 msgstr "_Wy¶lij"
 
-#: src/plugins/GUI/gui_chat.c:898
+#: src/plugins/GUI/gui_chat.c:900
 msgid "Chat Window"
 msgstr "Okno rozmowy"
 
-#: src/plugins/GUI/gui_chat.c:1085
+#: src/plugins/GUI/gui_chat.c:1087
 #, c-format
 msgid ""
 "Error initializing spell checking: \n"
@@ -162,35 +162,35 @@ msgstr ""
 "%s\n"
 "Zainstaluj wsparcie dla odpowiedniego jêzyka w aspell"
 
-#: src/plugins/GUI/gui_chat.c:1175
+#: src/plugins/GUI/gui_chat.c:1177
 msgid "Send a message"
 msgstr "Wysy³a wiadomo¶ci"
 
-#: src/plugins/GUI/gui_chat.c:1176
+#: src/plugins/GUI/gui_chat.c:1178
 msgid "Send message with enter"
 msgstr "Wysy³a wiadomo¶æ po naci¶niêciu klawisza Enter"
 
-#: src/plugins/GUI/gui_chat.c:1177
+#: src/plugins/GUI/gui_chat.c:1179
 msgid "Close a window"
 msgstr "Zamyka okno"
 
-#: src/plugins/GUI/gui_chat.c:1178
+#: src/plugins/GUI/gui_chat.c:1180
 msgid "Clear the buffer"
 msgstr "Czy¶ci panel historii rozmowy"
 
-#: src/plugins/GUI/gui_chat.c:1179
+#: src/plugins/GUI/gui_chat.c:1181
 msgid "Stick to all virtual desktops"
 msgstr "Przypina okno do wszystkich wirtualnych biurek"
 
-#: src/plugins/GUI/gui_chat.c:1180
+#: src/plugins/GUI/gui_chat.c:1182
 msgid "Find a contact"
 msgstr "Znajd¼ rozmówcê"
 
-#: src/plugins/GUI/gui_chat.c:1198
+#: src/plugins/GUI/gui_chat.c:1200
 msgid "Emoticons"
 msgstr "Emotikony"
 
-#: src/plugins/GUI/gui_chat.c:1316 src/plugins/GUI/gui_chat.c:1320
+#: src/plugins/GUI/gui_chat.c:1318 src/plugins/GUI/gui_chat.c:1322
 msgid "Me"
 msgstr "Ja"
 
@@ -402,7 +402,7 @@ msgstr "Wybrany zestaw ikon:"
 #: src/plugins/GUI/gui_preferences.c:952
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1500
 #: src/plugins/tlen/tlen_plugin.c:846 src/plugins/xosd/plugin_xosd.c:407
-#: src/plugins/jabber/jabber_plugin.c:1321
+#: src/plugins/jabber/jabber_plugin.c:1319
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
 #: src/plugins/history/external/history_viewer.c:106
@@ -1255,7 +1255,7 @@ msgid "Unignore contact"
 msgstr "Nie ignoruj kontaktu"
 
 #: src/plugins/jabber/jabber_plugin.c:434
-#: src/plugins/jabber/jabber_plugin.c:1319
+#: src/plugins/jabber/jabber_plugin.c:1321
 msgid "Show ignored"
 msgstr "Wy¶wietl ignorowych"
 

@@ -7,6 +7,7 @@
   4) Does any one heard about HiG?
 - small fixes (krzak)
 - fixed multiline messages in history engine (krzak)
+- release 2.0.6
      
 06.09.2004
 - gg2-select.patch for userlist right click by madej@afn.no-ip.org (GUI/Madej)

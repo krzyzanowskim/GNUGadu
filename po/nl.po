@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-09-07 15:38+0200\n"
+"POT-Creation-Date: 2004-09-07 17:04+0200\n"
 "PO-Revision-Date: 04/06/04 21:02\n"
 "Last-Translator: Sander Devrieze <s.devrieze@pandora.be>\n"
 "Language-Team: Nederlands <i18n@kde.nl>\n"
@@ -145,19 +145,19 @@ msgstr "Toon/verberg beschrijvingen in gebruikerslijst"
 msgid "New message from %s"
 msgstr "Nieuw bericht van %s"
 
-#: src/plugins/GUI/gui_chat.c:585 src/plugins/GUI/gui_search.c:189
+#: src/plugins/GUI/gui_chat.c:587 src/plugins/GUI/gui_search.c:189
 msgid "_Close"
 msgstr "_Sluiten"
 
-#: src/plugins/GUI/gui_chat.c:798
+#: src/plugins/GUI/gui_chat.c:800
 msgid "_Send"
 msgstr "_Versturen"
 
-#: src/plugins/GUI/gui_chat.c:898
+#: src/plugins/GUI/gui_chat.c:900
 msgid "Chat Window"
 msgstr "Berichtenvenster"
 
-#: src/plugins/GUI/gui_chat.c:1085
+#: src/plugins/GUI/gui_chat.c:1087
 #, c-format
 msgid ""
 "Error initializing spell checking: \n"
@@ -168,38 +168,38 @@ msgstr ""
 "%s\n"
 "Probeer de juiste taal te installeren met aspell"
 
-#: src/plugins/GUI/gui_chat.c:1175
+#: src/plugins/GUI/gui_chat.c:1177
 #, fuzzy
 msgid "Send a message"
 msgstr "Toon berichten"
 
-#: src/plugins/GUI/gui_chat.c:1176
+#: src/plugins/GUI/gui_chat.c:1178
 msgid "Send message with enter"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1177
+#: src/plugins/GUI/gui_chat.c:1179
 #, fuzzy
 msgid "Close a window"
 msgstr "Berichtenvenster"
 
-#: src/plugins/GUI/gui_chat.c:1178
+#: src/plugins/GUI/gui_chat.c:1180
 msgid "Clear the buffer"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1179
+#: src/plugins/GUI/gui_chat.c:1181
 msgid "Stick to all virtual desktops"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1180
+#: src/plugins/GUI/gui_chat.c:1182
 #, fuzzy
 msgid "Find a contact"
 msgstr "Voeg contactpersoon toe"
 
-#: src/plugins/GUI/gui_chat.c:1198
+#: src/plugins/GUI/gui_chat.c:1200
 msgid "Emoticons"
 msgstr "Emoticons"
 
-#: src/plugins/GUI/gui_chat.c:1316 src/plugins/GUI/gui_chat.c:1320
+#: src/plugins/GUI/gui_chat.c:1318 src/plugins/GUI/gui_chat.c:1322
 msgid "Me"
 msgstr "Mijzelf"
 
@@ -420,7 +420,7 @@ msgstr "Selecteer iconset"
 #: src/plugins/GUI/gui_preferences.c:952
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1500
 #: src/plugins/tlen/tlen_plugin.c:846 src/plugins/xosd/plugin_xosd.c:407
-#: src/plugins/jabber/jabber_plugin.c:1321
+#: src/plugins/jabber/jabber_plugin.c:1319
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
 #: src/plugins/history/external/history_viewer.c:106
@@ -1282,7 +1282,7 @@ msgid "Unignore contact"
 msgstr "Voeg contactpersoon toe"
 
 #: src/plugins/jabber/jabber_plugin.c:434
-#: src/plugins/jabber/jabber_plugin.c:1319
+#: src/plugins/jabber/jabber_plugin.c:1321
 msgid "Show ignored"
 msgstr ""
 
