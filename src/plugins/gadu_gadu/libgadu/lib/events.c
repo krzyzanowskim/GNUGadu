@@ -1,9 +1,9 @@
-/* $Id: events.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
+/* $Id: events.c,v 1.3 2004/08/04 21:50:51 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
  *                          Robert J. Wo¼ny <speedy@ziew.org>
- *                          Arkadiusz Mi¶kiewicz <misiek@pld.org.pl>
+ *                          Arkadiusz Mi¶kiewicz <arekm@pld-linux.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License Version
@@ -837,7 +837,7 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 
 		case GG_STATE_CONNECTING_HUB:
 		{
-			char buf[1024], *client;
+			char buf[1024], *client, *auth;
 			int res = 0, res_size = sizeof(res);
 			const char *host, *appmsg;
 
@@ -890,12 +890,18 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 #endif
 				appmsg = "appmsg2.asp";
 
+			auth = gg_proxy_auth();
+
 			snprintf(buf, sizeof(buf) - 1,
 				"GET %s/appsvc/%s?fmnumber=%u&version=%s&lastmsg=%d HTTP/1.0\r\n"
 				"Host: " GG_APPMSG_HOST "\r\n"
 				"User-Agent: " GG_HTTP_USERAGENT "\r\n"
 				"Pragma: no-cache\r\n"
-				"\r\n", host, appmsg, sess->uin, client, sess->last_sysmsg);
+				"%s" 
+				"\r\n", host, appmsg, sess->uin, client, sess->last_sysmsg, (auth) ? auth : "");
+
+			if (auth)
+				free(auth);
 			
 			free(client);
 

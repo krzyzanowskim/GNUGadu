@@ -1,4 +1,4 @@
-/* $Id: common.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
+/* $Id: common.c,v 1.3 2004/08/04 21:50:51 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -238,7 +238,7 @@ int gg_connect(void *addr, int port, int async)
 		return -1;
 	}
 
-        bzero(&myaddr, sizeof(myaddr));
+        memset(&myaddr, 0, sizeof(myaddr));
         myaddr.sin_family = AF_INET;
 
         myaddr.sin_addr.s_addr = gg_local_ip;

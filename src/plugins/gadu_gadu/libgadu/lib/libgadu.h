@@ -1,9 +1,9 @@
-/* $Id: libgadu.h,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
+/* $Id: libgadu.h,v 1.3 2004/08/04 21:50:51 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
  *                          Robert J. Wo¼ny <speedy@ziew.org>
- *                          Arkadiusz Mi¶kiewicz <misiek@pld.org.pl>
+ *                          Arkadiusz Mi¶kiewicz <arekm@pld-linux.org>
  *                          Tomasz Chiliñski <chilek@chilan.com>
  *                          Piotr Wysocki <wysek@linux.bydg.org>
  *                          Dawid Jarosz <dawjar@poczta.onet.pl>
@@ -1066,6 +1066,9 @@ struct gg_pubdir50_reply {
 struct gg_new_status {
 	uint32_t status;			/* na jaki zmieniæ? */
 } GG_PACKED;
+
+#define GG_NOTIFY_FIRST 0x000f
+#define GG_NOTIFY_LAST 0x0010
 
 #define GG_NOTIFY 0x0010
 	

@@ -1,9 +1,9 @@
-/* $Id: libgadu.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
+/* $Id: libgadu.c,v 1.3 2004/08/04 21:50:51 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
  *                          Robert J. Wo¼ny <speedy@ziew.org>
- *                          Arkadiusz Mi¶kiewicz <misiek@pld.org.pl>
+ *                          Arkadiusz Mi¶kiewicz <arekm@pld-linux.org>
  *                          Tomasz Chiliñski <chilek@chilan.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -71,7 +71,7 @@ static char rcsid[]
 #ifdef __GNUC__
 __attribute__ ((unused))
 #endif
-= "$Id: libgadu.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $";
+= "$Id: libgadu.c,v 1.3 2004/08/04 21:50:51 krzyzak Exp $";
 #endif 
 
 /*
@@ -439,6 +439,7 @@ void *gg_recv_packet(struct gg_session *sess)
 			gg_debug(GG_DEBUG_MISC, "// gg_recv_packet() header recv(%d,%p,%d) = %d\n", sess->fd, &h + sess->header_done, sizeof(h) - sess->header_done, ret);
 
 			if (!ret) {
+				errno = 0;
 				gg_debug(GG_DEBUG_MISC, "// gg_recv_packet() header recv() failed: connection broken\n");
 				return NULL;
 			}
@@ -707,7 +708,7 @@ struct gg_session *gg_login(const struct gg_login_params *p)
 	sess->initial_status = p->status;
 	sess->callback = gg_session_callback;
 	sess->destroy = gg_free_session;
-	sess->port = (p->server_port) ? p->server_port : GG_DEFAULT_PORT;
+	sess->port = (p->server_port) ? p->server_port : ((gg_proxy_enabled) ? GG_HTTPS_PORT : GG_DEFAULT_PORT);
 	sess->server_addr = p->server_addr;
 	sess->external_port = p->external_port;
 	sess->external_addr = p->external_addr;
@@ -790,6 +791,9 @@ struct gg_session *gg_login(const struct gg_login_params *p)
 		}
 
 		sess->hub_addr = a.s_addr;
+
+		if (gg_proxy_enabled)
+			sess->proxy_addr = a.s_addr;
 
 		if ((sess->fd = gg_connect(&a, port, 0)) == -1) {
 			gg_debug(GG_DEBUG_MISC, "// gg_login() connection failed (errno=%d, %s)\n", errno, strerror(errno));
@@ -1158,7 +1162,7 @@ int gg_image_reply(struct gg_session *sess, uin_t recipient, const char *filenam
 	}
 
 	/* wytnij ¶cie¿ki, zostaw tylko nazwê pliku */
-	while ((tmp = rindex(filename, '/')) || (tmp = rindex(filename, '\\')))
+	while ((tmp = strrchr(filename, '/')) || (tmp = strrchr(filename, '\\')))
 		filename = tmp + 1;
 
 	if (strlen(filename) < 1 || strlen(filename) > 1024) {
@@ -1463,18 +1467,37 @@ int gg_notify_ex(struct gg_session *sess, uin_t *userlist, char *types, int coun
 	if (!userlist || !count)
 		return gg_send_packet(sess, GG_LIST_EMPTY, NULL);
 	
-	if (!(n = (struct gg_notify*) malloc(sizeof(*n) * count)))
-		return -1;
-	
-	for (u = userlist, t = types, i = 0; i < count; u++, t++, i++) { 
-		n[i].uin = gg_fix32(*u);
-		n[i].dunno1 = *t;
-	}
-	
-	if (gg_send_packet(sess, GG_NOTIFY, n, sizeof(*n) * count, NULL) == -1)
-		res = -1;
+	while (count > 0) {
+		int part_count, packet_type;
+		
+		if (count > 400) {
+			part_count = 400;
+			packet_type = GG_NOTIFY_FIRST;
+		} else {
+			part_count = count;
+			packet_type = GG_NOTIFY_LAST;
+		}
 
-	free(n);
+		if (!(n = (struct gg_notify*) malloc(sizeof(*n) * part_count)))
+			return -1;
+	
+		for (u = userlist, t = types, i = 0; i < part_count; u++, t++, i++) { 
+			n[i].uin = gg_fix32(*u);
+			n[i].dunno1 = *t;
+		}
+	
+		if (gg_send_packet(sess, packet_type, n, sizeof(*n) * part_count, NULL) == -1) {
+			free(n);
+			res = -1;
+			break;
+		}
+
+		count -= part_count;
+		userlist += part_count;
+		types += part_count;
+
+		free(n);
+	}
 
 	return res;
 }
@@ -1510,20 +1533,38 @@ int gg_notify(struct gg_session *sess, uin_t *userlist, int count)
 	}
 
 	if (!userlist || !count)
-		return 0;
+		return gg_send_packet(sess, GG_LIST_EMPTY, NULL);
 	
-	if (!(n = (struct gg_notify*) malloc(sizeof(*n) * count)))
-		return -1;
+	while (count > 0) {
+		int part_count, packet_type;
+		
+		if (count > 400) {
+			part_count = 400;
+			packet_type = GG_NOTIFY_FIRST;
+		} else {
+			part_count = count;
+			packet_type = GG_NOTIFY_LAST;
+		}
+			
+		if (!(n = (struct gg_notify*) malloc(sizeof(*n) * part_count)))
+			return -1;
 	
-	for (u = userlist, i = 0; i < count; u++, i++) { 
-		n[i].uin = gg_fix32(*u);
-		n[i].dunno1 = GG_USER_NORMAL;
-	}
+		for (u = userlist, i = 0; i < part_count; u++, i++) { 
+			n[i].uin = gg_fix32(*u);
+			n[i].dunno1 = GG_USER_NORMAL;
+		}
 	
-	if (gg_send_packet(sess, GG_NOTIFY, n, sizeof(*n) * count, NULL) == -1)
-		res = -1;
+		if (gg_send_packet(sess, packet_type, n, sizeof(*n) * part_count, NULL) == -1) {
+			res = -1;
+			free(n);
+			break;
+		}
 
-	free(n);
+		free(n);
+
+		userlist += part_count;
+		count -= part_count;
+	}
 
 	return res;
 }
