@@ -1,3 +1,8 @@
+26.12.2004
+- dcc fixes (GUI/krzak)
+- libgadu update (gadu-gadu/krzak)
+- small design changes (GUI/krzak)
+
 25.12.2004
 - patch for external-history plugin destroy function by BJ (foxia[at]alexandria.cc)
 - search for X libraries for aaway plugin (krzak)
