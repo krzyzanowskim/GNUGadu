@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.42 2005/01/22 11:17:36 mkobierzycki Exp $ */
+/* $Id: jabber_protocol.c,v 1.43 2005/01/26 12:15:29 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -102,6 +102,10 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 		return;
 	}
 
+	/* Just a simple esthetic functionality */
+	if((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status == JABBER_STATUS_DESCR))
+		signal_emit("jabber", "gui status changed", (gpointer) JABBER_STATUS_UNAVAILABLE, "main-gui");
+	
 	if (jabber_data.connection && !lm_connection_is_authenticated(jabber_data.connection))
 	{
 		print_debug("You are not yet authenticated!");
@@ -137,8 +141,6 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 	if (show)
 		lm_message_node_add_child(m->node, "show", show);
 
-	if(sp->keep_desc == 1)
-	    sp->status_description = g_strdup(jabber_data.description);
 	g_free(jabber_data.description);
 	jabber_data.description = NULL;
 
