@@ -14,6 +14,7 @@ libgadu_gadu_plugin_la_LIBADD = ../../plugins.lo \
     ../../menu.lo \
     ../../dialog.lo \
     ../../unified-types.lo \
+    ../../repo.lo \
     $(GG_LIBS)
     
 libgadu_gadu_plugin_la_LDFLAGS = -module -avoid-version  

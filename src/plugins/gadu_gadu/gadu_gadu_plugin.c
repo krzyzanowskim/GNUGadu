@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.33 2003/04/13 23:55:33 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.34 2003/04/14 16:23:55 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -25,6 +25,7 @@
 #include "menu.h"
 #include "gadu_gadu_plugin.h"
 #include "dialog.h"
+#include "repo.h"
 
 extern GGaduConfig *config;
 
@@ -75,6 +76,7 @@ void ggadu_gadu_gadu_disconnect()
 	GGaduContact *k = tmplist->data;
 	fprintf(stderr, "\t%s\n", k->id);
 	k->status = GG_STATUS_NOT_AVAIL;
+	ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 	tmplist = tmplist->next;
     }
 }
@@ -253,6 +255,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 	GGaduNotify *notify = NULL;
 	GGaduMsg *msg = NULL;
 	gint    i,j;
+	GSList *l;
 
     /* w przypadku b³êdu/utraty po³±czenia post±p tak jak w przypadku disconnect */
 	if (!(e = gg_watch_fd(session)) || (condition & G_IO_ERR) || (condition & G_IO_HUP)) {
@@ -398,6 +401,16 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			    notify->id = g_strdup_printf("%d",n->uin);
 
 			    notify->status = n->status;
+			    
+			    while (l) {
+			      GGaduContact *k = (GGaduContact *)l->data;
+
+			      if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
+				ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+			      }
+			      l = l->next;
+			    }
+			    
 			    set_userlist_status(notify, e->event.notify_descr.descr,userlist);
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
@@ -411,6 +424,14 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			notify = g_new0(GGaduNotify,1);
 			notify->id = g_strdup_printf("%d",e->event.status.uin);
 			notify->status = e->event.status.status;
+    			while (l) {
+			  GGaduContact *k = (GGaduContact *)l->data;
+
+			  if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
+			    ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+			  }
+			  l = l->next;
+			}
 			set_userlist_status(notify, e->event.status.descr,userlist);
 			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 			break;
@@ -515,6 +536,7 @@ gpointer user_remove_user_action(gpointer user_data)
 	{
 		GGaduContact *k = (GGaduContact *)users->data;
 		userlist = g_slist_remove(userlist,k);
+		ggadu_repo_del_value ("gadu-gadu", k->id);
 
 		if (connected && session)
 			gg_remove_notify(session,atoi(k->id));
@@ -719,6 +741,7 @@ void import_userlist(gchar *list)
 		k->status = GG_STATUS_NOT_AVAIL;
 
 		userlist = g_slist_append(userlist, k);
+		ggadu_repo_add_value ("gadu-gadu", k->id, k, REPO_VALUE_CONTACT);
 		
 		if (connected && session)
 		    gg_add_notify(session,atoi(k->id));
@@ -1063,6 +1086,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 		config_var_set(handler,"sound_chat_file",g_build_filename(PACKAGE_DATA_DIR,"sounds","msg.wav",NULL));
 	
 	register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
+
+	ggadu_repo_add ("gadu-gadu");
+	
 	return handler;
 }
 
@@ -1149,6 +1175,8 @@ void start_plugin()
 	p->img_filename = g_strdup("gadu-gadu.png");
 	p->statuslist = status_init();
 	p->offline_status = GG_STATUS_NOT_AVAIL;
+	
+	ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 	
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 	
@@ -1311,6 +1339,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    g_slist_free(kvlist);
 
 	    userlist = g_slist_append(userlist,k);
+	    ggadu_repo_add_value ("gadu-gadu", k->id, k, REPO_VALUE_CONTACT);
 	    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
 	    save_addressbook_file(userlist);
 
@@ -1327,6 +1356,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	    k->status	= GG_STATUS_NOT_AVAIL;
 	    
 	    userlist = g_slist_append(userlist,k);
+	    ggadu_repo_add_value ("gadu-gadu", k->id, k, REPO_VALUE_CONTACT);
 	    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
 	    save_addressbook_file(userlist);
 
@@ -1393,11 +1423,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		
 		if (!ggadu_strcasecmp(ktmp->id, k->id)) {
 		    /* zmiana danych */
+		    ggadu_repo_del_value ("gadu-gadu", ktmp->id);
 		    ktmp->id = k->id;
 		    ktmp->first_name = k->first_name;
 		    ktmp->last_name = k->last_name;
 		    ktmp->nick = k->nick;
 		    ktmp->mobile = k->mobile;
+		    ggadu_repo_add_value ("gadu-gadu", ktmp->id, ktmp, REPO_VALUE_CONTACT);
 		    break;
 		}
 		ulisttmp = ulisttmp->next;
@@ -1747,6 +1779,8 @@ void destroy_plugin()
       signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
       ggadu_menu_free (menu_pluginmenu);
     }
+    ggadu_repo_del ("gadu-gadu");
+    ggadu_repo_del_value ("_protocols_", p);
     signal_emit (GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
     signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 }
@@ -1813,6 +1847,7 @@ void load_contacts(gchar *encoding)
 		g_strfreev(l);
 
 		userlist = g_slist_append(userlist, k);
+		ggadu_repo_add_value("gadu-gadu", k->id, k, REPO_VALUE_CONTACT);
 	}
 
 	g_free(line);
