@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.7 2004/01/09 10:47:59 thrulliq Exp $ */
+/* $Id: docklet_plugin.c,v 1.8 2004/01/09 11:41:12 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -267,6 +267,35 @@ void go_offline(GtkWidget *widget, gpointer user_data)
     }
 }
 
+void go_away(GtkWidget *widget, gpointer user_data) 
+{
+    gpointer key, index;
+    if (ggadu_repo_exists("_protocols_")) {
+	GGaduProtocol *p = NULL;
+	index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+
+	while (index) {
+	    GGaduStatusPrototype *sp;
+	    gint status;
+	    p = ggadu_repo_find_value("_protocols_", key);
+	    
+	    if (p && p->away_status) {
+		GSList *tmp = p->statuslist;
+		status = (gint)p->away_status->data;
+		while (tmp) {
+		    sp = tmp->data;
+		    if (sp->status == status) {
+			signal_emit(DOCKLET_PLUGIN_NAME, "change status", sp, p->display_name);
+			break;    
+		    }
+		    tmp = tmp->next;
+		}
+	    } 
+	    index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+	}
+    }
+}
+
 void docklet_menu(GdkEventButton *event) {
     static GtkWidget *menu = NULL;
     gpointer key, index;
@@ -308,6 +337,11 @@ void docklet_menu(GdkEventButton *event) {
         menuitem = gtk_menu_item_new_with_label(_("Go online (all)"));
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
         g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_online), NULL);	
+
+	menuitem = gtk_menu_item_new_with_label(_("Go away (all)"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+	g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_away), NULL);
+
 	
 	menuitem = gtk_menu_item_new_with_label(_("Go offline (all)"));
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
