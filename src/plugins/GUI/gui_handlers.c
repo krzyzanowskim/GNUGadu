@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.31 2003/06/20 01:09:03 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.32 2003/06/21 14:38:35 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -251,6 +251,7 @@ void handle_register_userlist_menu (GGaduSignal * signal)
 void handle_unregister_userlist_menu (GGaduSignal * signal)
 {
     gui_protocol *gp = gui_find_protocol (signal->source_plugin_name, protocols);
+    ggadu_menu_free(gp->userlist_menu);
     gp->userlist_menu = NULL;
 }
 

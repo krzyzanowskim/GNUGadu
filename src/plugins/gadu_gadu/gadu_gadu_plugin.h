@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.10 2003/06/21 01:34:54 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.11 2003/06/21 14:38:35 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -34,6 +34,7 @@ enum
     GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS,
     GGADU_GADU_GADU_CONFIG_REASON,
     GGADU_GADU_GADU_CONFIG_FRIENDS_MASK,
+    GGADU_GADU_GADU_CONFIG_DCC,
     GGADU_GADU_GADU_SELECTED_FILE,
     GGADU_GADU_GADU_CONTACT
 };
@@ -53,6 +54,8 @@ void my_signal_receive (gpointer name, gpointer signal_ptr);
 void start_plugin ();
 
 void destroy_plugin ();
+
+void gadu_gadu_enable_dcc_socket (gboolean state);
 
 gpointer gadu_gadu_login (gpointer desc, gint status);
 

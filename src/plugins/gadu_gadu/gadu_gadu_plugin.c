@@ -1,17 +1,20 @@
-/* $Id: gadu_gadu_plugin.c,v 1.75 2003/06/21 02:15:33 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.76 2003/06/21 14:38:35 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdio.h>
 #include <string.h>
 #include <signal.h>
-#include <sys/stat.h>
 
 #include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/fcntl.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
@@ -32,8 +35,8 @@ extern GGaduConfig *config;
 
 GGaduPlugin *handler;
 
-struct gg_session *session;
-struct gg_dcc *dcc_session_get = NULL;
+static struct gg_session *session;
+static struct gg_dcc *dcc_session_get = NULL;
 
 static gchar *dcc_send_request_filename = NULL;	/* nazwa pliku do wyslania */
 
@@ -41,14 +44,13 @@ static gint connect_count = 0;
 
 static guint watch = 0;
 static guint watch_dcc_file = 0;
-gint http_watch = 0;
 
-GIOChannel *source_chan = NULL;
+static GIOChannel *source_chan = NULL;
 
-gboolean connected = FALSE;
+static gboolean connected = FALSE;
 
-GGaduProtocol *p;
-GGaduMenu *menu_pluginmenu;
+static GGaduProtocol *p;
+static GGaduMenu *menu_pluginmenu;
 
 static gchar *this_configdir = NULL;
 static GSList *userlist = NULL;
@@ -137,6 +139,33 @@ gchar *insert_cr (gchar * txt)
     return start;
 }
 
+void gadu_gadu_enable_dcc_socket (gboolean state)
+{
+
+    if ((state == TRUE) && (!dcc_session_get) && ((gboolean) config_var_get (handler, "dcc")))
+      {
+	  GIOChannel *dcc_channel_get = NULL;
+	  gint cond = G_IO_IN;
+
+	  dcc_session_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
+	  gg_dcc_ip = inet_addr ("255.255.255.255");
+	  gg_dcc_port = dcc_session_get->port;
+
+	  dcc_channel_get = g_io_channel_unix_new (dcc_session_get->fd);
+	  cond = (dcc_session_get->check == GG_CHECK_READ) ? G_IO_IN : G_IO_OUT;
+	  watch_dcc_file = g_io_add_watch (dcc_channel_get, G_IO_ERR | cond, test_chan_dcc_get, dcc_session_get);
+
+      }
+    else if (state == FALSE)
+      {
+	  g_source_remove (watch_dcc_file);
+	  gg_free_dcc (dcc_session_get);
+	  dcc_session_get = NULL;
+	  gg_dcc_ip = 0;
+	  gg_dcc_port = 0;
+      }
+}
+
 gpointer gadu_gadu_login (gpointer desc, gint status)
 {
     struct gg_login_params p;
@@ -151,19 +180,7 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	  return FALSE;
       }
 
-    if (!dcc_session_get)
-      {
-	  GIOChannel *dcc_channel_get = NULL;
-
-	  dcc_session_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
-	  gg_dcc_ip = inet_addr ("255.255.255.255");
-	  gg_dcc_port = dcc_session_get->port;
-
-	  dcc_channel_get = g_io_channel_unix_new (dcc_session_get->fd);
-	  watch_dcc_file =
-	      g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc_get, dcc_session_get);
-
-      }
+    gadu_gadu_enable_dcc_socket (TRUE);
 
     memset (&p, 0, sizeof (p));
 
@@ -823,7 +840,9 @@ gpointer user_preferences_action (gpointer user_data)
 			    _("Proxy server (optional)\n[user:pass@]host.com[:80]"), VAR_STR, config_var_get (handler,
 													      "proxy"),
 			    VAR_FLAG_NONE);
+
     to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), utf);
+
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf,
 			    VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL,
@@ -834,6 +853,8 @@ gpointer user_preferences_action (gpointer user_data)
 			    statuslist_names, VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"),
 			    VAR_BOOL, config_var_get (handler, "private"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_DCC, _("Enable DCC"), VAR_BOOL,
+			    config_var_get (handler, "dcc"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE, _("Sound file (app)"),
 			    VAR_FILE_CHOOSER, config_var_get (handler, "sound_app_file"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE, _("Sound file (chat)"),
@@ -894,8 +915,8 @@ gchar *userlist_dump (GSList * list)
 	  GGaduContact *k = (GGaduContact *) us->data;
 
 	  line =
-	      g_strdup_printf ("%s;%s;%s;%s;%s;%s;%s\r\n", k->first_name, k->last_name, k->nick, k->nick,
-			       k->mobile, k->group, k->id);
+	      g_strdup_printf ("%s;%s;%s;%s;%s;%s;%s\r\n", k->first_name, k->last_name, k->nick, k->nick, k->mobile,
+			       k->group, k->id);
 
 	  if (!dump)
 	      dump = g_strdup (line);
@@ -1141,12 +1162,19 @@ gboolean test_chan_dcc_get (GIOChannel * source, GIOCondition condition, gpointe
     struct gg_event *e = NULL;
     struct gg_dcc *d = data;
 
+    if (!(gboolean) config_var_get (handler, "dcc"))
+      {
+	  gadu_gadu_enable_dcc_socket (FALSE);
+	  return FALSE;
+      }
+
+
     if (!(e = gg_dcc_watch_fd (d)))
       {
 	  if (d->type != GG_SESSION_DCC_SOCKET)
 	    {
 		gg_free_dcc (d);
-		print_debug("qylazimy staq albercik\n");
+		print_debug ("qylazimy staq albercik\n");
 		return FALSE;
 	    }
       }
@@ -1188,23 +1216,23 @@ gboolean test_chan_dcc_get (GIOChannel * source, GIOCondition condition, gpointe
 
 	  gg_event_free (e);
 	  /* gg_dcc_free (d);              WHYYYYYYYYYYYYYYY
-	  return FALSE; */
+	     return FALSE; */
 	  break;
       }
 
-	  if (d->check == GG_CHECK_READ)
-	    {
-		print_debug ("GG_CHECK_READ DCC_GET\n");
-		watch_dcc_file = g_io_add_watch (source, G_IO_IN | G_IO_ERR , test_chan_dcc_get, d);
-		return FALSE;
-	    }
+    if (d->check == GG_CHECK_READ)
+      {
+	  print_debug ("GG_CHECK_READ DCC_GET\n");
+	  watch_dcc_file = g_io_add_watch (source, G_IO_IN | G_IO_ERR, test_chan_dcc_get, d);
+	  return FALSE;
+      }
 
-	  if (d->check == GG_CHECK_WRITE)
-	    {
-		print_debug ("GG_CHECK_WRITE DCC_GET\n");
-		watch_dcc_file = g_io_add_watch (source, G_IO_OUT | G_IO_ERR, test_chan_dcc_get, d);
-		return FALSE;
-	    }
+    if (d->check == GG_CHECK_WRITE)
+      {
+	  print_debug ("GG_CHECK_WRITE DCC_GET\n");
+	  watch_dcc_file = g_io_add_watch (source, G_IO_OUT | G_IO_ERR, test_chan_dcc_get, d);
+	  return FALSE;
+      }
 
     return TRUE;
 }
@@ -1216,12 +1244,19 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
     struct gg_dcc *d = data;
     static gint prev_check = -1;
 
+    if (!(gboolean) config_var_get (handler, "dcc"))
+      {
+	  gg_free_dcc (d);
+	  return FALSE;
+      }
+
+
     if (!(e = gg_dcc_watch_fd (d)))
       {
 	  if (d->type != GG_SESSION_DCC_SOCKET)
 	    {
 		gg_free_dcc (d);
-		print_debug("qylazimy staq albercik\n");
+		print_debug ("qylazimy staq albercik\n");
 		return FALSE;
 	    }
       }
@@ -1239,30 +1274,58 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 	  gg_dcc_set_type (d, GG_SESSION_DCC_SEND);
 	  gg_event_free (e);
 	  break;
- 
+
       case GG_EVENT_DCC_NEED_FILE_INFO:
 	  print_debug ("GG_EVENT_DCC_NEED_FILE_INFO\n");
 	  gg_dcc_fill_file_info (d, dcc_send_request_filename);
 	  gg_event_free (e);
 	  break;
 
-      case GG_EVENT_DCC_NEED_FILE_ACK: /* dotyczy odbierania plikow */
+      case GG_EVENT_DCC_NEED_FILE_ACK:	/* dotyczy odbierania plikow */
 	  {
-	      struct gg_file_info file_info = d->file_info;
-	      gchar *filename = file_info.filename;
+	      /* struct gg_file_info file_info = d->file_info; */
+	      gchar *dest_path = NULL;
+	      gchar *p = NULL;
 
-	      print_debug ("GG_EVENT_DCC_NEED_FILE_ACK %s\n", filename);
+	      print_debug ("GG_EVENT_DCC_NEED_FILE_ACK");
+	      //gg_dcc_set_type (d, GG_SESSION_DCC_GET);
+
+	      for (p = d->file_info.filename; *p; p++)
+		  if (*p < 32 || *p == '\\' || *p == '/')
+		      *p = '_';
+
+	      if (d->file_info.filename[0] == '.')
+		  d->file_info.filename[0] = '_';
+
+	      dest_path = g_strconcat (g_get_home_dir (), G_DIR_SEPARATOR_S, d->file_info.filename, NULL);
+	      d->file_fd = open (dest_path, O_WRONLY | O_CREAT, 0600);
+	      print_debug ("GG_EVENT_DCC_NEED_FILE_ACK %s\n", dest_path);
+
 
 	  }
 	  gg_event_free (e);
 	  break;
 
       case GG_EVENT_DCC_DONE:
-	  print_debug ("GG_EVENT_DCC_DONE\n");
-	  gg_event_free (e);
-	  gg_dcc_free (d);
-	  signal_emit (GGadu_PLUGIN_NAME, "gui show message",g_strdup (_("File sent succesful")), "main-gui");
-	  return FALSE;
+	  {
+	      gint state = d->state;
+	      gchar *filename = g_strdup (d->file_info.filename);
+
+	      print_debug ("GG_EVENT_DCC_DONE\n");
+	      gg_event_free (e);
+	      gg_dcc_free (d);
+
+	      if (state == GG_STATE_GETTING_FILE)
+		{
+		    signal_emit (GGadu_PLUGIN_NAME, "gui show message",
+				 g_strdup_printf (_("File %s received succesful"), filename), "main-gui");
+		    g_free (filename);
+		}
+	      else
+		  signal_emit (GGadu_PLUGIN_NAME, "gui show message", g_strdup (_("File sent succesful")), "main-gui");
+
+	      return FALSE;
+	  }
 	  break;
 
       case GG_EVENT_DCC_ERROR:
@@ -1272,19 +1335,20 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 	    {
 	    case GG_ERROR_DCC_HANDSHAKE:
 		print_debug ("dcc_error_handshake\n");
-		if (d->state == GG_STATE_READING_FILE_ACK) {
-			signal_emit (GGadu_PLUGIN_NAME, "gui show message",g_strdup (_("File refused")), "main-gui");
-	  		gg_event_free (e);
-	  		gg_dcc_free (d);
-	  		return FALSE;
-		}
+		if (d->state == GG_STATE_READING_FILE_ACK)
+		  {
+		      signal_emit (GGadu_PLUGIN_NAME, "gui show message", g_strdup (_("File refused")), "main-gui");
+		      gg_event_free (e);
+		      gg_dcc_free (d);
+		      return FALSE;
+		  }
 		break;
 	    case GG_ERROR_DCC_NET:
 		print_debug ("dcc_error_network\n");
 		break;
 	    case GG_ERROR_DCC_REFUSED:
 		print_debug ("dcc_error_refused\n");
-		signal_emit (GGadu_PLUGIN_NAME, "gui show message",g_strdup (_("File refused")), "main-gui");
+		signal_emit (GGadu_PLUGIN_NAME, "gui show message", g_strdup (_("File refused")), "main-gui");
 		break;
 	    default:
 		print_debug ("dcc_error_unknown\n");
@@ -1293,7 +1357,7 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 
 	  gg_event_free (e);
 	  /* gg_dcc_free (d);           WHYYYYYYYYYYY
-	  return FALSE; */
+	     return FALSE; */
 	  break;
       }
 
@@ -1304,7 +1368,7 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 	  if (d->check == GG_CHECK_READ)
 	    {
 		print_debug ("GG_CHECK_READ DCC\n");
-		watch_dcc_file = g_io_add_watch (source, G_IO_IN | G_IO_ERR , test_chan_dcc, d);
+		watch_dcc_file = g_io_add_watch (source, G_IO_IN | G_IO_ERR, test_chan_dcc, d);
 		return FALSE;
 	    }
 
@@ -1314,7 +1378,7 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 		watch_dcc_file = g_io_add_watch (source, G_IO_OUT | G_IO_ERR, test_chan_dcc, d);
 		return FALSE;
 	    }
-      } 
+      }
 
     return TRUE;
 }
@@ -1366,14 +1430,16 @@ gpointer send_file_action (gpointer user_data)
 }
 
 
-void register_userlist_menu ()
+void register_userlist_menu (gboolean dcc)
 {
     GGaduMenu *umenu = ggadu_menu_create ();
     GGaduMenu *listmenu = NULL;
 
     ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Chat"), user_chat_action, NULL));
     ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("View History"), user_view_history_action, NULL));
-    ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Send File"), send_file_action, NULL));
+
+    if (dcc)
+	ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Send File"), send_file_action, NULL));
 
     listmenu = ggadu_menu_new_item (_("Contact"), NULL, NULL);
     ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Add"), user_add_user_action, NULL));
@@ -1449,6 +1515,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     config_var_add (handler, "status", VAR_INT);
     config_var_add (handler, "reason", VAR_STR);
     config_var_add (handler, "private", VAR_BOOL);
+    config_var_add (handler, "dcc", VAR_BOOL);
 
 
     if (g_getenv ("CONFIG_DIR"))
@@ -1595,7 +1662,7 @@ void start_plugin ()
 
     test ();
 
-    register_userlist_menu ();
+    register_userlist_menu ((gboolean) config_var_get (handler, "dcc"));
 
     if (config_var_get (handler, "autoconnect") && !connected)
 	gadu_gadu_login ((config_var_check (handler, "reason")) ? config_var_get (handler, "reason") : _("no reason"),
@@ -1988,6 +2055,16 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			    print_debug ("changing var setting log to %d\n", kv->value);
 			    config_var_set (handler, "log", kv->value);
 			    break;
+			case GGADU_GADU_GADU_CONFIG_DCC:
+			    print_debug ("changing var setting dcc to %d\n", kv->value);
+			    config_var_set (handler, "dcc", kv->value);
+
+			    signal_emit (GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+
+			    gadu_gadu_enable_dcc_socket ((gboolean) config_var_get (handler, "dcc"));
+			    register_userlist_menu ((gboolean) config_var_get (handler, "dcc"));
+
+			    break;
 			case GGADU_GADU_GADU_CONFIG_AUTOCONNECT:
 			    print_debug ("changing var setting autoconnect to %d\n", kv->value);
 			    config_var_set (handler, "autoconnect", kv->value);
@@ -2264,7 +2341,7 @@ void load_contacts (gchar * encoding)
       {
 	  gchar *buf = NULL;
 	  gchar **l;
-	  gchar *first_name, *last_name, *nick, *nick2/*, *comment */, *mobile, *group, *uin;
+	  gchar *first_name, *last_name, *nick, *nick2 /*, *comment */ , *mobile, *group, *uin;
 
 	  if (line[0] == '#' || !strcmp (g_strstrip (line), ""))
 	      continue;
@@ -2293,10 +2370,10 @@ void load_contacts (gchar * encoding)
 	  k->first_name = g_strdup (first_name);
 	  k->last_name = g_strdup (last_name);
 
-	  	if (strlen(nick2) == 0)
-	  		k->nick = (strlen (nick) == 0) ? g_strconcat (first_name, " ", last_name, NULL) : g_strdup (nick);
-		else
-			k->nick = g_strdup(nick2);
+	  if (strlen (nick2) == 0)
+	      k->nick = (strlen (nick) == 0) ? g_strconcat (first_name, " ", last_name, NULL) : g_strdup (nick);
+	  else
+	      k->nick = g_strdup (nick2);
 
 	  /* k->comment = g_strdup (comment); */
 	  k->mobile = g_strdup (mobile);

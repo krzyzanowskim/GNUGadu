@@ -1,3 +1,6 @@
+21.06.2003
+- fixes in dcc options : [enable/disable] dcc (gadu-gadu/krzak)
+
 20.06.2003
 - fixes in gtkanimlabel mostly (after button click, text go to clipboard) (GUI/krzak)
 - dcc file sending feature fixed, and now it really works (gadu-gadu/krzak)
