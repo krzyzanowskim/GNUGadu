@@ -1,6 +1,7 @@
 17.01.2004
 - mass code indentation (shasta)
 - mass code cleanups - do not use C++-style comments (shasta)
+- use repo [fixes disappearing userlist] (sms/shasta)
 
 16.01.2004
 - "gui send userlist" signal relay on Repo values, not userlist signal parameter (GUI/krzak)

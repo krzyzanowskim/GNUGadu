@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.35 2004/01/17 00:45:03 shaster Exp $ */
+/* $Id: sms_gui.c,v 1.36 2004/01/17 01:38:38 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -28,6 +28,7 @@
 #include "menu.h"
 #include "support.h"
 #include "dialog.h"
+#include "repo.h"
 #include "sms_gui.h"
 #include "sms_core.h"
 
@@ -41,7 +42,6 @@ static GGaduMenu *menu_smsmenu;
 static GGaduPluginExtension *ext = NULL;	/* extension to handle send sms from foreign plugins */
 
 GGadu_PLUGIN_INIT("sms", GGADU_PLUGIN_TYPE_PROTOCOL);
-
 
 /* okienko z ustawieniami */
 gpointer sms_preferences(gpointer user_data)
@@ -114,9 +114,12 @@ gpointer sms_remove_contact(gpointer user_data)
     {
 	GGaduContact *k = (GGaduContact *) users->data;
 	smslist = g_slist_remove(smslist, k);
+	ggadu_repo_del_value("sms", k->id);
+
 	users = users->next;
     }
-    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", smslist, "main-gui");
+
+    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
     save_smslist();
 
     return NULL;
@@ -193,6 +196,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     idea_token_path = g_build_filename(this_configdir, IDEA_GFX, NULL);
 
     register_signal_receiver((GGaduPlugin *) sms_handler, (signal_func_ptr) signal_receive);
+
+    ggadu_repo_add("sms");
 
     return sms_handler;
 }
@@ -393,7 +398,8 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	g_slist_free(tmplist);
 
 	smslist = g_slist_append(smslist, k);
-	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", smslist, "main-gui");
+	ggadu_repo_add_value("sms", k->id, k, REPO_VALUE_CONTACT);
+	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 
 	save_smslist();
 
@@ -432,9 +438,11 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 	    if (!ggadu_strcasecmp(g_strconcat(kvtmp->nick, "@", kvtmp->mobile, NULL), k->id))
 	    {
+		ggadu_repo_del_value("sms", kvtmp->id);
 		kvtmp->mobile = k->mobile;
 		kvtmp->id = k->mobile;
 		kvtmp->nick = k->nick;
+		ggadu_repo_add_value("sms", kvtmp->id, kvtmp, REPO_VALUE_CONTACT);
 		break;
 	    }
 	    uslist = uslist->next;
@@ -442,8 +450,8 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 /*
 	smslist = g_slist_append(smslist,k);
 */
-	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", smslist, "main-gui");
 	save_smslist();
+	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 
 	return;
     }
@@ -496,6 +504,8 @@ GSList *button_send()
 /* gdzies to musi sie zaczac */
 void start_plugin()
 {
+    print_debug("%s : start_plugin\n", GGadu_PLUGIN_NAME);
+
     p = g_new0(GGaduProtocol, 1);
     p->display_name = g_strdup("SMS");
     p->img_filename = g_strdup("sms.png");
@@ -503,7 +513,6 @@ void start_plugin()
     p->statuslist = button_send();
     p->offline_status = g_slist_append(p->offline_status, (gint *) ggadu_config_var_get(sms_handler, "show_in_status") ? (gpointer) 2 : (gpointer) 3);
 
-    print_debug("%s : start_plugin\n", GGadu_PLUGIN_NAME);
     register_signal(sms_handler, "update config");
     register_signal(sms_handler, "change status");
     register_signal(sms_handler, "sms send");
@@ -511,6 +520,8 @@ void start_plugin()
     register_signal(sms_handler, "change user");
     register_signal(sms_handler, "send message");
     register_signal(sms_handler, "get token");
+
+    ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 
     signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
@@ -521,7 +532,7 @@ void start_plugin()
 
     load_smslist();
 
-    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", smslist, "main-gui");
+    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 
     ext = g_new0(GGaduPluginExtension, 1);
     ext->type = GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE;
@@ -531,24 +542,21 @@ void start_plugin()
     register_extension_for_plugins(ext);
 }
 
-/* i skonczyc :-p */
 void destroy_plugin()
 {
     print_debug("destroy_plugin%s\n", GGadu_PLUGIN_NAME);
-    if (menu_smsmenu)
-    {
-	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_smsmenu, "main-gui");
-	ggadu_menu_free(menu_smsmenu);
-    }
 
     unregister_extension_for_plugins(ext);
 
-    g_free(idea_token_path);
+    ggadu_repo_del("sms");
+    ggadu_repo_del_value("_protocols_", p->display_name);
 
-/*
-    signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
-*/
+    signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_smsmenu, "main-gui");
     signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
+    ggadu_menu_free(menu_smsmenu);
+
+    g_free(idea_token_path);
+    g_free(this_configdir);
 }
 
 /* zapis listy numerow do pliku */
@@ -655,6 +663,7 @@ void load_smslist()
 	k->status = 1;
 	print_debug("%s %s\n", k->nick, k->mobile);
 	smslist = g_slist_append(smslist, k);
+	ggadu_repo_add_value("sms", k->id, k, REPO_VALUE_CONTACT);
     }
 
     if (fclose(fp) != 0)
