@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.53 2003/05/22 10:16:50 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.54 2003/05/23 19:19:22 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -709,6 +709,7 @@ gpointer search_action(gpointer user_data)
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_BIRTHYEAR, _("Birthyear:"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_ID, _("GG#"), VAR_STR, NULL, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_ACTIVE, _("Search only for active users"), VAR_BOOL, NULL, VAR_FLAG_NONE);
     
@@ -1789,6 +1790,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				gg_pubdir50_add(req, GG_PUBDIR50_CITY, city);
 				g_free(city);
 			    }
+			    break;
+			case GGADU_SEARCH_BIRTHYEAR:
+		    	    if (kv->value && *(gchar*)kv->value)
+				gg_pubdir50_add(req, GG_PUBDIR50_BIRTHYEAR, kv->value);
 			    break;
 			case GGADU_SEARCH_ACTIVE:
 			    if (kv->value)

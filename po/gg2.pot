@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-05-22 20:54+0200\n"
+"POT-Creation-Date: 2003-05-23 21:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -150,7 +150,7 @@ msgid "Contact list"
 msgstr ""
 
 #: src/plugins/GUI/gui_preferences.c:384
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1046 src/plugins/sms/sms_gui.c:141
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1047 src/plugins/sms/sms_gui.c:141
 msgid "Contact"
 msgstr ""
 
@@ -182,8 +182,8 @@ msgid "Outgoing message:"
 msgstr ""
 
 #: src/plugins/GUI/gui_preferences.c:526
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1065
-#: src/plugins/tlen/tlen_plugin.c:651 src/plugins/xosd/plugin_xosd.c:305
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1066
+#: src/plugins/tlen/tlen_plugin.c:651 src/plugins/xosd/plugin_xosd.c:311
 #: src/plugins/jabber/jabber_plugin.c:462
 #: src/plugins/remote/remote_plugin.c:616 src/plugins/sms/sms_gui.c:160
 msgid "Preferences"
@@ -294,7 +294,7 @@ msgid "Age"
 msgstr ""
 
 #: src/plugins/GUI/gui_search.c:105
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1047
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1048
 #: src/plugins/tlen/tlen_plugin.c:617 src/plugins/jabber/jabber_plugin.c:310
 #: src/plugins/sms/sms_gui.c:142
 msgid "Add"
@@ -493,166 +493,170 @@ msgid "City:"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:712
-msgid "GG#"
+msgid "Birthyear:"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:713
+msgid "GG#"
+msgstr ""
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:714
 msgid "Search only for active users"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:859
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:860
 msgid "Userlist has been imported succesfully!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:861
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:862
 msgid "Server returned empty userlist!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:866
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:867
 msgid "Userlist export succeeded!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:868
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:869
 msgid "Userlist export failed!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:871
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:872
 msgid "Userlist delete succeeded!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:873
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:874
 msgid "Userlist delete failed!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1026
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1027
 #, c-format
 msgid "Sending File to %s"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1029
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1030
 msgid "Select File :"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1042
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1043
 #: src/plugins/tlen/tlen_plugin.c:614 src/plugins/jabber/jabber_plugin.c:417
 msgid "Chat"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1043
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1044
 msgid "View History"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1044
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1045
 msgid "Send File"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1048
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1049
 #: src/plugins/tlen/tlen_plugin.c:618 src/plugins/jabber/jabber_plugin.c:311
 #: src/plugins/sms/sms_gui.c:143
 msgid "Remove"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1049
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1050
 msgid "Info"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1064
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1065
 #: src/plugins/tlen/tlen_plugin.c:650 src/plugins/jabber/jabber_plugin.c:461
 #: src/plugins/sms/sms_gui.c:158
 msgid "Add Contact"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1066
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1067
 #: src/plugins/tlen/tlen_plugin.c:652
 msgid "Search for friends"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1068
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1069
 msgid "Import userlist"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1069
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1070
 msgid "Export userlist"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1070
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1071
 msgid "Delete userlist"
 msgstr ""
 
 #. wazne zeby wywolac to makro w tym miejscu
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1105
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1106
 msgid "Gadu-Gadu(c) protocol"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1138
-#: src/plugins/xosd/plugin_xosd.c:410
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1139
+#: src/plugins/xosd/plugin_xosd.c:416
 #, c-format
 msgid "Unable to read configuration file for plugin %s"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1171
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1172
 #: src/plugins/tlen/tlen_plugin.c:518 src/plugins/jabber/jabber_plugin.c:393
 msgid "Available"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1178
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1179
 msgid "Available with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1185
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1186
 msgid "Busy"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1192
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1193
 msgid "Busy with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1199
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1200
 #: src/plugins/tlen/tlen_plugin.c:548
 msgid "Invisible"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1206
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1207
 msgid "Invisible with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1213
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1214
 msgid "Offline with description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1220
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1221
 msgid "Offline"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1227
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1228
 msgid "Blocked"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1278
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1279
 msgid "no reason"
 msgstr ""
 
 #. end
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1517
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1518
 #: src/plugins/tlen/tlen_plugin.c:754 src/plugins/jabber/jabber_plugin.c:224
 msgid "Enter status description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1521
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1522
 #: src/plugins/tlen/tlen_plugin.c:758 src/plugins/jabber/jabber_plugin.c:221
 msgid "Description:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1536
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1537
 msgid "Unable to change status"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1706
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1728
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1707
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1729
 msgid "Unable send message"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1713
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1714
 #, c-format
 msgid ""
 ":: Me (%s)::\n"
@@ -660,7 +664,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1731
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1732
 #, c-format
 msgid ""
 ":: Me (%s) ::\n"
@@ -668,12 +672,12 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1808
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1813
 #: src/plugins/tlen/tlen_plugin.c:963
 msgid "Error! Cannot perform search!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1855
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1860
 msgid "I still cannot open contacts files! Exiting..."
 msgstr ""
 
@@ -758,39 +762,39 @@ msgstr ""
 msgid "Auto connect on startup"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:262
+#: src/plugins/xosd/plugin_xosd.c:268
 msgid "X OSD Preferences"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:289
+#: src/plugins/xosd/plugin_xosd.c:295
 msgid "Colour"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:290
+#: src/plugins/xosd/plugin_xosd.c:296
 msgid "Number of lines"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:291
+#: src/plugins/xosd/plugin_xosd.c:297
 msgid "Timeout"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:292
+#: src/plugins/xosd/plugin_xosd.c:298
 msgid "Timestamp"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:293
+#: src/plugins/xosd/plugin_xosd.c:299
 msgid "Alignment"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:294
+#: src/plugins/xosd/plugin_xosd.c:300
 msgid "Position"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:306
+#: src/plugins/xosd/plugin_xosd.c:312
 msgid "Show messages"
 msgstr ""
 
-#: src/plugins/xosd/plugin_xosd.c:380
+#: src/plugins/xosd/plugin_xosd.c:386
 msgid "On Screen Display"
 msgstr ""
 
