@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.14 2003/04/01 15:38:42 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.15 2003/04/02 10:31:51 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -578,6 +578,7 @@ gpointer user_add_user_action(gpointer user_data)
 gpointer user_preferences_action(gpointer user_data)
 {
 	GGaduDialog *d = ggadu_dialog_new();
+	gchar *utf = NULL;
 
 	ggadu_dialog_set_title(d, _("Gadu-gadu plugin configuration"));
 	ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);       
@@ -585,7 +586,8 @@ gpointer user_preferences_action(gpointer user_data)
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, config_var_get(handler, "uin"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_PASSWORD, _("Password"), VAR_STR, config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SERVER, _("Server"), VAR_STR, config_var_get(handler, "server"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, config_var_get(handler, "reason"), VAR_FLAG_NONE);
+	to_utf8("ISO-8859-2",config_var_get(handler, "reason"),utf);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL, config_var_get(handler, "log"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"), VAR_BOOL, config_var_get(handler, "private"), VAR_FLAG_NONE);
@@ -1273,7 +1275,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		        kv = g_new0(GGaduKeyValue,1);
 			kv->description	= g_strdup(_("Description:"));
 			kv->type	= VAR_STR;
-			kv->value	= config_var_get(handler,"reason");
+			to_utf8("ISO-8859-2",config_var_get(handler,"reason"),kv->value);
+//			kv->value	= config_var_get(handler,"reason");
 
 			d->optlist = g_slist_append(d->optlist, kv);
 			d->user_data = sp;
@@ -1392,8 +1395,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    config_var_set(handler, "autoconnect", kv->value);
 				    break;
 		    case GGADU_GADU_GADU_CONFIG_REASON:
+				    {
+				    gchar *utf = NULL;
 				    print_debug("changing derault reason %s\n", kv->value);
-				    config_var_set(handler, "reason", kv->value);
+				    from_utf8("ISO-8859-2",kv->value,utf);
+				    config_var_set(handler, "reason", utf);
+				    }
 				    break;
 		    case GGADU_GADU_GADU_CONFIG_FRIENDS_MASK:
 				    print_debug("changing var setting private to %d\n", kv->value);
