@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.102 2004/12/29 13:06:19 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.103 2005/01/05 18:17:16 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include <string.h>
+#include <X11/Xlib.h>
+#include <gdk/gdkx.h>
 
 #include "ggadu_types.h"
 #include "plugins.h"
@@ -62,6 +64,21 @@ GtkWidget *view_container = NULL;
 
 /* used with tree user view */
 GtkAccelGroup *accel_group = NULL;
+
+typedef struct _GUISkinData {
+    gchar *bkg;
+    gint w1;
+    gint w2; 
+    gint w3;
+    gint w4;
+    gint mx;
+    gint my;
+    gint cx;
+    gint cy;
+} GUISkinData;
+
+/* skin stuff */
+
 
 void set_selected_users_list(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer data)
 {
@@ -411,16 +428,112 @@ gboolean gui_main_window_delete(GtkWidget * window, GdkEvent * event, gpointer u
 }
 
 
+gboolean gui_main_fixed_btn_press(GtkWidget *widget,
+                                            GdkEventButton *event,
+                                            gpointer user_data)
+{
+	/* magic of gtk does it all ;-) */
+	gtk_window_begin_move_drag      (GTK_WINDOW(window), event->button,
+                                             event->x_root,
+                                             event->y_root,
+                                             event->time);
+	return TRUE;
+}
+
+/*
+ * Read skin data
+ */
+ 
+gboolean gui_read_skin_data(GUISkinData *skin) 
+{
+	gchar *skindir = NULL;
+	gchar *path = NULL;
+	FILE *f;
+	gchar line[128];
+	
+	if (!ggadu_config_var_get(gui_handler, "skin"))
+	    return FALSE;
+	
+	if (g_getenv("HOME_ETC"))
+		skindir = g_build_filename(g_get_home_dir(), g_getenv("HOME_ETC"), "gg2", "skins", ggadu_config_var_get(gui_handler, "skin"), NULL);
+	else
+		skindir = g_build_filename(g_get_home_dir(), ".gg2", "skins", ggadu_config_var_get(gui_handler, "skin"),NULL);
+	
+	path = g_build_filename(skindir, "main.txt", NULL);
+
+	print_debug("ridink %s\n", path);
+	
+	f = fopen(path, "r");
+	
+	if (!f)
+	{
+		print_debug("cannot open main skin file!\n");
+		return FALSE;
+	}
+	
+	while (fgets(line, 127, f))
+	{
+		if (!g_ascii_strncasecmp("BKG", line, 3)) {
+			gchar **fields = g_strsplit(line, ",", 7);
+			
+			print_debug("skin main.txt BKG is: %s\n", fields[1]);
+			g_print("skin main.txt BKG is: %s\n", fields[1]);
+			
+			skin->bkg = g_build_filename(skindir, fields[1], NULL);
+			
+			if (fields[4]) 
+			    skin->cx = atoi(fields[4]);
+			if (fields[5])
+			    skin->cy = atoi(fields[5]);
+			g_strfreev(fields);
+		} else
+		if (!g_ascii_strncasecmp("W", line, 1)) {
+			gchar **fields = g_strsplit(line, ",", 5);
+			if (fields[1])
+			    skin->w1 = atoi(fields[1]);
+			if (fields[2])
+			    skin->w2 = atoi(fields[2]);
+			if (fields[3])
+			    skin->w3 = atoi(fields[3]);
+			if (fields[4])
+			    skin->w4 = atoi(fields[4]);
+			g_strfreev(fields);
+		} else 
+		if (!g_ascii_strncasecmp("B", line, 1)) {
+			gchar **fields = g_strsplit(line, ",", 4);
+			if (!g_ascii_strncasecmp("MAINMENU", fields[1], 8)) {
+			    if (fields[2])
+			        skin->mx = atoi(fields[2]);
+			    if (fields[3])
+	    		        skin->my = atoi(fields[3]);
+			}
+			g_strfreev(fields);
+		}
+	}
+	
+	fclose(f);
+	
+	g_free(skindir);
+	g_free(path);
+	
+        return TRUE;
+}
+
 /*
  * Application window
  */
 void gui_main_window_create(gboolean visible)
 {
 	GtkWidget *main_vbox = NULL;
+	GtkWidget *fixed;
 	GdkPixbuf *image;
 	gint width, height;
 	gint top, left;
-
+	GUISkinData *skin = NULL;
+	gboolean use_theme;
+	GdkPixbuf *skin_bkg_im = NULL;
+	
+	    	
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_widget_set_name(window, "ggadu_window");
 	gtk_window_set_wmclass(GTK_WINDOW(window), "GM_NAME", "GNUGadu");
@@ -443,7 +556,7 @@ void gui_main_window_create(gboolean visible)
 
 	top = (gint) ggadu_config_var_get(gui_handler, "top");
 	left = (gint) ggadu_config_var_get(gui_handler, "left");
-
+	
 	if (top < 0 || top > 3000)
 		top = 0;
 
@@ -458,17 +571,70 @@ void gui_main_window_create(gboolean visible)
 	gdk_pixbuf_unref(image);
 
 	main_vbox = gtk_vbox_new(FALSE, 0);
-
-	gtk_box_pack_start(GTK_BOX(main_vbox), main_menu_bar, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(main_vbox), toolbar_handle_box, FALSE, FALSE, 0);
-
 /*
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gui_main_window_destroy), NULL);
 */
 	g_signal_connect(G_OBJECT(window), "delete-event", G_CALLBACK(gui_main_window_delete), NULL);
 
-	gtk_container_add(GTK_CONTAINER(window), main_vbox);
+	skin = g_new0(GUISkinData, 1);
 
+	if (ggadu_config_var_get(gui_handler, "skin"))
+	    use_theme = gui_read_skin_data(skin);
+	
+	if (use_theme && skin->bkg)
+	    skin_bkg_im = create_pixbuf(skin->bkg);
+	
+	if (skin_bkg_im) {
+		GdkPixbuf *background;
+		GdkPixmap *pixmap;
+		GdkBitmap *mask;
+		GtkWidget *img;
+		GtkWidget *evbox;
+		GtkWidget *close_button;
+		
+		evbox = gtk_event_box_new();
+		
+		close_button = gtk_button_new_with_label("x");
+		g_signal_connect_swapped(G_OBJECT(close_button), "clicked", G_CALLBACK(gui_main_window_delete), window);
+		gtk_widget_set_size_request(close_button, 10, 10);
+		
+		background = gdk_pixbuf_add_alpha(skin_bkg_im, TRUE, 255, 0, 255);
+		gdk_pixbuf_unref(skin_bkg_im);
+		
+		width = gdk_pixbuf_get_width(background);
+		height = gdk_pixbuf_get_height(background);
+
+		fixed = gtk_fixed_new ();
+		gtk_widget_set_size_request (fixed, width, height);
+		gtk_container_add (GTK_CONTAINER (window), evbox);
+		gtk_container_add (GTK_CONTAINER (evbox), fixed);
+	
+		gdk_pixbuf_render_pixmap_and_mask(background, &pixmap, &mask, 127 );
+	
+		img = gtk_image_new_from_pixbuf (background);
+		gtk_widget_show (img);
+	
+		g_signal_connect(G_OBJECT(evbox), "button-press-event", G_CALLBACK(gui_main_fixed_btn_press), NULL);
+		
+		gtk_fixed_put (GTK_FIXED (fixed), img, 0, 0);
+		gtk_fixed_put (GTK_FIXED (fixed), main_menu_bar, skin->mx, skin->my);
+		gtk_fixed_put (GTK_FIXED (fixed), close_button, skin->cx, skin->cy);
+
+		gtk_widget_set_size_request (main_vbox, width - skin->w1 + skin->w3, height - skin->w2 + skin->w4);
+		gtk_fixed_put (GTK_FIXED (fixed), main_vbox, skin->w1, skin->w2);
+		gtk_widget_show(fixed);
+		
+		gtk_window_set_default_size(GTK_WINDOW(window), width, height);
+		gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
+	
+		gtk_widget_shape_combine_mask(window, mask, 0, 0);
+	} else {
+		gtk_box_pack_start(GTK_BOX(main_vbox), main_menu_bar, FALSE, FALSE, 0);
+		gtk_container_add(GTK_CONTAINER(window), main_vbox);
+	}
+
+	gtk_box_pack_start(GTK_BOX(main_vbox), toolbar_handle_box, FALSE, FALSE, 0);
+	
 	view_container = gtk_vbox_new(FALSE, 2);
 	gtk_box_pack_start(GTK_BOX(main_vbox), view_container, TRUE, TRUE, 0);
 
@@ -481,7 +647,8 @@ void gui_main_window_create(gboolean visible)
 
 	if (visible)
 	{
-		gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
+		if (!use_theme)
+		    gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
 		gtk_window_set_auto_startup_notification(TRUE);
 		gtk_widget_show_all(GTK_WIDGET(window));
 	}
@@ -491,6 +658,9 @@ void gui_main_window_create(gboolean visible)
 
 	if (tree)
 		gui_create_tree();
+	
+	g_free(skin->bkg);
+	g_free(skin);
 }
 
 gboolean status_blinker(gpointer data)
@@ -527,6 +697,7 @@ void change_status(GPtrArray * ptra)
 	gchar *plugin_source = g_ptr_array_index(ptra, 1);
 	gui_protocol *gp = NULL;
 
+//	gint status = 0;
 	/*    
 	 * GtkWidget *status_image = g_ptr_array_index(ptra, 2);
 	 * GtkWidget *image = create_image(sp->image);

@@ -3,6 +3,7 @@
 - some default values (GUI/krzak)
 - README.dbus for D-BUS plugin
 - 2.2.4
+- skins support for original Gadu-Gadu skins - EXPERIMENTAL (GUI/THrull)
 
 04.01.2005
 - auto-away is independent for every protocol (aaway/krzak)

@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.17 2005/01/02 04:01:28 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.18 2005/01/05 18:17:16 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -249,6 +249,8 @@ GtkWidget *create_image(const gchar * filename)
 	dir = g_slist_prepend(dir, PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir, PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif
+	dir = g_slist_prepend(dir, "/");
+
 	if (ggadu_config_var_get(gui_handler, "icons"))
 	{
 		iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", ggadu_config_var_get(gui_handler, "icons"), NULL);
@@ -303,6 +305,8 @@ GdkPixbuf *create_pixbuf(const gchar * filename)
 	dir = g_slist_prepend(dir, PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir, PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif
+	dir = g_slist_prepend(dir, "/");
+
 	if (ggadu_config_var_get(gui_handler, "icons"))
 	{
 		iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", ggadu_config_var_get(gui_handler, "icons"), NULL);

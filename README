@@ -27,3 +27,11 @@ Important:
     If you accidentally do something wrong with list of plugins to be loaded,
     try removing $HOME/.gg2/modules.load and restart GNU Gadu so it will load 
     all available plugins.
+
+Skins:
+    
+    Skins should be installed in $HOME/.gg2/skins/<skindir> directory or 
+$HOME/$HOME_ETC/gg2/skins/<skindir> (if You have $HOME_ETC set).
+    
+    GNU Gadu uses skin in Windows Gadu-Gadu client format.
+
