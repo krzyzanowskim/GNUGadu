@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.8 2003/04/12 19:59:27 zapal Exp $ */
+/* $Id: main.c,v 1.9 2003/04/13 18:13:06 zapal Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -154,6 +154,7 @@ gboolean gnu_gadu_init(gpointer data)
 
 	mkdir(config->configdir, 0700);
 	config->repos = g_new0(GGaduRepo, 1);
+	ggadu_repo_add ("_protocols_");
 	load_available_modules();
 	start_plugins_ordered();
 	flush_queued_signals();

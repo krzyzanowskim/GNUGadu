@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.3 2003/04/12 19:59:27 zapal Exp $ */
+/* $Id: repo.h,v 1.4 2003/04/13 18:13:06 zapal Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
@@ -37,7 +37,8 @@ enum {
   REPO_VALUE_DC      = 0, /* don't change */
   REPO_VALUE_CONTACT = 1,
   REPO_VALUE_SETTING = 2,
-  REPO_VALUE_OTHER   = 4,
+  REPO_VALUE_PROTOCOL= 4,
+  REPO_VALUE_OTHER   = 8,
   
   REPO_VALUE_ANY     = INT_MAX
 };
