@@ -255,9 +255,20 @@ int main(int argc, char **argv)
 #endif
 	int fd = open(argv[1], O_RDONLY);
 
-	if (fd == -1)
+	if (fd == -1) {
+		GtkWidget *dialog;
+		
+		
+		dialog = gtk_message_dialog_new (NULL,GTK_DIALOG_MODAL,
+						GTK_MESSAGE_WARNING,
+						GTK_BUTTONS_CLOSE,
+						_("There is no history file"));
+						
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+		
 		g_error("Failed to open history file! %s\n", argv[1]);
-
+	}
 
 #ifdef GGADU_DEBUG
 	g_print("Getting lines count..\n");

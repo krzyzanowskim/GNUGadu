@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.181 2004/08/03 20:44:59 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.182 2004/08/03 21:34:31 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -793,48 +793,6 @@ gpointer user_chat_action(gpointer user_data)
 	msg->message = NULL;
 
 	signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui", GGaduMsg_free);
-
-	return NULL;
-}
-
-gpointer user_view_history_action(gpointer user_data)
-{
-	gsize length, terminator;
-	GIOChannel *ch = NULL;
-	gchar *line = NULL;
-	gchar *path = NULL;
-	GString *hist_buf = NULL;
-	GSList *users = (GSList *) user_data;
-	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
-
-	if (!k)
-		return NULL;
-
-	path = g_build_filename(this_configdir, "history", k->id, NULL);
-	ch = g_io_channel_new_file(path, "r", NULL);
-	print_debug("Looking into file %s", path);
-	g_free(path);
-
-	if (!ch)
-		return NULL;
-
-	hist_buf = g_string_new(NULL);
-
-	g_io_channel_set_encoding(ch, "CP1250", NULL);
-
-	while (g_io_channel_read_line(ch, &line, &length, &terminator, NULL) != G_IO_STATUS_EOF)
-	{
-		if (line != NULL)
-			g_string_append(hist_buf, line);
-	}
-
-	g_io_channel_shutdown(ch, TRUE, NULL);
-	g_io_channel_unref(ch);
-
-	signal_emit(GGadu_PLUGIN_NAME, "gui show window with text", hist_buf->str, "main-gui");
-
-	/* zwonic ten hist_buf */
-	g_string_free(hist_buf, TRUE);
 
 	return NULL;
 }
@@ -1794,10 +1752,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if ((gboolean) ggadu_config_var_get(handler, "dcc"))
 			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send File"), send_file_action, NULL));
 
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 		ggadu_menu_add_user_menu_extensions(umenu,handler);
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), user_change_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_ask_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));

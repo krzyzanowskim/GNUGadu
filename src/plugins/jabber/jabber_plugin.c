@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.86 2004/08/02 11:42:03 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.87 2004/08/03 21:34:32 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -62,49 +62,6 @@ GGaduProtocol *p;
 GGaduMenu *jabbermenu;
 
 GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
-
-gpointer user_view_history_action(gpointer user_data)
-{
-	gsize length, terminator;
-	GIOChannel *ch = NULL;
-	gchar *line = NULL;
-	gchar *path = NULL;
-	GString *hist_buf = g_string_new(NULL);
-	GSList *users = (GSList *) user_data;
-	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
-
-	if (!k)
-	{
-		g_string_free(hist_buf, TRUE);
-		return NULL;
-	}
-
-	path = g_build_filename(config->configdir, "jabber_history", k->id, NULL);
-	ch = g_io_channel_new_file(path, "r", NULL);
-	g_free(path);
-
-	if (!ch)
-	{
-		g_string_free(hist_buf, TRUE);
-		return NULL;
-	}
-
-	g_io_channel_set_encoding(ch, "ISO-8859-2", NULL);
-
-	while (g_io_channel_read_line(ch, &line, &length, &terminator, NULL) != G_IO_STATUS_EOF)
-	{
-		if (line != NULL)
-			g_string_append(hist_buf, line);
-	}
-	g_io_channel_shutdown(ch, TRUE, NULL);
-	g_io_channel_unref(ch);
-
-	signal_emit(GGadu_PLUGIN_NAME, "gui show window with text", hist_buf->str, "main-gui");
-	g_string_free(hist_buf, TRUE);
-
-	return NULL;
-}
-
 
 gpointer user_chat_action(gpointer user_data)
 {
@@ -272,12 +229,8 @@ GGaduMenu *build_userlist_menu(void)
 	GGaduMenu *listmenu;
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
 
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
-
-	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	
 	listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
 	ggadu_menu_add_submenu(listmenu,
