@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.27 2004/12/29 22:45:02 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.28 2005/01/02 04:38:38 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -67,13 +67,15 @@ static gpointer ggadu_play_file(gpointer user_data)
     cmd = g_strdup_printf("\"%s\" \"%s\"", (gchar *) ggadu_config_var_get(handler, "player"), (gchar *)user_data);
     cmd_native = g_filename_from_utf8(cmd,strlen(cmd),&r,&w,NULL);
 
-    ret = system(cmd_native); 
-	
-    if ((WIFSIGNALED(ret) && (WTERMSIG(ret) == SIGINT || WTERMSIG(ret) == SIGQUIT)) || (ret == -1))
-    {
-      signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", _("external sound plugin: Error while playing file"), "main-gui");
-    }
+//    ret = system(cmd_native); 
+    if (!g_spawn_command_line_async(cmd_native,NULL))
+          signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", _("external sound plugin: Error while playing file"), "main-gui");
     
+	
+/*    if ((WIFSIGNALED(ret) && (WTERMSIG(ret) == SIGINT || WTERMSIG(ret) == SIGQUIT)) || (ret == -1))
+    {
+    }
+*/    
     g_static_mutex_unlock(&play_mutex);
     
     g_free(cmd_native);
