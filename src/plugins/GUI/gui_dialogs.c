@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.15 2003/04/10 19:17:20 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.16 2003/04/13 17:58:35 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -599,7 +599,7 @@ void gui_about(GtkWidget *widget, gpointer data)
 		"Plavi\n"
 	  "see AUTHORS file for details\n\n"
 	  
-	  "<i>Compite time:\n%s %s</i>"), VERSION, __DATE__, __TIME__);
+	  "<i>Compile time:\n%s %s</i>"), VERSION, __DATE__, __TIME__);
 		
     about_timeout = g_timeout_add(50, timeout, image);
 }
