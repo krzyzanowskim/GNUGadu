@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.132 2004/12/20 09:15:20 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.133 2004/12/20 16:56:10 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -504,6 +504,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		{
 			GSList *tmplist = ggadu_dialog_get_entries(dialog);
 			gboolean reconn = FALSE;
+			gchar *field;
 			while (tmplist)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
@@ -511,7 +512,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				{
 				case GGADU_JABBER_JID:
 					{
-						if (ggadu_strcmp(kv->value,ggadu_config_var_get(jabber_handler, "jid")))
+						field = ggadu_config_var_get(jabber_handler, "jid");
+						if(kv->value && field && ggadu_strcmp(kv->value, field))
+							reconn = TRUE;
+						if(!(kv->value && field) && (kv->value || field))
 							reconn = TRUE;
 
 						ggadu_config_var_set(jabber_handler, "jid", kv->value);
@@ -534,7 +538,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_RESOURCE:
 					{
-						if (ggadu_strcmp(kv->value,ggadu_config_var_get(jabber_handler, "resource")))
+						field = ggadu_config_var_get(jabber_handler, "resource");
+						if(kv->value && field && ggadu_strcmp(kv->value, field))
+							reconn = TRUE;
+						if(!(kv->value && field) && (kv->value || field))
 							reconn = TRUE;
 		
 						ggadu_config_var_set(jabber_handler, "resource", kv->value);
@@ -542,15 +549,23 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_SERVER:
 					{
-						if(kv->value != ggadu_config_var_get(jabber_handler, "server"))
+						field = ggadu_config_var_get(jabber_handler, "server");
+						if(kv->value && field && ggadu_strcmp(kv->value, field))
 							reconn = TRUE;
+						if(!(kv->value && field) && (kv->value || field))
+							reconn = TRUE;
+
 						ggadu_config_var_set(jabber_handler, "server", kv->value);
 					}
 					break;
 				case GGADU_JABBER_PROXY:
 					{
-						if(kv->value != ggadu_config_var_get(jabber_handler, "proxy"))
+						field = ggadu_config_var_get(jabber_handler, "proxy");
+						if(kv->value && field && ggadu_strcmp(kv->value, field))
 							reconn = TRUE;
+						if(!(kv->value && field) && (kv->value || field))
+							reconn = TRUE;
+
 			       			ggadu_config_var_set(jabber_handler, "proxy", kv->value);
 					}
 					break;
