@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.8 2004/09/16 11:27:16 krzyzak Exp $
+dnl $Id: configure.in,v 1.9 2004/09/23 08:41:26 krzyzak Exp $
 
 AC_INIT(lib/libgadu.h)
 AM_INIT_AUTOMAKE([libgadu],[1.5])
@@ -179,7 +179,7 @@ dnl
 dnl LIBS_LIBGADU="$LIBS_LIBGADU $LIBS"
 
 AC_CONFIG_FILES(Makefile)
-AC_OUTPUT([lib/libgadu-config.h])
+dnl AC_OUTPUT([lib/libgadu-config.h])
 
 echo
 echo "configured options:"

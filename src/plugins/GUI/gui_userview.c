@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.47 2004/08/19 11:57:11 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.48 2004/09/23 08:41:25 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -567,7 +567,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 
 				if (chat_type == CHAT_TYPE_CLASSIC)
 				{
-					gchar *tmp = NULL;
+					const gchar *tmp = NULL;
 
 					if (!ggadu_strcasecmp(k->nick, k->id))
 						tmp = g_strdup_printf("%s %s", k->id, (sp ? st : ""));
@@ -575,7 +575,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 						tmp = g_strdup_printf("%s (%s) %s", k->nick, k->id, (sp ? st : ""));
 
 					gtk_window_set_title(GTK_WINDOW(window), tmp);
-					g_free(tmp);
+					/* g_free(tmp);  tmp shoud be const char */
 				}
 
 				if (chat_type == CHAT_TYPE_TABBED)
@@ -583,7 +583,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 					GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(window), "chat_notebook");
 					guint curr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
 					guint nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook), session->chat);
-					gchar *tmp = g_strdup_printf("%s %s",
+					const gchar *tmp = g_strdup_printf("%s %s",
 								     ggadu_strcasecmp(k->nick, k->id) ? k->nick : k->id,
 								     (sp ? st : ""));
 
@@ -594,7 +594,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 					if (nr == curr)
 						gtk_window_set_title(GTK_WINDOW(window), tmp);
 
-					g_free(tmp);
+					/* g_free(tmp); const gchar */
 				}
 			}
 			if (ggadu_config_var_get(gui_handler, "show_active") &&

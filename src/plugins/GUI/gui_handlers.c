@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.52 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.53 2004/09/23 08:41:25 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -471,12 +471,12 @@ void auto_away_start(gui_protocol * gp)
 {
 	int status;
 
+	if (!gp) return;
+
 	auto_away_stop(gp);
-	if (!gp)
-		return;
 
 	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-	if (is_in_status(status, gp->p->online_status) && ggadu_config_var_get(gui_handler, "auto_away"))
+	if (gp->p && is_in_status(status, gp->p->online_status) && ggadu_config_var_get(gui_handler, "auto_away"))
 	{
 		gp->aaway_timer =
 			g_timeout_add(ggadu_config_var_get(gui_handler, "auto_away_interval")
@@ -488,10 +488,11 @@ void auto_away_start(gui_protocol * gp)
 
 void auto_away_stop(gui_protocol * gp)
 {
-	if (!gp)
-		return;
+	if (!gp) return;
+	
 	if (gp->aaway_timer > 0)
 		g_source_remove(gp->aaway_timer);
+		
 	gp->aaway_timer = -1;
 }
 

@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.29 2004/05/21 07:54:40 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.30 2004/09/23 08:41:26 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -71,7 +71,7 @@ void action_roster_remove_result(LmConnection * connection, LmMessage * message,
 
 void jabber_change_status(enum states status)
 {
-	LmMessage *m;
+	LmMessage *m = NULL;
 	gchar *show = NULL;
 	gchar *show_away = "away";
 	gchar *show_xa = "xa";
@@ -103,9 +103,8 @@ void jabber_change_status(enum states status)
 	}
 	
 	m = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_PRESENCE,
-					 status ==
-					 JABBER_STATUS_UNAVAILABLE ? LM_MESSAGE_SUB_TYPE_UNAVAILABLE :
-					 LM_MESSAGE_SUB_TYPE_AVAILABLE);
+					 (status == JABBER_STATUS_UNAVAILABLE) ? 
+					 LM_MESSAGE_SUB_TYPE_UNAVAILABLE : LM_MESSAGE_SUB_TYPE_AVAILABLE);
 
 	switch (status)
 	{

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.111 2004/09/07 14:59:19 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.112 2004/09/23 08:41:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -33,6 +33,8 @@
 #include "gui_support.h"
 #include "gui_chat.h"
 #include "gui_handlers.h"
+
+#define WINDOW_CHAT_NOTIFY_PREFIX "* "
 
 extern GSList *protocols;
 extern GSList *emoticons;
@@ -307,7 +309,7 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 	else if (chat_type == CHAT_TYPE_CLASSIC)
 	{
 
-		session = user_data;
+		session = (gui_chat_session *)user_data;
 		input = g_object_get_data(G_OBJECT(session->chat), "input");
 		plugin_name = g_object_get_data(G_OBJECT(session->chat), "plugin_name");
 	}
@@ -327,7 +329,8 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 
 	if (tmpmsg && strlen(tmpmsg) > 0)
 	{
-		gchar *soundfile;
+		GtkWidget *window =  g_object_get_data(G_OBJECT(session->chat), "top_window");
+		gchar *soundfile = NULL;
 		msg = g_new0(GGaduMsg, 1);
 		msg->id = g_strdup(session->id);
 		msg->message = tmpmsg;
@@ -335,10 +338,19 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 		msg->class = (g_slist_length(session->recipients) > 1) ? GGADU_CLASS_CONFERENCE : GGADU_CLASS_CHAT;
 		msg->recipients = g_slist_copy(session->recipients);
 
+		/* it's me who send it */
 		gui_chat_append(session->chat, msg->message, TRUE, FALSE);
 		if ((soundfile = ggadu_config_var_get(gui_handler, "sound_msg_out")))
 		{
 			signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
+		}
+		
+		/* remove window "*" mark */
+		if (g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(window)),WINDOW_CHAT_NOTIFY_PREFIX))
+		{
+		    const gchar *old_title = gtk_window_get_title(GTK_WINDOW(window));
+		    gchar *new_title = g_strdup(old_title + 2);
+		    gtk_window_set_title(GTK_WINDOW(window),new_title);
 		}
 
 		gp = gui_find_protocol(plugin_name, protocols);
@@ -1300,12 +1312,28 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 		GtkWidget *input = g_object_get_data(G_OBJECT(chat), "input");
 		GtkWidget *window = gtk_widget_get_ancestor(chat, GTK_TYPE_WINDOW);
 		if (!GTK_WIDGET_VISIBLE(window))
+		{
 			gtk_widget_show(window);
+		}
 		gtk_widget_grab_focus(input);
 	}
 
 	if (!chat || !msg)
 		return;
+		
+	if (chat && !self)
+	{
+	    GtkWidget *window = gtk_widget_get_ancestor(chat, GTK_TYPE_WINDOW);
+	    if (GTK_WIDGET_VISIBLE(window))
+	    {
+		if (!g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(window)),WINDOW_CHAT_NOTIFY_PREFIX))
+		{
+		    const gchar *old_title = gtk_window_get_title(GTK_WINDOW(window));
+		    gchar *new_title = g_strconcat(WINDOW_CHAT_NOTIFY_PREFIX,old_title,NULL);
+		    gtk_window_set_title(GTK_WINDOW(window),new_title);
+		}
+	    }
+	}
 
 	session = g_object_get_data(G_OBJECT(chat), "gui_session");
 	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;

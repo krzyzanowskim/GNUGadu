@@ -1,5 +1,7 @@
 23.09.2004
 - rewriten sound-oss plugin (krzak/oss)
+- mark chat window title with "*" if somebody talk to us (krzak/GUI)
+- small fixes with gtk_window_set_title (krzak/GUI)
 
 21.09.2004
 - dlerror() - clear error messages after dlopen (piotr.smyrak@heron.pl)

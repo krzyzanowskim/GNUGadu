@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.48 2004/09/17 09:19:18 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.49 2004/09/23 08:41:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -445,7 +445,7 @@ void gui_show_message_box(gint type, gpointer signal)
 	gtk_widget_show_all(warning);
 	g_signal_connect_swapped(GTK_OBJECT(warning), "response", G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(warning));
 	g_free(txt);		/* ZONK there shouldnt be free(txt) imho */
-	g_free(title);
+//	g_free(title); 		because of void gtk_window_set_title (GtkWindow *window, const gchar *title);
 }
 
 void gui_show_window_with_text(gpointer signal)
