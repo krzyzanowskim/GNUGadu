@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.62 2004/09/17 17:58:50 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.63 2004/09/24 08:05:26 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -53,19 +53,19 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 	message_handler = NULL;
 	
 	jabber_data.status = JABBER_STATUS_UNAVAILABLE;
-	signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
+	signal_emit("jabber", "gui disconnected", NULL, "main-gui");
 
 	if (reason == LM_DISCONNECT_REASON_OK)
 	{
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Jabber disconnected")), "main-gui");
+		signal_emit("jabber", "gui show message", g_strdup(_("Jabber disconnected")), "main-gui");
 	} else if (reason == LM_DISCONNECT_REASON_PING_TIME_OUT) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Connection to the Jabber server timed out")), "main-gui");
+		signal_emit("jabber", "gui show message", g_strdup(_("Connection to the Jabber server timed out")), "main-gui");
 	} else if (reason == LM_DISCONNECT_REASON_HUP) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Connection hung up")), "main-gui");
+		signal_emit("jabber", "gui show message", g_strdup(_("Connection hung up")), "main-gui");
 	} else if (reason == LM_DISCONNECT_REASON_ERROR) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("Generic error somewhere in the transport layer")), "main-gui");
+		signal_emit("jabber", "gui show message", g_strdup(_("Generic error somewhere in the transport layer")), "main-gui");
 	} else if (reason == LM_DISCONNECT_REASON_UNKNOWN) {
-		signal_emit_from_thread("jabber", "gui show message", g_strdup(_("An unknown Jabber error")), "main-gui");
+		signal_emit("jabber", "gui show message", g_strdup(_("An unknown Jabber error")), "main-gui");
 	}
 
 	g_static_mutex_unlock(&connect_mutex);

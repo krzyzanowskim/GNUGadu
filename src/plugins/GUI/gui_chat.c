@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.114 2004/09/23 12:39:29 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.115 2004/09/24 08:05:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -329,7 +329,7 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 
 	if (tmpmsg && strlen(tmpmsg) > 0)
 	{
-		GtkWidget *window =  g_object_get_data(G_OBJECT(session->chat), "top_window");
+//		GtkWidget *window =  g_object_get_data(G_OBJECT(session->chat), "top_window");
 		gchar *soundfile = NULL;
 		msg = g_new0(GGaduMsg, 1);
 		msg->id = g_strdup(session->id);
@@ -346,13 +346,13 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 		}
 		
 		/* remove window "*" mark */
-		if (g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(window)),WINDOW_CHAT_NOTIFY_PREFIX))
+/*		if (g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(window)),WINDOW_CHAT_NOTIFY_PREFIX))
 		{
 		    const gchar *old_title = gtk_window_get_title(GTK_WINDOW(window));
 		    gchar *new_title = g_strdup(old_title + 2);
 		    gtk_window_set_title(GTK_WINDOW(window),new_title);
 		}
-
+*/
 		gp = gui_find_protocol(plugin_name, protocols);
 		auto_away_start(gp);
 
@@ -698,6 +698,21 @@ void gui_chat_update_tags()
 		}
 		tmplist = tmplist->next;
 	}
+}
+
+static gboolean window_notify_event_signal(GtkWidget *widget, GdkEventCrossing *event, gpointer user_data)
+{
+	//dupa
+	
+        if ((event->detail != GDK_NOTIFY_INFERIOR) && g_str_has_prefix(gtk_window_get_title(GTK_WINDOW(widget)),WINDOW_CHAT_NOTIFY_PREFIX))
+        {
+	    print_debug("window_notify_event_signal");
+	    const gchar *old_title = gtk_window_get_title(GTK_WINDOW(widget));
+	    gchar *new_title = g_strdup(old_title + 2);
+	    gtk_window_set_title(GTK_WINDOW(widget),new_title);
+	}
+	
+	return FALSE;
 }
 
 static gboolean window_resize_signal(GtkWidget * window, GdkEventConfigure * event, gpointer user_data)
@@ -1256,6 +1271,9 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	
 
 	g_signal_connect(chat_window, "configure-event", G_CALLBACK(window_resize_signal), session);
+	g_signal_connect(chat_window, "enter-notify-event", G_CALLBACK(window_notify_event_signal), session);
+	g_signal_connect(chat_window, "leave-notify-event", G_CALLBACK(window_notify_event_signal), session);
+	g_signal_connect(chat_window, "key-press-event", G_CALLBACK(window_notify_event_signal), session);
 	g_signal_connect(button_autosend, "clicked", G_CALLBACK(on_autosend_clicked), session);
 	g_signal_connect(button_send, "clicked", G_CALLBACK(on_send_clicked), session);
 	g_signal_connect(button_stick, "toggled", G_CALLBACK(on_stick_clicked), session);
