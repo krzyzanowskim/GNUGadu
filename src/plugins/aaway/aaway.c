@@ -103,7 +103,7 @@ static gboolean check_idle_time()
 		    {
 			GGaduStatusPrototype *sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
 			
-			if (ggadu_is_in_status(sp->status, protocol->online_status))
+			if (sp && ggadu_is_in_status(sp->status, protocol->online_status))
 			{
 			    gchar *message = g_strdup(ggadu_config_var_get(handler, "message"));
 			    GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, NULL, NULL);
@@ -138,7 +138,7 @@ static gboolean check_idle_time()
 		    if (plugin && protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL))
 		    {
 			GGaduStatusPrototype *sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
-			if (ggadu_is_in_status(sp->status, protocol->away_status))
+			if (sp && ggadu_is_in_status(sp->status, protocol->away_status))
 			{
 			    gchar *message = g_strdup(ggadu_config_var_get(handler, "message"));
 			    GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, NULL, NULL);
