@@ -1,3 +1,11 @@
+/* $Id: perl_embed.c,v 1.5 2003/05/09 19:06:37 zapal Exp $ */
+
+/* Written by Bartosz Zapalowski <zapal@users.sf.net>
+ * based on perl plugin in X-Chat
+ *
+ * Thanks to Adam Wujek for help in testing.
+ */
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -108,16 +116,20 @@ static XS (XS_GGadu_register_script)
   dXSARGS;
 
   name = SvPV (ST (0), junk);
-  on_msg_receive = SvPV (ST (0), junk);
+  on_msg_receive = SvPV (ST (1), junk);
 
+  print_debug ("registering %s with %s\n", name, on_msg_receive);
+  
   list = perlscripts;
   while (list)
   {
     script = (perlscript *) list->data;
     tmp = basename (script->filename);
+    print_debug ("%s, %s\n", script->filename, tmp);
     if (!strcmp (tmp, name))
     {
       script->loaded = 1;
+      print_debug ("found %s in %s\n", name, script->filename);
 
       script->on_msg_receive = g_strdup (on_msg_receive);
       
@@ -174,17 +186,47 @@ int perl_load_script (char *script_name)
 {
   perlscript *script;
   char *perl_args[] = {"", "-e", "0", "-w"};
+  const char perl_definitions[] = {
+	  "sub load_file{"
+	    "my $f_name=shift;"
+	    "local $/=undef;"
+	    "open FH,$f_name or return \"__FAILED__\";"
+	    "$_=<FH>;"
+	    "close FH;"
+	    "return $_;"
+	  "}"
+	  "sub load_n_eval{"
+	    "my $f_name=shift;"
+	    "my $strin=load_file($f_name);"
+	    "return 2 if($strin eq \"__FAILED__\");"
+	    "eval $strin;"
+	    "if($@){"
+	    /*"  #something went wrong\n"*/
+	      "print\"Errors loading file $f_name:\\n\";"
+	      "print\"$@\\n\";"
+	      "return 1;"
+	    "}"
+	    "return 0;"
+	  "}"
+	  "$SIG{__WARN__}=sub{print\"$_[0]\n\";};"
+	};
 
   script = g_new0 (perlscript, 1);
   script->loaded = 0;
   script->filename = g_strdup (script_name);
   script->perl = perl_alloc ();
   PERL_SET_CONTEXT (script->perl);
+  my_perl = script->perl;
   perl_construct (script->perl);
-  perl_parse (script->perl, xs_init, 3, perl_args, NULL);
-  perl_run (script->perl);
-  
+  perl_parse (script->perl, xs_init, 4, perl_args, NULL);
+  eval_pv (perl_definitions, TRUE);
+
   perlscripts = g_slist_append (perlscripts, script);
+
+  execute_perl ("load_n_eval", script->filename);
+
+  printf ("aaaa\n");
+  
   return 0;
 };
 
@@ -204,6 +246,7 @@ int perl_unload_script (char *script_name)
       perl_destruct (script->perl);
       perl_free (script->perl);
       perlscripts = g_slist_remove (perlscripts, script);
+      g_free (script);
       break;
     }
     list = list->next;
@@ -218,6 +261,8 @@ char *perl_action_on_msg_receive (char *uid, char *msg)
   GSList *list;
   perlscript *script;
 
+  print_debug ("Hejlo\n");
+  
   list = perlscripts;
   while (list)
   {
@@ -226,7 +271,7 @@ char *perl_action_on_msg_receive (char *uid, char *msg)
     {
       PERL_SET_CONTEXT (script->perl);
       my_perl = script->perl;
-      ret = execute_perl_string ("on_msg_receive", ret);
+      ret = execute_perl_string (script->on_msg_receive, ret);
     }
     list = list->next;
   }
