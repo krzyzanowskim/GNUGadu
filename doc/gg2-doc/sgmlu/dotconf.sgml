@@ -38,50 +38,73 @@ jest kolejnością, w jakiej będą ładowane moduły.</para>
   <row>
     <entry>auto_away_interval</entry>
     <entry>VAR_INT</entry>
-    <entry>300000</entry>
-    <entry></entry>
+    <entry>5</entry>
+    <entry>Czas nieaktywności w minutach, po jakim stan zostanie automatycznie
+    zmieniony na zajęty pod warunkiem, że wcześniej stan należał do jednego
+    ze stanów określonych jako dostępny. Nieaktywność oznacza tutaj brak
+    wysyłania wiadomości w obrębie danego protokołu.</entry>
   </row>
 
   <row>
     <entry>auto_away</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy automatyczna zmiana stanu na zajęty jest włączona.</entry>
+  </row>
+
+  <row>
+    <entry>blink</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry>Określa, czy mruganie wskaźnikiem stanu podczas łączenia jest
+    włączone.</entry>
   </row>
 
   <row>
     <entry>blink_interval</entry>
     <entry>VAR_INT</entry>
     <entry>500</entry>
-    <entry></entry>
+    <entry>Odstęp czasu w milisekundach, po jakim będzie zmieniany obrazek
+    podczas mrugania wskaźnikiem stanu.</entry>
   </row>
 
   <row>
     <entry>chat_paned_size</entry>
     <entry>VAR_INT</entry>
-    <entry>160</entry>
-    <entry></entry>
+    <entry>0</entry>
+    <entry>Określa rozmiar w procentach, jaki zajmuje pole z historią
+    rozmowy w okienku rozmowy.</entry>
   </row>
 
   <row>
     <entry>chat_type</entry>
-    <entry>VAR_INT</entry>
+    <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy w okienku rozmowy wykorzystywane są zakładki.
+    Jeśli nie są (wartość 0), to dla każdej rozmowy tworzone jest oddzielne
+    okienko z rozmową.</entry>
   </row>
 
   <row>
     <entry>chat_window_auto_raise</entry>
     <entry>VAR_BOOT</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy po nadejściu nowej wiadomości będącej kontynuacją
+    istniejącej rozmowy, okienko z rozmową automatycznie wyskakuje na wierzch.
+    Przydatne, gdy mamy spory bałagan na biurku i często okienko jest ukrywane
+    pod stertą innych okien.</entry>
   </row>
 
   <row>
     <entry>chat_window_auto_show</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy po nawiązaniu nowej rozmowy, okienko z rozmową
+    automatycznie się pojawia. Jest to opcja niebezpieczne, ponieważ może
+    być łatwo wykorzystana do przeprowadzenia ataku typu DoS (Denial of Service)
+    prowadząc do wyczerpania zasobów komputera (pamięć). W skrajnych
+    przypadkach (gdy zabraknie pamięci) może to spowodować błędne działanie
+    systemu.</entry>
   </row>
 
   <row>
@@ -102,161 +125,172 @@ jest kolejnością, w jakiej będą ładowane moduły.</para>
     <entry>emot</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy program może korzystać z graficznych emotikonek.</entry>
   </row>
 
   <row>
     <entry>expand</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy drzewo z kontaktami ma być automatycznie rozwijane
+    po pojawieniu się aktywnych użytkowników.</entry>
   </row>
 
   <row>
     <entry>height</entry>
     <entry>VAR_INT</entry>
     <entry>488</entry>
-    <entry></entry>
+    <entry>Wysokość okna głównego w pikselach.</entry>
   </row>
 
   <row>
     <entry>hide_on_start</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy główne okno programu będzie ukrywane przy starcie.
+    Ta opcja działa tylko wtedy, gdy moduł docklet jest załadowany.</entry>
   </row>
 
   <row>
     <entry>icons</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Określa zestaw ikon, z których korzysta &gad;. Ikony obejmują
+    graficzne reprezentacje poszczególnych protokołów, stanów na liście
+    kontaktów.</entry>
   </row>
 
   <row>
     <entry>left</entry>
     <entry>VAR_INT</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Przesunięcie od lewej głównego okna programu w pikselach.</entry>
   </row>
 
   <row>
     <entry>msg_body_color</entry>
     <entry>VAR_STR</entry>
     <entry>#000001</entry>
-    <entry></entry>
+    <entry>Kolor tekstu wiadomości przychodzącej.</entry>
   </row>
 
   <row>
     <entry>msg_body_font</entry>
     <entry>VAR_STR</entry>
     <entry>Sans</entry>
-    <entry></entry>
+    <entry>Czcionka tekstu wiadomości przychodzącej.</entry>
   </row>
 
   <row>
     <entry>msg_header_color</entry>
     <entry>VAR_STR</entry>
     <entry>#000001</entry>
-    <entry></entry>
+    <entry>Kolor nagłówka wiadomośći przychodzącej.</entry>
   </row>
 
   <row>
     <entry>msg_header_font</entry>
     <entry>VAR_STR</entry>
     <entry>Sans</entry>
-    <entry></entry>
+    <entry>Czcionka nagłówka wiadomości przychodzącej.</entry>
   </row>
 
   <row>
     <entry>msg_out_body_color</entry>
     <entry>VAR_STR</entry>
     <entry>#000001</entry>
-    <entry></entry>
+    <entry>Kolor tekstu wiadomości wychodzącej.</entry>
   </row>
 
   <row>
     <entry>msg_out_body_font</entry>
     <entry>VAR_STR</entry>
     <entry>Sans</entry>
-    <entry></entry>
+    <entry>Czcionka tekstu wiadomości wychodzącej.</entry>
   </row>
 
   <row>
     <entry>msg_out_header_color</entry>
     <entry>VAR_STR</entry>
     <entry>#000001</entry>
-    <entry></entry>
+    <entry>Kolor nagłówka wiadomośći wychodzącej.</entry>
   </row>
 
   <row>
     <entry>msg_out_header_font</entry>
     <entry>VAR_STR</entry>
     <entry>Sans</entry>
-    <entry></entry>
+    <entry>Czcionka nagłówka wiadomośći wychodzącej.</entry>
   </row>
 
   <row>
     <entry>send_on_enter</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy wiadomość jest wysyłana po wciśnięciu klawisza
+    <keycap>Enter</keycap> w oknie rozmowy.</entry>
   </row>
 
   <row>
     <entry>show_active</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy na liście kontaktów mają być pokazywani tylko
+    aktywni użytkownicy.</entry>
   </row>
 
   <row>
     <entry>sound_msg_in</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Plik dźwiękowy, jaki zostanie odegrany po przyjściu nowej
+    wiadomości.</entry>
   </row>
 
   <row>
     <entry>sound_msg_out</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Plik dźwiękowy, jaki zostanie odegrany po wysłaniu
+    wiadomości.</entry>
   </row>
 
   <row>
     <entry>theme</entry>
     <entry>VAR_STR</entry>
     <entry>(brak)</entry>
-    <entry></entry>
+    <entry>Motyw GTK+2.0, który zostanie użyty do zmiany wyglądu
+    programu.</entry>
   </row>
 
   <row>
     <entry>top</entry>
     <entry>VAR_INT</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Przesunięcie od góry głównego okna programu w pikselach.</entry>
   </row>
 
   <row>
     <entry>tree</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy protokoły są przedstawiane w postaci drzewa
+    (wartość 1) czy w postaci zakładek (wartość 0).</entry>
   </row>
 
   <row>
     <entry>use_xosd_for_new_msgs</entry>
     <entry>VAR_BOOL</entry>
     <entry>0</entry>
-    <entry></entry>
+    <entry>Określa, czy po przyjściu nowej wiadomości jest wykorzystywany
+    moduł XOSD do informowania o oczekującej rozmowie.</entry>
   </row>
 
   <row>
     <entry>width</entry>
     <entry>VAR_INT</entry>
     <entry>160</entry>
-    <entry></entry>
+    <entry>Szerokość głównego okna programu w pikselach.</entry>
   </row>
 </tbody>
 </tgroup>
