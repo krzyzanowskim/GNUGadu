@@ -69,7 +69,7 @@ gint get_idle()
 	{
 		mit_info = XScreenSaverAllocInfo();
 		XScreenSaverQueryInfo(GDK_DISPLAY(), GDK_ROOT_WINDOW(), mit_info);
-		idle_time = (mit_info->idle) / 1000;
+		idle_time = (mit_info->idle) / 100;
 		XFree(mit_info);
 	}
 	else
