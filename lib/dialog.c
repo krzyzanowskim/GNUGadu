@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.10 2004/02/14 02:08:08 krzyzak Exp $ */
+/* $Id: dialog.c,v 1.11 2004/02/14 13:12:44 thrulliq Exp $ */
 
 /*
  * GNU Gadu 2
@@ -36,12 +36,13 @@
 	return g_new0(GGaduDialog, 1);
 } */
 
-GGaduDialog *ggadu_dialog_new1(guint type, gchar * title, gchar * callback_signal)
+GGaduDialog *ggadu_dialog_new1_full(guint type, gchar * title, gchar * callback_signal, gpointer user_data)
 {
 	GGaduDialog *dialog = g_new0(GGaduDialog, 1);
 	ggadu_dialog_callback_signal(dialog, callback_signal);
 	ggadu_dialog_set_title(dialog, title);
 	ggadu_dialog_set_type(dialog, type);
+	dialog->user_data = user_data;
 	return dialog;
 }
 

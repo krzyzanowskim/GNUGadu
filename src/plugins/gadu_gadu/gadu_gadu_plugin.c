@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.147 2004/02/14 13:01:22 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.148 2004/02/14 13:12:45 thrulliq Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -985,7 +985,7 @@ gpointer _register_account_action(gpointer user_data)
 	g_io_channel_write_chars(ch, h->body, h->body_size, NULL, NULL);
 	g_io_channel_shutdown(ch, TRUE, NULL);
 
-	dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("Register Gadu-Gadu account"), "register account");
+	dialog = ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC, _("Register Gadu-Gadu account"), "register account", h);
 	ggadu_dialog_add_entry1(dialog, GGADU_GADU_GADU_REGISTER_IMAGE, "", VAR_IMG, token_image_path, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry1(dialog, GGADU_GADU_GADU_REGISTER_TOKEN, _("Registration code:\n(shown above)"), VAR_STR,
 				NULL, VAR_FLAG_NONE);
@@ -994,7 +994,6 @@ gpointer _register_account_action(gpointer user_data)
 				VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry1(dialog, GGADU_GADU_GADU_REGISTER_UPDATE_CONFIG, _("Update settings on success?"),
 				VAR_BOOL, FALSE, VAR_FLAG_NONE);
-	dialog->user_data = (gpointer) h;
 	signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	g_free(token_image_path);
@@ -1422,13 +1421,12 @@ gpointer send_file_action(gpointer user_data)
 	}
 
 	tmp = g_strdup_printf(_("Sending File to %s"), k->ip);
-	dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, tmp, "send file");
+	dialog = ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC, tmp, "send file", (gpointer) atoi((char *) k->id));
 	g_free(tmp);
 
 	ggadu_dialog_add_entry1(dialog, GGADU_GADU_GADU_CONTACT, NULL, VAR_NULL, k, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry1(dialog, GGADU_GADU_GADU_SELECTED_FILE, _("Select File :"), VAR_FILE_CHOOSER, NULL,
 				VAR_FLAG_NONE);
-	dialog->user_data = (gpointer) atoi((char *) k->id);
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
 }
@@ -1880,10 +1878,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				GGaduDialog *dialog = NULL;
 				gchar *reason_c = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 				
-				dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr");
+				dialog = ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr", sp);
 				ggadu_dialog_add_entry1(dialog, 0, _("Description:"), VAR_STR,
 						       (gpointer) reason_c, VAR_FLAG_FOCUS);
-				dialog->user_data = sp;
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 				g_free(reason_c);
 			}

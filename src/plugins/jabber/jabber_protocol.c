@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.23 2004/02/14 02:08:10 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.24 2004/02/14 13:12:46 thrulliq Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -152,11 +152,12 @@ void jabber_fetch_roster(gpointer user_data)
 
 void action_search_form(LmConnection * connection, LmMessage * message, gpointer data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Jabber search: form"),"search");
+	GGaduDialog *dialog;
 	LmMessageNode *node;
 	LmMessageNode *child_first, *child_last, *child_nick, *child_email, *child_instr;
-
-	dialog->user_data = (gpointer) g_strdup(lm_message_node_get_attribute(message->node, "from"));
+	
+	dialog =  ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC,_("Jabber search: form"),"search", 
+			    (gpointer) g_strdup(lm_message_node_get_attribute(message->node, "from")));
 
 	node = lm_message_node_get_child(message->node, "query");
 	if (!strcmp(lm_message_node_get_attribute(node, "xmlns"), "jabber:iq:search"))

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.58 2004/02/14 12:48:18 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.59 2004/02/14 13:12:47 thrulliq Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -974,8 +974,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				/* end */
 
-				dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr");
-				dialog->user_data = _sp;
+				dialog = ggadu_dialog_new1_full(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr", _sp);
 				desc_utf = to_utf8("ISO-8859-2", description);
 				ggadu_dialog_add_entry1(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR,
 						       desc_utf, VAR_FLAG_NONE);

@@ -1,4 +1,5 @@
 14.02.2004
+- added ggadu_dialog_new1_full, replaced ggadu_dialog_new1 with macro (core/THrull)
 - systray code cleanups (docket/systray/THrull)
 - "add user" & "change user" signals are now working... (sms/THrull)
 - "gui add user window" and "gui change user window" are no longer avilable (krzak)

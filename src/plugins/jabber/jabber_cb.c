@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.35 2004/02/14 12:48:17 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.36 2004/02/14 13:12:46 thrulliq Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -170,11 +170,10 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 
 	if (lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_SUBSCRIBE)
 	{
-		GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_YES_NO,_("Subscription request confirmation"),"jabber subscribe");
+		GGaduDialog *dialog = ggadu_dialog_new1_full(GGADU_DIALOG_YES_NO,_("Subscription request confirmation"),"jabber subscribe", g_strdup(jid));
 		gchar *msg = g_strdup_printf(_("Person : %s\nwants to subscribe your presence"), jid);
 
 		ggadu_dialog_add_entry1(dialog, 0, msg, VAR_NULL, NULL, VAR_FLAG_NONE);
-		dialog->user_data = g_strdup(jid);
 		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
