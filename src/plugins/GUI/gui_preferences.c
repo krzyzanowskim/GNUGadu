@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.51 2004/02/17 16:12:23 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.52 2004/02/29 17:57:58 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -703,6 +703,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *blink_interval;
 	GtkWidget *auto_away;
 	GtkWidget *auto_away_interval;
+	GtkWidget *descr_on_list;
 	GtkWidget *tabbox;
 	GtkWidget *label0_align, *label1_align, *label2_align, *label3_align;
 	GDir *dir;
@@ -799,11 +800,15 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	hide_toolbar = gtk_check_button_new_with_label(_("Show toolbar"));
 	gtk_box_pack_start(GTK_BOX(vbox), hide_toolbar, FALSE, FALSE, 0);
 
+	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on user list"));
+	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
+
 	blink = gtk_check_button_new_with_label(_("Blink status"));
 	gtk_box_pack_start(GTK_BOX(vbox), blink, FALSE, FALSE, 0);
 
 	auto_away = gtk_check_button_new_with_label(_("Auto away"));
 	gtk_box_pack_start(GTK_BOX(vbox), auto_away, FALSE, FALSE, 0);
+
 
 	tabbox = gtk_table_new(8, 2, FALSE);
 
@@ -941,6 +946,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	if (!ggadu_config_var_get(gui_handler, "hide_toolbar"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_toolbar), TRUE);
+
+	if (ggadu_config_var_get(gui_handler, "descr_on_list"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(descr_on_list), TRUE);
 
 	/* read available themes */
 	dirname = g_build_filename(PACKAGE_DATA_DIR, "themes", NULL);
@@ -1119,8 +1127,12 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "hide_toolbar",
 				     (gpointer) ! gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(hide_toolbar)));
 
+		ggadu_config_var_set(gui_handler, "descr_on_list", 
+				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));
+
 		ggadu_config_var_set(gui_handler, "theme",
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_theme)->entry))));
+				     
 		ggadu_config_var_set(gui_handler, "icons",
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_icons)->entry))));
 

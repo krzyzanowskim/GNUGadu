@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.46 2004/02/17 09:56:09 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.47 2004/02/29 17:57:58 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -172,11 +172,13 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 					  (gpointer) DEFAULT_CHAT_WINDOW_WIDTH);
 	ggadu_config_var_add_with_default(gui_handler, "chat_window_height", VAR_INT,
 					  (gpointer) DEFAULT_CHAT_WINDOW_HEIGHT);
-	ggadu_config_var_add_with_default(gui_handler, "blink", VAR_BOOL,(gpointer) TRUE);
+	ggadu_config_var_add_with_default(gui_handler, "blink", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(gui_handler, "blink_interval", VAR_INT);
 	ggadu_config_var_add(gui_handler, "auto_away", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "auto_away_interval", VAR_INT);
 	ggadu_config_var_add(gui_handler, "use_username", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "descr_on_list", VAR_BOOL, (gpointer) TRUE);
+
 
 	if (!ggadu_config_read(gui_handler))
 		g_warning(_("Unable to read configuration file for plugin GUI"));

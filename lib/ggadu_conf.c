@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.14 2004/02/17 20:42:14 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.15 2004/02/29 17:57:57 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -126,16 +126,8 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 	while (tmp)
 	{
 		GGaduVar *var = (GGaduVar *) tmp->data;
-
 		if ((var) && (var->name) && (!ggadu_strcasecmp(var->name, name)))
 		{
-
-			if (!val)
-			{
-				var->ptr = (var->def) ? var->def : NULL;
-				break;
-			}
-
 			print_debug("VAR \"%s\" ", var->name);
 			switch (var->type)
 			{
@@ -146,13 +138,6 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 
 				print_debug("VAR_STR %s\n", (gchar *) val);
 
-				if (val && (strlen((gchar *) val) == 0))
-				{
-					var->ptr = var->def;
-					print_debug(" SET DEFAULT : %s\n", (gchar *) val);
-					break;
-				}
-
 				if (*(gchar *) val == 1)
 					var->ptr = (gpointer) base64_decode(g_strstrip((gchar *) val + 1));
 				else
@@ -161,9 +146,11 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 				break;
 			case VAR_INT:
 			case VAR_BOOL:
-				if (val)
-					print_debug("VAR_INT||BOOL %d", val);
+				print_debug("VAR_INT||BOOL %d", (gint) val);
 				var->ptr = (gpointer) val;
+				break;
+			default:
+				print_debug("UNKNOWN VARIABLE TYPE: WTF? %d", var->type);
 				break;
 			}
 
@@ -172,22 +159,6 @@ void ggadu_config_var_set(GGaduPlugin * handler, gchar * name, gpointer val)
 		}
 		tmp = tmp->next;
 	}
-}
-
-void ggadu_config_var_add(GGaduPlugin * handler, gchar * name, gint type)
-{
-	GGaduVar *var = NULL;
-
-	if (!name || !handler)
-		return;
-
-	var = g_new0(GGaduVar, 1);
-	var->name = g_strdup(name);
-	var->type = type;
-	var->ptr = NULL;
-	var->def = NULL;
-
-	handler->variables = g_slist_append(handler->variables, var);
 }
 
 void ggadu_config_var_add_with_default(GGaduPlugin * handler, gchar * name, gint type, gpointer default_value)
@@ -200,10 +171,14 @@ void ggadu_config_var_add_with_default(GGaduPlugin * handler, gchar * name, gint
 	var = g_new0(GGaduVar, 1);
 	var->name = g_strdup(name);
 	var->type = type;
-	var->ptr = NULL;
-	var->def = default_value;
-
+	var->ptr = default_value;
+	
 	handler->variables = g_slist_append(handler->variables, var);
+}
+
+void ggadu_config_var_add(GGaduPlugin * handler, gchar * name, gint type)
+{
+	ggadu_config_var_add_with_default(handler, name, type, NULL);
 }
 
 /*

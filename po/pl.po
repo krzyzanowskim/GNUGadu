@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.48 2004/02/21 21:31:12 thrulliq Exp $
+# $Id: pl.po,v 1.49 2004/02/29 17:57:57 thrulliq Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 msgid ""
@@ -47,7 +47,7 @@ msgstr ""
 
 #: src/main.c:195
 msgid "GNU Gadu 2"
-msgstr ""
+msgstr "GNU Gadu 2"
 
 #: lib/plugins.c:129
 #, c-format
@@ -542,7 +542,7 @@ msgstr "Program zakoñczy swoje dzia³anie"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:812
 msgid "Change contact informations"
-msgstr ""
+msgstr "Zmieñ informacje o kontakcie"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:814
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:827

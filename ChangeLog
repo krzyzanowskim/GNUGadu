@@ -1,3 +1,7 @@
+29.02.2004
+- GUI user list can now show user descriptions under nicknames (THrull/GUI)
+- fixed fscked ggadu_config_var_set/add with use of default values (THrull/core)
+
 26.02.2004
 - Shift + Enter does not send a message even if "Send on enter" option is enabled (THrull/GUI)
 

@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.35 2004/02/21 22:26:50 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.36 2004/02/29 17:57:58 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -98,15 +98,18 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 
 	gtk_tree_model_get(model, iter, 2, &k, -1);
 
-	if (!k)
-	{
+	if (!k) {
 		gchar *font = ggadu_config_var_get(gui_handler, "contact_list_protocol_font");
 		g_object_set(G_OBJECT(renderer), "font", (font) ? font : "bold", NULL);
-	}
-	else
-	{
+	} else {
 		gchar *font = ggadu_config_var_get(gui_handler, "contact_list_contact_font");
 		g_object_set(G_OBJECT(renderer), "font", (font) ? font : "normal", NULL);
+		
+		if (ggadu_config_var_get(gui_handler, "descr_on_list") && k->status_descr) {
+		    gchar *markup = g_strdup_printf("%s\n<small>%s</small>", k->nick, k->status_descr);
+		    g_object_set(G_OBJECT(renderer), "text", NULL, "markup", markup, NULL);
+		    g_free(markup);
+		}
 	}
 }
 
