@@ -89,6 +89,10 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 	  print_debug ("changing use_ssl to %d\n", kv->value);
 	  config_var_set (jabber_handler, "use_ssl", kv->value);
 	  break;
+	case GGADU_JABBER_RESOURCE:
+	  print_debug ("changing resource to %s\n", kv->value);
+	  config_var_set (jabber_handler, "resource", kv->value);
+	  break;
       }
       tmplist = tmplist->next;
     }
@@ -286,6 +290,9 @@ gpointer user_preferences_action (gpointer user_data)
   ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_USESSL,
       _("Use SSL"), VAR_BOOL,
       config_var_get (jabber_handler, "use_ssl"), VAR_FLAG_NONE);
+  ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_RESOURCE,
+      _("Resource"), VAR_STR,
+      config_var_get (jabber_handler, "resource"), VAR_FLAG_NONE);
 
   signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
   return NULL;
@@ -470,6 +477,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
   config_var_add (jabber_handler, "password", VAR_STR);
   config_var_add (jabber_handler, "autoconnect", VAR_BOOL);
   config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
+  config_var_add (jabber_handler, "resource", VAR_STR);
 
   if (!config_read (jabber_handler))
     g_warning (_("Unable to read configuration file for plugin jabber"));

@@ -39,7 +39,8 @@ void connection_open_result_cb (LmConnection *connection, gboolean success, gint
   strchr (jid, '@')[0] = '\0';
   
   if (!lm_connection_authenticate (connection, jid,
-	config_var_get (jabber_handler, "password"), "GNU Gadu 2",
+	config_var_get (jabber_handler, "password"),
+	config_var_get (jabber_handler, "resource") ? config_var_get (jabber_handler, "resource") : "GNU Gadu 2",
 	(LmResultFunction) connection_auth_cb,
 	status, NULL, NULL))
   {
