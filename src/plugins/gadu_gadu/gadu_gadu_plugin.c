@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.66 2003/06/15 17:53:29 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.67 2003/06/16 00:25:01 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -133,12 +133,15 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	  return FALSE;
       }
 
-    dcc_socket_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
-    gg_dcc_ip = inet_addr ("255.255.255.255");
-    gg_dcc_port = dcc_socket_get->port;
+    if (!dcc_socket_get) 
+    {
+ 	   dcc_socket_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
+	    gg_dcc_ip = inet_addr ("255.255.255.255");
+	    gg_dcc_port = dcc_socket_get->port;
 
-    dcc_channel_get = g_io_channel_unix_new (dcc_socket_get->fd);
-    g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_socket_get);
+	    dcc_channel_get = g_io_channel_unix_new (dcc_socket_get->fd);
+	    g_io_add_watch (dcc_channel_get, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_socket_get);
+    }
 
     memset (&p, 0, sizeof (p));
 
