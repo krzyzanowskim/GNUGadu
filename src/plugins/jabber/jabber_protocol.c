@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.39 2004/12/29 13:32:42 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.40 2004/12/29 14:38:41 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -87,9 +87,9 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 	
 	status = sp->status;
 	
-	if ((status == jabber_data.status))
+/*	if ((status == jabber_data.status))
 		return;
-		
+*/				
 	if (status == JABBER_STATUS_UNAVAILABLE)
 	{
 		lm_connection_close(jabber_data.connection, NULL);
@@ -143,8 +143,17 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 	if (show)
 		lm_message_node_add_child(m->node, "show", show);
 
-	if (jabber_data.description)
-		lm_message_node_add_child(m->node, "status", jabber_data.description);
+	g_free(jabber_data.description);
+	jabber_data.description = NULL;
+
+	if (sp->status_description)
+	{
+		print_debug("jabber: status description %s %s",sp->status_description,show);
+		lm_message_node_add_child(m->node, "status", sp->status_description);
+		jabber_data.description = g_strdup(sp->status_description);
+	}
+
+	print_debug(lm_message_node_to_string(m->node));
 
 	if (!lm_connection_send(jabber_data.connection, m, NULL))
 	{
