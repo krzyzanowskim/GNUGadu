@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.49 2004/01/20 22:08:06 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.50 2004/01/24 19:45:58 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -565,12 +565,12 @@ GtkWidget *create_status_menu(gui_protocol * gp, GtkWidget * status_image)
 void gui_build_default_menu()
 {
 	GtkItemFactoryEntry menu_items[] = {
-		{"/_GnuGadu", NULL, NULL, 0, "<Branch>"},
+		{"/_GnuGadu", NULL, NULL, 0, "<Branch>", NULL},
 		{_("/GnuGadu/_Preferences"), NULL, gui_preferences, 0, "<StockItem>", GTK_STOCK_PREFERENCES},
-		{_("/GnuGadu/"), "", NULL, 0, 0},
+		{_("/GnuGadu/"), NULL, NULL, 0, "<Separator>", NULL},
 		{_("/GnuGadu/_About"), "<CTRL>a", gui_about, 0, "<StockItem>", GTK_STOCK_DIALOG_INFO},
 		{_("/GnuGadu/_Quit"), "<CTRL>q", gui_quit, 0, "<StockItem>", GTK_STOCK_QUIT},
-		{"/_Menu", NULL, NULL, 0, "<Branch>"},
+		{"/_Menu", NULL, NULL, 0, "<Branch>", NULL},
 	};
 	gint Nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
