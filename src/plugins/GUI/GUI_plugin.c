@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.28 2003/06/24 18:52:32 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.29 2003/06/24 19:01:10 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -195,14 +195,18 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 		gint status;
 
 		status = (gint) signal_emit ("main-gui", "get current status", NULL, gp->plugin_name);
-		sp = gui_find_status_prototype (gp->p, status);
+		sp = gui_find_status_prototype (gp->p, (gint) status);
 
-		markup_id = g_strdup_printf ("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
-		markup_desc =
-		    (sp) ? g_strdup_printf ("<span size=\"small\"><b>%s</b></span>", sp->description) : _("(None)");
-		is_desc = TRUE;
-		gtk_tooltips_set_tip (tooltip, gtk_widget_get_ancestor (add_info_label_desc, GTK_TYPE_EVENT_BOX), NULL,
-				      "caption");
+		if (sp)
+		  {
+		      markup_id = g_strdup_printf ("<span size=\"small\"><b>%s</b></span>", gp->p->display_name);
+		      markup_desc =
+			  (sp) ? g_strdup_printf ("<span size=\"small\"><b>%s</b></span>",
+						  sp->description) : _("(None)");
+		      is_desc = TRUE;
+		      gtk_tooltips_set_tip (tooltip, gtk_widget_get_ancestor (add_info_label_desc, GTK_TYPE_EVENT_BOX),
+					    NULL, "caption");
+		  }
 	    }
 
 	  gtk_tooltips_enable (tooltip);
@@ -260,18 +264,19 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 	    {
 		GGaduContact *k = NULL;
 
-	  	gtk_tree_model_get_iter (model, &iter, treepath);
+		gtk_tree_model_get_iter (model, &iter, treepath);
 		gtk_tree_model_get (model, &iter, 2, &k, -1);
 
 		if (k)
-		  gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 3, &gp, -1);
+		    gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 3, &gp, -1);
 	    }
 
 	  if (gp && gp->plugin_name && selectedusers)
-	  	umenu = signal_emit ("main-gui", "get user menu", selectedusers, gp->plugin_name);
-	  
-	  if (!umenu) return FALSE;
-	  
+	      umenu = signal_emit ("main-gui", "get user menu", selectedusers, gp->plugin_name);
+
+	  if (!umenu)
+	      return FALSE;
+
 	  ifactory = gtk_item_factory_new (GTK_TYPE_MENU, "<name>", NULL);
 
 	  if (selectedusers)
