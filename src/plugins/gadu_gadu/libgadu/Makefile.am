@@ -1,5 +1,4 @@
 SUBDIRS=lib
 
-EXTRA_DIST= \
-	lib\COPYING
+EXTRA_DIST= autogen.sh
 	

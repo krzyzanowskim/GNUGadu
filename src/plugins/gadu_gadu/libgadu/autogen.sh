@@ -24,6 +24,7 @@ else
     fi
 fi
 
+libtoolize --force --copy --automake || exit 1
 
 aclocal -I m4 || exit 1
 autoheader || exit 1
