@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.2 2004/02/17 16:12:22 thrulliq Exp $ */
+/* $Id: ggadu_support.c,v 1.3 2004/02/17 16:34:13 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -393,10 +393,10 @@ gchar *check_file_exists(const gchar * directory, const gchar * filename)
 
 gchar *get_timestamp(time_t t)
 {
+	static gchar buf[10];
 	struct tm *tajm = NULL;
 	time_t _t;
-	gint max_l = 10;	/* 12:34:54\0 */
-	gchar *buf = g_malloc0(max_l);
+
 
 	if (t)
 		_t = t;
@@ -404,7 +404,7 @@ gchar *get_timestamp(time_t t)
 		time(&_t);
 
 	tajm = localtime(&_t);
-	strftime(buf, max_l, "%T", tajm);
+	strftime(buf, 10, "%T", tajm);
 
 	return buf;
 }

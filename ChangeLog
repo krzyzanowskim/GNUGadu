@@ -1,4 +1,5 @@
 17.02.2004
+- leak stop, get_timestamp returns static string (THrull)
 - some mem leaks (THrull)
 - systray-docklet unload crash fixed (THrull/system-tray-docklet)
 - gadu-gadu protocol use repo since now (krzak/gadu-gadu)

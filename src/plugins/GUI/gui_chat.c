@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.79 2004/02/17 09:29:53 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.80 2004/02/17 16:34:14 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1138,7 +1138,6 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	GtkTextIter iend;
 	GtkWidget *widget = NULL;
 	GSList *emottmp = emoticons;
-	gchar *timestamp = NULL;
 	gui_chat_session * session = NULL;
 	gboolean conference = FALSE;
 
@@ -1150,21 +1149,18 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	session  = g_object_get_data(G_OBJECT(chat), "gui_session");
 	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
 
-	timestamp = get_timestamp(0);
-
 	if (self == TRUE)
 	{
 		if (conference)
-			header = g_strdup_printf("%s :: %s :: ", timestamp, ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
+			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
 		else
-			header = g_strdup_printf("%s :: %s :: ", ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"), timestamp);
+			header = g_strdup_printf("%s :: %s :: ", ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"), get_timestamp(0));
 			
 
 		text = g_strdup(msg);
 	}
 	else
 	{
-		gchar *timestamp_send = NULL;
 		gchar *plugin_name_ = NULL;
 		GGaduContact *k = NULL;
 		GGaduMsg *gmsg = (GGaduMsg *) msg;
@@ -1172,7 +1168,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		if (!gmsg || !gmsg->message)
 			return;
 
-		timestamp_send = get_timestamp(gmsg->time);
+
 		plugin_name_ = g_object_get_data(G_OBJECT(chat), "plugin_name");
 		k = gui_find_user(gmsg->id, gui_find_protocol(plugin_name_, protocols));
 
@@ -1196,13 +1192,11 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		}
 
 		if (conference)
-			header = g_strdup_printf("%s :: %s :: ", timestamp, (k) ? k->nick : gmsg->id);
+			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), (k) ? k->nick : gmsg->id);
 		else
-			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, timestamp, timestamp_send);
+			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, get_timestamp(0), get_timestamp(gmsg->time));
 			
 		text = g_strdup(gmsg->message);
-
-		g_free(timestamp_send);
 	}
 
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(history));
@@ -1267,12 +1261,10 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		emottmp = emottmp->next;
 	}
 
-
 	if (((gint) ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
 	    (GTK_WIDGET_VISIBLE(chat)))
 		gtk_window_present(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window")));
 
-	g_free(timestamp);
 	g_free(header);
 	g_free(text);
 }
