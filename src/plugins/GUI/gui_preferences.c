@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.92 2005/01/07 20:39:18 aflinta Exp $ */
+/* $Id: gui_preferences.c,v 1.93 2005/01/26 08:38:16 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -755,10 +755,12 @@ static GtkWidget *create_advanced_tab()
 	GtkWidget *tabbox;
 	GtkWidget *tabbox2;
 	GtkWidget *label0_align;
+	GtkWidget *label1_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *label3_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *label4_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *combo_theme = NULL;
+	GtkWidget *combo_skins = NULL;
 	GtkWidget *combo_icons = NULL;
 	GtkWidget *notify_status_changes = NULL;
 
@@ -868,14 +870,70 @@ static GtkWidget *create_advanced_tab()
 
 	}
 
+	/* skins */
+	combo_skins = gtk_combo_box_new_text();
+	g_object_set_data(G_OBJECT(adv_vbox), "combo_skins", combo_skins);
+
+	label = gtk_label_new(_("Selected skin:"));
+	gtk_container_add(GTK_CONTAINER(label1_align), label);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label1_align, 0, 1, 3, 4);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_skins, 1, 3, 3, 4);
+
+	dirname = g_build_filename(g_get_home_dir(), ".gg2/skins", NULL);
+
+	dir = g_dir_open(dirname, 0, NULL);
+	if (!dir) {
+	    g_free(dirname);
+	    dirname = g_build_filename(g_getenv("HOME_ETC"), "gg2/skins", NULL);
+	    dir = g_dir_open(dirname, 0, NULL);
+	}
+	
+	print_debug("tryin to read skins directory %s\n", dirname);
+
+	if (dir)
+	{
+		GList *list_skins = NULL;
+		gchar *skin_current;
+		gchar *skin_dir_name;
+		gint i = 0;
+
+		skin_current = ggadu_config_var_get(gui_handler, "skin");
+
+		// select first (\ none \) if empty
+
+		
+		while ((skin_dir_name = (gchar *) g_dir_read_name(dir)) != NULL)
+		{
+			gchar *full_skin_dir_name = g_build_filename(dirname, skin_dir_name, NULL);
+			print_debug("skin file : %s", skin_dir_name);
+			
+			if (g_file_test(full_skin_dir_name, G_FILE_TEST_IS_DIR))
+			{
+				list_skins = g_list_append(list_skins, g_strdup(skin_dir_name));
+				gtk_combo_box_append_text(GTK_COMBO_BOX(combo_skins), g_strdup(skin_dir_name));
+
+				if (skin_current && !ggadu_strcasecmp(skin_dir_name, skin_current))
+					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_skins), i);
+
+				i++;
+			}
+			g_free(full_skin_dir_name);
+		}
+
+		g_dir_close(dir);
+		g_object_set_data(G_OBJECT(combo_skins), "combo_skins_slist", list_skins);
+	}
+
+	g_free(dirname);
+
 	/* iconset */
 	combo_icons = gtk_combo_box_new_text();
 	g_object_set_data(G_OBJECT(adv_vbox), "combo_icons", combo_icons);
 	label = gtk_label_new(_("Selected icon set:"));
 	gtk_container_add(GTK_CONTAINER(label3_align), label);
 
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 3, 4);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 3, 3, 4);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 4, 5);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 3, 4, 5);
 
 	dirname = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", NULL);
 	print_debug("Trying to read icons directory %s", dirname);
@@ -947,8 +1005,7 @@ static GtkWidget *create_advanced_tab()
 	return adv_vbox;
 }
 
-void gui_preferences(GtkWidget * widget, gpointer data
-)
+void gui_preferences(GtkWidget * widget, gpointer data)
 {
 	GtkWidget *preferences;
 	GtkWidget *notebook;
@@ -1330,6 +1387,15 @@ void gui_preferences(GtkWidget * widget, gpointer data
 
 		g_slist_foreach(combo_theme_slist, (GFunc) g_free, NULL);
 		g_slist_free(combo_theme_slist);
+
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_skins");
+		g_return_if_fail(entry != NULL);
+
+		GSList *combo_skins_slist = g_object_get_data(G_OBJECT(entry), "combo_skins_slist");
+		ggadu_config_var_set(gui_handler, "skin", (gpointer) g_strdup(g_slist_nth_data(combo_skins_slist, gtk_combo_box_get_active(GTK_COMBO_BOX(entry)))));
+		
+		g_slist_foreach(combo_skins_slist, (GFunc) g_free, NULL);
+		g_slist_free(combo_skins_slist);
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_icons");
 		g_return_if_fail(entry != NULL);
