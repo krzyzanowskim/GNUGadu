@@ -262,6 +262,286 @@ jest kolejnością, w jakiej będą ładowane moduły.</para>
 </tgroup>
 </table>
 
+</sect1>
+
+<sect1><title>Konfiguracja Jabbera - <filename>jabber</filename></title>
+<para>Plik <filename>jabber</filename> zawiera konfigurację dla modułu
+Jabber.</para>
+
+<table frame='all'><title>Opcje konfiguracyjne Jabbera</title>
+<tgroup cols='4' align='center' colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colname='Opis' colnum='3'/>
+<thead><row>
+  <entry align='center'>Nazwa</entry>
+  <entry align='center'>Typ</entry>
+  <entry align='center'>Domyślna wartość</entry>
+  <entry align='center'>Opis</entry>
+</row></thead>
+
+<tbody>
+  <row>
+    <entry>autoconnect</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>jid</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>password</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+
+<sect1><title>Konfiguracja Remote - <filename>remote</filename></title>
+<para>Plik <filename>remote</filename> zawiera konfigurację dla modułu
+Remote.</para>
+
+<table frame='all'><title>Opcje konfiguracyjne Remote</title>
+<tgroup cols='4' align='center' colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colname='Opis' colnum='3'/>
+<thead><row>
+  <entry align='center'>Nazwa</entry>
+  <entry align='center'>Typ</entry>
+  <entry align='center'>Domyślna wartość</entry>
+  <entry align='center'>Opis</entry>
+</row></thead>
+
+<tbody>
+  <row>
+    <entry>same_gid</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>same_uid</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+
+<sect1><title>Konfiguracja SMS - <filename>sms</filename></title>
+<para>Plik <filename>sms</filename> zawiera konfigurację dla modułu
+SMS.</para>
+
+<table frame='all'><title>Opcje konfiguracyjne SMS</title>
+<tgroup cols='4' align='center' colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colname='Opis' colnum='3'/>
+<thead><row>
+  <entry align='center'>Nazwa</entry>
+  <entry align='center'>Typ</entry>
+  <entry align='center'>Domyślna wartość</entry>
+  <entry align='center'>Opis</entry>
+</row></thead>
+
+<tbody>
+  <row>
+    <entry>body</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>external</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>number</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+
+  <row>
+    <entry>sender</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+
+<sect1><title>Konfiguracja Sound-external -
+<filename>sound-external</filename></title>
+<para>Plik <filename>sound-external</filename> zawiera konfigurację dla modułu
+SMS.</para>
+
+<table frame='all'><title>Opcje konfiguracyjne SMS</title>
+<tgroup cols='4' align='center' colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colname='Opis' colnum='3'/>
+<thead><row>
+  <entry align='center'>Nazwa</entry>
+  <entry align='center'>Typ</entry>
+  <entry align='center'>Domyślna wartość</entry>
+  <entry align='center'>Opis</entry>
+</row></thead>
+
+<tbody>
+  <row>
+    <entry>player</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+
+<sect1><title>Konfiguracja Tlenu - <filename>~/.tlen/config</filename></title>
+<para>Plik <filename>~/.tlen/config</filename> zawiera konfigurację dla modułu
+Tlen.</para>
+
+<table frame='all'><title>Opcje konfiguracyjne Tlen</title>
+<tgroup cols='4' align='center' colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colname='Opis' colnum='3'/>
+<thead><row>
+  <entry align='center'>Nazwa</entry>
+  <entry align='center'>Typ</entry>
+  <entry align='center'>Domyślna wartość</entry>
+  <entry align='center'>Opis</entry>
+</row></thead>
+
+<tbody>
+  <row>
+    <entry>autoconnect</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>login</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>password</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry></entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+
+<sect1><title>Konfiguracja XOSD - <filename>xosd</filename></title>
+<para>Plik <filename>xosd</filename> zawiera konfigurację dla modułu
+XOSD.</para>
+
+<table frame='all'><title>Opcje konfiguracyjne XOSD</title>
+<tgroup cols='4' align='center' colsep='1' rowsep='1'>
+<colspec colname='Nazwa'/>
+<colspec colname='Opis' colnum='3'/>
+<thead><row>
+  <entry align='center'>Nazwa</entry>
+  <entry align='center'>Typ</entry>
+  <entry align='center'>Domyślna wartość</entry>
+  <entry align='center'>Opis</entry>
+</row></thead>
+
+<tbody>
+  <row>
+    <entry>align</entry>
+    <entry>VAR_STR</entry>
+    <entry>center</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>colour</entry>
+    <entry>VAR_STR</entry>
+    <entry>yellow</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>font</entry>
+    <entry>VAR_STR</entry>
+    <entry>-misc-fixed-bold-r-*-*-15-*-*-*-*-*-*-2</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>numlines</entry>
+    <entry>VAR_INT</entry>
+    <entry>5</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>pos</entry>
+    <entry>VAR_STR</entry>
+    <entry>top</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>scrollines</entry>
+    <entry>VAR_INT</entry>
+    <entry>1</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>shadow_offset</entry>
+    <entry>VAR_INT</entry>
+    <entry>1</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>timestamp</entry>
+    <entry>VAR_BOOL</entry>
+    <entry>0</entry>
+    <entry></entry>
+  </row>
+  
+  <row>
+    <entry>timeout</entry>
+    <entry>VAR_INT</entry>
+    <entry>2</entry>
+    <entry></entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
 
 </sect1>
 
