@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.73 2004/11/27 18:16:43 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.74 2004/11/29 22:05:27 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -210,9 +210,8 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
 	
 	if (!lm_connection_authenticate
 	    (connection, jid, ggadu_config_var_get(jabber_handler, "password"),
-	     ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler,
-										     "resource") : "GNU Gadu",
-	     (LmResultFunction) connection_auth_cb, status, NULL, NULL))
+	     ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler, "resource") :
+	     JABBER_DEFAULT_RESOURCE, (LmResultFunction) connection_auth_cb, status, NULL, NULL))
 	{
 		print_debug("jabber: lm_connection_authenticate() failed.");
 		signal_emit("jabber", "gui show message", g_strdup(_("Jabber authentication failed")), "main-gui");

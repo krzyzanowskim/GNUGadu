@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.119 2004/11/26 12:40:55 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.120 2004/11/29 22:05:48 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -292,11 +292,14 @@ static gpointer user_get_software_action(gpointer user_data)
 	string0 = g_strconcat(k0->id, "/", k0->resource, NULL);
 	m = lm_message_new_with_sub_type(string0, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 	string1 = g_strconcat(ggadu_config_var_get(jabber_handler, "jid"), "/",
-			      ggadu_config_var_get(jabber_handler, "resource"), NULL);
+			      ggadu_config_var_get(jabber_handler, "resource") ?
+			      ggadu_config_var_get(jabber_handler, "resource") :
+			      JABBER_DEFAULT_RESOURCE, NULL);
 	lm_message_node_set_attribute(m->node, "from", string1);
 	lm_message_node_set_attribute(m->node, "id", "version_1");
 	node = lm_message_node_add_child(m->node, "query", NULL);
 	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:version");
+	print_debug(lm_message_node_to_string(m->node));
 	lm_connection_send(jabber_data.connection, m, NULL);
 	lm_message_unref(m);
 

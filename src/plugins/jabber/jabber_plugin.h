@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.42 2004/11/26 12:40:55 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.43 2004/11/29 22:05:49 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -41,6 +41,8 @@
 	    ggadu_save_history(_type, path, _nick, _msg); \
 	    g_free(path); \
 	}
+
+#define JABBER_DEFAULT_RESOURCE "GNU Gadu"
 
 enum
 {
