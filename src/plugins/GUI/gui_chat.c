@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.39 2003/06/07 10:47:09 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.40 2003/06/08 21:28:56 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -31,7 +31,7 @@ void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * page, gui
     gchar *txt = NULL;
     gchar *txt2 = NULL;
 
-    if (chat_notebook)
+    if ((chat_notebook) && (chat_window))
 	chat = (GtkWidget *) gtk_notebook_get_nth_page (GTK_NOTEBOOK (chat_notebook), page_num);
 
     if (chat)
@@ -43,7 +43,7 @@ void gui_chat_notebook_switch (GtkWidget * notebook, GtkNotebookPage * page, gui
 	  txt2 = (gchar *) g_object_get_data (G_OBJECT (chat), "tab_window_title_char");
       }
 
-    if ((txt != NULL) && (chat_window != NULL) && (lb != NULL))
+    if ((txt != NULL) && (chat_window != NULL) && (lb != NULL) && (txt2 != NULL))
       {
 	  gchar *markup = g_strdup_printf ("<span foreground=\"black\">%s</span>",
 					   txt);
@@ -84,11 +84,11 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
 	      /* do not segfault here, thankyou. */
 	      if (!chat_notebook)
 		{
-		  gui_remove_all_chat_sessions (protocols);
-		  gtk_widget_destroy (chat_window);
-		  chat_window = NULL;
-		  return;
-	        }
+		    gui_remove_all_chat_sessions (protocols);
+		    gtk_widget_destroy (chat_window);
+		    chat_window = NULL;
+		    return;
+		}
 
 	      if (!user_data)
 		{
@@ -136,11 +136,11 @@ void on_destroy_chat (GtkWidget * button, gpointer user_data)
 	      session = (gui_chat_session *) user_data;
 	      if (!session)
 		{
-		  /* fuck me plenty... */
-		  gui_remove_all_chat_sessions (protocols);
-		  gtk_widget_destroy (chat_window);
-		  chat_window = NULL;
-		  return;
+		    /* fuck me plenty... */
+		    gui_remove_all_chat_sessions (protocols);
+		    gtk_widget_destroy (chat_window);
+		    chat_window = NULL;
+		    return;
 		}
 	      plugin_name = g_object_get_data (G_OBJECT (session->chat), "plugin_name");
 	      if (!plugin_name)
@@ -780,13 +780,6 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 		    gtk_notebook_popup_enable (GTK_NOTEBOOK (chat_notebook));
 		    g_object_set_data (G_OBJECT (chat_window), "chat_notebook", chat_notebook);
 
-		    // g_signal_connect(G_OBJECT(chat_notebook),
-		    // "key-press-event",
-		    // G_CALLBACK(on_press_event_switching_tabs), NULL);
-		    // g_signal_connect(G_OBJECT(chat_window),
-		    // "key-press-event",
-		    // G_CALLBACK(on_press_event_switching_tabs), NULL);
-
 		}
 	      else
 		{
@@ -840,7 +833,6 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
       }
 
 
-    // gtk_widget_set_usize(GTK_WINDOW(chat_window), 400, 300);
     gtk_window_set_default_size (GTK_WINDOW (chat_window), 400, 300);
     gtk_window_set_modal (GTK_WINDOW (chat_window), FALSE);
     gtk_widget_set_name (GTK_WIDGET (chat_window), "GGChat");
@@ -980,7 +972,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
     if (visible)
       {
 	  gtk_widget_show_all (vbox);
-          gtk_widget_grab_focus (GTK_WIDGET (input));
+	  gtk_widget_grab_focus (GTK_WIDGET (input));
 
 	  if (chat_window != NULL)
 	      gtk_widget_show_all (chat_window);
@@ -1003,12 +995,11 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 
 	  if ((chat_type == CHAT_TYPE_TABBED) && (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook))))
 	    {
+		GtkRequisition rbnl;
 		GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook),
 							       GTK_WIDGET (session->chat));
-		GtkRequisition rbnl;
 
 		gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
-
 		tab_minus = -rbnl.height;
 	    }
 
@@ -1024,10 +1015,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
       }
 
 
-    // g_signal_connect(button_close, "clicked",
-    // G_CALLBACK(on_destroy_chat), session);
     g_signal_connect (chat_window, "configure-event", G_CALLBACK (window_resize_signal), session);
-
     g_signal_connect (button_autosend, "clicked", G_CALLBACK (on_autosend_clicked), session);
     g_signal_connect (button_send, "clicked", G_CALLBACK (on_send_clicked), session);
     g_signal_connect (button_stick, "toggled", G_CALLBACK (on_stick_clicked), session);
@@ -1132,18 +1120,13 @@ void gui_chat_append (GtkWidget * chat, gpointer msg, gboolean self)
       }
 
     buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (history));
-
     gtk_text_buffer_get_end_iter (buf, &iter);
-
     gtk_text_buffer_insert_with_tags_by_name (buf, &iter, header, -1, self ? "outgoing_header" : "incoming_header",
 					      NULL);
 
     tmp = g_strconcat (text, "\n", NULL);
-
     gtk_text_buffer_insert_with_tags_by_name (buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text", NULL);
-
     mark_start = gtk_text_buffer_get_insert (buf);
-
     g_free (tmp);
 
     /*
