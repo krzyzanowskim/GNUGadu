@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS =  m4 lib src po pixmaps sounds themes
+SUBDIRS = intl m4 lib src po pixmaps sounds themes
 
-EXTRA_DIST = config.rpath mkinstalldirs  config.rpath  autogen.sh ANNOUNCE AUTHORS ChangeLog COPYING \
+EXTRA_DIST = config.rpath mkinstalldirs  config.rpath mkinstalldirs  config.rpath  autogen.sh ANNOUNCE AUTHORS ChangeLog COPYING \
 		contrib/example.pl \
 		contrib/gg2sms \
 		contrib/mkgg2snap \

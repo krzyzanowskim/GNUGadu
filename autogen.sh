@@ -66,13 +66,27 @@ if test "$DIE" -eq 1; then
 fi
 
 echo "gettextize"
-gettextize --force --copy --no-changelog || exit 1
+#gettextize --force --copy --no-changelog || exit 1
+# comment the next line when you have the system without NLS
+if ! gettextize --version | grep -q '0\.10\.' ; then
+    gettextize -c -f --intl --no-changelog
+else
+    gettextize -c -f
+fi
+# I don't like when this file gets automatically changed
+if [ -f configure.in~ ]; then
+    mv configure.in~ configure.in
+fi
 
-echo "aclocal"
-$ACLOCAL $ACPATH -I m4 || exit 1
+if [ -f Makefile.am~ ]; then
+    mv Makefile.am~ Makefile.am
+fi
 
 echo "libtoolize"
 libtoolize --force --copy --automake || exit 1
+
+echo "aclocal"
+$ACLOCAL $ACPATH -I m4 || exit 1
 
 echo "automake"
 $AUTOMAKE --force --copy --add-missing || exit 1

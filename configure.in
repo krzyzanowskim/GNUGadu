@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.47 2004/01/26 19:16:13 krzyzak Exp $
+dnl $Id: configure.in,v 1.48 2004/01/26 20:22:29 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -52,10 +52,10 @@ AC_CHECK_FUNCS([memset mkdir strcasecmp strchr strlen])
 
 
 ALL_LINGUAS="pl"
-GETTEXT_PACKAGE="$PACKAGE"
-AC_SUBST(GETTEXT_PACKAGE)
-
-AM_GNU_GETTEXT([external])
+#GETTEXT_PACKAGE="$PACKAGE"
+#AC_SUBST(GETTEXT_PACKAGE)
+AC_CHECK_HEADERS(libintl.h)
+AM_GNU_GETTEXT([use-libtool])
 
 AM_PROG_LIBTOOL
 AM_MAINTAINER_MODE
@@ -439,6 +439,7 @@ AC_SUBST(CFLAGS_CLEAN)
 AC_SUBST(LDFLAGS)
 
 AC_OUTPUT([ 
+intl/Makefile 
 m4/Makefile 
 po/Makefile.in
 Makefile
