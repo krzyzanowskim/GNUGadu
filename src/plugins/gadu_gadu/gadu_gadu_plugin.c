@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.5 2003/03/23 17:58:30 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.6 2003/03/24 17:30:51 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -105,7 +105,7 @@ gchar *insert_cr(gchar *txt)
     return start;
 }
 
-gpointer gadu_gadu_login(gpointer data)
+gpointer gadu_gadu_login(gpointer data, gint status)
 {
     struct gg_login_params p;
     gchar *serveraddr = (gchar *)config_var_get(handler,"server");
@@ -143,7 +143,7 @@ gpointer gadu_gadu_login(gpointer data)
     p.uin	= (int) config_var_get(handler,"uin");
     p.password	= (gchar *)config_var_get(handler,"password");
     p.async	= 1;
-    p.status	= GG_STATUS_AVAIL;
+    p.status	= status;
 	
     if (serveraddr != NULL)
 		p.server_addr = inet_addr(serveraddr);
@@ -273,7 +273,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 
 		if ( ++connect_count < 3){
 			ggadu_gadu_gadu_disconnect();
-			gadu_gadu_login(NULL);
+			gadu_gadu_login(NULL,GG_STATUS_AVAIL);
 		} else {
 			gchar *txt = g_strdup(_("Disconnected"));
 			ggadu_gadu_gadu_disconnect_msg(txt);
@@ -339,7 +339,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 
 		case GG_EVENT_DISCONNECT:
 			ggadu_gadu_gadu_disconnect_msg(_("Disconnected"));
-			gadu_gadu_login(NULL);
+			gadu_gadu_login(NULL,GG_STATUS_AVAIL);
 			break;
 
 		case GG_EVENT_MSG:
@@ -1078,7 +1078,7 @@ void start_plugin()
 	register_userlist_menu();
 
 	if (config_var_get(handler, "autoconnect") && !connected) 
-		gadu_gadu_login(NULL);
+		gadu_gadu_login(NULL,GG_STATUS_AVAIL);
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr) 
@@ -1257,7 +1257,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		connect_count = 0;
 		if ((sp != NULL) && (sp->status != GG_STATUS_NOT_AVAIL) &&
 		    (sp->status != GG_STATUS_NOT_AVAIL_DESCR)) {
-		    gadu_gadu_login(NULL);
+		    gadu_gadu_login(NULL,sp->status);
 		}
 
 		
