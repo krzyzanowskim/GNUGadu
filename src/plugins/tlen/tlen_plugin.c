@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.25 2003/05/15 10:31:27 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.26 2003/05/22 10:16:51 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -87,21 +87,24 @@ void handle_search_item(struct tlen_pubdir *item)
 	GGaduContact *k = g_new0(GGaduContact, 1);
 	
 	const gchar * id;
-	const gchar * first_name;
-	const gchar * last_name;
-	const gchar * nick;
+//	const gchar * first_name;
+//	const gchar * last_name;
+//	const gchar * nick;
+//	const gchar * city;
+	const gchar * age;
 	int status = item->status;
 	
 	// konwersja na UTF8
 	to_utf8("ISO-8859-2", item->id, id);
-	to_utf8("ISO-8859-2", item->firstname, first_name);
-	to_utf8("ISO-8859-2", item->lastname, last_name);
-	to_utf8("ISO-8859-2", item->nick, nick);
+	if ((item->firstname) != NULL) to_utf8("ISO-8859-2", item->firstname, k->first_name);
+	if ((item->lastname) != NULL) to_utf8("ISO-8859-2", item->lastname, k->last_name);
+	if ((item->nick) != NULL) to_utf8("ISO-8859-2", item->nick, k->nick);
+	if ((item->city) != NULL) to_utf8("ISO-8859-2", item->city, k->city);
+	
+	age = g_strdup_printf("%d", item->age);
 	
 	k->id = g_strdup((id) ? id : "?");
-	k->first_name = (first_name) ? g_strdup(first_name) : NULL;
-	k->last_name = (last_name) ? g_strdup(last_name) : NULL;
-	k->nick = (nick) ? g_strdup(nick) : NULL;
+	k->age = (age) ? g_strdup(age) : NULL; 
 	k->status = (status) ? status : TLEN_STATUS_UNAVAILABLE;
 
 	search_results = g_slist_append(search_results, k);
@@ -754,6 +757,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		    kv = g_new0(GGaduKeyValue,1);
 		    kv->description = g_strdup(_("Description:"));
 		    kv->type = VAR_STR;
+		    to_utf8("ISO-8859-2",description,kv->value);
 		    
 		    d->optlist = g_slist_append(d->optlist, kv);
 		    d->user_data = _sp;
@@ -819,10 +823,18 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		{
 		    GGaduKeyValue *kv = NULL;
 		    if (d->optlist)
-		    {
+		    {   
+		        gchar *desc_utf = NULL, *desc_iso = NULL;
+			
 		        kv = (GGaduKeyValue *)d->optlist->data;
-			tlen_presence(session, sp->status, kv->value);
-			description = g_strdup(kv->value);
+//			tlen_presence(session, sp->status, kv->value);
+			
+			desc_utf = kv->value;
+			from_utf8("ISO-8859-2",desc_utf,desc_iso);
+			description = g_strdup(desc_iso);
+			tlen_presence(session, sp->status, description);
+			
+			g_free(desc_iso);
 		    }
 		}
 	    }

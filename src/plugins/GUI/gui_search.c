@@ -1,4 +1,4 @@
-/* $Id: gui_search.c,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_search.c,v 1.2 2003/05/22 10:16:49 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include "unified-types.h"
@@ -32,6 +32,14 @@ void add_columns(GtkTreeView *tv)
     column = gtk_tree_view_column_new_with_attributes(_("User"), renderer, "text", 3, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes(_("City"), renderer, "text", 4, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
+    
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes(_("Age"), renderer, "text", 5, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
+
 }
 
 void on_destroy_search(GtkWidget *search, gpointer user_data)
@@ -61,6 +69,7 @@ gpointer search_user_add(gpointer user_data)
     tmp->first_name = g_strdup(k->first_name);
     tmp->mobile = g_strdup(k->mobile);
     tmp->status = k->status;
+    tmp->city = g_strdup(k->city);
     
     signal_emit("main-gui", "add user search", tmp, g_object_get_data(G_OBJECT(widget), "plugin_name"));
     return NULL;
@@ -133,7 +142,7 @@ void gui_show_search_results(GSList *list, gchar *plugin_name)
     gtk_window_set_title(GTK_WINDOW(search), _("Search results"));
     gtk_window_set_default_size(GTK_WINDOW(search), 350, 300);
     
-    search_liststore = gtk_list_store_new(4, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_STRING);
+    search_liststore = gtk_list_store_new(6, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
     tree_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(search_liststore));
 //    gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree_view)), GTK_SELECTION_MULTIPLE);    
 
@@ -174,10 +183,14 @@ void gui_show_search_results(GSList *list, gchar *plugin_name)
 	    	print_debug("adding kontakt to results list: %s\n", k->id);
 	    	if (sp && sp->image != NULL) {
 				gchar *display;
+				gchar *dispcity;
+				gchar *dispage;
 				GdkPixbuf *image = create_pixbuf(sp->image);
-				display = g_strdup_printf("%s %s%s%s", (k->first_name) ? k->first_name : "", (k->nick) ? "(" : "", (k->nick) ? k->nick : "", (k->nick) ? ")" : ""); 	
+				display = g_strdup_printf("%s %s%s%s", (k->first_name) ? k->first_name : "", (k->nick) ? "(" : "", (k->nick) ? k->nick : "", (k->nick) ? ")" : "");
+				dispcity = g_strdup_printf("%s", (k->city) ? k->city : "");
+				dispage = g_strdup_printf("%s", (k->age) ? k->age : ""); 	
     			gtk_list_store_append(search_liststore, &search_iter);
-				gtk_list_store_set(search_liststore, &search_iter, 0, image, 1, k->id, 2, (gpointer) k, 3, display,  -1);
+				gtk_list_store_set(search_liststore, &search_iter, 0, image, 1, k->id, 2, (gpointer) k, 3, display, 4, dispcity, 5, dispage, -1);
 	    	}
 	    	tmplist = tmplist->next;
 		}

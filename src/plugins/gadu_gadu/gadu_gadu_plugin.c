@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.52 2003/05/19 20:41:45 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.53 2003/05/22 10:16:50 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -207,7 +207,11 @@ void handle_search_event(struct gg_event *e)
     gg_pubdir50_t res = e->event.pubdir50;
     gint count, i;
     GSList *list = NULL;
-
+    GDate *cur_date;
+    
+    cur_date = g_date_new ();
+    g_date_set_time (cur_date, time (NULL));
+    
     if ((count = gg_pubdir50_count(res)) < 1) {
 	signal_emit(GGadu_PLUGIN_NAME, "gui show message",g_strdup(_("No users have been found!")),"main-gui");
     	return;
@@ -219,12 +223,24 @@ void handle_search_event(struct gg_event *e)
 	const gchar * first_name = gg_pubdir50_get(res, i, GG_PUBDIR50_FIRSTNAME);
 	const gchar * nick = gg_pubdir50_get(res, i, GG_PUBDIR50_NICKNAME);
 	const gchar * status = gg_pubdir50_get(res, i, GG_PUBDIR50_STATUS);
-
+	const gchar * city = gg_pubdir50_get(res, i, GG_PUBDIR50_CITY);
+	const gchar * birthyear = gg_pubdir50_get(res, i, GG_PUBDIR50_BIRTHYEAR);
+	      gint * b_year;
+	
 	k->id = g_strdup((uin) ? uin : "?");
+	
+//	k->age = (birthyear) ? g_strdup_printf("%d", ((cur_date->year) - atoi(birthyear))) : NULL;
+	if (birthyear != NULL) {
+				b_year = ((cur_date->year) - atoi(birthyear));
+				k->age = (b_year <= 99) ? g_strdup_printf("%d", (b_year)) : NULL;
+				}
+				else k->age =  NULL;
 
 	if (first_name != NULL) to_utf8("CP1250", first_name, k->first_name);
 
 	if (nick != NULL) to_utf8("CP1250", nick, k->nick);
+	
+	if (city != NULL) to_utf8("CP1250", city, k->city);
 
 	k->status = (status) ? atoi(status) : GG_STATUS_NOT_AVAIL;
     

@@ -279,6 +279,14 @@ msgstr ""
 msgid "User"
 msgstr ""
 
+#: src/plugins/GUI/gui_search.c:36
+msgid "City"
+msgstr ""
+
+#: src/plugins/GUI/gui_search.c:40
+msgid "Age"
+msgstr ""
+
 #: src/plugins/GUI/gui_search.c:96
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1015
 #: src/plugins/tlen/tlen_plugin.c:614 src/plugins/jabber/jabber_plugin.c:310

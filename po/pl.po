@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.16 2003/05/04 00:28:00 shaster Exp $
+# $Id: pl.po,v 1.17 2003/05/22 10:16:46 krzyzak Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
@@ -513,6 +513,14 @@ msgstr "Ksywa:"
 #: src/plugins/tlen/tlen_plugin.c:598
 msgid "City:"
 msgstr "Miejscowo¶æ:"
+
+#: src/plugins/GUI/gui_search.c:36
+msgid "City"
+msgstr "Miejscowo¶æ"
+
+#: src/plugins/GUI/gui_search.c:40
+msgid "Age"
+msgstr "Wiek"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:680
 msgid "GG#"

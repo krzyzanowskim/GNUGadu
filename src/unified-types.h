@@ -1,4 +1,4 @@
-/* $Id: unified-types.h,v 1.7 2003/04/12 19:11:34 krzyzak Exp $ */
+/* $Id: unified-types.h,v 1.8 2003/05/22 10:16:48 krzyzak Exp $ */
 #ifndef GGadu_UNIFIED_TYPES_H
 #define GGadu_UNIFIED_TYPES_H
 
@@ -25,7 +25,9 @@ typedef struct {
     gchar *comment;	// komentarz
     gchar *birthdate;	// data urodzenia
     gchar *status_descr;// opis do statusu
-		gchar *ip; // "IP:PORT"
+    gchar *ip; 	// "IP:PORT"
+    gchar *city;	// miasto
+    gchar *age;	//wiek
     gint status;	// status w postaci liczbowej
 } GGaduContact;
 
