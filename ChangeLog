@@ -1,3 +1,6 @@
+26.01.2004
+- added ability to register new gadu-gadu account [uses threads] (gadu-gadu/shasta)
+
 25.01.2004
 - massive memory leaks fixes, minor code cleanups (tlen/sms/update/xosd/shasta)
 - force focus to the input widget on 'gui show invisible chats' (GUI/shasta)

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.136 2004/01/25 22:52:30 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.137 2004/01/26 01:47:33 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 #include <string.h>
 #include <signal.h>
@@ -53,6 +54,8 @@ static GGaduMenu *menu_pluginmenu;
 
 static gchar *this_configdir = NULL;
 static GSList *userlist = NULL;
+
+static GStaticMutex register_mutex = G_STATIC_MUTEX_INIT;
 
 GGadu_PLUGIN_INIT("gadu-gadu", GGADU_PLUGIN_TYPE_PROTOCOL);
 
@@ -134,7 +137,6 @@ gchar *insert_cr(gchar * txt)
 
 void gadu_gadu_enable_dcc_socket(gboolean state)
 {
-
 	if ((state == TRUE) && (!dcc_session_get) && ((gboolean) ggadu_config_var_get(handler, "dcc")))
 	{
 		GIOChannel *dcc_channel_get = NULL;
@@ -893,6 +895,126 @@ gpointer user_preferences_action(gpointer user_data)
 	return NULL;
 }
 
+gpointer register_account(gpointer data)
+{
+	struct ggadu_gg_register *reg = (struct ggadu_gg_register *) data;
+	struct gg_http *r = gg_register3(reg->email, reg->password, reg->token_id, reg->token, 0);
+	struct gg_pubdir *p = (r ? (struct gg_pubdir *) r->data : NULL);
+	gchar *uin = NULL;
+
+	if (!r || !p || !p->success || !p->uin)
+	{
+		print_debug("gg_register3() failed!\n");
+		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show warning", 
+			g_strdup(_("Registration process failed")), "main-gui");
+	}
+	else
+	{
+		print_debug("registration process succeded: '%s'\n", r->body);
+		uin = g_strdup_printf("%ld", (glong) p->uin);
+		if (reg->update_config == TRUE)
+		{
+			ggadu_config_var_set(handler, "uin", (gpointer) atol(uin));
+			ggadu_config_var_set(handler, "password", reg->password);
+			ggadu_config_save(handler);
+			signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", 
+				g_strdup_printf(_("Registration process succeded: UIN: %s\nSettings have been updated."), uin), "main-gui");
+		}
+		else
+		{
+			signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show message", 
+				g_strdup_printf(_("Registration process succeded: UIN: %s"), uin), "main-gui");
+		}
+	}
+
+	gg_register_free(r);
+	g_free(uin);
+	g_free(reg->email);
+	g_free(reg->password);
+	g_free(reg->token_id);
+	g_free(reg->token);
+	g_free(reg);
+
+	g_thread_exit(NULL);
+	return NULL;
+}
+
+gpointer _register_account_action(gpointer user_data)
+{
+	GGaduDialog *d = NULL;
+	GIOChannel *ch = NULL;
+	gchar *token_image_path = NULL;
+	struct gg_http *h = NULL;
+	struct gg_token *t = NULL;
+
+	g_static_mutex_lock(&register_mutex);
+
+	h = gg_token(0);
+	t = h->data;
+
+	if (!t || !h->body)
+	{
+		print_debug("gg_token() failed\n");
+		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show warning",
+			g_strdup(_("Registration failed.")), "main-gui");
+
+		gg_token_free(h);
+		g_static_mutex_unlock(&register_mutex);
+		g_thread_exit(NULL);
+		return NULL;
+	}
+
+	token_image_path = g_build_filename(this_configdir, "register-token.tmp", NULL);
+	print_debug("Gonna write token to %s\n", token_image_path);
+	ch = g_io_channel_new_file(token_image_path, "w", NULL);
+
+	if (!ch)
+	{
+		print_debug("Couldnt open token image file %s for writing\n", token_image_path);
+		signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show warning",
+			g_strdup_printf(_("Registration failed:\ncouldn't write token image to %s"), token_image_path), "main-gui");
+
+		g_free(token_image_path);
+		gg_token_free(h);
+
+		g_static_mutex_unlock(&register_mutex);
+		g_thread_exit(NULL);
+		return NULL;
+	}
+
+	/* set NULL encoding - safe for binary data */
+	g_io_channel_set_encoding(ch, NULL, NULL);
+	g_io_channel_write_chars(ch, h->body, h->body_size, NULL, NULL);
+	g_io_channel_shutdown(ch, TRUE, NULL);
+
+	d = ggadu_dialog_new();
+	ggadu_dialog_set_title(d, _("Register Gadu-Gadu account"));
+	ggadu_dialog_callback_signal(d, "register account");
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_REGISTER_IMAGE, "", VAR_IMG, token_image_path, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_REGISTER_TOKEN, _("Registration code:\n(shown above)"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_REGISTER_EMAIL, _("Email:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_REGISTER_PASSWORD, _("Password:"), VAR_STR, NULL, VAR_FLAG_PASSWORD);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_REGISTER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE, VAR_FLAG_NONE);
+
+	d->user_data = (gpointer) h;
+
+	signal_emit_from_thread(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+
+	/* FIXME: unfortunately, due to ggadu_dialog_* design flaws, we can't g_free() it */
+/*
+	g_free(token_image_path);
+*/
+	g_static_mutex_unlock(&register_mutex);
+	g_thread_exit(NULL);
+	return NULL;
+}
+
+gpointer register_account_action(gpointer user_data)
+{
+	g_thread_create(_register_account_action, NULL, FALSE, NULL);
+	return NULL;
+}
+
 gpointer search_action(gpointer user_data)
 {
 	GGaduDialog *d = NULL;
@@ -1380,6 +1502,8 @@ GGaduMenu *build_plugin_menu()
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Import userlist"), import_userlist_action, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Export userlist"), export_userlist_action, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Delete userlist"), delete_userlist_action, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Register account"), register_account_action, NULL));
 
 	return root;
 }
@@ -1465,7 +1589,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
 
 	ggadu_repo_add("gadu-gadu");
-
 
 	return handler;
 }
@@ -1579,6 +1702,7 @@ void start_plugin()
 	GET_CURRENT_STATUS_SIG = register_signal(handler, "get current status");
 	SEND_FILE_SIG = register_signal(handler, "send file");
 	GET_USER_MENU_SIG = register_signal(handler, "get user menu");
+	REGISTER_ACCOUNT = register_signal(handler, "register account");
 
 	load_contacts("ISO-8859-2");
 
@@ -2238,6 +2362,91 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 		signal->data_return = (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ?
 				(session->status ^ GG_STATUS_FRIENDS_MASK) : session->status);
+	}
+
+	if (signal->name == REGISTER_ACCOUNT)
+	{
+		GGaduDialog *d = signal->data;
+		GSList *tmplist = d->optlist;
+		struct gg_http *h = (struct gg_http *) d->user_data;
+		struct gg_token *t = h ? h->data : NULL;
+		struct ggadu_gg_register *reg = NULL;
+		gchar *reg_email = NULL;
+		gchar *reg_password = NULL;
+		gchar *reg_token = NULL;
+		gboolean reg_update = FALSE;
+		gchar *token_image_path = g_build_filename(this_configdir, "register-token.tmp", NULL);
+
+		if (g_file_test(token_image_path, G_FILE_TEST_IS_REGULAR))
+			unlink(token_image_path);
+
+		g_free(token_image_path);
+
+		if (d && d->response == GGADU_OK)
+		{
+			while (tmplist)
+			{
+				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
+
+				switch (kv->key)
+				{
+				case GGADU_GADU_GADU_REGISTER_EMAIL:
+					if (kv->value && *(gchar *) kv->value)
+					{
+						print_debug("email: %s\n", kv->value);
+						reg_email = to_cp("UTF8", kv->value);
+					}
+					break;
+				case GGADU_GADU_GADU_REGISTER_PASSWORD:
+					if (kv->value && *(gchar *) kv->value)
+					{
+						print_debug("password: %s\n", kv->value);
+						reg_password = to_cp("UTF8", kv->value);
+					}
+					break;
+				case GGADU_GADU_GADU_REGISTER_TOKEN:
+					if (kv->value && *(gchar *) kv->value)
+					{
+						print_debug("token: %s\n", kv->value);
+						reg_token = to_cp("UTF8", kv->value);
+					}
+					break;
+				case GGADU_GADU_GADU_REGISTER_UPDATE_CONFIG:
+					print_debug("update config?: %d\n", kv->value);
+					reg_update = (gboolean) kv->value;
+					break;
+				}
+				tmplist = tmplist->next;
+			}
+
+			if (!reg_email || !reg_password || !reg_token)
+			{
+				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", 
+					g_strdup(_("You have to fill in all fields")), "main-gui");
+
+				g_free(reg_email);
+				g_free(reg_password);
+				g_free(reg_token);
+				gg_token_free(h);
+				GGaduDialog_free(d);
+				return;
+			}
+
+			reg = g_new0(struct ggadu_gg_register, 1);
+			reg->email = reg_email;
+			reg->password = reg_password;
+			reg->token_id = t ? g_strdup(t->tokenid) : NULL;
+			reg->token = reg_token;
+			reg->update_config = reg_update;
+
+			g_thread_create(register_account, (gpointer) reg, FALSE, NULL);
+
+		}
+
+		gg_token_free(h);
+		GGaduDialog_free(d);
+
+		return;
 	}
 }
 

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.17 2004/01/21 19:37:24 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.18 2004/01/26 01:47:34 shaster Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -6,6 +6,15 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
+
+struct ggadu_gg_register
+{
+	gchar *email;
+	gchar *password;
+	gchar *token_id;
+	gchar *token;
+	gboolean update_config;
+};
 
 static GQuark CHANGE_STATUS_SIG;
 static GQuark CHANGE_STATUS_DESCR_SIG;
@@ -19,6 +28,7 @@ static GQuark ADD_USER_SEARCH_SIG;
 static GQuark GET_CURRENT_STATUS_SIG;
 static GQuark SEND_FILE_SIG;
 static GQuark GET_USER_MENU_SIG;
+static GQuark REGISTER_ACCOUNT;
 
 enum
 {
@@ -35,6 +45,12 @@ enum
     GGADU_GADU_GADU_CONFIG_REASON,
     GGADU_GADU_GADU_CONFIG_FRIENDS_MASK,
     GGADU_GADU_GADU_CONFIG_DCC,
+    GGADU_GADU_GADU_REGISTER_EMAIL,
+    GGADU_GADU_GADU_REGISTER_PASSWORD,
+    GGADU_GADU_GADU_REGISTER_TOKEN_ID,
+    GGADU_GADU_GADU_REGISTER_TOKEN,
+    GGADU_GADU_GADU_REGISTER_IMAGE,
+    GGADU_GADU_GADU_REGISTER_UPDATE_CONFIG,
     GGADU_GADU_GADU_SELECTED_FILE,
     GGADU_GADU_GADU_CONTACT
 };
