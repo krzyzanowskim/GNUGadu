@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.62 2004/02/08 23:02:00 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.63 2004/02/08 23:46:30 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -468,12 +468,12 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				{
 				case GGADU_ID:
 					k->id = g_strdup((gchar *) kv->value);
-					g_free(kv->value);
+					/* g_free(kv->value); */
 					break;
 				case GGADU_NICK:
 					if (kv->value && (((gchar *) kv->value)[0] != '\0'))
 						k->nick = g_strdup((gchar *) kv->value);
-					g_free(kv->value);
+					/* g_free(kv->value); if you free it GGaduKeyValue_free will crash on next g_free(), shouldn't */
 					break;
 				}
 
@@ -494,8 +494,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 			if (lm_connection_send(connection, m, NULL))
 			{
-				action_queue_add("roster_add", "result", action_roster_add_result, k->id, TRUE);
 				print_debug("Add : %s", k->id);
+				action_queue_add("roster_add", "result", action_roster_add_result, k->id, TRUE);
 			}
 			else
 			{

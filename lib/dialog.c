@@ -1,4 +1,4 @@
-/* $Id: dialog.c,v 1.6 2004/02/08 23:01:59 krzyzak Exp $ */
+/* $Id: dialog.c,v 1.7 2004/02/08 23:46:28 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -116,15 +116,15 @@ void GGaduDialog_free(GGaduDialog * d)
 	g_free(d->title);
 	g_free(d->callback_signal);
 
-	e = d->optlist;
+	e = ggadu_dialog_get_entries(d);
 	while (e)
 	{
 		GGaduKeyValue *kv = (GGaduKeyValue *) e->data;
 		GGaduKeyValue_free(kv);
 		e = e->next;
 	}
+	
 	g_slist_free(d->optlist);
-
 	g_free(d);
 	return;
 }
