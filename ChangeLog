@@ -1,3 +1,6 @@
+25.06.2003
+- remember last used search server (jabber/zapal)
+
 24.06.2003
 - fixed memory leak in GUI caused by improperly handling of plugin names
   (GUI/zapal)
