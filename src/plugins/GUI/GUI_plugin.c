@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.85 2004/10/14 12:04:05 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.86 2004/10/14 15:20:47 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -76,7 +76,13 @@ void set_selected_users_list(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 
 void nick_list_row_changed2(GtkTreeModel *model,GtkTreePath *path, GtkTreeIter *iter, gpointer user_data)
 {
-    print_debug("nick_list_row_changed2");
+    GGaduContact *k = NULL;
+    GtkTreeView *treeview = g_object_get(G_OBJECT(model),"treeview");
+    GtkTreeSelection *gtk_tree_view_get_selection(tree);
+    gtk_tree_model_get(model, iter, 2, &k, -1);
+    
+    print_debug("nick_list_row_changed2 %s",k->id);
+
     nick_list_row_changed(NULL,model,path,FALSE,user_data);
 }
 
@@ -84,7 +90,7 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 {
     GtkTreeIter iter;
     gchar *markup_id = NULL;
-    gchar *markup_desc = NULL;
+    gchar *markup_desc = g_strdup("");
     gboolean is_desc = FALSE;
     gchar *desc_text = NULL;
     gchar *ip = NULL;
@@ -95,6 +101,7 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
     GGaduContact *k = NULL;
         
     print_debug("nick_list_row_changed");
+    
     gtk_tree_model_get_iter(model, &iter, path);
 
     if (!tree)
@@ -111,13 +118,27 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 
 	if (!gp || !k)
 		return FALSE;
-
+		
+	print_debug("oiuytrew %s",k->id);
+		
 	add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label), "add_info_label_desc");
 
 	tooltip = gtk_tooltips_new();
 
 	if (k)
 	{
+/*		print_debug("k->id = %s %s",prev_id, k->id);
+		if (!ggadu_strcasecmp(prev_id,k->id) && (selection != NULL))
+		{
+		    return TRUE;
+		}
+		 else
+		{
+		    g_free(prev_id);
+		    prev_id = g_strdup(k->id);
+		}
+		print_debug("duit");
+*/		
 		if (k->ip)
 		{
 			gchar **strtab = g_strsplit(k->ip, ":", 2);
@@ -161,7 +182,7 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 			GGaduStatusPrototype *sp;
 			gint status;
 			
-			print_debug("nick_list_row_changed");
+			print_debug("inside nick_list_row_changed");
 			
 			status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 			sp = gui_find_status_prototype(gp->p, (gint) status);
@@ -185,16 +206,18 @@ gboolean nick_list_row_changed(GtkTreeSelection *selection, GtkTreeModel *model,
 
 	gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup_id);
 
-	gtk_anim_label_set_text(GTK_ANIM_LABEL(add_info_label_desc), markup_desc);
-	gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc), TRUE);
+	print_debug("%s",markup_desc);
 
 	if (!GTK_WIDGET_VISIBLE(gp->add_info_label))
 	{
 		gtk_widget_show(gp->add_info_label);
 	}
+	
 
 	if (is_desc)
 	{
+		gtk_anim_label_set_text(GTK_ANIM_LABEL(add_info_label_desc), markup_desc);
+		gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc), TRUE);
 		gtk_widget_show(add_info_label_desc);
 	}
 	else
@@ -225,6 +248,7 @@ gboolean nick_list_row_activated(GtkWidget * widget, GtkTreePath *arg1, GtkTreeV
 	gtk_tree_model_get(model, &iter, 2, &k, -1);
 
 	g_return_val_if_fail(k != NULL, FALSE);
+	if (!k) return FALSE;
 
 	if (!tree)
 	{
