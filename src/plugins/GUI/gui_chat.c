@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.86 2004/03/13 07:44:19 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.87 2004/03/15 20:27:14 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1164,7 +1164,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		g_signal_connect(chat_window, "destroy", G_CALLBACK(on_destroy_chat_window), NULL);
 		break;
 	case CHAT_TYPE_CLASSIC:
-		g_signal_connect_swapped(button_close, "clicked", G_CALLBACK(gtk_widget_destroy), chat_window);
+		g_signal_connect_swapped(button_close, "clicked", G_CALLBACK(gtk_widget_hide), chat_window);
 		g_signal_connect(chat_window, "destroy", G_CALLBACK(on_destroy_chat), session);
 
 		break;

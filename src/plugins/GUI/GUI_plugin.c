@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.60 2004/03/14 18:49:13 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.61 2004/03/15 20:27:14 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -53,6 +53,8 @@ extern GtkWidget *window;
 extern gboolean tree;
 
 extern GtkItemFactory *item_factory;
+
+extern GSList *invisible_chats;
 
 GtkWidget *main_menu_bar = NULL;
 GtkWidget *main_toolbar = NULL;
@@ -126,6 +128,11 @@ gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer 
 
 			if (!session->chat)
 				session->chat = create_chat(session, gp->plugin_name, k->id, TRUE);
+			else {
+			    GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
+			    if (!GTK_WIDGET_VISIBLE(window))
+				gtk_widget_show(window);
+			}
 
 			gui_chat_append(session->chat, NULL, TRUE);
 		}
@@ -713,6 +720,8 @@ void gui_msg_receive(GGaduSignal * signal)
 	{
 		gui_chat_session *session = NULL;
 		gboolean showwindow = ggadu_config_var_get(gui_handler, "chat_window_auto_show") ? TRUE : FALSE;
+		GSList *sigdata = NULL;
+		GGaduContact *k = gui_find_user(msg->id, gp);
 
 		if (msg->class == GGADU_CLASS_CONFERENCE)
 			session = gui_session_find_confer(gp, msg->recipients);
@@ -729,38 +738,42 @@ void gui_msg_receive(GGaduSignal * signal)
 		if (msg->message == NULL)
 			showwindow = TRUE;
 
+		/* shasta: new "docklet set [default] icon" approach */
+		sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
+		sigdata = g_slist_append(sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
+		sigdata =
+			g_slist_append(sigdata,
+					       g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)));
 		if (!session->chat)
 		{
-			GSList *sigdata = NULL;
-			GGaduContact *k = gui_find_user(msg->id, gp);
-
-			/* shasta: new "docklet set [default] icon" approach */
-			sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
-			sigdata = g_slist_append(sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
-			sigdata =
-				g_slist_append(sigdata,
-					       g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)));
-
 			if (showwindow == FALSE)
 			{
-				if (signal_emit_full
-				    ("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free) == NULL)
-					showwindow = TRUE;
-				else
-					showwindow = FALSE;
+			    if (signal_emit_full
+				("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free) == NULL)
+			    	    showwindow = TRUE;
+			    else
+				    showwindow = FALSE;
+			} else {
+				g_slist_free(sigdata);
 			}
-
 
 			session->recipients = g_slist_copy(msg->recipients);
 			session->chat = create_chat(session, gp->plugin_name, msg->id, showwindow);
-
-			if ((gint) ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs") == TRUE &&
-			    find_plugin_by_name("xosd") && msg->message)
-			{
-				signal_emit("main-gui", "xosd show message",
-					    g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)), "xosd");
+		} else {
+		    GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
+		        if (!GTK_WIDGET_VISIBLE(window)) {
+				invisible_chats = g_slist_append(invisible_chats, session->chat);
+				signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
+			} else {
+				g_slist_free(sigdata);
 			}
+		}
 
+		if ((gint) ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs") == TRUE &&
+		    find_plugin_by_name("xosd") && msg->message)
+		{
+			signal_emit("main-gui", "xosd show message",
+				    g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)), "xosd");
 		}
 
 		gui_chat_append(session->chat, msg, FALSE);
