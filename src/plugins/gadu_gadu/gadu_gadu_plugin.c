@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.80 2003/08/23 20:44:56 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.81 2003/08/28 07:16:52 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -462,6 +462,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		gchar **addr_arr = NULL;
 		gpointer key = NULL,index = NULL;
 		GGaduContact *k = NULL, *ktmp = NULL;
+		GIOChannel *ch = NULL;
 
 		print_debug ("somebody want to send us a file\n");
 
@@ -482,6 +483,9 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
 		d = gg_dcc_get_file (inet_addr (addr_arr[0]), atoi (addr_arr[1]),
 				     (gint) config_var_get (handler, "uin"), e->event.msg.sender);
+
+		ch = g_io_channel_unix_new (d->fd);
+		watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc, d);
 
 		g_free (idtmp);
 		g_free (addr_arr[0]);
