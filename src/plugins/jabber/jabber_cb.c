@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.38 2004/05/03 23:11:24 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.39 2004/05/04 09:37:48 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -143,12 +143,13 @@ void connection_open_result_cb(LmConnection * connection, gboolean success, gint
 	}
 
 	jabber_data.connected = 1;
-	print_debug("jabber: Connection succeeded. Authenticating... (%p)\n", status);
 
 	jid = g_strdup(ggadu_config_var_get(jabber_handler, "jid"));
 	if ((tmp = g_strstr_len(jid, strlen(jid), "@")) != NULL)
 		tmp[0] = '\0';
 
+	print_debug("jabber: Connection open succeeded. Authenticating... (status %p, jid %s, server %s)\n", status, jid,lm_connection_get_server(connection));
+	
 	if (!lm_connection_authenticate
 	    (connection, jid, ggadu_config_var_get(jabber_handler, "password"),
 	     ggadu_config_var_get(jabber_handler, "resource") ? ggadu_config_var_get(jabber_handler,

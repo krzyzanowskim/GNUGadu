@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.166 2004/04/20 21:59:24 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.167 2004/05/04 09:37:47 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1019,7 +1019,7 @@ gchar *userlist_dump()
 	{
 		gchar *line = NULL;
 		GGaduContact *k = (GGaduContact *) us->data;
-		line = g_strdup_printf("%s;%s;%s;%s;%s;%s;%s\r\n", k->first_name, k->last_name, k->nick, k->nick,
+		line = g_strdup_printf("%s;%s;%s;%s;%s;%s;%s;\r\n", k->first_name, k->last_name, k->nick, k->nick,
 				       k->mobile, k->group, k->id);
 		if (!dump)
 		{
