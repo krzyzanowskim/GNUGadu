@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.44 2004/08/01 21:05:05 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.45 2004/08/02 11:42:03 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -533,6 +533,7 @@ LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection
 	msg = g_new0(GGaduMsg, 1);
 	msg->id = g_strdup(jid);
 	msg->message = g_strdup(lm_message_node_get_value(body));
+	msg->time = time(NULL);
 
 	signal_emit("jabber", "gui msg receive", msg, "main-gui");
 

@@ -1,4 +1,5 @@
 src/main.c
+contrib/gghist/gghist.c
 lib/plugins.c
 lib/signals.c
 lib/ggadu_support.c

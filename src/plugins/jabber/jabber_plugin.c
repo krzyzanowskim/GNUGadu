@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.85 2004/08/02 11:13:59 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.86 2004/08/02 11:42:03 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -124,6 +124,7 @@ gpointer user_chat_action(gpointer user_data)
 		GGaduContact *k = (GGaduContact *) users->data;
 		msg->class = GGADU_CLASS_CHAT;
 		msg->id = k->id;
+		msg->time = time(NULL);
 		signal_emit("jabber", "gui msg receive", msg, "main-gui");
 	}
 

@@ -170,3 +170,16 @@ gchar *gg_hist_time(int timestamp)
 
 	return gtmp2;
 }
+
+gchar *gg_hist_time_time(int timestamp)
+{
+	gchar gtmp[32];
+	gchar *gtmp2 = NULL;
+
+	struct tm *ptm = (struct tm *) localtime((time_t *) & timestamp);
+	strftime(gtmp, sizeof (gtmp), "%H:%M:%S", ptm);
+
+	gtmp2 = g_strdup_printf("%s", gtmp);
+
+	return gtmp2;
+}

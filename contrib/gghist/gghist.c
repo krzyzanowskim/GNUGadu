@@ -169,9 +169,9 @@ void show_lines(int start, int end, int *list)
 #ifdef GGADU_DEBUG
 			g_print("chatrcv..");
 #endif
-			gtmp2 = gg_hist_time(atoi(hist_line->timestamp1));
+			gtmp2 = gg_hist_time_time(atoi(hist_line->timestamp1));
 			gtmp3 = gg_hist_time(atoi(hist_line->timestamp2));
-			gtmp4 = g_strdup_printf("%s :: %s (%s) :: \n", hist_line->nick, gtmp2, gtmp3);
+			gtmp4 = g_strdup_printf("%s :: %s [%s] :: \n", hist_line->nick, gtmp2, gtmp3);
 			AddText(text_view, gtmp4, "header2");
 			g_free(gtmp2);
 			g_free(gtmp3);
