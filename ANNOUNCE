@@ -73,7 +73,7 @@ upubliczniæ wersjê - 2.0, jako kolejn± wersjê pogl±dow±.
 4. Wymagania
 
     - glib 2.2.0 (ftp://ftp.gnome.org/pub/GNOME/)
-    - gtk+ 2.2.0 (ftp://ftp.gnome.org/pub/GNOME/) - GUI
+    - gtk+ 2.4.0 (ftp://ftp.gnome.org/pub/GNOME/) - GUI
     - libtlen (http://www.libtlen.eu.org) - Tlen
     - Loudmouth 0.13 (http://www.imendio.com/projects/loudmouth/) - Jabber
     - xosd (http://ignavus.net/software.html) - XOSD

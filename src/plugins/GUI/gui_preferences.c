@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.66 2004/08/22 12:26:52 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.67 2004/08/22 13:41:41 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -555,7 +555,7 @@ static GtkWidget *create_sound_tab()
 	if (ggadu_config_var_get(gui_handler, "sound_msg_in"))
 		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "sound_msg_in"));
 	
-    label = gtk_label_new(_("Initial message:"));
+	label = gtk_label_new(_("Initial message:"));
 	entry = gtk_entry_new();
 	button = gtk_button_new_from_stock("gtk-open");
 
@@ -606,7 +606,6 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *combo_spell;
 	GtkWidget *label3_align;
 #endif
-	GtkWidget *chat_paned_size;
 	GtkWidget *label0_align, *label1_align, *label2_align;
 
 	chat_vbox = gtk_vbox_new(FALSE, 5);
@@ -640,12 +639,12 @@ static GtkWidget *create_chat_tab()
 	g_object_set_data(G_OBJECT(chat_vbox), "send_on_enter", send_on_enter);
 
 
-	chatwindowshow = gtk_check_button_new_with_label(_("Automatically show chat window"));
+	chatwindowshow = gtk_check_button_new_with_label(_("Allways show new window on new message"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatwindowshow, FALSE, FALSE, 0);
 
 	g_object_set_data(G_OBJECT(chat_vbox), "chatwindowshow", chatwindowshow);
 
-	chatwindowraise = gtk_check_button_new_with_label(_("Automatically raise chat window"));
+	chatwindowraise = gtk_check_button_new_with_label(_("Raise window on new message"));
 	gtk_box_pack_start(GTK_BOX(vbox), chatwindowraise, FALSE, FALSE, 0);
 
 	g_object_set_data(G_OBJECT(chat_vbox), "chatwindowraise", chatwindowraise);
@@ -703,15 +702,6 @@ static GtkWidget *create_chat_tab()
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label1_align, 0, 1, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), chatwindowheight, 1, 2, 1, 2);
 
-	/* ZONK - how to name it ? */
-	label = gtk_label_new(_("Chat window split size (percent)"));
-	chat_paned_size = gtk_spin_button_new_with_range(5, 100, 5);
-	gtk_container_add(GTK_CONTAINER(label2_align), label);
-
-	g_object_set_data(G_OBJECT(chat_vbox), "chat_paned_size", chat_paned_size);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 2, 3);
 
 
 	return chat_vbox;
@@ -725,11 +715,15 @@ static GtkWidget *create_advanced_tab()
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *tabbox;
-	GtkWidget *label0_align = gtk_alignment_new(0.9, 0.5, 0, 0);
+	GtkWidget *label0_align;
 	GtkWidget *label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *label3_align = gtk_alignment_new(0, 0.5, 0, 0);
+	GtkWidget *label4_align = gtk_alignment_new(0, 0.5, 0, 0);
+	GtkWidget *label5_align = gtk_alignment_new(0, 0.5, 0, 0);
 	GtkWidget *combo_theme = NULL;
 	GtkWidget *combo_icons = NULL;
+	GtkWidget *chat_paned_size;
+
 	gchar *dirname = NULL;
 	GDir *dir;
 	GtkWidget *adv_vbox = gtk_vbox_new(FALSE, 5);
@@ -758,13 +752,14 @@ static GtkWidget *create_advanced_tab()
 	
 	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
 
-	tabbox = gtk_table_new(3, 3, FALSE);
+	tabbox = gtk_table_new(3, 4, FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 
 	gtk_box_pack_start(GTK_BOX(adv_vbox), tabbox, FALSE, FALSE, 0);
 
-	label = gtk_label_new(_("interval"));
+	label = gtk_label_new(_("miliseconds (interval)"));
+	label0_align = gtk_alignment_new(0, 0.5, 0, 0);
 	gtk_container_add(GTK_CONTAINER(label0_align), label);
 
 	if (ggadu_config_var_get(gui_handler, "blink"))
@@ -773,8 +768,8 @@ static GtkWidget *create_advanced_tab()
 		gtk_widget_set_sensitive(blink_interval, FALSE);
 		
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 1, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 2, 3, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 2, 3, 0, 1);
 		
 
 
@@ -872,6 +867,21 @@ static GtkWidget *create_advanced_tab()
 		g_object_set_data(G_OBJECT(combo_icons), "combo_icons_slist", list_icons);
 	}
 
+	/* chat_paned_size */
+	/* ZONK - how to name it ? */
+	label = gtk_label_new(_("Chat window split position"));
+	chat_paned_size = gtk_spin_button_new_with_range(5, 100, 5);
+	gtk_container_add(GTK_CONTAINER(label4_align), label);
+
+	g_object_set_data(G_OBJECT(adv_vbox), "chat_paned_size", chat_paned_size);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label4_align, 0, 1, 3, 4);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 3, 4);
+
+	label = gtk_label_new(_("percent"));
+	label5_align = gtk_alignment_new(0, 0.5, 0, 0);
+	gtk_container_add(GTK_CONTAINER(label5_align), label);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label5_align, 2, 3, 3, 4);
 	
 	/* set */
 	
@@ -882,6 +892,9 @@ static GtkWidget *create_advanced_tab()
 	if (ggadu_config_var_get(gui_handler, "hide_on_start"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_on_start), TRUE);
 
+	if (ggadu_config_var_get(gui_handler, "chat_paned_size"))
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(chat_paned_size),
+					  (gint) ggadu_config_var_get(gui_handler, "chat_paned_size"));
 
 	return adv_vbox;
 }
@@ -914,13 +927,15 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *label1_align;
 	GtkWidget *entry;
 	GdkPixbuf *windowicon = NULL;
+	gchar *previous_theme = ggadu_config_var_get(gui_handler, "theme");
+	gchar *previous_icons = ggadu_config_var_get(gui_handler, "icons");
 	gint response = -1;
 
 	print_debug("Preferences");
 
 	preferences =
 		gtk_dialog_new_with_buttons(_("Preferences"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+					    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT,
 					    NULL);
 
 	gtk_window_set_resizable(GTK_WINDOW(preferences), FALSE);
@@ -983,7 +998,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	show_active = gtk_check_button_new_with_label(_("Show only active users"));
 	gtk_box_pack_start(GTK_BOX(vbox), show_active, FALSE, FALSE, 0);
 
-	tree = gtk_check_button_new_with_label(_("Tree user list"));
+	tree = gtk_check_button_new_with_label(_("Tree users list"));
 	gtk_box_pack_start(GTK_BOX(vbox), tree, FALSE, FALSE, 0);
 
 	expand = gtk_check_button_new_with_label(_("Expand Tree by default"));
@@ -1006,27 +1021,27 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	show_toolbar = gtk_check_button_new_with_label(_("Show toolbar"));
 	gtk_box_pack_start(GTK_BOX(vbox), show_toolbar, FALSE, FALSE, 0);
 
-	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on user list"));
+	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on users list"));
 	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
 
 	tabbox_auto_away = gtk_table_new(1, 3, FALSE);
 	
-	auto_away = gtk_check_button_new_with_label(_("Auto away"));
+	auto_away = gtk_check_button_new_with_label(_("Auto away set after"));
 
-	label1_align = gtk_alignment_new(0.9, 0.5, 0, 0);
-	label = gtk_label_new(_("Mark away after (minutes)"));
+	label1_align = gtk_alignment_new(0.1, 0.5, 0, 0);
+	label = gtk_label_new(_("minutes"));
 	auto_away_interval = gtk_spin_button_new_with_range(0, 1440, 1);
 	g_signal_connect(auto_away, "toggled", G_CALLBACK(tree_toggled), auto_away_interval);
 	gtk_container_add(GTK_CONTAINER(label1_align), label);
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away, 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), label1_align, 1, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away_interval, 2, 3, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), auto_away_interval, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox_auto_away), label1_align, 2, 3, 0, 1);
 	
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox_auto_away, FALSE, FALSE, 0);
 	
 
-	tabbox = gtk_table_new(8, 2, FALSE);
+	tabbox = gtk_table_new(6, 2, FALSE);
 
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
@@ -1159,12 +1174,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "chat_window_auto_raise"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 
-	entry = g_object_get_data(G_OBJECT(chat_vbox), "chat_paned_size");
-	g_return_if_fail(entry != NULL);
-
-	if (ggadu_config_var_get(gui_handler, "chat_paned_size"))
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),
-					  (gint) ggadu_config_var_get(gui_handler, "chat_paned_size"));
 
 	entry = g_object_get_data(G_OBJECT(chat_vbox), "use_username");
 	g_return_if_fail(entry != NULL);
@@ -1265,7 +1274,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "chat_window_auto_raise",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
-		entry = g_object_get_data(G_OBJECT(chat_vbox), "chat_paned_size");
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "chat_paned_size");
 		g_return_if_fail(entry != NULL);
 
 		ggadu_config_var_set(gui_handler, "chat_paned_size",
@@ -1428,9 +1437,15 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		ggadu_config_save(gui_handler);
-		gui_load_theme();
+		
+		if (ggadu_strcasecmp(previous_theme,ggadu_config_var_get(gui_handler, "theme")))
+		    gui_load_theme();
+		    
 		gui_config_emoticons();
-		gui_reload_images();
+		
+		if (ggadu_strcasecmp(previous_icons,ggadu_config_var_get(gui_handler, "icons")))
+		    gui_reload_images();
+		
 		gui_user_view_refresh();
 		gui_chat_update_tags();
 	}

@@ -56,4 +56,4 @@ pixmap_DATA = \
 icondir = $(datadir)/pixmaps
 icon_DATA = gg2.png
 
-EXTRA_DIST = $(pixmap_DATA) $(icon_DATA)
+EXTRA_DIST = $(pixmap_DATA) $(icon_DATA) README.icons

@@ -1,1 +1,1 @@
-SUBDIRS = bubble classic ghosts modern rozgwiazda tlen-3d
+SUBDIRS = bubble classic ghosts modern rozgwiazda tlen-classic

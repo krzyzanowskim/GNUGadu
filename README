@@ -4,7 +4,7 @@ To compile all plugins you need:
 - libtool 1.4e or better
 
 - glib 2.2.0 (http://www.gtk.org/)
-- gtk+ 2.2.0 (http://www.gtk.org/) - GUI
+- gtk+ 2.4.0 (http://www.gtk.org/) - GUI
 - libtlen (http://www.libtlen.eu.org) - Tlen
 - Loudmouth 0.15.1 or newer (http://www.imendio.com/projects/loudmouth/) - Jabber
 - xosd (http://ignavus.net/software.html) - XOSD
