@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.19 2003/09/16 22:50:02 shaster Exp $ */
+/* $Id: gui_userview.c,v 1.20 2003/11/06 20:03:27 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -351,8 +351,8 @@ void gui_create_tree()
 
     gtk_box_pack_start(GTK_BOX(vbox), add_info_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), eventbox, FALSE, FALSE, 0);
-    
-    gtk_widget_show_all(window);
+
+    gtk_widget_show_all(view_container);
     
     g_object_set_data(G_OBJECT(treeview), "add_info_label", add_info_label);
     g_object_set_data(G_OBJECT(add_info_label), "add_info_label_desc", add_info_label_desc);

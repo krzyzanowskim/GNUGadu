@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.25 2003/11/06 19:17:59 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.26 2003/11/06 20:03:27 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -119,6 +119,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     config_var_add(gui_handler, "msg_out_header_font", VAR_STR);
     config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
     config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
+    config_var_add(gui_handler, "hide_toolbar", VAR_BOOL);
     config_var_add(gui_handler, "sound_msg_in", VAR_STR);
     config_var_add(gui_handler, "sound_msg_out", VAR_STR);
     config_var_add(gui_handler, "contact_list_contact_font", VAR_STR);

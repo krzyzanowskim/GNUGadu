@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.25 2003/09/16 22:56:08 shaster Exp $ */
+/* $Id: gui_preferences.c,v 1.26 2003/11/06 20:03:27 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -545,6 +545,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     GtkWidget *usexosdfornewmsgs;
     GtkWidget *send_on_enter;
     GtkWidget *hide_on_start;
+    GtkWidget *hide_toolbar;
     GtkWidget *blink;
     GtkWidget *blink_interval;
     GtkWidget *auto_away;
@@ -635,6 +636,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     hide_on_start = gtk_check_button_new_with_label (_("Auto hide on start"));
     gtk_box_pack_start (GTK_BOX (vbox), hide_on_start, FALSE, FALSE, 0);
 
+    hide_toolbar = gtk_check_button_new_with_label (_("Hide toolbar"));
+    gtk_box_pack_start (GTK_BOX (vbox), hide_toolbar, FALSE, FALSE, 0);
+
     blink = gtk_check_button_new_with_label (_("Blink status"));
     gtk_box_pack_start (GTK_BOX (vbox), blink, FALSE, FALSE, 0);
 
@@ -691,6 +695,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
     if (config_var_get (gui_handler, "expand"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (expand), TRUE);
+	
     if ((gint) config_var_get (gui_handler, "chat_type") == CHAT_TYPE_TABBED)
       {
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatstyle), TRUE);
@@ -733,8 +738,12 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
     if (config_var_get (gui_handler, "use_xosd_for_new_msgs"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs), TRUE);
+	
     if (config_var_get (gui_handler, "hide_on_start"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (hide_on_start), TRUE);
+
+    if (config_var_get (gui_handler, "hide_toolbar"))
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (hide_toolbar), TRUE);
 
     /* read available themes */
     dirname = g_build_filename (PACKAGE_DATA_DIR, "themes", NULL);
@@ -866,6 +875,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
 	  config_var_set (gui_handler, "hide_on_start",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (hide_on_start)));
+
+	  config_var_set (gui_handler, "hide_toolbar",
+			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (hide_toolbar)));
 
 	  config_var_set (gui_handler, "theme",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_theme)->entry))));
