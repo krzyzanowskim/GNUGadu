@@ -64,7 +64,7 @@ void roster_update_presence(ikspak *pak)
 	notify->id = g_strdup(iks_id_printx(pak->from,id_print));
 	notify->status = pak->show;
 	
-	set_userlist_status(notify, iks_find_cdata(pak->x,"status"), userlist);
+	set_userlist_status(notify, g_strdup(iks_find_cdata(pak->x,"status")), userlist);
 
 	while (l) {
 	  GGaduContact *k = (GGaduContact *)l->data;

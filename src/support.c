@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.4 2003/04/21 15:15:02 krzyzak Exp $ */
+/* $Id: support.c,v 1.5 2003/04/21 18:03:15 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -39,7 +39,7 @@ void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist)
 				k->status_descr = NULL;
 			}
 	    
-			if (status_descr)
+			if ((status_descr) && (strlen(status_descr) > 0))
 				k->status_descr = status_descr;
 
 	    break;
