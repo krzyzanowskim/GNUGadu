@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.45 2004/02/14 02:55:34 thrulliq Exp $ */
+/* $Id: sms_gui.c,v 1.46 2004/02/14 03:02:19 thrulliq Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -455,15 +455,11 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 				if (!ggadu_strcasecmp(id, k->id))
 				{
-					//ggadu_repo_del_value("sms", kvtmp->id);
-					//g_free(kvtmp->id);
-					//g_free(kvtmp->nick);
-					//g_free(kvtmp->mobile);
-					//kvtmp->mobile = k->mobile;
-					//kvtmp->id = g_strdup(k->mobile);
-					//kvtmp->nick = k->nick;
-					//ggadu_repo_add_value("sms", kvtmp->id, kvtmp, REPO_VALUE_CONTACT);
-					//g_free(k);
+					g_free(kvtmp->nick);
+					g_free(kvtmp->mobile);
+					kvtmp->mobile = g_strdup(k->mobile);
+					kvtmp->nick = g_strdup(k->nick);
+					ggadu_repo_change_value("sms", kvtmp->id, kvtmp, REPO_VALUE_CONTACT);
 					g_free(id);
 					break;
 				}
