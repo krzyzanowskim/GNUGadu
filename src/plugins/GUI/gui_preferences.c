@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.96 2005/01/28 16:56:28 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.97 2005/02/18 11:46:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1029,6 +1029,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *usexosdfornewmsgs = NULL;
 	GtkWidget *usexosdforstatuschange = NULL;
 	GtkWidget *show_toolbar;
+	GtkWidget *irc_msg_style;
 	GtkWidget *descr_on_list;
 	GtkWidget *tabbox;
 	GtkWidget *entry;
@@ -1122,6 +1123,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
  		gtk_box_pack_start(GTK_BOX(vbox), usexosdforstatuschange, FALSE, FALSE, 0);
 	}
 
+	irc_msg_style = gtk_check_button_new_with_label(_("Irc messages style"));
+	gtk_box_pack_start(GTK_BOX(vbox), irc_msg_style, FALSE, FALSE, 0);
 
 	show_toolbar = gtk_check_button_new_with_label(_("Show toolbar"));
 	gtk_box_pack_start(GTK_BOX(vbox), show_toolbar, FALSE, FALSE, 0);
@@ -1143,6 +1146,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "emot"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 
+	print_debug("baaas? irc_msg_style %d\n", ggadu_config_var_get(gui_handler, "irc_msg_style"));
 	print_debug("baaas? %d\n", ggadu_config_var_get(gui_handler, "show_toolbar"));
 	print_debug("baaas? active %d\n", ggadu_config_var_get(gui_handler, "show_active"));
 
@@ -1266,6 +1270,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
  		if (ggadu_config_var_get(gui_handler, "use_xosd_for_status_change"))
  			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usexosdforstatuschange), TRUE);
 
+	if (ggadu_config_var_get(gui_handler, "irc_msg_style"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(irc_msg_style), TRUE);
+
 	if (ggadu_config_var_get(gui_handler, "show_toolbar"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_toolbar), TRUE);
 
@@ -1378,6 +1385,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
  		if (usexosdforstatuschange)
  			ggadu_config_var_set(gui_handler, "use_xosd_for_status_change", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usexosdforstatuschange)));
 			
+		ggadu_config_var_set(gui_handler, "irc_msg_style", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(irc_msg_style)));
+
 		ggadu_config_var_set(gui_handler, "show_toolbar", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_toolbar)));
 
 		ggadu_config_var_set(gui_handler, "descr_on_list", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));

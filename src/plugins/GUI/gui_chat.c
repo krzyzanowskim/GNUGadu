@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.141 2005/01/17 21:57:24 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.142 2005/02/18 11:46:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1396,11 +1396,24 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	if (self == TRUE)
 	{
 		if (conference)
-			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
+			if (ggadu_config_var_get(gui_handler, "irc_msg_style")) 
+			{
+				header = g_strdup_printf("[%s] <%s> ", get_timestamp(0), ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
+			}
+			else
+			{
+				header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
+			}
 		else
-			header = g_strdup_printf("%s :: %s :: ", ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"), get_timestamp(0));
-
-		text = g_strdup(msg);
+			if (ggadu_config_var_get(gui_handler, "irc_msg_style"))
+			{
+				header = g_strdup_printf("[%s] <%s> ", get_timestamp(0), ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
+			}
+			else
+			{
+				header = g_strdup_printf("%s :: %s :: ", ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"), get_timestamp(0));
+			}
+			text = g_strdup(msg);
 	}
 	else
 	{
@@ -1433,11 +1446,25 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 		}
 
 		if (conference)
-			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), (k) ? k->nick : gmsg->id);
+			if (ggadu_config_var_get(gui_handler, "irc_msg_style"))
+			{
+				header = g_strdup_printf("[%s] <%s> ", get_timestamp(0), (k) ? k->nick : gmsg->id);
+			}
+			else
+			{
+				header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), (k) ? k->nick : gmsg->id);
+			}
 		else
 		{
 			gchar *timestamp = g_strdup(get_timestamp(0));
-			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, timestamp, get_timestamp(gmsg->time));
+			if (ggadu_config_var_get(gui_handler, "irc_msg_style"))
+			{
+				header = g_strdup_printf("[%s | %s] <%s> ", timestamp, get_timestamp(gmsg->time), (k) ? k->nick : gmsg->id);
+			}
+			else
+			{
+				header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, timestamp, get_timestamp(gmsg->time));
+			}
 			g_free(timestamp);
 		}
 		text = g_strdup(gmsg->message);
@@ -1449,7 +1476,14 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 
 	if (!notice_message)
 	{
+	if (ggadu_config_var_get(gui_handler, "irc_msg_style"))
+		{
+		tmp = g_strconcat(header, (conference) ? "" : "", NULL);
+		}
+		else
+		{
 		tmp = g_strconcat(header, (conference) ? "" : "\n", NULL);
+		}
 		gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_header" : "incoming_header", NULL);
 	}
 	else

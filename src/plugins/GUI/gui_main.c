@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.75 2005/01/19 21:02:12 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.76 2005/02/18 11:46:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -160,6 +160,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "notify_status_changes", VAR_BOOL, (gpointer) TRUE);
  	ggadu_config_var_add_with_default(gui_handler, "use_xosd_for_status_change", VAR_BOOL, (gpointer)FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL, (gpointer)TRUE);
+	ggadu_config_var_add_with_default(gui_handler, "irc_msg_style", VAR_BOOL, (gpointer) FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "show_toolbar", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in", VAR_STR,
 					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/msg.wav", NULL));
