@@ -19,8 +19,8 @@
 
 18.08.2004
 - building plugins and other features is enabled now by default (not all)
-  but you can disable it with --without-foo, in addition is some library
-  will be not found - configure will stop with error message instead just
+  but you can disable it with --without-foo, in addition if some library
+  will cannot be found - configure will stop with error message instead just
   disable feature. 
 - fixed segfault with gadu-gadu disconnect/reconnect (krzak/gadu-gadu)
 - small fixes in jabber plugin
@@ -33,8 +33,8 @@
 
 09.08.2004
 - #ifdef BUILD_WITH_NEW_LOUDMOUTH
-        lm_connection_set_jid(jabber_data.connection, jid);
-  #endif	
+-        lm_connection_set_jid(jabber_data.connection, jid);
+- #endif	
 
 05.08.2004
 - fixed warning messages with g_strchomp() (GUI/krzak)

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.93 2004/08/22 19:12:27 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.94 2004/08/22 19:35:13 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -346,7 +346,7 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERNAME, _("Username:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Password:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success ?"), VAR_BOOL, FALSE,
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE,
 				VAR_FLAG_NONE);
 
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
@@ -1017,7 +1017,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(jabber_handler, "jid", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "password", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "server", VAR_STR);
-	ggadu_config_var_add(jabber_handler, "log", VAR_BOOL);
+	ggadu_config_var_add_with_default(jabber_handler, "log", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(jabber_handler, "only_friends", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "resource", VAR_STR);

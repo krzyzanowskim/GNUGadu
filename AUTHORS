@@ -14,7 +14,6 @@ also :
 	Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
 	Jakub Jankowski		<shasta@atn.pl>
 
-
 ----------------------------------------------------------------
 -- PLUGINS -----------------------------------------------------
 ----------------------------------------------------------------
@@ -33,8 +32,9 @@ Tlen		(http://www.tlen.pl)
 
 
 Jabber		(http://www.jabber.org)
-		: Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+		: Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
+		: Marcin P. Kobierzycki <m-kobierzycki@debian.linux.org.pl>
 
 Docklet 	
 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
