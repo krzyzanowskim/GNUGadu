@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.21 2003/04/07 20:02:43 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.22 2003/04/10 10:11:34 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -546,8 +546,10 @@ gpointer user_add_user_action(gpointer user_data)
 
 gpointer user_preferences_action(gpointer user_data)
 {
-	GGaduDialog *d = ggadu_dialog_new();
 	gchar *utf = NULL;
+	GGaduDialog *d = ggadu_dialog_new();
+//	GSList *statuslist_names = NULL;
+
 
 	ggadu_dialog_set_title(d, _("Gadu-gadu plugin configuration"));
 	ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);       
@@ -559,8 +561,8 @@ gpointer user_preferences_action(gpointer user_data)
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL, config_var_get(handler, "log"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
+	//ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, p->statuslist, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"), VAR_BOOL, config_var_get(handler, "private"), VAR_FLAG_NONE);
-
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE, _("Sound file (app)"), VAR_FILE_CHOOSER, config_var_get(handler, "sound_app_file"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE, _("Sound file (chat)"), VAR_FILE_CHOOSER, config_var_get(handler, "sound_chat_file"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_MSG_FILE, _("Sound file (msg)"), VAR_FILE_CHOOSER, config_var_get(handler, "sound_msg_file"), VAR_FLAG_NONE);

@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.10 2003/04/08 21:35:18 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.11 2003/04/10 10:11:32 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -253,11 +253,10 @@ void on_emoticon_press_event(GtkWidget *event_box, GdkEventButton *event, gpoint
 	emoticons_window = lookup_widget(event_box, "emoticons_window");
 
 	g_return_if_fail(emoticons_window != NULL);
-	
+
 	session = g_object_get_data(G_OBJECT(emoticons_window), "session");
-
 	input = g_object_get_data(G_OBJECT(session->chat), "input");
-
+	
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(input));
 	gtk_text_buffer_get_start_iter(buf, &start);
 	gtk_text_buffer_get_end_iter(buf, &end);
@@ -286,16 +285,29 @@ gboolean find_emoticon(gchar *name,GSList *here)
 
 void on_emoticons_clicked(GtkWidget *button, gpointer user_data)
 {
-	GtkWidget *emoticons_window;
-	GtkWidget *vbox;
-	GtkWidget *button_close;
-	gui_chat_session *session = user_data;
+	gint chat_type = (gint)config_var_get(gui_handler,"chat_type");
+	GtkWidget *emoticons_window = NULL;
+	GtkWidget *vbox = NULL;
+	GtkWidget *button_close = NULL;
+	gui_chat_session *session = NULL;
+
+	if (chat_type == CHAT_TYPE_TABBED) {
+		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");	
+		guint			nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+		GtkWidget *chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),nr);
+	
+		session = (gui_chat_session *)g_object_get_data(G_OBJECT(chat), "gui_session");
+	
+	} else if (chat_type == CHAT_TYPE_CLASSIC) {
+		session = user_data;
+	}
 
 	emoticons_window = gtk_window_new(GTK_WINDOW_POPUP);
 	gtk_window_set_modal(GTK_WINDOW(emoticons_window), TRUE);
 	gtk_window_set_position(GTK_WINDOW(emoticons_window), GTK_WIN_POS_MOUSE);
-
+	
 	g_object_set_data(G_OBJECT(emoticons_window), "session", session);
+	
 	g_object_set_data(G_OBJECT(emoticons_window), "emoticons_window", emoticons_window);
 
 	vbox = gtk_vbox_new(TRUE, 0);
