@@ -85,8 +85,9 @@ gtk_anim_label_destroy (GtkObject *object)
 	anim_label = GTK_ANIM_LABEL(object);
 	
 	g_free(anim_label->txt);
-	g_object_unref(G_OBJECT(anim_label->layout));
-	g_source_remove(anim_label->timeout_source);
+	/* g_object_unref(G_OBJECT(anim_label->layout)); */
+	if (anim_label->timeout_source > 0)
+		g_source_remove(anim_label->timeout_source);
 	
 	if (GTK_OBJECT_CLASS (parent_class)->destroy)
 		(* GTK_OBJECT_CLASS(parent_class)->destroy) (object);
@@ -120,6 +121,9 @@ gtk_anim_label_set_text (GtkAnimLabel *anim_label, const gchar *txt)
 	
 	if (!txt) return;
 	
+	
+
+	if (anim_label->txt) g_free(anim_label->txt);
 	
 	anim_label->txt = g_strdup(txt);
 	
