@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_arts.c,v 1.11 2004/10/15 09:48:04 krzyzak Exp $ */
+/* $Id: plugin_sound_arts.c,v 1.12 2004/11/12 11:26:26 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -62,7 +62,6 @@ static gpointer ggadu_play_file(gpointer filename)
     g_free(filename_native);
 
     g_static_mutex_unlock(&play_mutex);
-    g_thread_exit(0);
     return NULL;
 }
 
