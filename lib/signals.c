@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.26 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: signals.c,v 1.27 2005/03/27 00:15:22 shaster Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -204,7 +204,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalInfo * signalinfo)
 
 			while (list)
 			{
-				(void *) hook_func = (void *) list->data;
+				hook_func = (void *) list->data;
 				hook_func(tmpsignal, hook->perl_handler);
 				list = list->next;
 			}
