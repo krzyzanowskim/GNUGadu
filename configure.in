@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.12 2003/05/14 21:26:22 shaster Exp $
+dnl $Id: configure.in,v 1.13 2003/05/26 09:48:59 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -55,7 +55,7 @@ AM_PROG_LIBTOOL
 AM_MAINTAINER_MODE
 
 if test "x$GCC" = "xyes"; then
-   CFLAGS="$CFLAGS -Wall -Wno-uninitialized -Wchar-subscripts -Wnested-externs -Wpointer-arith -Wno-sign-compare -Wsign-promo"
+   CFLAGS="$CFLAGS -Wall -Wno-uninitialized -Wchar-subscripts -Wnested-externs -Wpointer-arith -Wno-sign-compare"
 fi
 
 
