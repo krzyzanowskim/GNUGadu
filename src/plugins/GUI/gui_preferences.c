@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.101 2005/03/04 16:04:53 mkobierzycki Exp $ */
+/* $Id: gui_preferences.c,v 1.102 2005/03/09 13:11:14 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -898,13 +898,13 @@ static GtkWidget *create_advanced_tab()
 	combo_skins = gtk_combo_box_new_text();
 	g_object_set_data(G_OBJECT(adv_vbox), "combo_skins", combo_skins);
 
-	label = gtk_label_new(_("Selected skin:"));
+	label = gtk_label_new(_("Selected skin (need restart):"));
 	gtk_container_add(GTK_CONTAINER(label1_align), label);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label1_align, 0, 1, 3, 4);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_skins, 1, 3, 3, 4);
 
 	dirname = g_build_filename(config->configdir, "skins", NULL);
-g_print("DIRNAME %s\n", dirname);
+	g_print("DIRNAME %s\n", dirname);
 	dir = g_dir_open(dirname, 0, NULL);
 
 	if (!dir) {
@@ -918,12 +918,14 @@ g_print("DIRNAME %s\n", dirname);
 	if (dir)
 	{
 		GSList *list_skins = NULL;
-		gchar *skin_current;
+		gchar *skin_current = NULL;
 		gchar *skin_dir;
 		gint i = 0;
 	
 		list_skins = g_slist_append(list_skins, g_strdup(_("")));
 		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_skins), g_strdup(_("default")));
+
+		skin_current = ggadu_config_var_get(gui_handler, "skin");
 		
 		// select 1st one anyway...
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_skins), i);

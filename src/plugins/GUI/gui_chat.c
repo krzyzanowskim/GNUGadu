@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.145 2005/03/01 17:03:14 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.146 2005/03/09 13:11:13 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1092,7 +1092,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		gchar *conf_dict = ggadu_config_var_get(gui_handler, "dictionary");
 		gchar *dictionary = NULL;
 
-		if (!conf_dict || (conf_dict && (!strcmp(conf_dict, "default"))))
+		if (!conf_dict || (conf_dict && (!g_utf8_collate(conf_dict, "default"))))
 			dictionary = g_strdup(g_getenv("LANG"));
 		else
 			dictionary = g_strdup(conf_dict);
