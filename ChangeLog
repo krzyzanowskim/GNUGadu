@@ -1,5 +1,6 @@
 26.01.2004
 - added ability to register new gadu-gadu account [uses threads] (gadu-gadu/shasta)
+- pure gettext instead intltool (krzak)
 
 25.01.2004
 - massive memory leaks fixes, minor code cleanups (tlen/sms/update/xosd/shasta)

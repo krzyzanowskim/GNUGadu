@@ -89,7 +89,7 @@ echo "aclocal"
 $ACLOCAL $ACPATH -I m4 || exit 1
 
 echo "automake"
-$AUTOMAKE --copy --add-missing || exit 1
+$AUTOMAKE --no-force --copy --add-missing || exit 1
 
 echo "autoconf"
 autoconf || exit 1

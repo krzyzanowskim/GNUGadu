@@ -2,25 +2,29 @@
 
 SUBDIRS = intl m4 lib src po pixmaps sounds themes
 
-EXTRA_DIST = config.rpath mkinstalldirs  config.rpath mkinstalldirs  config.rpath  autogen.sh ANNOUNCE AUTHORS ChangeLog COPYING \
-		contrib/example.pl \
-		contrib/gg2sms \
-		contrib/mkgg2snap \
-		contrib/plugin_example/build.sh \
-		contrib/plugin_example/my_plugin.c \
-		contrib/plugin_example/my_plugin.h \
-		contrib/remote_client/Makefile \
-		contrib/remote_client/main.c \
-		contrib/remote_client/remote_client.c \
-		contrib/remote_client/remote_client.h \
-		doc/README.remote \
-		doc/emoticons.def \
-		doc/problems \
-		gg2.desktop \
-		gg2.spec \
-		intltool-extract.in \
-		intltool-merge.in \
-		intltool-update.in
+EXTRA_DIST = \
+	autogen.sh \
+	ANNOUNCE \
+	AUTHORS \
+	ChangeLog \
+	COPYING \
+	contrib/example.pl \
+	contrib/gg2sms \
+	contrib/mkgg2snap \
+	contrib/plugin_example/build.sh \
+	contrib/plugin_example/my_plugin.c \
+	contrib/plugin_example/my_plugin.h \
+	contrib/remote_client/Makefile \
+	contrib/remote_client/main.c \
+	contrib/remote_client/remote_client.c \
+	contrib/remote_client/remote_client.h \
+	doc/README.remote \
+	doc/emoticons.def \
+	doc/problems \
+	gg2.desktop \
+	gg2.spec
+#	config.rpath
+#	mkinstalldirs
 		
 
 dist-hook:
