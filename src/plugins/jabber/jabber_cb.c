@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.81 2004/12/27 14:22:40 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.82 2005/01/12 21:55:32 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -451,13 +451,15 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			      gpointer user_data)
 {
+	print_debug("jabber : %s", lm_message_node_to_string(message->node));
+	
 	if(!lm_message_node_get_attribute(message->node, "id"))
 	        return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 
-        if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "v1") &&
-	   lm_message_node_get_attribute(message->node, "from") &&
-	   !lm_message_node_get_attribute(message->node, "to"))
+        if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "v1"))
 	{
+	    if(lm_message_node_find_child(message->node, "vCard"))
+	    {
 		LmMessageNode *node;
 		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Personal info:"), "user edit vcard");
 		gchar **tab = NULL;
@@ -484,7 +486,7 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 				       VAR_FLAG_NONE);
 
 		node = lm_message_node_find_child(message->node, "BDAY");
-		if(lm_message_node_get_value(node))
+		if(node && lm_message_node_get_value(node))
                 	tab = g_strsplit(lm_message_node_get_value(node), "-", 3);
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_BDAY, _("Birthday"), VAR_INT,
 				       tab ? (gpointer) atoi(tab[2]) : NULL, VAR_FLAG_NONE);
@@ -515,9 +517,11 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERID, _("E-mail"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_NONE);
-		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
-		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
+	    }
+	    
+	    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
 
         if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "v3"))
@@ -573,17 +577,13 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_USERID, _("E-mail"), VAR_STR,
 				       node ? (gpointer) lm_message_node_get_value(node) : NULL,
 				       VAR_FLAG_INSENSITIVE);
+
 		signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
-		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+                return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
 
-	if((!strcmp(lm_message_node_get_attribute(message->node, "id"), "v1") ||
-	    !strcmp(lm_message_node_get_attribute(message->node, "id"), "v3")) &&
-	    !lm_message_node_find_child(message->node, "vCard"))
-		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
-	        else
-		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
 LmHandlerResult iq_account_data_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
@@ -703,7 +703,7 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 	if (!(node = lm_message_node_get_child(message->node, "query")))
 	{
 		print_debug("jabber: weird roster.");
-		lm_message_node_unref(node);
+		/* lm_message_node_unref(node); */
 		g_slist_free(list);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
