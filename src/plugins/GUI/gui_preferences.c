@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.62 2004/08/20 14:56:47 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.63 2004/08/20 15:02:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -679,7 +679,7 @@ static GtkWidget *create_chat_tab()
 	label1_align = gtk_alignment_new(0, 0.5, 0, 0);
 	label2_align = gtk_alignment_new(0, 0.5, 0, 0);
 
-	tabbox = gtk_table_new(8, 2, FALSE);
+	tabbox = gtk_table_new(3, 2, FALSE);
 
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
@@ -1193,7 +1193,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_combo_set_popdown_strings(GTK_COMBO(combo_icons), list_icons);
 	}
 
-	gtk_window_set_default_size(GTK_WINDOW(preferences), 250, 200);
+//	gtk_window_set_default_size(GTK_WINDOW(preferences), 250, 200);
 
 	gtk_widget_show_all(preferences);
 
