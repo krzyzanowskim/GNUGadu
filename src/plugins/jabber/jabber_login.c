@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.26 2004/01/29 22:15:06 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.27 2004/02/01 21:24:37 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -135,16 +135,16 @@ gpointer jabber_login_connect(gpointer status)
 		print_debug("jabber: Changing server to %s", server);
 		lm_connection_close(connection, NULL);
 		lm_connection_set_server(connection, server);
+		lm_connection_set_port(connection,5222);
 		/* lm_connection_unref(connection); */
 	}
-
-	lm_connection_set_disconnect_function(connection, jabber_disconnect_cb, NULL, NULL);
 
 	if (ggadu_config_var_get(jabber_handler, "use_ssl"))
 	{
 		if (lm_ssl_is_supported())
 		{
 			LmSSL *ssl = lm_ssl_new (NULL,jabber_connection_ssl_func,NULL,NULL);
+			lm_connection_set_port(connection,5223);
 			lm_connection_set_ssl(connection,ssl);
 			lm_ssl_unref(ssl);
 		}
@@ -201,6 +201,8 @@ gpointer jabber_login_connect(gpointer status)
 		signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
 		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Connection failed")), "main-gui");
 	}
+
+	lm_connection_set_disconnect_function(connection, jabber_disconnect_cb, NULL, NULL);
 
 	g_free(jid);
 	g_static_mutex_unlock(&connect_mutex);
