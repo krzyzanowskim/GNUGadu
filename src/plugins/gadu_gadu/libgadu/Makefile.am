@@ -1,0 +1,5 @@
+SUBDIRS=lib
+
+EXTRA_DIST= \
+	lib\COPYING
+	
