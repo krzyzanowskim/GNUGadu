@@ -1,3 +1,7 @@
+24.06.2003
+- fixed memory leak in GUI caused by improperly handling of plugin names
+  (GUI/zapal)
+
 23.06.2003
 - fixed handling of status (available!=free for chat) (jabber/zapal)
 - fixed segfault when invoked with invalid jid (jabber/zapal)
