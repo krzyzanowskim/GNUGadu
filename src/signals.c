@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.1 2003/03/20 10:37:05 krzyzak Exp $ */
+/* $Id: signals.c,v 1.2 2003/04/05 17:14:25 zapal Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -181,8 +181,9 @@ void flush_queued_signals()
 		    g_free(sig->name);
 		    g_free(sig->source_plugin_name);
 		    g_free(sig->destination_plugin_name);
+		    if (sig->free && sig->free_me)
+		      sig->free (sig->data);
 		    g_free(sig);
-		    /* ZONK dodac wywolanie fukncji zwalniajacej tenze signal w tym miejscu */
 			
 		}  else {
 		    do_signal(sig, signalinfo);

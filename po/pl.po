@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.9 2003/04/05 11:35:39 zapal Exp $
+# $Id: pl.po,v 1.10 2003/04/05 17:14:21 zapal Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"POT-Creation-Date: 2003-04-05 13:31+0200\n"
+"POT-Creation-Date: 2003-04-05 18:55+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
