@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.24 2004/01/17 17:20:53 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.25 2004/01/18 11:46:24 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -526,7 +526,9 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 		descr = g_strdup_printf("(%s)", k->status_descr);
 
 	    gtk_tree_sortable_sort_column_changed(GTK_TREE_SORTABLE(model));
-	    signal_emit("main-gui", "xosd show message", g_strdup_printf("%s - %s %s", k->nick, sp->description, (descr) ? descr : ""), "xosd");
+		if (find_plugin_by_name("xosd")) {
+			signal_emit("main-gui", "xosd show message", g_strdup_printf("%s - %s %s", k->nick, sp->description, (descr) ? descr : ""), "xosd");
+		}
 	    g_free(descr);
 	    g_free(st);
 	}
