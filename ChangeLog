@@ -8,6 +8,10 @@
 - introduced new signal "get user" -  should return GGaduContact (krzak)
 - added GGaduContact_copy() (krzak)
 - GGaduConfig->plugins  to GGaduConfig->loaded_plugins
+- "get user" implemented in gadu-gadu, tlen, jabber (krzak)
+- remember to set plugin_handler->protocol = protocol (krzak)
+- DBUS getPresence working fine (krzak)
+
 
 26.10.2004
 - fix exit if set unavailable in jabber plugin (krzak/jabber)
