@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.60 2004/02/02 23:22:46 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.61 2004/02/02 23:35:56 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -253,7 +253,8 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_SERVER, _("Server : "), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_USERNAME, _("Username : "), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_PASSWORD, _("Password : "), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL,
+			       FALSE, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", d, "main-gui");
 
 	return NULL;
@@ -353,13 +354,22 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					gjr->username = kv->value;
 					break;
 				case GGADU_JABBER_UPDATE_CONFIG:
-					gjr->update_config = (gboolean)kv->value;
+					gjr->update_config = (gboolean) kv->value;
 					break;
 				}
 				tmplist = tmplist->next;
 			}
-			LmConnection *con = lm_connection_new(gjr->server);
-			lm_connection_open(con, (LmResultFunction) jabber_register_account_cb, gjr, NULL, NULL);
+
+			if (gjr->server && gjr->password && gjr->username)
+			{
+				LmConnection *con = lm_connection_new(gjr->server);
+				lm_connection_open(con, (LmResultFunction) jabber_register_account_cb, gjr, NULL, NULL);
+			}
+			else
+			{
+				signal_emit("jabber", "gui show warning", g_strdup(_("Invalid data passed, try again")),
+					    "main-gui");
+			}
 		}
 		GGaduDialog_free(d);
 	}
