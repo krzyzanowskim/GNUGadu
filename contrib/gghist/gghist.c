@@ -278,7 +278,7 @@ int main(int argc, char **argv)
 
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title(GTK_WINDOW(window), "GNU Gadu History Prototype");
+	gtk_window_set_title(GTK_WINDOW(window), "GNU Gadu History");
 	gtk_signal_connect(GTK_OBJECT(window), "delete_event", GTK_SIGNAL_FUNC(close_window), NULL);
 	gtk_window_set_default_size(GTK_WINDOW(window), 400, 300);
 	gtk_container_border_width(GTK_CONTAINER(window), 1);
