@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.24 2004/10/20 10:50:47 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.25 2004/10/22 14:32:00 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -77,10 +77,11 @@ void destroy_plugin()
 	print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
 	gtk_widget_destroy(da);
 	gtk_widget_destroy(status_dockapp);
-	g_object_unref(launch_pixmap);
-	launch_pixmap = NULL;
+//	g_object_unref(da);
+//	g_object_unref(launch_pixmap);
+//	launch_pixmap = NULL;
 	g_object_unref(gc);
-	gc = NULL;
+//	gc = NULL;
 }
 
 
