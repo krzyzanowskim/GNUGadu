@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.23 2004/01/17 00:44:59 shaster Exp $ */
+/* $Id: gui_userview.c,v 1.24 2004/01/17 17:20:53 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -45,7 +45,7 @@ void status_clicked(GtkWidget * widget, GdkEventButton * ev, gpointer user_data)
     GtkWidget *popupmenu = create_status_menu(gp, gtk_bin_get_child(GTK_BIN(widget)));
 
     gtk_menu_popup(GTK_MENU(popupmenu), NULL, NULL, NULL, NULL, ev->button, ev->time);
-    print_debug("status clicked\n");
+    print_debug("status clicked");
 
     /* status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
        sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status); */
@@ -605,8 +605,8 @@ void gui_user_view_add_userlist(gui_protocol * gp)
     {
 	GGaduContact *k = tmplist->data;
 	GGaduStatusPrototype *sp = gui_find_status_prototype(gp->p, k->status);
-
-	print_debug("Adding %s %s\n", k->id, k->nick);
+	
+	print_debug("Adding %s %s", k->id, k->nick);
 
 	if (ggadu_config_var_get(gui_handler, "show_active") && is_in_status(k->status, gp->p->offline_status))
 	{

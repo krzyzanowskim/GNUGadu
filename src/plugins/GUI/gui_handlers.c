@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.40 2004/01/17 11:57:52 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.41 2004/01/17 17:20:53 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -247,18 +247,12 @@ void handle_unregister_menu(GGaduSignal * signal)
 /* remember about repo, repo is more important than userlist send as a signal argument */
 void handle_send_userlist(GGaduSignal * signal)
 {
-    gpointer index, key;
-    GGaduContact *ktmp = NULL;
-    GSList *userlist_from_repo = NULL;
-
     gui_protocol *gp = gui_find_protocol(signal->source_plugin_name, protocols);
-
     /* repo support hmmm */
-	userlist_from_repo = ggadu_repo_get_as_slist(gp->plugin_name,REPO_VALUE_CONTACT);
-	
+
     if (gp && (gp->users_liststore || users_treestore))
     {
-	gp->userlist = userlist_from_repo;
+	gp->userlist = ggadu_repo_get_as_slist(signal->source_plugin_name,REPO_VALUE_CONTACT);
 	gui_user_view_add_userlist(gp);
     }
 }

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.28 2004/01/17 12:37:58 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.29 2004/01/17 17:20:53 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -45,9 +45,6 @@ void connection_auth_cb(LmConnection * connection, gboolean success, gpointer st
 
 	jabber_data.connected = 2;
 	print_debug("jabber: Authentication succeeded. Changing status...\n");
-/*
-    jabber_change_status((gint) status);
-*/
 	jabber_fetch_roster(status);
 }
 
@@ -87,7 +84,6 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 			    gpointer user_data)
 {
 	gchar *jid;
-/*    GSList *list = jabber_data.userlist; */
 	GGaduContact *k = NULL;
 	LmMessageNode *status;
 	gchar *descr = NULL;
@@ -97,7 +93,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 
 	jid = (gchar *) lm_message_node_get_attribute(message->node, "from");
 
-	print_debug("\n%s", lm_message_node_to_string(message->node));
+	print_debug("%s", lm_message_node_to_string(message->node));
 
 	if (strchr(jid, '/'))
 		strchr(jid, '/')[0] = '\0';
@@ -107,7 +103,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 		GGaduDialog *d = ggadu_dialog_new();
 		gchar *msg = g_strdup_printf(_("Person : %s\nwants to subscribe your presence"), jid);
 
-		ggadu_dialog_set_title(d, _("Subscription request confirmation"));
+		ggadu_dialog_set_title(d, g_strdup(_("Subscription request confirmation")));
 		ggadu_dialog_set_type(d, GGADU_DIALOG_YES_NO);
 		ggadu_dialog_callback_signal(d, "jabber subscribe");
 		ggadu_dialog_add_entry(&(d->optlist), 0, msg, VAR_NULL, NULL, VAR_FLAG_NONE);
@@ -136,7 +132,6 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
     }
 */
-
 	status = lm_message_node_get_child(message->node, "status");
 	if (status)
 		descr = (gchar *) lm_message_node_get_value(status);
@@ -200,12 +195,12 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 			}
 
 			if ((k->status != oldstatus) || (olddescr != k->status_descr))
-				ggadu_repo_change_value("jabber", k->id, k, REPO_VALUE_DC);
+				ggadu_repo_change_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
+
 		}
 		list = list->next;
 	}
 	g_slist_free(list);
-
 	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
@@ -268,7 +263,6 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 	lm_message_node_add_child(node, "name", "GNU Gadu");
 	lm_message_node_add_child(node, "version", VERSION);
 
-	/* print_debug("%s", lm_message_node_to_string(m->node)); */
 	lm_connection_send(connection, m, NULL);
 
 	lm_message_unref(m);
@@ -296,12 +290,14 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		{
 			print_debug("jabber: weird roster.");
 			lm_message_node_unref(node);
+			g_slist_free(list);
 			return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 		}
 		signal_emit("jabber", "gui show warning",
 			    g_strdup_printf(_("Error: %s (code %s)"), lm_message_node_get_value(node),
 					    lm_message_node_get_attribute(node, "code")), "main-gui");
 		lm_message_node_unref(node);
+		g_slist_free(list);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
@@ -309,6 +305,7 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 	    lm_message_get_sub_type(message) != LM_MESSAGE_SUB_TYPE_RESULT)
 	{
 		print_debug("Type : %s", lm_message_node_get_attribute(message->node, "type"));
+		g_slist_free(list);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
@@ -316,12 +313,14 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 	{
 		print_debug("jabber: weird roster.");
 		lm_message_node_unref(node);
+		g_slist_free(list);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
 	if (strcmp(lm_message_node_get_attribute(node, "xmlns"), "jabber:iq:roster"))
 	{
 		lm_message_node_unref(node);
+		g_slist_free(list);
 		return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 	}
 
@@ -346,10 +345,11 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 
 		if (subs && (!strcmp(subs, "remove")))
 		{
+			g_slist_free(list);
 			return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 		}
 
-		/* co to kurwa jest ? tu sprawdzac raczej czy id=roster_1 bo to jest lista kontaktow ? weeeeeee */
+		/* hm... ?  weeeeeee */
 		if (list)
 		{
 			GSList *list2 = list;
@@ -366,7 +366,6 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 				k = NULL;
 				list2 = list2->next;
 			}
-			g_slist_free(list2);
 		}
 
 		if (!k)
@@ -378,19 +377,19 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 
 		k->nick = g_strdup(name ? name : jid);
 
-		/* pokazuj wszystkie */
+		/* show all */
 		if (first_seen)
 			k->status = JABBER_STATUS_UNAVAILABLE;
 
-		if (!ggadu_repo_add_value("jabber", k->id, k, REPO_VALUE_CONTACT))
-			ggadu_repo_change_value("jabber", k->id, k, REPO_VALUE_DC);
+		if (!ggadu_repo_add_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_CONTACT))
+			ggadu_repo_change_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
 
 		child = child->next;
 	}
 
 	signal_emit("jabber", "gui send userlist", NULL, "main-gui");
 
-	/* pytanie o status kolesi ktorzy znalezli sie na liscie */
+	/* ZONK ask everybowy from the list about their status, do we need it ? */
 	if (first_time)
 	{
 		GSList *list3 = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);

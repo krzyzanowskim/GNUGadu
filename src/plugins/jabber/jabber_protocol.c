@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.20 2004/01/17 12:37:58 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.21 2004/01/17 17:20:54 krzyzak Exp $ */
 
 #include <loudmouth/loudmouth.h>
 #include <string.h>
@@ -46,10 +46,8 @@ void action_roster_fetch_result(LmConnection * connection, LmMessage * message, 
 
 void action_roster_remove_result(LmConnection * connection, LmMessage * message, gpointer data)
 {
-	gchar *id = (gchar *) data;
-
-	ggadu_repo_del_value("jabber", id);
-/*   GGaduContact_free(k); */
+	ggadu_repo_del_value("jabber", ggadu_repo_key_from_string((gchar *) data));
+	/* GGaduContact_free(k); */
 	signal_emit("jabber", "gui send userlist", NULL, "main-gui");
 	signal_emit("jabber", "gui show message", g_strdup(_("Contact removed from roster")), "main-gui");
 }

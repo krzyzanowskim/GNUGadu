@@ -1,4 +1,4 @@
-/* $Id: repo.c,v 1.4 2004/01/17 11:56:40 krzyzak Exp $ */
+/* $Id: repo.c,v 1.5 2004/01/17 17:20:53 krzyzak Exp $ */
 
 #include <glib.h>
 
@@ -30,6 +30,11 @@ void ggadu_repo_enable_notification()
  */
 
 #define REPOS ((GGaduRepo *)(config->repos))
+
+GGaduRepoKey ggadu_repo_key_from_string(gchar * key)
+{
+	return (GGaduRepoKey)g_quark_from_string(key);
+}
 
 GGaduRepo *ggadu_repo_find(gchar * repo_name)
 {

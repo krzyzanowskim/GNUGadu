@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.15 2004/01/17 00:54:48 shaster Exp $ */
+/* $Id: signals.c,v 1.16 2004/01/17 17:20:53 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -321,7 +321,7 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data, gpointer
     GGaduSignalinfo *signalinfo = NULL;
     gpointer ret = NULL;
 
-
+	
     if (config->all_plugins_loaded && (signalinfo = find_signal((gpointer) q_name)) == NULL)
     {
 	print_debug("core : Nie ma takiego czego zarejestrowanego : %s!!! \n", name);

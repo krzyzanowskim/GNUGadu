@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.3 2004/01/17 11:57:01 krzyzak Exp $ */
+/* $Id: repo.h,v 1.4 2004/01/17 17:20:53 krzyzak Exp $ */
 
 #ifndef GGadu_REPO_H
 #define GGadu_REPO_H 1
@@ -9,6 +9,7 @@
 #include "gg-types.h"
 
 typedef void (*watch_ptr) (gchar *, gpointer, gint);
+typedef gpointer GGaduRepoKey;
 
 typedef struct
 {
@@ -50,6 +51,7 @@ enum
 void ggadu_repo_disable_notification();
 void ggadu_repo_enable_notification();
 
+GGaduRepoKey ggadu_repo_key_from_string(gchar * key);
 gboolean ggadu_repo_add(gchar * repo_name);
 gboolean ggadu_repo_add_value(gchar * repo_name, gpointer key, gpointer value, gint type);
 gboolean ggadu_repo_change_value(gchar * repo_name, gpointer key, gpointer value, gint type);
