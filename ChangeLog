@@ -8,6 +8,7 @@
 - removed signals :
   "auth request","auth request accepted","unauth request","unauth request accepted"
   nobody really used it (GUI/tlen/krzak)
+- gui signals handling improved (GUI/krzak)
 
 16.01.2004
 - "gui send userlist" signal relay on Repo values, not userlist signal parameter (GUI/krzak)

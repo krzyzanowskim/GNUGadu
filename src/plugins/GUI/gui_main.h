@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.11 2004/01/17 00:44:59 shaster Exp $ */
+/* $Id: gui_main.h,v 1.12 2004/01/17 21:10:55 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -18,46 +18,41 @@
 #define GGADU_DEFAULT_ICON_FILENAME "icon.png"
 #define GGADU_MSG_ICON_FILENAME "new-msg.png"
 
+
 typedef struct
 {
-    gchar *id;
-    GtkWidget *chat;
-    GSList *recipients;
+	gchar *id;
+	GtkWidget *chat;
+	GSList *recipients;
 } gui_chat_session;
 
 
 typedef struct
 {
-    gchar *plugin_name;
-    GSList *userlist;
-    GSList *chat_sessions;
-    GtkListStore *users_liststore;
-    GtkWidget *add_info_label;
-    GtkWidget *statuslist_eventbox;
-    gchar *tree_path;
-    guint blinker;
-    GdkPixbuf *blinker_image1;
-    GdkPixbuf *blinker_image2;
-    guint aaway_timer;
-    GGaduProtocol *p;
+	gchar *plugin_name;
+	GSList *userlist;
+	GSList *chat_sessions;
+	GtkListStore *users_liststore;
+	GtkWidget *add_info_label;
+	GtkWidget *statuslist_eventbox;
+	gchar *tree_path;
+	guint blinker;
+	GdkPixbuf *blinker_image1;
+	GdkPixbuf *blinker_image2;
+	guint aaway_timer;
+	GGaduProtocol *p;
 } gui_protocol;
 
 typedef struct
 {
-    gchar *emoticon;
-    gchar *file;
+	gchar *emoticon;
+	gchar *file;
 } gui_emoticon;
-
-typedef struct
-{
-    gchar *signal_name;
-    void (*handler_func) ();
-} gui_signal_handler;
 
 enum
 {
-    CHAT_TYPE_CLASSIC,
-    CHAT_TYPE_TABBED
+	CHAT_TYPE_CLASSIC,
+	CHAT_TYPE_TABBED
 };
 
 
