@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.183 2004/08/04 20:43:49 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.184 2004/08/18 12:38:24 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -386,7 +386,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	gint i, j;
 
 	/* w przypadku bledu/utraty polaczenia postap tak jak w przypadku disconnect */
-	if (!(e = gg_watch_fd(session)) || (condition & G_IO_ERR) ||
+	if (!session || !(e = gg_watch_fd(session)) || (condition & G_IO_ERR) ||
 	    ((condition & G_IO_HUP) &&
 	     ((session->state != GG_STATE_CONNECTING_GG) && (session->check != GG_CHECK_WRITE))))
 	{
