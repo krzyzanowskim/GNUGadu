@@ -1,0 +1,43 @@
+#!/usr/bin/perl
+
+# Konwersja danych o numerach adresowych z listy uzytkownikow  pluginu gadu-gadu
+# do listu pluginu SMS
+# Przyklad uzycia gg2sms ~/.gg/userlist ~/.gg2/smslist
+#
+# UWAGA: zamazuje poprzednie dane w pliku wyjsciowym
+
+if (!$ARGV[0]) { 
+	print "Wywolanie:\n";
+	print "\tgg2sms userlist outfile\n\n";
+	print "\tuserlist\t- sciezka do pliku z kontaktami gadugadu (.gg/userlist)i\n";
+	print "\toutfile\t\t- plik wyjsciowy (.gg2/smslist)\n\n";
+	exit(0);
+};
+
+if (!open(GGFILE,"<".$ARGV[0])) {
+	print "Nie moge otworzyc pliku $ARGV[0] \n";
+	exit(1);
+}
+
+if (!open(SMSFILE,">".$ARGV[1])) {
+	print "Nie moge utworzyc pliku $ARGV[1] \n";
+	exit(1);
+}
+
+while (my $gl = <GGFILE>) {
+	@entries = split(/;/,$gl);
+	my $phone;
+	
+	if (($entries[4] ne "(null)") && ($entries[4] ne "")) {
+	    $phone = $entries[4];
+	    $nick  = $entries[0];
+	    if ($nick eq "") { $nick  = $entries[1]; }
+	    if ($nick eq "") { $nick  = $entries[2]; }
+	    if ($nick eq "") { $nick  = $entries[3]; }
+	    
+	    print SMSFILE $nick.";",$phone."\n";
+	};
+}
+
+
+#
