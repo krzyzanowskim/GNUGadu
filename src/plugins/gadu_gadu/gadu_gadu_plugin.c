@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.132 2004/01/23 14:59:28 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.133 2004/01/23 15:37:05 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -94,7 +94,9 @@ void ggadu_gadu_gadu_disconnect()
 		{
 			k->status = GG_STATUS_NOT_AVAIL;
 			g_free(k->status_descr);
+			g_free(k->ip);
 			k->status_descr = NULL;
+			k->ip = NULL;
 			ggadu_repo_change_value("gadu-gadu", k->id, k, REPO_VALUE_DC);
 		}
 		tmplist = tmplist->next;
