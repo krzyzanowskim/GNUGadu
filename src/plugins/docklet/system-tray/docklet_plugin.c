@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.21 2004/12/20 09:15:18 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.22 2004/12/20 13:04:03 krzyzak Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -249,16 +249,16 @@ void docklet_menu(GdkEventButton * event)
 		GGaduProtocol *p = NULL;
 		index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
 
-		menuitem = ggadu_new_item_from_image(NULL, _("Go Online (all)"), "online.png", NULL, NULL, 0, 0, 0);
+		menuitem = ggadu_new_item_from_image(NULL, _("Go Online"), "online.png", NULL, NULL, 0, 0, 0);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 		g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_online), NULL);
 
-		menuitem = ggadu_new_item_from_image(NULL, _("Go Away (all)"), "away.png", NULL, NULL, 0, 0, 0);
+		menuitem = ggadu_new_item_from_image(NULL, _("Go Away"), "away.png", NULL, NULL, 0, 0, 0);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 		g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_away), NULL);
 
 
-		menuitem = ggadu_new_item_from_image(NULL, _("Go Offline (all)"), "offline.png", NULL, NULL, 0, 0, 0);
+		menuitem = ggadu_new_item_from_image(NULL, _("Go Offline"), "offline.png", NULL, NULL, 0, 0, 0);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 		g_signal_connect(GTK_OBJECT(menuitem), "activate", G_CALLBACK(go_offline), NULL);
 
