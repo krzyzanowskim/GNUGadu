@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.23 2003/06/07 10:20:25 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.24 2003/07/01 10:05:43 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -99,6 +99,56 @@ void gui_dialog_show_filename (GtkWidget * txt_entry)
     gtk_widget_destroy (file_selector);
 }
 
+/* Does not work as expected yet. Need to know how to make it
+   return XLFD. */
+void gui_dialog_show_fontchooser (GtkWidget * txt_entry)
+{
+    GtkWidget *font_selector = NULL;
+    GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data (G_OBJECT (txt_entry), "kv");
+    gchar *font_name = NULL;
+    gint response;
+
+    font_selector = gtk_font_selection_dialog_new(_("Select font"));
+
+    response = gtk_dialog_run (GTK_DIALOG (font_selector));
+
+    if (response == GTK_RESPONSE_OK)
+      {
+	  font_name = (gchar *) gtk_font_selection_get_font_name (GTK_FONT_SELECTION(GTK_FONT_SELECTION_DIALOG (font_selector)->fontsel));
+	  gtk_entry_set_text (GTK_ENTRY (txt_entry), font_name);
+	  kv->value = (gpointer) font_name;
+      }
+
+    gtk_widget_destroy (font_selector);
+}
+
+void gui_dialog_show_colorchooser (GtkWidget * txt_entry)
+{
+    GtkWidget *color_selector = NULL;
+    GGaduKeyValue *kv = (GGaduKeyValue *) g_object_get_data (G_OBJECT (txt_entry), "kv");
+    GdkColor color;
+    gchar *color_txt = NULL;
+    gint response;
+
+    color_selector = gtk_color_selection_dialog_new(_("Select color"));
+
+    color_txt = (gchar *) gtk_entry_get_text(GTK_ENTRY(txt_entry));
+    gdk_color_parse(color_txt, &color);
+    gtk_color_selection_set_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(color_selector)->colorsel), &color);
+
+    response = gtk_dialog_run (GTK_DIALOG (color_selector));
+
+    if (response == GTK_RESPONSE_OK)
+      {
+        gtk_color_selection_get_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(color_selector)->colorsel), &color);
+        color_txt = (gchar *) gtk_color_selection_palette_to_string(&color, 1);
+        gtk_entry_set_text(GTK_ENTRY(txt_entry), color_txt);
+	kv->value = (gpointer) color_txt;
+      }
+
+    gtk_widget_destroy (color_selector);
+}
+
 GtkWidget *gui_build_dialog_gtk_table (GSList * list, gint cols)
 {
     GSList *listtmp = list;
@@ -164,6 +214,52 @@ GtkWidget *gui_build_dialog_gtk_table (GSList * list, gint cols)
 		    gtk_box_pack_start_defaults (GTK_BOX (entry), button_entry);
 
 		    g_signal_connect_swapped (button_entry, "clicked", G_CALLBACK (gui_dialog_show_filename),
+					      txt_entry);
+		}
+		break;
+	    case VAR_FONT_CHOOSER:
+		{
+		    GtkWidget *txt_entry = NULL;
+		    GtkWidget *button_entry = NULL;
+
+		    entry = gtk_hbox_new (FALSE, 2);
+
+		    txt_entry = gtk_entry_new ();
+		    if (kv->value)
+			gtk_entry_set_text (GTK_ENTRY (txt_entry), kv->value);
+
+		    g_object_set_data (G_OBJECT (txt_entry), "kv", kv);
+		    g_object_set_data (G_OBJECT (entry), "txt_entry", txt_entry);
+
+		    button_entry = gtk_button_new_from_stock ("gtk-select-font");
+
+		    gtk_box_pack_start_defaults (GTK_BOX (entry), txt_entry);
+		    gtk_box_pack_start_defaults (GTK_BOX (entry), button_entry);
+
+		    g_signal_connect_swapped (button_entry, "clicked", G_CALLBACK (gui_dialog_show_fontchooser),
+					      txt_entry);
+		}
+		break;
+	    case VAR_COLOUR_CHOOSER:
+		{
+		    GtkWidget *txt_entry = NULL;
+		    GtkWidget *button_entry = NULL;
+
+		    entry = gtk_hbox_new (FALSE, 2);
+
+		    txt_entry = gtk_entry_new ();
+		    if (kv->value)
+			gtk_entry_set_text (GTK_ENTRY (txt_entry), kv->value);
+
+		    g_object_set_data (G_OBJECT (txt_entry), "kv", kv);
+		    g_object_set_data (G_OBJECT (entry), "txt_entry", txt_entry);
+
+		    button_entry = gtk_button_new_from_stock ("gtk-select-color");
+
+		    gtk_box_pack_start_defaults (GTK_BOX (entry), txt_entry);
+		    gtk_box_pack_start_defaults (GTK_BOX (entry), button_entry);
+
+		    g_signal_connect_swapped (button_entry, "clicked", G_CALLBACK (gui_dialog_show_colorchooser),
 					      txt_entry);
 		}
 		break;
@@ -285,6 +381,8 @@ void gui_dialog_response (GtkDialog * dialog, int resid, gpointer user_data)
 		kv->value = (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (kv->user_data));
 		break;
 	    case VAR_FILE_CHOOSER:
+	    case VAR_FONT_CHOOSER:
+	    case VAR_COLOUR_CHOOSER:
 		{
 		    gchar *tmp = NULL;
 		    GtkWidget *hbox = (GtkWidget *) kv->user_data;

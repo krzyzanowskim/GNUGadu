@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.8 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.9 2003/07/01 10:03:39 shaster Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -40,6 +40,8 @@ enum {
     VAR_BOOL,
     VAR_IMG,
     VAR_FILE_CHOOSER,
+    VAR_FONT_CHOOSER,
+    VAR_COLOUR_CHOOSER,
     VAR_LIST,
     VAR_NULL
 };
