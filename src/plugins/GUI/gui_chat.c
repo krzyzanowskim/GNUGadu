@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.81 2004/02/19 22:52:23 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.82 2004/02/21 21:04:18 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -74,15 +74,14 @@ static void gui_chat_notebook_switch(GtkWidget * notebook, GtkNotebookPage * pag
 
 	if ((txt != NULL) && (chat_window != NULL) && (lb != NULL) && (txt2 != NULL))
 	{
-		gchar *markup = g_strdup_printf("<span foreground=\"black\">%s</span>",
-						txt);
+		gchar *markup = g_strdup_printf("<span foreground=\"black\">%s</span>", txt);
 		gtk_window_set_title(GTK_WINDOW(chat_window), txt2);
 		gtk_label_set_markup(GTK_LABEL(lb), markup);
 
 		g_free(markup);
 	}
 
-	print_debug("gui_chat_notebook_switch\n");
+	print_debug("gui_chat_notebook_switch");
 }
 
 static void on_destroy_chat_window(GtkWidget * chat, gpointer user_data)
@@ -1137,7 +1136,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	GtkTextIter istart;
 	GtkTextIter iend;
 	GtkWidget *widget = NULL;
-	GSList *emottmp = emoticons;
+	GSList *emottmp = NULL;
 	gui_chat_session * session = NULL;
 	gboolean conference = FALSE;
 
@@ -1238,6 +1237,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	gtk_text_buffer_get_start_iter(buf, &iend);
 	gtk_text_iter_backward_char(&istart);
 
+	emottmp = emoticons;
 	while (emottmp)
 	{
 		gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
