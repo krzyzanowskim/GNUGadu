@@ -1,5 +1,6 @@
 28.05.2003
 - divider value in chat window is now % (GUI/krzak)
+- add an option to set more than one away statuses (all but icq/zapal)
 
 25.05.2003
 - allow +48 and 0 prefixes in phone numbers (sms/shasta)

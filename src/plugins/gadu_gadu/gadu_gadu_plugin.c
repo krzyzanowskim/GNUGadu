@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.56 2003/05/24 14:30:19 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.57 2003/05/28 07:43:00 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1244,7 +1244,7 @@ void start_plugin()
 	p->img_filename = g_strdup("gadu-gadu.png");
 	p->statuslist = status_init();
 	p->offline_status = GG_STATUS_NOT_AVAIL;
-	p->away_status = GG_STATUS_BUSY;
+	p->away_status = g_slist_append (p->away_status, (gint*)GG_STATUS_BUSY);
 	
 	ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 	

@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.6 2003/05/07 11:14:35 krzyzak Exp $ */
+/* $Id: support.c,v 1.7 2003/05/28 07:42:57 zapal Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -17,6 +17,25 @@
 #include <time.h>
 #include "support.h"
 #include "unified-types.h"
+
+gboolean is_in_status (gint status, GSList *list)
+{
+  GSList *tmp = list;
+  gint st;
+  
+  if (!list)
+    return FALSE;
+ 
+  while (tmp)
+  {
+    st = *(gint *) &tmp->data;
+    if (st == status)
+      return TRUE;
+    tmp = tmp->next;
+  }
+  
+  return FALSE;
+}
 
 void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist)
 {

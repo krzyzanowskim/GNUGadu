@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.3 2003/04/12 19:11:34 krzyzak Exp $ */
+/* $Id: support.h,v 1.4 2003/05/28 07:42:57 zapal Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -88,6 +88,8 @@
 #define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1,-1) , g_utf8_casefold(s2,-1))
 
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
+
+gboolean is_in_status (gint status, GSList *list);
 
 void set_userlist_status(GGaduNotify *n, gchar *status_descr, GSList *userlist);
 
