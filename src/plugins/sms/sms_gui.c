@@ -308,11 +308,15 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	if (msg)
 	{
 	method = GGADU_SMS_METHOD_CHAT;
-	send_sms((gboolean)config_var_get(sms_handler, "external"),
+	if (config_var_get(sms_handler, "sender") != NULL)
+	{
+	   send_sms((gboolean)config_var_get(sms_handler, "external"),
 		 config_var_get(sms_handler, "sender"),
 		 msg->id,
 		 msg->message);
-	    
+	}
+	else 
+	sms_preferences(0);    
 	}
     
     }

@@ -401,6 +401,11 @@ int send_ERA(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
 	recv_buff[i++] = temp[0];
     }
 
+    if (g_strstr_len(recv_buff, i, "Serwis jest chwilowo niedostepny"))
+    {
+        g_free(recv_buff);
+	return ERR_GATEWAY;
+    }
     recv_buff = g_strstr_len(recv_buff, i, "Cookie:");
     if (!recv_buff) return ERR_READ_TOKEN;
     cookie = g_strstr_len(recv_buff, strlen(recv_buff), ";");
