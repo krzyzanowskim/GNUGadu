@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.19 2003/04/16 14:40:56 shaster Exp $ */
+/* $Id: gui_chat.c,v 1.20 2003/04/24 13:41:41 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -259,7 +259,7 @@ void on_emoticon_press_event(GtkWidget *event_box, GdkEventButton *event, gpoint
 	GtkWidget *emoticons_window;
 	gui_emoticon *gemo = user_data;
 	GtkTextBuffer *buf;
-	GtkTextIter start, end;
+	GtkTextIter end;
 	gui_chat_session *session;
 
 	/* ZONK */
@@ -271,7 +271,6 @@ void on_emoticon_press_event(GtkWidget *event_box, GdkEventButton *event, gpoint
 	input = g_object_get_data(G_OBJECT(session->chat), "input");
 	
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(input));
-	gtk_text_buffer_get_start_iter(buf, &start);
 	gtk_text_buffer_get_end_iter(buf, &end);
 
 	gtk_text_buffer_insert(buf, &end, gemo->emoticon, -1);
@@ -895,12 +894,9 @@ void gui_chat_append(GtkWidget *chat, gpointer msg, gboolean self)
 
 	tmp = g_strconcat(text,"\n",NULL);
 	
-	if ((mark_start = gtk_text_buffer_get_mark(buf,"gg_new_text_start")) == NULL) 
-		mark_start = gtk_text_buffer_create_mark(buf,"gg_new_text_start",&iter,FALSE);
-	else
-		gtk_text_buffer_move_mark(buf,mark_start,&iter);
-
 	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_text" : "incoming_text",NULL);
+
+	mark_start = gtk_text_buffer_get_insert(buf);
 	
 	g_free(tmp);
 
@@ -940,14 +936,12 @@ void gui_chat_append(GtkWidget *chat, gpointer msg, gboolean self)
 			gtk_text_buffer_get_end_iter(buf, &istart);
 			gtk_text_iter_backward_char(&istart);
 
-			gtk_widget_show_all(widget);
+			gtk_widget_show(widget);
 		}
 
 	emottmp = emottmp->next;
 	}
 
-	/* Is it should be called somewhere or not ? this is a question, rather no, but....*/
-	/* gtk_text_buffer_delete_mark_by_name(buf,"gg_end"); */
 
 	if (((gint)config_var_get(gui_handler,"chat_window_auto_raise") == TRUE) && (!self) && (GTK_WIDGET_VISIBLE(chat)))
 		gtk_window_present(GTK_WINDOW(g_object_get_data(G_OBJECT(chat),"top_window")));
