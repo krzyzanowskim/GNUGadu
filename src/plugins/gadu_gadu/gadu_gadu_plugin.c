@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.10 2003/03/28 22:15:00 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.11 2003/03/28 22:30:44 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1591,7 +1591,8 @@ void load_contacts(gchar *encoding)
 		to_utf8(encoding,line,buf);
 		
 		l = g_strsplit(buf, ";", 11);
-		
+		if (!l[0]) /* ZONK */ 
+		    continue;
 		first_name = l[0];
 		last_name = l[1];
 		nick = l[2];
