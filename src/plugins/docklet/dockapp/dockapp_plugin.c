@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.6 2003/12/11 04:25:26 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.7 2003/12/17 16:10:53 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -230,7 +230,7 @@ gpointer dockapp_preferences_action()
   gpointer key = NULL, index = NULL;
   gchar *utf = NULL, *current_proto;
   GGaduProtocol *proto;
-
+  GGaduDialog *d;
   gint count=0;
 
   /* prepare list of protocol plugins */
@@ -256,7 +256,7 @@ gpointer dockapp_preferences_action()
 
 
   /* create dialog */
-  GGaduDialog *d = ggadu_dialog_new();
+  d = ggadu_dialog_new();
   ggadu_dialog_set_title(d, _("Dockapp plugin configuration"));
   ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
   ggadu_dialog_callback_signal(d, "update config");
@@ -379,13 +379,13 @@ void create_dockapp()
 /* do when user notify changed */
 void notify_callback(gchar * repo_name, gpointer key, gint actions)
 {
-  print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
-
   gchar *dockapp_protocol, *utf;
   GGaduContact *k = NULL;
   GGaduProtocol *p = NULL;
   int i;
   gpointer key2 = NULL, index = NULL;
+
+  print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
 
   /* stop if no dockapp_protocol set or notify from other protocol */
   dockapp_protocol = config_var_get(handler, "dockapp_protocol");

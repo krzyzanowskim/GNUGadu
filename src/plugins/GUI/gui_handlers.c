@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.35 2003/12/13 14:13:51 thrulliq Exp $ */
+/* $Id: gui_handlers.c,v 1.36 2003/12/17 16:10:53 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -77,12 +77,12 @@ void perl_gui_msg_receive (GGaduSignal * signal, gchar * perl_func, void *pperl)
     SV *sv_data_class;
     SV *sv_data_time;
     PerlInterpreter *my_perl = (PerlInterpreter *) pperl;
+
+    dSP;
     
     /* empty message, leave */
     if (!msg->message)
 	return;
-	
-    dSP;
 
     ENTER;
     SAVETMPS;

@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.9 2003/09/22 17:17:47 krzyzak Exp $ */
+/* $Id: perl_embed.c,v 1.10 2003/12/17 16:10:52 thrulliq Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -215,11 +215,11 @@ void userlist_handler (gchar *repo_name, gpointer key, gint actions)
 	SV *sv_name;
 	SV *sv_action;
 	SV *sv_user_id;
+
+	dSP;
 	
 	PERL_SET_CONTEXT (script->perl);
 	my_perl = script->perl;
-
-	dSP;
 
       	ENTER;
 	SAVETMPS;

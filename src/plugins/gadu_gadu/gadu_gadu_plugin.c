@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.96 2003/12/11 00:58:51 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.97 2003/12/17 16:10:54 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -604,8 +604,8 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
       case GG_EVENT_NOTIFY:
       case GG_EVENT_NOTIFY_DESCR:
 	  {
-	      print_debug ("GG_EVENT_NOTIFY\n");
 	      struct gg_notify_reply *n = NULL;
+	      print_debug ("GG_EVENT_NOTIFY\n");
 
 	      if (e->type == GG_EVENT_NOTIFY)
 		  n = e->event.notify;
