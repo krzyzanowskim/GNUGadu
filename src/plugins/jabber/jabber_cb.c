@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.34 2004/02/14 02:08:09 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.35 2004/02/14 12:48:17 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -442,7 +442,6 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 		{
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(jid);
-			/* jabber_data.userlist = g_slist_append(jabber_data.userlist, k); */
 		}
 
 		k->nick = g_strdup(name ? name : jid);

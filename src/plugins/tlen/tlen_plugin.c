@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.57 2004/02/09 23:29:00 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.58 2004/02/14 12:48:18 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -396,53 +396,55 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			 */
 #if 0
 		case TLEN_EVENT_NOTIFY:
-		{
-			gchar *notifytype;
-
-			print_debug("otrzyma³e¶ powiadomienie!\n");
-			print_debug("od: %s\n", e->message->from);
-
-			switch (e->notify->type)
 			{
-			case TLEN_NOTIFY_TYPING:
-			{
-				notifytype = "pisze";
-				/* jak bedzie support to sie doda powiadamianie */
-				break;
-			}
-			case TLEN_NOTIFY_NOTTYPING:
-			{
-				notifytype = "przestal pisac";
-				/* jak bedzie support to sie doda powiadamianie */
-				break;
-			}
-			case TLEN_NOTIFY_SOUNDALERT:
-			{
-				notifytype = "powiadomienie d¼wiêkowe";
-				/* na razie tak jak w tlenie - informacja mesgiem. Potem sie doda informowanie przez dzwiek */
-				msg = g_new0(GGaduMsg, 1);
+				gchar *notifytype;
 
-				msg->id = g_strdup_printf("%s", e->notify->from);
+				print_debug("otrzyma³e¶ powiadomienie!\n");
+				print_debug("od: %s\n", e->message->from);
 
-				msg->message = to_utf8("ISO-8859-2", "Rozmówca wys³a³ Ci alert d¼wiêkowy!");
-
-				msg->class = TLEN_CHAT;
-				signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
-
-				if (ggadu_config_var_get(handler, "log"))
+				switch (e->notify->type)
 				{
-					gchar *line = g_strdup_printf("\n:: %s (%s) ::\n%s\n", msg->id,
-								      get_timestamp(msg->time), msg->message);
-					ggadu_tlen_save_history(msg->id, line);
-					g_free(line);
+				case TLEN_NOTIFY_TYPING:
+					{
+						notifytype = "pisze";
+						/* jak bedzie support to sie doda powiadamianie */
+						break;
+					}
+				case TLEN_NOTIFY_NOTTYPING:
+					{
+						notifytype = "przestal pisac";
+						/* jak bedzie support to sie doda powiadamianie */
+						break;
+					}
+				case TLEN_NOTIFY_SOUNDALERT:
+					{
+						notifytype = "powiadomienie d¼wiêkowe";
+						/* na razie tak jak w tlenie - informacja mesgiem. Potem sie doda informowanie przez dzwiek */
+						msg = g_new0(GGaduMsg, 1);
+
+						msg->id = g_strdup_printf("%s", e->notify->from);
+
+						msg->message =
+							to_utf8("ISO-8859-2", "Rozmówca wys³a³ Ci alert d¼wiêkowy!");
+
+						msg->class = TLEN_CHAT;
+						signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
+
+						if (ggadu_config_var_get(handler, "log"))
+						{
+							gchar *line = g_strdup_printf("\n:: %s (%s) ::\n%s\n", msg->id,
+										      get_timestamp(msg->time),
+										      msg->message);
+							ggadu_tlen_save_history(msg->id, line);
+							g_free(line);
+						}
+						break;
+					}
 				}
+				print_debug("typ: %s\n", notifytype);
+
 				break;
 			}
-			}
-			print_debug("typ: %s\n", notifytype);
-
-			break;
-		}
 #endif /* 0 */
 
 		case TLEN_EVENT_MESSAGE:
@@ -640,13 +642,12 @@ gpointer user_remove_user_action(gpointer user_data)
 
 gpointer user_add_user_action(gpointer user_data)
 {
-	GSList *optlist = NULL;
+	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, "Add contact", "add user");
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_UIN, "Tlen ID", VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_GROUP, _("Group"), VAR_STR, NULL, VAR_FLAG_NONE);
 
-	ggadu_dialog_add_entry(&optlist, GGADU_TLEN_UIN, "Tlen ID", VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&optlist, GGADU_TLEN_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&optlist, GGADU_TLEN_GROUP, _("Group"), VAR_STR, NULL, VAR_FLAG_NONE);
-
-	signal_emit(GGadu_PLUGIN_NAME, "gui add user window", optlist, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	return NULL;
 }
@@ -768,7 +769,7 @@ void free_search_results()
 
 gpointer search_action(gpointer user_data)
 {
-	GGaduDialog *d = NULL;
+	GGaduDialog *dialog = NULL;
 	GList *gender_list = NULL;
 
 	if (!connected)
@@ -786,19 +787,16 @@ gpointer search_action(gpointer user_data)
 	gender_list = g_list_append(gender_list, _("female"));
 	gender_list = g_list_append(gender_list, _("male"));
 
-	d = ggadu_dialog_new();
+	dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("Tlen search"), "search");
 
-	ggadu_dialog_callback_signal(d, "search");
-	ggadu_dialog_set_title(d, _("Tlen search"));
-	
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_SEARCH_ID, _("@tlen.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(dialog, GGADU_SEARCH_ID, _("@tlen.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	g_list_free(gender_list);
 
@@ -807,7 +805,7 @@ gpointer search_action(gpointer user_data)
 
 gpointer user_preferences_action(gpointer user_data)
 {
-	GGaduDialog *d = ggadu_dialog_new();
+	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_CONFIG,_("Tlen plugin configuration"),"update config");
 	GSList *statuslist_names = NULL;
 	GSList *tmplist = p->statuslist;
 
@@ -823,22 +821,18 @@ gpointer user_preferences_action(gpointer user_data)
 		tmplist = tmplist->next;
 	}
 
-	ggadu_dialog_set_title(d, _("Tlen plugin configuration"));
-	ggadu_dialog_callback_signal(d, "update config");
-	ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
-
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_UIN, _("Tlen login"), VAR_STR,
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_UIN, _("Tlen login"), VAR_STR,
 			       ggadu_config_var_get(handler, "login"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_PASSWORD, _("Password"), VAR_STR,
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_PASSWORD, _("Password"), VAR_STR,
 			       ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL,
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL,
 			       ggadu_config_var_get(handler, "log"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 			       ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
+	ggadu_dialog_add_entry1(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
 			       statuslist_names, VAR_FLAG_NONE);
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
 	g_slist_free(statuslist_names);
 
@@ -893,7 +887,8 @@ void start_plugin()
 
 	if (ggadu_config_var_get(handler, "autoconnect") && !connected)
 		ggadu_tlen_login(ggadu_config_var_get(handler, "autoconnect_status") ? (gpointer)
-				 ggadu_config_var_get(handler, "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
+				 ggadu_config_var_get(handler,
+						      "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr)
@@ -949,7 +944,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 			else if (sp->status == TLEN_STATUS_DESC)
 			{
-				GGaduDialog *d = ggadu_dialog_new();
+				GGaduDialog *dialog = NULL;
 				GGaduStatusPrototype *_sp;
 				GSList *tmp = NULL;
 				gchar *desc_utf = NULL;
@@ -979,17 +974,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				/* end */
 
-				ggadu_dialog_set_title(d, _("Enter status description"));
-				ggadu_dialog_callback_signal(d, "change status descr");
-
-				d->user_data = _sp;
-
+				dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr");
+				dialog->user_data = _sp;
 				desc_utf = to_utf8("ISO-8859-2", description);
-				ggadu_dialog_add_entry(&(d->optlist), TLEN_STATUS_DESC, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
+				ggadu_dialog_add_entry1(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR,
+						       desc_utf, VAR_FLAG_NONE);
 				g_free(desc_utf);
 
-				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _sp->status, "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _sp->status,
+					    "main-gui");
 			}
 			else
 			{
@@ -1004,10 +998,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("update config"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
+		GGaduDialog *dialog = signal->data;
+		GSList *tmplist = ggadu_dialog_get_entries(dialog);
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			while (tmplist)
 			{
@@ -1032,31 +1026,32 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					ggadu_config_var_set(handler, "autoconnect", kv->value);
 					break;
 				case GGADU_TLEN_AUTOCONNECT_STATUS:
-				{
-					GSList *statuslist_tmp = p->statuslist;
-					gint val = -1;
-
-					while (statuslist_tmp)
 					{
-						GGaduStatusPrototype *sp =
-							(GGaduStatusPrototype *) statuslist_tmp->data;
-						if (!ggadu_strcasecmp(sp->description, ((GSList *)kv->value)->data ))
-						{
-							val = sp->status;
-						}
-						statuslist_tmp = statuslist_tmp->next;
-					}
+						GSList *statuslist_tmp = p->statuslist;
+						gint val = -1;
 
-					print_debug("changing var setting autoconnect_status to %d\n", val);
-					ggadu_config_var_set(handler, "autoconnect_status", (gpointer) val);
-				}
+						while (statuslist_tmp)
+						{
+							GGaduStatusPrototype *sp =
+								(GGaduStatusPrototype *) statuslist_tmp->data;
+							if (!ggadu_strcasecmp
+							    (sp->description, ((GSList *) kv->value)->data))
+							{
+								val = sp->status;
+							}
+							statuslist_tmp = statuslist_tmp->next;
+						}
+
+						print_debug("changing var setting autoconnect_status to %d\n", val);
+						ggadu_config_var_set(handler, "autoconnect_status", (gpointer) val);
+					}
 					break;
 				}
 				tmplist = tmplist->next;
 			}
 			ggadu_config_save(handler);
 		}
-		GGaduDialog_free(d);
+		GGaduDialog_free(dialog);
 		return;
 	}
 
@@ -1065,7 +1060,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		GGaduDialog *d = signal->data;
 		GGaduStatusPrototype *sp = d->user_data;
 
-		if (d->response == GGADU_OK)
+		if (ggadu_dialog_get_response(d) == GGADU_OK)
 		{
 			if (connected == FALSE)
 			{
@@ -1073,7 +1068,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 			else if (connected && sp)
 			{
-				if (d->optlist)
+				if (ggadu_dialog_get_entries(d))
 				{
 					/* w kv->value jest opis, w utf8 */
 					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
@@ -1094,47 +1089,44 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("add user"))
 	{
-
+		GGaduDialog *dialog = signal->data;
 		GGaduContact *k = g_new0(GGaduContact, 1);
-		GSList *kvlist = (GSList *) signal->data;
 
-		while (kvlist)
+		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
-			GGaduKeyValue *kv = (GGaduKeyValue *) kvlist->data;
+			GSList *kvlist = ggadu_dialog_get_entries(dialog);
 
-			switch ((gint) kv->key)
+			while (kvlist)
 			{
+				GGaduKeyValue *kv = (GGaduKeyValue *) kvlist->data;
 
-			case GGADU_TLEN_UIN:
-				k->id = g_strdup((gchar *) kv->value);
-				g_free(kv->value);
-				break;
+				switch ((gint) kv->key)
+				{
+				case GGADU_TLEN_UIN:
+					k->id = g_strdup((gchar *) kv->value);
+					break;
 
-			case GGADU_TLEN_NICK:
-				k->nick = g_strdup((gchar *) kv->value);
-				g_free(kv->value);
-				break;
+				case GGADU_TLEN_NICK:
+					k->nick = g_strdup((gchar *) kv->value);
+					break;
 
-			case GGADU_TLEN_GROUP:
-				k->group = g_strdup((gchar *) kv->value);
-				g_free(kv->value);
-				break;
+				case GGADU_TLEN_GROUP:
+					k->group = g_strdup((gchar *) kv->value);
+					break;
+				}
+
+				kvlist = kvlist->next;
 			}
+			userlist = g_slist_append(userlist, k);
+			ggadu_repo_add_value("tlen", k->id, k, REPO_VALUE_CONTACT);
 
-			g_free(kv->description);
-			kvlist = kvlist->next;
+			tlen_addcontact(session, k->nick, k->id, k->group);
+
+			tlen_request_subscribe(session, k->id);
+
+			signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
 		}
-
-		g_slist_free(kvlist);
-
-		userlist = g_slist_append(userlist, k);
-		ggadu_repo_add_value("tlen", k->id, k, REPO_VALUE_CONTACT);
-
-		tlen_addcontact(session, k->nick, k->id, k->group);
-
-		tlen_request_subscribe(session, k->id);
-
-		signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
+		GGaduDialog_free(dialog);
 	}
 
 	if (signal->name == g_quark_from_static_string("add user search"))
@@ -1198,15 +1190,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("search"))
 	{
-		GGaduDialog *d = signal->data;
-		GSList *tmplist = d->optlist;
+		GGaduDialog *dialog = signal->data;
+		GSList *tmplist = ggadu_dialog_get_entries(dialog);
 		struct tlen_pubdir *req = NULL;
 
-		if ((d->response == GGADU_OK) || (d->response == GGADU_NONE))
+		if ((ggadu_dialog_get_response(dialog) == GGADU_OK) ||
+		    (ggadu_dialog_get_response(dialog) == GGADU_NONE))
 		{
 			if (!(req = tlen_new_pubdir()))
 			{
-				GGaduDialog_free(d);
+				GGaduDialog_free(dialog);
 				return;
 			}
 
@@ -1233,9 +1226,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 						req->city = g_strdup(kv->value);
 					break;
 				case GGADU_SEARCH_GENDER:
-					if (((GSList *)kv->value)->data)
+					if (((GSList *) kv->value)->data)
 					{
-						gchar *val = ((GSList *)kv->value)->data;
+						gchar *val = ((GSList *) kv->value)->data;
 						if (!ggadu_strcasecmp(val, _("female")))
 							req->gender = 2;
 						if (!ggadu_strcasecmp(val, _("male")))
@@ -1256,7 +1249,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					    g_strdup(_("Error! Cannot perform search!")), "main-gui");
 			tlen_free_pubdir(req);
 		}
-		GGaduDialog_free(d);
+		GGaduDialog_free(dialog);
 	}
 
 	if (signal->name == g_quark_from_static_string("get current status"))
