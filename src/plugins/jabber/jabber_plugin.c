@@ -330,6 +330,108 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
   } else if (signal->name == g_quark_from_static_string ("get user menu")) {
     GGaduMenu *menu = build_userlist_menu ();
     signal->data_return = menu;
+  } else if (signal->name == g_quark_from_static_string ("search-server")) {
+    GGaduDialog *d = signal->data;
+    GSList *tmplist = d->optlist;
+
+    if (d->response == GGADU_OK) {
+      while (tmplist) {
+	GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
+	switch (kv->key) {
+	  case 0:
+	    if (kv->value) {
+	      LmMessage *message;
+	      LmMessageNode *node;
+	      gboolean result;
+	      waiting_action *action;
+
+	      message = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
+	      lm_message_node_set_attributes (message->node, "to", kv->value, "id", "search1", NULL);
+	      node = lm_message_node_add_child (message->node, "query", NULL);
+	      lm_message_node_set_attribute (node, "xmlns", "jabber:iq:search");
+
+	      action = g_new0 (waiting_action, 1);
+	      action->id = g_strdup ("search1");
+	      action->type = g_strdup ("result");
+	      action->data = NULL;
+	      action->func = action_search_form;
+	      actions = g_slist_append (actions, action);
+	      
+	      result = lm_connection_send (connection, message, NULL);
+	      lm_message_unref (message);
+	      if (!result) {
+		signal_emit ("jabber", "gui show warning", g_strdup (_("Can't perform search!")),
+		    "main-gui");
+	      }
+	    }
+	    break;
+	  default:
+	    break;
+	}
+
+	tmplist = tmplist->next;
+      }
+    }
+  } else if (signal->name == g_quark_from_static_string ("search")) {
+    GGaduDialog *d = signal->data;
+    GSList *tmplist = d->optlist;
+    LmMessage *message;
+    LmMessageNode *node;
+    gboolean result;
+    waiting_action *action;
+
+    if (d->response == GGADU_OK) {
+      message = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+      lm_message_node_set_attributes (message->node, "to", d->user_data, "id", "search2", NULL);
+      node = lm_message_node_add_child (message->node, "query", NULL);
+      lm_message_node_set_attribute (node, "xmlns", "jabber:iq:search");
+      while (tmplist) {
+	GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
+
+	switch (kv->key) {
+	  case GGADU_SEARCH_FIRSTNAME:
+	    if (kv->value) {
+	      lm_message_node_add_child (node, "first", kv->value);
+	    }
+	    break;
+	  case GGADU_SEARCH_LASTNAME:
+	    if (kv->value) {
+	      lm_message_node_add_child (node, "last", kv->value);
+	    }
+	    break;
+	  case GGADU_SEARCH_NICKNAME:
+	    if (kv->value) {
+	      lm_message_node_add_child (node, "nick", kv->value);
+	    }
+	    break;
+/*
+	  case GGADU_SEARCH_EMAIL:
+	    if (kv->value) {
+	      lm_message_node_add_child (node, "email", kv->value);
+	    }
+	    break;
+  */
+	  default:
+	    break;
+	}
+	tmplist = tmplist->next;
+      }
+      
+      action = g_new0 (waiting_action, 1);
+      action->id = g_strdup ("search2");
+      action->type = g_strdup ("result");
+      action->data = NULL;
+      action->func = action_search_result;
+      actions = g_slist_append (actions, action);
+ 
+      print_debug ("\n%s", lm_message_node_to_string (message->node));
+      result = lm_connection_send (connection, message, NULL);
+      lm_message_unref (message);
+      if (!result) {
+	signal_emit ("jabber", "gui show warning", g_strdup (_("Can't perform search!")),
+	    "main-gui");
+      }
+    }
   }
 }
 
@@ -385,6 +487,32 @@ GSList *status_init ()
   return list;
 }
 
+gpointer user_search_action (gpointer user_data)
+{
+  GGaduDialog *d;
+  gchar *server;
+  
+  if (connected != 2) {
+    signal_emit ("jabber", "gui show warning",
+	g_strdup (_("You have to be connected to perform searching!")), "main-gui");
+    return NULL;
+  }
+
+  server = config_var_get (jabber_handler, "jid");
+  if (server && (server = strchr (server, '@'))) {
+    server++;
+  }
+  
+  d = ggadu_dialog_new ();
+  ggadu_dialog_set_title (d, _("Jabber search: server"));
+  ggadu_dialog_callback_signal (d, "search-server");
+  
+  ggadu_dialog_add_entry (&(d->optlist), 0, _("Server:"), VAR_STR, server, VAR_FLAG_NONE);
+  signal_emit ("jabber", "gui show dialog", d, "main-gui");
+
+  return NULL;
+}
+
 gpointer user_preferences_action (gpointer user_data)
 {
   GGaduDialog *d;
@@ -424,6 +552,8 @@ GGaduMenu *build_jabber_menu ()
 
   ggadu_menu_add_submenu (item, ggadu_menu_new_item (_("Add Contact"),
       user_add_action, NULL));
+  ggadu_menu_add_submenu (item, ggadu_menu_new_item (_("Search for friends"),
+      user_search_action, NULL));
   ggadu_menu_add_submenu (item, ggadu_menu_new_item (_("Preferences"),
       user_preferences_action, NULL));
 
@@ -453,6 +583,8 @@ void start_plugin ()
   register_signal (jabber_handler, "add user");
   register_signal (jabber_handler, "jabber subscribe");
   register_signal (jabber_handler, "get user menu");
+  register_signal (jabber_handler, "search-server");
+  register_signal (jabber_handler, "search");
 
   jabbermenu = build_jabber_menu ();
   signal_emit (GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
