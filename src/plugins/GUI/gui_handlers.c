@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.58 2004/10/19 21:51:54 thrulliq Exp $ */
+/* $Id: gui_handlers.c,v 1.59 2004/10/22 09:01:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -487,7 +487,7 @@ void auto_away_start(gui_protocol * gp)
 	
 	print_debug("auto_away_start 2");
 	
-	if ((gp->p) && (gp->p->online_status) && is_in_status(sp->status, gp->p->online_status) && ggadu_config_var_get(gui_handler, "auto_away"))
+	if ((sp) && (gp->p) && (gp->p->online_status) && is_in_status(sp->status, gp->p->online_status) && ggadu_config_var_get(gui_handler, "auto_away"))
 	{
 		gint timeout = ggadu_config_var_get(gui_handler, "auto_away_interval") ? ((gint) ggadu_config_var_get(gui_handler, "auto_away_interval") * 60000) : 300000;
 		GSource *source = g_timeout_source_new(timeout);
