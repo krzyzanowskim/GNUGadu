@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.22 2004/01/09 09:33:08 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.23 2004/01/09 10:44:30 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -26,7 +26,7 @@ void jabber_disconnect_cb (LmConnection * connection, LmDisconnectReason reason,
 }
 
 
-void connection_auth_cb (LmConnection * connection, gboolean success, gint * status)
+void connection_auth_cb (LmConnection * connection, gboolean success, gpointer status)
 {
 	if (!success)
 	{
@@ -39,7 +39,7 @@ void connection_auth_cb (LmConnection * connection, gboolean success, gint * sta
 
 	jabber_data.connected = 2;
 	print_debug ("jabber: Authentication succeeded. Changing status...\n");
-	jabber_change_status (*(gint *) & status);
+	jabber_change_status ((gint)status);
 	jabber_fetch_roster ();
 }
 

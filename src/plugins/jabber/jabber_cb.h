@@ -1,11 +1,11 @@
-/* $Id: jabber_cb.h,v 1.5 2004/01/09 09:33:08 krzyzak Exp $ */
+/* $Id: jabber_cb.h,v 1.6 2004/01/09 10:44:30 krzyzak Exp $ */
 
 #ifndef JABBER_CB_H
 #define JABBER_CB_H 1
 
 #include <loudmouth/loudmouth.h>
 
-void connection_auth_cb (LmConnection * connection, gboolean success, gint * status);
+void connection_auth_cb (LmConnection * connection, gboolean success, gpointer status);
 void connection_open_result_cb (LmConnection * connection, gboolean success, gint * status);
 
 LmHandlerResult presence_cb (LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
