@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.104 2004/01/07 23:53:15 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.105 2004/01/08 21:12:35 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1567,7 +1567,6 @@ GSList *status_init ()
 
 void start_plugin ()
 {
-
     print_debug ("%s : start_plugin\n", GGadu_PLUGIN_NAME);
 
     p = g_new0 (GGaduProtocol, 1);
@@ -1607,13 +1606,18 @@ void start_plugin ()
 
     signal_emit (GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
 
-    test ();
+    test (); /* ?! */
 
     if (ggadu_config_var_get (handler, "autoconnect") && !connected)
-	gadu_gadu_login ((ggadu_config_var_check (handler, "reason")) ? ggadu_config_var_get (handler, "reason") : _("no reason"),
-			 (ggadu_config_var_check (handler, "status")) ? (gint) ggadu_config_var_get (handler,
-											 "status") : GG_STATUS_AVAIL);
+      {
+	gint status = (ggadu_config_var_check (handler, "status") ? (gint) ggadu_config_var_get (handler, "status") : GG_STATUS_AVAIL);
 
+	if (ggadu_config_var_get (handler, "private"))
+	  status |= GG_STATUS_FRIENDS_MASK;
+
+	gadu_gadu_login ((ggadu_config_var_check (handler, "reason")) ? ggadu_config_var_get (handler, "reason") : _("no reason"),
+			 status);
+      }
 }
 
 void my_signal_receive (gpointer name, gpointer signal_ptr)

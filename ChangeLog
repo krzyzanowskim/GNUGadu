@@ -1,3 +1,6 @@
+08.01.2004
+- fixed `private` setting usage with autoconnect (gadu-gadu/shasta)
+
 07.01.2004
 - fixed some memory leaks (gadu-gadu/THrull)
 - added some of long-awaited functionality to docklet (docklet/THrull)
