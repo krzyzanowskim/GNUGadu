@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.93 2003/11/25 21:16:17 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.94 2003/11/26 18:07:31 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1639,6 +1639,7 @@ void start_plugin ()
     p->offline_status = g_slist_append (p->offline_status, (gint *) GG_STATUS_NOT_AVAIL);
     p->offline_status = g_slist_append (p->offline_status, (gint *) GG_STATUS_NOT_AVAIL_DESCR);
     p->away_status = g_slist_append (p->away_status, (gint *) GG_STATUS_BUSY);
+    p->away_status = g_slist_append (p->away_status, (gint *) GG_STATUS_BUSY_DESCR);
     p->online_status = g_slist_append (p->online_status, (gint *) GG_STATUS_AVAIL);
     p->online_status = g_slist_append (p->online_status, (gint *) GG_STATUS_AVAIL_DESCR);
 

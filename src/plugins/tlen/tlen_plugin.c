@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.42 2003/11/16 14:13:51 maticompxp Exp $ */
+/* $Id: tlen_plugin.c,v 1.43 2003/11/26 18:07:31 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1115,7 +1115,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 	  GGaduContact *k = signal->data;
 
 	  userlist = g_slist_append (userlist, k);
-	  ggadu_repo_add_value ("gadu-gadu", k->id, k, REPO_VALUE_CONTACT);
+	  ggadu_repo_add_value ("tlen", k->id, k, REPO_VALUE_CONTACT);
 	  tlen_addcontact (session, k->nick, k->id, k->group);
 
 	  tlen_request_subscribe (session, k->id);

@@ -23,7 +23,7 @@ DOCKLET=docklet
 endif
 
 if BUILD_DOCKLET_DOCKAPP
-DOCKAPP=docklet
+DOCKLET=docklet
 endif
 
 if BUILD_SOUND_ESD
