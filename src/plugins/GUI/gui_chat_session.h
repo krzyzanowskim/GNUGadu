@@ -1,9 +1,10 @@
 #ifndef __GTK_CHAT_SESSION_H__
 #define __GTK_CHAT_SESSION_H__
 
+#include <gtk/gtk.h>
 #include <glib.h>
 #include <glib-object.h>
-#include <gtk/gtk.h>
+#include "gui_main.h"
 
 #define DEFAULT_TEXT_COLOR "#000001"
 #define DEFAULT_FONT "Sans"
@@ -43,6 +44,7 @@ struct _GUIChatSession
     GList *history_list;	/* gcs_history */
     /* gtk widget to put in some container */
     GtkWidget *widget;
+    GtkWidget *buttons_widget;
     gboolean visibility;
 };
 
@@ -53,7 +55,7 @@ struct _GUIChatSessionClass
 };
 
 /* public */
-GUIChatSession *gui_chat_session_new (void);
+GUIChatSession *gui_chat_session_new (gui_protocol * gp);
 
 void gui_chat_session_add_recipient (GUIChatSession * gsc, gchar * id);
 
@@ -61,7 +63,13 @@ GList *gui_chat_session_get_recipients_list (GUIChatSession * gsc);
 
 guint gui_chat_session_get_session_type (GUIChatSession * gsc);
 
+GUIChatSession *gui_chat_session_find (gui_protocol * gp, GList *recipients_arg);
+
 GtkWidget *gui_chat_session_get_widget (GUIChatSession * gcs);
 
-/* void gui_chat_session_create_gtk_widget (GUIChatSession * gcs) */
+GtkWidget *gui_chat_session_create_gtk_widget (GUIChatSession *gcs);
+
+void gui_chat_sessions_create_visible_chat_window(GUIChatSession * gcs);
+
+
 #endif
