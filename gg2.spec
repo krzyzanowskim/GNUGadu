@@ -1,23 +1,23 @@
-# $Revision: 1.9 $, $Date: 2003/12/13 14:43:17 $
+# $Revision: 1.10 $, $Date: 2004/01/14 19:43:20 $
 #
 # Conditional build:
 %bcond_with	arts
 %bcond_without	perl
 %bcond_without	esd
 #
-%define		_snap	20031211
+%define		_pre	pre6
 Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
 Version:	2.0
-Release:	2.%{_snap}.1
-Epoch:		2
+Release:	0.%{_pre}.1
+Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://gg.tiwek.com/gg2/snapshots/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	4e5167ba819531a7cf057c44d76e527f
-Source1:	%{name}.desktop
+#Source0:	http://gg.tiwek.com/gg2/snapshots/%{name}-%{_snap}.tar.bz2
+Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}%{_pre}.tar.bz2
+# Source0-md5:	0e24e1420d3b85822b871af953e12df6
 URL:		http://www.gadu.gnu.pl/
 %{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
@@ -35,6 +35,7 @@ BuildRequires:	openssl-devel
 %{?with_perl:BuildRequires:	perl-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	xosd-devel   >= 2.0.0
+Requires:		gg2-ui
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -75,6 +76,7 @@ Summary:	GTK+2 GUI plugin
 Summary(es):	Plugin de GUI en GTK+2
 Summary(pl):	Wtyczka z GUI w GTK+2
 Group:		Applications/Communications
+Provides:	gg2-ui
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description gui-gtk+2
@@ -287,6 +289,7 @@ Summary:	Remote access from other applications
 Summary(es):	Acceso remoto desde otras aplicaciones
 Summary(pl):	Dostêp do programu z innych aplikacji
 Group:		Applications/Communications
+Provides:	gg2-ui
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description remote
@@ -332,7 +335,7 @@ Temas para el GUI de GNU Gadu 2.
 Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
-%setup -q -n %{name}-%{_snap}
+%setup -q -n %{name}-%{version}%{_pre}
 
 %build
 rm -f missing
@@ -370,7 +373,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
+install gg2.desktop $RPM_BUILD_ROOT%{_desktopdir}
 install -d $RPM_BUILD_ROOT%{_pixmapsdir}
 install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/sounds
 install $RPM_BUILD_ROOT%{_datadir}/%{name}/pixmaps/icon.png $RPM_BUILD_ROOT%{_pixmapsdir}/%{name}.png
@@ -412,7 +415,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files emoticons
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_datadir}/gg2/pixmaps/emoticons
+%{_datadir}/gg2/pixmaps/emoticons
 
 %files gadu-gadu
 %defattr(644,root,root,755)
@@ -498,8 +501,29 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.9  2003/12/13 14:43:17  krzyzak
-. cosmetics and update
+Revision 1.10  2004/01/14 19:43:20  krzyzak
+- update
+
+Revision 1.84  2004/01/11 21:02:18  krzak
+- up to version 2.0pre5
+
+Revision 1.83  2004/01/09 18:38:16  mmazur
+- added virtual package gg2-ui, so that gg2 doesn't install without a user
+  interface
+
+Revision 1.82  2003/12/21 10:36:41  gotar
+- chmod -x emoticons
+
+Revision 1.81  2003/12/14 00:22:35  krzak
+- finally release 0.pre4.1 (sorry)
+
+Revision 1.80  2003/12/13 23:50:12  krzak
+- version: 2.0pre4
+- rel 1
+
+Revision 1.79  2003/12/13 17:13:18  krzak
+- up to version pre4
+- remove gg2.desktop source, it's in source already.
 
 Revision 1.78  2003/12/12 20:41:14  tiwek
 - update to 20031211 snap, more change (see ChangeLog)
