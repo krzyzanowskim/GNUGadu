@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.44 2004/01/12 22:34:25 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.45 2004/01/12 23:07:18 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -904,8 +904,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     if (ggadu_config_var_get (gui_handler, "send_on_enter"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
 
-    if (ggadu_config_var_get (gui_handler, "use_xosd_for_new_msgs"))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs), TRUE);
+    if (usexosdfornewmsgs)
+	if (ggadu_config_var_get (gui_handler, "use_xosd_for_new_msgs"))
+	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs), TRUE);
 	
     if (ggadu_config_var_get (gui_handler, "hide_on_start"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (hide_on_start), TRUE);
