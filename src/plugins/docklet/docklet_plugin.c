@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.6 2003/05/06 13:30:44 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.7 2003/05/07 11:14:37 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -44,7 +44,7 @@ GtkWidget *docklet_create_image(const gchar * directory, const gchar * filename)
 	/* We first try any pixmaps directories set by the application. */
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef DEBUG
+#ifdef GGADU_DEBUG
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif
@@ -95,7 +95,7 @@ GdkPixbuf *docklet_create_pixbuf(const gchar * directory, const gchar * filename
 	/* We first try any pixmaps directories set by the application. */
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef DEBUG
+#ifdef GGADU_DEBUG
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif

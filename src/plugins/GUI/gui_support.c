@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.2 2003/05/07 11:14:36 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -184,7 +184,7 @@ GtkWidget *create_image(const gchar * filename) {
 	/* We first try any pixmaps directories set by the application. */
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef DEBUG
+#ifdef GGADU_DEBUG
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif
@@ -233,7 +233,7 @@ GdkPixbuf *create_pixbuf(const gchar * filename) {
 	/* We first try any pixmaps directories set by the application. */
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef DEBUG
+#ifdef GGADU_DEBUG
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif

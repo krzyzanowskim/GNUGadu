@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.5 2003/04/21 18:03:15 krzyzak Exp $ */
+/* $Id: support.c,v 1.6 2003/05/07 11:14:35 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -68,7 +68,7 @@ gboolean str_has_suffix (const gchar  *str, const gchar  *suffix) {
 
 void print_debug_raw(const gchar *func, const char *format, ...)
 {
-#ifdef DEBUG
+#ifdef GGADU_DEBUG
 	static char *func_name;
 	va_list ap;
 	va_start(ap, format);

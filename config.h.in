@@ -3,7 +3,7 @@
 #undef PACKAGE_LOCALE_DIR
 #undef PACKAGE
 #undef VERSION
-#undef DEBUG
+#undef GGADU_DEBUG
 #undef ENABLE_NLS
 #undef WORDS_BIGENDIAN
 #undef PERL_EMBED

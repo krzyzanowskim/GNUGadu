@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.6 2003/04/04 15:17:35 thrulliq Exp $ */
+/* $Id: remote_plugin.c,v 1.7 2003/05/07 11:14:38 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -242,7 +242,7 @@ int remote_sig_remote_get_icon_path (char *arg)
   /* We first try any pixmaps directories set by the application. */
   dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps");
   dir = g_slist_prepend(dir,PACKAGE_DATA_DIR "/pixmaps/emoticons");
-#ifdef DEBUG
+#ifdef GGADU_DEBUG
   dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
   dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif

@@ -1,9 +1,8 @@
+#ifndef PERL_EMBED
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-
-#ifndef PERL_EMBED
 
 int perl_load_script (char *script_name)
 {
@@ -20,8 +19,8 @@ void perl_unload_script (char *script_name)
 
 #include <stdio.h>
 #include <EXTERN.h>
-#include <perl.h>
 #include <XSUB.h>
+#include <perl.h>
 #include <glib.h>
 #include <libgen.h>
 

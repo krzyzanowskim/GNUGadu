@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.47 2003/05/07 10:52:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.48 2003/05/07 11:14:37 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1077,7 +1077,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	signal(SIGHUP,handle_sighup);
 
-#if DEBUG    
+#if GGADU_DEBUG    
 	gg_debug_level = 255;
 #endif
 

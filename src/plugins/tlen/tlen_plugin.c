@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.23 2003/05/02 11:30:38 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.24 2003/05/07 11:14:38 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -336,7 +336,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 gpointer login(gpointer data) 
 {
     gchar *login, *password;
-#ifndef DEBUG
+#ifndef GGADU_DEBUG
     tlen_setdebug(0);
 #else
     tlen_setdebug(1);
