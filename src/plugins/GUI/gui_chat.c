@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.6 2003/03/23 23:13:45 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.7 2003/03/24 10:42:36 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -782,20 +782,19 @@ void gui_chat_append(GtkWidget *chat, gpointer msg, gboolean self)
 	g_free(tmp);
 
 	/* scroll only if we at the bottom of the history :) I'm genius */
-/*	if (GTK_TEXT_VIEW(history)->vadjustment) 
-	{
+	if (GTK_TEXT_VIEW(history)->vadjustment) {
 	    GtkAdjustment *adj = GTK_TEXT_VIEW(history)->vadjustment;
 
-	    if ((adj->value + adj->page_size) == adj->upper) 
-	    { */
+		 if ((adj->value + adj->page_size) == adj->upper) {
 
-		gtk_text_buffer_get_end_iter(buf, &iter);
-		gtk_text_buffer_place_cursor(buf,&iter);
-		gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW(history), 
+			gtk_text_buffer_get_end_iter(buf, &iter);
+			gtk_text_buffer_place_cursor(buf,&iter);
+			gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW(history), 
 					    gtk_text_buffer_get_insert(buf)
 					    , 0.0, TRUE, 0.5, 0.5);
+		 }
 
-//	    }
+	}
 
 	/* emoticons engine initial, it works !, but is case sensitive */
 	gtk_text_buffer_get_iter_at_mark(buf,&istart,mark_start);
