@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.42 2004/05/03 21:26:44 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.43 2004/05/03 21:34:25 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -161,7 +161,7 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 {
 	GGaduContact *k1, *k2;
 	gchar *d1, *d2;
-	gint p1, p2;
+	gint p1, p2, s1, s2;
 	gui_protocol *gp = user_data;
 
 	gtk_tree_model_get(GTK_TREE_MODEL(model), a, 1, &d1, 2, &k1, -1);
@@ -174,15 +174,18 @@ gint sort_func(GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b, gpointer 
 		gtk_tree_model_get(GTK_TREE_MODEL(model), a, 3, &gp, -1);
 
 
+	s1 = k1->status;
+	s2 = k2->status;
+
 	/* print_debug("SORTUJE\n"); */
 	/* maly trik, jesli statusy sa w tej samej grupie to trakuj je jako te same statusy przy sortowaniu */
-	if ((is_in_status(k1->status,gp->p->online_status) && is_in_status(k2->status,gp->p->online_status)) ||
-	   (is_in_status(k1->status,gp->p->away_status) && is_in_status(k2->status,gp->p->away_status)) ||
-	   (is_in_status(k1->status,gp->p->offline_status) && is_in_status(k2->status,gp->p->offline_status)))
-	    k1->status = k2->status;
-
+	if ((is_in_status(s1,gp->p->online_status) && is_in_status(s2,gp->p->online_status)) ||
+	   (is_in_status(s1,gp->p->away_status) && is_in_status(s2,gp->p->away_status)) ||
+	   (is_in_status(s1,gp->p->offline_status) && is_in_status(s2,gp->p->offline_status)))
+	    s1=s2;
+	    
 	/* je¶li status jest taki sam posortuj alfabetycznie wg. tego co wy¶wietla */
-	if ((k1->status == k2->status))
+	if ((s1 == s2))
 		return ggadu_strcasecmp(d1, d2);
 
 	/* w innym przypadku sprawd¼ który status jest wy¿ej na li¶cie */
