@@ -1,10 +1,11 @@
-/* $Id: GUI_plugin.c,v 1.7 2003/04/12 11:05:23 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.8 2003/04/21 16:07:27 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <string.h>
 
 #include "gg-types.h"
 #include "unified-types.h"
@@ -136,10 +137,13 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 		return FALSE;
 	    }
 
-	    if (k->status_descr)
-		desc_text = g_strdup_printf("\n%s", k->status_descr);
+	    if (k->status_descr) {
+	    	gchar *desc_esc = g_markup_escape_text(k->status_descr,strlen(k->status_descr));
+		desc_text = g_strdup_printf("\n%s", desc_esc);
+		g_free(desc_esc);
+	    }
 
-	    markup = g_strdup_printf("<span size=\"small\">Id: <b>%s</b>%s</span>", k->id, (k->status_descr) ? desc_text : "");
+	    markup = g_strdup_printf("<span size=\"small\">Id: <b>%s</b>%s</span>", k->id, (k->status_descr) ?  desc_text : "");
 
 	    if (gp == NULL) print_debug("MAAAAAC %s\n",plugin_name);
 	    gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup);
