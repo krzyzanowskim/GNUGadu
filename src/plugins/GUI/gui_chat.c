@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.118 2004/10/08 12:22:05 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.119 2004/10/13 18:19:53 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -290,8 +290,6 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 	GtkTextBuffer *buf = NULL;
 	GtkTextIter start, end;
 	gchar *tmpmsg = NULL;
-	gui_protocol *gp;
-
 
 	if (chat_type == CHAT_TYPE_TABBED)
 	{
