@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.238 2005/01/16 21:52:54 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.239 2005/01/26 12:46:21 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2109,18 +2109,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (!sp)
 			return;
 
-/*		if (sp->status & GG_STATUS_FRIENDS_MASK)
-			internal_status = (sp->status ^ GG_STATUS_FRIENDS_MASK);
-		else
-			internal_status = sp->status;
-*/
 		internal_status = sp->status;
 		if (ggadu_config_var_get(handler, "private"))
 		{
 			internal_status |= GG_STATUS_FRIENDS_MASK;
 		}
-
-
 
 		/* descriptions, call dialogbox */
 		if (ggadu_gadu_gadu_is_status_descriptive(sp) && (!sp->status_description))
@@ -2152,10 +2145,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					sp->status = GG_STATUS_INVISIBLE_DESCR;
 					break;
 				}
+				
 				if (ggadu_config_var_get(handler, "private"))
 				{
 					internal_status = sp->status;
-					internal_status |= GG_STATUS_FRIENDS_MASK;
+					if (sp->status != GG_STATUS_NOT_AVAIL_DESCR)
+					    internal_status |= GG_STATUS_FRIENDS_MASK;
 				}
 			}
 
@@ -2179,16 +2174,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 				print_debug("changed to %d %d %d %d", internal_status, sp->status, GG_STATUS_NOT_AVAIL, GG_STATUS_NOT_AVAIL_DESCR);
 				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
-/*				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
-					    (gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
-*/
 			}
 			else if (gg_change_status(session, internal_status) != -1)
 			{
 				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
-/*				signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
-					    (gpointer) ((_status & GG_STATUS_FRIENDS_MASK) ? (_status ^ GG_STATUS_FRIENDS_MASK) : _status), "main-gui");
-*/
 			}
 			else
 			{
