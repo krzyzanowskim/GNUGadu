@@ -7,7 +7,7 @@ libmozilla_org_freedesktop_im_dbus_la_SOURCES = \
 	npunix.c
 
 # this stinks	
-X_CFLAGS="-I/usr/X11R6/include"
+X_CFLAGS="-I/usr/X11R6/include -I/usr/include/mozilla"
 X_LIBS="-L/usr/X11R6/lib"
 
 libmozilla_org_freedesktop_im_dbus_la_CFLAGS = $(MOZILLA_PLUGIN_CFLAGS) $(X_CFLAGS)

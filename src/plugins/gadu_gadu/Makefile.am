@@ -46,14 +46,14 @@ EXTRA_DIST = libgadu/autogen.sh \
 	libgadu/aclocal.m4 \
 	libgadu/Makefile.am \
 	libgadu/Makefile.in \
-	libgadu/Makefile \
-	libgadu/config.status \
 	libgadu/install-sh \
 	libgadu/missing \
 	libgadu/lib/*.c \
 	libgadu/lib/libgadu.h \
 	libgadu/lib/compat.h \
 	libgadu/lib/*.h.in
+#	libgadu/config.status \
+#	libgadu/Makefile \
 #	libgadu/ltmain.sh \
 #	libgadu/libtool \
 #	libgadu/depcomp \
