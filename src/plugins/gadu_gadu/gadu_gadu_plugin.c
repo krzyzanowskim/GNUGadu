@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.48 2003/05/07 11:14:37 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.49 2003/05/09 19:45:09 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -26,6 +26,7 @@
 #include "gadu_gadu_plugin.h"
 #include "dialog.h"
 #include "repo.h"
+#include "perl_embed.h"
 
 extern GGaduConfig *config;
 
@@ -358,6 +359,8 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 				msg->recipients = g_slist_append(msg->recipients,(gpointer)g_strdup_printf("%d",recipients_gg[i]));
 			
 			}
+
+			msg->message = perl_action_on_msg_receive (1, msg->message);
 			
 			{
 			    gchar *line = g_strdup_printf(":: %s (%s)::\n%s\n\n",msg->id,get_timestamp(msg->time),msg->message);
