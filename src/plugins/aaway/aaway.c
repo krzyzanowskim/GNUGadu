@@ -54,6 +54,7 @@ guint timer_handle;
 
 static GGaduPlugin *handler;
 static GGaduMenu *menu_pluginmenu;
+static GHashTable* aaway_hash;
 
 GGadu_PLUGIN_INIT("aaway", GGADU_PLUGIN_TYPE_MISC);
 
@@ -87,23 +88,26 @@ gint get_idle()
 static gboolean check_idle_time()
 {
 	gint local_idle = get_idle();
-	static gboolean away_enabled = FALSE;
 	
-	if ((local_idle >= (gint) ggadu_config_var_get(handler, "interval")) && !away_enabled && (gint) ggadu_config_var_get(handler, "enable"))
+	if ((local_idle >= (gint) ggadu_config_var_get(handler, "interval")) 
+	    && (gint) ggadu_config_var_get(handler, "enable"))
 	{
 		GSList *plugins = config->loaded_plugins;
-		
-		print_debug("%s : Setting AWAY state\n", GGadu_PLUGIN_NAME);
 
 		while (plugins)
 		{
 		    GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
 		    GGaduProtocol *protocol = plugin->plugin_data;
-		    if (plugin && protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL))
+		    if (plugin 
+		        && protocol 
+			&& (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL)
+			&& !g_hash_table_lookup(aaway_hash,plugin->name))
 		    {
-			print_debug("lustruje %s",plugin->name);
-			GGaduStatusPrototype *sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
+			GGaduStatusPrototype *sp;
+			sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
 			
+			print_debug("lustruje %s",plugin->name);
+			print_debug("%s : Setting AWAY state\n", GGadu_PLUGIN_NAME);
 			if (sp && ggadu_is_in_status(sp->status, protocol->online_status))
 			{
 			    GGaduStatusPrototype *sp2;
@@ -125,7 +129,7 @@ static gboolean check_idle_time()
 			    print_debug("change from %d to %d",sp->status,newstatus);
 			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
 			    
-			    away_enabled = TRUE;
+			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)TRUE);
 			    
 			    print_debug("SET %d %s",newstatus,plugin->name);
 //			    g_free(message);
@@ -134,19 +138,24 @@ static gboolean check_idle_time()
 		    plugins = plugins->next;
 		}
 	}
-	else if ((local_idle == 0) && away_enabled)
+	else if (local_idle == 0)
 	{
 		GSList *plugins = config->loaded_plugins;
 		
-		print_debug("%s : Setting ACTIVE state\n", GGadu_PLUGIN_NAME);
 
 		while (plugins)
 		{
 		    GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
 		    GGaduProtocol *protocol = plugin->plugin_data;
-		    if (plugin && protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL))
+		    if (plugin 
+			&& protocol 
+			&& (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL)
+			&& g_hash_table_lookup(aaway_hash,plugin->name))
 		    {
-			GGaduStatusPrototype *sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
+			GGaduStatusPrototype *sp;
+			sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
+			
+			print_debug("%s : Setting ACTIVE state\n", GGadu_PLUGIN_NAME);
 			if (sp && ggadu_is_in_status(sp->status, protocol->away_status))
 			{
 			    gchar *message = NULL;
@@ -167,12 +176,14 @@ static gboolean check_idle_time()
 			    
 			    print_debug("change from %d to %d",sp->status,newstatus);
  			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
+			    
+			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)FALSE);
+
 //			    g_free(message); 
 			}
 		    }
 		    plugins = plugins->next;
 		}
-		away_enabled = FALSE;
 	}
 	return TRUE;
 }
@@ -261,8 +272,9 @@ void start_plugin()
 	print_debug("%s : start_plugin\n", GGadu_PLUGIN_NAME);
 
 	build_plugin_menu();
-
 	register_signal(handler, "update config");
+	
+	aaway_hash = g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL);
 
 	print_debug("%s : Start Timer\n", GGadu_PLUGIN_NAME);
 	timer_handle = g_timeout_add_full(G_PRIORITY_DEFAULT_IDLE, 1000, check_idle_time, NULL, timeout_remove);
@@ -310,5 +322,7 @@ void destroy_plugin()
 	{
 		g_source_remove(timer_handle);
 	}
+	
+	g_hash_table_destroy(aaway_hash);
 
 }

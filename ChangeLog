@@ -1,3 +1,6 @@
+04.01.2005
+- auto-away is independent for every protocol (aaway/krzak)
+
 03.01.2005
 - ggadu_spawn() can parse %s argument. (krzak)
 - change default values for executable variables in sound-external, history-viewer
