@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.38 2004/09/24 07:03:16 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.39 2004/09/26 18:34:59 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -209,13 +209,12 @@ gpointer jabber_login_connect(gpointer status)
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
-	lm_connection_set_disconnect_function(jabber_data.connection, jabber_disconnect_cb, NULL, NULL);
-
 	if (!lm_connection_open(jabber_data.connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
 	{
 		jabber_disconnect_cb(jabber_data.connection,LM_DISCONNECT_REASON_OK, NULL);
 	}
 
+	lm_connection_set_disconnect_function(jabber_data.connection, jabber_disconnect_cb, NULL, NULL);
 
 	g_free(jid);
 	g_static_mutex_unlock(&connect_mutex);
