@@ -1,5 +1,8 @@
+27.12.2003
+- remove old and not working icqlib plugin... (icq/THrull)
+
 23.12.2003
-- aRts detection in configure fix, --with-arts-prefix option added (THrull/configure)
+- aRts detection in configure fix, --with-arts-prefix option added (configure/THrull)
 - fixed problem with main window decoration on some WM's (GUI/krzak)
 
 21.12.2003
@@ -7,10 +10,10 @@
   and stored in ggadu_conf.{c,h} (all/krzak)
 
 17.12.2003
-- fixed compilation issue with gcc-2.95	(sebo/all)
+- fixed compilation issue with gcc-2.95	(all/sebo)
 
 13.12.2003
-- fixed segfault with "chat" option and perl support enabled (THrull/core)
+- fixed segfault with "chat" option and perl support enabled (core/THrull)
 
 11.12.2003
 - userlist import/export work again (gadu-gadu/krzak)
