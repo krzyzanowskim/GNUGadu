@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.63 2003/06/09 01:20:46 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.64 2003/06/11 17:49:18 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1251,7 +1251,8 @@ void start_plugin()
 	p->display_name = g_strdup("Gadu-Gadu");
 	p->img_filename = g_strdup("gadu-gadu.png");
 	p->statuslist = status_init();
-	p->offline_status = GG_STATUS_NOT_AVAIL;
+	p->offline_status = g_slist_append (p->offline_status, (gint*)GG_STATUS_NOT_AVAIL);
+	p->offline_status = g_slist_append (p->offline_status, (gint*)GG_STATUS_NOT_AVAIL_DESCR);
 	p->away_status = g_slist_append (p->away_status, (gint*)GG_STATUS_BUSY);
 	p->online_status = g_slist_append (p->online_status, (gint*)GG_STATUS_AVAIL);
 	p->online_status = g_slist_append (p->online_status, (gint*)GG_STATUS_AVAIL_DESCR);

@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.10 2003/04/29 19:21:22 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.11 2003/06/11 17:49:16 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -216,7 +216,7 @@ void gui_list_add(gui_protocol *gp)
     /* cos co jest oznaczone jakos p->offine_status przez protocol */
 
     status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-    sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status);
+    sp = gui_find_status_prototype(gp->p, (status) ? status : *(int*)&gp->p->offline_status->data);
 
     if (sp) {
 	gp->statuslist_eventbox = gtk_event_box_new();
@@ -265,7 +265,7 @@ void gui_tree_add(gui_protocol *gp)
     
     status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
     
-    sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status);
+    sp = gui_find_status_prototype(gp->p, (status) ? status : *(int*)&gp->p->offline_status->data);
     
     if (sp) {
     	gp->statuslist_eventbox = gtk_event_box_new();
@@ -364,7 +364,7 @@ gint gui_get_active_users_count(gui_protocol *gp)
     
     while (tmplist) {
 	GGaduContact *k = tmplist->data;
-	if (k->status != gp->p->offline_status)
+	if (!is_in_status (k->status, gp->p->offline_status))
 	    active_count++;
 	tmplist = tmplist->next;
     }
@@ -448,7 +448,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 		    g_free(tmp);
 		}
 	    }
-	    if (config_var_get(gui_handler, "show_active") && n->status == gp->p->offline_status) {
+	    if (config_var_get(gui_handler, "show_active") && is_in_status (n->status, gp->p->offline_status)) {
 	        if (tree)
 		    gtk_tree_store_remove(GTK_TREE_STORE(users_treestore), &users_iter);
 		else 
@@ -495,7 +495,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 	while (tmplist) {
 	    k = tmplist->data;
 	    
-	    if (k && n->status != gp->p->offline_status && !ggadu_strcasecmp(n->id, k->id)) {
+	    if (k && !is_in_status (n->status, gp->p->offline_status) && !ggadu_strcasecmp(n->id, k->id)) {
 		GdkPixbuf	 *image		= create_pixbuf(sp->image);
 		    
 		if (image == NULL)
@@ -550,7 +550,7 @@ void gui_user_view_add_userlist(gui_protocol *gp)
 	
 	print_debug("Adding %s %s\n",k->id, k->nick);
 	
-        if (config_var_get(gui_handler, "show_active") && k->status == gp->p->offline_status) {
+        if (config_var_get(gui_handler, "show_active") && is_in_status (k->status, gp->p->offline_status)) {
 	    tmplist = tmplist->next;
 	    continue;
 	} 

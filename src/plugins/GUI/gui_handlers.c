@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.27 2003/06/09 17:47:33 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.28 2003/06/11 17:49:16 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -328,8 +328,9 @@ void handle_disconnected(GGaduSignal *signal)
     gp = gui_find_protocol(signal->source_plugin_name,protocols);
 		
     g_return_if_fail(gp != NULL);
-		
-    sp = gui_find_status_prototype(gp->p, gp->p->offline_status);
+    g_return_if_fail(gp->p->offline_status != NULL);
+    
+    sp = gui_find_status_prototype(gp->p, *(int *)&gp->p->offline_status->data);
 
     g_return_if_fail(sp != NULL);
     
@@ -358,7 +359,7 @@ void handle_disconnected(GGaduSignal *signal)
 		
 	    gtk_tree_model_get(GTK_TREE_MODEL(model), &users_iter, 0, &oldpixbuf, 2, &k, -1);
 	
-	    if (k->status != gp->p->offline_status) {
+	    if (!is_in_status (k->status, gp->p->offline_status)) {
 		if (!tree) {
     	    	    gtk_list_store_set(gp->users_liststore, &users_iter, 0, image, -1);
 		} else {

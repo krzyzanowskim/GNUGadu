@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.19 2003/06/05 19:56:47 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.20 2003/06/11 17:49:16 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -398,7 +398,7 @@ void change_status(GPtrArray *ptra)
 
 
     gp = gui_find_protocol (plugin_source, protocols);
-    if (gp && sp->status != gp->p->offline_status &&
+    if (gp && !is_in_status (sp->status, gp->p->offline_status) &&
 	config_var_get (gui_handler, "blink"))
     {
       gp->aaway_timer = -1;
@@ -408,9 +408,9 @@ void change_status(GPtrArray *ptra)
       gp->blinker = -1;
 
       status = (gint) signal_emit ("main-gui", "get current status", NULL, gp->plugin_name);
-      print_debug ("%d %d\n", status, gp->p->offline_status);
-      sp1 = gui_find_status_prototype (gp->p, status != 0 ? status : gp->p->offline_status);
-      if (sp1 != NULL && status == gp->p->offline_status) 
+      print_debug ("%d %d\n", status, *(int *)&gp->p->offline_status->data);
+      sp1 = gui_find_status_prototype (gp->p, status != 0 ? status : *(int*)&gp->p->offline_status->data);
+      if (sp1 != NULL && is_in_status (status, gp->p->offline_status)) 
       {
 	gp->blinker_image1 = create_pixbuf (sp1->image);
 	gp->blinker_image2 = create_pixbuf (sp->image);
@@ -420,7 +420,7 @@ void change_status(GPtrArray *ptra)
 	    (gint) config_var_get (gui_handler, "blink_interval"):500,
 	    status_blinker, gp);
       }
-    } else if (sp->status == gp->p->offline_status && gp->blinker > 0)
+    } else if (is_in_status (sp->status, gp->p->offline_status) && gp->blinker > 0)
     {
       g_source_remove (gp->blinker);
       gp->blinker = -1;

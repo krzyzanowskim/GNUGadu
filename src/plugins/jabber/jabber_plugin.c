@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.21 2003/06/09 18:24:35 shaster Exp $ */
+/* $Id: jabber_plugin.c,v 1.22 2003/06/11 17:49:21 zapal Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2
@@ -473,7 +473,7 @@ void start_plugin()
 	p->display_name = g_strdup("Jabber");
 	p->img_filename = g_strdup("jabber.png");
 	p->statuslist = status_init();
-	p->offline_status = JABBER_STATUS_UNAVAILABLE;
+	p->offline_status = g_slist_append (p->offline_status, (gint*)JABBER_STATUS_UNAVAILABLE);
 	p->away_status = g_slist_append (p->away_status, (gint*)JABBER_STATUS_AWAY);
 	p->online_status = g_slist_append (p->online_status, (gint *)JABBER_STATUS_AVAILABLE);
 

@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.5 2003/06/09 11:55:28 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.6 2003/06/11 17:49:13 zapal Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -89,7 +89,7 @@ typedef struct {
     gchar *display_name;
     gchar *img_filename;	//¶cie¿ka do obrazka z etykiet± na zak³adkê
     GSList *statuslist;		// lista dostêpnych statusów danego protoko³u
-    gint   offline_status;	// ktory status oznacza offline
+    GSList *offline_status;	// ktory status oznacza offline
     GSList *away_status;	// ktory status oznacza away (NULL = brak)
     GSList *online_status;	// ktory status oznacza online
 } GGaduProtocol;

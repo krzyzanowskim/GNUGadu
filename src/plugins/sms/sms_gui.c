@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.19 2003/06/09 18:49:55 shaster Exp $ */
+/* $Id: sms_gui.c,v 1.20 2003/06/11 17:49:22 zapal Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -451,7 +451,7 @@ void start_plugin()
     p->img_filename = g_strdup("sms.png");
     
     p->statuslist = button_send();
-    p->offline_status = config_var_get (sms_handler, "show_in_status") ? 2:3;
+    p->offline_status = g_slist_append (p->offline_status, (gint *)config_var_get (sms_handler, "show_in_status") ? 2:3);
 
     print_debug("%s : start_plugin\n",GGadu_PLUGIN_NAME);
     register_signal(sms_handler, "update config");

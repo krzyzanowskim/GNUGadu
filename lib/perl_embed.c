@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.5 2003/06/09 18:44:28 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.6 2003/06/11 17:49:14 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -474,7 +474,7 @@ gint perl_load_scripts (void)
   if (!dir)
     return 0;
   
-  while ((file = g_dir_read_name (dir)))
+  while ((file = (gchar *)g_dir_read_name (dir)))
   {
     print_debug ("perl: Autoloading script %s\n", file);
     perl_load_script (file);
