@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.153 2004/02/17 09:29:56 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.154 2004/02/17 16:12:24 thrulliq Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -756,6 +756,7 @@ gpointer user_view_history_action(gpointer user_data)
 	}
 
 	g_io_channel_shutdown(ch, TRUE, NULL);
+	g_io_channel_unref(ch);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show window with text", hist_buf->str, "main-gui");
 
@@ -953,6 +954,7 @@ gpointer _register_account_action(gpointer user_data)
 	g_io_channel_set_encoding(ch, NULL, NULL);
 	g_io_channel_write_chars(ch, h->body, h->body_size, NULL, NULL);
 	g_io_channel_shutdown(ch, TRUE, NULL);
+	g_io_channel_unref(ch);
 
 	dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Register Gadu-Gadu account"), "register account", h);
 	ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_REGISTER_IMAGE, "", VAR_IMG, token_image_path, VAR_FLAG_NONE);
@@ -2378,6 +2380,7 @@ void save_addressbook_file()
 
 		g_free(temp);
 		g_io_channel_shutdown(ch, TRUE, NULL);
+		g_io_channel_unref(ch);
 	}
 	g_free(path);
 

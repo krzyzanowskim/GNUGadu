@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.2 2004/02/17 16:12:22 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -589,6 +589,8 @@ gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc)
 
 	g_io_channel_write_chars(ch, line, -1, NULL, NULL);
 	g_io_channel_shutdown(ch, TRUE, NULL);
+	g_io_channel_unref(ch);
+	
 	return TRUE;
 }
 

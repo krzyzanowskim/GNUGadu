@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.14 2004/02/17 09:29:51 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.15 2004/02/17 16:12:22 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -67,8 +67,9 @@ gboolean plugin_at_list(gchar * name)
 		lines++;
 	}
 	g_io_channel_shutdown(ch, TRUE, NULL);
+	g_io_channel_unref(ch);
 	g_string_free(buffer, TRUE);
-
+	
 	if (!lines)
 		return TRUE;
 
@@ -471,6 +472,7 @@ GSList *get_list_modules_load()
 			}
 		}
 		g_io_channel_shutdown(ch, TRUE, NULL);
+		g_io_channel_unref(ch);
 	}
 
 	/* ugly hack: no modules.load file, load all plugins */

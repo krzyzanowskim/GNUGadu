@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.61 2004/02/17 09:30:04 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.62 2004/02/17 16:12:26 thrulliq Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -545,6 +545,7 @@ gpointer ggadu_tlen_login(gpointer data)
 		{
 			tlen_presence(session, TLEN_STATUS_UNAVAILABLE, "");
 			g_io_channel_shutdown(source_chan, TRUE, NULL);
+			g_io_channel_unref(source_chan);
 		}
 		tlen_freesession(session);
 		session = tlen_init();

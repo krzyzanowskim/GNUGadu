@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.49 2004/02/17 09:30:00 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.50 2004/02/17 16:12:25 thrulliq Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -629,6 +629,7 @@ void save_smslist()
 		g_free(path_tmp);
 		return;
 	}
+	g_io_channel_unref(ch_tmp);
 
 	/* mv temporary_file destination_file */
 	path = g_build_filename(this_configdir, GGADU_SMS_USERLIST_FILENAME, NULL);

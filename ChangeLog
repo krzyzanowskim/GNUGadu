@@ -1,4 +1,5 @@
 17.02.2004
+- some mem leaks (THrull)
 - systray-docklet unload crash fixed (THrull/system-tray-docklet)
 - gadu-gadu protocol use repo since now (krzak/gadu-gadu)
 - repo.{c,h} -> ggadu_repo.{c,h} (krzak)

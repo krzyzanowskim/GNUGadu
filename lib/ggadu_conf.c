@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.12 2004/02/17 09:29:51 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.13 2004/02/17 16:12:22 thrulliq Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -332,6 +332,7 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 	}
 
 	g_io_channel_shutdown(ch_dest, TRUE, NULL);
+	g_io_channel_unref(ch_dest);
 
 	ch_dest = g_io_channel_new_file(path_dest, "a+", NULL);
 	g_io_channel_set_encoding(ch_dest, NULL, NULL);
@@ -365,10 +366,12 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 			g_free(line);
 		}
 		g_io_channel_shutdown(ch, TRUE, NULL);
+		g_io_channel_unref(ch);
 	}
 
 	g_io_channel_shutdown(ch_dest, TRUE, NULL);
-
+	g_io_channel_unref(ch);
+	
 	if (rename(path_dest, path) == -1)
 	{
 		print_debug("Failed to rename %s to %s", path_dest, path);

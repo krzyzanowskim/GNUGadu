@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.72 2004/02/17 01:34:31 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.73 2004/02/17 16:12:25 thrulliq Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -113,6 +113,7 @@ gpointer user_view_history_action(gpointer user_data)
 			g_string_append(hist_buf, line);
 	}
 	g_io_channel_shutdown(ch, TRUE, NULL);
+	g_io_channel_unref(ch);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show window with text", hist_buf->str, "main-gui");
 	g_string_free(hist_buf, TRUE);

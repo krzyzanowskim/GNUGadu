@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.50 2004/02/17 09:29:54 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.51 2004/02/17 16:12:23 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1021,6 +1021,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 						      NULL);
 			gtk_tree_model_foreach(GTK_TREE_MODEL(store), save_selected_plugins, ch);
 			g_io_channel_shutdown(ch, TRUE, NULL);
+			g_io_channel_unref(ch);
 		}
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "emotic");
 		g_return_if_fail(entry != NULL);

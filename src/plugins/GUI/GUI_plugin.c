@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.54 2004/02/17 09:29:53 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.55 2004/02/17 16:12:23 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -813,6 +813,8 @@ GSList *gui_read_emoticons(gchar * path)
 
 	g_string_free(line, TRUE);
 	g_io_channel_shutdown(ch, TRUE, NULL);
+	g_io_channel_unref(ch);
+
 	return emotlist;
 }
 
