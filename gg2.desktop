@@ -5,6 +5,7 @@ Name=GNU Gadu
 Comment=Instant Messanger Client
 Comment[pl]=Wolne Gadanie
 TryExec=gg2
+Exec=gg2
 Icon=gg2.png
 Terminal=false
 Type=Application
