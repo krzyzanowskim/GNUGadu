@@ -230,18 +230,27 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
     gchar *recv_buff;
     gchar temp[2];
     gint i;
-
+    gchar *sms_number = g_malloc0(strlen(user_data));
+    
+    
+    
+    sms_number = g_strstr_len(user_data, strlen(user_data), "&RECIPIENT=");
+    sms_number = g_strndup(sms_number+11,9);
     print_debug("token %s, data %s\n", pass, user_data);
     
     if (!pass) {
-	sms_message("IDEA", _("Please enter token"));
+	sms_message(sms_number, _("Please enter token"));
 	return FALSE;
     }
     
     recv_buff = g_strconcat(user_data, "&pass=", pass, "&wyslij=Wy¶lij\n", NULL);
 
     remove(IDEA_GFX);
-    if (!sms_connect("IDEA","sms.idea.pl")) return ERR_SERVICE;
+    if (!sms_connect("IDEA","sms.idea.pl")) 
+    {
+    sms_message(sms_number, _("Cannot connect!"));
+    return FALSE;
+    }
 
     strcpy(HTTP.Command,"POST");
     strcpy(HTTP.Host,"Host: sms.idea.pl");
@@ -258,37 +267,46 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
 	recv_buff[i++] = temp[0];
     }
 
-    if (!recv_buff) return ERR_SERVICE;
+    if (!recv_buff)
+    {
+    sms_message(sms_number, _("Cannot connect!"));
+    return FALSE;
+    }
 
 /* sprawdzenie czy doszlo */
     if (g_strstr_len(recv_buff, i, "Object moved"))
     {
 	g_free(recv_buff);
-	return ERR_BAD_TOKEN;
+	sms_message(sms_number, _("Bad token entered!"));
+	return FALSE;
     }
 
     if (g_strstr_len(recv_buff, i, "wyczerpany"))
     {
 	g_free(recv_buff);
-	return ERR_LIMIT_EX;
+	sms_message(sms_number, _("Daily limit exceeded!"));
+	return FALSE;
     }
 
     if (g_strstr_len(recv_buff, i, "serwis chwilowo"))
     {
 	g_free(recv_buff);
-	return ERR_GATEWAY;
+	sms_message(sms_number, _("Gateway error!"));
+	return FALSE;
     }
 
     if (g_strstr_len(recv_buff, i, "tekstowa zosta³a wys³ana"))
     {
 	g_free(recv_buff);
+	sms_message(sms_number, _("SMS delivered :-)"));
 	return TRUE;
     }
 
     if (g_strstr_len(recv_buff, i, "Odbiorca nie ma aktywnej"))
     {
 	g_free(recv_buff);
-	return ERR_DISABLE_G;
+	sms_message(sms_number, _("Service not activated!"));
+	return FALSE;
     }
 
     g_free(recv_buff);
@@ -562,7 +580,7 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	}
 	
 
-	if (result == 1 && method == GGADU_SMS_METHOD_CHAT)
+	if (result == 1 && method == GGADU_SMS_METHOD_CHAT && gsm_oper != SMS_IDEA)
 	{
 	    sms_message(sms_number, _("SMS delivered :-)"));
 	    return;
@@ -574,9 +592,6 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	    case ERR_READ_TOKEN:
 	    sms_message(sms_number, _("Token not found!"));
 	    break;
-	    case ERR_BAD_TOKEN:
-	    sms_message(sms_number, _("Bad token entered!"));
-	    break;
 	    case ERR_LIMIT_EX:
 	    sms_message(sms_number, _("Daily limit exceeded!"));
 	    break;
@@ -585,9 +600,6 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	    break;
 	    case ERR_SERVICE:
 	    sms_message(sms_number, _("Cannot connect!"));
-	    break;
-	    case ERR_DISABLE_G:
-	    sms_message(sms_number, _("Service not activated!"));
 	    break;
 	}
     
