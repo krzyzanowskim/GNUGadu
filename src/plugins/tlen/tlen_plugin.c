@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.20 2003/04/25 08:07:35 zapal Exp $ */
+/* $Id: tlen_plugin.c,v 1.21 2003/04/26 23:01:51 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -172,7 +172,13 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 	switch (session->error) {
 	    case TLEN_ERROR_UNAUTHORIZED:
 		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Unauthorized")), "main-gui");
+		
+		g_source_remove(watch);
+		connected = FALSE;
+		tag = 0;
+		
 		print_debug("libtlen error: Unauthorized\n");
+		return FALSE;
 		break;
 	    
 	    case TLEN_ERROR_BADRESPONSE:
@@ -702,11 +708,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		    connected = FALSE;
 		    tlen_freesession(session);
 		    session = FALSE;
-//		    g_io_channel_shutdown(source_chan, FALSE, NULL);
 		    if (g_source_remove(tag) == TRUE)
 				g_io_channel_unref(source_chan);
 				
-			tag = 0;
+		    tag = 0;
 
 		    signal_emit(GGadu_PLUGIN_NAME, "gui disconnected", NULL, "main-gui");
 		    signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
