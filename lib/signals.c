@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.3 2003/06/09 01:20:44 krzyzak Exp $ */
+/* $Id: signals.c,v 1.4 2003/06/09 01:28:17 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -55,7 +55,7 @@ GQuark register_signal(GGaduPlugin * plugin_handler, gpointer name)
 
 	tmplugin->signals = g_slist_append(tmplugin->signals, signalinfo);
 
-#ifndef GGadu_PERL_EMBED_H
+#ifdef GGadu_PERL_EMBED_H
 	register_signal_perl ((gpointer)q_name, NULL);	
 #endif
 	return q_name;
