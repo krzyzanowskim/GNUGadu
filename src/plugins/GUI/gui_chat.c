@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.84 2004/03/09 20:58:42 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.85 2004/03/09 23:59:40 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -113,9 +113,6 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 							     "chat_notebook");
 		GtkWidget *chat = NULL;
 		GtkWidget *input = NULL;
-#ifdef USE_GTKSPELL
-		GtkSpell  *spell = NULL;
-#endif
 		
 		if (!user_data)
 		{
@@ -137,8 +134,9 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 		input = g_object_get_data(G_OBJECT(chat), "input");
 
 #ifdef USE_GTKSPELL
-		if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
 		{
+		    GtkSpell  *spell = NULL;
+		    if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
 			gtkspell_detach (spell);
 		}
 #endif				
@@ -169,16 +167,14 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 	case CHAT_TYPE_CLASSIC:
 	{
 		GtkWidget *input = NULL;
-#ifdef USE_GTKSPELL
-		GtkSpell  *spell = NULL;
-#endif		
 		session = (gui_chat_session *) user_data;
 		
 		input = g_object_get_data(G_OBJECT(session->chat), "input");
 
 #ifdef USE_GTKSPELL
-		if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
 		{
+		    GtkSpell  *spell = NULL;
+		    if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
 			gtkspell_detach (spell);
 		}
 #endif
@@ -750,7 +746,6 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gchar *fontstr = NULL;
 	GGaduStatusPrototype *sp = NULL;
 	GdkPixbuf *image = NULL;
-	GError *err = NULL;
 
 	if (!session || !plugin_name || !id)
 		return NULL;
@@ -1001,9 +996,11 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	 */
 	input = gtk_text_view_new();
 
-#ifdef USE_GTKSPELL	
-	if (!gtkspell_new_attach(GTK_TEXT_VIEW(input), g_getenv("LANG"), &err)) 
+#ifdef USE_GTKSPELL
 	{
+	    GError *err = NULL;
+	    if (!gtkspell_new_attach(GTK_TEXT_VIEW(input), g_getenv("LANG"), &err)) 
+	    {
 /*		GtkWidget *errdlg;
         	errdlg = gtk_message_dialog_new(GTK_WINDOW(chat_window),
                         GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1015,6 +1012,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
         	gtk_widget_destroy(errdlg);
         	g_error_free(err);
 */
+	    }
 	}
 #endif
 	gtk_widget_set_name(GTK_WIDGET(input), "GGInput");
