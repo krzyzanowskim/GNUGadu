@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.30 2004/01/05 15:20:58 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.31 2004/01/07 20:53:42 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -856,13 +856,12 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     if (response == GTK_RESPONSE_ACCEPT)
       {
 	  GtkWidget *entry;
-	  GIOChannel *ch =
-	      g_io_channel_new_file (g_build_filename (config->configdir, "modules.load", NULL), "w", NULL);
 
-	  if (plugins_updated)
-	    gtk_tree_model_foreach (GTK_TREE_MODEL (store), save_selected_plugins, ch);
-
-	  g_io_channel_shutdown (ch, TRUE, NULL);
+	  if (plugins_updated) {
+		GIOChannel *ch = g_io_channel_new_file (g_build_filename (config->configdir, "modules.load", NULL), "w", NULL);
+	        gtk_tree_model_foreach (GTK_TREE_MODEL (store), save_selected_plugins, ch);
+		g_io_channel_shutdown (ch, TRUE, NULL);
+	  }
 
 	  ggadu_config_var_set (gui_handler, "emot", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (emotic)));
 
