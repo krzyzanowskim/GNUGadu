@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.87 2003/11/14 18:08:13 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.88 2003/11/14 20:02:04 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -363,7 +363,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
     GSList *l = userlist;
     static gint prev_check = GG_CHECK_READ;
 
-    /* w przypadku błędu/utraty połączenia postąp tak jak w przypadku disconnect */
+    /* w przypadku bledu/utraty polaczenia postap tak jak w przypadku disconnect */
     if (!(e = gg_watch_fd (session)) || (condition & G_IO_ERR) ||
 	((condition & G_IO_HUP) && (session->state != GG_STATE_CONNECTING_GG)))
       {
@@ -397,7 +397,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	  break;
 
       case GG_EVENT_CONN_SUCCESS:
-	  print_debug ("połączono!\n");
+	  print_debug ("polaczono!\n");
 	  connected = TRUE;
 
 	  /* notify wysylam */
@@ -437,7 +437,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	  break;
 
       case GG_EVENT_CONN_FAILED:
-	  print_debug ("nie udało się polaczyc\n");
+	  print_debug ("nie udalo sie polaczyc\n");
 	  ggadu_gadu_gadu_disconnect_msg (_("Connection failed"));
 	  break;
 
@@ -643,9 +643,9 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
       case GG_EVENT_ACK:
 
 	  if (e->event.ack.status == GG_ACK_QUEUED)
-	      print_debug ("wiadomość bedzie dostarczona pozniej do %d.\n", e->event.ack.recipient);
+	      print_debug ("wiadomosc bedzie dostarczona pozniej do %d.\n", e->event.ack.recipient);
 	  else
-	      print_debug ("wiadomość dotarła do %d.\n", e->event.ack.recipient);
+	      print_debug ("wiadomosc dotarla do %d.\n", e->event.ack.recipient);
 
 	  break;
       case GG_EVENT_PUBDIR50_SEARCH_REPLY:
@@ -675,7 +675,6 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
     return TRUE;
 }
-
 
 void exit_signal_handler ()
 {
