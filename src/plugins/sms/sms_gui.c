@@ -444,7 +444,7 @@ void start_plugin()
     p->img_filename = g_strdup("sms.png");
     
     p->statuslist = button_send();
-    p->offline_status = 3;
+    p->offline_status = 2;
 
     print_debug("%s : start_plugin\n",GGadu_PLUGIN_NAME);
     register_signal(sms_handler, "update config");
