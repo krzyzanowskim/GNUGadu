@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.81 2003/08/28 07:16:52 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.82 2003/09/16 23:15:47 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -470,7 +470,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
   		index = ggadu_repo_value_first ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *)&key);
 		while (index) {
 			ktmp = ggadu_repo_find_value ("gadu-gadu", key);
-			if (ktmp && (!g_strcasecmp(ktmp->id,idtmp))) k = ktmp;
+			if (ktmp && (!ggadu_strcasecmp(ktmp->id,idtmp))) k = ktmp;
 			index = ggadu_repo_value_next ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *)&key, index);
 		}
 
@@ -546,7 +546,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
 		tmpip = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
 
-		if (tmpip && (g_strcasecmp (tmpip, "0.0.0.0")))
+		if (tmpip && (ggadu_strcasecmp (tmpip, "0.0.0.0")))
 		    notify->ip = g_strdup_printf ("%s:%d", tmpip, n->remote_port);
 
 
@@ -560,7 +560,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		  {
 		      GGaduContact *k = (GGaduContact *) l->data;
 
-		      if (!g_strcasecmp (k->id, notify->id))
+		      if (!ggadu_strcasecmp (k->id, notify->id))
 			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 
 		      l = l->next;
@@ -589,7 +589,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		notify->status = n->status;
 
 		tmpip = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
-		if (tmpip && (g_strcasecmp (tmpip, "0.0.0.0")))
+		if (tmpip && (ggadu_strcasecmp (tmpip, "0.0.0.0")))
 		    notify->ip = g_strdup_printf ("%s:%d", tmpip, n->remote_port);
 
 
@@ -601,7 +601,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		  {
 		      GGaduContact *k = (GGaduContact *) l->data;
 
-		      if (!g_strcasecmp (k->id, notify->id))
+		      if (!ggadu_strcasecmp (k->id, notify->id))
 			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 
 		      l = l->next;
@@ -630,7 +630,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		{
 		    GGaduContact *k = (GGaduContact *) l->data;
 
-		    if (!g_strcasecmp (k->id, notify->id))
+		    if (!ggadu_strcasecmp (k->id, notify->id))
 			ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 
 		    l = l->next;
@@ -2089,7 +2089,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 				while (statuslist_tmp)
 				  {
 				      GGaduStatusPrototype *sp = (GGaduStatusPrototype *) statuslist_tmp->data;
-				      if (!g_strcasecmp (sp->description, kv->value))
+				      if (!ggadu_strcasecmp (sp->description, kv->value))
 					{
 					    val = sp->status;
 					}
@@ -2259,9 +2259,9 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			case GGADU_SEARCH_GENDER:
 			    if (kv->value)
 			      {
-				  if (!g_strcasecmp (kv->value, _("female")))
+				  if (!ggadu_strcasecmp (kv->value, _("female")))
 				      gg_pubdir50_add (req, GG_PUBDIR50_GENDER, GG_PUBDIR50_GENDER_FEMALE);
-				  if (!g_strcasecmp (kv->value, _("male")))
+				  if (!ggadu_strcasecmp (kv->value, _("male")))
 				      gg_pubdir50_add (req, GG_PUBDIR50_GENDER, GG_PUBDIR50_GENDER_MALE);
 			      };
 			    break;
@@ -2352,7 +2352,7 @@ void load_contacts (gchar * encoding)
 	  gchar **l;
 	  gchar *first_name, *last_name, *nick, *nick2 /*, *comment */ , *mobile, *group, *uin;
 
-	  if (line[0] == '#' || !strcmp (g_strstrip (line), ""))
+	  if (line[0] == '#' || !ggadu_strcasecmp (g_strstrip (line), ""))
 	      continue;
 
 	  to_utf8 (encoding, line, buf);
