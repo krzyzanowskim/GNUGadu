@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.3 2004/05/25 16:37:54 thrulliq Exp $ */
+/* $Id: ggadu_types.h,v 1.4 2004/08/01 17:28:20 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -133,6 +133,7 @@ typedef struct
     GSList *offline_status;	/* ktory status oznacza offline */
     GSList *away_status;	/* ktory status oznacza away (NULL = brak) */
     GSList *online_status;	/* ktory status oznacza online */
+/*    GGaduStatusPrototype *current_status; */ /* aktualnie ustawiony status */
 } GGaduProtocol;
 
 /* 

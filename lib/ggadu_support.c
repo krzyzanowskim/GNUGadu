@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.4 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.5 2004/08/01 17:28:20 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -593,22 +593,3 @@ gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc)
 	return TRUE;
 }
 
-gpointer ggadu_find_extension(GGaduPlugin * handler, gint type)
-{
-	GSList *extensions;
-
-	if (!handler)
-		return NULL;
-
-	extensions = handler->extensions;
-	while (extensions)
-	{
-		GGaduPluginExtension *ext = extensions->data;
-
-		if (ext->type == type)
-			return ext;
-
-		extensions = extensions->next;
-	}
-	return NULL;
-}

@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.3 2004/06/14 14:53:23 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.4 2004/08/01 17:28:20 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -108,7 +108,5 @@ void array_free(char **array);
 const char *itoa(long int i);
 
 gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc);
-
-gpointer ggadu_find_extension(GGaduPlugin * handler, gint type);
 
 #endif
