@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.242 2005/03/02 08:42:44 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.243 2005/03/09 12:55:55 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -798,6 +798,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			g_free(status);
 */
 			g_free(id);
+			g_free(tmp);
 		}
 		break;
 
