@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.130 2004/12/19 19:40:49 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.131 2004/12/19 20:35:50 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -511,8 +511,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				{
 				case GGADU_JABBER_JID:
 					{
-						if(kv->value != ggadu_config_var_get(jabber_handler, "jid"))
+						if (ggadu_strcmp(kv->value,ggadu_config_var_get(jabber_handler, "jid")))
 							reconn = TRUE;
+
 						ggadu_config_var_set(jabber_handler, "jid", kv->value);
 					}
 					break;
@@ -533,8 +534,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_RESOURCE:
 					{
-						if(kv->value != ggadu_config_var_get(jabber_handler, "resource"))
+						if (ggadu_strcmp(kv->value,ggadu_config_var_get(jabber_handler, "resource")))
 							reconn = TRUE;
+		
 						ggadu_config_var_set(jabber_handler, "resource", kv->value);
 					}
 					break;

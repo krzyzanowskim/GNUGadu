@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.16 2004/11/26 12:40:51 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.17 2004/12/19 20:35:49 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -54,6 +54,19 @@ gint ggadu_strcasecmp(const gchar *s1,const gchar *s2)
 
     g_free(casefold1);
     g_free(casefold2);
+    return ret;
+}
+
+/*! \fn ggadu_strcmp(const gchar *s1,const gchar *s2)
+    \brief A case sensitive string comparison
+    
+    corresponding to the standard strcmp() function on platforms which support it.
+    Best if arguments is in UTF-8 encoding, but work for ASCII as well.
+*/
+gint ggadu_strcmp(const gchar *s1,const gchar *s2)
+{
+    gint ret = 0;
+    ret = g_utf8_collate(s1,s2);
     return ret;
 }
 

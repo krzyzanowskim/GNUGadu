@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.12 2004/11/26 12:40:51 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.13 2004/12/19 20:35:49 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -112,6 +112,7 @@ void		array_free(char **array);
 /*! @name Various functions */
 
 gint		ggadu_strcasecmp(const gchar *s1,const gchar *s2);
+gint		ggadu_strcmp(const gchar *s1,const gchar *s2);
 gchar		*ggadu_get_image_path(const gchar * directory, const gchar * filename);
 gboolean	ggadu_is_in_status(gint status, GSList * list);
 

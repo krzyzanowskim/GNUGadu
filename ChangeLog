@@ -3,6 +3,7 @@
   http://bugzilla.gnome.org/show_bug.cgi?id=161720 (GUI)
 - config->argv config->argc values from main(..)
 - small fixes.
+- introduce ggadu_strcmp(const gchar *s1,const gchar *s2) a case sensitive coparision
 
 15.12.2004
 - dbus plugin update (dbus/krzak)
