@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.43 2005/01/26 12:15:29 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.44 2005/01/27 16:42:59 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -58,7 +58,7 @@ void action_roster_add_result(LmConnection * connection, LmMessage * message, gp
 void action_roster_fetch_result(LmConnection * connection, LmMessage * message, gpointer user_data)
 {
 	GGaduStatusPrototype *sp = ggadu_find_status_prototype(p,(gint) user_data);
-	jabber_change_status(sp);
+	jabber_change_status(sp, FALSE);
 	iq_roster_cb(NULL, connection, message, user_data);
 }
 
@@ -70,7 +70,7 @@ void action_roster_remove_result(LmConnection * connection, LmMessage * message,
 	signal_emit("jabber", "gui show message", g_strdup(_("Contact removed from roster")), "main-gui");
 }
 
-void jabber_change_status(GGaduStatusPrototype *sp)
+void jabber_change_status(GGaduStatusPrototype *sp, gboolean keep_desc)
 {
 	enum states status;
 	LmMessage *m = NULL;
@@ -141,6 +141,11 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 	if (show)
 		lm_message_node_add_child(m->node, "show", show);
 
+	if(keep_desc)
+	{
+	    if(sp->status_description) g_free(sp->status_description);
+	    sp->status_description = g_strdup(jabber_data.description);
+	}
 	g_free(jabber_data.description);
 	jabber_data.description = NULL;
 

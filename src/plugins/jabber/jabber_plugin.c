@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.154 2005/01/26 12:12:15 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.155 2005/01/27 16:42:57 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -663,7 +663,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				{
 					sp2->status_description = g_strdup(kv->value); /* not sure */
 				}
-				signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, "jabber");
+
+				jabber_change_status(sp2, FALSE);
 				GGaduStatusPrototype_free(sp2);
 			}
 		}
@@ -676,7 +677,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		if (!sp)
 			return;
 
-		if (sp->status == JABBER_STATUS_DESCR && !sp->status_description)
+		if (sp->status == JABBER_STATUS_DESCR)
 		{
 
 			GGaduDialog *dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
@@ -685,9 +686,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.description, VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 			return;
+		} else
+		{
+		    jabber_change_status(sp, TRUE);
 		}
-		else
-			jabber_change_status(sp);
 
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
@@ -1447,7 +1449,7 @@ void start_plugin()
 	{
 		print_debug("jabber: autoconneting");
 		GGaduStatusPrototype *sp = ggadu_find_status_prototype(p,JABBER_STATUS_AVAILABLE);
-		jabber_change_status(sp);
+		jabber_change_status(sp, FALSE);
 		GGaduStatusPrototype_free(sp);
 	}
 
