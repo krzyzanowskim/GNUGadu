@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.c,v 1.6 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: ggadu_types.c,v 1.7 2005/01/16 21:52:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -118,11 +118,12 @@ void GGaduNotify_free(GGaduNotify * n)
 }
 
 
-void GGaduStatusPrototype_free(GGaduStatusPrototype * s)
+void GGaduStatusPrototype_free(GGaduStatusPrototype *s)
 {
 	if (!s)
 		return;
 
+	g_free(s->status_description);
 	g_free(s->description);
 	g_free(s->image);
 

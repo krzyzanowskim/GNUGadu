@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.237 2005/01/10 10:49:18 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.238 2005/01/16 21:52:54 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2530,8 +2530,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			g_free(sp->status_description);
 			sp->status_description = ggadu_config_var_get(handler, "reason");
 		}
-
-		signal->data_return = sp;
+		// to free
+    		signal->data_return = sp;
 	}
 
 	if (signal->name == REGISTER_ACCOUNT)

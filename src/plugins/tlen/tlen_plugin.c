@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.93 2005/01/12 09:20:17 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.94 2005/01/16 21:52:56 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -1215,7 +1215,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		    g_free(sp->status_description);
 		    sp->status_description = NULL;
 		}
-			
+		
+		/* newly allocated by ggadu_find_status_prototype */
 		signal->data_return = sp;
 	}
 }

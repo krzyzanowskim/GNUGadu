@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.105 2005/01/12 21:59:12 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.106 2005/01/16 21:52:52 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -210,6 +210,7 @@ gboolean nick_list_row_changed(GtkTreeSelection * selection, GtkTreeModel * mode
 			is_desc = TRUE;
 			gtk_tooltips_set_tip(tooltip, gtk_widget_get_ancestor(add_info_label_desc, GTK_TYPE_EVENT_BOX), NULL, "caption");
 		}
+		GGaduStatusPrototype_free(sp);
 	}
 
 
@@ -751,6 +752,8 @@ void change_status(GPtrArray * ptra)
 	    sp->status_description = NULL;
 	    signal_emit("main-gui", "change status", sp, plugin_source);
 	}
+	GGaduStatusPrototype_free(sp1);
+	GGaduStatusPrototype_free(sp2);
 	/* ZONK */
 	/* te tablice "ptra" kiedys tam mozna zwolic, ale nie mozna tutaj */
 }

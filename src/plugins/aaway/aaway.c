@@ -131,10 +131,11 @@ static gboolean check_idle_time()
 			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
 			    
 			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)TRUE);
-			    
+			    GGaduStatusPrototype_free(sp2);
 			    print_debug("SET %d %s",newstatus,plugin->name);
 //			    g_free(message);
 			}
+			GGaduStatusPrototype_free(sp);
 		    }
 		    plugins = plugins->next;
 		}
@@ -180,9 +181,10 @@ static gboolean check_idle_time()
  			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
 			    
 			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)FALSE);
-
+			    GGaduStatusPrototype_free(sp2);
 //			    g_free(message); 
 			}
+			GGaduStatusPrototype_free(sp);
 		    }
 		    plugins = plugins->next;
 		}

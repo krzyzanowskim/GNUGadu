@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.150 2005/01/10 09:39:12 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.151 2005/01/16 21:52:56 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -664,6 +664,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					sp2->status_description = g_strdup(kv->value); /* not sure */
 				}
 				signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, "jabber");
+				GGaduStatusPrototype_free(sp2);
 			}
 		}
 		GGaduDialog_free(dialog);
@@ -705,7 +706,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		}
 		else
 		    sp->status_description = NULL;
-		    	
+		
+		// to free
 		signal->data_return = sp;
 	}
 	else if (signal->name == SEND_MESSAGE_SIG)
@@ -1446,6 +1448,7 @@ void start_plugin()
 		print_debug("jabber: autoconneting");
 		GGaduStatusPrototype *sp = ggadu_find_status_prototype(p,JABBER_STATUS_AVAILABLE);
 		jabber_change_status(sp);
+//		GGaduStatusPrototype_free(sp);
 	}
 
 }

@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.66 2005/01/04 12:34:00 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.67 2005/01/16 21:52:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -396,6 +396,7 @@ void handle_disconnected(GGaduSignal * signal)
 	gp->blinker_image2 = NULL;
 	
 	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, sp->description, NULL);
+	GGaduStatusPrototype_free(sp);
 }
 
 void handle_show_search_results(GGaduSignal * signal)
@@ -450,9 +451,9 @@ void handle_status_changed(GGaduSignal * signal)
 	    
 	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, tipdesc, NULL);
 	g_free(tipdesc);
+	GGaduStatusPrototype_free(sp);
 	
 	print_debug("handle_status_changed end");
-	
 }
 
 void notify_callback(gchar * repo_name, gpointer key, gint actions)

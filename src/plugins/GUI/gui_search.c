@@ -1,4 +1,4 @@
-/* $Id: gui_search.c,v 1.10 2005/01/02 00:13:15 krzyzak Exp $ */
+/* $Id: gui_search.c,v 1.11 2005/01/16 21:52:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -218,6 +218,7 @@ void gui_show_search_results(GSList * list, gchar * plugin_name)
 		gtk_list_store_set(search_liststore, &search_iter, 0, image, 1, k->id, 2, (gpointer) k, 3, display, 4, dispcity, 5, dispage, -1);
 		gdk_pixbuf_unref(image);
 	    }
+	    GGaduStatusPrototype_free(sp);
 	    tmplist = tmplist->next;
 	}
     }

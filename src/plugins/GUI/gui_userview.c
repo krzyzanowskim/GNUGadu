@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.64 2005/01/04 15:38:20 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.65 2005/01/16 21:52:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -331,6 +331,7 @@ void gui_list_add(gui_protocol * gp)
 	
 	//forcing realize treeview before we render contacts
 	gtk_widget_realize(treeview); 
+	GGaduStatusPrototype_free(sp);
 }
 
 void gui_tree_add(gui_protocol * gp)
@@ -365,6 +366,8 @@ void gui_tree_add(gui_protocol * gp)
 
 	if (ggadu_config_var_get(gui_handler, "expand"))
 		gtk_tree_view_expand_all(GTK_TREE_VIEW(treeview));
+	
+	GGaduStatusPrototype_free(sp);
 }
 
 void gui_create_tree()
@@ -701,8 +704,8 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 				   g_strdup_printf("%s (%d/%d)", gp->p->display_name, gui_get_active_users_count(gp),
 						   g_slist_length(gp->userlist)), -1);
 		g_free(tmp);
-
 	}
+	GGaduStatusPrototype_free(sp);
 }
 
 void gui_user_view_add_userlist(gui_protocol * gp)
@@ -782,6 +785,7 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 						   3, gp, -1);
 			}
 		}
+		GGaduStatusPrototype_free(sp);
 		tmplist = tmplist->next;
 	}
 

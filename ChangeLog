@@ -1,3 +1,7 @@
+16.01.2005
+- "get current status" and ggadu_find_status_prototype() return 
+  duplicate of GGaduStatusPrototype stucture (krzak)
+
 12.01.2005
 - close #139 - tlen sefgault while change status (tlen/krzak)
 

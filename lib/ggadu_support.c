@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.21 2005/01/03 15:50:59 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.22 2005/01/16 21:52:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -708,6 +708,7 @@ gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick,
 /*!
     aaaa
     @see GGaduProtocol
+    @return newly allocated GGaduStatusPrototype
 */
 GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint status)
 {
@@ -720,9 +721,28 @@ GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint statu
 	while (tmp)
 	{
 		GGaduStatusPrototype *sp = tmp->data;
+		
 		if ((sp) && (sp->status == status))
-			return sp;
+		{
+			GGaduStatusPrototype *sp_ret = g_new0(GGaduStatusPrototype,1);
+			sp_ret->status = sp->status;
+			
+			if (sp->description)
+			    sp_ret->description = g_strdup(sp->description);
 
+			if (sp->status_description)
+			    sp_ret->status_description = g_strdup(sp->status_description);
+
+			if (sp->image)
+			    sp_ret->image = g_strdup(sp->image);
+
+			sp_ret->receive_only = sp_ret->receive_only;
+			return sp_ret;
+
+//			return sp;
+			
+		}
+		
 		tmp = tmp->next;
 	}
 	return NULL;
