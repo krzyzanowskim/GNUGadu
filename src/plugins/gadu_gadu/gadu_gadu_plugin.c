@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.38 2003/04/21 15:15:06 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.39 2003/04/25 08:05:14 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -386,8 +386,16 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 					notify->ip = g_strdup_printf("%s:%d",inet_ntoa(ip_addr),n->remote_port);
 					
 			    print_debug("%s : GG_EVENT_NOTIFY : %d  %d  %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,notify->ip);
-					
+			    
 			    set_userlist_status(notify, NULL, userlist);
+     			    while (l) {
+    			      GGaduContact *k = (GGaduContact *)l->data;
+
+    			      if (!g_strcasecmp(k->id, notify->id)) {
+    				ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+    			      }
+    			      l = l->next;
+    			    }
 			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 
 			    n++;
@@ -445,7 +453,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
     			while (l) {
 			  GGaduContact *k = (GGaduContact *)l->data;
 
-			  if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
+			  if (!g_strcasecmp(k->id, notify->id)) {
 			    ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 			  }
 			  l = l->next;

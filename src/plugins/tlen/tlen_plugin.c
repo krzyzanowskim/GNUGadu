@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.19 2003/04/21 15:15:08 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.20 2003/04/25 08:07:35 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -288,15 +288,6 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 		notify->id = g_strdup_printf("%s",e->presence->from);
 		notify->status = e->presence->status;
 
-		while (l) {
-		  GGaduContact *k = (GGaduContact *)l->data;
-		  
-		  if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
-		    ggadu_repo_change_value ("tlen", k->id, k, REPO_VALUE_DC);
-		  }
-		  l = l->next;
-		}
-		
 		print_debug("STATUS IN EVENT: %d\n",e->presence->status);
 		
 		{
@@ -305,6 +296,14 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			set_userlist_status(notify, desc_utf8, userlist);
 		}
 		
+		while (l) {
+		  GGaduContact *k = (GGaduContact *)l->data;
+		  
+		  if (!g_strcasecmp(k->id, notify->id)) {
+		    ggadu_repo_change_value ("tlen", k->id, k, REPO_VALUE_DC);
+		  }
+		  l = l->next;
+		}
 		
 		signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 		break;
