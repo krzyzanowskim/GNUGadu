@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.58 2004/10/28 09:44:19 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.59 2004/10/28 14:04:14 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -530,8 +530,8 @@ void start_plugin()
 	p->display_name = g_strdup("SMS");
 	p->protocol_handler_str = g_strdup("sms://");
 	p->img_filename = g_strdup("sms.png");
-
 	p->statuslist = button_send();
+	sms_handler->protocol = p;
 
 	register_signal(sms_handler, "update config");
 	register_signal(sms_handler, "change status");

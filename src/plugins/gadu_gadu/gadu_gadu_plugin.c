@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.200 2004/10/28 11:33:38 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.201 2004/10/28 14:04:11 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1671,6 +1671,7 @@ void start_plugin()
 	p->away_status = g_slist_append(p->away_status, (gint *) GG_STATUS_BUSY_DESCR);
 	p->online_status = g_slist_append(p->online_status, (gint *) GG_STATUS_AVAIL);
 	p->online_status = g_slist_append(p->online_status, (gint *) GG_STATUS_AVAIL_DESCR);
+	handler->protocol = p;
 	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 	/* try to register menu for this plugin in GUI */

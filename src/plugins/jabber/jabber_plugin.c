@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.113 2004/10/28 09:44:19 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.114 2004/10/28 14:04:13 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -52,6 +52,7 @@ static GQuark CHANGE_STATUS_SIG;
 static GQuark CHANGE_STATUS_DESCR_SIG;
 static GQuark SEND_MESSAGE_SIG;
 static GQuark ADD_USER_SIG;
+static GQuark GET_USER_SIG;
 static GQuark UPDATE_CONFIG_SIG;
 static GQuark SEARCH_SIG;
 static GQuark GET_CURRENT_STATUS_SIG;
@@ -826,8 +827,18 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		}
 
 		GGaduDialog_free(dialog);
-	}
-	else if(signal->name == USER_EDIT_VCARD_SIG)
+	} else if (signal->name == GET_USER_SIG)
+	{
+		/* dupa */
+		GGaduContact *k = NULL;
+		gchar *id = (gchar *)signal->data;
+		if (id && (k = ggadu_repo_find_value("jabber", ggadu_repo_key_from_string(id))))
+		{
+		    /* return copy of GGaduContact */
+		    signal->data_return = GGaduContact_copy(k);
+		}
+		
+	} else if(signal->name == USER_EDIT_VCARD_SIG)
 	{
 		GGaduDialog *dialog = signal->data;
 		
@@ -1390,7 +1401,8 @@ void start_plugin()
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_AWAY);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_DND);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_XA);
-
+	jabber_handler->protocol = p;
+	
 	ggadu_repo_add_value("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
@@ -1405,6 +1417,7 @@ void start_plugin()
 	SEARCH_SERVER_SIG = register_signal(jabber_handler, "search-server");
 	SEARCH_SIG = register_signal(jabber_handler, "search");
 	ADD_USER_SIG = register_signal(jabber_handler, "add user");
+	GET_USER_SIG = register_signal(jabber_handler, "get user");
 	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
 	REMOVE_ACCOUNT =  register_signal(jabber_handler, "remove account");
 	REGISTER_GET_FIELDS = register_signal(jabber_handler, "register get fields");

@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.h,v 1.7 2004/10/28 10:04:19 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.8 2004/10/28 14:04:10 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -28,7 +28,8 @@
 
 typedef enum
 {
-    IM_PRESENCE_ONLINE,
+    IM_PRESENCE_NOT_FOUND = 1,
+    IM_PRESENCE_AVAILABLE,
     IM_PRESENCE_AWAY,
     IM_PRESENCE_OFFLINE
 } DBusIMPresence;

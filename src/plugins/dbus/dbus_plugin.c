@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.11 2004/10/28 11:33:37 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.12 2004/10/28 14:04:10 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -49,37 +49,72 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 
 	if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &contactURI, DBUS_TYPE_INVALID))
 	{
-		GGaduProtocol *p = NULL;
-		gpointer key, index;
 		gchar **URItab = NULL;
-		
+		GSList *plugins = config->loaded_plugins;
+
 		/* get contactURIhandler from contactURI */
-		URItab = g_strsplit(contactURI,"://",2);
+		URItab = g_strsplit(contactURI, "://", 2);
 		if (URItab)
 		{
-		    contactURIhandler=URItab[0];
-		    contactURIdata=URItab[1];
+			contactURIhandler = g_strconcat(URItab[0], "://", NULL);
+			contactURIdata = URItab[1];
 		}
+		else
+			return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
-		print_debug("DBUS getPresence: search %s", contactURI);
+		print_debug("DBUS getPresence: search %s %s", contactURIhandler, contactURIdata);
 
-		if (ggadu_repo_exists("_protocols_"))
+		while (plugins)
 		{
-			index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
-			while (index)
+			GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
+			if (plugin && plugin->protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
+			    !ggadu_strcasecmp(plugin->protocol->protocol_handler_str, contactURIhandler))
 			{
-				p = ggadu_repo_find_value("_protocols_", key);
+				GGaduContact *k = NULL;
+				DBusMessage *return_message = dbus_message_new_method_return(message);
 
-				if (p && ggadu_strcasecmp(p->protocol_handler_str,contactURIhandler))
+				print_debug("DBUS getPresence: search %s in protocol: %s", contactURIdata, contactURIhandler);
+
+				if ((k = signal_emit("dbus", "get user", contactURIdata, plugin->name)))
 				{
-					print_debug("DBUS getPresence: search %s in protocol: %s", contactURIdata, contactURIhandler);
-					signal_emit(p->display_name, "gui get user", NULL, "main-gui");
-				}
+					guint return_status;
+					gchar *status_descr = NULL;
 
-				index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+					if (is_in_status(k->status, plugin->protocol->online_status))
+					{
+						return_status = IM_PRESENCE_AVAILABLE;
+					}
+					else if (is_in_status(k->status, plugin->protocol->offline_status))
+					{
+						return_status = IM_PRESENCE_OFFLINE;
+					}
+					else if (is_in_status(k->status, plugin->protocol->away_status))
+					{
+						return_status = IM_PRESENCE_OFFLINE;
+					}
+
+					print_debug("FOUND %d",return_status);
+					
+					/* not sure about this g_strdup() */
+					status_descr = k->status_descr ? g_strdup(k->status_descr) : "";
+					
+					dbus_message_append_args(return_message, DBUS_TYPE_UINT32, return_status, DBUS_TYPE_STRING, status_descr,DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
+					GGaduContact_free(k);
+				}
+				else
+				{
+					print_debug("NOT FOUND");
+					dbus_message_append_args(return_message, DBUS_TYPE_UINT32, IM_PRESENCE_NOT_FOUND, DBUS_TYPE_STRING, "",DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
+				}
+				/* I can free here because signal return copy of GGaduContact */
+				dbus_connection_send(connection, return_message, NULL);
+				dbus_message_unref(return_message);
 			}
+			plugins = plugins->next;
 		}
 		dbus_free(contactURI);
+		g_strfreev(URItab);
+		g_free(contactURIhandler);
 	}
 	dbus_error_free(&error);
 	return DBUS_HANDLER_RESULT_HANDLED;

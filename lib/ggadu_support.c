@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.12 2004/10/22 09:22:28 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.13 2004/10/28 14:03:55 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -195,12 +195,13 @@ GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id)
 
 	print_debug("\e[0;33mTHIS FUNCTION IS DEPRECATED AS IT USE USERLIST INSTEAD REPO\e[0m\n");
 	
-	while (list)
+	while (tmp)
 	{
 		k = (GGaduContact *) tmp->data;
 		if (!ggadu_strcasecmp(k->id, id))
 			return k;
-		list = list->next;
+			
+		tmp = tmp->next;
 	}
 
 	return NULL;

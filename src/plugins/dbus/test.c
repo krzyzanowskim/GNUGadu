@@ -49,7 +49,7 @@ static gboolean send_ping(DBusConnection *bus)
 					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
 					       DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE);
 					       
-	dbus_message_append_args(message, DBUS_TYPE_STRING, "gg://12345", DBUS_TYPE_INVALID);
+	dbus_message_append_args(message, DBUS_TYPE_STRING, "tlen://yachim@tlen.pl", DBUS_TYPE_INVALID);
 //	dbus_message_set_no_reply(message, TRUE);
 	/* Send the signal */
 	dbus_connection_send(bus, message, NULL);

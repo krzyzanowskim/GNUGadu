@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.72 2004/10/28 09:44:19 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.73 2004/10/28 14:04:15 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -1061,6 +1061,20 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		GGaduDialog_free(d);
 		return;
 	}
+
+	if (signal->name == g_quark_from_static_string("get user"))
+	{
+		GGaduContact *k = NULL;
+		gchar *id = (gchar *)signal->data;
+		GSList *ul = userlist;
+		
+		if (id && ul && (k = ggadu_find_contact_in_userlist(userlist,id)))
+		{
+			signal->data_return = GGaduContact_copy(k);
+		}		
+		
+	}
+	
 
 	if (signal->name == g_quark_from_static_string("add user"))
 	{
