@@ -1,6 +1,7 @@
 15.01.2004
 - code cleanup (gadu-gadu/core/krzak)
 - write_line_to_file() try to create directory before creating file (core/krzak)
+- fixed segfault if remove all entries from list (gadu-gadu/krzak)
 
 14.01.2004 - Released 2.0pre6
 
