@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.240 2005/02/16 13:24:16 mkobierzycki Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.241 2005/02/19 23:06:12 mkobierzycki Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -231,6 +231,8 @@ static gpointer user_preferences_action(gpointer user_data)
 			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(handler, "proxy"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
+	g_list_free(statuslist_names);
+	
 	return NULL;
 }
 
