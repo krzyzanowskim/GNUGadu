@@ -213,8 +213,11 @@ int send_IDEA(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
 	recv_buff[k] = recv_buff[k+j];
     }
     recv_buff[k] = 0;
-    
-    idea_logo = fopen(IDEA_GFX, "w");
+
+    /* oops, IDEA_GFX cannot be written. */
+    if (!(idea_logo = fopen(IDEA_GFX, "w")))
+	return FALSE;
+
     fwrite(recv_buff,1,i-j,idea_logo);
     fclose(idea_logo);
 

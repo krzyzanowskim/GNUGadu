@@ -551,23 +551,19 @@ void save_smslist()
     nick = g_malloc0(100);
     mobile = g_malloc0(20);
     
-    if (fp) {
-	while (smu){
-	    GGaduContact *k = (GGaduContact *)smu->data;
-	    char *t;
+    while (smu) {
+	GGaduContact *k = (GGaduContact *)smu->data;
+	char *t;
     
-	    /* Podmiana srednikow na przecinki */
-	    for ( t=k->nick; *t; t++) if (*t == ';') *t = ',';
+	/* Podmiana srednikow na przecinki */
+	for ( t=k->nick; *t; t++) if (*t == ';') *t = ',';
 	    
-	    fprintf(fp,"%s;%s\n",k->nick,k->mobile);
-	    smu=smu->next;
-	}
+	fprintf(fp,"%s;%s\n",k->nick,k->mobile);
+	smu=smu->next;
     }
     g_free(nick);
     g_free(mobile);
     fclose(fp);
-
-
 }
 
 
