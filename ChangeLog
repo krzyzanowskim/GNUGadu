@@ -1,5 +1,6 @@
 29.08.2004
 - workaround for loudmouth 0.17 keepalive bug (krzak/jabber)
+- fixed bug with userlist with polish characters (krzak/gadu-gadu)
 
 28.08.2004
 - Fixed registration procedure; Now compliant with JEP-0077; Closes bugreport #3 (mkobierzycki/jabber)

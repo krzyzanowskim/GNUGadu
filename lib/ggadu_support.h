@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.6 2004/08/02 11:13:59 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.7 2004/08/29 11:13:00 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -67,6 +67,9 @@
 #define from_utf8(to_enc,text) ggadu_convert("UTF-8",to_enc,text);
 #define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1,-1) , g_utf8_casefold(s2,-1))
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
+
+#define ggadu_iso_in_utf_str "łęóśążźćńĘŁÓĄŚŁŻŹĆŃ"
+
 
 gchar		*ggadu_get_image_path(const gchar * directory, const gchar * filename);
 gboolean	is_in_status(gint status, GSList * list);

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.27 2004/08/22 14:39:41 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.28 2004/08/29 11:13:03 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -35,7 +35,6 @@
 	    g_free(path); \
 	}
 	
-
 struct ggadu_gg_register
 {
 	gchar *email;

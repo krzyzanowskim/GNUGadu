@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.187 2004/08/22 19:35:11 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.188 2004/08/29 11:13:03 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1065,10 +1065,10 @@ gchar *userlist_dump()
 		GGaduContact *k_tmp = g_new0(GGaduContact, 1);
 		GGaduContact *k = (GGaduContact *) us->data;
 		
-		k_tmp->first_name = g_strescape(k->first_name ? k->first_name : "", "");
-		k_tmp->last_name = g_strescape(k->last_name ? k->last_name : "", "");
-		k_tmp->nick = g_strescape(k->nick ? k->nick : "","");
-		k_tmp->group = g_strescape(k->group ? k->group : "","");
+		k_tmp->first_name = g_strescape(k->first_name ? k->first_name : "", ggadu_iso_in_utf_str);
+		k_tmp->last_name = g_strescape(k->last_name ? k->last_name : "", ggadu_iso_in_utf_str);
+		k_tmp->nick = g_strescape(k->nick ? k->nick : "",ggadu_iso_in_utf_str);
+		k_tmp->group = g_strescape(k->group ? k->group : "",ggadu_iso_in_utf_str);
 		
 		line = g_strdup_printf("%s;%s;%s;%s;%s;%s;%s;\r\n", k_tmp->first_name, k_tmp->last_name, k_tmp->nick, k_tmp->nick,
 				       k->mobile, k_tmp->group, k->id);
