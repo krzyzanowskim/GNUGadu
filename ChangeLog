@@ -1,6 +1,7 @@
 22.01.2004
 - fixed strange behaviour when tabbed chat window is closed and another 
   one session is waiting in dock (GUI/krzak)
+- fixes with reconnect, and save last connected server IP (gadu-gadu/krzak)
 
 21.01.2004
 - clean'ups an memory leak fixes in ggadu_dialog_* (core/THrull)

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.130 2004/01/21 17:43:40 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.131 2004/01/22 22:26:50 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -167,6 +167,7 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 	{
 		gg_logoff(session);
 		gg_free_session(session);
+		session = NULL;
 		connected = FALSE;
 		return FALSE;
 	}
@@ -330,6 +331,23 @@ void ggadu_gg_save_history(gchar * to, gchar * txt)
 	}
 }
 
+void ggadu_gadu_gadu_reconnect()
+{
+	if (++connect_count < 3)
+	{
+		gint _status = session->status;
+		ggadu_gadu_gadu_disconnect();
+		gadu_gadu_login(NULL, _status);
+	}
+	else
+	{
+		gchar *txt = g_strdup(_("Disconnected"));
+		ggadu_gadu_gadu_disconnect_msg(txt);
+		connect_count = 0;
+		g_free(txt);
+	}
+}
+
 gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 {
 	struct gg_event *e = NULL;
@@ -346,20 +364,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	    ((condition & G_IO_HUP) &&
 	     ((session->state != GG_STATE_CONNECTING_GG) && (session->check != GG_CHECK_WRITE))))
 	{
-		if (++connect_count < 3)
-		{
-			gint _status = session->status;
-			ggadu_gadu_gadu_disconnect();
-			gadu_gadu_login(NULL, _status);
-		}
-		else
-		{
-			gchar *txt = g_strdup(_("Disconnected"));
-			ggadu_gadu_gadu_disconnect_msg(txt);
-			connect_count = 0;
-			g_free(txt);
-		}
-
+		ggadu_gadu_gadu_reconnect();
 		return FALSE;
 	}
 
@@ -399,20 +404,33 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			signal_emit(GGadu_PLUGIN_NAME, "sound play file",
 				    ggadu_config_var_get(handler, "sound_app_file"), "sound*");
 
+		/* *INDENT-OFF* */
 		signal_emit(GGadu_PLUGIN_NAME, "gui status changed",
-			    (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->
-										      status ^ GG_STATUS_FRIENDS_MASK) :
-					session->status), "main-gui");
+			    (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status), "main-gui");
+		/* *INDENT-ON* */
+
+		ggadu_config_var_set(handler, "server", inet_ntoa(*((struct in_addr *) &session->server_addr)));
+		ggadu_config_save(handler);
 
 		break;
 	case GG_EVENT_CONN_FAILED:
-		ggadu_gadu_gadu_disconnect_msg(_("Connection failed"));
+	{
+		ggadu_config_var_set(handler, "server", NULL);
+		ggadu_gadu_gadu_reconnect();
+/*		gint _status = session->status;
+		ggadu_gadu_gadu_disconnect_msg(_("Connection failed, reconnecting"));
+		ggadu_config_var_set(handler, "server", NULL);
+		gadu_gadu_login(NULL, _status);
+*/
+	}
 		break;
 	case GG_EVENT_DISCONNECT:
 	{
-		gint _status = session->status;
-		ggadu_gadu_gadu_disconnect_msg(_("Disconnected"));
+		ggadu_gadu_gadu_reconnect();
+/*		gint _status = session->status;
+		ggadu_gadu_gadu_disconnect_msg(_("Disconnected, reconnecting"));
 		gadu_gadu_login(NULL, _status);
+*/
 	}
 		break;
 	case GG_EVENT_USERLIST:
@@ -589,7 +607,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				notify->ip = g_strdup_printf("%s:%d", strIP, n->remote_port);
 
 			if (e->type == GG_EVENT_NOTIFY_DESCR)
-				desc_utf8 = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify_descr.descr));
+				desc_utf8 =
+					ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify_descr.descr));
 
 			set_userlist_status(notify, desc_utf8, userlist);
 
@@ -1301,7 +1320,7 @@ gpointer send_file_action(gpointer user_data)
 	gint port;
 	gchar **addr_arr = NULL;
 	gchar *tmp;
-	
+
 	if (!connected || !k->ip || g_str_has_prefix(k->ip, "0.0.0.0"))
 	{
 		signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("You cannot send file to this person")),
@@ -2070,9 +2089,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 					while (tmp)
 					{
-						gchar *line =
-							g_strdup_printf(_("(%s) Me :: %s\n"), get_timestamp(0),
-									msg->message);
+						gchar *line = g_strdup_printf(_("(%s) Me :: %s\n"), get_timestamp(0),
+									      msg->message);
 						ggadu_gg_save_history((gchar *) tmp->data, line);
 						g_free(line);
 						tmp = tmp->next;
