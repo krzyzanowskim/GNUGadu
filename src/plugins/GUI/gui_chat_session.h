@@ -63,5 +63,5 @@ guint gui_chat_session_get_session_type (GUIChatSession * gsc);
 
 GtkWidget *gui_chat_session_get_widget (GUIChatSession * gcs);
 
-void gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
+/* void gui_chat_session_create_gtk_widget (GUIChatSession * gcs) */
 #endif

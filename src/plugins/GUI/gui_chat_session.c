@@ -68,7 +68,7 @@ void gui_chat_session_add_message (GUIChatSession * gcs, gchar * text, GTimeVal 
     gcs->history_list = g_list_append (gcs->history_list, history_entry);
 }
 
-void gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
+static void gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
 {
     GtkWidget *widget = NULL;
     GtkWidget *history;
