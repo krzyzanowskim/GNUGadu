@@ -1,4 +1,5 @@
 04.10.2004
+- close #97, won't fix until we got decent parser (emoticons.def/shasta)
 - gg2-devel.SlackBuild arguments are passed to autogen.sh now. (shasta)
 - don't use --with-all-plugins in gg2-devel.SlackBuild, it's FUBAR.
   instead, you can do: sh gg2-devel.SlackBuild --with-all-plugins,
