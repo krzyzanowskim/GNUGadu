@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.59 2004/08/19 23:05:45 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.60 2004/08/19 23:28:30 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -665,7 +665,6 @@ static GtkWidget *create_chat_tab()
 
 	label = gtk_label_new(_("language"));
 	combo_spell = gtk_combo_box_new_text();
-//	combo_spell = gtk_combo_new();
 	label3_align = gtk_alignment_new(0.9, 0.5, 0, 0);
 	gtk_container_add(GTK_CONTAINER(label3_align), label);
 
@@ -989,6 +988,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	{
 	   	GtkWidget *entry2 = g_object_get_data(G_OBJECT(chat_vbox), "combospell");
 		gchar *cur_dict = ggadu_config_var_get(gui_handler, "dictionary");
+		GSList *dict_list = NULL;
 
   		AspellConfig * config;
   		AspellDictInfoList * dlist;
@@ -998,11 +998,16 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		g_return_if_fail(entry2 != NULL);
 
 
-		if ((cur_dict != NULL) && (cur_dict[0] != '\0')) 
+		if (cur_dict && (cur_dict[0] != '\0')) 
+		{
 			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),cur_dict);
+			dict_list = g_slist_append(dict_list,cur_dict);
+		}
 		else
+		{
 			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),"default");
-
+			dict_list = g_slist_append(dict_list,"default");
+		}
 
 		config = new_aspell_config();
 		/* the returned pointer should _not_ need to be deleted */
@@ -1015,12 +1020,16 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		while ( (dict_entry = aspell_dict_info_enumeration_next(dels)) != 0)
 		{
 			gtk_combo_box_append_text (GTK_COMBO_BOX(entry2),dict_entry->name);
+			dict_list = g_slist_append(dict_list,(gpointer)dict_entry->name);
 		}
 		
 
 		delete_aspell_dict_info_enumeration(dels);
 		
 		gtk_combo_box_set_active(GTK_COMBO_BOX(entry2),0);
+		
+		g_object_set_data(G_OBJECT(entry2), "dictionary_slist", dict_list);
+
 
 		if (gui_check_for_sessions(protocols))
 		{
@@ -1215,9 +1224,14 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		      		     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "combospell");
+		GSList *dict_slist= g_object_get_data(G_OBJECT(entry), "dictionary_slist");
+		
 		g_return_if_fail(entry != NULL);
+
 		ggadu_config_var_set(gui_handler, "dictionary",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(entry)->entry))));
+				     (gpointer) g_strdup(g_slist_nth_data(dict_slist,gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) ));
+
+		g_slist_free(dict_slist);				     
 #endif
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowshow");
