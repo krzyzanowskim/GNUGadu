@@ -21,6 +21,18 @@ sub on_msg {
 # Modify any of the above variables to change them.
 # Below is an example of how to change message that is to be displayed
   $_[4] =~ s/money/*MONEY*/g;
+
+# GGadu::find_user_id searches for id (here $_[3]) in a given protocol
+# (here $_[1]). If no id is found, then @list is undefined.
+# If there's id found, then @list is defined and @list is filled with
+# every item from GGaduContact (in order from unified-types.h).
+  $first_chars = substr ($_[4], 0, 40);
+  $nick = $_[3];
+  @list = GGadu::find_user_id ($_[3], $_[1]);
+  if (defined @list) {
+    $nick = $list[3];
+  }
+  GGadu::signal_emit ("xosd show message", $nick.": ".$first_chars."...", "xosd", 0);
 }
 
 sub userlist_watch {
