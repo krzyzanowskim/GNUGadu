@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.133 2004/12/26 13:23:50 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.134 2004/12/26 23:20:20 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -875,13 +875,13 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	};
 
 
-	vbox = gtk_vbox_new(FALSE, 0);	/* up - vbox_in_out, down -
+	vbox = gtk_vbox_new(FALSE, 4);	/* up - vbox_in_out, down -
 					 * buttons */
 	hbox_buttons = gtk_hbox_new(FALSE, 0);	/* buttons hbox */
 	/* hbox_buttons = gtk_hbutton_box_new(); */
 
 
-	vbox_in_out = gtk_vbox_new(FALSE, 0);	/* up - input, down -
+	vbox_in_out = gtk_vbox_new(FALSE, 4);	/* up - input, down -
 						 * history */
 	session->chat = vbox_in_out;
 	g_object_set_data(G_OBJECT(session->chat), "gui_session", session);
@@ -926,16 +926,13 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 
 				chat_notebook = gtk_notebook_new();
 				g_object_set_data(G_OBJECT(chat_window), "chat_notebook", chat_notebook);
-
 				gtk_notebook_set_scrollable(GTK_NOTEBOOK(chat_notebook), TRUE);
 
 				gtk_box_pack_start(GTK_BOX(vbox), chat_notebook, TRUE, TRUE, 0);
 				gtk_box_pack_end(GTK_BOX(vbox), hbox_buttons, FALSE, FALSE, 0);
-
 				gtk_container_add(GTK_CONTAINER(chat_window), vbox);
 
 				g_signal_connect(G_OBJECT(chat_notebook), "switch-page", G_CALLBACK(gui_chat_notebook_switch), NULL);
-
 				gtk_notebook_popup_enable(GTK_NOTEBOOK(chat_notebook));
 
 			}
