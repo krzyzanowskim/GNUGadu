@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.10 2003/11/25 23:12:05 thrulliq Exp $ */
+/* $Id: signals.c,v 1.11 2003/12/13 14:32:04 thrulliq Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -451,7 +451,5 @@ gboolean signal_from_thread_enabled()
 
 void signal_from_thread_disabled()
 {
-    g_mutex_lock(thread_signal_mutex);
-    check_thread_signals = FALSE;
-    g_mutex_unlock(thread_signal_mutex);
+    print_debug("TODO?");
 }
