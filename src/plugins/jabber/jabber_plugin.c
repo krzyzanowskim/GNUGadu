@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.59 2004/02/01 09:39:31 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.60 2004/02/02 23:22:46 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -33,6 +33,7 @@
 #include "jabber_plugin.h"
 #include "jabber_login.h"
 #include "jabber_protocol.h"
+#include "jabber_cb.h"
 
 GGaduPlugin *jabber_handler;
 LmConnection *connection;
@@ -53,6 +54,7 @@ static GQuark UPDATE_CONFIG_SIG;
 static GQuark SEARCH_SIG;
 static GQuark GET_CURRENT_STATUS_SIG;
 static GQuark GET_USER_MENU_SIG;
+static GQuark REGISTER_ACCOUNT;
 
 jabber_data_type jabber_data;
 
@@ -104,11 +106,9 @@ gpointer user_view_history_action(gpointer user_data)
 		if (line != NULL)
 			g_string_append(hist_buf, line);
 	}
-
 	g_io_channel_shutdown(ch, TRUE, NULL);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show window with text", hist_buf->str, "main-gui");
-
 	g_string_free(hist_buf, TRUE);
 
 	return NULL;
@@ -245,7 +245,19 @@ gpointer user_remove_auth_from(gpointer user_data)
 	return NULL;
 }
 
+gpointer jabber_register_account_dialog(gpointer user_data)
+{
+	GGaduDialog *d = ggadu_dialog_new();
+	ggadu_dialog_set_title(d, _("Register Jabber account"));
+	ggadu_dialog_callback_signal(d, "register account");
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_SERVER, _("Server : "), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_USERNAME, _("Username : "), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_PASSWORD, _("Password : "), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_UPDATE_CONFIG, _("Update settings on success?"), VAR_BOOL, FALSE, VAR_FLAG_NONE);
+	signal_emit("jabber", "gui show dialog", d, "main-gui");
 
+	return NULL;
+}
 
 GGaduMenu *build_userlist_menu(void)
 {
@@ -315,6 +327,40 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 		}
 		ggadu_config_save(jabber_handler);
 
+		GGaduDialog_free(d);
+	}
+	else if (signal->name == REGISTER_ACCOUNT)
+	{
+		GGaduDialog *d = signal->data;
+		GSList *tmplist = d->optlist;
+
+		if (d->response == GGADU_OK)
+		{
+			GGaduJabberRegister *gjr = g_new0(GGaduJabberRegister, 1);
+
+			while (tmplist)
+			{
+				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
+				switch (kv->key)
+				{
+				case GGADU_JABBER_SERVER:
+					gjr->server = kv->value;
+					break;
+				case GGADU_JABBER_PASSWORD:
+					gjr->password = kv->value;
+					break;
+				case GGADU_JABBER_USERNAME:
+					gjr->username = kv->value;
+					break;
+				case GGADU_JABBER_UPDATE_CONFIG:
+					gjr->update_config = (gboolean)kv->value;
+					break;
+				}
+				tmplist = tmplist->next;
+			}
+			LmConnection *con = lm_connection_new(gjr->server);
+			lm_connection_open(con, (LmResultFunction) jabber_register_account_cb, gjr, NULL, NULL);
+		}
 		GGaduDialog_free(d);
 	}
 	else if (signal->name == CHANGE_STATUS_DESCR_SIG)
@@ -703,7 +749,8 @@ GGaduMenu *build_jabber_menu()
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Add Contact"), user_add_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Preferences"), user_preferences_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Search for friends"), user_search_action, NULL));
-
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Register account"), jabber_register_account_dialog, NULL));
 	return root;
 }
 
@@ -733,6 +780,7 @@ void start_plugin()
 	SEARCH_SERVER_SIG = register_signal(jabber_handler, "search-server");
 	SEARCH_SIG = register_signal(jabber_handler, "search");
 	ADD_USER_SIG = register_signal(jabber_handler, "add user");
+	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
 
 	jabbermenu = build_jabber_menu();
 
@@ -758,7 +806,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	register_signal_receiver(jabber_handler, (signal_func_ptr) jabber_signal_recv);
 
 	mkdir(config->configdir, 0700);
-	
+
 	path = g_build_filename(config->configdir, "jabber", NULL);
 	ggadu_config_set_filename(jabber_handler, path);
 	g_free(path);

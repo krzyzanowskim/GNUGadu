@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.32 2004/01/28 23:41:14 shaster Exp $ */
+/* $Id: jabber_cb.c,v 1.33 2004/02/02 23:22:46 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -51,6 +51,56 @@ void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, 
 	message_handler = NULL;
 }
 
+static LmHandlerResult register_register_handler(LmMessageHandler * handler, LmConnection * connection, LmMessage * msg,
+						GGaduJabberRegister * data)
+{
+	LmMessageSubType sub_type;
+	LmMessageNode *node;
+
+	sub_type = lm_message_get_sub_type(msg);
+	switch (sub_type)
+	{
+	case LM_MESSAGE_SUB_TYPE_RESULT:
+		signal_emit("jabber", "gui show message", g_strdup_printf(_("Account:\n%s@%s\ncreated"),data->username,data->server), "main-gui");
+		if (data->update_config)
+		{
+			ggadu_config_var_set(jabber_handler,"jid",g_strdup_printf("%s@%s",data->username,data->server));
+			ggadu_config_var_set(jabber_handler,"password",g_strdup(data->password));
+			ggadu_config_save(jabber_handler);
+		}
+		break;
+	case LM_MESSAGE_SUB_TYPE_ERROR:
+	default:
+		node = lm_message_node_find_child(msg->node, "error");
+		signal_emit("jabber", "gui show warning", g_strdup(lm_message_node_get_value(node)), "main-gui");
+		break;
+	}
+	g_free(data->username);
+	g_free(data->password);
+	g_free(data->server);
+	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+}
+
+void jabber_register_account_cb(LmConnection * connection, gboolean result, GGaduJabberRegister * gjr)
+{
+	LmMessage *msg = NULL;
+	LmMessageNode *node = NULL;
+	LmMessageHandler *handler = NULL;
+	gchar *jid = g_strdup_printf("%s@%s", gjr->username, gjr->server);
+
+	msg = lm_message_new_with_sub_type(jid, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_SET);
+	node = lm_message_node_add_child(msg->node, "query", NULL);
+
+	lm_message_node_set_attribute(node, "xmlns", "jabber:iq:register");
+	lm_message_node_add_child(node, "username", gjr->username);
+	lm_message_node_add_child(node, "password", gjr->password);
+
+	handler = lm_message_handler_new((LmHandleMessageFunction) register_register_handler, gjr, NULL);
+	lm_connection_send_with_reply(connection, msg, handler, NULL);
+
+	lm_message_unref(msg);
+	g_free(jid);
+}
 
 void connection_auth_cb(LmConnection * connection, gboolean success, gpointer status)
 {
@@ -214,7 +264,8 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 				break;
 			}
 
-			if ((k->status != oldstatus) || (olddescr != k->status_descr)) {
+			if ((k->status != oldstatus) || (olddescr != k->status_descr))
+			{
 				//k->status_descr = g_strstrip(k->status_descr);
 				ggadu_repo_change_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
 			}

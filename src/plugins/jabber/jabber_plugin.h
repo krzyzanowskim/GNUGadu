@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.22 2004/01/29 22:15:07 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.23 2004/02/02 23:22:46 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -42,7 +42,9 @@ enum
     GGADU_JABBER_AUTOCONNECT,
     GGADU_JABBER_USESSL,
     GGADU_JABBER_RESOURCE,
-    GGADU_JABBER_SERVER
+    GGADU_JABBER_SERVER,
+    GGADU_JABBER_USERNAME,
+	GGADU_JABBER_UPDATE_CONFIG
 };
 
 enum states
@@ -73,6 +75,14 @@ typedef struct
     void (*func) (LmConnection *, LmMessage *, gpointer);
 } waiting_action;
 
+typedef struct
+{
+	gchar *server;
+	gchar *username;
+	gchar *password;
+	gboolean update_config;
+} GGaduJabberRegister;
+
 extern GGaduPlugin *jabber_handler;
 extern LmConnection *connection;
 //extern LmSSL	*lm_ssl;
@@ -93,5 +103,5 @@ typedef struct
 
 
 void ggadu_jabber_save_history(gchar * to, gchar * txt);
-
+gpointer jabber_register_account_dialog(gpointer user_data);
 #endif

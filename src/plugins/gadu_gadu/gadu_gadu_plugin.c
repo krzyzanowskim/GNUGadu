@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.140 2004/01/28 23:40:55 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.141 2004/02/02 23:22:45 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -446,20 +446,11 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	{
 		ggadu_config_var_set(handler, "server", NULL);
 		ggadu_gadu_gadu_reconnect();
-/*		gint _status = session->status;
-		ggadu_gadu_gadu_disconnect_msg(_("Connection failed, reconnecting"));
-		ggadu_config_var_set(handler, "server", NULL);
-		gadu_gadu_login(NULL, _status);
-*/
 	}
 		break;
 	case GG_EVENT_DISCONNECT:
 	{
 		ggadu_gadu_gadu_reconnect();
-/*		gint _status = session->status;
-		ggadu_gadu_gadu_disconnect_msg(_("Disconnected, reconnecting"));
-		gadu_gadu_login(NULL, _status);
-*/
 	}
 		break;
 	case GG_EVENT_USERLIST:
@@ -483,11 +474,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		break;
 	case GG_EVENT_MSG:
 		print_debug("GG_EVENT_MSG from: %d type: %d", e->event.msg.sender, e->event.msg.msgclass);
-
-/*		if (e->event.msg.msgclass == GG_CLASS_CHAT) {
-			print_debug("body: %s\n", e->event.msg.message);
-		} else */
-
 		if ((e->event.msg.msgclass == GG_CLASS_CTCP))	/* dcc part */
 		{
 			struct gg_dcc *d = NULL;
