@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.1 2003/03/20 10:37:08 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.2 2003/03/23 01:17:21 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -670,7 +670,7 @@ void import_userlist(gchar *list)
 	gchar **l, **tmpl;
 	GGaduContact *k;
 	
-	l = g_strsplit(*tmp++, ";", 7);
+	l = g_strsplit(*tmp++, ";", 8);
 	tmpl = l;
 		
 	first_name = *l;
@@ -1567,7 +1567,7 @@ void load_contacts(gchar *encoding)
 
 		to_utf8(encoding,line,buf);
 		
-		l = g_strsplit(buf, ";", 7);
+		l = g_strsplit(buf, ";", 8);
 		tmp = l;
 		
 		first_name = *l;
