@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.18 2003/06/23 09:18:41 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.19 2003/09/16 22:50:02 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -143,7 +143,7 @@ gint sort_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer use
     
     // je¶li status jest taki sam posortuj alfabetycznie wg. tego co wy¶wietla
     if ((k1->status == k2->status))
-	return g_strcasecmp(d1, d2);
+	return ggadu_strcasecmp(d1, d2);
     
     if (!gp)
         gtk_tree_model_get(GTK_TREE_MODEL(model), a, 3, &gp, -1);
@@ -453,7 +453,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 		if (chat_type == CHAT_TYPE_CLASSIC) {
 		    gchar *tmp = NULL;
 
-		    if (!g_strcasecmp(k->nick,k->id))
+		    if (!ggadu_strcasecmp(k->nick,k->id))
 			tmp = g_strdup_printf(_("Talking to %s %s"),k->id, (sp ? st : ""));
 		    else
 			tmp = g_strdup_printf(_("Talking to %s (%s) %s"),k->nick,k->id, (sp ? st : ""));
@@ -466,7 +466,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 		    GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(window),"chat_notebook");
 		    guint     curr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
 		    guint     nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook), session->chat);
-		    gchar     *tmp = g_strdup_printf("%s %s", g_strcasecmp(k->nick, k->id) ? k->nick : k->id, (sp ? st : ""));
+		    gchar     *tmp = g_strdup_printf("%s %s", ggadu_strcasecmp(k->nick, k->id) ? k->nick : k->id, (sp ? st : ""));
 
 		    g_object_set_data_full(G_OBJECT(session->chat),"tab_window_title_char",g_strdup(tmp),g_free);
 
