@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.16 2004/10/20 10:38:42 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.17 2004/10/27 09:19:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -27,7 +27,7 @@
 #include "ggadu_types.h"
 
 /* default size of a window */
-#define DEFAULT_WIDTH 160
+#define DEFAULT_WIDTH 210
 #define DEFAULT_HEIGHT 488
 
 /* default size of a chat window */
