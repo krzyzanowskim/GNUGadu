@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.32 2003/06/21 14:38:35 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.33 2003/06/22 17:36:00 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -238,21 +238,6 @@ void handle_unregister_menu (GGaduSignal * signal)
 	  gtk_item_factory_delete_item (item_factory, path);
 	  g_free (path);
       }
-}
-
-void handle_register_userlist_menu (GGaduSignal * signal)
-{
-    gui_protocol *gp = gui_find_protocol (signal->source_plugin_name, protocols);
-
-    if (gp->userlist_menu == NULL)
-	gp->userlist_menu = signal->data;
-}
-
-void handle_unregister_userlist_menu (GGaduSignal * signal)
-{
-    gui_protocol *gp = gui_find_protocol (signal->source_plugin_name, protocols);
-    ggadu_menu_free(gp->userlist_menu);
-    gp->userlist_menu = NULL;
 }
 
 void handle_send_userlist (GGaduSignal * signal)

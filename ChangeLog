@@ -1,3 +1,6 @@
+22.06.2003
+- uff... GGaduPluginExtension stuff, completly new method using userlist menus, but now it's extensible (core/gadu-gadu/sms/GUI/krzak)
+
 21.06.2003
 - fixes in dcc options : [enable/disable] dcc (gadu-gadu/krzak)
 - add support for description status (jabber/zapal)

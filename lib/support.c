@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.5 2003/06/19 15:10:56 krzyzak Exp $ */
+/* $Id: support.c,v 1.6 2003/06/22 17:36:00 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -417,4 +417,25 @@ gboolean write_line_to_file(gchar *path,gchar *line,gchar *enc)
 	g_io_channel_shutdown(ch,TRUE,NULL);
 	return TRUE;
 }
+
+gpointer ggadu_find_extension(GGaduPlugin *handler,gint type)
+{
+	GSList *extensions;
+	
+	if (!handler) return NULL;
+	
+	extensions = handler->extensions;
+	
+	while (extensions) {
+		GGaduPluginExtension *ext = extensions->data;
+		
+		if (ext->type == type)
+			return ext;
+		
+		extensions = extensions->next;
+	}
+	
+	return NULL;
+}
+
 

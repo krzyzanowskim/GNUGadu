@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.h,v 1.11 2003/06/06 13:42:10 zapal Exp $ */
+/* $Id: gui_handlers.h,v 1.12 2003/06/22 17:36:00 krzyzak Exp $ */
 
 #include "signals.h"
 #include "gui_main.h"
@@ -17,8 +17,6 @@ void handle_register_protocol(GGaduSignal *signal);
 void handle_unregister_protocol(GGaduSignal *signal);
 void handle_register_menu(GGaduSignal *signal);
 void handle_unregister_menu(GGaduSignal *signal);
-void handle_register_userlist_menu(GGaduSignal *signal);
-void handle_unregister_userlist_menu(GGaduSignal *signal);
 void handle_add_user_to_list(GGaduSignal *signal);
 void handle_send_userlist(GGaduSignal *signal);
 void handle_auth_request(GGaduSignal *signal);

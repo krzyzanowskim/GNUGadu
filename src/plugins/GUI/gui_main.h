@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.6 2003/05/26 12:27:06 zapal Exp $ */
+/* $Id: gui_main.h,v 1.7 2003/06/22 17:36:00 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -23,7 +23,7 @@ typedef struct {
     gchar 	  *plugin_name;
     GSList 	  *userlist;
     GSList	  *chat_sessions;
-    GGaduMenu 	  *userlist_menu;
+/*    GGaduMenu 	  *userlist_menu; */
     GtkListStore  *users_liststore;
     GtkWidget     *add_info_label;
     GtkWidget	  *statuslist_eventbox;

@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.2 2003/06/15 19:06:39 krzyzak Exp $ */
+/* $Id: support.h,v 1.3 2003/06/22 17:36:00 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -9,6 +9,7 @@
 
 #include <time.h>
 #include "unified-types.h"
+#include "gg-types.h"
 /*
  * Standard gettext macros.
  */
@@ -115,5 +116,7 @@ void array_free(char **array);
 const char *itoa(long int i);
 
 gboolean write_line_to_file(gchar *path,gchar *line,gchar *enc);
+
+gpointer ggadu_find_extension(GGaduPlugin *handler,gint type);
 
 #endif

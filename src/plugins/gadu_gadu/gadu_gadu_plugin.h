@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.11 2003/06/21 14:38:35 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.12 2003/06/22 17:36:00 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -19,6 +19,7 @@ static GQuark EXIT_SIG;
 static GQuark ADD_USER_SEARCH_SIG;
 static GQuark GET_CURRENT_STATUS_SIG;
 static GQuark SEND_FILE_SIG;
+static GQuark GET_USER_MENU_SIG;
 
 enum
 {

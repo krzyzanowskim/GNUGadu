@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.76 2003/06/21 14:38:35 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.77 2003/06/22 17:36:00 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1430,30 +1430,6 @@ gpointer send_file_action (gpointer user_data)
 }
 
 
-void register_userlist_menu (gboolean dcc)
-{
-    GGaduMenu *umenu = ggadu_menu_create ();
-    GGaduMenu *listmenu = NULL;
-
-    ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Chat"), user_chat_action, NULL));
-    ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("View History"), user_view_history_action, NULL));
-
-    if (dcc)
-	ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Send File"), send_file_action, NULL));
-
-    listmenu = ggadu_menu_new_item (_("Contact"), NULL, NULL);
-    ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Add"), user_add_user_action, NULL));
-    ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Remove"), user_remove_user_action, NULL));
-    ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Info"), user_change_user_action, NULL));
-
-    ggadu_menu_add_submenu (umenu, listmenu);
-
-    ggadu_menu_print (umenu, NULL);
-
-    signal_emit (GGadu_PLUGIN_NAME, "gui register userlist menu", umenu, "main-gui");
-}
-
-
 GGaduMenu *build_plugin_menu ()
 {
     GGaduMenu *root = ggadu_menu_create ();
@@ -1655,14 +1631,13 @@ void start_plugin ()
     ADD_USER_SEARCH_SIG = register_signal (handler, "add user search");
     GET_CURRENT_STATUS_SIG = register_signal (handler, "get current status");
     SEND_FILE_SIG = register_signal (handler, "send file");
+    GET_USER_MENU_SIG = register_signal (handler, "get user menu");
 
     load_contacts ("ISO-8859-2");
 
     signal_emit (GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
 
     test ();
-
-    register_userlist_menu ((gboolean) config_var_get (handler, "dcc"));
 
     if (config_var_get (handler, "autoconnect") && !connected)
 	gadu_gadu_login ((config_var_check (handler, "reason")) ? config_var_get (handler, "reason") : _("no reason"),
@@ -1681,6 +1656,34 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
       {
 	  /* exit_signal_handler(); */
 	  return;
+      }
+      
+    if (signal->name == GET_USER_MENU_SIG)
+      {
+	  GGaduMenu *umenu = ggadu_menu_create ();
+	  GGaduMenu *listmenu = NULL;
+	  GGaduPluginExtension *ext = NULL;
+
+	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Chat"), user_chat_action, NULL));
+	  
+	  if ((ext = ggadu_find_extension(handler,GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE)))
+	  	ggadu_menu_add_submenu (umenu, ggadu_menu_new_item ((gpointer)ext->txt, ext->callback, NULL));
+	  
+	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("View History"), user_view_history_action, NULL));
+
+	  if ((gboolean) config_var_get (handler, "dcc"))
+	      ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Send File"), send_file_action, NULL));
+
+	  listmenu = ggadu_menu_new_item (_("Contact"), NULL, NULL);
+	  ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Add"), user_add_user_action, NULL));
+	  ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Remove"), user_remove_user_action, NULL));
+	  ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Info"), user_change_user_action, NULL));
+
+	  ggadu_menu_add_submenu (umenu, listmenu);
+
+	  ggadu_menu_print (umenu, NULL);
+
+	  signal->data_return = umenu;
       }
 
     if (signal->name == SEND_FILE_SIG)
@@ -2058,12 +2061,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			case GGADU_GADU_GADU_CONFIG_DCC:
 			    print_debug ("changing var setting dcc to %d\n", kv->value);
 			    config_var_set (handler, "dcc", kv->value);
-
-			    signal_emit (GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
-
 			    gadu_gadu_enable_dcc_socket ((gboolean) config_var_get (handler, "dcc"));
-			    register_userlist_menu ((gboolean) config_var_get (handler, "dcc"));
-
 			    break;
 			case GGADU_GADU_GADU_CONFIG_AUTOCONNECT:
 			    print_debug ("changing var setting autoconnect to %d\n", kv->value);
@@ -2307,7 +2305,6 @@ void destroy_plugin ()
     ggadu_repo_del ("gadu-gadu");
     ggadu_repo_del_value ("_protocols_", p);
 
-    signal_emit (GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
     signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 
     g_slist_free (userlist);

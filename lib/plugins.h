@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.1 2003/06/03 21:30:08 krzyzak Exp $ */
+/* $Id: plugins.h,v 1.2 2003/06/22 17:36:00 krzyzak Exp $ */
 #ifndef GGadu_PROTOCOLS_H
 #define GGadu_PROTOCOLS_H 1
 
@@ -46,6 +46,9 @@ void set_config_file_name(GGaduPlugin *plugin_handler, gchar *config_file);
 GGaduPlugin *register_plugin(gchar *name, gchar *desc);
 
 void register_signal_receiver(GGaduPlugin *plugin_handler,void (*sgr)(gpointer,gpointer));
+
+void register_extension_for_plugins(GGaduPluginExtension *ext);
+void unregister_extension_for_plugins(GGaduPluginExtension *ext);
 
 GGaduPlugin *find_plugin_by_name(gchar *name);
 

@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.3 2003/06/13 00:17:19 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.4 2003/06/22 17:36:00 krzyzak Exp $ */
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -638,3 +638,60 @@ void set_config_file_name(GGaduPlugin *plugin_handler, gchar *config_file)
     
     plugin_handler->config_file = config_file;
 }
+
+void register_extension_for_plugins(GGaduPluginExtension *ext)
+{
+	GSList *plugins;
+	
+	if ((!ext) || (!config)) return;
+	
+	plugins = config->plugins;
+	
+	while (plugins)
+	{
+		GGaduPlugin *handler = (GGaduPlugin *)plugins->data;
+		
+		if (handler)
+			handler->extensions = g_slist_append(handler->extensions,ext);
+			
+		plugins = plugins->next;
+	}
+	
+}
+
+void unregister_extension_for_plugins(GGaduPluginExtension *ext)
+{
+	GSList *plugins;
+	GSList *extensions;
+	
+	if ((!ext) || (!config)) return;
+
+	plugins = config->plugins;
+	
+	while (plugins)
+	{
+		GGaduPlugin *handler = (GGaduPlugin *)plugins->data;
+		
+		g_slist_remove((GSList *)handler->extensions,ext);
+		
+/*		extensions = handler->extensions;
+	
+		while (extensions) {
+			GGaduPluginExtension *ext_search = extensions->data;
+		
+			if (ext_search == ext)
+				return ext;
+		
+			extensions = extensions->next;
+		}
+		
+*/			
+		plugins = plugins->next;
+	}
+
+}
+
+
+
+
+

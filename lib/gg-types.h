@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.7 2003/06/19 15:10:56 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.8 2003/06/22 17:36:00 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -45,6 +45,10 @@ enum {
 };
 
 enum {
+    GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE = 1
+};
+
+enum {
     VAR_FLAG_NONE         = 1,
     VAR_FLAG_SENSITIVE    = 1 << 2,
     VAR_FLAG_INSENSITIVE  = 1 << 4,
@@ -70,6 +74,13 @@ typedef struct {
     gpointer 	 data;
     gpointer     callback; //    function_ptr callback;
 } GGaduMenuItem;
+
+/* GGaduPluginExtension */
+typedef struct {
+    const gchar *txt;
+    guint type;
+    gpointer (*callback)(gpointer user_data);
+} GGaduPluginExtension;
 
 /*
  * GGaduVar
@@ -132,6 +143,7 @@ typedef struct {
     GSList *signals;			// lista zarejestrowanych signali
     
     GGaduProtocol *protocol; 		/* stuff specyficzna dla kazdego typu */
+    GSList *extensions;			/* GGaduPluginExtension's */
     
     void (*signal_receive_func)(gpointer,gpointer); // wskaznik na receiver signali
     void (*destroy_plugin)();			// wskaznik na zwalniacza plugina
