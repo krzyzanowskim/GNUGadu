@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.172 2004/05/25 14:45:14 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.173 2004/06/10 21:50:19 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -704,7 +704,7 @@ gpointer user_chat_action(gpointer user_data)
 		{
 			GGaduContact *k = (GGaduContact *) users->data;
 			msg->id = g_strdup(k->id);
-			msg->recipients = g_slist_append(msg->recipients, msg->id);
+			msg->recipients = g_slist_append(msg->recipients, g_strdup(k->id));
 			users = users->next;
 		}
 	}

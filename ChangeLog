@@ -1,5 +1,6 @@
 10.06.2004
 - --without-openssl disable OpenSSL support with included libgadu (krzak)
+- fixed conneferce chats initialization (krzak/gadu-gadu)
 
 08.06.2004
 - emoticons window is not created every time, only once in every chat window. (krzak/GUI)
