@@ -3,7 +3,7 @@
 pkgdir = $(libdir)/gg2
 
 pkg_LTLIBRARIES = libGUI_plugin.la
-noinst_LIBRARIES =
+noinst_LIBRARIES = 
 
 if USE_GTKSPELL
 libGUI_plugin_la_CFLAGS = $(GTK_CFLAGS) $(GTKSPELL_CFLAGS) -DUSE_GTKSPELL
