@@ -75,7 +75,6 @@ void gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
     GtkWidget *input;
     GtkWidget *paned;
     GtkWidget *sw;
-    GtkWidget *vbox_in_out = NULL;
     GtkWidget *hbox_buttons;
     GtkWidget *button_send;
     GtkWidget *button_autosend;
@@ -173,47 +172,9 @@ void gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
     gtk_container_add (GTK_CONTAINER (sw), input);
     gtk_paned_add2 (GTK_PANED (paned), sw);
 
-    /*
-    * buttons 
-    */
-    hbox_buttons = gtk_hbox_new (FALSE, 0); 
-    button_send = gtk_button_new_with_mnemonic (_("_Send"));
-
-    button_autosend = gtk_toggle_button_new ();
-    gtk_container_add (GTK_CONTAINER (button_autosend), create_image ("arrow.png"));
-
-    button_find = gtk_button_new_from_stock ("gtk-find");
-    button_close = gtk_button_new_from_stock ("gtk-close");
-    button_stick = gtk_toggle_button_new_with_mnemonic (_("S_tick"));
-
-    gtk_button_set_relief (GTK_BUTTON (button_send), GTK_RELIEF_NONE);
-    gtk_button_set_relief (GTK_BUTTON (button_autosend), GTK_RELIEF_NONE);
-    gtk_button_set_relief (GTK_BUTTON (button_find), GTK_RELIEF_NONE);
-    gtk_button_set_relief (GTK_BUTTON (button_close), GTK_RELIEF_NONE);
-    gtk_button_set_relief (GTK_BUTTON (button_stick), GTK_RELIEF_NONE);
-
-    gtk_box_pack_start (GTK_BOX (hbox_buttons), button_send, FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (hbox_buttons), button_autosend, FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (hbox_buttons), button_find, FALSE, FALSE, 0);
-    gtk_box_pack_end (GTK_BOX (hbox_buttons), button_close, FALSE, FALSE, 0);
-    gtk_box_pack_end (GTK_BOX (hbox_buttons), button_stick, FALSE, FALSE, 0);
-
-//    g_object_set_data (G_OBJECT ( widget ), "autosend_button", button_autosend);
-//    g_signal_connect (G_OBJECT (input), "key-press-event", G_CALLBACK (on_input_press_event), session);
-
-    if (config_var_get (gui_handler, "send_on_enter"))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button_autosend), TRUE);
-
-
-    /*
-     * attach paned to vbox_in_out 
-     */
-    gtk_box_pack_start (GTK_BOX (vbox_in_out), paned, TRUE, TRUE, 0);
+    /* attach paned to widget */
+    gtk_box_pack_start (GTK_BOX (widget), paned, TRUE, TRUE, 0);
     
-    /* attach vbox_in_out and hbox_buttons to widget */
-    gtk_box_pack_start (GTK_BOX (widget), vbox_in_out, TRUE, TRUE, 0);
-    gtk_box_pack_end (GTK_BOX (widget), hbox_buttons, FALSE, FALSE, 0);
-
     gcs->widget = widget;
 }
 
