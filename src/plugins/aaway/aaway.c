@@ -107,12 +107,13 @@ static gboolean check_idle_time()
 			sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
 			
 			print_debug("lustruje %s",plugin->name);
-			print_debug("%s : Setting AWAY state\n", GGadu_PLUGIN_NAME);
 			if (sp && ggadu_is_in_status(sp->status, protocol->online_status))
 			{
 			    GGaduStatusPrototype *sp2;
 			    gchar *message = NULL;
 			    gint newstatus;
+
+			    print_debug("%s : Setting AWAY state\n", GGadu_PLUGIN_NAME);
 
 			    if (sp->status_description)
 			    {
@@ -155,13 +156,14 @@ static gboolean check_idle_time()
 			GGaduStatusPrototype *sp;
 			sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
 			
-			print_debug("%s : Setting ACTIVE state\n", GGadu_PLUGIN_NAME);
 			if (sp && ggadu_is_in_status(sp->status, protocol->away_status))
 			{
 			    gchar *message = NULL;
 			    GGaduStatusPrototype *sp2;
 			    gint newstatus;
 
+			    print_debug("%s : Setting ACTIVE state\n", GGadu_PLUGIN_NAME);
+			    
 			    if (sp->status_description && 
 			        !strstr(sp->status_description,ggadu_config_var_get(handler, "message")))
 			    {

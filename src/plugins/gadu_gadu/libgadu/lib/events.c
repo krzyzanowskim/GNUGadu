@@ -1,4 +1,4 @@
-/* $Id: events.c,v 1.6 2004/11/18 09:47:53 krzyzak Exp $ */
+/* $Id: events.c,v 1.7 2005/01/05 10:48:06 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -1156,8 +1156,14 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 			/* je¶li mamy proxy, wy¶lijmy zapytanie. */
 			if (sess->proxy_addr && sess->proxy_port) {
 				char buf[100], *auth = gg_proxy_auth();
+				struct in_addr addr;
 
-				snprintf(buf, sizeof(buf), "CONNECT %s:%d HTTP/1.0\r\n", inet_ntoa(*((struct in_addr*) &sess->server_addr)), sess->port);
+				if (sess->server_addr)
+					addr.s_addr = sess->server_addr;
+				else
+					addr.s_addr = sess->hub_addr;
+
+				snprintf(buf, sizeof(buf), "CONNECT %s:%d HTTP/1.0\r\n", inet_ntoa(addr), sess->port);
 
 				gg_debug(GG_DEBUG_MISC, "// gg_watch_fd() proxy request:\n//   %s", buf);
 				

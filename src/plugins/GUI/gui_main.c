@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.72 2005/01/03 12:54:54 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.73 2005/01/05 10:48:05 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -138,13 +138,12 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(gui_handler, "icons", VAR_STR);
 	ggadu_config_var_add(gui_handler, "tree", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "chat_window_auto_raise", VAR_BOOL);
-	ggadu_config_var_add_with_default(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL, (gpointer)TRUE);
 	ggadu_config_var_add(gui_handler, "chat_type", VAR_INT);
 #ifdef USE_GTKSPELL
-	ggadu_config_var_add(gui_handler, "use_spell", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "use_spell", VAR_BOOL, (gpointer) FALSE);
 	ggadu_config_var_add(gui_handler, "dictionary", VAR_STR);
 #endif
-	ggadu_config_var_add(gui_handler, "chat_window_auto_show", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "chat_window_auto_show", VAR_BOOL,(gpointer) FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "chat_paned_size", VAR_INT,(gpointer) 80);
 	ggadu_config_var_add_with_default(gui_handler, "expand", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add(gui_handler, "show_active", VAR_BOOL);
@@ -163,15 +162,16 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "msg_out_body_color", VAR_STR,g_strdup("black"));
 	ggadu_config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
 	
-	ggadu_config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "hide_on_start", VAR_BOOL,(gpointer) FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "close_on_esc", VAR_BOOL, (gpointer) FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "notify_status_changes", VAR_BOOL, (gpointer) TRUE);
- 	ggadu_config_var_add_with_default(gui_handler, "use_xosd_for_status_change", VAR_BOOL, (gpointer)TRUE);
+ 	ggadu_config_var_add_with_default(gui_handler, "use_xosd_for_status_change", VAR_BOOL, (gpointer)FALSE);
+	ggadu_config_var_add_with_default(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL, (gpointer)TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "show_toolbar", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in", VAR_STR,
 					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/msg.wav", NULL));
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in_first", VAR_STR,
-					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));
+					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/usr.wav", NULL));
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_out", VAR_STR,
 					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));
 	ggadu_config_var_add(gui_handler, "contact_list_contact_font", VAR_STR);

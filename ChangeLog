@@ -1,3 +1,7 @@
+05.01.2005
+- perl support is still too experimental and is disabled by default (krzak)
+- some default values (GUI/krzak)
+
 04.01.2005
 - auto-away is independent for every protocol (aaway/krzak)
 - description is visible in protocol status tooltip (GUI/krzak)
