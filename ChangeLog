@@ -2,6 +2,8 @@
 - userlist import/export work again (gadu-gadu/krzak)
 - userlist menu order changed (gadu-gadu/krzak)
 - setting status description fixes (jabber/krzak)
+- dockapp fixes (jarwyp/dockapp)
+- jabber plugin fixes (need more fixes) (jabber/krzak)
 
 01.12.2003
 - HOME_ETC support (CONFIG_DIR already supported) (krzak/All)
