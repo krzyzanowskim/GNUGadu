@@ -1,5 +1,6 @@
 23.06.2003
 - fixed handling of status (available!=free for chat) (jabber/zapal)
+- fixed segfault when invoked with invalid jid (jabber/zapal)
 
 22.06.2003
 - uff... GGaduPluginExtension stuff, completly new method using userlist menus, but now it's extensible (core/gadu-gadu/sms/GUI/krzak)
