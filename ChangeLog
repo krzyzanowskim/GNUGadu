@@ -1,3 +1,6 @@
+7.04.2003
+- sync eggtrayicon.c with libegg repository (docklet/krzak)
+
 6.04.2003
 - one little segfault fixed, one small code cleanup (sms/shasta)
 - fixes in jabber plugin, confirmations added (jabber/krzak)
