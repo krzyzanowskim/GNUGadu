@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.105 2004/01/08 21:12:35 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.106 2004/01/08 22:29:05 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -518,7 +518,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 				     (gint) ggadu_config_var_get (handler, "uin"), e->event.msg.sender);
 
 		ch = g_io_channel_unix_new (d->fd);
-		watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc, d);
+		watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN, test_chan_dcc, d);
 
 		g_free (idtmp);
 		g_strfreev(addr_arr);
@@ -1153,7 +1153,7 @@ gboolean test_chan_dcc_get (GIOChannel * source, GIOCondition condition, gpointe
 
 	      print_debug ("GG_EVENT_DCC_NEW %ld\n", (guint32) d->uin);
 	      ch = g_io_channel_unix_new (dcc_new->fd);
-	      watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc, dcc_new);
+	      watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN, test_chan_dcc, dcc_new);
 	  }
 	  e->event.dcc_new = NULL;
 	  gg_event_free (e);
@@ -1300,12 +1300,7 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 	    case GG_ERROR_DCC_HANDSHAKE:
 		print_debug ("dcc_error_handshake\n");
 		if (d->state == GG_STATE_READING_FILE_ACK)
-		  {
-		      signal_emit (GGadu_PLUGIN_NAME, "gui show message", g_strdup (_("File refused")), "main-gui");
-		      gg_event_free (e);
-		      gg_dcc_free (d);
-		      return FALSE;
-		  }
+			signal_emit (GGadu_PLUGIN_NAME, "gui show message", g_strdup (_("File refused")), "main-gui");
 		break;
 	    case GG_ERROR_DCC_NET:
 		print_debug ("dcc_error_network\n");
@@ -1320,8 +1315,8 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 	    }
 
 	  gg_event_free (e);
-	  /* gg_dcc_free (d);           WHYYYYYYYYYYY
-	   * return FALSE; */
+	  gg_dcc_free (d);
+	  return FALSE;
 	  break;
       }
 
