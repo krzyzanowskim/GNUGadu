@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-04-09 00:20+0200\n"
+"POT-Creation-Date: 2004-04-22 19:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgid ""
 "[not in userlist]"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:168 src/plugins/GUI/gui_userview.c:715
+#: src/plugins/GUI/GUI_plugin.c:168 src/plugins/GUI/gui_userview.c:720
 msgid "(None)"
 msgstr ""
 
@@ -128,9 +128,9 @@ msgid ""
 "Try install appropriate language support with aspell"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:1221 src/plugins/GUI/gui_chat.c:1223
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2135
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2157
+#: src/plugins/GUI/gui_chat.c:1229 src/plugins/GUI/gui_chat.c:1231
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2136
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2158
 msgid "Me"
 msgstr ""
 
@@ -637,13 +637,13 @@ msgid "You have to be connected to perform searching!"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:994
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2228
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2229
 #: src/plugins/tlen/tlen_plugin.c:785 src/plugins/tlen/tlen_plugin.c:1229
 msgid "female"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:995
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2231
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2232
 #: src/plugins/tlen/tlen_plugin.c:786 src/plugins/tlen/tlen_plugin.c:1231
 msgid "male"
 msgstr ""
@@ -801,11 +801,11 @@ msgid "Invisible with description"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1570
-msgid "Offline with description"
+msgid "Offline"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1576
-msgid "Offline"
+msgid "Offline with description"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1582
@@ -850,35 +850,35 @@ msgstr ""
 msgid "Unable to create file"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1923
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1924
 #: src/plugins/tlen/tlen_plugin.c:975 src/plugins/jabber/jabber_plugin.c:410
 msgid "Enter status description"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1925
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1926
 #: src/plugins/jabber/jabber_plugin.c:413
 msgid "Description:"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1944
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1945
 msgid "Unable to change status"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2126
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2152
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2127
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2153
 msgid "Unable to send message"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2251
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2252
 #: src/plugins/tlen/tlen_plugin.c:1246
 msgid "Error! Cannot perform search!"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2328
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2329
 msgid "You have to fill in all fields"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2380
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2381
 msgid "I still cannot open contacts files! Exiting..."
 msgstr ""
 

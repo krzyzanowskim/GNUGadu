@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.57 2004/04/09 21:19:02 thrulliq Exp $
+# $Id: pl.po,v 1.58 2004/04/23 21:19:25 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-04-09 00:20+0200\n"
+"POT-Creation-Date: 2004-04-22 19:39+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -74,7 +74,7 @@ msgstr ""
 "\n"
 "[nie ma Ciê w kontaktach]"
 
-#: src/plugins/GUI/GUI_plugin.c:168 src/plugins/GUI/gui_userview.c:715
+#: src/plugins/GUI/GUI_plugin.c:168 src/plugins/GUI/gui_userview.c:720
 msgid "(None)"
 msgstr "(Brak)"
 
@@ -138,9 +138,9 @@ msgstr ""
 "%s\n"
 "Zainstaluj wsparcie dla odpowiedniego jêzyka w aspell"
 
-#: src/plugins/GUI/gui_chat.c:1221 src/plugins/GUI/gui_chat.c:1223
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2135
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2157
+#: src/plugins/GUI/gui_chat.c:1229 src/plugins/GUI/gui_chat.c:1231
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2136
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2158
 msgid "Me"
 msgstr "Ja"
 
@@ -701,13 +701,13 @@ msgid "You have to be connected to perform searching!"
 msgstr "Do wyszukiwania potrzebne jest nawi±zane po³±czenie z serwerem!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:994
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2228
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2229
 #: src/plugins/tlen/tlen_plugin.c:785 src/plugins/tlen/tlen_plugin.c:1229
 msgid "female"
 msgstr "kobieta"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:995
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2231
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2232
 #: src/plugins/tlen/tlen_plugin.c:786 src/plugins/tlen/tlen_plugin.c:1231
 msgid "male"
 msgstr "mê¿czyzna"
@@ -866,12 +866,12 @@ msgid "Invisible with description"
 msgstr "Niewidoczny z opisem"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1570
-msgid "Offline with description"
-msgstr "Niedostêpny z opisem"
-
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1576
 msgid "Offline"
 msgstr "Niedostêpny"
+
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1576
+msgid "Offline with description"
+msgstr "Niedostêpny z opisem"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1582
 msgid "Blocked"
@@ -915,35 +915,35 @@ msgstr "Wy¶wietl historiê"
 msgid "Unable to create file"
 msgstr "Nie mo¿na utworzyæ pliku"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1923
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1924
 #: src/plugins/tlen/tlen_plugin.c:975 src/plugins/jabber/jabber_plugin.c:410
 msgid "Enter status description"
 msgstr "Opis stanu"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1925
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1926
 #: src/plugins/jabber/jabber_plugin.c:413
 msgid "Description:"
 msgstr "Opis:"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1944
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1945
 msgid "Unable to change status"
 msgstr "Nie mo¿na zmieniæ stanu"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2126
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2152
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2127
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2153
 msgid "Unable to send message"
 msgstr "Nie mo¿na wys³aæ wiadomo¶ci"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2251
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2252
 #: src/plugins/tlen/tlen_plugin.c:1246
 msgid "Error! Cannot perform search!"
 msgstr "B³±d! Nie mo¿na przeprowadziæ wyszukiwania!"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2328
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2329
 msgid "You have to fill in all fields"
 msgstr "Nale¿y wype³niæ wszystkie pola"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2380
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2381
 msgid "I still cannot open contacts files! Exiting..."
 msgstr "Nie mo¿na odczytaæ pliku z kontaktami. Rezygnacja..."
 

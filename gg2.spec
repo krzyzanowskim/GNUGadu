@@ -1,4 +1,4 @@
-# $Revision: 1.12 $, $Date: 2004/04/02 18:51:58 $
+# $Revision: 1.13 $, $Date: 2004/04/23 21:19:24 $
 #
 # Conditional build:
 %bcond_with	arts
@@ -10,15 +10,12 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.0
+Version:	2.0.1
 Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
-#Source0:	http://gg.tiwek.com/gg2/snapshots/%{name}-%{_snap}.tar.bz2
-#Source0:	http://osdn.dl.sourceforge.net/ggadu/%{name}-%{version}%{_pre}.tar.bz2
-Source0:	http://osdn.dl.sourceforge.net/ggadu/gg2-2.0.tar.gz
-# Source0-md5:	1d44788e6fb7b6c47453e2a0ad104c54
+Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}.tar.gz
 URL:		http://www.gnugadu.org/
 %{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
@@ -33,6 +30,7 @@ BuildRequires:	loudmouth-devel >= 0.15.1
 BuildRequires:	openssl-devel >= 0.9.7d
 %{?with_perl:BuildRequires:	perl-devel}
 %{?with_gtkspell:BuildRequires:	gtkspell-devel}
+%{?with_gtkspell:BuildRequires:	aspell-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	xosd-devel   >= 2.0.0
 Requires:	gg2-ui
@@ -341,7 +339,7 @@ Motywy graficzne dla GUI GNU Gadu 2.
 rm -f missing
 %{__gettextize}
 %{__libtoolize}
-%{__aclocal}
+%{__aclocal} -I src/plugins/gadu_gadu/libgadu/m4
 %{__automake}
 %{__autoconf}
 
@@ -499,8 +497,26 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.12  2004/04/02 18:51:58  krzyzak
-- 2.0
+Revision 1.13  2004/04/23 21:19:24  krzyzak
+- 2.0.1
+
+Revision 1.100  2004/04/04 16:22:58  adamg
+- use dl.sourceforge.net in Source0 URL
+
+Revision 1.99  2004/04/03 15:27:40  krzak
+- aspell-devel conditionaly
+
+Revision 1.98  2004/04/03 14:49:12  pawelb
+- BR aspell-devel
+
+Revision 1.97  2004/04/02 19:35:22  averne
+- updated Source0 again
+
+Revision 1.96  2004/04/02 19:31:26  averne
+- updated Source0
+
+Revision 1.95  2004/04/02 19:11:14  krzak
+- up to 2.0
 
 Revision 1.94  2004/03/19 23:46:26  ankry
 - massive change: BR openssl-devel >= 0.9.7d

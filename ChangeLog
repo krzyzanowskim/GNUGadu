@@ -1,11 +1,14 @@
 22.04.2004
+- release 2.0.1
+
+22.04.2004
 - openssl detection fixes, libgadu update. (krzak)
 
 21.04.2004
 - fix '(null)' in userlist (gadu-gadu/krzak)
 
 18.04.2004
-- improved contacts sort (GUI/krzak)
+- improved contacts sorting (GUI/krzak)
 
 07.04.2004
 - fixes in build process (gadu-gadu/krzak)
