@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.54 2004/01/20 22:08:07 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.55 2004/01/22 01:21:21 krzyzak Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -708,7 +708,7 @@ void start_plugin()
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
 	CHANGE_STATUS_SIG = register_signal(jabber_handler, "change status");
-	CHANGE_STATUS_DESCR_SIG = register_signal(jabber_handler, "change status desc");
+	CHANGE_STATUS_DESCR_SIG = register_signal(jabber_handler, "change status descr");
 	GET_CURRENT_STATUS_SIG = register_signal(jabber_handler, "get current status");
 	UPDATE_CONFIG_SIG = register_signal(jabber_handler, "update config");
 	SEND_MESSAGE_SIG = register_signal(jabber_handler, "send message");
