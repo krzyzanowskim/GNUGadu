@@ -1,4 +1,6 @@
 25.03.2003
+- some labels are noe selectable (GUI/THrull)
+- segv fixed in gui_user_view_refresh (GUI/THrull)
 - available only for friends oiption (gadu-gadu/THrull)
 
 24.03.2003
