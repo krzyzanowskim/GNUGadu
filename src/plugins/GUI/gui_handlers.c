@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.16 2003/05/24 14:30:18 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.17 2003/05/24 21:41:49 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -370,6 +370,14 @@ void handle_disconnected(GGaduSignal *signal)
 	gui_user_view_clear(gp);
     }
 	    
+    GtkTreeIter parent_iter;
+
+    gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (users_treestore),
+	&parent_iter, gp->tree_path);
+    gtk_tree_store_set (users_treestore, &parent_iter, 1,
+	g_strdup_printf ("%s (%d/%d)", gp->p->display_name, 0,
+	  g_slist_length(gp->userlist)), -1);
+
     /* zmiana obrazka na offline */
     status_image = gtk_bin_get_child(GTK_BIN(gp->statuslist_eventbox));
 	    
