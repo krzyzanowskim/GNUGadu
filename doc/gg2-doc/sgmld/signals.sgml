@@ -43,8 +43,8 @@ void *signal_emit_full(gpointer src_name, gpointer name, gpointer data,
 		       gpointer dest_name, void (*signal_free) (gpointer));
 </programlisting>
 
-Opis:
-<para>(const char *)<type>src_name</type> określa nazwę pluginu źródłowego.
+<para>
+(const char *)<type>src_name</type> określa nazwę pluginu źródłowego.
 (const char *) <type>name</type> jest nazwą sygnału, natomiast
 (const char *) <type>dest_name</type> nazwą pluginu docelowego.
 (gpointer) <type>data</type> jest wskaźnikiem do danych towarzyszących sygnałowi. 
