@@ -347,6 +347,8 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 
 	      message = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 	      lm_message_node_set_attributes (message->node, "to", kv->value, "id", "search1", NULL);
+	      config_var_set (jabber_handler, "search_server", kv->value);
+	      config_save (jabber_handler);
 	      node = lm_message_node_add_child (message->node, "query", NULL);
 	      lm_message_node_set_attribute (node, "xmlns", "jabber:iq:search");
 
@@ -498,9 +500,11 @@ gpointer user_search_action (gpointer user_data)
     return NULL;
   }
 
-  server = config_var_get (jabber_handler, "jid");
-  if (server && (server = strchr (server, '@'))) {
-    server++;
+  if (!(server = config_var_get (jabber_handler, "search_server"))) {
+    server = config_var_get (jabber_handler, "jid");
+    if (server && (server = strchr (server, '@'))) {
+      server++;
+    }
   }
   
   d = ggadu_dialog_new ();
@@ -617,6 +621,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
   config_var_add (jabber_handler, "autoconnect", VAR_BOOL);
   config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
   config_var_add (jabber_handler, "resource", VAR_STR);
+  config_var_add (jabber_handler, "search_server", VAR_STR);
 
   if (!config_read (jabber_handler))
     g_warning (_("Unable to read configuration file for plugin jabber"));
