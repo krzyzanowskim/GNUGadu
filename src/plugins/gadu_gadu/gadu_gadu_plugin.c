@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.45 2003/05/07 09:26:27 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.46 2003/05/07 10:01:24 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -378,13 +378,18 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			while (n->uin) 
 			{
 					struct in_addr ip_addr;
+					gchar *tmpip = NULL;
 					
 					ip_addr.s_addr = n->remote_ip;
 
 			    notify = g_new0(GGaduNotify,1);
 			    notify->id = g_strdup_printf("%d",n->uin);
 			    notify->status = n->status;
-					notify->ip = g_strdup_printf("%s:%d",inet_ntoa(ip_addr),n->remote_port);
+			    
+			    tmpip = inet_ntoa(ip_addr); /* cannot be freed it staically allocated memory */
+			    if (tmpip && (g_strcasecmp(tmpip,"0.0.0.0")))
+				notify->ip = g_strdup_printf("%s:%d",tmpip,n->remote_port);
+			    
 					
 			    print_debug("%s : GG_EVENT_NOTIFY : %d  %d  %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,notify->ip);
 			    
@@ -413,16 +418,21 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			while (n->uin) 
 			{
 			    gchar *desc_utf8 = NULL;
+			    gchar *tmpip = NULL;
 			    struct in_addr ip_addr;
 
 			    ip_addr.s_addr = n->remote_ip;
-//			    print_debug("%s : GG_EVENT_NOTIFY_DESCR : %d  %d %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,e->event.notify_descr.descr);
+			    print_debug("%s : GG_EVENT_NOTIFY_DESCR : %d  %d %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,e->event.notify_descr.descr);
 			
 			    notify = g_new0(GGaduNotify,1);
 			    notify->id = g_strdup_printf("%d",n->uin);
 
 			    notify->status = n->status;
-					notify->ip = g_strdup_printf("%s:%d",inet_ntoa(ip_addr),n->remote_port);
+
+			    tmpip = inet_ntoa(ip_addr); /* cannot be freed it staically allocated memory */
+			    if (tmpip && (g_strcasecmp(tmpip,"0.0.0.0")))
+				notify->ip = g_strdup_printf("%s:%d",tmpip,n->remote_port);
+
 			    
 			    ggadu_convert("CP1250","UTF-8",e->event.notify_descr.descr,desc_utf8);
 
@@ -437,8 +447,6 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			      l = l->next;
 			    }
 			    
-//			    signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
-
 			    n++;
 			}
 			break;
