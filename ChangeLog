@@ -1,5 +1,6 @@
 22.10.2004
 - close chat window on ESC option (mkobierzycki/GUI)
+- fixed reading malformed userlist (gadu-gadu/krzak)
 
 20.10.2004
 - default font set to -*-*-*-r-*-*-20-*-*-*-*-*-iso8859-2
