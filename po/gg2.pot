@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-29 22:08+0100\n"
+"POT-Creation-Date: 2003-03-30 13:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -256,25 +256,26 @@ msgstr ""
 msgid "(None)"
 msgstr ""
 
-#: src/plugins/GUI/gui_dialogs.c:80
+#: src/plugins/GUI/gui_dialogs.c:82
 msgid "Select file"
 msgstr ""
 
-#: src/plugins/GUI/gui_dialogs.c:191
+#: src/plugins/GUI/gui_dialogs.c:193
 msgid "Change User"
 msgstr ""
 
-#: src/plugins/GUI/gui_dialogs.c:191
+#: src/plugins/GUI/gui_dialogs.c:193
 msgid "Add User"
 msgstr ""
 
-#: src/plugins/GUI/gui_dialogs.c:398
-msgid "<b>GNU Gadu "
+#: src/plugins/GUI/gui_dialogs.c:541
+msgid "About"
 msgstr ""
 
-#: src/plugins/GUI/gui_dialogs.c:398
+#: src/plugins/GUI/gui_dialogs.c:572
+#, c-format
 msgid ""
-"</b>\n"
+"<b>GNU Gadu %s</b>\n"
 "Copyright (C) 2001-2003 GNU Gadu Team\n"
 "License: GPL\n"
 "Homepage: http://www.gadu.gnu.pl\n"
@@ -297,19 +298,8 @@ msgid ""
 "Plavi\n"
 "see AUTHORS file for details\n"
 "\n"
-"<i>Compile time:\n"
-msgstr ""
-
-#: src/plugins/GUI/gui_dialogs.c:418
-msgid " "
-msgstr ""
-
-#: src/plugins/GUI/gui_dialogs.c:418
-msgid "</i>"
-msgstr ""
-
-#: src/plugins/GUI/gui_dialogs.c:536
-msgid "About"
+"<i>Compite time:\n"
+"%s %s</i>"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:81

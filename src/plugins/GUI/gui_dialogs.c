@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.7 2003/03/25 16:23:18 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.8 2003/03/30 11:34:49 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -22,6 +22,8 @@ static gint about_area_x;
 static gint about_timeout;
 static GdkPixmap *pixmap = NULL;
 static GdkGC *gc;
+
+static gchar *about_text = NULL;
 
 void gui_add_user_window_response(GtkDialog *dialog, int resid, gpointer user_data) {
 	GGaduSignal *signal = (GGaduSignal *)user_data;
@@ -393,7 +395,9 @@ gint timeout(gpointer user_data)
 	return FALSE;
 
     layout = gtk_widget_create_pango_layout(image, NULL);
-    
+ 
+    pango_layout_set_markup(layout, about_text, -1);
+/*
     pango_layout_set_markup(layout, _(
     "<b>GNU Gadu " VERSION "</b>\n"
     "Copyright (C) 2001-2003 GNU Gadu Team\n"
@@ -417,7 +421,7 @@ gint timeout(gpointer user_data)
     
     "<i>Compile time:\n" __DATE__ " " __TIME__ "</i>"
     ), -1);
-
+*/
     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
     pango_layout_set_justify(layout, TRUE);
 
@@ -485,6 +489,7 @@ void about_response(GtkWidget *widget, gpointer user_data)
     gtk_widget_destroy(widget);
     gdk_pixmap_unref(pixmap);
     pixmap = NULL;
+    g_free(about_text);
 }
 
 static
@@ -563,5 +568,28 @@ void gui_about(GtkWidget *widget, gpointer data)
 
     about_y = 0;
     about_area_y = 0;
+    about_text = g_strdup_printf (_(
+	  "<b>GNU Gadu %s</b>\n"
+	  "Copyright (C) 2001-2003 GNU Gadu Team\n"
+	  "License: GPL\n"
+	  "Homepage: http://www.gadu.gnu.pl\n\n"
+	  
+	  "<b>Main Programmers:</b>\n"
+	  "Igor Popik &lt;thrull@slackware.pl&gt;\n"
+	  "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n"
+	  
+	  "<b>Patches:</b>\n"
+	  "Mateusz Papiernik\n"
+	  "Pawel Jan Maczewski\n"
+	  "HelDoRe\n"
+	  "Bartosz Zapalowski\n"
+	  "Jakub 'shasta' Jankowski\n\n"
+	  
+	  "<b>Thanks to:</b>\n"
+	  "Dwuziu\nAflinta\nGammaRay\nPlavi\n"
+	  "see AUTHORS file for details\n\n"
+	  
+	  "<i>Compite time:\n%s %s</i>"),
+	VERSION, __DATE__, __TIME__);
     about_timeout = g_timeout_add(50, timeout, image);
 }

@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.3 2003/03/29 21:24:11 zapal Exp $
+# $Id: pl.po,v 1.4 2003/03/30 11:34:49 zapal Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"POT-Creation-Date: 2003-03-29 22:08+0100\n"
+"POT-Creation-Date: 2003-03-30 13:29+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -265,25 +265,26 @@ msgstr "Rozmowa z %s %s"
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/gui_dialogs.c:80
+#: src/plugins/GUI/gui_dialogs.c:82
 msgid "Select file"
 msgstr "Wybór pliku"
 
-#: src/plugins/GUI/gui_dialogs.c:191
+#: src/plugins/GUI/gui_dialogs.c:193
 msgid "Change User"
 msgstr "Modyfikacja danych kontaktu"
 
-#: src/plugins/GUI/gui_dialogs.c:191
+#: src/plugins/GUI/gui_dialogs.c:193
 msgid "Add User"
 msgstr "Nowy kontakt"
 
-#: src/plugins/GUI/gui_dialogs.c:398
-msgid "<b>GNU Gadu "
-msgstr ""
+#: src/plugins/GUI/gui_dialogs.c:541
+msgid "About"
+msgstr "Informacje o programie"
 
-#: src/plugins/GUI/gui_dialogs.c:398
+#: src/plugins/GUI/gui_dialogs.c:572
+#, c-format
 msgid ""
-"</b>\n"
+"<b>GNU Gadu %s</b>\n"
 "Copyright (C) 2001-2003 GNU Gadu Team\n"
 "License: GPL\n"
 "Homepage: http://www.gadu.gnu.pl\n"
@@ -306,16 +307,17 @@ msgid ""
 "Plavi\n"
 "see AUTHORS file for details\n"
 "\n"
-"<i>Compile time:\n"
+"<i>Compite time:\n"
+"%s %s</i>"
 msgstr ""
-"</b>\n"
+"<b>GNU Gadu %s</b>\n"
 "Copyright (C) 2001-2003 GNU Gadu Team\n"
 "Licencja: GPL\n"
-"Witryna domowa: http://www.gadu.gnu.pl/\n"
+"Strona domowa: http://www.gadu.gnu.pl\n"
 "\n"
 "<b>G³ówni programi¶ci:</b>\n"
 "Igor Popik &lt;thrull@slackware.pl&gt;\n"
-"Marcin Krzy¿anowski &ltkrzak@hakore.com&gt;\n"
+"Marcin Krzy¿anowski &lt;krzak@hakore.com&gt;\n"
 "\n"
 "<b>Autorzy ³atek:</b>\n"
 "Mateusz Papiernik\n"
@@ -324,26 +326,15 @@ msgstr ""
 "Bartosz Zapa³owski\n"
 "Jakub 'shasta' Jankowski\n"
 "\n"
-"<b>Podziêkowania:</b>\n"
+"<b>Podziêkowania dla:</b>\n"
 "Dwuziu\n"
 "Aflinta\n"
 "GammaRay\n"
 "Plavi\n"
-"wiêcej w pliku AUTHORS\n"
+"szczegó³y w pliku AUTHORS\n"
 "\n"
 "<i>Data kompilacji:\n"
-
-#: src/plugins/GUI/gui_dialogs.c:418
-msgid " "
-msgstr " "
-
-#: src/plugins/GUI/gui_dialogs.c:418
-msgid "</i>"
-msgstr ""
-
-#: src/plugins/GUI/gui_dialogs.c:536
-msgid "About"
-msgstr "Informacje o programie"
+"%s %s</i>"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:81
 msgid "Connection failed!"
@@ -953,6 +944,9 @@ msgstr "Wy¶lij SMS (wewnêtrznie)"
 #: src/plugins/sms/sms_gui.c:475
 msgid "Send SMS (external)"
 msgstr "Wy¶lij SMS (zewnêtrznie)"
+
+#~ msgid " "
+#~ msgstr " "
 
 #~ msgid "%s"
 #~ msgstr "%s"
