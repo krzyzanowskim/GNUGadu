@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.38 2003/12/13 14:43:17 krzyzak Exp $
+dnl $Id: configure.in,v 1.39 2003/12/27 17:32:01 thrulliq Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -119,6 +119,7 @@ want_gui=no
 want_gadu=no
 want_tlen=no
 want_jabber=no
+want_oscar_icq=no
 want_xosd=no
 want_sms=no
 want_remote=no
@@ -137,6 +138,7 @@ if test x$with_all_plugins = xyes; then
     with_gadu=yes
     with_tlen=yes
     with_jabber=yes
+    with_oscar_icq=yes
     with_xosd=yes
     with_esd=yes
     with_oss=yes
@@ -263,6 +265,11 @@ if test "x$with_jabber" = "xyes"; then
     AC_SUBST(JABBER_CFLAGS)
 fi
 
+AC_ARG_WITH(oscar_icq, [  --with-oscar_icq		  Build OSCAR/ICQ plugin		default=no])
+if test "x$with_oscar_icq" = "xyes"; then 
+    want_oscar_icq=yes
+fi
+
 AC_ARG_WITH(xosd, [  --with-xosd		  Build XOSD plugin		default=no])
 if test "x$with_xosd" = "xyes"; then 
     AC_PATH_PROG(xosd_config_script, xosd-config, "none")
@@ -336,16 +343,23 @@ if test "x$with_esd" = "xyes"; then
 fi
 
 AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
+AC_ARG_WITH(arts-prefix, [  --with-arts-prefix=PREFIX	Prefix where aRts! is installed (optional)], arts_prefix="$withval", arts_prefix="")
 if test "x$with_arts" = "xyes"; then 
     AC_PROG_CXX
-    AC_PATH_PROG(ARTS_CONFIG, artsc-config, no)
+    if test "$arts_prefix" != ""; then
+	arts_include_path="-I$arts_prefix/include"
+	arts_libs_path="-L$arts_prefix/lib"
+    fi
     
-    if test "x$ARTS_CONFIG" = "xno"; then
-    	want_arts=no
-	AC_MSG_WARN([artsc-config ])
-    else
-        ARTS_CXXFLAGS="$CXXFLAGS `$ARTS_CONFIG --cflags`"
-	ARTS_LIBS="`$ARTS_CONFIG --libs`"
+    have_arts=no
+    CFLAGS="$CFLAGS $arts_include_path"
+    CPPFLAGS="$CPPLAGS $arts_include_path"
+    AC_CHECK_HEADERS(arts/artsversion.h, have_arts=yes,
+    [AC_MSG_WARN([*** sound support for aRts! has been disabled ***])],-)
+
+    if test "x$have_arts" = "xyes"; then
+        ARTS_CXXFLAGS="$CXXFLAGS $arts_include_path"
+	ARTS_LIBS="-lartsflow -lartswavplayobject $arts_libs_path"
 	AC_SUBST(ARTS_LIBS)
 	AC_SUBST(ARTS_CXXFLAGS)
 	AC_SUBST(CXX, $CC)
@@ -389,6 +403,7 @@ AM_CONDITIONAL(BUILD_GUI, test "$want_gui" = "yes")
 AM_CONDITIONAL(BUILD_GG, test "$want_gadu" = "yes")
 AM_CONDITIONAL(BUILD_TLEN, test "$want_tlen" = "yes")
 AM_CONDITIONAL(BUILD_JABBER, test "$want_jabber" = "yes")
+AM_CONDITIONAL(BUILD_OSCAR_ICQ, test "$want_oscar_icq" = "yes")
 AM_CONDITIONAL(BUILD_XOSD, test "$want_xosd" = "yes")
 AM_CONDITIONAL(BUILD_DOCKLET_SYSTEM_TRAY, test "$want_docklet_system_tray" = "yes")
 AM_CONDITIONAL(BUILD_DOCKLET_DOCKAPP, test "$want_docklet_dockapp" = "yes")
@@ -443,6 +458,7 @@ src/plugins/GUI/Makefile
 src/plugins/gadu_gadu/Makefile
 src/plugins/tlen/Makefile
 src/plugins/jabber/Makefile
+src/plugins/oscar_icq/Makefile
 src/plugins/xosd/Makefile
 src/plugins/docklet/Makefile
 src/plugins/docklet/system-tray/Makefile
@@ -465,6 +481,7 @@ echo Build plugin GUI-GTK2.......... : $want_gui
 echo Build plugin Gadu-Gadu......... : $want_gadu
 echo Build plugin Tlen.pl........... : $want_tlen
 echo Build plugin Jabber............ : $want_jabber
+echo Build plugin OSCAR/ICQ......... : $want_oscar_icq
 echo Build plugin XOSD.............. : $want_xosd
 echo Build plugin sound ESD......... : $want_esd
 echo Build plugin sound aRts........ : $want_arts
