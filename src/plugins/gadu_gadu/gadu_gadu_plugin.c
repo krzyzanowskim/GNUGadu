@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.162 2004/03/30 22:21:06 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.163 2004/03/30 22:25:33 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -64,7 +64,6 @@ static gint connect_count = 0;
 
 static guint watch = 0;
 static guint watch_dcc_file = 0;
-static gboolean dcc_let_go = TRUE;
 
 static GIOChannel *source_chan = NULL;
 
