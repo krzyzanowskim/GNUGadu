@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.40 2003/09/23 00:32:03 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.41 2003/11/16 13:48:56 maticompxp Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -291,21 +291,29 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		break;
 
 	    case TLEN_EVENT_GOTROSTERITEM:
-
+	    
+	    
 		if (e->roster->jid == NULL)
-		  {
-		      print_debug ("%s \t\t B£¡D PODCZAS GOTROSTERITEM!\n", GGadu_PLUGIN_NAME);
-		      signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Error while GETROSTERITEM")),
+		{
+		    print_debug ("%s \t\t B£¡D PODCZAS GOTROSTERITEM!\n", GGadu_PLUGIN_NAME);
+		    signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Error while GETROSTERITEM")),
 				   "main-gui");
-		      break;
-		  }
+		    break;
+		}
 
 		k = g_new0 (GGaduContact, 1);
 		k->id = g_strdup (e->roster->jid);
+		
 		if (e->roster->name)
-		    k->nick = g_strdup (e->roster->name);
+		{
+	    	    const gchar *temp;
+		    to_utf8 ("ISO-8859-2", e->roster->name, temp);
+		    k->nick = g_strdup (temp);
+		}
 		else
+		{
 		    k->nick = g_strdup (e->roster->jid);
+		}
 
 		k->status = TLEN_STATUS_UNAVAILABLE;
 		if (!user_in_userlist (userlist, k))
@@ -314,7 +322,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		      ggadu_repo_add_value ("tlen", k->id, k, REPO_VALUE_CONTACT);
 		  }
 		break;
-
+	    
 	    case TLEN_EVENT_ENDROSTER:
 		tlen_presence (session, (int) loginstatus, "");
 		signal_emit (GGadu_PLUGIN_NAME, "gui status changed", loginstatus, "main-gui");
@@ -338,7 +346,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		k = g_new0 (GGaduContact, 1);
 		k->id = g_strdup (e->subscribe->jid);
 		tlen_accept_unsubscribe (session, k->id);
-		signal_emit (GGadu_PLUGIN_NAME, "unauth request", k, "main-gui");
+		    signal_emit (GGadu_PLUGIN_NAME, "unauth request", k, "main-gui");
 		break;
 
 	    case TLEN_EVENT_UNSUBSCRIBED:
@@ -347,9 +355,63 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		signal_emit (GGadu_PLUGIN_NAME, "unauth request accepted", k, "main-gui");
 		break;
 
+
+	    /*
+	     * Cholerka, czemu to nie dziala? Zachowuje sie tak jakby libtlen
+	     * w ogole nie rozpoznawal tego eventu :/
+	     * 
+	    case TLEN_EVENT_NOTIFY:
+	    {
+		gchar *notifytype;
+	    
+		print_debug ("otrzyma³e¶ powiadomienie!\n");
+		print_debug ("od: %s\n", e->message->from);
+		
+		switch (e->notify->type)
+		{
+		    case TLEN_NOTIFY_TYPING:
+		    {
+			notifytype = "pisze";
+			// jak bedzie support to sie doda powiadamianie
+			break;
+		    }
+		    case TLEN_NOTIFY_NOTTYPING:
+		    {
+			notifytype = "przestal pisac";
+			// jak bedzie support to sie doda powiadamianie
+			break;
+		    }
+		    case TLEN_NOTIFY_SOUNDALERT:
+		    {
+			notifytype = "powiadomienie d¼wiêkowe";
+			// na razie tak jak w tlenie - informacja mesgiem. Potem sie doda informowanie przez dzwiek
+			msg = g_new0 (GGaduMsg, 1);
+
+			msg->id = g_strdup_printf ("%s", e->notify->from);
+
+			to_utf8 ("ISO-8859-2", "Rozmówca wys³a³ Ci alert d¼wiêkowy!", msg->message);
+
+			msg->class = TLEN_CHAT;
+			signal_emit (GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
+
+			if (config_var_get(handler, "log"))
+			{
+			    gchar *line = g_strdup_printf ("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp (msg->time), msg->message);
+			    ggadu_tlen_save_history (msg->id, line);
+			    g_free (line);
+			}
+			break;
+		    }			    
+		}
+		print_debug ("typ: %s\n", notifytype);
+		
+		break;
+	    }
+		*/	
+
 	    case TLEN_EVENT_MESSAGE:
 		print_debug ("masz wiadomo¶æ!\n");
-		print_debug ("od: %d\n", e->message->from);
+		print_debug ("od: %s\n", e->message->from);
 		print_debug ("tre¶æ: %s\n", e->message->body);
 
 		msg = g_new0 (GGaduMsg, 1);
