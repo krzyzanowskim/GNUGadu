@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.100 2004/12/22 15:56:25 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.101 2004/12/28 17:48:04 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -577,7 +577,8 @@ void change_status(GPtrArray * ptra)
 		gp->blinker = -1;
 	}
 
-	signal_emit("main-gui", "change status", sp, plugin_source);
+	if (sp)
+	    signal_emit("main-gui", "change status", sp, plugin_source);
 	/* ZONK */
 	/* te tablice "ptra" kiedys tam mozna zwolic, ale nie mozna tutaj */
 }

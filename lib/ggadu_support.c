@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.19 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: ggadu_support.c,v 1.20 2004/12/28 17:48:04 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -92,6 +92,7 @@ gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)
 		{
 			g_warning("Unable to convert : %s", err->message);
 			g_error_free(err);
+			return NULL;
 		}
 		out = g_strdup(text);
 	}

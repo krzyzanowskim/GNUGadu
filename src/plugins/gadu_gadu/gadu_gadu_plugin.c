@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.220 2004/12/27 13:20:26 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.221 2004/12/28 17:48:05 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -55,7 +55,6 @@
 GGaduPlugin *handler;
 
 static struct gg_session *session;
-static char *session_description;
 static struct gg_dcc *dcc_session_get = NULL;
 
 static gchar *dcc_send_request_filename = NULL;	/* nazwa pliku do wyslania */
@@ -88,9 +87,14 @@ void test()
 {
 }
 
-static gint ggadu_gadu_gadu_is_status_descriptive(gint status)
+//static gint ggadu_gadu_gadu_is_status_descriptive(gint status)
+static gint ggadu_gadu_gadu_is_status_descriptive(GGaduStatusPrototype *sp)
 {
-	return (gint) (status == GG_STATUS_AVAIL_DESCR || status == GG_STATUS_BUSY_DESCR || status == GG_STATUS_NOT_AVAIL_DESCR || status == GG_STATUS_INVISIBLE_DESCR);
+	gint status = sp->status;
+	gint ret =  (gint) (status == GG_STATUS_AVAIL_DESCR || status == GG_STATUS_BUSY_DESCR || status == GG_STATUS_NOT_AVAIL_DESCR || status == GG_STATUS_INVISIBLE_DESCR);
+//	if (!ret && sp->status_description)
+//	    ret = TRUE;
+	return ret;
 }
 
 static void ggadu_gadu_gadu_disconnect()
@@ -2066,20 +2070,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (sp->status != GG_STATUS_NOT_AVAIL)
 		{
 			/* descriptions, call dialogbox */
-			if (ggadu_gadu_gadu_is_status_descriptive(sp->status))
+			if (ggadu_gadu_gadu_is_status_descriptive(sp))
 			{
 				GGaduDialog *dialog = NULL;
 				gchar *reason_c = NULL;
 
-				if (session_description)
-				{
-					reason_c = g_strdup(session_description);
-				}
-				else
-				{
-					reason_c = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
-				}
-
+				reason_c = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr", sp);
 				ggadu_dialog_add_entry(dialog, 0, _("_Description:"), VAR_STR, (gpointer) reason_c, VAR_FLAG_FOCUS);
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
@@ -2088,8 +2084,32 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			else
 			{
 				gint _status = sp->status;
+				
+/*				if (sp->status_description)
+				{
+				    switch (sp->status)
+				    {
+					case GG_STATUS_AVAIL:
+					    _status = GG_STATUS_AVAIL_DESCR;
+					break;
+					case GG_STATUS_BUSY:
+					    _status = GG_STATUS_BUSY_DESCR;
+					break;
+					case GG_STATUS_NOT_AVAIL:
+					    _status = GG_STATUS_NOT_AVAIL_DESCR;
+					break;
+					case GG_STATUS_INVISIBLE:
+					    _status = GG_STATUS_INVISIBLE_DESCR;
+					break;
+					default:
+					    _status = GG_STATUS_AVAIL_DESCR;
+					break;
+				    }
+				}
+*/				
 				if (ggadu_config_var_get(handler, "private"))
 					_status |= GG_STATUS_FRIENDS_MASK;
+					
 				/* if not connected, login. else, just change status */
 				if (!connected)
 				{
@@ -2124,17 +2144,15 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 			GGaduStatusPrototype *sp = dialog->user_data;
 			GGaduKeyValue *kv = NULL;
+			
 			if (ggadu_dialog_get_entries(dialog))
 			{
 				gchar *desc_utf = NULL, *desc_cp = NULL, *desc_iso = NULL;
 				gint _status = sp->status;
 
-				if (ggadu_config_var_get(handler, "private"))
-					_status |= GG_STATUS_FRIENDS_MASK;
-
 				kv = (GGaduKeyValue *) ggadu_dialog_get_entries(dialog)->data;
 
-				print_debug(" %d %d\n ", GG_STATUS_INVISIBLE_DESCR, sp->status);
+				print_debug(" _status %d status %d\n ", _status,sp->status);
 
 				if (kv)
 				{
@@ -2143,10 +2161,35 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    desc_cp = from_utf8("CP1250", desc_utf);
 				    /* do konfiga */
 				    desc_iso = from_utf8("ISO-8859-2", desc_utf);
-
+				    /* do not free desc_iso */
 				    ggadu_config_var_set(handler, "reason", desc_iso);
-				    session_description = desc_utf;
 				}
+
+				if (kv || sp->status_description)
+				{
+				    switch (sp->status)
+				    {
+					case GG_STATUS_AVAIL:
+					    _status = GG_STATUS_AVAIL_DESCR;
+					break;
+					case GG_STATUS_BUSY:
+					    _status = GG_STATUS_BUSY_DESCR;
+					break;
+					case GG_STATUS_NOT_AVAIL:
+					    _status = GG_STATUS_NOT_AVAIL_DESCR;
+					break;
+					case GG_STATUS_INVISIBLE:
+					    _status = GG_STATUS_INVISIBLE_DESCR;
+					break;
+					default:
+					    _status = GG_STATUS_AVAIL_DESCR;
+					break;
+				    }
+				}
+
+				if (ggadu_config_var_get(handler, "private"))
+					_status |= GG_STATUS_FRIENDS_MASK;
+
 
 				if (!connected)
 				{
@@ -2446,14 +2489,28 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == GET_CURRENT_STATUS_SIG)
 	{
+		GGaduStatusPrototype *sp;
+
 		if (session)
 		{
-			gint s = ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status);
-			signal->data_return = ggadu_find_status_prototype(p, s);
-			print_debug("GG %d",s);
+			gint s;
+			
+			s = ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status);
+			sp = ggadu_find_status_prototype(p, s);
 		}
 		else
-			signal->data_return = ggadu_find_status_prototype(p, GG_STATUS_NOT_AVAIL);
+		{
+			sp = ggadu_find_status_prototype(p, GG_STATUS_NOT_AVAIL);
+		}
+	
+		if (session && ggadu_config_var_get(handler, "reason") && 
+		    ggadu_gadu_gadu_is_status_descriptive(sp))
+		{
+			    sp->status_description = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
+		}
+			    
+		print_debug("GG get current status return data = %d",sp ? sp->status : -1);
+		signal->data_return = sp;
 	}
 
 	if (signal->name == REGISTER_ACCOUNT)

@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.20 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: ggadu_types.h,v 1.21 2004/12/28 17:48:04 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -339,8 +339,8 @@ void GGaduNotify_free(GGaduNotify * n);
 typedef struct
 {
     gint status;		 /*!< Status code */
-    gchar *status_description;   /*!< Status description */
-    gchar *description;		 /*!< Status label np. "Available" */
+    gchar *status_description;   /*!< Status description example: "I'm away from computer" */
+    gchar *description;		 /*!< Status label example: "Available" */
     gchar *image;		 /*!< Image name  */
     gboolean receive_only;	 /*!< Identify if status is only received by other contacts */
 } GGaduStatusPrototype;

@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.12 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: plugins.h,v 1.13 2004/12/28 17:48:04 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -45,29 +45,21 @@
 #define GGadu_MAX_PLUGIN_NAME 100
 
 gboolean load_plugin(gchar * path);
+void	 unload_plugin(gchar * name);
 
-void unload_plugin(gchar * name);
+GGaduPlugin*		register_plugin(gchar * name, gchar * desc);
+void			register_signal_receiver(GGaduPlugin * plugin_handler, void (*sgr) (gpointer, gpointer));
 
-GGaduPlugin *register_plugin(gchar * name, gchar * desc);
+void			register_extension_for_plugins(GGaduPluginExtension * ext);
+void			register_extension_for_plugin(GGaduPluginExtension * ext, gint plugin_type);
+void			unregister_extension_for_plugins(GGaduPluginExtension * ext);
+GGaduPluginExtension*	ggadu_find_extension(GGaduPlugin * handler, gint type);
+gpointer		ggadu_get_extensions_list(GGaduPlugin * handler);
+guint			ggadu_extension_get_type(GGaduPluginExtension *ext);
 
-void register_signal_receiver(GGaduPlugin * plugin_handler, void (*sgr) (gpointer, gpointer));
+GGaduPlugin*		find_plugin_by_name(gchar * name);
+GSList*			find_plugin_by_pattern(gchar * pattern);
 
-void register_extension_for_plugins(GGaduPluginExtension * ext);
-void register_extension_for_plugin(GGaduPluginExtension * ext, gint plugin_type);
-
-void unregister_extension_for_plugins(GGaduPluginExtension * ext);
-
-
-GGaduPluginExtension *ggadu_find_extension(GGaduPlugin * handler, gint type);
-
-gpointer ggadu_get_extensions_list(GGaduPlugin * handler);
-
-guint	ggadu_extension_get_type(GGaduPluginExtension *ext);
-
-GGaduPlugin *find_plugin_by_name(gchar * name);
-
-GSList *find_plugin_by_pattern(gchar * pattern);
-
-GSList *get_list_modules_load();
+GSList*			get_list_modules_load();
 
 #endif
