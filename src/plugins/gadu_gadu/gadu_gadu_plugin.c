@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.218 2004/12/26 17:26:24 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.219 2004/12/27 08:42:54 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1807,11 +1807,20 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (dcc && ggadu_dialog_get_response(d) == GGADU_OK)
 		{
 			GIOChannel *ch;
-			gchar *dest_path = NULL;
-			
+			/* gchar *dest_path = NULL; */
+/*
+			dest_path = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S, dcc->file_info.filename, NULL);
+			dcc->file_fd = open(dest_path, O_WRONLY | O_CREAT, 0600);
+
+			if (dcc->file_fd == -1)
+			{
+				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf(_("Unable to create file %s ."),dest_path), "main-gui");
+			}
+			g_free(dest_path);
+
+*/
+
 			ch = g_io_channel_unix_new(dcc->fd);
-
-
 			if (dcc->check == GG_CHECK_READ)
 			{
 				print_debug("GG_CHECK_READ DCC\n");
@@ -1828,17 +1837,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				return;
 			}
 
-/*
-			dest_path = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S, dcc->file_info.filename, NULL);
-			dcc->file_fd = open(dest_path, O_WRONLY | O_CREAT, 0600);
-
-			if (dcc->file_fd == -1)
-			{
-				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf(_("Unable to create file %s ."),dest_path), "main-gui");
-			}
-			g_free(dest_path);
-
-*/
 		}
 		else
 		{
