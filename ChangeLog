@@ -1,3 +1,6 @@
+05.08.2004
+- fixed warning messages with g_strchomp() (GUI/krzak)
+
 04.08.2004
 - fixed crash of gghist if no file is given (gghist/krzak)
 - fixed timeout with jabber plugin by sending empty message every 100000 sec. (jabber/krzak)

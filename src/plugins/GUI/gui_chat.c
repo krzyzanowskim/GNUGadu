@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.105 2004/08/04 20:53:58 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.106 2004/08/05 09:43:20 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -319,9 +319,11 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 	gtk_text_buffer_get_end_iter(buf, &end);
 
 	tmpmsg = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
-	tmpmsg = g_strchug(g_strchomp(tmpmsg));	/* obciete puste spacje z obu stron */
+	
+	if (tmpmsg)
+	    tmpmsg = g_strchug(g_strchomp(tmpmsg));	/* obciete puste spacje z obu stron */
 
-	if (strlen(tmpmsg) > 0)
+	if (tmpmsg && strlen(tmpmsg) > 0)
 	{
 		gchar *soundfile;
 		msg = g_new0(GGaduMsg, 1);
@@ -342,8 +344,10 @@ static void on_send_clicked(GtkWidget * button, gpointer user_data)
 
 		signal_emit_full("main-gui", "send message", msg, plugin_name, GGaduMsg_free);
 	}
-	else
+	else if (tmpmsg)
+	{
 		g_free(tmpmsg);
+	}
 
 	gtk_text_buffer_set_text(buf, "", -1);
 	gtk_widget_grab_focus(GTK_WIDGET(input));
