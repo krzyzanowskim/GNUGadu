@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.6 2004/05/06 10:27:47 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.7 2004/05/24 05:36:18 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -30,9 +30,15 @@ typedef enum
 {
 	GGADU_DIALOG_GENERIC,
 	GGADU_DIALOG_CONFIG,
-	GGADU_DIALOG_YES_NO,
-	GGADU_DIALOG_PROGRESS
+	GGADU_DIALOG_YES_NO/*,
+	GGADU_DIALOG_PROGRESS*/
 } GGaduDialogType;
+
+typedef enum
+{
+	GGADU_DIALOG_FLAG_NONE = 0,
+	GGADU_DIALOG_FLAG_PROGRESS = 1
+} GGaduDialogFlags;
 
 typedef struct
 {
@@ -42,6 +48,7 @@ typedef struct
 	GSList *optlist;	/* List of GGaduKeyValue's */
 	gpointer user_data;
 	gint type;
+	guint flags; /* GGaduDialogFlags */
 	
 	gboolean(*watch_func) (gpointer);
 } GGaduDialog;
@@ -68,6 +75,10 @@ void			ggadu_dialog_set_type			(GGaduDialog *, GGaduDialogType);
 GGaduDialogType		ggadu_dialog_get_type			(GGaduDialog * dialog);
 
 gint 			ggadu_dialog_get_response		(GGaduDialog * dialog);
+
+void			ggadu_dialog_set_flags			(GGaduDialog * dialog, guint flags);
+
+guint			ggadu_dialog_get_flags			(GGaduDialog * dialog);
 
 void			GGaduDialog_free			(GGaduDialog * dialog);
 

@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.c,v 1.5 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_dialog.c,v 1.6 2004/05/24 05:36:18 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -89,6 +89,18 @@ void ggadu_dialog_set_progress_watch (GGaduDialog * dialog, watch_func watch)
 {
 	g_return_if_fail(dialog != NULL);
 	dialog->watch_func = watch;
+}
+
+void ggadu_dialog_set_flags(GGaduDialog * dialog, guint flags)
+{
+	g_return_if_fail(dialog != NULL);
+	dialog->flags = flags;
+}
+
+guint ggadu_dialog_get_flags(GGaduDialog * dialog)
+{
+	g_return_if_fail(dialog != NULL);
+	return dialog->flags;
 }
 
 void ggadu_dialog_set_title(GGaduDialog * dialog, const gchar * title)
