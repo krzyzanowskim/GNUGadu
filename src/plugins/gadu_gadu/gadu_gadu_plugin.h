@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.12 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.13 2003/12/11 00:58:51 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -63,6 +63,8 @@ gpointer gadu_gadu_login (gpointer desc, gint status);
 void wyjdz_signal_handler ();
 
 void load_contacts (gchar * encoding);
+
+void import_userlist (gchar * list);
 
 void test ();
 

@@ -1,3 +1,7 @@
+11.12.2003
+- userlist import/export work again (gadu-gadu/krzak)
+- userlist menu order changed (gadu-gadu/krzak)
+
 01.12.2003
 - HOME_ETC support (CONFIG_DIR already supported) (krzak/All)
 - config_save create directory that it want save to (krzak/core)

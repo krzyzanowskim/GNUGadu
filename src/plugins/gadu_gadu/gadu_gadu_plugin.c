@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.95 2003/12/01 22:43:10 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.96 2003/12/11 00:58:51 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -232,8 +232,6 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
     p.async = 1;
     p.status = status;
     p.status_descr = desc;
-    /* ZONK this is to remove just to work with libgadu 1.4 */
-    /* p.protocol_version = GG_DEFAULT_PROTOCOL_VERSION; */
 
     if ((gint) config_var_get (handler, "private") == 1)
 	p.status |= GG_STATUS_FRIENDS_MASK;
@@ -244,12 +242,14 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
     if (!p.uin || (!p.password || !*p.password))
       {
 	  user_preferences_action (NULL);
+
 	  signal_emit (GGadu_PLUGIN_NAME, "gui show warning",
 		       g_strdup (_("You have to enter your GG# and password first!")), "main-gui");
+
 	  ggadu_gadu_gadu_disconnect ();
+
 	  return NULL;
       }
-
 
     print_debug ("loguje sie GG# %d do serwera %s %d, status %d\n", (gint) config_var_get (handler, "uin"), serveraddr,
 		 p.server_port, status);
@@ -445,6 +445,26 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	  gadu_gadu_login (NULL, GG_STATUS_AVAIL);
 	  break;
 
+      case GG_EVENT_USERLIST:
+
+	  switch (e->event.userlist.type)
+	    case GG_USERLIST_GET_REPLY:
+	      {
+		  gchar *list = NULL;
+
+		  print_debug ("GG_USERLIST_GET_REPLY");
+
+		  to_utf8 ("CP1250", e->event.userlist.reply, list);
+		  import_userlist (list);
+
+		  signal_emit (GGadu_PLUGIN_NAME, "gui show message",
+			       g_strdup (_("Userlist has been imported succesfully!")), "main-gui");
+		  g_free (list);
+	      }
+	  break;
+
+	  break;
+
       case GG_EVENT_MSG:
 	  print_debug ("you have message!\n");
 	  print_debug ("from: %d\n", e->event.msg.sender);
@@ -461,21 +481,24 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		struct gg_dcc *d = NULL;
 		gchar *idtmp = g_strdup_printf ("%d", e->event.msg.sender);
 		gchar **addr_arr = NULL;
-		gpointer key = NULL,index = NULL;
+		gpointer key = NULL, index = NULL;
 		GGaduContact *k = NULL, *ktmp = NULL;
 		GIOChannel *ch = NULL;
 
 		print_debug ("somebody want to send us a file\n");
 
 		//k = ggadu_repo_find_value ("gadu-gadu", idtmp);
-  		index = ggadu_repo_value_first ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *)&key);
-		while (index) {
-			ktmp = ggadu_repo_find_value ("gadu-gadu", key);
-			if (ktmp && (!ggadu_strcasecmp(ktmp->id,idtmp))) k = ktmp;
-			index = ggadu_repo_value_next ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *)&key, index);
-		}
+		index = ggadu_repo_value_first ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *) & key);
+		while (index)
+		  {
+		      ktmp = ggadu_repo_find_value ("gadu-gadu", key);
+		      if (ktmp && (!ggadu_strcasecmp (ktmp->id, idtmp)))
+			  k = ktmp;
+		      index = ggadu_repo_value_next ("gadu-gadu", REPO_VALUE_CONTACT, (gpointer *) & key, index);
+		  }
 
-		if (k == NULL) return TRUE;
+		if (k == NULL)
+		    return TRUE;
 
 		addr_arr = g_strsplit (k->ip, ":", 2);
 
@@ -519,8 +542,9 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	    }
 
 	  {
-	      gchar *line = g_strdup_printf (":: %s (%s)::\n%s\n\n", msg->id, get_timestamp (msg->time), msg->message);
-	      print_debug ("%s\n", line);
+	      gchar *line = g_strdup_printf (":: %s (%s)::\n%s\n\n", msg->id, get_timestamp (msg->time),
+					     msg->message);
+
 	      ggadu_gg_save_history (msg->id, line);
 	      g_free (line);
 	  }
@@ -529,113 +553,117 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
 	  if (config_var_get (handler, "sound_msg_file") != NULL)
 	      signal_emit (GGadu_PLUGIN_NAME, "sound play file", config_var_get (handler, "sound_msg_file"), "sound*");
+
 	  break;
 
       case GG_EVENT_NOTIFY60:
-      	  {
-      	  int i;
-	  
-	  print_debug("GG_EVENT_NOTIFY60\n");
-	  
-          for (i = 0; e->event.notify60[i].uin; i++)
+	  {
+	      int i;
+
+	      print_debug ("GG_EVENT_NOTIFY60\n");
+
+	      for (i = 0; e->event.notify60[i].uin; i++)
 		{
-		gchar *strIP = NULL;
-		gchar *desc_utf8 = NULL;
-		struct in_addr ip_addr;
-		
-		ip_addr.s_addr = e->event.notify60[i].remote_ip;
+		    gchar *strIP = NULL;
+		    gchar *desc_utf8 = NULL;
+		    struct in_addr ip_addr;
 
-		notify = g_new0 (GGaduNotify, 1);
-		notify->id = g_strdup_printf ("%d", e->event.notify60[i].uin);
-		notify->status = e->event.notify60[i].status;
+		    ip_addr.s_addr = e->event.notify60[i].remote_ip;
 
-		strIP = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
-		
-		if (strIP && (ggadu_strcasecmp (strIP, "0.0.0.0")))
-		    notify->ip = g_strdup_printf ("%s:%d", strIP, e->event.notify60[i].remote_port);
+		    notify = g_new0 (GGaduNotify, 1);
+		    notify->id = g_strdup_printf ("%d", e->event.notify60[i].uin);
+		    notify->status = e->event.notify60[i].status;
 
-		ggadu_convert ("CP1250", "UTF-8", e->event.notify60[i].descr, desc_utf8);
+		    strIP = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
 
-		set_userlist_status (notify, desc_utf8, userlist);
+		    if (strIP && (ggadu_strcasecmp (strIP, "0.0.0.0")))
+			notify->ip = g_strdup_printf ("%s:%d", strIP, e->event.notify60[i].remote_port);
 
-		l = userlist;
+		    ggadu_convert ("CP1250", "UTF-8", e->event.notify60[i].descr, desc_utf8);
 
-		while (l)
-		  {
-		      GGaduContact *k = (GGaduContact *) l->data;
+		    set_userlist_status (notify, desc_utf8, userlist);
 
-		      if (!ggadu_strcasecmp (k->id, notify->id))
-			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+		    l = userlist;
 
-		      l = l->next;
-		  }
+		    while (l)
+		      {
+			  GGaduContact *k = (GGaduContact *) l->data;
+
+			  if (!ggadu_strcasecmp (k->id, notify->id))
+			      ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+
+			  l = l->next;
+		      }
 
 
 		}
-		
-      	  }
-      	  break;
-	  
+
+	  }
+	  break;
+
       case GG_EVENT_NOTIFY:
       case GG_EVENT_NOTIFY_DESCR:
-          {
-	  print_debug("GG_EVENT_NOTIFY\n");
-	  struct gg_notify_reply *n = NULL;
-	  
-	  if (e->type == GG_EVENT_NOTIFY)
-	  	n = e->event.notify;
-	  else if (e->type == GG_EVENT_NOTIFY_DESCR)
-	  	n = e->event.notify_descr.notify;
+	  {
+	      print_debug ("GG_EVENT_NOTIFY\n");
+	      struct gg_notify_reply *n = NULL;
 
-	  while (n->uin)
-	    {
-		struct in_addr ip_addr;
-		gchar *strIP = NULL;
-		gchar *desc_utf8 = NULL;
+	      if (e->type == GG_EVENT_NOTIFY)
+		  n = e->event.notify;
+	      else if (e->type == GG_EVENT_NOTIFY_DESCR)
+		  n = e->event.notify_descr.notify;
 
-		ip_addr.s_addr = n->remote_ip;
+	      while (n->uin)
+		{
+		    struct in_addr ip_addr;
+		    gchar *strIP = NULL;
+		    gchar *desc_utf8 = NULL;
 
-		notify = g_new0 (GGaduNotify, 1);
-		notify->id = g_strdup_printf ("%d", n->uin);
-		notify->status = n->status;
+		    ip_addr.s_addr = n->remote_ip;
 
-		strIP = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
+		    notify = g_new0 (GGaduNotify, 1);
+		    notify->id = g_strdup_printf ("%d", n->uin);
+		    notify->status = n->status;
 
-		if (strIP && (ggadu_strcasecmp (strIP, "0.0.0.0")))
-		    notify->ip = g_strdup_printf ("%s:%d", strIP, n->remote_port);
+		    strIP = inet_ntoa (ip_addr);	/* cannot be freed it staically allocated memory */
 
-		if (e->type == GG_EVENT_NOTIFY_DESCR)
+		    if (strIP && (ggadu_strcasecmp (strIP, "0.0.0.0")))
+			notify->ip = g_strdup_printf ("%s:%d", strIP, n->remote_port);
+
+		    if (e->type == GG_EVENT_NOTIFY_DESCR)
 			ggadu_convert ("CP1250", "UTF-8", e->event.notify_descr.descr, desc_utf8);
-		
-		set_userlist_status (notify, desc_utf8, userlist);
 
-		l = userlist;
+		    set_userlist_status (notify, desc_utf8, userlist);
 
-		while (l)
-		  {
-		      GGaduContact *k = (GGaduContact *) l->data;
+		    l = userlist;
 
-		      if (!ggadu_strcasecmp (k->id, notify->id))
-			  ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
+		    while (l)
+		      {
+			  GGaduContact *k = (GGaduContact *) l->data;
 
-		      l = l->next;
-		  }
+			  if (!ggadu_strcasecmp (k->id, notify->id))
+			      ggadu_repo_change_value ("gadu-gadu", k->id, k, REPO_VALUE_DC);
 
-		n++;
-	    }
- 	  }
+			  l = l->next;
+		      }
+
+		    n++;
+		}
+	  }
 	  break;
 
       case GG_EVENT_STATUS60:
       case GG_EVENT_STATUS:
 	  {
 	      gchar *desc_utf8 = NULL;
-	      
-	      print_debug("GG_EVENT_STATUS");
 
-	      ggadu_convert ("CP1250", "UTF-8", ((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr), desc_utf8);
+	      print_debug ("GG_EVENT_STATUS");
+
+	      ggadu_convert ("CP1250", "UTF-8",
+			     ((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr),
+			     desc_utf8);
 	      notify = g_new0 (GGaduNotify, 1);
-	      notify->id = g_strdup_printf ("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
+	      notify->id =
+		  g_strdup_printf ("%d", (e->type == GG_EVENT_STATUS) ? e->event.status.uin : e->event.status60.uin);
 	      notify->status = (e->type == GG_EVENT_STATUS) ? e->event.status.status : e->event.status60.status;
 
 	      set_userlist_status (notify, desc_utf8, userlist);
@@ -988,7 +1016,8 @@ void import_userlist (gchar * list)
 	  gchar *first_name, *last_name, *nick, *comment, *mobile, *group, *uin;
 	  gchar **l = NULL;
 	  GGaduContact *k;
-	  print_debug ("pointer %p -> %p\n", tmp, *tmp);
+
+	  /* print_debug ("pointer %p -> %p\n", tmp, *tmp); */
 	  l = g_strsplit (*tmp, ";", 12);
 	  tmp++;
 
@@ -1003,7 +1032,8 @@ void import_userlist (gchar * list)
 	  uin = l[6];
 	  comment = l[7];
 
-	  print_debug ("dupa %s %p %p\n", uin, uin, mobile);
+	  /* print_debug ("dupa %s %p %p\n", uin, uin, mobile); */
+
 	  if ((!uin) && (!mobile))
 	      continue;
 
@@ -1036,127 +1066,39 @@ void import_userlist (gchar * list)
     save_addressbook_file (userlist);
 
     g_strfreev (all);
-    g_free (list);
 }
 
-gboolean handle_userlist (GIOChannel * source, GIOCondition condition, gpointer data)
-{
-    struct gg_http *h = data;
-
-    if (!h)
-	return FALSE;
-
-    if ((condition & G_IO_ERR))
-      {
-	  print_debug ("Condition with error\n");
-	  goto abort;
-      }
-
-    if (condition & G_IO_IN || condition & G_IO_OUT)
-      {
-
-	  if (h->callback (h) == -1 || h->state == GG_STATE_ERROR)
-	    {
-		print_debug ("error ocurred\n");
-		goto abort;
-	    }
-
-	  if (h->state == GG_STATE_CONNECTING)
-	    {
-		return TRUE;
-	    }
-
-	  if (h->state == GG_STATE_READING_HEADER)
-	    {
-		g_io_add_watch (source, G_IO_IN | G_IO_ERR, handle_userlist, h);
-		return FALSE;
-	    }
-
-	  if (h->state != GG_STATE_DONE)
-	      return TRUE;
-
-	  if (h->type == GG_SESSION_USERLIST_GET)
-	    {
-		if (h->data)
-		  {
-		      gchar *list;
-		      to_utf8 ("CP1250", h->data, list);
-		      import_userlist (list);
-		      signal_emit (GGadu_PLUGIN_NAME, "gui show message",
-				   g_strdup (_("Userlist has been imported succesfully!")), "main-gui");
-		  }
-		else
-		    signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Server returned empty userlist!")),
-				 "main-gui");
-
-	    }
-	  else if (h->type == GG_SESSION_USERLIST_PUT)
-	    {
-		if (!h->user_data)
-		  {
-		      if (h->data)
-			  signal_emit (GGadu_PLUGIN_NAME, "gui show message",
-				       g_strdup (_("Userlist export succeeded!")), "main-gui");
-		      else
-			  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Userlist export failed!")),
-				       "main-gui");
-		  }
-		else
-		  {
-		      if (h->data)
-			  signal_emit (GGadu_PLUGIN_NAME, "gui show message",
-				       g_strdup (_("Userlist delete succeeded!")), "main-gui");
-		      else
-			  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Userlist delete failed!")),
-				       "main-gui");
-		  }
-	    }
-      }
-
-  abort:
-    print_debug ("shutting down channel\n");
-    g_io_channel_shutdown (source, FALSE, NULL);
-    g_io_channel_unref (source);
-
-    h->destroy (h);
-
-    return FALSE;
-}
 
 gpointer import_userlist_action (gpointer user_data)
 {
-    struct gg_http *h;
-    GIOChannel *chan;
 
-    if (!(h = gg_userlist_get ((gint) config_var_get (handler, "uin"), config_var_get (handler, "password"), 1)))
+    if (gg_userlist_request (session, GG_USERLIST_GET, NULL) == -1)
       {
 	  print_debug ("userlist get error!\n");
+	  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Userlist import failed!")), "main-gui");
 	  return NULL;
       }
-
-    chan = g_io_channel_unix_new (h->fd);
-    g_io_add_watch (chan, G_IO_IN | G_IO_OUT | G_IO_ERR, handle_userlist, h);
 
     return NULL;
 }
 
 gpointer export_userlist_action (gpointer user_data)
 {
-    struct gg_http *h;
-    gchar *dump, *tmp = userlist_dump (userlist);
-    GIOChannel *chan;
+    gchar *dump = NULL;
+    gchar *tmp = userlist_dump (userlist);
 
     from_utf8 ("CP1250", tmp, dump);
-    g_free (tmp);
 
-    if (!(h = gg_userlist_put ((gint) config_var_get (handler, "uin"), config_var_get (handler, "password"), dump, 1)))
+    if (gg_userlist_request (session, GG_USERLIST_PUT, dump) == -1)
       {
 	  print_debug ("userlist put error!\n");
+	  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Userlist export failed!")), "main-gui");
 	  return NULL;
       }
 
-    chan = g_io_channel_unix_new (h->fd);
-    g_io_add_watch (chan, G_IO_IN | G_IO_OUT | G_IO_ERR, handle_userlist, h);
+    signal_emit (GGadu_PLUGIN_NAME, "gui show message", g_strdup (_("Userlist export succeeded!")), "main-gui");
+
+    g_free (tmp);
     g_free (dump);
 
     return NULL;
@@ -1164,20 +1106,15 @@ gpointer export_userlist_action (gpointer user_data)
 
 gpointer delete_userlist_action (gpointer user_data)
 {
-    struct gg_http *h;
-    GIOChannel *chan;
     gchar *dump = g_strdup ("");
 
-    if (!(h = gg_userlist_put ((gint) config_var_get (handler, "uin"), config_var_get (handler, "password"), dump, 1)))
+    if (gg_userlist_request (session, GG_USERLIST_PUT, dump) == -1)
       {
 	  print_debug ("userlist put error!\n");
+	  signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Userlist delete failed!")), "main-gui");
 	  return NULL;
       }
 
-    h->user_data = (gchar *) 2;
-
-    chan = g_io_channel_unix_new (h->fd);
-    g_io_add_watch (chan, G_IO_IN | G_IO_OUT | G_IO_ERR, handle_userlist, h);
     g_free (dump);
 
     return NULL;
@@ -1242,7 +1179,7 @@ gboolean test_chan_dcc_get (GIOChannel * source, GIOCondition condition, gpointe
 
 	  gg_event_free (e);
 	  /* gg_dcc_free (d);              WHYYYYYYYYYYYYYYY
-	     return FALSE; */
+	   * return FALSE; */
 	  break;
       }
 
@@ -1383,7 +1320,7 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
 
 	  gg_event_free (e);
 	  /* gg_dcc_free (d);           WHYYYYYYYYYYY
-	     return FALSE; */
+	   * return FALSE; */
 	  break;
       }
 
@@ -1521,10 +1458,12 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 
 
     if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
-	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg", NULL);
+	this_configdir =
+	    g_build_filename (g_get_home_dir (),
+			      g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg", NULL);
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".gg", NULL);
-	
+
 /* reserved for DEVEL branch 
 #if GGADU_DEBUG
     path = g_build_filename (this_configdir, "config_test", NULL);
@@ -1537,12 +1476,12 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
       {
 	  g_free (path);
 #endif*/
-	  path = g_build_filename (this_configdir, "config", NULL);
+    path = g_build_filename (this_configdir, "config", NULL);
 
-	  set_config_file_name ((GGaduPlugin *) handler, path);
+    set_config_file_name ((GGaduPlugin *) handler, path);
 
-	  if (!config_read (handler))
-	      g_warning (_("Unable to read configuration file for plugin %s"), "gadu-gadu");
+    if (!config_read (handler))
+	g_warning (_("Unable to read configuration file for plugin %s"), "gadu-gadu");
 /*#if GGADU_DEBUG
       }
 #endif*/
@@ -1689,29 +1628,25 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 	  /* exit_signal_handler(); */
 	  return;
       }
-      
+
     if (signal->name == GET_USER_MENU_SIG)
       {
 	  GGaduMenu *umenu = ggadu_menu_create ();
-	  GGaduMenu *listmenu = NULL;
 	  GGaduPluginExtension *ext = NULL;
 
 	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Chat"), user_chat_action, NULL));
-	  
-	  if ((ext = ggadu_find_extension(handler,GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE)))
-	  	ggadu_menu_add_submenu (umenu, ggadu_menu_new_item ((gpointer)ext->txt, ext->callback, NULL));
-	  
-	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("View History"), user_view_history_action, NULL));
 
 	  if ((gboolean) config_var_get (handler, "dcc"))
 	      ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Send File"), send_file_action, NULL));
 
-	  listmenu = ggadu_menu_new_item (_("Contact"), NULL, NULL);
-	  ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Add"), user_add_user_action, NULL));
-	  ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Remove"), user_remove_user_action, NULL));
-	  ggadu_menu_add_submenu (listmenu, ggadu_menu_new_item (_("Info"), user_change_user_action, NULL));
+	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Edit"), user_change_user_action, NULL));
+	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Remove"), user_remove_user_action, NULL));
+	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Add New"), user_add_user_action, NULL));
 
-	  ggadu_menu_add_submenu (umenu, listmenu);
+	  if ((ext = ggadu_find_extension (handler, GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE)))
+	      ggadu_menu_add_submenu (umenu, ggadu_menu_new_item ((gpointer) ext->txt, ext->callback, NULL));
+
+	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("View History"), user_view_history_action, NULL));
 
 	  ggadu_menu_print (umenu, NULL);
 
@@ -1942,56 +1877,55 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 	  GGaduStatusPrototype *sp = signal->data;
 
 	  if (sp == NULL)
-		return;
+	      return;
 
 	  if (sp->status != GG_STATUS_NOT_AVAIL)
 	    {
-	      /* descriptions, call dialogbox */
-	      if (sp->status == GG_STATUS_AVAIL_DESCR || sp->status == GG_STATUS_BUSY_DESCR ||
-		  sp->status == GG_STATUS_NOT_AVAIL_DESCR || sp->status == GG_STATUS_INVISIBLE_DESCR)
-		{
-		    GGaduDialog *d = ggadu_dialog_new ();
-		    gchar *reason_c = NULL;
+		/* descriptions, call dialogbox */
+		if (sp->status == GG_STATUS_AVAIL_DESCR || sp->status == GG_STATUS_BUSY_DESCR ||
+		    sp->status == GG_STATUS_NOT_AVAIL_DESCR || sp->status == GG_STATUS_INVISIBLE_DESCR)
+		  {
+		      GGaduDialog *d = ggadu_dialog_new ();
+		      gchar *reason_c = NULL;
 
-		    to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), reason_c);
+		      to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), reason_c);
 
-		    ggadu_dialog_set_title (d, _("Enter status description"));
-		    ggadu_dialog_callback_signal (d, "change status descr");
-		    ggadu_dialog_add_entry (&(d->optlist), 0, _("Description:"), VAR_STR, (gpointer) reason_c,
-					    VAR_FLAG_FOCUS);
+		      ggadu_dialog_set_title (d, _("Enter status description"));
+		      ggadu_dialog_callback_signal (d, "change status descr");
+		      ggadu_dialog_add_entry (&(d->optlist), 0, _("Description:"), VAR_STR, (gpointer) reason_c,
+					      VAR_FLAG_FOCUS);
 
-		    d->user_data = sp;
-		    signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
-		}
-	      else
-		{
-		    gint _status = sp->status;
-		    if (config_var_get (handler, "private"))
-			_status |= GG_STATUS_FRIENDS_MASK;
+		      d->user_data = sp;
+		      signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+		  }
+		else
+		  {
+		      gint _status = sp->status;
+		      if (config_var_get (handler, "private"))
+			  _status |= GG_STATUS_FRIENDS_MASK;
 
-		    /* if not connected, login. else, just change status */
-		    if (!connected)
-		      {
-			connect_count = 0;
-			gadu_gadu_login (NULL, sp->status);
-		      }
-		    else if (gg_change_status (session, _status) == -1)
-		      {
-			  signal_emit (GGadu_PLUGIN_NAME, "gui show warning",
-				       g_strdup (_("Unable to change status")), "main-gui");
-			  print_debug ("zjebka podczas change_status %d\n", sp->status);
-		      }
-		    else
-		      {
-			  signal_emit (GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status,
-				       "main-gui");
-		      }
-		}
+		      /* if not connected, login. else, just change status */
+		      if (!connected)
+			{
+			    connect_count = 0;
+			    gadu_gadu_login (NULL, sp->status);
+			}
+		      else if (gg_change_status (session, _status) == -1)
+			{
+			    signal_emit (GGadu_PLUGIN_NAME, "gui show warning", g_strdup (_("Unable to change status")),
+					 "main-gui");
+			    print_debug ("zjebka podczas change_status %d\n", sp->status);
+			}
+		      else
+			{
+			    signal_emit (GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+			}
+		  }
 	    }
 	  else
 	    {
-	      /* nie czekamy az serwer powie good bye tylko sami sie rozlaczamy */
-	      ggadu_gadu_gadu_disconnect ();
+		/* nie czekamy az serwer powie good bye tylko sami sie rozlaczamy */
+		ggadu_gadu_gadu_disconnect ();
 	    }
 
 	  return;
@@ -2004,45 +1938,44 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 
 	  if (d->response == GGADU_OK && sp)
 	    {
-		      GGaduKeyValue *kv = NULL;
-		      if (d->optlist)
+		GGaduKeyValue *kv = NULL;
+		if (d->optlist)
+		  {
+		      gchar *desc_utf = NULL, *desc_cp = NULL, *desc_iso = NULL;
+		      gint _status = sp->status;
+
+		      if (config_var_get (handler, "private"))
+			  _status |= GG_STATUS_FRIENDS_MASK;
+
+		      kv = (GGaduKeyValue *) d->optlist->data;
+
+		      print_debug (" %d %d\n ", GG_STATUS_INVISIBLE_DESCR, sp->status);
+
+		      desc_utf = kv->value;
+		      /* do sesji */
+		      from_utf8 ("CP1250", desc_utf, desc_cp);
+		      /* do konfiga */
+		      from_utf8 ("ISO-8859-2", desc_utf, desc_iso);
+		      config_var_set (handler, "reason", desc_iso);
+
+		      if (!connected)
 			{
-			    gchar *desc_utf = NULL, *desc_cp = NULL, *desc_iso = NULL;
-			    gint _status = sp->status;
-
-			    if (config_var_get (handler, "private"))
-				_status |= GG_STATUS_FRIENDS_MASK;
-
-			    kv = (GGaduKeyValue *) d->optlist->data;
-
-			    print_debug (" %d %d\n ", GG_STATUS_INVISIBLE_DESCR, sp->status);
-
-			    desc_utf = kv->value;
-			    /* do sesji */
-			    from_utf8 ("CP1250", desc_utf, desc_cp);
-			    /* do konfiga */
-			    from_utf8 ("ISO-8859-2", desc_utf, desc_iso);
-			    config_var_set (handler, "reason", desc_iso);
-
-			    if (!connected)
-			    {
-				connect_count = 0;
-				gadu_gadu_login (desc_cp, _status);
-			    }
-			    else if (!gg_change_status_descr (session, _status, desc_cp))
-				signal_emit (GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status,
-					     "main-gui");
-
-			    g_free (desc_cp);
-			    g_free (desc_iso);
-
-			    config_save(handler);
+			    connect_count = 0;
+			    gadu_gadu_login (desc_cp, _status);
 			}
+		      else if (!gg_change_status_descr (session, _status, desc_cp))
+			  signal_emit (GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
 
-		      if (sp->status == GG_STATUS_NOT_AVAIL_DESCR)
-			{
-			    ggadu_gadu_gadu_disconnect ();
-			}
+		      g_free (desc_cp);
+		      g_free (desc_iso);
+
+		      config_save (handler);
+		  }
+
+		if (sp->status == GG_STATUS_NOT_AVAIL_DESCR)
+		  {
+		      ggadu_gadu_gadu_disconnect ();
+		  }
 	    }
 	  GGaduDialog_free (d);
 	  return;
@@ -2185,8 +2118,8 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 
 			    while (tmp)
 			      {
-				  gchar *line =
-				      g_strdup_printf (_(":: Me (%s)::\n%s\n\n"), get_timestamp (0), msg->message);
+				  gchar *line = g_strdup_printf (_(":: Me (%s)::\n%s\n\n"), get_timestamp (0),
+								 msg->message);
 				  ggadu_gg_save_history ((gchar *) tmp->data, line);
 				  g_free (line);
 				  tmp = tmp->next;
@@ -2208,7 +2141,8 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			}
 		      else if (config_var_get (handler, "log"))
 			{
-			    gchar *line = g_strdup_printf (_(":: Me (%s) ::\n%s\n\n"), get_timestamp (0), msg->message);
+			    gchar *line = g_strdup_printf (_(":: Me (%s) ::\n%s\n\n"), get_timestamp (0),
+							   msg->message);
 			    ggadu_gg_save_history (msg->id, line);
 			    g_free (line);
 			}
@@ -2317,11 +2251,13 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 
     if (signal->name == GET_CURRENT_STATUS_SIG)
       {
-          signal->data_return = (gpointer) GG_STATUS_NOT_AVAIL;
-	  
+	  signal->data_return = (gpointer) GG_STATUS_NOT_AVAIL;
+
 	  if (session)
-	      signal->data_return =  (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->status ^ GG_STATUS_FRIENDS_MASK : session->status);
-	      
+	      signal->data_return =
+		  (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->
+			      status ^ GG_STATUS_FRIENDS_MASK : session->status);
+
       }
 }
 
