@@ -457,6 +457,8 @@ void start_plugin()
 	p->img_filename = g_strdup("jabber.png");
 	p->statuslist = status_init();
 	p->offline_status = JABBER_STATUS_UNAVAILABLE;
+
+	ggadu_repo_add_value ("_protocols_", p->display_name, p, REPO_VALUE_PROTOCOL);
     
 	signal_emit(GGadu_PLUGIN_NAME,"gui register protocol", p, "main-gui");
 	register_signal(jabber_handler,"change status");
@@ -517,6 +519,8 @@ void destroy_plugin() {
 		signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_jabbermenu, "main-gui");
 		ggadu_menu_free (menu_jabbermenu);
 	}
+
+	ggadu_repo_del_value ("_protocols_", p->display_name);
 	
 	signal_emit (GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
 	signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
