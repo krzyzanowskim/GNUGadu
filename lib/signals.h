@@ -1,4 +1,4 @@
-/* $Id: signals.h,v 1.8 2004/01/28 23:39:28 shaster Exp $ */
+/* $Id: signals.h,v 1.9 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -23,7 +23,7 @@
 #ifndef GGadu_SIGNALS_H
 #define GGadu_SIGNALS_H 1
 
-#include "gg-types.h"
+#include "ggadu_types.h"
 
 /* DEPRECATED */
 #define signal_emit(src_name,name,data,dest_data) \

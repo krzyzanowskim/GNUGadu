@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.19 2004/03/27 08:23:22 krzyzak Exp $ */
+/* $Id: main.c,v 1.20 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -37,7 +37,7 @@
 #include <sys/wait.h>
 
 #include "ggadu_support.h"
-#include "gg-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
 #include "ggadu_repo.h"

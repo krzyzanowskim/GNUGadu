@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.51 2004/03/28 12:12:31 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.52 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -28,8 +28,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"

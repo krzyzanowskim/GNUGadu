@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.51 2004/02/17 23:20:19 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.52 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -32,8 +32,7 @@
 #include <perl.h>
 #endif
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"

@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.54 2004/03/27 08:23:24 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.55 2004/05/04 21:39:11 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -30,8 +30,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
 #include "ggadu_conf.h"

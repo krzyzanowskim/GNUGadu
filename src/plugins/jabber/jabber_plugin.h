@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.26 2004/02/17 09:29:57 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.27 2004/05/04 21:39:10 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -25,8 +25,7 @@
 
 #include <loudmouth/loudmouth.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
 #include "ggadu_menu.h"

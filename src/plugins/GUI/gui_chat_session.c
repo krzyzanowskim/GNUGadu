@@ -1,4 +1,4 @@
-/* $Id: gui_chat_session.c,v 1.10 2004/02/17 09:29:53 krzyzak Exp $ */
+/* $Id: gui_chat_session.c,v 1.11 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -24,7 +24,6 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <string.h>
-#include "unified-types.h"
 #include "ggadu_support.h"
 #include "plugins.h"
 #include "ggadu_conf.h"

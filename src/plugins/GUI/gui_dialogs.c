@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.42 2004/04/02 18:52:01 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.43 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -29,7 +29,7 @@
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "ggadu_dialog.h"
 #include "signals.h"
 #include "ggadu_support.h"
@@ -430,7 +430,7 @@ void gui_show_message_box(gint type, gpointer signal)
 	gp = gui_find_protocol(((GGaduSignal *) signal)->source_plugin_name, protocols);
 
 	/* *INDENT-OFF* */
-    title =	g_strdup_printf("%s: %s", (gp) ? gp->p->display_name : (char *) ((GGaduSignal *) signal)->source_plugin_name,
+	title = g_strdup_printf("%s: %s", (gp) ? gp->p->display_name : (char *) ((GGaduSignal *) signal)->source_plugin_name,
 			gtk_window_get_title(GTK_WINDOW(warning)));
 	/* *INDENT-ON* */
 

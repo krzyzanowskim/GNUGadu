@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.14 2004/01/28 23:40:27 shaster Exp $ */
+/* $Id: gui_main.h,v 1.15 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -24,7 +24,7 @@
 #define GGadu_GUI_PLUGIN_MAIN_H 1
 
 #include <gtk/gtk.h>
-#include "unified-types.h"
+#include "ggadu_types.h"
 
 /* default size of a window */
 #define DEFAULT_WIDTH 160

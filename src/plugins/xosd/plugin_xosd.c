@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.28 2004/03/27 08:23:25 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.29 2004/05/04 21:39:13 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -39,8 +39,7 @@
 #include <perl.h>
 #endif
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"

@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.17 2004/03/28 23:03:43 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.1 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -230,5 +230,124 @@ typedef struct
     GSList *hooks;
     void (*perl_handler) (GGaduSignal *, gchar *, void *);
 } GGaduSignalHook;
+
+/*
+ *    GGaduContact
+ *    struktura opisujaca kontakt z dowolnego protoko³u
+ *    je¶li jakie¶ pole == NULL GUI powinno je zignorowaæ
+ */
+
+typedef struct
+{
+    gchar *id;			/* unikalny identyfikator: numer GG, adres z tlen'u etc. */
+    gchar *first_name;		/* imiê */
+    gchar *last_name;		/* nazwisko */
+    gchar *nick;		/* pseudo */
+    gchar *mobile;		/* tel. komórkowy */
+    gchar *email;		/* adres e-mail */
+    gchar *gender;		/* p³eæ */
+    gchar *group;		/* grupa */
+    gchar *comment;		/* komentarz */
+    gchar *birthdate;		/* data urodzenia */
+    gchar *status_descr;	/* opis do statusu */
+    gchar *ip;			/* "IP:PORT" */
+    gchar *city;		/* miasto */
+    gchar *age;			/* wiek */
+    gint status;		/* status w postaci liczbowej */
+} GGaduContact;
+
+void GGaduContact_free(GGaduContact * k);
+
+/*
+ *	Klasy wiadomo¶ci
+ */
+
+enum
+{
+    GGADU_CLASS_CHAT,
+    GGADU_CLASS_MSG,
+    GGADU_CLASS_CONFERENCE,
+    GGADU_MSG_SEND,
+    GGADU_MSG_RECV
+};
+
+enum
+{
+    GGADU_SEARCH_FIRSTNAME,
+    GGADU_SEARCH_LASTNAME,
+    GGADU_SEARCH_NICKNAME,
+    GGADU_SEARCH_CITY,
+    GGADU_SEARCH_BIRTHYEAR,
+    GGADU_SEARCH_GENDER,
+    GGADU_SEARCH_ACTIVE,
+    GGADU_SEARCH_ID,
+    GGADU_SEARCH_EMAIL
+};
+
+
+/*
+ *	GGaduMsg
+ *	opisuje przesylana wiadomosc
+ */
+
+typedef struct
+{
+    gchar *id;
+    gchar *message;
+    guint class;
+    guint time;
+
+    /* conference */
+    GSList *recipients;
+
+} GGaduMsg;
+
+void GGaduMsg_free(gpointer msg);
+
+/*
+ *	GGaduNotify
+ *	opisuje pojawienie sie kogos, lub zmiane stanu
+ */
+
+typedef struct
+{
+    gchar *id;
+    unsigned long status;
+    gchar *ip;			/* adres ip, nie musi byc ustawiony */
+} GGaduNotify;
+
+void GGaduNotify_free(GGaduNotify * n);
+
+/*
+ *	GGaduStatusPrototype
+ *	prototyp statusu uzytownika danego protoko³u
+ *
+ */
+
+typedef struct
+{
+    gint status;		/* identyfikator statusu */
+    gchar *description;		/* wy¶wietlany opis np. "Dostêpny" */
+    gchar *image;		/* nazwa pliku obrazeku statusu */
+    gboolean receive_only;
+} GGaduStatusPrototype;
+
+void GGaduStatusPrototype_free(GGaduStatusPrototype * s);
+
+typedef struct
+{
+    gint key;
+    gpointer value;
+
+    guint type;			/* VAR_STR, VAR_INT, VAR_BOOL */
+    guint flag;			/* GGADU_INSENSITIVE, GGADU_SENSITIVE (default) */
+
+    gchar *description;
+
+    gpointer user_data;
+} GGaduKeyValue;
+
+void GGaduKeyValue_free(GGaduKeyValue * kv);
+
 
 #endif

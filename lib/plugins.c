@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.15 2004/02/17 16:12:22 thrulliq Exp $ */
+/* $Id: plugins.c,v 1.16 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -27,8 +27,7 @@
 
 #include "plugins.h"
 #include "ggadu_support.h"
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 
 /* 
     sprawdza czy plugin jest na liscie modulow do zaladowania 
@@ -210,7 +209,7 @@ void unload_plugin(gchar * name)
 	dlclose(plugin_handler->plugin_so_handler);	/* tego ju¿ nie potrzebujemy */
 
 	/* jako, ¿e ju¿ nam praktycznie wszystko jedno w jakiej kolejno¶ci,
-	 * to dla porz±dku czy¶cimy w takiej kolejno¶ci, jak w gg-types.h,
+	 * to dla porz±dku czy¶cimy w takiej kolejno¶ci, jak w ggadu_types.h,
 	 * ¿eby o niczym nie zapomnieæ
 	 */
 

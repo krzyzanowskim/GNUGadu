@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.18 2004/03/27 20:47:51 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.19 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -28,8 +28,7 @@
 
 #include "ggadu_support.h"
 #include "ggadu_conf.h"
-#include "unified-types.h"
-#include "gg-types.h"
+#include "ggadu_types.h"
 
 static GGaduVar *ggadu_find_variable(GGaduPlugin * plugin_handler, gchar * name)
 {

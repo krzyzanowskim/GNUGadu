@@ -1,4 +1,4 @@
-/* $Id: unified-types.c,v 1.10 2004/02/17 09:29:52 krzyzak Exp $ */
+/* $Id: ggadu_types.c,v 1.1 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -28,8 +28,7 @@
 #endif
 
 #include <glib.h>
-#include "unified-types.h"
-#include "gg-types.h"
+#include "ggadu_types.h"
 #include "ggadu_support.h"
 
 void GGaduContact_free(GGaduContact * k)

@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.19 2004/03/27 08:23:23 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.20 2004/05/04 21:39:10 krzyzak Exp $ */
 
 /* 
  * remote plugin for GNU Gadu 2 
@@ -36,8 +36,7 @@
 #include <stdlib.h>
 #include <regex.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"

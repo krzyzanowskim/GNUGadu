@@ -4,7 +4,7 @@ pkg_LTLIBRARIES = libgg2_core.la
 noinst_LIBRARIES =
 
 libgg2_core_ladir = $(includedir)
-libgg2_core_la_SOURCES = unified-types.c \
+libgg2_core_la_SOURCES = \
 	signals.c \
 	plugins.c \
 	ggadu_support.c \
@@ -13,8 +13,8 @@ libgg2_core_la_SOURCES = unified-types.c \
 	ggadu_conf.c \
 	ggadu_dialog.c \
 	perl_embed.c \
-	gg-types.h \
-	unified-types.h \
+	ggadu_types.h \
+	ggadu_types.c \
 	signals.h \
 	plugins.h \
 	ggadu_support.h \
@@ -37,8 +37,7 @@ all:
 	@echo "#ifndef GG2_CORE_H" >> $(top_builddir)/lib/gg2_core.h
 	@echo "#define GG2_CORE_H" >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/config.h >> $(top_builddir)/lib/gg2_core.h
-	@cat $(top_builddir)/lib/gg-types.h >> $(top_builddir)/lib/gg2_core.h
-	@cat $(top_builddir)/lib/unified-types.h >> $(top_builddir)/lib/gg2_core.h
+	@cat $(top_builddir)/lib/ggadu_types.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/ggadu_dialog.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/perl_embed.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/ggadu_repo.h >> $(top_builddir)/lib/gg2_core.h
@@ -48,6 +47,5 @@ all:
 	@cat $(top_builddir)/lib/ggadu_conf.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/signals.h >> $(top_builddir)/lib/gg2_core.h
 	@echo "#endif" >> $(top_builddir)/lib/gg2_core.h
-	sed -e 's/#include \"unified-types.h\"//g' $(top_builddir)/lib/gg2_core.h > $(top_builddir)/lib/gg2_core.h-
-	sed -e 's/#include \"gg-types.h\"//g' $(top_builddir)/lib/gg2_core.h- > $(top_builddir)/lib/gg2_core.h
-	rm -f $(top_builddir)/lib/gg2_core.h-
+	sed -e 's/#include \"ggadu_types.h\"//g' $(top_builddir)/lib/gg2_core.h > $(top_builddir)/lib/gg2_core.h-
+	mv -f $(top_builddir)/lib/gg2_core.h- $(top_builddir)/lib/gg2_core.h

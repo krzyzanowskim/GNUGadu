@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.21 2004/03/27 08:23:24 krzyzak Exp $ */
+/* $Id: update_plugin.c,v 1.22 2004/05/04 21:39:13 krzyzak Exp $ */
 
 /*  
  * Update plugin for GNU Gadu 2  
@@ -37,8 +37,7 @@
 #include <netdb.h>
 #include <unistd.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"

@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.3 2004/02/17 16:34:13 thrulliq Exp $ */
+/* $Id: ggadu_support.c,v 1.4 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -32,7 +32,6 @@
 #include <sys/stat.h>
 #include <time.h>
 #include "ggadu_support.h"
-#include "unified-types.h"
 
 
 gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text)

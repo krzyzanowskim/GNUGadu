@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.36 2004/02/17 09:30:00 krzyzak Exp $ */
+/* $Id: sms_core.c,v 1.37 2004/05/04 21:39:11 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -38,8 +38,7 @@
 #include <netdb.h>
 #include <unistd.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
 #include "ggadu_menu.h"

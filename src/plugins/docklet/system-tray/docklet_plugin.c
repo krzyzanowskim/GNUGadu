@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.16 2004/03/13 14:27:06 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.17 2004/05/04 21:39:10 krzyzak Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -30,8 +30,7 @@
 #include <gdk/gdkx.h>
 #include <X11/Xatom.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
 #include "ggadu_menu.h"

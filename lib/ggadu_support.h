@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.2 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -29,8 +29,8 @@
 
 #include <glib.h>
 #include <time.h>
-#include "unified-types.h"
-#include "gg-types.h"
+#include <stdio.h>
+#include "ggadu_types.h"
 /*
  * Standard gettext macros.
  */
@@ -77,11 +77,11 @@ gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename);
 gboolean is_in_status(gint status, GSList * list);
 
 /* DEPRECATED */
-void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist);
+ void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist); 
 /* DEPRECATED */
-GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id);
+ GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id); 
 /* DEPRECATED */
-GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id);
+ GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id); 
 
 gboolean str_has_suffix(const gchar * str, const gchar * suffix);
 

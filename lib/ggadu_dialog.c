@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.c,v 1.4 2004/03/28 23:03:43 krzyzak Exp $ */
+/* $Id: ggadu_dialog.c,v 1.5 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -28,8 +28,7 @@
 
 #include "ggadu_dialog.h"
 #include "ggadu_support.h"
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 
 GGaduDialog *ggadu_dialog_new_full(guint type, gchar * title, gchar * callback_signal, gpointer user_data)
 {

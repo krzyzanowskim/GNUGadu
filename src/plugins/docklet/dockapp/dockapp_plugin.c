@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.20 2004/03/27 08:23:22 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.21 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -30,7 +30,7 @@
 #include <gdk/gdkx.h>
 #include <glib.h>
 
-#include "gg-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
 #include "ggadu_support.h"

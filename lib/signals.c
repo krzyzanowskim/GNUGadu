@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.20 2004/02/17 09:29:52 krzyzak Exp $ */
+/* $Id: signals.c,v 1.21 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "gg-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_support.h"
 #include "signals.h"

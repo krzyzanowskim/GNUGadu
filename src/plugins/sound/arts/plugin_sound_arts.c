@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_arts.c,v 1.6 2004/02/17 09:30:01 krzyzak Exp $ */
+/* $Id: plugin_sound_arts.c,v 1.7 2004/05/04 21:39:11 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -30,8 +30,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "signals.h"
 #include "ggadu_menu.h"

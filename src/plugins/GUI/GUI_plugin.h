@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.h,v 1.5 2004/04/02 14:14:03 thrulliq Exp $ */
+/* $Id: GUI_plugin.h,v 1.6 2004/05/04 21:39:09 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -25,8 +25,7 @@
 
 #include <gtk/gtk.h>
 #include "gui_main.h"
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 
 gboolean nick_list_clicked(GtkWidget * widget, GdkEventButton * event, gpointer user_data);
 

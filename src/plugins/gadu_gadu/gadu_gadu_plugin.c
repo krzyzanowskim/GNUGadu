@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.167 2004/05/04 09:37:47 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.168 2004/05/04 21:39:10 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -41,8 +41,7 @@
 
 #include <libgadu.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"

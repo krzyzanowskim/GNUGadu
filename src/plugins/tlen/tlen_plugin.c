@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.63 2004/03/27 08:23:24 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.64 2004/05/04 21:39:12 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -36,8 +36,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "gg-types.h"
-#include "unified-types.h"
+#include "ggadu_types.h"
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"

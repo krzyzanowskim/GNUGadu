@@ -1,4 +1,4 @@
-/* $Id: ggadu_repo.h,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
+/* $Id: ggadu_repo.h,v 1.2 2004/05/04 21:39:08 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -26,7 +26,7 @@
 #include <glib.h>
 #include <limits.h>
 
-#include "gg-types.h"
+#include "ggadu_types.h"
 
 typedef void (*watch_ptr) (gchar *, gpointer, gint);
 typedef gpointer GGaduRepoKey;
