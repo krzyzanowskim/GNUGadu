@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.23 2004/01/17 17:20:54 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.24 2004/01/26 23:22:50 krzyzak Exp $ */
 
 #include <string.h>
 
@@ -27,8 +27,9 @@ void jabber_login(enum states status)
 
 		if (lm_connection_close(connection, NULL))
 		{
-			signal_emit("jabber", "gui status changed", (gpointer) status, "main-gui");
-			signal_emit("jabber", "gui send userlist", NULL, "main-gui");
+			signal_emit("jabber", "gui disconnected", NULL, "main-gui");
+			jabber_data.connected = 0;
+			return;
 		}
 
 		while (list)
