@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.6 2003/04/13 11:57:17 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.7 2003/04/13 21:29:37 krzyzak Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -28,6 +28,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr);
 gpointer config_init_plugin(GGaduPlugin *plugin_handler);
 
 gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data);
+
+gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data);
 
 void my_signal_receive(gpointer name, gpointer signal_ptr);
 

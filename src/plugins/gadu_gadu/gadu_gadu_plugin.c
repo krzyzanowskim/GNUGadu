@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.31 2003/04/13 15:55:46 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.32 2003/04/13 21:29:36 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -38,8 +38,9 @@ gint http_watch = 0;
 
 GSList *userlist = NULL;
 GIOChannel *source_chan = NULL;
-struct gg_dcc *dcc_socket = NULL;
-GIOChannel *dcc_channel = NULL;
+struct gg_dcc *dcc_socket_get = NULL;
+GIOChannel *dcc_channel_send = NULL;
+GIOChannel *dcc_channel_get = NULL;
 
 gboolean connected = FALSE;
 gchar *this_configdir = NULL;
@@ -124,9 +125,13 @@ gpointer gadu_gadu_login(gpointer desc, gint status)
 	return FALSE;
     }
 
-		dcc_socket = gg_dcc_socket_create((int)config_var_get(handler,"uin"),0);
+		dcc_socket_get = gg_dcc_socket_create((int)config_var_get(handler,"uin"),0);
 		gg_dcc_ip = inet_addr("255.255.255.255");
-		gg_dcc_port = dcc_socket->port;
+		gg_dcc_port = dcc_socket_get->port;
+
+		dcc_channel_get = g_io_channel_unix_new(dcc_socket_get->fd);
+  	g_io_add_watch(dcc_channel_get, G_IO_ERR | G_IO_IN, test_chan_dcc,dcc_socket_get);
+
     
     memset(&p, 0, sizeof(p));
 
@@ -387,7 +392,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			
 			while (n->uin) 
 			{
-			    print_debug("%s : GG_EVENT_NOTIFY_DESCR : %d  %d %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,e->event.notify_descr.descr);
+//			    print_debug("%s : GG_EVENT_NOTIFY_DESCR : %d  %d %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,e->event.notify_descr.descr);
 			
 			    notify = g_new0(GGaduNotify,1);
 			    notify->id = g_strdup_printf("%d",n->uin);
@@ -861,21 +866,33 @@ gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data
 	}
 	
 	switch (e->type) {
-		case GG_EVENT_DCC_NEW:
-				print_debug("GG_EVENT_DCC_NEW\n");
-//				return FALSE;
+		case GG_EVENT_DCC_NEW: {
+				GIOChannel *ch = NULL;
+				struct gg_dcc *dcc = e->event.dcc_new;
+				print_debug("GG_EVENT_DCC_NEW %ld\n",(guint32)d->uin);
+				ch = g_io_channel_unix_new(dcc->fd);
+  			g_io_add_watch(ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc,dcc);
+				gg_dcc_free(d);
+				return FALSE;
+		}
 		break;
 		case GG_EVENT_DCC_CLIENT_ACCEPT:
-				print_debug("GG_EVENT_DCC_CLIENT_ACCEPT\n");
-//				return FALSE;
+				print_debug("GG_EVENT_DCC_CLIENT_ACCEPT %ld\n",(guint32)d->uin);
+//				if (d->uin != (gint)config_var_get(handler,"uin")) {
+//					gg_dcc_free(d);
+//					return FALSE;
+//				}
 		break;
 		case GG_EVENT_DCC_NEED_FILE_INFO:
 				print_debug("GG_EVENT_DCC_NEED_FILE_INFO\n");
 //				return FALSE;
 		break;
-		case GG_EVENT_DCC_NEED_FILE_ACK:
-				print_debug("GG_EVENT_DCC_NEED_FILE_ACK\n");
-//				return FALSE;
+		case GG_EVENT_DCC_NEED_FILE_ACK: {
+				struct gg_file_info file_info = d->file_info;
+				gchar *filename = file_info.filename;
+				print_debug("GG_EVENT_DCC_NEED_FILE_ACK %s\n",filename);
+		
+		}
 		break;
 		case GG_EVENT_DCC_DONE:
 				print_debug("GG_EVENT_DCC_DONE\n");
@@ -886,23 +903,24 @@ gboolean test_chan_dcc(GIOChannel *source, GIOCondition condition, gpointer data
 				print_debug("GG_EVENT_DCC_ERROR\n");
 				switch (e->event.dcc_error) {                                                                 
 					case GG_ERROR_DCC_HANDSHAKE:
-						print_debug("dcc_error_handshake");
+						print_debug("dcc_error_handshake\n");
+						if (d->state != GG_STATE_READING_ACK)
+							return FALSE;
 					break;
 					case GG_ERROR_DCC_NET:
-						print_debug("dcc_error_network");
+						print_debug("dcc_error_network\n");
 						gg_dcc_free(d);
 						return FALSE;
 					break;                                                                        
 					case GG_ERROR_DCC_REFUSED:
-						print_debug("dcc_error_refused");
+						print_debug("dcc_error_refused\n");
 						gg_dcc_free(d);
 						return FALSE;
 					break;
 					default:
-					print_debug("dcc_error_unknown");
+					print_debug("dcc_error_unknown\n");
 					break;
 				}
-//				return FALSE;
 		break;
 	}
 	
@@ -1229,8 +1247,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 		gg_dcc_fill_file_info(socket,filename);
 		
-		dcc_channel = g_io_channel_unix_new(socket->fd);
-  	g_io_add_watch(dcc_channel, G_IO_OUT | G_IO_ERR | G_IO_IN, test_chan_dcc,socket);
+		dcc_channel_send = g_io_channel_unix_new(socket->fd);
+  	g_io_add_watch(dcc_channel_send, G_IO_OUT | G_IO_ERR | G_IO_IN, test_chan_dcc,socket);
 		
 	}
 
