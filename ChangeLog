@@ -1,3 +1,6 @@
+12.10.2003
+- IDEA changed their URL again, fixed. (sms/shasta)
+
 28.09.2003
 - load all plugins if there's no modules.load. this fixes a nasty bug,
   (affecting mostly new users, without ~/.gg2) where gg2 could eat 100% cpu
