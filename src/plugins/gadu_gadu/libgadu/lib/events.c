@@ -1,4 +1,4 @@
-/* $Id: events.c,v 1.3 2004/08/04 21:50:51 krzyzak Exp $ */
+/* $Id: events.c,v 1.4 2004/10/21 08:11:53 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -75,6 +75,8 @@ void gg_event_free(struct gg_event *e)
 			free(e->event.notify60[i].descr);
 		
 		free(e->event.notify60);
+		
+		break;
 	}
 
 	if (e->type == GG_EVENT_STATUS60)
