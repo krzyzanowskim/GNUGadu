@@ -29,11 +29,20 @@ AIM		aim://
 ICQ		icq://
 
 #####
-Interface
+Interface org.freedesktop.im
 
-[
-org.freedesktop.im.getProtocols
+[org.freedesktop.im.getProtocols()]
+    RETURN: 
+	DBUS_TYPE_STRING's with supported protocols list example: gg:// jabber:// icq://
+
+
+[org.freedesktop.im.getPresence( contactURI )]
+    example: jabber://krzak@jabberpl.org
     
-    return strings with supported protocols list example: gg:// jabber:// icq://
-]
-[
+    RETURN: type DBUS_TYPE_UINT32
+	enum
+	{
+	    IM_PRESENCE_ONLINE = 1,
+	    IM_PRESENCE_AWAY,
+	    IM_PRESENCE_OFFLINE
+	} DBusIMPresence;	    
