@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.14 2004/01/17 00:44:58 shaster Exp $ */
+/* $Id: signals.c,v 1.15 2004/01/17 00:54:48 shaster Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -40,7 +40,7 @@ GGaduSignal *signal_cpy(GGaduSignal * sig)
     tmpsignal->destination_plugin_name = g_strdup(sig->destination_plugin_name);
 
     tmpsignal->data = sig->data;
-    tmpsignal->free_me = sig->free_me;	/* flaga czy zwalniac signal po wykonaniu czy tez nie
+    tmpsignal->free_me = sig->free_me;	/* flaga czy zwalniac signal po wykonaniu czy tez nie */
     return tmpsignal;
 }
 
@@ -175,7 +175,9 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
     while (hooks)
     {
 	GGaduSignalHook *hook = (GGaduSignalHook *) hooks->data;
-	/* print_debug("qq %d %s - %d %s\n",tmpsignal->name,g_quark_to_string(tmpsignal->name),hook->name,g_quark_to_string(hook->name)); */
+/*
+	print_debug("qq %d %s - %d %s\n",tmpsignal->name,g_quark_to_string(tmpsignal->name),hook->name,g_quark_to_string(hook->name));
+*/
 	if (tmpsignal->name == hook->name)
 	{
 	    GSList *list = hook->hooks;
@@ -255,7 +257,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
     if ((signalinfo != NULL) && (signalinfo->signal_free != NULL) && 
         (tmpsignal != NULL) && (tmpsignal->free_me) && (!tmpsignal->data_return))
     {
-	signalinfo->signal_free(tmpsignal); /* ZONK
+	signalinfo->signal_free(tmpsignal);
     }
 */
 

@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.11 2004/01/17 00:45:00 shaster Exp $ */
+/* $Id: dockapp_plugin.c,v 1.12 2004/01/17 00:54:49 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -215,7 +215,7 @@ gboolean msgicon_blink(gpointer data)
 	blink_no--;
 	draw_pixmap();
 	redraw_dockapp();
-	return TRUE;		/* timer still running
+	return TRUE;		/* timer still running */
     }
     /* else stop timer */
     return FALSE;
