@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.232 2005/01/03 22:16:05 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.233 2005/01/04 08:48:33 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -142,9 +142,13 @@ void ggadu_gadu_gadu_disconnect_msg(gchar * txt)
 
 gchar *insert_cr(gchar * txt)
 {
+	gchar *out;
 	gchar *in = txt;
-	gchar *out = g_malloc0(strlen(txt) * 2);
 	gchar *start = out;
+	
+	if (!txt) return NULL;
+	
+	out = g_malloc0(strlen(txt) * 2);
 
 	while (*in)
 	{
@@ -2299,6 +2303,12 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			gchar *message = NULL;
 
 			message = from_utf8("CP1250", msg->message);
+			if (!message) 
+			{
+				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Unable to send message")), "main-gui");
+				return;
+			}
+			
 			message = insert_cr(message);
 			msg->time = time(NULL);
 
