@@ -1,9 +1,9 @@
-/* $Id: jabber_login.h,v 1.10 2004/12/22 15:56:29 krzyzak Exp $ */
+/* $Id: ignore.h,v 1.1 2004/12/22 15:56:28 krzyzak Exp $ */
 
 /* 
- * Jabber plugin for GNU Gadu 2 
+ * Example: plugin code for GNU Gadu 2 
  * 
- * Copyright (C) 2003-2005 GNU Gadu Team 
+ * Copyright (C) 2001-2004 GNU Gadu Team 
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 
@@ -20,11 +20,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  */
 
-#ifndef GGADU_JABBER_LOGIN_H
-#define GGADU_JABBER_LOGIN_H 1
+#ifndef GGADU_IGNORE_PLUGINH
+#define GGADU_IGNORE_PLUGIN_H 1
 
-#include "jabber_plugin.h"
 
-gpointer jabber_login_connect(gpointer status);
+GGaduSigID IGNORE_ADD_CONTACT_SIG;
+GGaduSigID IGNORE_REMOVE_CONTACT_SIG;
+GGaduSigID IGNORE_CHECK_CONTACT_SIG;
+
+enum
+{
+    GGADU_SE_CONFIG_PLAYER
+};
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.133 2004/12/20 16:56:10 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.134 2004/12/22 15:56:29 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -134,15 +134,16 @@ static gpointer user_edit_action(gpointer user_data)
 	return NULL;
 }
 
-static gpointer user_ignore_action(gpointer user_data)
+/*static gpointer user_ignore_action(gpointer user_data)
 {
 	GSList *user = (GSList *) user_data;
-	GGaduContact *k = (GGaduContact *) user->data;
+	GGaduContact *k;
 	gchar *ignored;
 
 	if(!user)
 	        return NULL;
-
+		
+	k = (GGaduContact *)user->data;
 	ignored = ggadu_config_var_get(jabber_handler, "ignored");
 	
 	if(!g_strrstr(ignored, k->id))
@@ -160,12 +161,13 @@ static gpointer user_ignore_action(gpointer user_data)
 static gpointer user_unignore_action(gpointer user_data)
 {
         GSList *user = (GSList *) user_data;
-	GGaduContact *k = (GGaduContact *) user->data;
+	GGaduContact *k;
 	gchar *ignored;
 
 	if(!user)
 	        return NULL;
-
+		
+	k = (GGaduContact *) user->data;
 	ignored = ggadu_config_var_get(jabber_handler, "ignored");
 	
 	if(g_strrstr(ignored, k->id))
@@ -224,7 +226,7 @@ static gpointer user_show_ignored_action(gpointer user_data)
 
         return NULL;
 }
-
+*/
 static gpointer user_own_vcard_action(gpointer user_data)
 {
         LmMessage *msg;
@@ -454,7 +456,8 @@ gpointer jabber_register_account_dialog(gpointer user_data)
 static GGaduMenu *build_userlist_menu(void)
 {
 	GGaduMenu *menu = ggadu_menu_create();
-	GGaduMenu *listmenu,*ignoremenu,*infomenu;
+	GGaduMenu *listmenu,*infomenu;
+//	*ignoremenu,
 
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
 	ggadu_menu_add_user_menu_extensions(menu,jabber_handler);
@@ -473,13 +476,13 @@ static GGaduMenu *build_userlist_menu(void)
 			       ggadu_menu_new_item(_("Re_move authorization"), user_remove_auth_from, NULL));
 	ggadu_menu_add_submenu(menu, listmenu);
 
-	ignoremenu = ggadu_menu_new_item(_("Ignore"), NULL, NULL);
+/*	ignoremenu = ggadu_menu_new_item(_("Ignore"), NULL, NULL);
 	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("_Ignore contact"), user_ignore_action, NULL));
 	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("_Unignore contact"), user_unignore_action, NULL));
 	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(ignoremenu, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
 	ggadu_menu_add_submenu(menu, ignoremenu);
-	
+*/	
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("E_dit"), user_edit_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Rem_ove"), user_ask_remove_action, NULL));
@@ -569,9 +572,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			       			ggadu_config_var_set(jabber_handler, "proxy", kv->value);
 					}
 					break;
-				case GGADU_JABBER_IGNORED:
+/*				case GGADU_JABBER_IGNORED:
 			       		ggadu_config_var_set(jabber_handler, "ignored", kv->value);
 					break;
+*/					
 				}
 				tmplist = tmplist->next;
 			}
@@ -1476,7 +1480,7 @@ GGaduMenu *build_jabber_menu()
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("_Search for friends"), user_search_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("_Preferences"), user_preferences_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
-	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show _ignored"), user_show_ignored_action, NULL));
+//	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Show _ignored"), user_show_ignored_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Personal _data"), user_own_vcard_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item(_("Services d_iscovery"), jabber_services_discovery_action, NULL));
 	ggadu_menu_add_submenu(item, ggadu_menu_new_item("", NULL, NULL));
@@ -1564,7 +1568,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
 	ggadu_config_var_add_with_default(jabber_handler, "resource", VAR_STR, JABBER_DEFAULT_RESOURCE);
 	ggadu_config_var_add(jabber_handler, "proxy", VAR_STR);
-	ggadu_config_var_add_with_default(jabber_handler, "ignored", VAR_STR, "");
+//	ggadu_config_var_add_with_default(jabber_handler, "ignored", VAR_STR, "");
 
 	if (lm_ssl_is_supported())
 		ggadu_config_var_add(jabber_handler, "use_ssl", VAR_BOOL);

@@ -1,4 +1,4 @@
-/* $Id: history_viewer.c,v 1.7 2004/12/15 17:51:31 krzyzak Exp $ */
+/* $Id: history_viewer.c,v 1.8 2004/12/22 15:56:27 krzyzak Exp $ */
 
 /* 
  * Plugin code for GNU Gadu 2 
@@ -28,8 +28,8 @@
 #include "gg2_core.h"
 #include "history_viewer.h"
 
-GGaduPlugin *handler;
-GGaduMenu *menu_pluginmenu = NULL;
+static GGaduPlugin *handler;
+static GGaduMenu *menu_pluginmenu = NULL;
 static GGaduPluginExtension *ext = NULL;	/* extension to handle vie hisatory from foreign plugins */
 
 GGadu_PLUGIN_INIT("history-external", GGADU_PLUGIN_TYPE_MISC);
@@ -37,11 +37,9 @@ GGadu_PLUGIN_INIT("history-external", GGADU_PLUGIN_TYPE_MISC);
 gpointer history_external_preferences(gpointer user_data)
 {
     GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("External History Viewer Preferences"),"update config");
-	
+
     print_debug("%s: Preferences\n","External history viewer");
-
     ggadu_dialog_add_entry(dialog, GGADU_HISTORY_CONFIG_VIEWER, _("_Path to external viewer"), VAR_FILE_CHOOSER, ggadu_config_var_get(handler, "viewer"), VAR_FLAG_NONE);
-
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
     return NULL;
@@ -61,7 +59,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 	{
 	    GSList *tmplist = ggadu_dialog_get_entries(dialog);
-	    
 	    while (tmplist)
 	    {
 		GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;

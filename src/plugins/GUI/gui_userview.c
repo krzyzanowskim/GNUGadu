@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.60 2004/12/20 09:15:15 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.61 2004/12/22 15:56:26 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -243,6 +243,7 @@ void gui_list_add(gui_protocol * gp)
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model), 2, GTK_SORT_ASCENDING);
 	
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(model));
+	
 	g_object_set_data(G_OBJECT(users_liststore),"treeview",treeview);
 	g_signal_connect(G_OBJECT(model),"row-changed",G_CALLBACK(nick_list_row_changed2),users_liststore);
 	g_object_unref(model);
@@ -390,8 +391,10 @@ void gui_create_tree()
 					NULL);
 
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(users_treestore));
+	
 	model = GTK_TREE_MODEL(users_treestore);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model), 3, GTK_SORT_ASCENDING);
+	
 	g_object_set_data(G_OBJECT(users_treestore),"treeview",treeview);
 	g_signal_connect(G_OBJECT(model),"row-changed",G_CALLBACK(nick_list_row_changed2),users_treestore);
 	

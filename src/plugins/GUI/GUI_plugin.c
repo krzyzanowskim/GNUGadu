@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.99 2004/12/20 09:15:13 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.100 2004/12/22 15:56:25 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -81,9 +81,12 @@ void nick_list_row_changed2(GtkTreeModel * model, GtkTreePath * path, GtkTreeIte
 	if (treeview)
 	{
 		GtkTreeSelection *selection = gtk_tree_view_get_selection(treeview);
-		if (gtk_tree_selection_path_is_selected(selection, path))
+		
+		if ((gtk_tree_selection_count_selected_rows(selection) == 1) && 
+		    gtk_tree_selection_path_is_selected(selection, path))
+//		    gtk_tree_selection_iter_is_selected(selection, iter))
 		{
-			print_debug("nick_list_row_changed2 selected and changed");
+			print_debug("nick_list_row_changed2 selected and changed %s",gtk_tree_path_to_string(path));
 			nick_list_row_changed(NULL, model, path, FALSE, user_data);
 		}
 	}

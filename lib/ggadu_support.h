@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.13 2004/12/19 20:35:49 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.14 2004/12/22 15:56:24 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -126,8 +126,6 @@ gchar		*get_timestamp(time_t t);
 char		*base64_decode(char *);
 char		*base64_encode(const char *buf);
 
-
-
 gchar		*ggadu_strchomp(gchar * str);
 gchar		*ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text);
 
@@ -136,6 +134,7 @@ gboolean	ggadu_write_line_to_file(gchar * path, gchar * line, gchar * enc);
 gchar		*check_file_exists(const gchar * directory, const gchar * filename);
 
 GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint status);
+
 
 /*! @name DEPRECATED */
 /* DEPRECATED */

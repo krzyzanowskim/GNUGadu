@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.82 2004/12/20 10:21:19 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.83 2004/12/22 15:56:32 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -95,46 +95,6 @@ gboolean ping(gpointer data)
 	tlen_ping(session);
 	print_debug("TLEN PING sent!\n");
 	return TRUE;
-}
-
-gpointer user_view_history_action(gpointer user_data)
-{
-	gsize length, terminator;
-	GIOChannel *ch = NULL;
-	gchar *line = NULL;
-	gchar *path = NULL;
-	GString *hist_buf = NULL;
-	GSList *users = (GSList *) user_data;
-	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
-
-	if (!k)
-		return NULL;
-
-	path = g_build_filename(this_configdir, "history", k->id, NULL);
-	ch = g_io_channel_new_file(path, "r", NULL);
-	g_free(path);
-
-	if (!ch)
-		return NULL;
-
-	hist_buf = g_string_new(NULL);
-
-	g_io_channel_set_encoding(ch, "ISO-8859-2", NULL);
-
-	while (g_io_channel_read_line(ch, &line, &length, &terminator, NULL) != G_IO_STATUS_EOF)
-	{
-		if (line != NULL)
-			g_string_append(hist_buf, line);
-	}
-
-	g_io_channel_shutdown(ch, TRUE, NULL);
-
-	signal_emit(GGadu_PLUGIN_NAME, "gui show window with text", hist_buf->str, "main-gui");
-
-	/* zwonic ten hist_buf */
-	g_string_free(hist_buf, TRUE);
-
-	return NULL;
 }
 
 
@@ -863,10 +823,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		/* GGaduMenu *listmenu = NULL; */
 
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View _History"), user_view_history_action, NULL));
-
 		ggadu_menu_add_user_menu_extensions(umenu, handler);
-
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Remove"), user_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Add New"), user_add_user_action, NULL));
 

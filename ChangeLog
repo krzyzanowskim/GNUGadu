@@ -1,3 +1,8 @@
+22.12.2004
+- introduce "ignore-main" plugin, not finished yet (krzak)
+- remove current ignore support from jabber plugin, need to use ignore-main plugin. (jabber/krzak)
+- some fixes.
+
 20.12.2004
 - support for common history interface for tlen plugin (tlen/krzak)
 

@@ -50,6 +50,10 @@ if BUILD_AAWAY
 AAWAY=aaway
 endif
 
+if BUILD_IGNORE
+IGNORE=ignore
+endif
+
 if BUILD_REMOTE
 REMOTE=remote
 endif
@@ -67,7 +71,7 @@ HISTORY=history
 endif
 
 
-SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE) $(HISTORY) $(DBUS) $(AAWAY)
+SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE) $(HISTORY) $(DBUS) $(AAWAY) $(IGNORE)
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)/$(pkglibdir)

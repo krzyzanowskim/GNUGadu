@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.17 2004/12/19 20:35:49 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.18 2004/12/22 15:56:24 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -688,22 +688,19 @@ gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick,
 	{
 	    case GGADU_HISTORY_TYPE_RECEIVE:
 		line = g_strdup_printf("chatrcv,%s,%s,%d,%d,%s", msg->id, nick, msg->time, (int)time(0), msg->message);
-		esc_line = g_strescape(line,"");
-		final_line = g_strconcat(esc_line,"\n",NULL);
-		g_free(esc_line);
-		g_free(line);
 	    break;
 	    case GGADU_HISTORY_TYPE_SEND:
 		line = g_strdup_printf("chatsend,%s,%s,%d,%s", msg->id, nick, (int)time(0), msg->message);
-		esc_line = g_strescape(line,"");
-		final_line = g_strconcat(esc_line,"\n",NULL);
-		g_free(esc_line);
-		g_free(line);
 	    break;
 	}
 	
+	esc_line = g_strescape(line,"");
+	final_line = g_strconcat(esc_line,"\n",NULL);
 	ret = ggadu_write_line_to_file(filepath, final_line, NULL);
+
 	g_free(final_line);
+	g_free(esc_line);
+	g_free(line);
 	return ret; 
 }
 
@@ -719,20 +716,14 @@ GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint statu
 		return NULL;
 
 	tmp = gp->statuslist;
-
 	while (tmp)
 	{
 		GGaduStatusPrototype *sp = tmp->data;
-
 		if ((sp) && (sp->status == status))
-		{
 			return sp;
-		}
 
 		tmp = tmp->next;
 	}
-
 	return NULL;
 }
-
 
