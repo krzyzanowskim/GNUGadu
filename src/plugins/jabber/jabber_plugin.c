@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.96 2004/08/24 12:39:49 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.97 2004/08/26 10:58:05 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -57,6 +57,7 @@ static GQuark GET_USER_MENU_SIG;
 static GQuark REGISTER_ACCOUNT;
 static GQuark USER_REMOVE_SIG;
 static GQuark USER_EDIT_VCARD_SIG;
+static GQuark USER_SHOW_VCARD_SIG;
 
 jabber_data_type jabber_data;
 
@@ -759,6 +760,11 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 		GGaduDialog_free(dialog);
 	}
+	else if (signal->name == USER_SHOW_VCARD_SIG)
+	{
+		GGaduDialog_free((GGaduDialog *) signal->data);
+		/* We have to free this dialog somewhere */
+	}
 	else if (signal->name == JABBER_SUBSCRIBE_SIG)
 	{
 
@@ -1094,6 +1100,7 @@ void start_plugin()
 	REGISTER_ACCOUNT = register_signal(jabber_handler, "register account");
 	USER_REMOVE_SIG = register_signal(jabber_handler, "user remove action");
 	USER_EDIT_VCARD_SIG = register_signal(jabber_handler, "user edit vcard");
+	USER_SHOW_VCARD_SIG = register_signal(jabber_handler, "user show vcard");
 
 	jabbermenu = build_jabber_menu();
 

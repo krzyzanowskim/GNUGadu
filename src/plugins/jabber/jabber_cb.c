@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.52 2004/08/24 12:39:49 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.53 2004/08/26 10:58:05 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -442,8 +442,7 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 	{
 		LmMessageNode *node;
 		gchar *string = g_strdup_printf(_("%s's personal info:"),lm_message_node_get_attribute(message->node, "from"));
-		GGaduDialog *dialog = dialog=ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "");
-		/* No signal name -- just show the vcard. */
+		GGaduDialog *dialog = dialog=ggadu_dialog_new(GGADU_DIALOG_YES_NO, string, "user show vcard");
 
 		g_free(string);
 
