@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_esd.c,v 1.8 2004/01/28 23:41:37 shaster Exp $ */
+/* $Id: plugin_sound_esd.c,v 1.9 2004/02/17 09:30:02 krzyzak Exp $ */
 
 /* 
  * sound-ESD plugin for GNU Gadu 2 
@@ -36,8 +36,8 @@
 #include "unified-types.h"
 #include "plugins.h"
 #include "signals.h"
-#include "menu.h"
-#include "support.h"
+#include "ggadu_menu.h"
+#include "ggadu_support.h"
 
 GGaduPlugin *handler;
 

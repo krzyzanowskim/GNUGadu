@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_arts.c,v 1.5 2004/01/28 23:41:35 shaster Exp $ */
+/* $Id: plugin_sound_arts.c,v 1.6 2004/02/17 09:30:01 krzyzak Exp $ */
 
 /* 
  * sound-aRts plugin for GNU Gadu 2 
@@ -34,8 +34,8 @@
 #include "unified-types.h"
 #include "plugins.h"
 #include "signals.h"
-#include "menu.h"
-#include "support.h"
+#include "ggadu_menu.h"
+#include "ggadu_support.h"
 #include "sound-arts.h"
 
 GGaduPlugin *handler;

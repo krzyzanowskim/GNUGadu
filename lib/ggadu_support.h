@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.11 2004/02/17 01:47:50 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 

@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.7 2004/01/28 23:41:50 shaster Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.8 2004/02/17 09:30:03 krzyzak Exp $ */
 
 /* 
  * XOSD plugin for GNU Gadu 2 
@@ -40,8 +40,8 @@
 #include "unified-types.h"
 #include "plugins.h"
 #include "signals.h"
-#include "menu.h"
-#include "support.h"
+#include "ggadu_menu.h"
+#include "ggadu_support.h"
 
 GGaduPlugin *handler;
 

@@ -7,9 +7,9 @@ libgg2_core_ladir = $(includedir)
 libgg2_core_la_SOURCES = unified-types.c \
 	signals.c \
 	plugins.c \
-	support.c \
-	menu.c \
-	repo.c \
+	ggadu_support.c \
+	ggadu_menu.c \
+	ggadu_repo.c \
 	ggadu_conf.c \
 	ggadu_dialog.c \
 	perl_embed.c \
@@ -17,9 +17,9 @@ libgg2_core_la_SOURCES = unified-types.c \
 	unified-types.h \
 	signals.h \
 	plugins.h \
-	support.h \
-	menu.h \
-	repo.h \
+	ggadu_support.h \
+	ggadu_menu.h \
+	ggadu_repo.h \
 	ggadu_conf.h \
 	ggadu_dialog.h \
 	perl_embed.h 
@@ -41,9 +41,9 @@ all:
 	@cat $(top_builddir)/lib/unified-types.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/ggadu_dialog.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/perl_embed.h >> $(top_builddir)/lib/gg2_core.h
-	@cat $(top_builddir)/lib/repo.h >> $(top_builddir)/lib/gg2_core.h
-	@cat $(top_builddir)/lib/support.h >> $(top_builddir)/lib/gg2_core.h
-	@cat $(top_builddir)/lib/menu.h >> $(top_builddir)/lib/gg2_core.h
+	@cat $(top_builddir)/lib/ggadu_repo.h >> $(top_builddir)/lib/gg2_core.h
+	@cat $(top_builddir)/lib/ggadu_support.h >> $(top_builddir)/lib/gg2_core.h
+	@cat $(top_builddir)/lib/ggadu_menu.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/plugins.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/ggadu_conf.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/signals.h >> $(top_builddir)/lib/gg2_core.h

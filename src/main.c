@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.17 2004/01/28 23:39:40 shaster Exp $ */
+/* $Id: main.c,v 1.18 2004/02/17 09:29:52 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -36,11 +36,11 @@
 #include <sys/signal.h>
 #include <sys/wait.h>
 
-#include "support.h"
+#include "ggadu_support.h"
 #include "gg-types.h"
 #include "plugins.h"
 #include "signals.h"
-#include "repo.h"
+#include "ggadu_repo.h"
 #include "perl_embed.h"
 
 GGaduConfig *config;

@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.20 2004/02/17 01:47:50 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -31,7 +31,7 @@
 #include <glib.h>
 #include <sys/stat.h>
 #include <time.h>
-#include "support.h"
+#include "ggadu_support.h"
 #include "unified-types.h"
 
 

@@ -1,4 +1,4 @@
-/* $Id: repo.c,v 1.7 2004/01/28 23:39:27 shaster Exp $ */
+/* $Id: ggadu_repo.c,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -22,10 +22,10 @@
 
 #include <glib.h>
 
-#include "repo.h"
+#include "ggadu_repo.h"
 #include "gg-types.h"
 #include "signals.h"
-#include "support.h"
+#include "ggadu_support.h"
 
 const gint REPO_mask = REPO_ACTION_NEW | REPO_ACTION_DEL | REPO_ACTION_CHANGE;
 const gint REPO_value_mask = REPO_ACTION_VALUE_NEW | REPO_ACTION_VALUE_DEL | REPO_ACTION_VALUE_CHANGE;

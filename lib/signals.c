@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.19 2004/01/28 23:39:28 shaster Exp $ */
+/* $Id: signals.c,v 1.20 2004/02/17 09:29:52 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -31,7 +31,7 @@
 
 #include "gg-types.h"
 #include "plugins.h"
-#include "support.h"
+#include "ggadu_support.h"
 #include "signals.h"
 
 static GMutex *thread_signal_mutex = NULL;

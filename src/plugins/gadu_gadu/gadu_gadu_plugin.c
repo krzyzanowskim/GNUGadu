@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.152 2004/02/17 01:34:29 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.153 2004/02/17 09:29:56 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -46,11 +46,11 @@
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"
-#include "support.h"
-#include "menu.h"
+#include "ggadu_support.h"
+#include "ggadu_menu.h"
 #include "gadu_gadu_plugin.h"
 #include "ggadu_dialog.h"
-#include "repo.h"
+#include "ggadu_repo.h"
 #include "perl_embed.h"
 
 GGaduPlugin *handler;

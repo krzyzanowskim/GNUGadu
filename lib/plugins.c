@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.13 2004/01/28 23:39:26 shaster Exp $ */
+/* $Id: plugins.c,v 1.14 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -26,7 +26,7 @@
 #include <dlfcn.h>
 
 #include "plugins.h"
-#include "support.h"
+#include "ggadu_support.h"
 #include "gg-types.h"
 #include "unified-types.h"
 

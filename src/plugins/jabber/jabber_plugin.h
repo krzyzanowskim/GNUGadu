@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.25 2004/02/15 14:11:19 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.26 2004/02/17 09:29:57 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -29,10 +29,10 @@
 #include "unified-types.h"
 #include "plugins.h"
 #include "signals.h"
-#include "menu.h"
-#include "support.h"
+#include "ggadu_menu.h"
+#include "ggadu_support.h"
 #include "ggadu_dialog.h"
-#include "repo.h"
+#include "ggadu_repo.h"
 
 enum
 {

@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.38 2004/02/17 02:04:57 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.39 2004/02/17 09:29:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -32,7 +32,7 @@
 #include "unified-types.h"
 #include "ggadu_dialog.h"
 #include "signals.h"
-#include "support.h"
+#include "ggadu_support.h"
 #include "gui_support.h"
 #include "gui_main.h"
 

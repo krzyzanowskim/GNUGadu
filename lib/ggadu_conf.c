@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.11 2004/02/14 16:46:53 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.12 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "support.h"
+#include "ggadu_support.h"
 #include "ggadu_conf.h"
 #include "unified-types.h"
 #include "gg-types.h"

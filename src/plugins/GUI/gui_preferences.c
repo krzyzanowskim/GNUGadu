@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.49 2004/01/28 23:40:27 shaster Exp $ */
+/* $Id: gui_preferences.c,v 1.50 2004/02/17 09:29:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -26,7 +26,7 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
-#include "support.h"
+#include "ggadu_support.h"
 #include "signals.h"
 #include "ggadu_conf.h"
 #include "plugins.h"

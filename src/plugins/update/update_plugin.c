@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.19 2004/02/14 16:47:00 krzyzak Exp $ */
+/* $Id: update_plugin.c,v 1.20 2004/02/17 09:30:05 krzyzak Exp $ */
 
 /*  
  * Update plugin for GNU Gadu 2  
@@ -42,8 +42,8 @@
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"
-#include "menu.h"
-#include "support.h"
+#include "ggadu_menu.h"
+#include "ggadu_support.h"
 #include "ggadu_dialog.h"
 #include "update_plugin.h"
 

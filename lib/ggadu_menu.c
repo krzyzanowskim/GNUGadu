@@ -1,4 +1,4 @@
-/* $Id: menu.c,v 1.5 2004/01/28 23:39:25 shaster Exp $ */
+/* $Id: ggadu_menu.c,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -26,7 +26,7 @@
 #include <string.h>
 #include <glib.h>
 
-#include "support.h"
+#include "ggadu_support.h"
 #include "gg-types.h"
 
 

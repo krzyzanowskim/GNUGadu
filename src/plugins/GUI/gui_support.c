@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.10 2004/01/28 23:40:38 shaster Exp $ */
+/* $Id: gui_support.c,v 1.11 2004/02/17 09:29:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -25,7 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "support.h"
+#include "ggadu_support.h"
 #include "signals.h"
 #include "ggadu_conf.h"
 #include "plugins.h"

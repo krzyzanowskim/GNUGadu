@@ -1,4 +1,4 @@
-/* $Id: repo.h,v 1.5 2004/01/28 23:39:28 shaster Exp $ */
+/* $Id: ggadu_repo.h,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 

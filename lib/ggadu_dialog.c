@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.c,v 1.2 2004/02/15 14:11:18 krzyzak Exp $ */
+/* $Id: ggadu_dialog.c,v 1.3 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -27,7 +27,7 @@
 #include <glib.h>
 
 #include "ggadu_dialog.h"
-#include "support.h"
+#include "ggadu_support.h"
 #include "gg-types.h"
 #include "unified-types.h"
 

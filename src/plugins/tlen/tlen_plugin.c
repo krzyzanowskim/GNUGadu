@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.60 2004/02/14 16:46:59 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.61 2004/02/17 09:30:04 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -41,11 +41,11 @@
 #include "plugins.h"
 #include "ggadu_conf.h"
 #include "signals.h"
-#include "menu.h"
-#include "support.h"
+#include "ggadu_menu.h"
+#include "ggadu_support.h"
 #include "tlen_plugin.h"
 #include "ggadu_dialog.h"
-#include "repo.h"
+#include "ggadu_repo.h"
 
 GGaduPlugin *handler;
 GGaduProtocol *p;

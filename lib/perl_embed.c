@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.14 2004/01/28 23:39:26 shaster Exp $ */
+/* $Id: perl_embed.c,v 1.15 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2
@@ -42,8 +42,8 @@
 
 #include "perl_embed.h"
 #include "signals.h"
-#include "support.h"
-#include "repo.h"
+#include "ggadu_support.h"
+#include "ggadu_repo.h"
 
 typedef struct
 {

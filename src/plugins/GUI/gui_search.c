@@ -1,4 +1,4 @@
-/* $Id: gui_search.c,v 1.4 2004/01/28 23:40:29 shaster Exp $ */
+/* $Id: gui_search.c,v 1.5 2004/02/17 09:29:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -22,8 +22,8 @@
 
 #include <gtk/gtk.h>
 #include "unified-types.h"
-#include "support.h"
-#include "menu.h"
+#include "ggadu_support.h"
+#include "ggadu_menu.h"
 #include "signals.h"
 #include "plugins.h"
 

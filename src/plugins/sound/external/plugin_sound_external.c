@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.14 2004/02/14 16:46:58 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.15 2004/02/17 09:30:03 krzyzak Exp $ */
 
 /* 
  * sound-external plugin for GNU Gadu 2 
@@ -34,9 +34,9 @@
 #include "unified-types.h"
 #include "plugins.h"
 #include "signals.h"
-#include "menu.h"
+#include "ggadu_menu.h"
 #include "ggadu_conf.h"
-#include "support.h"
+#include "ggadu_support.h"
 #include "ggadu_dialog.h"
 #include "plugin_sound_external.h"
 

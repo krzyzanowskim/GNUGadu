@@ -1,4 +1,4 @@
-/* $Id: menu.h,v 1.4 2004/01/28 23:39:26 shaster Exp $ */
+/* $Id: ggadu_menu.h,v 1.1 2004/02/17 09:29:51 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
