@@ -1,4 +1,4 @@
-/* $Id: update_plugin.h,v 1.1 2003/05/30 13:07:13 shaster Exp $ */
+/* $Id: update_plugin.h,v 1.2 2003/05/31 20:45:13 shaster Exp $ */
 
 #ifndef UPDATE_PLUGIN_H
 #define UPDATE_PLUGIN_H 1
@@ -14,6 +14,7 @@
 
 enum
 {
+    GGADU_UPDATE_CONFIG_CHECK_ON_STARTUP,
     GGADU_UPDATE_CONFIG_CHECK_AUTOMATICALLY,
     GGADU_UPDATE_CONFIG_CHECK_INTERVAL,
     GGADU_UPDATE_CONFIG_USE_XOSD,

@@ -1,4 +1,6 @@
 31.05.2003
+- added ability to check for updates on startup [configurable]; switched from
+  gtk_timeout_* to g_timeout_*, thus got rid of gtk dependency (update/shasta)
 - distinguish messages from warnings (sms/shasta)
 - forbid negative values in VAR_INT spin buttons (GUI/shasta)
 
