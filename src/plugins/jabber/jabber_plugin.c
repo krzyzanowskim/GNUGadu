@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.155 2005/01/27 16:42:57 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.156 2005/01/31 13:26:13 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1411,6 +1411,7 @@ void start_plugin()
 	p->img_filename = g_strdup("jabber.png");
 	p->statuslist = status_init();
 	p->offline_status = g_slist_append(p->offline_status, (gint *) JABBER_STATUS_UNAVAILABLE);
+	p->offline_status = g_slist_append(p->offline_status, (gint *) JABBER_STATUS_ERROR);
 	p->online_status = g_slist_append(p->online_status, (gint *) JABBER_STATUS_AVAILABLE);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_AWAY);
 	p->away_status = g_slist_append(p->away_status, (gint *) JABBER_STATUS_DND);
