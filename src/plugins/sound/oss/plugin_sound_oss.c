@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.4 2003/09/27 23:38:56 shaster Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.5 2004/01/12 00:00:49 krzyzak Exp $ */
 
 /*
  *    Originally written by Igor Truszkowski <pol128@polsl.gliwice.pl>
@@ -135,7 +135,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 	    gchar *filename = signal->data;
 	    
-	    if (filename != NULL) 
+	    if ((filename != NULL) && g_file_test(filename,G_FILE_TEST_IS_REGULAR))
 	    {
 		g_thread_create(ggadu_play_file, filename, FALSE, NULL);
 	    }
