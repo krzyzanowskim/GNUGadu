@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.29 2005/02/17 16:52:43 andyx_x Exp $ */
+/* $Id: dockapp_plugin.c,v 1.30 2005/02/20 11:31:50 andyx_x Exp $ */
 
 /* 
  * Dockapp plugin for GNU Gadu 2 
@@ -156,7 +156,8 @@ void dockapp_clicked(GtkWidget * widget, GdkEventButton * ev, gpointer data)
 	/* on icon1 or icon2 ? */
 	if (btn_clicked(&btnred, ev->x, ev->y))
 	{
-		destroy_plugin();
+		signal_emit("dockapp", "exit", NULL, NULL);
+		g_main_loop_quit(config->main_loop);
 	}
 	else
 	{
@@ -424,7 +425,7 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 gpointer user_preferences_action(gpointer user_data)
 {
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Dockapp plugin configuration"), "update config"); 
-	GSList *protocol_names = NULL;g_slist_append(protocol_names, "All" );
+	GSList *protocol_names = NULL;
 	gpointer key2 = NULL, index = NULL;	
 	gchar * utf;
 	GGaduProtocol *p = NULL;
