@@ -14,29 +14,36 @@ pkgdir = $(libdir)
 pkg_LTLIBRARIES = libgg2_core.la
 noinst_LIBRARIES =
 
-libgg2_core_la_SOURCES = gg-types.h \
-	unified-types.h \
-	unified-types.c \
+libgg2_core_ladir = $(includedir)
+libgg2_core_la_SOURCES = unified-types.c \
 	signals.c \
-	signals.h \
 	plugins.c \
-	plugins.h \
 	support.c \
-	support.h \
 	menu.c \
-	menu.h \
 	dialog.c \
-	dialog.h \
 	repo.c \
-	repo.h \
 	perl_embed.c \
+	gg-types.h \
+	unified-types.h \
+	signals.h \
+	plugins.h \
+	support.h \
+	menu.h \
+	dialog.h \
+	repo.h \
 	perl_embed.h
+	
+libgg2_core_la_HEADERS = libgg2_core.h
 
 libgg2_core_la_LIBADD = $(PERL_OPTION_LDFLAGS) -ldl 
 libgg2_core_la_LDFLAGS = -version-info 2:0:0
 
 all:
-	@cat $(top_builddir)/src/gg-types.h > $(top_builddir)/src/libgg2_core.h
+	@echo "/* This file is generated automatically. Do not edit. */\n" > $(top_builddir)/src/libgg2_core.h
+	@echo "#ifndef LIBGG2_CORE_H\n" >> $(top_builddir)/src/libgg2_core.h
+	@echo "#define LIBGG2_CORE_H\n" >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/config.h >> $(top_builddir)/src/libgg2_core.h
+	@cat $(top_builddir)/src/gg-types.h >> $(top_builddir)/src/libgg2_core.h
 	@cat $(top_builddir)/src/dialog.h >> $(top_builddir)/src/libgg2_core.h
 	@cat $(top_builddir)/src/perl_embed.h >> $(top_builddir)/src/libgg2_core.h
 	@cat $(top_builddir)/src/repo.h >> $(top_builddir)/src/libgg2_core.h
@@ -45,3 +52,4 @@ all:
 	@cat $(top_builddir)/src/plugins.h >> $(top_builddir)/src/libgg2_core.h
 	@cat $(top_builddir)/src/signals.h >> $(top_builddir)/src/libgg2_core.h
 	@cat $(top_builddir)/src/unified-types.h >> $(top_builddir)/src/libgg2_core.h
+	@echo "#endif\n" >> $(top_builddir)/src/libgg2_core.h
