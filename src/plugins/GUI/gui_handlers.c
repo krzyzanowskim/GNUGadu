@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.7 2003/04/01 15:53:31 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.8 2003/04/07 19:45:50 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -137,10 +137,10 @@ void handle_unregister_menu(GGaduSignal *signal)
     if (root)
     {
       GGaduMenuItem *it = root->data;
-      gchar *path;
       int len = strlen (it->label);
-      gchar *label = g_new0(char, len + 1);;
       int i, c;
+      gchar *label = g_new0(char, len + 1);
+      gchar *path;
       
       for (i =0, c = 0; i < len; i++)
       {
