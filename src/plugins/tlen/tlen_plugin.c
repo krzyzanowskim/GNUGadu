@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.52 2004/01/25 22:54:19 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.53 2004/01/26 10:35:47 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -449,7 +449,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			desc_utf8 = ggadu_convert("ISO-8859-2", "UTF-8", e->presence->description);
 			set_userlist_status(notify, desc_utf8, userlist);
-			g_free(desc_utf8);
 
 			while (l)
 			{
@@ -461,6 +460,11 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				}
 				l = l->next;
 			}
+
+			/* natomiast desc_utf8 nie mozna zwolnic, bo mamy takie glupie API */
+			g_free(notify->id);
+			g_free(notify);
+
 /*
             signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 */
@@ -951,7 +955,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				d->user_data = _sp;
 
 				desc_utf = to_utf8("ISO-8859-2", description);
-				ggadu_dialog_add_entry(&(d->optlist), 666, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
+				ggadu_dialog_add_entry(&(d->optlist), TLEN_STATUS_DESC, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
 				g_free(desc_utf);
 
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
