@@ -38,6 +38,17 @@ void clear_lines()
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(text_view), buf);
 }
 
+static void scroll_to_end()
+{
+	GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
+	GtkTextIter iter;
+	gtk_text_buffer_get_end_iter(buf, &iter);
+	gtk_text_buffer_place_cursor(buf, &iter);
+	gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW(text_view), gtk_text_buffer_get_insert(buf), 0.0, TRUE,
+					     0.0, 0.0);
+}
+
+
 void first_page(GtkWidget * widget, gpointer gdata)
 {
 	if (lines > 20)
@@ -152,7 +163,7 @@ void show_lines(int start, int end, int *list)
 #ifdef GGADU_DEBUG
 			g_print("chatsend..");
 #endif
-			gtmp1 = gg_hist_time(atoi(hist_line->timestamp1));
+			gtmp1 = gg_hist_time(atoi(hist_line->timestamp1),TRUE);
 			gtmp2 = g_strdup_printf("%s :: %s :: \n", "Me", gtmp1);
 			AddText(text_view, gtmp2, "header");
 			g_free(gtmp1);
@@ -169,8 +180,8 @@ void show_lines(int start, int end, int *list)
 #ifdef GGADU_DEBUG
 			g_print("chatrcv..");
 #endif
-			gtmp2 = gg_hist_time_time(atoi(hist_line->timestamp1));
-			gtmp3 = gg_hist_time(atoi(hist_line->timestamp2));
+			gtmp2 = gg_hist_time(atoi(hist_line->timestamp1),FALSE);
+			gtmp3 = gg_hist_time(atoi(hist_line->timestamp2),TRUE);
 			gtmp4 = g_strdup_printf("%s :: %s [%s] :: \n", hist_line->nick, gtmp2, gtmp3);
 			AddText(text_view, gtmp4, "header2");
 			g_free(gtmp2);
@@ -189,7 +200,7 @@ void show_lines(int start, int end, int *list)
 			g_print("status..");
 #endif
 #ifdef SHOW_STATUS
-			gtmp1 = gg_hist_time(atoi(hist_line->timestamp1));
+			gtmp1 = gg_hist_time(atoi(hist_line->timestamp1),TRUE);
 			gtmp3 = g_strdup_printf("%s *** %s *** \n", gtmp1, hist_line->data);
 			AddText(text_view, gtmp3, "status");
 			g_free(gtmp1);
@@ -215,8 +226,8 @@ void show_lines(int start, int end, int *list)
 		g_print("\n");
 #endif
 	}
+	scroll_to_end();
 }
-
 
 
 
@@ -225,7 +236,9 @@ int main(int argc, char **argv)
 	GtkWidget *window;
 	GtkWidget *button;
 	GtkWidget *field;
+	GtkWidget *field_s;
 	GtkWidget *base_field;
+	GtkTextBuffer *buf;
 
 	gtk_init(&argc, &argv);
 
@@ -269,19 +282,19 @@ int main(int argc, char **argv)
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(text_view), FALSE);
 	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(text_view), FALSE);
 
-	GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
+	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
 	gtk_text_buffer_create_tag(buf, "header", "foreground", "brown", "font", "Arial Bold", NULL);
 	gtk_text_buffer_create_tag(buf, "header2", "foreground", "blue", "font", "Arial Bold", NULL);
 	gtk_text_buffer_create_tag(buf, "status", "foreground", "#995500", "font", "Arial Bold", NULL);
 	gtk_text_buffer_create_tag(buf, "warning", "foreground", "#990099", "font", "Arial Bold", NULL);
 	gtk_text_buffer_create_tag(buf, "", "foreground", "#000000", "font", "Arial", NULL);
 
-	field = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(field), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-	gtk_container_add(GTK_CONTAINER(field), text_view);
+	field_s = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(field_s), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+	gtk_container_add(GTK_CONTAINER(field_s), text_view);
 
-	gtk_box_pack_start(GTK_BOX(base_field), field, TRUE, TRUE, 3);
-	gtk_widget_show(field);
+	gtk_box_pack_start(GTK_BOX(base_field), field_s, TRUE, TRUE, 3);
+	gtk_widget_show_all(field_s);
 
 
 	/* Bottom side - 4 buttons */
@@ -313,13 +326,13 @@ int main(int argc, char **argv)
 	g_print("Found %d lines, and read %d of 'em\n", lines, get_lines(fd, list));
 #endif
 
+	/* last page ? */
+	if (lines > display_pages)
+	    show_lines(lines-display_pages, lines, list);
+	else
+	    show_lines(0, display_pages, list);
 
-	int start = 0, end = display_pages;
-	show_lines(start, end, list);
-
-	gtk_widget_show(text_view);
-	gtk_widget_show(base_field);
-	gtk_widget_show(window);
+	gtk_widget_show_all(window);
 
 	gtk_main();
 	close(fd);

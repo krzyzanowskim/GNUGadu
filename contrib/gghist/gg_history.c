@@ -158,28 +158,19 @@ struct gg_hist_line *formatline(int fd, int offset)
 }
 
 
-gchar *gg_hist_time(int timestamp)
+gchar *gg_hist_time(int timestamp,gboolean date)
 {
 	gchar gtmp[32];
 	gchar *gtmp2 = NULL;
 
 	struct tm *ptm = (struct tm *) localtime((time_t *) & timestamp);
-	strftime(gtmp, sizeof (gtmp), "%H:%M:%S (%Y-%m-%d)", ptm);
+	if (date)
+	    strftime(gtmp, sizeof (gtmp), "%H:%M:%S (%Y-%m-%d)", ptm);
+	else
+	    strftime(gtmp, sizeof (gtmp), "%H:%M:%S", ptm);
 
 	gtmp2 = g_strdup_printf("%s", gtmp);
 
 	return gtmp2;
 }
 
-gchar *gg_hist_time_time(int timestamp)
-{
-	gchar gtmp[32];
-	gchar *gtmp2 = NULL;
-
-	struct tm *ptm = (struct tm *) localtime((time_t *) & timestamp);
-	strftime(gtmp, sizeof (gtmp), "%H:%M:%S", ptm);
-
-	gtmp2 = g_strdup_printf("%s", gtmp);
-
-	return gtmp2;
-}

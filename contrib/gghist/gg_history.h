@@ -34,6 +34,6 @@ char *getitem(int fd, int offset, char schr, char echr, int item, int cut);
 int lines_count(int fd);
 int get_lines(int fd, int *list);
 struct gg_hist_line *formatline(int fd, int offset);
-gchar *gg_hist_time(int timestamp);
+gchar *gg_hist_time(int timestamp,gboolean date);
 
 #endif
