@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.5 2004/10/26 16:26:05 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.6 2004/10/27 14:16:46 thrulliq Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -62,6 +62,39 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 		dbus_error_free(&error);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
+
+	/* getProtocols */
+	if (dbus_message_is_method_call
+	    (message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS))
+	{
+		print_debug("getProtocols");
+		
+		GGaduProtocol *p = NULL;
+		gpointer key, index;
+		DBusMessage *return_message;
+		
+		return_message = dbus_message_new_method_return(message);
+
+		if (ggadu_repo_exists("_protocols_")) {
+		    index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, &key);
+		    
+		    while (index) {
+			p = ggadu_repo_find_value("_protocols_", key);
+			
+			if (p) {
+			    print_debug("proto: %s", p->display_name);
+			    dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->display_name, DBUS_TYPE_INVALID);
+			}
+			
+			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
+		    }
+		}
+		/* not sure if it works that way, but just trying */
+		dbus_connection_send(connection, return_message, NULL);   
+		
+		dbus_error_free(&error);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	} else
 
 	/* getPresence */
 	if (dbus_message_is_method_call

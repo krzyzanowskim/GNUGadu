@@ -6,6 +6,7 @@
 #include "dbus_plugin.h"
 
 static gboolean send_ping(DBusConnection * bus);
+static void get_protocols(DBusConnection *bus);
 
 int main(int argc, char **argv)
 {
@@ -26,6 +27,8 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	/* get avaiable protocols */
+	get_protocols(bus);
 	/* Set up this connection to work in a GLib event loop */
 	dbus_connection_setup_with_g_main(bus, NULL);
 	/* Every second call send_ping() with the bus as an argument */
@@ -36,15 +39,11 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-static gboolean send_ping(DBusConnection * bus)
+
+static gboolean send_ping(DBusConnection *bus)
 {
 	DBusMessage *message;
 
-/*	message = dbus_message_new_method_call(DBUS_ORG_FREEDESKTOP_IM_SERVICE, 
-					       DBUS_ORG_FREEDESKTOP_IM_OBJECT,
-					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
-					       DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE);
-*/					       
 	message = dbus_message_new_method_call(DBUS_ORG_FREEDESKTOP_IM_SERVICE, 
 					       DBUS_ORG_FREEDESKTOP_IM_OBJECT,
 					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
@@ -59,4 +58,18 @@ static gboolean send_ping(DBusConnection * bus)
 	/* Tell the user we send a signal */
 	/* Return TRUE to tell the event loop we want to be called again */
 	return TRUE;
+}
+
+static void get_protocols(DBusConnection *bus)
+{
+	DBusMessage *message;
+
+	message = dbus_message_new_method_call(DBUS_ORG_FREEDESKTOP_IM_SERVICE, 
+					       DBUS_ORG_FREEDESKTOP_IM_OBJECT,
+					       DBUS_ORG_FREEDESKTOP_IM_INTERFACE,
+					       DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS);
+	
+	dbus_connection_send(bus, message, NULL);
+
+	dbus_message_unref(message);
 }

@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.h,v 1.4 2004/10/25 22:26:41 krzyzak Exp $ */
+/* $Id: dbus_plugin.h,v 1.5 2004/10/27 14:16:46 thrulliq Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -21,9 +21,10 @@
  */
 
 #define DBUS_ORG_FREEDESKTOP_IM_SERVICE "org.freedesktop.im"
-#define DBUS_ORG_FREEDESKTOP_IM_INTERFACE "org.freedesktop.im.Presence"
-#define DBUS_ORG_FREEDESKTOP_IM_OBJECT "/org/freedesktop/im/Presence"
+#define DBUS_ORG_FREEDESKTOP_IM_INTERFACE "org.freedesktop.im.ImApp"
+#define DBUS_ORG_FREEDESKTOP_IM_OBJECT "/org/freedesktop/im/GNUGadu"
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE "getPresence"
+#define DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS "getProtocols"
 
 enum
 {
