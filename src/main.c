@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.13 2003/11/25 23:14:11 thrulliq Exp $ */
+/* $Id: main.c,v 1.14 2004/01/11 13:35:59 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Igor Popik <thrull@slackware.pl>
@@ -117,6 +117,7 @@ void start_plugins_ordered ()
     GSList *tmp = NULL;
     GGaduPlugin *plugin = NULL;
     void (*start_plugin) ();
+    gboolean main_gui_loaded = FALSE;
 
     tmp = get_list_modules_load ();
 
@@ -125,9 +126,21 @@ void start_plugins_ordered ()
 	  plugin = (GGaduPlugin *) tmp->data;
 	  start_plugin = plugin->start_plugin;
 	  if (start_plugin)
-	      start_plugin ();
+	    start_plugin ();
+
+	  if (!g_strcasecmp(plugin->name,"main-gui"))
+	    main_gui_loaded = TRUE;
+	    
 	  tmp = tmp->next;
       }
+    
+    if (!main_gui_loaded) {
+	g_print(_("\n\t***************************\n \
+	GNU Gadu kindly inform you that because you have no GUI plugin installed/compiled/loaded.\n  \
+	you shouldn't expect common interaction with application.\n \
+	Check README for more information about plugins\n \
+	***************************\n"));
+    }
 
 }
 
@@ -175,8 +188,7 @@ int main (int argc, char **argv)
     signal (SIGPIPE, SIG_IGN);
     signal (SIGCHLD, sigchld);
 
-//    if (!g_thread_supported()) 
-    g_thread_init (NULL);	// a nuz widelec ktos bedzie potrzebowal watkow ?
+    g_thread_init (NULL);
     gnu_gadu_init (NULL);
     config->main_loop = g_main_loop_new (NULL, FALSE);
     g_main_loop_run (config->main_loop);
