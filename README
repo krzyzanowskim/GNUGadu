@@ -11,5 +11,7 @@ To compile all plugins you need:
 - xosd (http://ignavus.net/software.html) - XOSD
 - esound (http://www.tux.org/~ricdude/EsounD.html
 
+WARNING: perl support and remote plugin will compile/work only on Linux!
+
 Read doc/problems and other documentation files BEFORE submitting ANY
 bugreports.
