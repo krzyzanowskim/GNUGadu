@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.33 2004/01/09 23:40:49 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.34 2004/01/10 11:00:04 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -741,13 +741,9 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (expand), TRUE);
 	
     if ((gint) ggadu_config_var_get (gui_handler, "chat_type") == CHAT_TYPE_TABBED)
-      {
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatstyle), TRUE);
-      }
     else if ((gint) ggadu_config_var_get (gui_handler, "chat_type") == CHAT_TYPE_CLASSIC)
-      {
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatstyle), FALSE);
-      }
 
     if (ggadu_config_var_get (gui_handler, "blink"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (blink), TRUE);
@@ -807,7 +803,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
 	  while ((theme_name_file = (gchar *) g_dir_read_name (dir)) != NULL)
 	    {
-		print_debug ("%s\n", theme_name_file);
+		print_debug ("%s", theme_name_file);
 
 		if (g_str_has_suffix (theme_name_file, ".theme"))
 		  {
@@ -823,7 +819,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
       }
 
     dirname = g_build_filename (PACKAGE_DATA_DIR, "pixmaps", "icons", NULL);
-    print_debug ("tryin to read icons directory %s\n", dirname);
+    print_debug ("Trying to read icons directory %s", dirname);
     dir = g_dir_open (dirname, 0, NULL);
     g_free (dirname);
 

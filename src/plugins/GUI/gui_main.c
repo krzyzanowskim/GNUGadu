@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.28 2003/12/20 23:17:19 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.29 2004/01/10 11:00:04 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -111,13 +111,13 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     ggadu_config_var_add(gui_handler, "top", VAR_INT);
     ggadu_config_var_add(gui_handler, "left", VAR_INT);
     ggadu_config_var_add(gui_handler, "send_on_enter", VAR_BOOL);
-    ggadu_config_var_add(gui_handler, "msg_header_color", VAR_STR);
-    ggadu_config_var_add(gui_handler, "msg_body_color", VAR_STR);
-    ggadu_config_var_add(gui_handler, "msg_header_font", VAR_STR);
+    ggadu_config_var_add_with_default(gui_handler, "msg_header_color", VAR_STR,g_strdup("blue"));
+    ggadu_config_var_add_with_default(gui_handler, "msg_header_font", VAR_STR,g_strdup("bold"));
+    ggadu_config_var_add_with_default(gui_handler, "msg_out_header_color", VAR_STR,g_strdup("brown"));
+    ggadu_config_var_add_with_default(gui_handler, "msg_out_header_font", VAR_STR,g_strdup("bold"));
     ggadu_config_var_add(gui_handler, "msg_body_font", VAR_STR);
-    ggadu_config_var_add(gui_handler, "msg_out_header_color", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_body_font", VAR_STR);
     ggadu_config_var_add(gui_handler, "msg_out_body_color", VAR_STR);
-    ggadu_config_var_add(gui_handler, "msg_out_header_font", VAR_STR);
     ggadu_config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
     ggadu_config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
     ggadu_config_var_add(gui_handler, "hide_toolbar", VAR_BOOL);

@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.12 2004/01/09 23:40:48 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.13 2004/01/10 11:00:03 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -91,7 +91,8 @@ typedef struct {
 typedef struct {
     gchar *name; 			// nazwa zmiennej
     gint type;				// typ
-    gpointer ptr;			// wskaźnik gdzie będzie przechowywana 
+    gpointer ptr;			// wskaznik gdzie bedzie przechowywana 
+    gpointer def;			// default value
 } GGaduVar;
 
 /* 

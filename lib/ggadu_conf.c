@@ -65,7 +65,7 @@ gpointer ggadu_config_var_get (GGaduPlugin * handler, gchar * name)
 
 	  if ((var != NULL) && (!g_strcasecmp (var->name, name)))
 	    {
-		return var->ptr;
+		return var->ptr ? var->ptr : var->def;
 	    }
 
 	  tmp = tmp->next;
@@ -112,28 +112,37 @@ void ggadu_config_var_set (GGaduPlugin * handler, gchar * name, gpointer val)
 
 		if (val == NULL)
 		  {
-		      var->ptr = NULL;
+		      var->ptr = (var->def) ? var->def : NULL;
 		      break;
 		  }
 
-		print_debug ("VAR \"%s\"\n", var->name);
+		print_debug ("VAR \"%s\" ", var->name);
 		switch (var->type)
 		  {
 		  case VAR_STR:
 		  case VAR_IMG:	// VAR_IMG is a path to image file
 		  case VAR_LIST:
+
 		      print_debug ("VAR_STR %s\n", (gchar *) val);
+		      
+		      if (strlen((gchar *)val) == 0)
+		      {
+		      	  var->ptr = var->def;
+			  print_debug(" SET DEFAULT : %s\n",(gchar *) val);
+			  break;
+		      }
+		      
 		      if (*(gchar *) val == 1)
 			  var->ptr = (gpointer) base64_decode (g_strstrip ((gchar *) val + 1));
 		      else
 			  var->ptr = (gpointer) g_strdup (g_strstrip ((gchar *) val));
-		      break;
-
+			  
+		  break;
 		  case VAR_INT:
 		  case VAR_BOOL:
 		      print_debug ("VAR_INT||BOOL %d\n", val);
 		      var->ptr = (gpointer) val;
-		      break;
+		  break;
 		  }
 
 		break;
@@ -154,6 +163,23 @@ void ggadu_config_var_add (GGaduPlugin * handler, gchar * name, gint type)
     var->name = g_strdup (name);
     var->type = type;
     var->ptr = NULL;
+    var->def = NULL;
+
+    handler->variables = g_slist_append (handler->variables, var);
+}
+
+void ggadu_config_var_add_with_default(GGaduPlugin *handler, gchar * name, gint type, gpointer default_value)
+{
+    GGaduVar *var = NULL;
+
+    if ((name == NULL) || (handler == NULL))
+	return;
+
+    var = g_new0 (GGaduVar, 1);
+    var->name = g_strdup (name);
+    var->type = type;
+    var->ptr = NULL;
+    var->def = default_value;
 
     handler->variables = g_slist_append (handler->variables, var);
 }

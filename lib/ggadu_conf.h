@@ -19,6 +19,8 @@ gint ggadu_config_var_get_type(GGaduPlugin *handler, gchar *name);
 
 void ggadu_config_var_add(GGaduPlugin *handler, gchar * name, gint type);
 
+void ggadu_config_var_add_with_default(GGaduPlugin *handler, gchar * name, gint type, gpointer default_value);
+
 void ggadu_config_var_set(GGaduPlugin *handler, gchar *name, gpointer val);
 
 gint ggadu_config_var_check(GGaduPlugin *handler, gchar *name);
