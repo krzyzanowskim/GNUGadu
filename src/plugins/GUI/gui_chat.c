@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.82 2004/02/21 21:04:18 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.83 2004/02/26 21:23:18 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -304,11 +304,16 @@ static gboolean on_input_press_event(gpointer object, GdkEventKey * event, gpoin
 {
 	gui_chat_session *s = user_data;
 
-	if ((event->keyval == 65293) && (ggadu_config_var_get(gui_handler, "send_on_enter")))
+	if ((event->keyval == GDK_Return) && (ggadu_config_var_get(gui_handler, "send_on_enter")))
 	{
 		print_debug("main-gui : chat : wcisnieto Enter \n");
-		on_send_clicked(s->chat, user_data);
-		return TRUE;
+
+		if (!(event->state & GDK_SHIFT_MASK)) {
+			on_send_clicked(s->chat, user_data);
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 	return (event->state & GDK_CONTROL_MASK) ? on_press_event_switching_tabs(object, event, user_data) : FALSE;
