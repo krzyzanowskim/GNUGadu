@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.66 2004/06/21 21:47:03 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.67 2004/10/15 13:04:18 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -906,11 +906,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
-		/*
-		listmenu = ggadu_menu_new_item(_("List"), NULL, NULL);
-		ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Add"), user_add_user_action, NULL));
-		ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
-		*/
+
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), user_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), user_add_user_action, NULL));
 
@@ -1259,9 +1255,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == g_quark_from_static_string("get current status"))
 	{
 		if (session)
-			signal->data_return = (gpointer) session->status;
+			signal->data_return = ggadu_find_status_prototype(p, session->status);
+		else
+			signal->data_return = ggadu_find_status_prototype(p, TLEN_STATUS_UNAVAILABLE);
+			
+/*			signal->data_return = (gpointer) session->status;
 		else
 			signal->data_return = (gpointer) TLEN_STATUS_UNAVAILABLE;
+*/			
 	}
 }
 

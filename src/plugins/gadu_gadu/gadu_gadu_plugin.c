@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.191 2004/10/15 09:10:54 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.192 2004/10/15 13:04:16 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2378,13 +2378,23 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == GET_CURRENT_STATUS_SIG)
 	{
-		signal->data_return = (gpointer) GG_STATUS_NOT_AVAIL;
+		if (session)
+		{
+			gint s = ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status);
+			signal->data_return = ggadu_find_status_prototype(p, s);
+		}
+		else
+			signal->data_return = ggadu_find_status_prototype(p, GG_STATUS_NOT_AVAIL);
+	
+	
+/*		signal->data_return = (gpointer) GG_STATUS_NOT_AVAIL;
 		if (!session)
 			return;
 		signal->data_return =
 			(gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->
 										  status ^ GG_STATUS_FRIENDS_MASK) :
 				    session->status);
+*/
 	}
 
 	if (signal->name == REGISTER_ACCOUNT)

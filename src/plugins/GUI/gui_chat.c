@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.120 2004/10/15 09:10:52 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.121 2004/10/15 13:04:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -881,7 +881,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	 */
 	if (k)
 	{
-		sp = gui_find_status_prototype((GGaduProtocol *) gp->p, (gint) k->status);
+		sp = ggadu_find_status_prototype((GGaduProtocol *) gp->p, (gint) k->status);
 		status_desc = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
 
 		if ((k->status_descr) && (strlen(k->status_descr) > 0))

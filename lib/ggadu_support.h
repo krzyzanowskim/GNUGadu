@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.8 2004/09/07 14:59:18 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.9 2004/10/15 13:04:14 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -94,6 +94,9 @@ gboolean	ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick,
 gboolean	write_line_to_file(gchar * path, gchar * line, gchar * enc);
 /* This is an internally used function to check if a pixmap file exists. */
 gchar		*check_file_exists(const gchar * directory, const gchar * filename);
+
+GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint status);
+
 
 
 /* DEPRECATED */

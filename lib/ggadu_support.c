@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.9 2004/09/29 13:22:16 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.10 2004/10/15 13:04:14 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -626,3 +626,27 @@ gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick,
 	g_free(final_line);
 	return ret; 
 }
+
+
+GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint status)
+{
+	GSList *tmp = NULL;
+
+	if (gp == NULL)
+		return NULL;
+
+	tmp = gp->statuslist;
+
+	while (tmp)
+	{
+		GGaduStatusPrototype *sp = tmp->data;
+
+		if ((sp) && (sp->status == status))
+			return sp;
+
+		tmp = tmp->next;
+	}
+
+	return NULL;
+}
+

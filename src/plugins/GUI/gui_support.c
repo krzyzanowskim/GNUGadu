@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.12 2004/03/13 15:13:16 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.13 2004/10/15 13:04:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -190,7 +190,7 @@ gui_protocol *gui_find_protocol(gchar * plugin_name, GSList * protocolsl)
 	return NULL;
 }
 
-GGaduStatusPrototype *gui_find_status_prototype(GGaduProtocol * gp, gint status)
+/*GGaduStatusPrototype *gui_find_status_prototype(GGaduProtocol * gp, gint status)
 {
 	GSList *tmp = NULL;
 
@@ -211,7 +211,7 @@ GGaduStatusPrototype *gui_find_status_prototype(GGaduProtocol * gp, gint status)
 
 	return NULL;
 }
-
+*/
 GGaduContact *gui_find_user(gchar * id, gui_protocol * gp)
 {
 	GSList *ulist = NULL;

@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.55 2004/10/04 07:56:57 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.56 2004/10/15 13:04:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -310,7 +310,7 @@ void handle_disconnected(GGaduSignal * signal)
 	g_return_if_fail(gp != NULL);
 	g_return_if_fail(gp->p->offline_status != NULL);
 
-	sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+	sp = ggadu_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
 
 	g_return_if_fail(sp != NULL);
 
@@ -426,7 +426,7 @@ void handle_status_changed(GGaduSignal * signal)
 	gp = gui_find_protocol(signal->source_plugin_name, protocols);
 	g_return_if_fail(gp != NULL);
 
-	sp = gui_find_status_prototype(gp->p, status);
+	sp = ggadu_find_status_prototype(gp->p, status);
 	g_return_if_fail(sp != NULL);
 
 	if (gp->blinker > 0)
@@ -476,17 +476,17 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
 
 void auto_away_start(gui_protocol * gp)
 {
-	int status;
+	GGaduStatusPrototype *sp = NULL;
 
 	print_debug("auto_away_start");
 
 	if (!gp || auto_away_enabled) return;
 	
-	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+	sp = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 	
 	print_debug("auto_away_start 2");
 	
-	if ((gp->p) && (gp->p->online_status) && is_in_status(status, gp->p->online_status) && ggadu_config_var_get(gui_handler, "auto_away"))
+	if ((gp->p) && (gp->p->online_status) && is_in_status(sp->status, gp->p->online_status) && ggadu_config_var_get(gui_handler, "auto_away"))
 	{
 		gint timeout = ggadu_config_var_get(gui_handler, "auto_away_interval") ? ((gint) ggadu_config_var_get(gui_handler, "auto_away_interval") * 60000) : 300000;
 		GSource *source = g_timeout_source_new(timeout);
@@ -523,7 +523,7 @@ gboolean auto_away_func(gpointer data)
 		return FALSE;
 		
 
-	sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->away_status->data);
+	sp = ggadu_find_status_prototype(gp->p, *(int *) &gp->p->away_status->data);
 
 	if (!sp)
 	{

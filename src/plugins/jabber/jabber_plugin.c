@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.110 2004/10/08 12:24:26 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.111 2004/10/15 13:04:17 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -733,11 +733,17 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
 	{
+
 		if (jabber_data.connection)
+			signal->data_return = ggadu_find_status_prototype(p, jabber_data.status);
+		else
+			signal->data_return = ggadu_find_status_prototype(p, JABBER_STATUS_UNAVAILABLE);
+
+/*		if (jabber_data.connection)
 		    signal->data_return = (gpointer) jabber_data.status;
 		else
 		    signal->data_return = JABBER_STATUS_UNAVAILABLE;
-		    
+*/		    
 	}
 	else if (signal->name == SEND_MESSAGE_SIG)
 	{

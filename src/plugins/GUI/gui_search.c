@@ -1,4 +1,4 @@
-/* $Id: gui_search.c,v 1.6 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: gui_search.c,v 1.7 2004/10/15 13:04:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -203,7 +203,7 @@ void gui_show_search_results(GSList * list, gchar * plugin_name)
 	while (tmplist)
 	{
 	    GGaduContact *k = tmplist->data;
-	    GGaduStatusPrototype *sp = gui_find_status_prototype(gp->p, k->status);
+	    GGaduStatusPrototype *sp = ggadu_find_status_prototype(gp->p, k->status);
 	    print_debug("adding kontakt to results list: %s\n", k->id);
 	    if (sp && sp->image != NULL)
 	    {

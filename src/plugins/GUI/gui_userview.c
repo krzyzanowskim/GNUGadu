@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.52 2004/10/14 22:54:05 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.53 2004/10/15 13:04:15 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -60,16 +60,10 @@ GtkTooltips *tooltips = NULL;
 void status_clicked(GtkWidget * widget, GdkEventButton * ev, gpointer user_data)
 {
 	gui_protocol *gp = user_data;
-	/* GGaduStatusPrototype *sp;
-	 * gint status; */
-
 	GtkWidget *popupmenu = create_status_menu(gp, gtk_bin_get_child(GTK_BIN(widget)));
 
 	gtk_menu_popup(GTK_MENU(popupmenu), NULL, NULL, NULL, NULL, ev->button, ev->time);
 	print_debug("status clicked");
-
-	/* status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
-	 * sp = gui_find_status_prototype(gp->p, (status) ? status : gp->p->offline_status); */
 }
 
 static void on_pixbuf_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer, GtkTreeModel * model,
@@ -227,7 +221,7 @@ void gui_list_add(gui_protocol * gp)
 	GtkWidget *add_info_label_desc;
 	GtkTreeSelection *selection;
 	gchar *markup;
-	gint status;
+//	gint status;
 
 	g_return_if_fail(gp != NULL);
 	if (!gp) return;
@@ -287,14 +281,12 @@ void gui_list_add(gui_protocol * gp)
 
 	/* cos co jest oznaczone jakos p->offine_status przez protocol */
 	print_debug("gui_list_add");
-	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+	sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
-	if (!(sp = gui_find_status_prototype(gp->p, status)))
+	if (!sp)
 	{
-		if (status)
-			sp = gui_find_status_prototype(gp->p, status);
-		else if (gp->p->offline_status)
-			sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+		if (gp->p->offline_status)
+			sp = ggadu_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
 		else if (gp->p->statuslist)
 			sp = gp->p->statuslist->data; /* last resord, get dirst status from statuslist */
 	}
@@ -345,7 +337,6 @@ void gui_tree_add(gui_protocol * gp)
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GGaduStatusPrototype *sp;
-	gint status = 0;
 
 	g_return_if_fail(gp != NULL);
 
@@ -356,14 +347,12 @@ void gui_tree_add(gui_protocol * gp)
 			   g_strdup_printf("%s (0/0)", gp->p->display_name), 3, gp, -1);
 	gp->tree_path = g_strdup(gtk_tree_model_get_string_from_iter(model, &iter));
 	print_debug("gui_tree_add");
-	status = (gint) signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
+	sp = signal_emit("main-gui", "get current status", NULL, gp->plugin_name);
 
-	if (!(sp = gui_find_status_prototype(gp->p, status)))
+	if (!sp)
 	{
-		if (status)
-			sp = gui_find_status_prototype(gp->p, status);
-		else if (gp->p->offline_status)
-			sp = gui_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
+		if (gp->p->offline_status)
+			sp = ggadu_find_status_prototype(gp->p, *(int *) &gp->p->offline_status->data);
 		else if (gp->p->statuslist)
 			sp = gp->p->statuslist->data; /* last resord, get dirst status from statuslist */
 	}
@@ -521,7 +510,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 	g_return_if_fail(gp != NULL);
 	g_return_if_fail(n != NULL);
 
-	sp = gui_find_status_prototype(gp->p, n->status);
+	sp = ggadu_find_status_prototype(gp->p, n->status);
 
 	g_return_if_fail(sp != NULL);
 
@@ -735,7 +724,7 @@ void gui_user_view_add_userlist(gui_protocol * gp)
 	while (tmplist)
 	{
 		GGaduContact *k = tmplist->data;
-		GGaduStatusPrototype *sp = gui_find_status_prototype(gp->p, k->status);
+		GGaduStatusPrototype *sp = ggadu_find_status_prototype(gp->p, k->status);
 
 		print_debug("Adding %s %s", k->id, k->nick);
 
