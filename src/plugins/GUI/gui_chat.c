@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.99 2004/06/02 07:23:27 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.100 2004/06/08 11:34:18 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -100,95 +100,99 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 	gui_chat_session *session = NULL;
 	gui_protocol *gp = NULL;
 	gchar *plugin_name = NULL;
-	
+
 	print_debug("on_destroy_chat");
 
 	switch (chat_type)
 	{
 	case CHAT_TYPE_TABBED:
-	{
-		gint sess_count, tab_count;
-		guint nr;
-		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),
-							     "chat_notebook");
-		GtkWidget *chat = NULL;
-		GtkWidget *input = NULL;
-		
-		if (!user_data)
 		{
-			nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
-		}
-		else
-		{
-			gui_chat_session *s = (gui_chat_session *) user_data;
-			nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook), s->chat);
-		}
+			gint sess_count, tab_count;
+			guint nr;
+			GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),
+								     "chat_notebook");
+			GtkWidget *chat = NULL;
+			GtkWidget *input = NULL;
 
-		chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook), nr);
+			if (!user_data)
+			{
+				nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+			}
+			else
+			{
+				gui_chat_session *s = (gui_chat_session *) user_data;
+				nr = gtk_notebook_page_num(GTK_NOTEBOOK(chat_notebook), s->chat);
+			}
 
-		plugin_name = g_object_get_data(G_OBJECT(chat), "plugin_name");
-		
-		session = (gui_chat_session *) g_object_get_data(G_OBJECT(chat), "gui_session");
-		gp = gui_find_protocol(plugin_name, protocols);
+			chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook), nr);
 
-		input = g_object_get_data(G_OBJECT(chat), "input");
+			plugin_name = g_object_get_data(G_OBJECT(chat), "plugin_name");
+
+			session = (gui_chat_session *) g_object_get_data(G_OBJECT(chat), "gui_session");
+			gp = gui_find_protocol(plugin_name, protocols);
+
+			input = g_object_get_data(G_OBJECT(chat), "input");
 
 #ifdef USE_GTKSPELL
-		if (ggadu_config_var_get(gui_handler, "use_spell")) {
-		    GtkSpell  *spell = NULL;
-		    if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
-			gtkspell_detach (spell);
+			if (ggadu_config_var_get(gui_handler, "use_spell"))
+			{
+				GtkSpell *spell = NULL;
+				if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
+					gtkspell_detach(spell);
+			}
+#endif
+			gtk_notebook_remove_page(GTK_NOTEBOOK(chat_notebook), nr);
+
+
+			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(chat_notebook),
+						   (gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook)) <=
+						    1) ? FALSE : TRUE);
+
+			gtk_widget_queue_draw(GTK_WIDGET(chat_notebook));
+
+			gp->chat_sessions = g_slist_remove(gp->chat_sessions, session);
+			g_free(session);
+
+			sess_count = g_slist_length(gp->chat_sessions);
+			tab_count = gui_count_visible_tabs(GTK_NOTEBOOK(chat_notebook));
+
+			if ((sess_count == 0) && (tab_count == 0))
+				gtk_widget_destroy(chat_window);
+			else if ((sess_count > 0) && (tab_count == 0))
+				gtk_widget_hide(chat_window);
+			else
+				gui_chat_notebook_switch(chat_notebook, NULL,
+							 gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook)),
+							 NULL);
+
 		}
-#endif				
-		gtk_notebook_remove_page(GTK_NOTEBOOK(chat_notebook), nr);
-
-
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(chat_notebook),
-					   (gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook)) <= 1) ? FALSE : TRUE);
-
-		gtk_widget_queue_draw(GTK_WIDGET(chat_notebook));
-
-		gp->chat_sessions = g_slist_remove(gp->chat_sessions, session);
-		g_free(session);
-
-		sess_count = g_slist_length(gp->chat_sessions);
-		tab_count = gui_count_visible_tabs(GTK_NOTEBOOK(chat_notebook));
-
-		if ((sess_count == 0) && (tab_count == 0))
-			gtk_widget_destroy(chat_window);
-		else if ((sess_count > 0) && (tab_count == 0))
-			gtk_widget_hide(chat_window);
-		else
-			gui_chat_notebook_switch(chat_notebook, NULL,
-						 gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook)), NULL);
-
-	}
 		break;
 	case CHAT_TYPE_CLASSIC:
-	{
-		GtkWidget *input = NULL;
-		session = (gui_chat_session *) user_data;
-		
-		input = g_object_get_data(G_OBJECT(session->chat), "input");
+		{
+			GtkWidget *input = NULL;
+			session = (gui_chat_session *) user_data;
+
+			input = g_object_get_data(G_OBJECT(session->chat), "input");
 
 #ifdef USE_GTKSPELL
-		if (ggadu_config_var_get(gui_handler, "use_spell")) {
-		    GtkSpell  *spell = NULL;
-		    if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
-			gtkspell_detach (spell);
-		}
+			if (ggadu_config_var_get(gui_handler, "use_spell"))
+			{
+				GtkSpell *spell = NULL;
+				if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
+					gtkspell_detach(spell);
+			}
 #endif
-		plugin_name = g_object_get_data(G_OBJECT(session->chat), "plugin_name");
-		if (!plugin_name)
-			return;
-		gp = gui_find_protocol(plugin_name, protocols);
+			plugin_name = g_object_get_data(G_OBJECT(session->chat), "plugin_name");
+			if (!plugin_name)
+				return;
+			gp = gui_find_protocol(plugin_name, protocols);
 
-		chat_window = NULL;
-		gtk_widget_destroy(button);
-		session->chat = NULL;
-		gp->chat_sessions = g_slist_remove(gp->chat_sessions, session);
-		g_free(session);
-	}
+			chat_window = NULL;
+			gtk_widget_destroy(button);
+			session->chat = NULL;
+			gp->chat_sessions = g_slist_remove(gp->chat_sessions, session);
+			g_free(session);
+		}
 		break;
 	}
 
@@ -218,10 +222,11 @@ static gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey * eve
 
 	return FALSE;
 }
+
 void on_clear_clicked(GtkWidget * button, gpointer textview)
 {
-    GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
-    gtk_text_buffer_set_text(buf,"",-1);
+	GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
+	gtk_text_buffer_set_text(buf, "", -1);
 }
 
 void on_autosend_clicked(GtkWidget * button, gpointer user_data)
@@ -335,10 +340,13 @@ static gboolean on_input_press_event(gpointer object, GdkEventKey * event, gpoin
 	{
 		print_debug("main-gui : chat : wcisnieto Enter \n");
 
-		if (!(event->state & GDK_SHIFT_MASK)) {
+		if (!(event->state & GDK_SHIFT_MASK))
+		{
 			on_send_clicked(s->chat, user_data);
 			return TRUE;
-		} else {
+		}
+		else
+		{
 			return FALSE;
 		}
 	}
@@ -370,10 +378,9 @@ static void on_stick_clicked(GtkWidget * button, gpointer user_data)
 	}
 }
 
-
-
 static void on_emoticon_press_event(GtkWidget * event_box, GdkEventButton * event, gpointer user_data)
 {
+	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
 	GtkWidget *input;
 	GtkWidget *emoticons_window;
 	gui_emoticon *gemo = user_data;
@@ -388,7 +395,18 @@ static void on_emoticon_press_event(GtkWidget * event_box, GdkEventButton * even
 
 	g_return_if_fail(emoticons_window != NULL);
 
-	session = g_object_get_data(G_OBJECT(emoticons_window), "session");
+	
+	if (chat_type == CHAT_TYPE_TABBED)
+	{
+		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window), "chat_notebook");
+		guint nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+		GtkWidget *chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook), nr);
+
+		session = (gui_chat_session *) g_object_get_data(G_OBJECT(chat), "gui_session");
+	} else {
+		session = g_object_get_data(G_OBJECT(emoticons_window), "session");
+	}
+	
 	input = g_object_get_data(G_OBJECT(session->chat), "input");
 
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(input));
@@ -396,7 +414,7 @@ static void on_emoticon_press_event(GtkWidget * event_box, GdkEventButton * even
 
 	gtk_text_buffer_insert(buf, &end, gemo->emoticon, -1);
 
-	gtk_widget_destroy(emoticons_window);
+	gtk_widget_hide(emoticons_window);
 }
 
 static gboolean find_emoticon(gchar * name, GSList * here)
@@ -441,104 +459,114 @@ static void on_emoticons_clicked(GtkWidget * button, gpointer user_data)
 		session = user_data;
 	}
 
-	emoticons_window = gtk_window_new(GTK_WINDOW_POPUP);
-	gtk_window_set_modal(GTK_WINDOW(emoticons_window), TRUE);
-	gtk_window_set_position(GTK_WINDOW(emoticons_window), GTK_WIN_POS_MOUSE);
-
-	gtk_widget_set_usize(emoticons_window, 510, 300);
-
-	g_object_set_data(G_OBJECT(emoticons_window), "session", session);
-
-	g_object_set_data(G_OBJECT(emoticons_window), "emoticons_window", emoticons_window);
-
-
-	/*
-	 * dodajê po drodze viewport i scroll Pawe³ Marchewka
-	 * <pmgiant@student.uci.agh.edu.pl> 12.04.2003 
-	 */
-	outervbox = gtk_vbox_new(FALSE, 0);
-	gtk_container_add(GTK_CONTAINER(emoticons_window), outervbox);
-
-	scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
-	gtk_widget_set_name(scrolledwindow1, "scrolledwindow1");
-	gtk_widget_ref(scrolledwindow1);
-	gtk_object_set_data_full(GTK_OBJECT(emoticons_window), "scrolledwindow1", scrolledwindow1,
-				 (GtkDestroyNotify) gtk_widget_unref);
-	gtk_box_pack_start(GTK_BOX(outervbox), scrolledwindow1, TRUE, TRUE, 0);
-
-	gtk_container_set_border_width(GTK_CONTAINER(scrolledwindow1), 5);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-
-	viewport1 = gtk_viewport_new(NULL, NULL);
-	gtk_widget_set_name(viewport1, "viewport1");
-	gtk_widget_ref(viewport1);
-	gtk_object_set_data_full(GTK_OBJECT(emoticons_window), "viewport1", viewport1,
-				 (GtkDestroyNotify) gtk_widget_unref);
-	gtk_container_add(GTK_CONTAINER(scrolledwindow1), viewport1);
-
-	vbox = gtk_vbox_new(TRUE, 0);
-	gtk_container_add(GTK_CONTAINER(viewport1), vbox);
-
-	if (emoticons)
+	emoticons_window = g_object_get_data(G_OBJECT(button), "emoticons_window");
+	if (emoticons_window == NULL)
 	{
-		GSList *emotlist = NULL;
-		GSList *emottmp = emoticons;
-		GtkWidget *widget;
-		GtkWidget *hbox;
-		GtkWidget *event_box;
-		gint count = 0;
+		emoticons_window = gtk_window_new(GTK_WINDOW_POPUP);
+		g_object_set_data(G_OBJECT(button),"emoticons_window",emoticons_window);
+		/* destroy window when button is destroyed */
+		g_signal_connect(G_OBJECT(button),"destroy",G_CALLBACK(gtk_widget_destroy),emoticons_window);
+		
+		gtk_window_set_modal(GTK_WINDOW(emoticons_window), TRUE);
+		gtk_window_set_position(GTK_WINDOW(emoticons_window), GTK_WIN_POS_MOUSE);
 
-		hbox = gtk_hbox_new(TRUE, 0);
-		gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+		gtk_widget_set_usize(emoticons_window, 510, 300);
 
-		while (emottmp)
+		g_object_set_data(G_OBJECT(emoticons_window), "session", session);
+
+		g_object_set_data(G_OBJECT(emoticons_window), "emoticons_window", emoticons_window);
+
+
+		/*
+		 * dodajê po drodze viewport i scroll Pawe³ Marchewka
+		 * <pmgiant@student.uci.agh.edu.pl> 12.04.2003 
+		 */
+		outervbox = gtk_vbox_new(FALSE, 0);
+		gtk_container_add(GTK_CONTAINER(emoticons_window), outervbox);
+
+		scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
+		gtk_widget_set_name(scrolledwindow1, "scrolledwindow1");
+		gtk_widget_ref(scrolledwindow1);
+		gtk_object_set_data_full(GTK_OBJECT(emoticons_window), "scrolledwindow1", scrolledwindow1,
+					 (GtkDestroyNotify) gtk_widget_unref);
+		gtk_box_pack_start(GTK_BOX(outervbox), scrolledwindow1, TRUE, TRUE, 0);
+
+		gtk_container_set_border_width(GTK_CONTAINER(scrolledwindow1), 5);
+		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_POLICY_NEVER,
+					       GTK_POLICY_ALWAYS);
+
+		viewport1 = gtk_viewport_new(NULL, NULL);
+		gtk_widget_set_name(viewport1, "viewport1");
+		gtk_widget_ref(viewport1);
+		gtk_object_set_data_full(GTK_OBJECT(emoticons_window), "viewport1", viewport1,
+					 (GtkDestroyNotify) gtk_widget_unref);
+		gtk_container_add(GTK_CONTAINER(scrolledwindow1), viewport1);
+
+		vbox = gtk_vbox_new(TRUE, 0);
+		gtk_container_add(GTK_CONTAINER(viewport1), vbox);
+
+		if (emoticons)
 		{
-			gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
+			GSList *emotlist = NULL;
+			GSList *emottmp = emoticons;
+			GtkWidget *widget;
+			GtkWidget *hbox;
+			GtkWidget *event_box;
+			gint count = 0;
 
-			if (!find_emoticon(gemo->file, emotlist))
-				emotlist = g_slist_append(emotlist, gemo);
+			hbox = gtk_hbox_new(TRUE, 0);
+			gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
-			emottmp = emottmp->next;
-		}
-
-		emottmp = emotlist;
-
-		while (emottmp)
-		{
-			GtkTooltips *tip;
-			gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
-			widget = create_image(gemo->file);
-			event_box = gtk_event_box_new();
-			if (widget)
+			while (emottmp)
 			{
-				if (count >= MAX_EMOTICONS_IN_ROW)
-				{
-					hbox = gtk_hbox_new(TRUE, 0);
-					gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
-					count = 0;
-				}
+				gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
 
-				gtk_container_add(GTK_CONTAINER(event_box), widget);
-				gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);
-				gtk_widget_set_usize(event_box, 60, 30);
+				if (!find_emoticon(gemo->file, emotlist))
+					emotlist = g_slist_append(emotlist, gemo);
 
-				tip = gtk_tooltips_new();
-				gtk_tooltips_set_tip(tip, event_box, gemo->emoticon, gemo->file);
-				g_signal_connect(event_box, "button_press_event", G_CALLBACK(on_emoticon_press_event),
-						 gemo);
-				count++;
+				emottmp = emottmp->next;
 			}
-			emottmp = emottmp->next;
 
+			emottmp = emotlist;
+
+			while (emottmp)
+			{
+				GtkTooltips *tip;
+				gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
+				widget = create_image(gemo->file);
+				event_box = gtk_event_box_new();
+				if (widget)
+				{
+					if (count >= MAX_EMOTICONS_IN_ROW)
+					{
+						hbox = gtk_hbox_new(TRUE, 0);
+						gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+						count = 0;
+					}
+
+					gtk_container_add(GTK_CONTAINER(event_box), widget);
+					gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);
+					gtk_widget_set_usize(event_box, 60, 30);
+
+					tip = gtk_tooltips_new();
+					gtk_tooltips_set_tip(tip, event_box, gemo->emoticon, gemo->file);
+					g_signal_connect(event_box, "button_press_event",
+							 G_CALLBACK(on_emoticon_press_event), gemo);
+					count++;
+				}
+				emottmp = emottmp->next;
+
+			}
+			g_slist_free(emotlist);
 		}
-		g_slist_free(emotlist);
+
+		button_close = gtk_button_new_with_mnemonic(_("_Close"));
+
+		gtk_box_pack_start(GTK_BOX(outervbox), button_close, FALSE, FALSE, 0);
+
+		/*g_signal_connect_swapped(button_close, "clicked", G_CALLBACK(gtk_widget_destroy), emoticons_window);*/
+		g_signal_connect_swapped(button_close, "clicked", G_CALLBACK(gtk_widget_hide), emoticons_window);
 	}
-
-	button_close = gtk_button_new_with_mnemonic(_("_Close"));
-
-	gtk_box_pack_start(GTK_BOX(outervbox), button_close, FALSE, FALSE, 0);
-
-	g_signal_connect_swapped(button_close, "clicked", G_CALLBACK(gtk_widget_destroy), emoticons_window);
 
 	gtk_widget_show_all(emoticons_window);
 }
@@ -546,7 +574,7 @@ static void on_emoticons_clicked(GtkWidget * button, gpointer user_data)
 static void on_chat_find_clicked(GtkWidget * button, gpointer user_data)
 {
 	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
-	GGaduDialog *dialog = g_new0(GGaduDialog,1);
+	GGaduDialog *dialog = g_new0(GGaduDialog, 1);
 	gui_chat_session *session = NULL;
 	gchar *plugin_name = NULL;
 
@@ -571,7 +599,7 @@ static void on_chat_find_clicked(GtkWidget * button, gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, NULL, VAR_STR, session->id, VAR_FLAG_NONE);
 
-	dialog->response=GGADU_OK;
+	dialog->response = GGADU_OK;
 	signal_emit("main-gui", "search", dialog, plugin_name);
 }
 
@@ -756,8 +784,8 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 
 	if (!session || !plugin_name || !id)
 		return NULL;
-	
-	
+
+
 	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
 
 	gp = gui_find_protocol(plugin_name, protocols);
@@ -823,117 +851,121 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	switch (chat_type)
 	{
 	case CHAT_TYPE_TABBED:
-	{
-		gchar *title = NULL;
-		GtkWidget *chat_notebook = NULL;
-		GtkWidget *tab_label_hbox = NULL;
-		GtkWidget *tab_label_txt = NULL;
-		GtkWidget *tab_label_close = NULL;
-		GtkWidget *tab_label_close_image = gtk_image_new_from_pixbuf(NULL);	/* empty */
-
-		if (chat_window == NULL)
 		{
+			gchar *title = NULL;
+			GtkWidget *chat_notebook = NULL;
+			GtkWidget *tab_label_hbox = NULL;
+			GtkWidget *tab_label_txt = NULL;
+			GtkWidget *tab_label_close = NULL;
+			GtkWidget *tab_label_close_image = gtk_image_new_from_pixbuf(NULL);	/* empty */
+
+			if (chat_window == NULL)
+			{
+				chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+				image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
+				gtk_window_set_icon(GTK_WINDOW(chat_window), image);
+				gdk_pixbuf_unref(image);
+
+				gtk_window_set_title(GTK_WINDOW(chat_window), _("Chat Window"));
+				gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
+
+				chat_notebook = gtk_notebook_new();
+				g_object_set_data(G_OBJECT(chat_window), "chat_notebook", chat_notebook);
+
+				gtk_notebook_set_scrollable(GTK_NOTEBOOK(chat_notebook), TRUE);
+
+				gtk_box_pack_start(GTK_BOX(vbox), chat_notebook, TRUE, TRUE, 0);
+				gtk_box_pack_end(GTK_BOX(vbox), hbox_buttons, FALSE, FALSE, 0);
+
+				gtk_container_add(GTK_CONTAINER(chat_window), vbox);
+
+				g_signal_connect(G_OBJECT(chat_notebook), "switch-page",
+						 G_CALLBACK(gui_chat_notebook_switch), NULL);
+
+				gtk_notebook_popup_enable(GTK_NOTEBOOK(chat_notebook));
+
+			}
+			else
+			{
+				chat_notebook = g_object_get_data(G_OBJECT(chat_window), "chat_notebook");
+			}
+
+			if (!chat_notebook)
+				return NULL;
+
+			/*
+			 * for labels 
+			 */
+			title = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s", k ? k->nick : id);
+			/*
+			 * for window title 
+			 */
+			wintitle =
+				(conference) ? g_strdup(confer_title) : g_strdup_printf("%s %s", k ? k->nick : id,
+											(sp) ? status_desc : "");
+
+			tab_label_hbox = gtk_hbox_new(FALSE, FALSE);
+			tab_label_txt = gtk_label_new(title);
+			tab_label_close = gtk_button_new();
+
+			gtk_button_set_relief(GTK_BUTTON(tab_label_close), GTK_RELIEF_NONE);
+			g_signal_connect(tab_label_close, "clicked", G_CALLBACK(on_destroy_chat), session);
+
+			gtk_widget_set_usize(GTK_WIDGET(tab_label_close), 12, 1);
+
+			gtk_image_set_from_stock(GTK_IMAGE(tab_label_close_image), "gtk-close", GTK_ICON_SIZE_MENU);
+			gtk_container_add(GTK_CONTAINER(tab_label_close), GTK_WIDGET(tab_label_close_image));
+
+			gtk_box_pack_start_defaults(GTK_BOX(tab_label_hbox), tab_label_txt);
+			gtk_box_pack_start_defaults(GTK_BOX(tab_label_hbox), tab_label_close);
+
+			g_object_set_data(G_OBJECT(session->chat), "tab_label_txt", tab_label_txt);
+			g_object_set_data_full(G_OBJECT(session->chat), "tab_label_txt_char", g_strdup(title), g_free);
+			g_object_set_data_full(G_OBJECT(session->chat), "tab_window_title_char", g_strdup(wintitle),
+					       g_free);
+
+			/*
+			 * append page 
+			 */
+			gtk_notebook_append_page(GTK_NOTEBOOK(chat_notebook), session->chat, tab_label_hbox);
+			gtk_notebook_set_menu_label_text(GTK_NOTEBOOK(chat_notebook), session->chat, title);
+
+			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(chat_notebook),
+						   (gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook)) <=
+						    1) ? FALSE : TRUE);
+
+			gtk_widget_show_all(tab_label_hbox);
+
+			g_free(title);
+		}
+		break;
+
+	case CHAT_TYPE_CLASSIC:
+		{
+			if (k)
+				wintitle =
+					(conference) ? g_strdup(confer_title) : g_strdup_printf("%s (%s) %s", k->nick,
+												id,
+												(sp) ? status_desc :
+												"");
+			else
+				wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s", id);
+
 			chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 			image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
 			gtk_window_set_icon(GTK_WINDOW(chat_window), image);
 			gdk_pixbuf_unref(image);
 
-			gtk_window_set_title(GTK_WINDOW(chat_window), _("Chat Window"));
+			gtk_window_set_title(GTK_WINDOW(chat_window), g_strdup(wintitle));
 			gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
 
-			chat_notebook = gtk_notebook_new();
-			g_object_set_data(G_OBJECT(chat_window), "chat_notebook", chat_notebook);
-
-			gtk_notebook_set_scrollable(GTK_NOTEBOOK(chat_notebook), TRUE);
-
-			gtk_box_pack_start(GTK_BOX(vbox), chat_notebook, TRUE, TRUE, 0);
+			gtk_box_pack_start(GTK_BOX(vbox), vbox_in_out, TRUE, TRUE, 0);
 			gtk_box_pack_end(GTK_BOX(vbox), hbox_buttons, FALSE, FALSE, 0);
 
 			gtk_container_add(GTK_CONTAINER(chat_window), vbox);
-
-			g_signal_connect(G_OBJECT(chat_notebook), "switch-page", G_CALLBACK(gui_chat_notebook_switch),
-					 NULL);
-
-			gtk_notebook_popup_enable(GTK_NOTEBOOK(chat_notebook));
-
 		}
-		else
-		{
-			chat_notebook = g_object_get_data(G_OBJECT(chat_window), "chat_notebook");
-		}
-
-		if (!chat_notebook)
-			return NULL;
-
-		/*
-		 * for labels 
-		 */
-		title = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s", k ? k->nick : id);
-		/*
-		 * for window title 
-		 */
-		wintitle =
-			(conference) ? g_strdup(confer_title) : g_strdup_printf("%s %s", k ? k->nick : id,
-										(sp) ? status_desc : "");
-
-		tab_label_hbox = gtk_hbox_new(FALSE, FALSE);
-		tab_label_txt = gtk_label_new(title);
-		tab_label_close = gtk_button_new();
-
-		gtk_button_set_relief(GTK_BUTTON(tab_label_close), GTK_RELIEF_NONE);
-		g_signal_connect(tab_label_close, "clicked", G_CALLBACK(on_destroy_chat), session);
-
-		gtk_widget_set_usize(GTK_WIDGET(tab_label_close), 12, 1);
-
-		gtk_image_set_from_stock(GTK_IMAGE(tab_label_close_image), "gtk-close", GTK_ICON_SIZE_MENU);
-		gtk_container_add(GTK_CONTAINER(tab_label_close), GTK_WIDGET(tab_label_close_image));
-
-		gtk_box_pack_start_defaults(GTK_BOX(tab_label_hbox), tab_label_txt);
-		gtk_box_pack_start_defaults(GTK_BOX(tab_label_hbox), tab_label_close);
-
-		g_object_set_data(G_OBJECT(session->chat), "tab_label_txt", tab_label_txt);
-		g_object_set_data_full(G_OBJECT(session->chat), "tab_label_txt_char", g_strdup(title), g_free);
-		g_object_set_data_full(G_OBJECT(session->chat), "tab_window_title_char", g_strdup(wintitle), g_free);
-
-		/*
-		 * append page 
-		 */
-		gtk_notebook_append_page(GTK_NOTEBOOK(chat_notebook), session->chat, tab_label_hbox);
-		gtk_notebook_set_menu_label_text(GTK_NOTEBOOK(chat_notebook), session->chat, title);
-
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(chat_notebook),
-					   (gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook)) <= 1) ? FALSE : TRUE);
-
-		gtk_widget_show_all(tab_label_hbox);
-		
-		g_free(title);
-	}
-		break;
-
-	case CHAT_TYPE_CLASSIC:
-	{
-		if (k)
-			wintitle =
-				(conference) ? g_strdup(confer_title) : g_strdup_printf("%s (%s) %s", k->nick, id,
-											(sp) ? status_desc : "");
-		else
-			wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s", id);
-
-		chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-		image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
-		gtk_window_set_icon(GTK_WINDOW(chat_window), image);
-		gdk_pixbuf_unref(image);
-
-		gtk_window_set_title(GTK_WINDOW(chat_window), g_strdup(wintitle));
-		gtk_window_set_wmclass(GTK_WINDOW(chat_window), "GM_NAME", "GNUGadu-chat");
-
-		gtk_box_pack_start(GTK_BOX(vbox), vbox_in_out, TRUE, TRUE, 0);
-		gtk_box_pack_end(GTK_BOX(vbox), hbox_buttons, FALSE, FALSE, 0);
-
-		gtk_container_add(GTK_CONTAINER(chat_window), vbox);
-	}
 		break;
 	}
 
@@ -1004,30 +1036,30 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	input = gtk_text_view_new();
 
 #ifdef USE_GTKSPELL
-	if (ggadu_config_var_get(gui_handler, "use_spell")) {
-	    GError *err = NULL;
+	if (ggadu_config_var_get(gui_handler, "use_spell"))
+	{
+		GError *err = NULL;
 
-	    gchar *conf_dict = ggadu_config_var_get(gui_handler, "dictionary");
-	    gchar *dictionary = NULL;
-	    if (strcmp(conf_dict, "default") == 0)
-	    	dictionary = g_strdup(g_getenv("LANG"));
-	    else
-	       	dictionary = g_strdup(conf_dict);
+		gchar *conf_dict = ggadu_config_var_get(gui_handler, "dictionary");
+		gchar *dictionary = NULL;
+		if (strcmp(conf_dict, "default") == 0)
+			dictionary = g_strdup(g_getenv("LANG"));
+		else
+			dictionary = g_strdup(conf_dict);
 
-	    if (!gtkspell_new_attach(GTK_TEXT_VIEW(input), dictionary, &err)) 
-	    {
-		GtkWidget *errdlg;
-        	errdlg = gtk_message_dialog_new(GTK_WINDOW(chat_window),
-                        GTK_DIALOG_DESTROY_WITH_PARENT,
-                        GTK_MESSAGE_ERROR,
-                        GTK_BUTTONS_CLOSE,
-                        _("Error initializing spell checking: \n%s\nTry install appropriate language support with aspell"),
-                        err->message);
-        	gtk_dialog_run(GTK_DIALOG(errdlg));
-        	gtk_widget_destroy(errdlg);
-        	g_error_free(err);
-	    }
-	    g_free(dictionary);
+		if (!gtkspell_new_attach(GTK_TEXT_VIEW(input), dictionary, &err))
+		{
+			GtkWidget *errdlg;
+			errdlg = gtk_message_dialog_new(GTK_WINDOW(chat_window), GTK_DIALOG_DESTROY_WITH_PARENT,
+							GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+							_
+							("Error initializing spell checking: \n%s\nTry install appropriate language support with aspell"),
+							err->message);
+			gtk_dialog_run(GTK_DIALOG(errdlg));
+			gtk_widget_destroy(errdlg);
+			g_error_free(err);
+		}
+		g_free(dictionary);
 	}
 #endif
 	gtk_widget_set_name(GTK_WIDGET(input), "GGInput");
@@ -1094,10 +1126,10 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gtk_container_add(GTK_CONTAINER(button_clear), bas_image);
 
 	//_with_mnemonic(_("S_tick"));
-	
+
 	/* gtk_button_set_relief(GTK_BUTTON(button_autosend), GTK_RELIEF_NONE);
-	gtk_button_set_relief(GTK_BUTTON(button_send), GTK_RELIEF_NONE);
-	gtk_button_set_relief(GTK_BUTTON(button_close), GTK_RELIEF_NONE); */
+	   gtk_button_set_relief(GTK_BUTTON(button_send), GTK_RELIEF_NONE);
+	   gtk_button_set_relief(GTK_BUTTON(button_close), GTK_RELIEF_NONE); */
 	gtk_button_set_relief(GTK_BUTTON(button_find), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_clear), GTK_RELIEF_NONE);
 	gtk_button_set_relief(GTK_BUTTON(button_stick), GTK_RELIEF_NONE);
@@ -1132,9 +1164,10 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 		if (chat_window != NULL)
 			gtk_widget_show_all(chat_window);
 
-		if (ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == FALSE) {
-		    gtk_widget_grab_focus(GTK_WIDGET(input));
-		}    
+		if (ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == FALSE)
+		{
+			gtk_widget_grab_focus(GTK_WIDGET(input));
+		}
 
 	}
 	else
@@ -1217,34 +1250,40 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	GtkTextIter iend;
 	GtkWidget *widget = NULL;
 	GSList *emottmp = NULL;
-	gui_chat_session * session = NULL;
+	gui_chat_session *session = NULL;
 	gboolean conference = FALSE;
-	
+
 	print_debug("gui_chat_append");
 
 	g_return_if_fail(history != NULL);
 
-	if (chat && self && !msg) {
-	    GtkWidget *input = g_object_get_data(G_OBJECT(chat), "input");
-	    GtkWidget *window = gtk_widget_get_ancestor(chat, GTK_TYPE_WINDOW);
-	    if (!GTK_WIDGET_VISIBLE(window))
-		gtk_widget_show(window);
-	    gtk_widget_grab_focus(input);
+	if (chat && self && !msg)
+	{
+		GtkWidget *input = g_object_get_data(G_OBJECT(chat), "input");
+		GtkWidget *window = gtk_widget_get_ancestor(chat, GTK_TYPE_WINDOW);
+		if (!GTK_WIDGET_VISIBLE(window))
+			gtk_widget_show(window);
+		gtk_widget_grab_focus(input);
 	}
-	
+
 	if (!chat || !msg)
 		return;
-	
-	session  = g_object_get_data(G_OBJECT(chat), "gui_session");
+
+	session = g_object_get_data(G_OBJECT(chat), "gui_session");
 	conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
 
 	if (self == TRUE)
 	{
 		if (conference)
-			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"));
+			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0),
+						 ggadu_config_var_get(gui_handler,
+								      "use_username") ? g_get_user_name() : _("Me"));
 		else
-			header = g_strdup_printf("%s :: %s :: ", ggadu_config_var_get(gui_handler, "use_username") ? g_get_user_name() : _("Me"), get_timestamp(0));
-			
+			header = g_strdup_printf("%s :: %s :: ",
+						 ggadu_config_var_get(gui_handler,
+								      "use_username") ? g_get_user_name() : _("Me"),
+						 get_timestamp(0));
+
 
 		text = g_strdup(msg);
 	}
@@ -1253,7 +1292,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		gchar *plugin_name_ = NULL;
 		GGaduContact *k = NULL;
 		GGaduMsg *gmsg = (GGaduMsg *) msg;
-		
+
 		if (!gmsg || !gmsg->message)
 			return;
 
@@ -1282,9 +1321,11 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 
 		if (conference)
 			header = g_strdup_printf("%s :: %s :: ", get_timestamp(0), (k) ? k->nick : gmsg->id);
-		else {
+		else
+		{
 			gchar *timestamp = g_strdup(get_timestamp(0));
-			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, timestamp, get_timestamp(gmsg->time));
+			header = g_strdup_printf("%s :: %s (%s) :: ", (k) ? k->nick : gmsg->id, timestamp,
+						 get_timestamp(gmsg->time));
 			g_free(timestamp);
 		}
 		text = g_strdup(gmsg->message);
@@ -1293,9 +1334,10 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(history));
 	gtk_text_buffer_get_end_iter(buf, &iter);
 	mark_append = gtk_text_buffer_create_mark(buf, NULL, &iter, TRUE);
-	
-	tmp = g_strconcat(header, (conference) ? "" : "\n" , NULL);
-	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_header" : "incoming_header", NULL);
+
+	tmp = g_strconcat(header, (conference) ? "" : "\n", NULL);
+	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_header" : "incoming_header",
+						 NULL);
 	g_free(tmp);
 
 	tmp = g_strconcat(text, "\n", NULL);
@@ -1328,8 +1370,8 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	gtk_text_buffer_get_iter_at_mark(buf, &istart, mark_start);
 	gtk_text_buffer_get_start_iter(buf, &iend);
 	gtk_text_iter_backward_char(&istart);
-	
-	
+
+
 	emottmp = emoticons;
 	while (emottmp)
 	{
@@ -1356,26 +1398,26 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 		}
 		emottmp = emottmp->next;
 	}
-	
+
 	//g_object_unref(mark_append);
-//	g_object_unref(mark_start);
-	
+//      g_object_unref(mark_start);
+
 	if (((gint) ggadu_config_var_get(gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
 	    (GTK_WIDGET_VISIBLE(chat)))
-	    {
+	{
 		/* will not bring window to actually active screen */
-		gtk_window_deiconify(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window"))); 
-	    } 
+		gtk_window_deiconify(GTK_WINDOW(g_object_get_data(G_OBJECT(chat), "top_window")));
+	}
 	else if (chat_type == CHAT_TYPE_TABBED)
-		{
-			GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),
-								     "chat_notebook");
-			guint nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
-			GtkWidget *curr_page_widget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook),nr);
-			
-			gtk_widget_grab_focus(g_object_get_data(G_OBJECT(curr_page_widget), "input"));
-			print_debug("current_page = %d",nr);
-		}
+	{
+		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),
+							     "chat_notebook");
+		guint nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+		GtkWidget *curr_page_widget = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook), nr);
+
+		gtk_widget_grab_focus(g_object_get_data(G_OBJECT(curr_page_widget), "input"));
+		print_debug("current_page = %d", nr);
+	}
 
 	g_free(header);
 	g_free(text);

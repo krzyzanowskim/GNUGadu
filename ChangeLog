@@ -1,3 +1,7 @@
+08.06.2004
+- emoticons window is not created every time, only once in every chat window. (krzak/GUI)
+  ( http://bugs.gnugadu.org/index.php?do=details&id=41 )
+
 07.06.2004
 - --with-external-libgadu       Build gadu-gadu plugin against external libgadu (krzak)
 
