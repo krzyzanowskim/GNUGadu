@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.2 2003/05/07 11:14:36 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.3 2003/06/25 22:11:04 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -115,15 +115,15 @@ gui_chat_session *gui_session_find_confer(gui_protocol *gp, GSList *recipients)
 
 gui_protocol *gui_find_protocol(gchar *plugin_name, GSList *protocolsl)
 {
-    GSList *tmp = protocolsl;
+    GSList *tmp = (GSList *)protocolsl;
     
-    if (!tmp) return NULL;
+    if (!tmp || !plugin_name) return NULL;
     
     while (tmp) 
     {
 	gui_protocol *gp = (gui_protocol *)tmp->data;
 
-	if (!ggadu_strcasecmp(gp->plugin_name, plugin_name))
+	if (gp && !ggadu_strcasecmp(gp->plugin_name, plugin_name))
 	    return gp;
 	    
 	tmp = tmp->next;
@@ -157,7 +157,7 @@ GGaduContact *gui_find_user(gchar *id, gui_protocol *gp)
 {    
     GSList *ulist = NULL;
     
-    if (!gp) return NULL;
+    if (!gp || !id) return NULL;
     
     ulist = gp->userlist;
 
@@ -165,7 +165,7 @@ GGaduContact *gui_find_user(gchar *id, gui_protocol *gp)
     {
         GGaduContact *k = ulist->data;
 	
-	if (!ggadu_strcasecmp(id, k->id))
+	if ((k != NULL) && (!ggadu_strcasecmp(id, k->id)))
 	    return k;
 	    
         ulist = ulist->next;

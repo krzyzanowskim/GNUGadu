@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.7 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.8 2003/06/25 22:11:04 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -12,6 +12,7 @@
 
 /* default icon's filename */
 #define GGADU_DEFAULT_ICON_FILENAME "icon.png"
+#define GGADU_MSG_ICON_FILENAME "new-msg.png"
 
 typedef struct  {
     gchar *id;
@@ -23,7 +24,6 @@ typedef struct {
     gchar 	  *plugin_name;
     GSList 	  *userlist;
     GSList	  *chat_sessions;
-/*    GGaduMenu 	  *userlist_menu; */
     GtkListStore  *users_liststore;
     GtkWidget     *add_info_label;
     GtkWidget	  *statuslist_eventbox;

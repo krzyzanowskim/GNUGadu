@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.23 2003/06/22 17:36:01 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.24 2003/06/25 22:11:04 krzyzak Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -254,6 +254,8 @@ void signal_receive (gpointer name, gpointer signal_ptr)
     if (signal->name == g_quark_from_static_string ("change status"))
       {
 	  GGaduStatusPrototype *sp = signal->data;
+	  
+	  if (!sp) return;
 
 	  if (sp->status == 1 || sp->status == 2)
 	    {

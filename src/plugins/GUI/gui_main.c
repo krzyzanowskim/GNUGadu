@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.21 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.22 2003/06/25 22:11:04 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -268,9 +268,6 @@ void start_plugin()
 
     signal_emit_full("main-gui", "docklet set default icon", sigdata, NULL, (gpointer)g_slist_free);
 
-//    if (config_var_get(gui_handler, "hide_on_start") && find_plugin_by_name("docklet"))
-//	handle_show_invisible_chats (NULL);
-	
 }
 
 void destroy_plugin() 

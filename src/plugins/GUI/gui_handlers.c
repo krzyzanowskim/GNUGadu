@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.33 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.34 2003/06/25 22:11:04 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -144,15 +144,15 @@ void handle_show_invisible_chats (GGaduSignal * signal)
 	  gui_show_hide_window ();
 	  gtk_window_move (GTK_WINDOW (window), (gint) config_var_get (gui_handler, "left"),
 			   (gint) config_var_get (gui_handler, "top"));
-//      gdk_threads_leave();
 
 	  return;
       }
 
     while (tmp)
       {
-	  GtkWidget *chat = tmp->data;
-	  gtk_widget_show_all (chat);
+	  GtkWidget *chat = GTK_WIDGET(tmp->data);
+	  GtkWidget *win = g_object_get_data(G_OBJECT(chat),"top_window");
+	  if (win) gtk_widget_show_all (win);
 	  tmp = tmp->next;
       }
 

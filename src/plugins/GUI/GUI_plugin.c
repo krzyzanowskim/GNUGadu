@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.29 2003/06/24 19:01:10 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.30 2003/06/25 22:11:04 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -146,7 +146,8 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 
 
 	  gtk_tree_model_get (model, &iter, 2, &k, -1);
-	  if (!gp)
+
+	  if (!gp || !k)
 	      return FALSE;
 
 	  add_info_label_desc = g_object_get_data (G_OBJECT (gp->add_info_label), "add_info_label_desc");
@@ -369,10 +370,13 @@ void gui_main_window_create (gboolean visible)
     gint top, left;
 
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gdk_window_set_decorations(GTK_WIDGET(window)->window,GDK_DECOR_MENU);
     gtk_widget_set_name (window, "ggadu_window");
     gtk_window_set_wmclass (GTK_WINDOW (window), "GM_NAME", "GNUGadu");
     gtk_window_set_title (GTK_WINDOW (window), "GNU Gadu 2");
     gtk_window_set_modal (GTK_WINDOW (window), FALSE);
+    gtk_window_set_has_frame (GTK_WINDOW (window), FALSE);
+    gtk_window_set_role (GTK_WINDOW (window), "GNUGadu");
 
     width = (gint) config_var_get (gui_handler, "width");
     height = (gint) config_var_get (gui_handler, "height");
@@ -602,7 +606,7 @@ void gui_msg_receive (GGaduSignal * signal)
 
 		/* shasta: new "docklet set [default] icon" approach */
 		sigdata = g_slist_append (sigdata, (gchar *) config_var_get (gui_handler, "icons"));
-		sigdata = g_slist_append (sigdata, (gpointer) "new-msg.png");
+		sigdata = g_slist_append (sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
 		sigdata = g_slist_append (sigdata, _("You Have Message"));
 
 		if (showwindow == FALSE)
