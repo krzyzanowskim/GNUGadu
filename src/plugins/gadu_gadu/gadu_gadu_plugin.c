@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.32 2003/04/13 21:29:36 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.33 2003/04/13 23:55:33 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -319,7 +319,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 
 		case GG_EVENT_CONN_FAILED:
 			print_debug("nie uda³o siê polaczyc\n");
-			ggadu_gadu_gadu_disconnect_msg(_("Unable to authenticate (propably)"));
+			ggadu_gadu_gadu_disconnect_msg(_("Unable to authenticate (probably)"));
 			break;
 
 		case GG_EVENT_DISCONNECT:

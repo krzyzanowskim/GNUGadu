@@ -315,7 +315,7 @@ msgid "Disconnected"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:317
-msgid "Unable to authenticate (propably)"
+msgid "Unable to authenticate (probably)"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:436
