@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.17 2004/11/26 12:40:51 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.18 2004/12/15 17:15:24 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -85,11 +85,12 @@ typedef enum
 typedef enum
 {
     VAR_FLAG_NONE = 1,			/*!< Empty, no flag */
-    VAR_FLAG_SENSITIVE = 1 << 2,	/*!< Widget is sensitive */
-    VAR_FLAG_INSENSITIVE = 1 << 4,	/*!< Widget is insensitive */
-    VAR_FLAG_PASSWORD = 1 << 5,		/*!< Password type input */
-    VAR_FLAG_SELECTED = 1 << 6,		/*!< Mark selected by default */
-    VAR_FLAG_FOCUS = 1 << 8		/*!< Grab focus */
+    VAR_FLAG_SENSITIVE = 2,	/*!< Widget is sensitive */
+    VAR_FLAG_INSENSITIVE = 4,	/*!< Widget is insensitive */
+    VAR_FLAG_PASSWORD = 8,		/*!< Password type input */
+    VAR_FLAG_SELECTED = 16,		/*!< Mark selected by default */
+    VAR_FLAG_FOCUS = 32,		/*!< Grab focus */
+    VAR_FLAG_ADVANCED = 64		/*!< Put option into advanced box */
 } GGaduKeyValueFlag;
 
 /*! common enums */

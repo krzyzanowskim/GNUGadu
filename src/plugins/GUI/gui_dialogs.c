@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.57 2004/10/19 10:51:26 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.58 2004/12/15 17:15:24 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -114,19 +114,27 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 )
 {
 	GSList *listtmp = list;
+	GtkWidget *adv_vbox = NULL;
+	GtkWidget *adv_expander = NULL;
 	gint ielements = g_slist_position(list, g_slist_last(list));
 	gint rows = ((ielements + 1) / cols) + use_progress;
 	GtkWidget *tab = gtk_table_new(rows, cols, FALSE);
 	gint actC = 0, actR = 0;
 	GtkWidget *to_grab_focus = NULL;
+	gboolean need_advanced = FALSE;
 
 	gtk_container_set_border_width(GTK_CONTAINER(tab), 15);
+	
+	/* remember to free adv_expander */
+	
+	adv_vbox = gtk_vbox_new(FALSE,5);
 
 	while (listtmp)
 	{
 		GGaduKeyValue *kv = (GGaduKeyValue *) listtmp->data;
 		GtkWidget *entry = NULL;
 		gboolean need_label = TRUE;
+		gboolean is_advanced = FALSE;
 
 		switch (kv->type)
 		{
@@ -277,34 +285,70 @@ GtkWidget *gui_build_dialog_gtk_table(GSList * list, gint cols, gboolean use_pro
 		if ((kv->flag & VAR_FLAG_FOCUS) != 0)
 			to_grab_focus = entry;
 
+
 		kv->user_data = (gpointer) entry;
 
-		if (need_label)
+		if ((kv->flag & VAR_FLAG_ADVANCED) != 0)
 		{
-			GtkWidget *vbox = gtk_alignment_new(0, 0.5, 0, 0);
+		    GtkWidget *hbox = gtk_hbox_new(FALSE,5);
+		    GtkWidget *align;
+		    GtkWidget *label;
+		    
+		    need_advanced = TRUE;
+		    is_advanced = TRUE;
+		    
+		    gtk_box_pack_end_defaults(GTK_BOX(hbox),entry);
+		    
+		    if (need_label)
+		    {
+			align = gtk_alignment_new(0, 0.5, 0, 0);
+			label = gtk_label_new(kv->description);
+			gtk_container_add(GTK_CONTAINER(align), label);
+			gtk_box_pack_end_defaults(GTK_BOX(hbox),align);
+		    }
+		    
+		    gtk_box_pack_start_defaults(GTK_BOX(adv_vbox),hbox);
+		}
+		
+		if (need_label && !is_advanced)
+		{
+			GtkWidget *align = gtk_alignment_new(0, 0.5, 0, 0);
 			GtkWidget *label = gtk_label_new(kv->description);
 
-			gtk_container_add(GTK_CONTAINER(vbox), label);
-			gtk_table_attach_defaults(GTK_TABLE(tab), vbox, 0, 1, actR, actR + 1);
-
+			gtk_container_add(GTK_CONTAINER(align), label);
+			gtk_table_attach_defaults(GTK_TABLE(tab), align, 0, 1, actR, actR + 1);
+			
 			if (entry)
-				gtk_table_attach_defaults(GTK_TABLE(tab), entry, 1, 2, actR, actR + 1);
+			    gtk_table_attach_defaults(GTK_TABLE(tab), entry, 1, 2, actR, actR + 1);
 
 		}
-		else
+		else if (!is_advanced)
 		{
 			gtk_table_attach(GTK_TABLE(tab), entry, actC, actC + 2, actR, actR + 1, GTK_FILL, GTK_SHRINK, 0, 0);
 		}
-
-		if ((actC + 1) < cols)
-			actC++;
-		else
+		
+		
+		if (!is_advanced)
 		{
+		    if ((actC + 1) < cols)
+			actC++;
+		    else
+		    {
 			actC = 0;
 			actR++;
+		    }
 		}
 
 		listtmp = listtmp->next;
+	}
+
+	if (need_advanced)
+	{
+	    adv_expander = gtk_expander_new_with_mnemonic(_("_More options"));
+	    gtk_container_add(GTK_CONTAINER(adv_expander),adv_vbox);
+	    gtk_table_attach_defaults(GTK_TABLE(tab), adv_expander, 0, rows, actR, actR + 1);
+	} else {
+	    gtk_widget_destroy(adv_vbox);
 	}
 
 	/* progress stuff */

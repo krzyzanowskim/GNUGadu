@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.33 2004/10/21 14:02:13 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.34 2004/12/15 17:15:50 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -387,9 +387,9 @@ gpointer osd_preferences(gpointer user_data)
 	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer) NUMLINES, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_TIMEOUT, _("Timeout"), VAR_INT, (gpointer) TIMEOUT, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET, _("Horizontal offset"), VAR_INT, (gpointer) HORIZONTAL_OFFSET, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_VERTICAL_OFFSET, _("Vertical offset"), VAR_INT, (gpointer) VERTICAL_OFFSET, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_SHADOW_OFFSET, _("Shadow offset"), VAR_INT, (gpointer) SHADOW_OFFSET, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET, _("Horizontal offset"), VAR_INT, (gpointer) HORIZONTAL_OFFSET, VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_VERTICAL_OFFSET, _("Vertical offset"), VAR_INT, (gpointer) VERTICAL_OFFSET, VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(d, GGADU_XOSD_CONFIG_SHADOW_OFFSET, _("Shadow offset"), VAR_INT, (gpointer) SHADOW_OFFSET, VAR_FLAG_ADVANCED);
 	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");

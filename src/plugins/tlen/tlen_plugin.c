@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.78 2004/12/02 12:02:14 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.79 2004/12/15 17:15:47 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -633,7 +633,7 @@ gpointer user_add_user_action(gpointer user_data)
 	GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, "Add contact", "add user");
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_UIN, "Tlen ID", VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_GROUP, _("Group"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_GROUP, _("Group"), VAR_STR, NULL, VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -777,8 +777,8 @@ gpointer search_action(gpointer user_data)
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_CITY, _("City:"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_ID, _("@tlen.pl"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SEARCH_GENDER, _("Gender:"), VAR_LIST, gender_list, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 
@@ -807,9 +807,10 @@ gpointer user_preferences_action(gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_UIN, _("Tlen login"), VAR_STR, ggadu_config_var_get(handler, "login"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_PASSWORD, _("Password"), VAR_STR, ggadu_config_var_get(handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL, ggadu_config_var_get(handler, "autoconnect"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST, statuslist_names, VAR_FLAG_NONE);
+	
+	ggadu_dialog_add_entry(dialog, GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL, ggadu_config_var_get(handler, "log"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 

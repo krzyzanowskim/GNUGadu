@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.62 2004/12/02 12:02:13 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.63 2004/12/15 17:15:45 krzyzak Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -61,11 +61,11 @@ gpointer sms_preferences(gpointer user_data)
 	print_debug("%s : Preferences\n", GGadu_PLUGIN_NAME);
 
 	/* *INDENT-OFF* */
-	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "external"), VAR_FLAG_ADVANCED);
 	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_ERA_LOGIN, _("Era login"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "era_login"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_ERA_PASSWORD, _("Era password"), VAR_STR, (gpointer) ggadu_config_var_get(sms_handler, "era_password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SHOW_IN_STATUS, _("Show plugin in status list (needs reload)"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "show_in_status"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_SMS_CONFIG_SHOW_IN_STATUS, _("Show plugin in status list (needs reload)"), VAR_BOOL, (gpointer) ggadu_config_var_get(sms_handler, "show_in_status"), VAR_FLAG_ADVANCED);
 	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");

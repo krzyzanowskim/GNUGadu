@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.12 2004/08/02 00:09:08 krzyzak Exp $ */
+/* $Id: my_plugin.c,v 1.13 2004/12/15 17:15:23 krzyzak Exp $ */
 
 /* 
  * Example: plugin code for GNU Gadu 2 
@@ -40,11 +40,11 @@
 #include "my_plugin.h"
 
 GGaduPlugin *handler;
-GGaduMenu *menu_pluginmenu = NULL;
+static GGaduMenu *menu_pluginmenu = NULL;
 
 GGadu_PLUGIN_INIT("my-plugin", GGADU_PLUGIN_TYPE_MISC);
 
-gpointer ggadu_play_file(gpointer user_data)
+static gpointer ggadu_play_file(gpointer user_data)
 {
     gchar *cmd;
     if (!ggadu_config_var_get(handler, "player"))
@@ -57,7 +57,7 @@ gpointer ggadu_play_file(gpointer user_data)
     return NULL;
 }
 
-gpointer se_preferences(gpointer user_data)
+static gpointer se_preferences(gpointer user_data)
 {
     GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG,_("My Plugin preferences"),"update config");
 	
@@ -72,7 +72,7 @@ gpointer se_preferences(gpointer user_data)
 
 
 /* SIGNALS HANDLER */
-void my_signal_receive(gpointer name, gpointer signal_ptr)
+static void my_signal_receive(gpointer name, gpointer signal_ptr)
 {
     GGaduSignal *signal = (GGaduSignal *) signal_ptr;
 
@@ -115,7 +115,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 
 /* MENU */
-GGaduMenu *build_plugin_menu()
+static GGaduMenu *build_plugin_menu()
 {
     GGaduMenu *root = ggadu_menu_create();
     GGaduMenu *item_gg = ggadu_menu_add_item(root, "My Plugin", NULL, NULL);

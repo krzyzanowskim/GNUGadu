@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.123 2004/12/03 21:10:57 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.124 2004/12/15 17:15:43 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -110,7 +110,7 @@ static gpointer user_add_action(gpointer user_data)
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
 	ggadu_dialog_add_entry(dialog, GGADU_ID, _("Jabber ID (jid)"), VAR_STR, NULL, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_NICK, _("Nickname"), VAR_STR, NULL, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_REQUEST_AUTH_FROM, _("Request authorization from"), VAR_BOOL, (gpointer)TRUE, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_REQUEST_AUTH_FROM, _("Request authorization from"), VAR_BOOL, (gpointer)TRUE, VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
@@ -1348,7 +1348,7 @@ gpointer user_search_action(gpointer user_data)
 
 	dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, _("Jabber search: server"), "search-server");
 
-	ggadu_dialog_add_entry(dialog, 0, _("Server:"), VAR_STR, server, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, 0, _("Server"), VAR_STR, server, VAR_FLAG_NONE);
 	signal_emit("jabber", "gui show dialog", dialog, "main-gui");
 
 	return NULL;
@@ -1363,8 +1363,6 @@ gpointer user_preferences_action(gpointer user_data)
 				ggadu_config_var_get(jabber_handler, "jid"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PASSWORD, _("Password"), VAR_STR,
 				ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
-				ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_ONLY_FRIENDS, _("Receive messages from friends only"), VAR_BOOL,
 				ggadu_config_var_get(jabber_handler, "only_friends"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
@@ -1372,19 +1370,22 @@ gpointer user_preferences_action(gpointer user_data)
 
 	if (lm_ssl_is_supported())
 	{
-		ggadu_dialog_add_entry(dialog, GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
+		ggadu_dialog_add_entry(dialog, GGADU_JABBER_USESSL, _("Use encrypted connection (SSL)"), VAR_BOOL,
 					ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
 	}
 
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
+				ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_ADVANCED);
+				
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
-				ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_NONE);
+				ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_ADVANCED);
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Server\n(optional)"), VAR_STR,
-				ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server address"), VAR_STR,
+				ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
 	
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PROXY,
-			       _("Proxy server (optional)\n[user:pass@]host.com[:8080]"), VAR_STR,
-			       ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_NONE);
+			       _("Proxy server\n[user:pass@]host.com[:port]"), VAR_STR,
+			       ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
