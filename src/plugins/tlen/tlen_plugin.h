@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.h,v 1.8 2004/12/20 09:15:42 krzyzak Exp $ */
+/* $Id: tlen_plugin.h,v 1.9 2004/12/20 10:21:19 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -26,6 +26,15 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
+
+#define ggadu_tlen_save_history(_type,_msg,_nick)	\
+	if (ggadu_config_var_get(handler, "log")) \
+	{ \
+	    gchar *path = g_build_filename(config->configdir, "history", _msg->id, NULL); \
+	    ggadu_save_history(_type, path, _nick, _msg); \
+	    g_free(path); \
+	}
+
 
 /* meta status for "Set description" function */
 #define TLEN_STATUS_DESC 666

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.81 2004/12/20 09:15:41 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.82 2004/12/20 10:21:19 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -46,8 +46,8 @@
 #include "ggadu_dialog.h"
 #include "ggadu_repo.h"
 
-GGaduPlugin *handler;
-GGaduProtocol *p;
+static GGaduPlugin *handler;
+static GGaduProtocol *p;
 
 static gchar *this_configdir = NULL;
 struct tlen_session *session = NULL;
@@ -95,20 +95,6 @@ gboolean ping(gpointer data)
 	tlen_ping(session);
 	print_debug("TLEN PING sent!\n");
 	return TRUE;
-}
-
-void ggadu_tlen_save_history(gchar * to, gchar * txt)
-{
-	gchar *dir = g_build_filename(this_configdir, "history", NULL);
-	gchar *path = g_build_filename(this_configdir, "history", (to ? to : "UNKOWN"), NULL);
-
-	if (!g_file_test(dir, G_FILE_TEST_IS_DIR))
-		mkdir(dir, 0700);
-
-	ggadu_write_line_to_file(path, txt, "ISO-8859-2");
-
-	g_free(path);
-	g_free(dir);
 }
 
 gpointer user_view_history_action(gpointer user_data)
@@ -415,18 +401,14 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 						msg->id = g_strdup_printf("%s", e->notify->from);
 
-						msg->message = to_utf8("ISO-8859-2", "Rozmówca wys³a³ Ci alert d¼wiêkowy!");
+						msg->message = to_utf8("ISO-8859-2", _("You received sound alert"));
 
 						msg->class = TLEN_CHAT;
 						signal_emit(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
 
 						if (ggadu_config_var_get(handler, "log"))
 						{
-							gchar *line = g_strdup_printf("\n:: %s (%s) ::\n%s\n", msg->id,
-										      get_timestamp(msg->time),
-										      msg->message);
-							ggadu_tlen_save_history(msg->id, line);
-							g_free(line);
+							ggadu_tlen_save_history(GGADU_HISTORY_TYPE_RECEIVE,msg,msg->id);
 						}
 						break;
 					}
@@ -453,10 +435,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			if (ggadu_config_var_get(handler, "log"))
 			{
-				gchar *line = g_strdup_printf("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp(msg->time),
-							      msg->message);
-				ggadu_tlen_save_history(msg->id, line);
-				g_free(line);
+				ggadu_tlen_save_history(GGADU_HISTORY_TYPE_RECEIVE,msg,msg->id);
 			}
 
 			break;
@@ -885,7 +864,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Chat"), user_chat_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View _History"), user_view_history_action, NULL));
-		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
+
+		ggadu_menu_add_user_menu_extensions(umenu, handler);
 
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Remove"), user_remove_user_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("_Add New"), user_add_user_action, NULL));
@@ -1153,10 +1133,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					print_debug("zjebka podczas send message %s\n", msg->id, TLEN_CHAT);
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					gchar *line = g_strdup_printf(_("\n:: Me (%s) ::\n%s\n"), get_timestamp(0),
-								      msg->message);
-					ggadu_tlen_save_history(msg->id, line);
-					g_free(line);
+					ggadu_tlen_save_history(GGADU_HISTORY_TYPE_SEND,msg,msg->id);
 				}
 
 				break;
@@ -1166,10 +1143,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					print_debug("zjebka podczas send message %s\n", msg->id, TLEN_MESSAGE);
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					gchar *line = g_strdup_printf(_("\n:: Me (%s) ::\n%s\n"), get_timestamp(0),
-								      msg->message);
-					ggadu_tlen_save_history(msg->id, line);
-					g_free(line);
+					ggadu_tlen_save_history(GGADU_HISTORY_TYPE_SEND,msg,msg->id);
 				}
 
 				break;

@@ -1,3 +1,6 @@
+20.12.2004
+- support for common history interface for tlen plugin (tlen/krzak)
+
 19.12.2004
 - fixes for gtk 2.6 (GUI)
 - config->argv config->argc values from main(..)
