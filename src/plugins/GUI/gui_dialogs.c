@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.20 2003/05/15 14:19:01 shaster Exp $ */
+/* $Id: gui_dialogs.c,v 1.21 2003/05/31 09:49:50 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -113,6 +113,11 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 			    gtk_entry_set_text( GTK_ENTRY(entry), kv->value );
 			break;
 		case VAR_INT: {
+			entry = gtk_spin_button_new_with_range(0,999999999,1);
+			gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),(gint)kv->value);
+			}
+			break;
+		case VAR_INT_WITH_NEGATIVE: {
 			entry = gtk_spin_button_new_with_range(-999999999,999999999,1);
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(entry),(gint)kv->value);
 			}
@@ -237,6 +242,7 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 			}
 			break;
 	    case VAR_INT:
+	    case VAR_INT_WITH_NEGATIVE:
 	    		kv->value = (gpointer)gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(kv->user_data));
 			break;
 	    case VAR_BOOL:

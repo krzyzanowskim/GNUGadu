@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.11 2003/05/28 07:42:57 zapal Exp $ */
+/* $Id: gg-types.h,v 1.12 2003/05/31 09:49:48 shaster Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -35,6 +35,7 @@ enum {
 enum {
     VAR_STR = 1,
     VAR_INT,
+    VAR_INT_WITH_NEGATIVE,
     VAR_BOOL,
     VAR_IMG,
     VAR_FILE_CHOOSER,
