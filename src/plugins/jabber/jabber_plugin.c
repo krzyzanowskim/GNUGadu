@@ -187,14 +187,42 @@ gpointer user_remove_action (gpointer user_data)
     return NULL;
 }
 
+gpointer  user_resend_auth_to (gpointer user_data)
+{
+    GSList *user = (GSList *) user_data;
+    GGaduContact *k = (GGaduContact *) user->data;
+    LmMessage *m = lm_message_new_with_sub_type (k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
+    lm_connection_send (connection, m, NULL);
+    lm_message_unref(m);
+    return NULL;
+}
+
+gpointer  user_remove_auth_from (gpointer user_data)
+{
+    GSList *user = (GSList *) user_data;
+    GGaduContact *k = (GGaduContact *) user->data;
+    LmMessage *m = lm_message_new_with_sub_type (k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED);
+    lm_connection_send (connection, m, NULL);
+    lm_message_unref(m);
+    return NULL;
+}
+
 GGaduMenu *build_userlist_menu (void)
 {
     GGaduMenu *menu = ggadu_menu_create ();
+    GGaduMenu *listmenu;
 
     ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Chat"), user_chat_action, NULL));
     ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Edit"), user_edit_action, NULL));
     ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Remove"), user_remove_action, NULL));
     ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("Add New"), user_add_action, NULL));
+
+    listmenu = ggadu_menu_new_item(_("Authorization"), NULL, NULL);
+    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Resend authorization to"), user_resend_auth_to, NULL));
+/*    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Rerequest authorization from"), user_remove_auth_from, NULL)); */
+    ggadu_menu_add_submenu(listmenu, ggadu_menu_new_item(_("Remove authorization from"), user_remove_auth_from, NULL));
+
+    ggadu_menu_add_submenu(menu, listmenu);
     ggadu_menu_add_submenu (menu, ggadu_menu_new_item (_("View History"), user_view_history_action, NULL));
 
     return menu;
