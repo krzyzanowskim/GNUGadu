@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.23 2003/04/10 18:11:51 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.24 2003/04/10 19:25:10 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1429,7 +1429,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		    
 		print_debug("%s\n",message);
 			
-		msg->time = g_strtod(get_timestamp(0),NULL);
+		msg->time = time(NULL);
 		
 		if ((msg->class == GGADU_CLASS_CONFERENCE) && (msg->recipients != NULL)) {
 		    gint   i = 0;

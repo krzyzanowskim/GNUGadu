@@ -1,4 +1,6 @@
 10.04.2003
+- VAR_LIST isn't editable (GUI/krzak)
+- fix closing tabs (GUI/krzak)
 - autoconnect status box (gadu-gadu/krzak)
 - fixed paste emoticon tag choosed from window (GUI/krzak)
 
