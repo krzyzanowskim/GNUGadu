@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.99 2005/03/01 17:03:15 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.100 2005/03/02 13:00:57 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -420,7 +420,7 @@ static GtkWidget *create_fonts_tab(
 	frame = gtk_frame_new(_("Outgoing messages"));
 	gtk_box_pack_start(GTK_BOX(fonts_vbox), frame, FALSE, FALSE, 0);
 
-	tabbox = gtk_table_new(3, 3, FALSE);
+	tabbox = gtk_table_new(4, 3, FALSE);
 	gtk_container_add(GTK_CONTAINER(frame), tabbox);
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
@@ -485,12 +485,13 @@ static GtkWidget *create_fonts_tab(
 		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "contact_list_contact_font"));
 
 	label = gtk_label_new(_("Protocol\n(tree view)"));
+    gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
 	entry = gtk_entry_new();
 	button = gtk_button_new_from_stock("gtk-select-font");
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 1, 2);
+    gtk_table_attach(GTK_TABLE(tabbox), button, 2, 3, 1, 2, GTK_FILL, GTK_SHRINK, 0, 0);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_fonts_select_dialog), entry);
 	g_object_set_data(G_OBJECT(fonts_vbox), "contact_list_protocol_font", entry);
 
