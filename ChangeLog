@@ -1,6 +1,7 @@
 3.04.2003
 - dynamically load/unload plugins from GUI (restart isn't necessary)
   (GUI/krzak)
+- fix for IDEA (sms/HelDoRe)
 
 2.04.2003
 - fix "reason" variable encoding (gadu-gadu/krzak)
@@ -18,7 +19,7 @@
 - fixed change status icon (tlen/gadu-gadu/jabber/krzak)
 
 27.03.2003
-- sms fix for ERA (Heldore)
+- fix for ERA (sms/HelDoRe)
 
 25.03.2003
 - some labels are noe selectable (GUI/THrull)
