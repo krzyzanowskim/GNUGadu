@@ -10,7 +10,7 @@ To compile all plugins you need:
 - libtlen (http://libtlen.sourceforge.net) - Tlen
 - Loudmouth 0.17 or newer (http://www.imendio.com/projects/loudmouth) - Jabber
 - xosd (http://ignavus.net/software.html) - XOSD
-- esound (http://www.tux.org/~ricdude/EsounD.html - sound-esd
+- esound (http://www.tux.org/~ricdude/EsounD.html) - sound-esd
 - audiofile (http://www.68k.org/~michael/audiofile)
 - aRts! (http://www.arts-project.org)
 - gtkspell - http://gtkspell.sourceforge.net

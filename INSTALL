@@ -1,11 +1,12 @@
-read REAME file for requirements
+See README for requirements.
 
 ./configure --help
 
 # if you want to *try* build *all* plugins
 ./configure --with-all-plugins 
 or
-./configure --without-gtkspell --without-tlen etc.... check (--help for details)
+./configure --without-gtkspell --without-tlen etc.... (check --help for details)
 
 make
-make install
+make install (preferably as root)
+
