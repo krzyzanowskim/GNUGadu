@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.41 2005/01/21 22:12:52 mkobierzycki Exp $ */
+/* $Id: jabber_protocol.c,v 1.42 2005/01/22 11:17:36 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -87,9 +87,6 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 	
 	status = sp->status;
 	
-/*	if ((status == jabber_data.status))
-		return;
-*/				
 	if (status == JABBER_STATUS_UNAVAILABLE)
 	{
 		lm_connection_close(jabber_data.connection, NULL);
@@ -98,8 +95,8 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 
 	/* connect if switched to any other than unavailable */	
 	if ((jabber_data.status == JABBER_STATUS_UNAVAILABLE) && (status != JABBER_STATUS_UNAVAILABLE) &&
-	    (status != JABBER_STATUS_DESCR) && (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection)
-	    || !lm_connection_is_authenticated(jabber_data.connection)))
+	    (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection) ||
+	     !lm_connection_is_authenticated(jabber_data.connection)))
 	{
 		g_thread_create(jabber_login_connect, (gpointer) status, FALSE, NULL);
 		return;
@@ -115,7 +112,8 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 					 (status == JABBER_STATUS_UNAVAILABLE) ? 
 					 LM_MESSAGE_SUB_TYPE_UNAVAILABLE : LM_MESSAGE_SUB_TYPE_AVAILABLE);
 
-	switch (status == JABBER_STATUS_DESCR ? jabber_data.status : status)
+	/* switch (status == JABBER_STATUS_DESCR ? jabber_data.status : status) */
+	switch (status)
 	{
 	case JABBER_STATUS_AWAY:
 		show = show_away;
@@ -159,11 +157,8 @@ void jabber_change_status(GGaduStatusPrototype *sp)
 	}
 	else
 	{
-		if(status != JABBER_STATUS_DESCR)
-		{
-			jabber_data.status = status;
-			signal_emit("jabber", "gui status changed", (gpointer) status, "main-gui");
-		}
+		jabber_data.status = status;
+		signal_emit("jabber", "gui status changed", (gpointer) status, "main-gui");
 	}
 	lm_message_unref(m);
 	print_debug("jabber_change_status end");
