@@ -1,4 +1,4 @@
-/* $Id: libgadu.h,v 1.4 2004/10/08 07:57:38 krzyzak Exp $ */
+/* $Id: libgadu.h,v 1.5 2004/10/25 08:20:45 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -903,7 +903,7 @@ char *gg_vsaprintf(const char *format, va_list ap);
 char *gg_get_line(char **ptr);
 
 int gg_connect(void *addr, int port, int async);
-struct hostent *gg_gethostbyname(const char *hostname);
+struct hostent *gg_gethostbyname(const char *hostname, char **buf);
 char *gg_read_line(int sock, char *buf, int length);
 void gg_chomp(char *line);
 char *gg_urlencode(const char *str);

@@ -1,4 +1,4 @@
-/* $Id: http.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
+/* $Id: http.c,v 1.3 2004/10/25 08:20:45 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -119,14 +119,17 @@ struct gg_http *gg_http_connect(const char *hostname, int port, int async, const
 	} else {
 		struct hostent *he;
 		struct in_addr a;
+		char *buf=NULL;
 
-		if (!(he = gg_gethostbyname(hostname))) {
-                        gg_debug(GG_DEBUG_MISC, "// gg_http_connect() host not found\n");
+		if (!(he = gg_gethostbyname(hostname, &buf))) {
+			gg_debug(GG_DEBUG_MISC, "// gg_http_connect() host not found\n");
 			gg_http_free(h);
 			errno = ENOENT;
 			return NULL;
 		} else {
 			memcpy((char*) &a, he->h_addr, sizeof(a));
+			if (buf)
+				free(buf);
 			free(he);
 		}
 

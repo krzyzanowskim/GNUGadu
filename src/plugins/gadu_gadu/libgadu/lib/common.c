@@ -1,4 +1,4 @@
-/* $Id: common.c,v 1.4 2004/10/08 07:57:38 krzyzak Exp $ */
+/* $Id: common.c,v 1.5 2004/10/25 08:20:45 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -428,18 +428,52 @@ int gg_http_hash(const char *format, ...)
 /*
  * gg_gethostbyname() // funkcja pomocnicza
  *
- * odpowiednik gethostbyname() u¿ywaj±cy gethostbyname_r(), gdy potrzebna
- * jest wielobie¿no¶æ. chwilowo korzysta ze zwyk³ego gethostbyname().
+ * odpowiednik gethostbyname() u¿ywaj±cy gethostbyname_r()
  *
  *  - hostname - nazwa serwera
+ *  - buf - parametr wyj¶ciowy: wska¼nik na tablicê, któr± nale¿y pó¼niej zwolniæ
  *
  * zaalokowany bufor, który nale¿y zwolniæ lub NULL w przypadku b³êdu.
+ * po u¿yciu zwracanej warto¶ci nale¿y zwolniæ *buf
  */
-struct hostent *gg_gethostbyname(const char *hostname)
+struct hostent *gg_gethostbyname(const char *hostname, char **buf)
 {
-	/* XXX u¿yæ gethostbyname_r() */
-
+#ifdef __GLIBC__
+	char *tmpbuf;
 	struct hostent *hp, *hp2;
+	int h_errnop, ret;
+	size_t buflen=1024;
+	
+	*buf=NULL;
+	if (!(hp=calloc(1, sizeof(*hp))))
+		return NULL;
+	*buf=malloc(buflen);
+	if (*buf==NULL)
+	{
+		free(hp);
+		return NULL;
+	}
+	
+	while ((ret=gethostbyname_r(hostname, hp, *buf, buflen, &hp2, &h_errnop))==ERANGE)
+	{
+		buflen*=2;
+		tmpbuf=realloc(*buf, buflen);
+		if (tmpbuf==0)
+			break;
+		*buf=tmpbuf;
+	}
+	if (ret || hp2==NULL || tmpbuf==NULL)
+	{
+		if (*buf)
+			free(buf);
+		*buf=NULL;
+		free(hp);
+		return NULL;
+	}
+	return hp;
+#else
+	struct hostent *hp, *hp2;
+	*buf=NULL;
 
 	if (!(hp = gethostbyname(hostname)))
 		return NULL;
@@ -450,6 +484,7 @@ struct hostent *gg_gethostbyname(const char *hostname)
 	memcpy(hp2, hp, sizeof(*hp));
 
 	return hp2;
+#endif
 }
 
 #ifdef ASSIGN_SOCKETS_TO_THREADS

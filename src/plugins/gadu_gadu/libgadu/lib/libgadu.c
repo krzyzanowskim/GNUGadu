@@ -1,4 +1,4 @@
-/* $Id: libgadu.c,v 1.4 2004/10/08 07:57:38 krzyzak Exp $ */
+/* $Id: libgadu.c,v 1.5 2004/10/25 08:20:45 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -71,7 +71,7 @@ static char rcsid[]
 #ifdef __GNUC__
 __attribute__ ((unused))
 #endif
-= "$Id: libgadu.c,v 1.4 2004/10/08 07:57:38 krzyzak Exp $";
+= "$Id: libgadu.c,v 1.5 2004/10/25 08:20:45 krzyzak Exp $";
 #endif 
 
 /*
@@ -203,11 +203,14 @@ int gg_resolve(int *fd, int *pid, const char *hostname)
 	if (!res) {
 		if ((a.s_addr = inet_addr(hostname)) == INADDR_NONE) {
 			struct hostent *he;
+			char *buf=NULL;
 		
-			if (!(he = gg_gethostbyname(hostname)))
+			if (!(he = gg_gethostbyname(hostname, &buf)))
 				a.s_addr = INADDR_NONE;
 			else {
 				memcpy((char*) &a, he->h_addr, sizeof(a));
+				if (buf)
+					free(buf);
 				free(he);
 			}
 		}
@@ -239,11 +242,14 @@ static void *gg_resolve_pthread_thread(void *arg)
 
 	if ((a.s_addr = inet_addr(d->hostname)) == INADDR_NONE) {
 		struct hostent *he;
+		char *buf=NULL;
 		
-		if (!(he = gg_gethostbyname(d->hostname)))
+		if (!(he = gg_gethostbyname(d->hostname, &buf)))
 			a.s_addr = INADDR_NONE;
 		else {
 			memcpy((char*) &a, he->h_addr, sizeof(a));
+			if (buf)
+				free(buf);
 			free(he);
 		}
 	}
@@ -794,12 +800,15 @@ struct gg_session *gg_login(const struct gg_login_params *p)
 		if (!p->server_addr || !p->server_port) {
 			if ((a.s_addr = inet_addr(hostname)) == INADDR_NONE) {
 				struct hostent *he;
+				char *buf=NULL;
 	
-				if (!(he = gg_gethostbyname(hostname))) {
+				if (!(he = gg_gethostbyname(hostname, &buf))) {
 					gg_debug(GG_DEBUG_MISC, "// gg_login() host \"%s\" not found\n", hostname);
 					goto fail;
 				} else {
 					memcpy((char*) &a, he->h_addr, sizeof(a));
+					if (buf)
+						free(buf);
 					free(he);
 				}
 			}
