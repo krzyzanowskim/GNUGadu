@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.54 2004/01/26 10:45:45 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.55 2004/01/27 01:21:59 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -143,10 +143,10 @@ void handle_search_item(struct tlen_pubdir *item)
 
 	const gchar *id;
 /*
-    const gchar * first_name;
-    const gchar * last_name;
-    const gchar * nick;
-    const gchar * city;
+	const gchar * first_name;
+	const gchar * last_name;
+	const gchar * nick;
+	const gchar * city;
 */
 	const gchar *age;
 	int status = item->status;
@@ -226,11 +226,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	GGaduMsg *msg;
 	GSList *l = userlist;
 
-/*    if (condition & G_IO_ERR || condition & G_IO_HUP) {
-	connected = FALSE;
-	tlen_presence(session,TLEN_STATUS_UNAVAILABLE,""); 
-	return FALSE;
-    }
+/*
+	if (condition & G_IO_ERR || condition & G_IO_HUP) {
+		connected = FALSE;
+		tlen_presence(session,TLEN_STATUS_UNAVAILABLE,""); 
+		return FALSE;
+	}
 */
 	tlen_watch_fd(session);
 
@@ -336,26 +337,34 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
 			tlen_accept_subscribe(session, k->id);
-			/* signal_emit(GGadu_PLUGIN_NAME, "auth request", k, "main-gui"); */
+/*
+			signal_emit(GGadu_PLUGIN_NAME, "auth request", k, "main-gui");
+*/
 			break;
 
 		case TLEN_EVENT_SUBSCRIBED:
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
-			/* signal_emit(GGadu_PLUGIN_NAME, "auth request accepted", k, "main-gui"); */
+/*
+			signal_emit(GGadu_PLUGIN_NAME, "auth request accepted", k, "main-gui");
+*/
 			break;
 
 		case TLEN_EVENT_UNSUBSCRIBE:
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
 			tlen_accept_unsubscribe(session, k->id);
-			/* signal_emit(GGadu_PLUGIN_NAME, "unauth request", k, "main-gui"); */
+/*
+			signal_emit(GGadu_PLUGIN_NAME, "unauth request", k, "main-gui");
+*/
 			break;
 
 		case TLEN_EVENT_UNSUBSCRIBED:
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(e->subscribe->jid);
-			/* signal_emit(GGadu_PLUGIN_NAME, "unauth request accepted", k, "main-gui"); */
+/*
+			signal_emit(GGadu_PLUGIN_NAME, "unauth request accepted", k, "main-gui");
+*/
 			break;
 
 
@@ -465,7 +474,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			GGaduNotify_free(notify);
 
 /*
-            signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
+			signal_emit(GGadu_PLUGIN_NAME,"gui notify",notify,"main-gui");
 */
 			break;
 
@@ -487,8 +496,10 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		tlen_freeevent(e);
 
 	}
+
 	if (updatewatch(session) == FALSE)
 		print_debug("ooops, updatewatch() failed !!\n");
+
 	return TRUE;
 }
 
@@ -747,8 +758,8 @@ gpointer search_action(gpointer user_data)
 	}
 
 /*
-    if (search_results)
-	free_search_results();
+	if (search_results)
+		free_search_results();
 */
 	gender_list = g_list_append(gender_list, NULL);
 	gender_list = g_list_append(gender_list, _("female"));
@@ -861,8 +872,7 @@ void start_plugin()
 
 	if (ggadu_config_var_get(handler, "autoconnect") && !connected)
 		ggadu_tlen_login(ggadu_config_var_get(handler, "autoconnect_status") ? (gpointer)
-				 ggadu_config_var_get(handler,
-						      "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
+				 ggadu_config_var_get(handler, "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr)
@@ -1042,22 +1052,18 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 			else if (connected && sp)
 			{
-				GGaduKeyValue *kv = NULL;
 				if (d->optlist)
 				{
-					gchar *desc_utf = NULL, *desc_iso = NULL;
+					/* w kv->value jest opis, w utf8 */
+					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
 
-					kv = (GGaduKeyValue *) d->optlist->data;
-/*
-		    tlen_presence(session, sp->status, kv->value);
-*/
-					desc_utf = kv->value;
-					desc_iso = from_utf8("ISO-8859-2", desc_utf);
+					/* zwolnij obecny opis */
 					g_free(description);
-					description = g_strdup(desc_iso);
-					tlen_presence(session, sp->status, description);
+					/* zaalokuj pamiec na nowy */
+					description = from_utf8("ISO-8859-2", kv->value);
 
-					g_free(desc_iso);
+					/* ustaw nowy opis w sesji */
+					tlen_presence(session, sp->status, description);
 				}
 			}
 		}
@@ -1108,7 +1114,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		tlen_request_subscribe(session, k->id);
 
 		signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
-
 	}
 
 	if (signal->name == g_quark_from_static_string("add user search"))
@@ -1174,7 +1179,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	{
 		GGaduDialog *d = signal->data;
 		GSList *tmplist = d->optlist;
-		struct tlen_pubdir *req;
+		struct tlen_pubdir *req = NULL;
 
 		if ((d->response == GGADU_OK) || (d->response == GGADU_NONE))
 		{

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.h,v 1.5 2004/01/17 00:45:05 shaster Exp $ */
+/* $Id: tlen_plugin.h,v 1.6 2004/01/27 01:21:59 shaster Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -10,6 +10,7 @@
 /* meta status for "Set description" function */
 #define TLEN_STATUS_DESC 666
 
+/* ?! */
 typedef struct
 {
     guint uin;

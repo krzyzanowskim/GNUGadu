@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.21 2004/01/25 22:54:38 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.22 2004/01/27 01:24:25 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -41,8 +41,8 @@ gint VERTICAL_OFFSET;
 gint ALIGN;
 gint POS;
 
-int fine = 1;
-int timer = -1;
+gint fine = 1;
+gint timer = -1;
 GGaduPlugin *handler;
 xosd *osd = NULL;
 
@@ -243,7 +243,6 @@ gint set_configuration(void)
 	fine = 1;
 
 	/* Read settings from configfile */
-
 	if (!ggadu_config_var_check(handler, "font"))
 		print_debug("xosd: No font config found, setting default\n");
 	else
@@ -274,9 +273,9 @@ gint set_configuration(void)
 	else
 		VERTICAL_OFFSET = (gint) ggadu_config_var_get(handler, "vertical_offset");
 
-    /* *INDENT-OFF* */
-    print_debug("FONT=%s COLOUR=%s TIMEOUT=%d SHADOW_OFFSET=%d HORIZONTAL_OFFSET=%d VERTICAL_OFFSET=%d ALIGN=%d POS=%d\n", FONT, COLOUR, TIMEOUT, SHADOW_OFFSET, HORIZONTAL_OFFSET, VERTICAL_OFFSET, ALIGN, POS);
-    /* *INDENT-ON* */
+	/* *INDENT-OFF* */
+	print_debug("FONT=%s COLOUR=%s TIMEOUT=%d SHADOW_OFFSET=%d HORIZONTAL_OFFSET=%d VERTICAL_OFFSET=%d ALIGN=%d POS=%d\n", FONT, COLOUR, TIMEOUT, SHADOW_OFFSET, HORIZONTAL_OFFSET, VERTICAL_OFFSET, ALIGN, POS);
+	/* *INDENT-ON* */
 
 	/* Fallback to defaults if something fails */
 	if (xosd_set_font(osd, FONT) == -1)
@@ -374,20 +373,20 @@ gpointer osd_preferences(gpointer user_data)
 	ggadu_dialog_callback_signal(d, "update config");
 	ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
 
-    /* *INDENT-OFF* */
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) ggadu_config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_COLOUR_CHOOSER, (gpointer) COLOUR, VAR_FLAG_NONE);
+	/* *INDENT-OFF* */
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) ggadu_config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_COLOUR_CHOOSER, (gpointer) COLOUR, VAR_FLAG_NONE);
 /*
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
 */
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer) NUMLINES, VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMEOUT, _("Timeout"), VAR_INT, (gpointer) TIMEOUT, VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET, _("Horizontal offset"), VAR_INT, (gpointer) HORIZONTAL_OFFSET, VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_VERTICAL_OFFSET, _("Vertical offset"), VAR_INT, (gpointer) VERTICAL_OFFSET, VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_SHADOW_OFFSET, _("Shadow offset"), VAR_INT, (gpointer) SHADOW_OFFSET, VAR_FLAG_NONE);
-    /* *INDENT-ON* */
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_POS, _("Position"), VAR_LIST, pos_list, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_NUMLINES, _("Number of lines"), VAR_INT, (gpointer) NUMLINES, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMEOUT, _("Timeout"), VAR_INT, (gpointer) TIMEOUT, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET, _("Horizontal offset"), VAR_INT, (gpointer) HORIZONTAL_OFFSET, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_VERTICAL_OFFSET, _("Vertical offset"), VAR_INT, (gpointer) VERTICAL_OFFSET, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_SHADOW_OFFSET, _("Shadow offset"), VAR_INT, (gpointer) SHADOW_OFFSET, VAR_FLAG_NONE);
+	/* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
@@ -500,8 +499,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "numlines", VAR_INT);
 
 	if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
-		this_configdir =
-			g_build_filename(g_get_home_dir(),
+		this_configdir = g_build_filename(g_get_home_dir(),
 					 g_getenv("CONFIG_DIR") ? g_getenv("CONFIG_DIR") : g_getenv("HOME_ETC"), "gg2",
 					 NULL);
 	else
