@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.26 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.27 2003/06/24 18:14:34 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -263,7 +263,9 @@ gboolean nick_list_clicked (GtkWidget * widget, GdkEventButton * event, gpointer
 		gtk_tree_model_get (model, &iter, 2, &k, -1);
 
 		if (k)
-		    gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 3, &gp, -1);
+		  gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 3, &gp, -1);
+		/* ZONK if !k (and therefore !gp) */
+		plugin_name = gp->plugin_name;
 	    }
 
 	  umenu = signal_emit ("main-gui", "get user menu", selectedusers, plugin_name);
