@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.110 2004/01/11 13:11:26 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.111 2004/01/11 14:42:31 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1540,16 +1540,16 @@ GSList *status_init ()
     list = g_slist_append (list, sp);
     sp++;
 
-    sp->status = GG_STATUS_NOT_AVAIL;
-    sp->description = g_strdup (_("Offline"));
-    sp->image = g_strdup ("gadu-gadu-offline.png");
+    sp->status = GG_STATUS_NOT_AVAIL_DESCR;
+    sp->description = g_strdup (_("Offline with description"));
+    sp->image = g_strdup ("gadu-gadu-offline-descr.png");
     sp->receive_only = FALSE;
     list = g_slist_append (list, sp);
     sp++;
 
-    sp->status = GG_STATUS_NOT_AVAIL_DESCR;
-    sp->description = g_strdup (_("Offline with description"));
-    sp->image = g_strdup ("gadu-gadu-offline-descr.png");
+    sp->status = GG_STATUS_NOT_AVAIL;
+    sp->description = g_strdup (_("Offline"));
+    sp->image = g_strdup ("gadu-gadu-offline.png");
     sp->receive_only = FALSE;
     list = g_slist_append (list, sp);
     sp++;
