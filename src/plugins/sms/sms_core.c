@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.13 2003/09/21 14:08:31 shaster Exp $ */
+/* $Id: sms_core.c,v 1.14 2003/09/21 16:38:14 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -43,7 +43,7 @@ struct hostent *h;
 HTTPstruct HTTP;
 
 
-/* URLencoding code by Ahmad Baitalmal <ahmad@bitbuilder.com 
+/* URLencoding code by Ahmad Baitalmal <ahmad@bitbuilder.com>
  * with tweaks by Jakub Jankowski <shasta@atn.pl>
  */
 gchar *ggadu_sms_formencode(gchar * source)
@@ -461,34 +461,36 @@ int send_ERA(gchar * sms_sender, gchar * sms_number, gchar * sms_body, gchar * e
 
     if ((returncode = g_strstr_len(recv_buff, i, "OK?X-ERA-counter=")) != NULL)
     {
-	gchar *r = g_strndup(returncode + 17, 1);
-
-	if (g_ascii_isdigit(*r))
-	    *era_left = atoi(r);
-
+	*era_left = (int) (*(returncode + 17) - '0');
 	ret = TRUE;
 
-	g_free(r);
 	g_free(returncode);
     }
 
     if ((returncode = g_strstr_len(recv_buff, i, "FAIL?X-ERA-error=")) != NULL)
     {
-	gchar *r = g_strndup(returncode + 17, 1);
+	int r = (int) (*(returncode + 17) - '0');
 
-	/* *INDENT-OFF* */
 	/* error codes from www.eraomnix.pl/service/gw/bAPIPrv.jsp */
-	if (*r == '0') ret = ERR_NONE;
-	if (*r == '1') ret = ERR_GATEWAY;
-	if (*r == '2') ret = ERR_UNAUTH;
-	if (*r == '3') ret = ERR_ACCESS_DENIED;
-	if (*r == '5') ret = ERR_SYNTAX;
-	if (*r == '7') ret = ERR_LIMIT_EX;
-	if (*r == '8') ret = ERR_BAD_RCPT;
-	if (*r == '9') ret = ERR_MSG_TOO_LONG;
-	/* *INDENT-ON* */
+	if (r == 0)
+	    ret = ERR_NONE;
+	else if (r == 1)
+	    ret = ERR_GATEWAY;
+	else if (r == 2)
+	    ret = ERR_UNAUTH;
+	else if (r == 3)
+	    ret = ERR_ACCESS_DENIED;
+	else if (r == 5)
+	    ret = ERR_SYNTAX;
+	else if (r == 7)
+	    ret = ERR_LIMIT_EX;
+	else if (r == 8)
+	    ret = ERR_BAD_RCPT;
+	else if (r == 9)
+	    ret = ERR_MSG_TOO_LONG;
+	else
+	    ret = ERR_UNKNOWN;
 
-	g_free(r);
 	g_free(returncode);
     }
 

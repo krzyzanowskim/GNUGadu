@@ -1,4 +1,4 @@
-/* $Id: sms_gui.h,v 1.7 2003/09/21 14:08:31 shaster Exp $ */
+/* $Id: sms_gui.h,v 1.8 2003/09/21 16:38:14 shaster Exp $ */
 
 #ifndef SMS_PLUGIN_H
 #define SMS_PLUGIN_H 1
@@ -9,6 +9,9 @@
 
 #define GGADU_SMS_MAXLEN_NUMBER	20
 #define GGADU_SMS_MAXLEN_NICK	100
+
+#define GGADU_SMS_USERLIST_FILENAME	"smslist"
+#define GGADU_SMS_USERLIST_TMPFILE	"smslist.tmp_"
 
 enum
 {

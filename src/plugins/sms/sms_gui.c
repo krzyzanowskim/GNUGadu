@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.27 2003/09/21 14:08:31 shaster Exp $ */
+/* $Id: sms_gui.c,v 1.28 2003/09/21 16:38:14 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -57,7 +57,7 @@ gpointer sms_preferences(gpointer user_data)
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_EXTERNAL, _("Use \"SMS\" program to send"), VAR_BOOL, (gpointer) config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_ERA_LOGIN, _("Era login"), VAR_STR, (gpointer) config_var_get(sms_handler, "era_login"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_ERA_PASSWORD, _("Era password"), VAR_STR, (gpointer) config_var_get(sms_handler, "era_password"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_ERA_PASSWORD, _("Era password"), VAR_STR, (gpointer) config_var_get(sms_handler, "era_password"), VAR_FLAG_PASSWORD);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SHOW_IN_STATUS, _("Show plugin in status list (needs reload)"), VAR_BOOL, (gpointer) config_var_get(sms_handler, "show_in_status"), VAR_FLAG_NONE);
     /* *INDENT-ON* */
 
@@ -73,7 +73,7 @@ gpointer sms_edit_contact(gpointer user_data)
     GSList *users = (GSList *) user_data;
     GGaduContact *k = (GGaduContact *) users->data;
 
-    print_debug("%s : Add Contact\n", GGadu_PLUGIN_NAME);
+    print_debug("%s : Edit Contact\n", GGadu_PLUGIN_NAME);
 
     /* *INDENT-OFF* */
     ggadu_dialog_add_entry(&optlist, GGADU_SMS_CONTACT_ID, _("Id"), VAR_STR, g_strconcat(k->nick, "@", k->mobile, NULL), VAR_FLAG_INSENSITIVE);
@@ -142,8 +142,6 @@ gpointer sms_send_sms(gpointer user_data)
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_EXTERNAL, _("Use external program"), VAR_BOOL, (gpointer) config_var_get(sms_handler, "external"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer) config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_ERA_LOGIN, _("Era login"), VAR_STR, (gpointer) config_var_get(sms_handler, "era_login"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_ERA_PASSWORD, _("Era password"), VAR_STR, (gpointer) config_var_get(sms_handler, "era_password"), VAR_FLAG_NONE);
     /* *INDENT-ON* */
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
@@ -290,8 +288,6 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_SENDER, _("Sender"), VAR_STR, (gpointer) config_var_get(sms_handler, "sender"), VAR_FLAG_NONE);
 	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_NUMBER, _("Number"), VAR_STR, (gpointer) config_var_get(sms_handler, "number"), VAR_FLAG_NONE);
 	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_BODY, _("Message"), VAR_STR, (gpointer) config_var_get(sms_handler, "body"), VAR_FLAG_FOCUS);
-	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_ERA_LOGIN, _("Era login"), VAR_STR, (gpointer) config_var_get(sms_handler, "era_login"), VAR_FLAG_NONE);
-	    ggadu_dialog_add_entry(&(d->optlist), GGADU_SMS_CONFIG_ERA_PASSWORD, _("Era password"), VAR_STR, (gpointer) config_var_get(sms_handler, "era_password"), VAR_FLAG_NONE);
 	    /* *INDENT-ON* */
 
 	    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
@@ -319,8 +315,6 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 	GGaduDialog *d = signal->data;
 	GSList *tmplist = d->optlist;
 	gboolean old_external = (gboolean) config_var_get(sms_handler, "external");
-	gchar *old_era_login = (gchar *) config_var_get(sms_handler, "era_login");
-	gchar *old_era_password = (gchar *) config_var_get(sms_handler, "era_password");
 	gchar *sender_temp;
 
 	if (d->response == GGADU_OK)
@@ -342,12 +336,6 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		case GGADU_SMS_CONFIG_BODY:
 		    config_var_set(sms_handler, "body", kv->value);
 		    break;
-		case GGADU_SMS_CONFIG_ERA_LOGIN:
-		    config_var_set(sms_handler, "era_login", kv->value);
-		    break;
-		case GGADU_SMS_CONFIG_ERA_PASSWORD:
-		    config_var_set(sms_handler, "era_password", kv->value);
-		    break;
 		}
 		tmplist = tmplist->next;
 	    }
@@ -358,8 +346,6 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 //          g_free(sender_temp);
 	    config_var_set(sms_handler, "external", (gpointer) old_external);
-	    config_var_set(sms_handler, "era_login", (gpointer) old_era_login);
-	    config_var_set(sms_handler, "era_password", (gpointer) old_era_password);
 	    config_save(sms_handler);
 	}
 
@@ -549,36 +535,64 @@ void destroy_plugin()
 void save_smslist()
 {
     GSList *smu = smslist;
-    FILE *fp;
-    gchar *path;
+    gchar *path = NULL;
+    gchar *path_tmp = NULL;
+    GIOChannel *ch_tmp = NULL;
+    gsize bytes_written;
 
-    path = g_build_filename(this_configdir, "smslist", NULL);
+    /* open temporary file */
+    path_tmp = g_build_filename(this_configdir, GGADU_SMS_USERLIST_TMPFILE, NULL);
+    ch_tmp = g_io_channel_new_file (path_tmp, "w", NULL);
 
-    fp = fopen(path, "w");
-
-    g_free(path);
-
-    if (!fp)
+    if (!ch_tmp)
     {
-	print_debug("cannot create smslist!\n");
+	print_debug("cannot create smslist! %s\n", path_tmp);
+	signal_emit("sms", "gui show warning", g_strdup(_("Writing userlist failed!")), "main-gui");
+	g_free(path_tmp);
 	return;
     }
 
+    /* set encoding to utf-8 */
+    g_io_channel_set_encoding (ch_tmp, NULL, NULL);
+
+    /* write smslist */
     while (smu)
     {
 	GGaduContact *k = (GGaduContact *) smu->data;
-	char *t;
+	gchar *t, *line;
 
 	/* Podmiana srednikow na przecinki */
 	for (t = k->nick; *t; t++)
 	    if (*t == ';')
 		*t = ',';
 
-	fprintf(fp, "%s;%s\n", k->nick, k->mobile);
+	line = g_strdup_printf("%s;%s\n", k->nick, k->mobile);
+	g_io_channel_write_chars(ch_tmp, line, -1, &bytes_written, NULL);
+	g_free(line);
+
 	smu = smu->next;
     }
 
-    fclose(fp);
+    if (g_io_channel_shutdown (ch_tmp, TRUE, NULL) != G_IO_STATUS_NORMAL)
+    {
+	print_debug("error writing temporary smslist file\n");
+	signal_emit("sms", "gui show warning", g_strdup(_("Writing userlist failed!")), "main-gui");
+	g_free(path_tmp);
+	return;
+    }
+
+    /* mv temporary_file destination_file */
+    path = g_build_filename(this_configdir, GGADU_SMS_USERLIST_FILENAME, NULL);
+    if (rename (path_tmp, path) != 0)
+    {
+	print_debug("error renaming %s to %s\n", path_tmp, path);
+	signal_emit("sms", "gui show warning", g_strdup(_("Writing userlist failed!")), "main-gui");
+    }
+
+    g_free(path);
+    g_free(path_tmp);
+
+    return;
 }
 
 /* wczytanie listy numerow z pliku */
@@ -589,7 +603,7 @@ void load_smslist()
     gchar *path;
     gchar *nick = NULL, *mobile = NULL;
 
-    path = g_build_filename(this_configdir, "smslist", NULL);
+    path = g_build_filename(this_configdir, GGADU_SMS_USERLIST_FILENAME, NULL);
 
     fp = fopen(path, "r");
 
@@ -621,7 +635,8 @@ void load_smslist()
 	smslist = g_slist_append(smslist, k);
     }
 
-    fclose(fp);
+    if (fclose(fp) != 0)
+	print_debug("fclose() failed while reading smslist!\n");
 
     g_free(nick);
     g_free(mobile);
