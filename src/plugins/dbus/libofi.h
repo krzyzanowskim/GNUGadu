@@ -25,13 +25,9 @@
 
 /* methods */
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE "getPresence"
-typedef enum
-{
-    OFI_IM_PRESENCE_NOT_FOUND = 1,
-    OFI_IM_PRESENCE_AVAILABLE,
-    OFI_IM_PRESENCE_AWAY,
-    OFI_IM_PRESENCE_OFFLINE
-} ofiPresenceEnum;
+/* ofiPresence :
+   "Unknown","Online","Away","Offline","Hidden"
+*/
 
 #define DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS "getProtocols"
 #define DBUS_ORG_FREEDESKTOP_IM_OPEN_CHAT "openChat"
@@ -39,7 +35,7 @@ typedef enum
 
 
 char **
-org_freedesktop_im_getServices(DBusConnection *bus);
+ofi_getServices(DBusConnection *bus);
 
 #endif
 

@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.16 2004/11/26 12:40:53 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.17 2004/12/15 14:58:45 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -43,7 +43,7 @@
 GGaduPlugin *plugin_handler = NULL;
 GGadu_PLUGIN_INIT("dbus", GGADU_PLUGIN_TYPE_MISC);
 
-static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+static DBusHandlerResult ofi_getPresence(DBusConnection * connection, DBusMessage * message, gpointer user_data)
 {
 	/* URI of the user which we have to return presence. ex.  gg://13245  */
 	gchar *contactURI = NULL;
@@ -73,44 +73,47 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 		{
 			GGaduPlugin *plugin = (GGaduPlugin *) plugins->data;
 			GGaduProtocol *protocol = plugin->plugin_data;
+			
 			if (plugin && protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL) &&
 			    !ggadu_strcasecmp(protocol->protocol_uri, contactURIhandler))
 			{
+				DBusMessage *return_message;
 				GGaduContact *k = NULL;
-				DBusMessage *return_message = dbus_message_new_method_return(message);
+				
+				return_message = dbus_message_new_method_return(message);
 
 				print_debug("DBUS getPresence: search %s in protocol: %s", contactURIdata, contactURIhandler);
 
 				if ((k = signal_emit("dbus", "get user", contactURIdata, plugin->name)))
 				{
-					guint return_status = OFI_IM_PRESENCE_OFFLINE;
+					const gchar *return_status = "Offline";
 					gchar *status_descr = NULL;
 
 					if (ggadu_is_in_status(k->status, protocol->online_status))
 					{
-						return_status = OFI_IM_PRESENCE_AVAILABLE;
+						return_status = "Available";
 					}
 					else if (ggadu_is_in_status(k->status, protocol->offline_status))
 					{
-						return_status = OFI_IM_PRESENCE_OFFLINE;
+						return_status = "Offline";
 					}
 					else if (ggadu_is_in_status(k->status, protocol->away_status))
 					{
-						return_status = OFI_IM_PRESENCE_AWAY;
+						return_status = "Away";
 					}
 
-					print_debug("FOUND %d",return_status);
+					print_debug("FOUND %s",return_status);
 					
 					/* not sure about this g_strdup() */
 					status_descr = k->status_descr ? g_strdup(k->status_descr) : "";
 					
-					dbus_message_append_args(return_message, DBUS_TYPE_UINT32, return_status, DBUS_TYPE_STRING, status_descr,DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
+					dbus_message_append_args(return_message, DBUS_TYPE_STRING, return_status, DBUS_TYPE_STRING, status_descr,DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
 					GGaduContact_free(k);
 				}
 				else
 				{
-					print_debug("NOT FOUND");
-					dbus_message_append_args(return_message, DBUS_TYPE_UINT32, OFI_IM_PRESENCE_NOT_FOUND, DBUS_TYPE_STRING, "",DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
+					print_debug("NOT FOUND: Unknown");
+					dbus_message_append_args(return_message, DBUS_TYPE_STRING, "Unknown", DBUS_TYPE_STRING, "",DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
 				}
 				/* I can free here because signal return copy of GGaduContact */
 				dbus_connection_send(connection, return_message, NULL);
@@ -127,7 +130,7 @@ static DBusHandlerResult org_freedesktop_im_getPresence(DBusConnection * connect
 }
 
 
-static DBusHandlerResult org_freedesktop_im_getProtocols(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+static DBusHandlerResult ofi_getProtocols(DBusConnection * connection, DBusMessage * message, gpointer user_data)
 {
 	DBusError error;
 	dbus_error_init(&error);
@@ -166,7 +169,7 @@ static DBusHandlerResult org_freedesktop_im_getProtocols(DBusConnection * connec
 }
 
 
-static DBusHandlerResult org_freedesktop_im_openChat(DBusConnection * connection, DBusMessage * message, gpointer user_data)
+static DBusHandlerResult ofi_openChat(DBusConnection * connection, DBusMessage * message, gpointer user_data)
 {
 	/* URI of the user which we have to return presence. ex.  gg://13245  */
 	gchar *contactURI = NULL;
@@ -252,15 +255,15 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 
 	if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PROTOCOLS))
 	{
-		return org_freedesktop_im_getProtocols(connection, message, user_data);
+		return ofi_getProtocols(connection, message, user_data);
 	}
 	else if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_GET_PRESENCE))
 	{
-		return org_freedesktop_im_getPresence(connection, message, user_data);
+		return ofi_getPresence(connection, message, user_data);
 	}
 	else if (dbus_message_is_method_call(message, DBUS_ORG_FREEDESKTOP_IM_INTERFACE, DBUS_ORG_FREEDESKTOP_IM_OPEN_CHAT))
 	{
-		return org_freedesktop_im_openChat(connection, message, user_data);
+		return ofi_openChat(connection, message, user_data);
 	}
 
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
