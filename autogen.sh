@@ -61,6 +61,9 @@ if test "$DIE" -eq 1; then
         exit 1
 fi
 
+echo "gettextize"
+gettextize -f
+
 echo "aclocal"
 $ACLOCAL $ACPATH || exit 1
 

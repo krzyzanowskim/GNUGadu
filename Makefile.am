@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = lib src po pixmaps sounds themes
+SUBDIRS = m4  lib src po pixmaps sounds themes
 
-EXTRA_DIST = autogen.sh ANNOUNCE AUTHORS ChangeLog COPYING \
+EXTRA_DIST = config.rpath  autogen.sh ANNOUNCE AUTHORS ChangeLog COPYING \
 		contrib/example.pl \
 		contrib/gg2sms \
 		contrib/mkgg2snap \
@@ -36,3 +36,5 @@ dist-hook:
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
+
+ACLOCAL_AMFLAGS = -I m4
