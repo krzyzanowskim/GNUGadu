@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.24 2003/05/07 11:14:38 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.25 2003/05/15 10:31:27 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -333,7 +333,7 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
     return TRUE;
 }
 
-gpointer login(gpointer data) 
+gpointer ggadu_tlen_login(gpointer data) 
 {
     gchar *login, *password;
 #ifndef GGADU_DEBUG
@@ -685,7 +685,7 @@ void start_plugin()
 	register_userlist_menu();
 
 	if (config_var_get(handler, "autoconnect") && !connected)
-	    login((gpointer)TLEN_STATUS_AVAILABLE);
+	    ggadu_tlen_login((gpointer)TLEN_STATUS_AVAILABLE);
 }
 
 void my_signal_receive(gpointer name, gpointer signal_ptr) {
@@ -767,7 +767,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 		}
 	    }
 	    else if (sp && sp->status != TLEN_STATUS_UNAVAILABLE && sp->status != TLEN_STATUS_DESC) 
-		login((gpointer)sp->status);
+		ggadu_tlen_login((gpointer)sp->status);
 	    return;
 	}
 
@@ -813,7 +813,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    if (d->response == GGADU_OK) {
 		if (connected == FALSE)
 		{
-		    login((gpointer)TLEN_STATUS_AVAILABLE);
+		    ggadu_tlen_login((gpointer)TLEN_STATUS_AVAILABLE);
 	        }
 		else if (connected && sp)
 		{

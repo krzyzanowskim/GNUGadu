@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.h,v 1.1 2003/03/20 10:37:08 krzyzak Exp $ */
+/* $Id: tlen_plugin.h,v 1.2 2003/05/15 10:31:27 shaster Exp $ */
 
 #ifndef GGadu_PROTOCOL_GADU_H
 #define GGadu_PROTOCOL_GADU_H 1
@@ -47,7 +47,7 @@ void destroy_plugin();
 
 void available(gpointer widget, gpointer data);
 
-gpointer login(gpointer data);
+gpointer ggadu_tlen_login(gpointer data);
 
 void wyjdz_signal_handler();
 
