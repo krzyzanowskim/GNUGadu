@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.71 2004/02/15 23:33:23 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.72 2004/02/17 01:34:31 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -667,9 +667,8 @@ static GSList *status_init()
 	GSList *list = NULL;
 	GGaduStatusPrototype *sp = g_new0(GGaduStatusPrototype, 8);
 
-/*	if (!(sp = g_new0(GGaduStatusPrototype, 8)))
-		return NULL;*/
-	print_debug("1ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+	if (!(sp = g_new0(GGaduStatusPrototype, 8)))
+		return NULL;
 
 	sp->status = JABBER_STATUS_AVAILABLE;
 	sp->description = g_strdup(_("Available"));

@@ -1,4 +1,4 @@
-/* $Id: support.c,v 1.18 2004/01/28 23:39:29 shaster Exp $ */
+/* $Id: support.c,v 1.19 2004/02/17 01:34:29 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -130,10 +130,13 @@ gboolean is_in_status(gint status, GSList * list)
 	return FALSE;
 }
 
+/* DEPRECATED */
 void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist)
 {
 	GSList *slistmp = userlist;
 
+	print_debug("THIS FUNCTION IS DEPRECATED");
+	
 	if (slistmp == NULL)
 		return;
 

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.h,v 1.19 2004/01/28 23:41:13 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.h,v 1.20 2004/02/17 01:34:31 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -103,7 +103,7 @@ gboolean import_userlist(gchar * list);
 
 void test();
 
-void save_addressbook_file(gpointer userlist);
+void save_addressbook_file();
 
 gpointer user_preferences_action(gpointer user_data);
 
