@@ -1,4 +1,4 @@
-/* $Id: icq_plugin.c,v 1.6 2003/04/09 21:49:31 shaster Exp $ */
+/* $Id: icq_plugin.c,v 1.7 2003/04/10 21:49:47 thrulliq Exp $ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -111,14 +111,35 @@ static void request_notify(icq_Link *icqlink, guint id, gint type, gint len, gpo
     }
 }
 
+static void icq_status_notify(gulong uin, glong status)
+{
+    GGaduNotify *notify = g_new0(GGaduNotify, 1);
+    
+    /* don't know why but it has to be that way ? */
+    if (status != -1) {
+	status = (status & 0x0fff);
+        if (status == 0x13L) status = STATUS_DND;
+	else if (status == 0x05L) status = STATUS_NA;
+        else if (status == 0x11L) status = STATUS_OCCUPIED;
+    }
+    
+    print_debug("icq_status_notify: %d %ld\n", uin, status);
+    
+    notify->id = g_strdup_printf("%ld", uin);
+    notify->status = status;
+    signal_emit(GGadu_PLUGIN_NAME, "gui notify", notify, "main-gui");
+}
+
 static void user_online(icq_Link *icqlink, gulong uin, gulong status, gulong ip, gushort port, gulong real_ip, guchar tcp_flag)
 {
-    print_debug("user_online: %d\n", uin);
+    print_debug("user_online: %d %ld %x\n", uin, status, status);
+    icq_status_notify(uin, status);
 }
 
 static void user_offline(icq_Link *icqlink, gulong uin)
 {
     print_debug("user offline: %d\n", uin);
+    icq_status_notify(uin, STATUS_OFFLINE);
 }
 
 static void recv_message(icq_Link *icqlink, gulong uin, guchar hour, guchar minute, guchar day, guchar month, gushort year, gchar *message)
@@ -166,9 +187,10 @@ static void recv_web_pager(icq_Link *icqlink, guchar hour, guchar minute, guchar
     print_debug("recv web pager: %s %s %s\n", email, nick, msg);
 }
 
-static void user_status_update(icq_Link *icqlink, gulong uin, gulong status)
+static void user_status_update(icq_Link *icqlink, gulong uin, glong status)
 {
     print_debug("status update: %d\n", uin);
+    icq_status_notify(uin, status);
 }
 
 static void info_reply(icq_Link *icqlink, gulong uin, gchar *nick, gchar *first, gchar *last, gchar *email, gchar auth)
@@ -537,25 +559,25 @@ void init_icq()
 
     /* setting callbacks */
     
-    icqlink->icq_Log = log_event;
-    icqlink->icq_Logged = logged_in;
-    icqlink->icq_WrongPassword = wrong_password;
-    icqlink->icq_InvalidUIN = wrong_uin;
-    icqlink->icq_Disconnected = disconnected;
-    icqlink->icq_RequestNotify = request_notify;
-    icqlink->icq_UserOnline = user_online;
-    icqlink->icq_UserOffline = user_offline;
-    icqlink->icq_RecvMessage = recv_message;
-    icqlink->icq_RecvAdded = recv_added;
-    icqlink->icq_RecvURL = recv_url;
-    icqlink->icq_RecvWebPager = recv_web_pager;
-    icqlink->icq_RecvMailExpress = recv_mail_express;
-    icqlink->icq_UserStatusUpdate = user_status_update;
-    icqlink->icq_InfoReply = info_reply;
-    icqlink->icq_ExtInfoReply = ext_info_reply;
-    icqlink->icq_RecvAuthReq = recv_auth_req;
-    icqlink->icq_RecvChatReq = recv_chat_req;
-    icqlink->icq_RecvFileReq = recv_file_req;
+    icqlink->icq_Log 			= (gpointer)log_event;
+    icqlink->icq_Logged 		= (gpointer)logged_in;
+    icqlink->icq_WrongPassword 		= (gpointer)wrong_password;
+    icqlink->icq_InvalidUIN 		= (gpointer)wrong_uin;
+    icqlink->icq_Disconnected 		= (gpointer)disconnected;
+    icqlink->icq_RequestNotify 		= (gpointer)request_notify;
+    icqlink->icq_UserOnline 		= (gpointer)user_online;
+    icqlink->icq_UserOffline 		= (gpointer)user_offline;
+    icqlink->icq_RecvMessage 		= (gpointer)recv_message;
+    icqlink->icq_RecvAdded 		= (gpointer)recv_added;
+    icqlink->icq_RecvURL 		= (gpointer)recv_url;
+    icqlink->icq_RecvWebPager 		= (gpointer)recv_web_pager;
+    icqlink->icq_RecvMailExpress 	= (gpointer)recv_mail_express;
+    icqlink->icq_UserStatusUpdate 	= (gpointer)user_status_update;
+    icqlink->icq_InfoReply 		= (gpointer)info_reply;
+    icqlink->icq_ExtInfoReply 		= (gpointer)ext_info_reply;
+    icqlink->icq_RecvAuthReq 		= (gpointer)recv_auth_req;
+    icqlink->icq_RecvChatReq 		= (gpointer)recv_chat_req;
+    icqlink->icq_RecvFileReq 		= (gpointer)recv_file_req;
     
     icq_SocketNotify = icq_sock_notify;
     icq_SetTimeout = set_timeout;    
