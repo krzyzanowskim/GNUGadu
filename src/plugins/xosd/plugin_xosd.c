@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.20 2004/01/25 16:19:15 shaster Exp $ */
+/* $Id: plugin_xosd.c,v 1.21 2004/01/25 22:54:38 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -473,10 +473,10 @@ void perl_xosd_show_message(GGaduSignal * signal, gchar * perl_func, void *pperl
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
 	gchar *this_configdir = NULL;
-
-	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
-
+	gchar *path = NULL;
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
+	
+	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
 	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("On Screen Display"));
 
@@ -507,7 +507,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
-	ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "xosd", NULL));
+	path = g_build_filename(this_configdir, "xosd", NULL);
+	ggadu_config_set_filename((GGaduPlugin *) handler, path);
+	g_free(path);
 
 	g_free(this_configdir);
 

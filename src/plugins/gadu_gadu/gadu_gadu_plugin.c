@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.135 2004/01/25 16:12:43 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.136 2004/01/25 22:52:30 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -414,8 +414,10 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			    (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->status ^ GG_STATUS_FRIENDS_MASK) : session->status), "main-gui");
 		/* *INDENT-ON* */
 
-		ggadu_config_var_set(handler, "server", inet_ntoa(*((struct in_addr *) &session->server_addr)));
+		ggadu_config_var_set(handler, "server", g_strdup_printf("%s:%d",inet_ntoa(*((struct in_addr *) &session->server_addr)),session->port));
+		print_debug("qqqq");	
 		ggadu_config_save(handler);
+		print_debug("qqqq2");	
 
 		break;
 	case GG_EVENT_CONN_FAILED:
@@ -1449,9 +1451,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 #endif
 */
 	path = g_build_filename(this_configdir, "config", NULL);
-
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
-
+	g_free(path);
+	
 	if (!ggadu_config_read(handler))
 		g_warning(_("Unable to read configuration file for plugin %s"), "gadu-gadu");
 /*
@@ -1464,7 +1466,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	ggadu_repo_add("gadu-gadu");
 
-	g_free(path);
+
 	return handler;
 }
 

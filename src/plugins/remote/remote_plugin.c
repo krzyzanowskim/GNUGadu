@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.13 2004/01/17 00:45:02 shaster Exp $ */
+/* $Id: remote_plugin.c,v 1.14 2004/01/25 22:53:23 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -655,9 +655,10 @@ void start_plugin()
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-    print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
-
+	gchar *path = NULL;
     GGadu_PLUGIN_ACTIVATE(conf_ptr);	/* wazne zeby to bylo tutaj */
+
+    print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
     handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Remote control"));
 
@@ -667,7 +668,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
-    ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "remote", NULL));
+	path = g_build_filename(this_configdir, "remote", NULL);
+    ggadu_config_set_filename((GGaduPlugin *) handler, path);
+	g_free(path);
 
     ggadu_config_var_add(handler, "same_uid", VAR_BOOL);
     ggadu_config_var_add(handler, "same_gid", VAR_BOOL);

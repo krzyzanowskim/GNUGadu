@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_esd.c,v 1.6 2004/01/17 00:45:04 shaster Exp $ */
+/* $Id: plugin_sound_esd.c,v 1.7 2004/01/25 22:53:45 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -24,9 +24,9 @@ GGadu_PLUGIN_INIT("sound-esd", GGADU_PLUGIN_TYPE_MISC);
 
 static GQuark SOUND_PLAY_FILE_SIG;
 
-gpointer ggadu_play_file(gpointer user_data)
+gpointer ggadu_play_file(gpointer filename)
 {
-    esd_play_file(g_get_prgname(), user_data, 1);
+    esd_play_file(g_get_prgname(), filename, 1);
     return NULL;
 }
 

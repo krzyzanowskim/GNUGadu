@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.55 2004/01/22 01:21:21 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.56 2004/01/25 22:52:52 krzyzak Exp $ */
 
 /*
  * Jabber protocol plugin for GNU Gadu 2 based on loudmouth library
@@ -732,6 +732,7 @@ void start_plugin()
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
+	gchar *path = NULL;
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);
 
 	print_debug("%s: initialize", GGadu_PLUGIN_NAME);
@@ -741,7 +742,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	register_signal_receiver(jabber_handler, (signal_func_ptr) jabber_signal_recv);
 
 	mkdir(config->configdir, 0700);
-	ggadu_config_set_filename(jabber_handler, g_build_filename(config->configdir, "jabber", NULL));
+	
+	path = g_build_filename(config->configdir, "jabber", NULL);
+	ggadu_config_set_filename(jabber_handler, path);
+	g_free(path);
 
 	ggadu_config_var_add(jabber_handler, "jid", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "password", VAR_STR);

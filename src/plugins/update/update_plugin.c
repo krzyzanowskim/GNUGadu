@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.15 2004/01/25 16:19:10 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.16 2004/01/25 22:54:35 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -394,9 +394,10 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
     gchar *this_configdir = NULL;
-    print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
-
+	gchar *path = NULL;
     GGadu_PLUGIN_ACTIVATE(conf_ptr);
+	
+    print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
     update_handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, _("Update checker"));
 
     print_debug("%s : read configuration\n", GGadu_PLUGIN_NAME);
@@ -405,9 +406,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
-    ggadu_config_set_filename((GGaduPlugin *) update_handler, g_build_filename(this_configdir, "update", NULL));
-
-    g_free(this_configdir);
+	path = g_build_filename(this_configdir, "update", NULL);
+    ggadu_config_set_filename((GGaduPlugin *) update_handler, path);
+	g_free(path);
+	g_free(this_configdir);
 
     ggadu_config_var_add(update_handler, "check_on_startup", VAR_BOOL);
     ggadu_config_var_add(update_handler, "check_automatically", VAR_BOOL);

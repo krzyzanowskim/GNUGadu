@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.9 2004/01/17 00:45:04 shaster Exp $ */
+/* $Id: plugin_sound_external.c,v 1.10 2004/01/25 22:54:02 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -111,7 +111,8 @@ void start_plugin()
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-    gchar *this_configdir;
+    gchar *this_configdir = NULL;
+	gchar *path = NULL;
 
     print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
@@ -126,7 +127,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
-    ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "sound-external", NULL));
+	path = g_build_filename(this_configdir, "sound-external", NULL);
+    ggadu_config_set_filename((GGaduPlugin *) handler, path);
+	g_free(path);
 
     g_free(this_configdir);
 

@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.51 2004/01/25 16:18:53 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.52 2004/01/25 22:54:19 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -624,9 +624,9 @@ gpointer user_add_user_action(gpointer user_data)
 
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
-	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
-
+	gchar *path = NULL;
 	GGadu_PLUGIN_ACTIVATE(conf_ptr);	/* wazne zeby wywolac to makro w tym miejscu */
+	print_debug("%s : initialize\n", GGadu_PLUGIN_NAME);
 
 	handler = (GGaduPlugin *) register_plugin(GGadu_PLUGIN_NAME, "Tlen protocol");
 
@@ -642,7 +642,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	mkdir(this_configdir, 0700);
 
-	ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "config", NULL));
+	path = g_build_filename(this_configdir, "config", NULL);
+	ggadu_config_set_filename((GGaduPlugin *) handler, path);
+	g_free(path);
 
 	ggadu_config_var_add(handler, "login", VAR_STR);
 	ggadu_config_var_add(handler, "password", VAR_STR);

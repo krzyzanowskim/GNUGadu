@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.50 2004/01/24 19:45:58 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.51 2004/01/25 22:51:37 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -632,16 +632,20 @@ void gui_msg_receive(GGaduSignal * signal)
 {
 	GGaduMsg *msg = signal->data;
 	gui_protocol *gp = NULL;
+	gchar *soundfile = NULL;
 
-	if ((msg == NULL) || (msg->id == NULL))
+	if (!signal || !msg || !msg)
 	{
-		print_debug("main-gui : gui_msg_receive : ((msg == NULL) || (msg->id == NULL) - return !!!!\n");
+		print_debug("main-gui : gui_msg_receive : ((msg == NULL) || (msg->id == NULL) || (signal == NULL) - return !!!!");
 		return;
 	}
 
 	gp = gui_find_protocol(signal->source_plugin_name, protocols);
 
-	print_debug("%s : %s -> %s | %s \n", "gui-main", msg->id, msg->message, signal->source_plugin_name);
+	print_debug("%s : %s -> %s | %s", "gui-main", msg->id, msg->message, signal->source_plugin_name);
+
+	if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in")))
+		signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
 
 	if (gp != NULL)
 	{

@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.68 2004/01/22 22:34:15 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.69 2004/01/25 22:51:49 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -1133,7 +1133,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	if (self == TRUE)
 	{
 		if (ggadu_config_var_get(gui_handler, "use_username"))
-			header = g_strdup_printf("%s :: %s :: \n", g_getenv("USER"), timestamp);
+			header = g_strdup_printf("%s :: %s :: \n", g_get_user_name(), timestamp);
 		else
 			header = g_strdup_printf(_("Me :: %s ::\n"), timestamp);
 

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.40 2004/01/25 09:32:25 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.41 2004/01/25 22:51:54 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -96,6 +96,7 @@ void gui_signal_receive(gpointer name, gpointer signal_ptr)
 GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 {
 	gchar *this_configdir = NULL;
+	gchar *path = NULL;
 
 	gtk_init(NULL, NULL);
 	gtk_window_set_auto_startup_notification(FALSE);
@@ -116,8 +117,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	else
 		this_configdir = g_build_filename(g_get_home_dir(), ".gg2", NULL);
 
-	ggadu_config_set_filename((GGaduPlugin *) gui_handler, g_build_filename(this_configdir, "gui", NULL));
+	path = g_build_filename(this_configdir, "gui", NULL);
+	ggadu_config_set_filename((GGaduPlugin *) gui_handler, path);
 	g_free(this_configdir);
+	g_free(path);
 
 	ggadu_config_var_add(gui_handler, "theme", VAR_STR);
 	ggadu_config_var_add(gui_handler, "emot", VAR_BOOL);

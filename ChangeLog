@@ -1,6 +1,8 @@
 25.01.2004
 - massive memory leaks fixes, minor code cleanups (tlen/sms/update/xosd/shasta)
 - force focus to the input widget on 'gui show invisible chats' (GUI/shasta)
+- when initial chat session is created with menu, do not play any sound (GUI/krzak)
+- fixes with ggadu_conf_set_filename() (core/krzak)
 
 24.01.2004
 - massive memory leaks fixes, minor code cleanups (gadu-gadu/shasta)

@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.13 2004/01/17 19:41:12 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.14 2004/01/25 22:52:07 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -596,6 +596,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	path = g_build_filename(this_configdir, "config", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
+	g_free(path);
 	if (!ggadu_config_read(handler))
 		g_warning(_("Unable to read configuration file for plugin %s"), GGadu_PLUGIN_NAME);
 
