@@ -1,4 +1,4 @@
-/* $Id: obsolete.c,v 1.2 2004/04/22 09:26:04 krzyzak Exp $ */
+/* $Id: obsolete.c,v 1.3 2005/03/09 12:34:55 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
+ *  USA.
  */
 
 /*
@@ -176,7 +177,14 @@ struct gg_http *gg_change_passwd3(uin_t uin, const char *passwd, const char *new
 
 struct gg_http *gg_remind_passwd(uin_t uin, int async)
 {
-	gg_debug(GG_DEBUG_MISC, "// gg_remind_passwd() is obsolete. use gg_remind_passwd2() instead!\n");
+	gg_debug(GG_DEBUG_MISC, "// gg_remind_passwd() is obsolete. use gg_remind_passwd3() instead!\n");
+	errno = EINVAL;
+	return NULL;
+}
+
+struct gg_http *gg_remind_passwd2(uin_t uin, const char *tokenid, const char *tokenval, int async)
+{
+	gg_debug(GG_DEBUG_MISC, "// gg_remind_passwd2() is obsolete. use gg_remind_passwd3() instead!\n");
 	errno = EINVAL;
 	return NULL;
 }

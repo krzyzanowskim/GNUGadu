@@ -1,4 +1,4 @@
-/* $Id: libgadu.c,v 1.7 2004/12/27 08:42:57 krzyzak Exp $ */
+/* $Id: libgadu.c,v 1.8 2005/03/09 12:34:55 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -72,7 +72,7 @@ static char rcsid[]
 #ifdef __GNUC__
 __attribute__ ((unused))
 #endif
-= "$Id: libgadu.c,v 1.7 2004/12/27 08:42:57 krzyzak Exp $";
+= "$Id: libgadu.c,v 1.8 2005/03/09 12:34:55 krzyzak Exp $";
 #endif 
 
 /*
@@ -107,9 +107,9 @@ uint32_t gg_fix32(uint32_t x)
 #else
 	return (uint32_t)
 		(((x & (uint32_t) 0x000000ffU) << 24) |
-                 ((x & (uint32_t) 0x0000ff00U) << 8) |
-                 ((x & (uint32_t) 0x00ff0000U) >> 8) |
-                 ((x & (uint32_t) 0xff000000U) >> 24));
+		((x & (uint32_t) 0x0000ff00U) << 8) |
+		((x & (uint32_t) 0x00ff0000U) >> 8) |
+		((x & (uint32_t) 0xff000000U) >> 24));
 #endif		
 }
 
@@ -131,7 +131,7 @@ uint16_t gg_fix16(uint16_t x)
 #else
 	return (uint16_t)
 		(((x & (uint16_t) 0x00ffU) << 8) |
-                 ((x & (uint16_t) 0xff00U) >> 8));
+		((x & (uint16_t) 0xff00U) >> 8));
 #endif
 }
 
@@ -743,7 +743,7 @@ struct gg_session *gg_login(const struct gg_login_params *p)
 	sess->check = GG_CHECK_READ;
 	sess->timeout = GG_DEFAULT_TIMEOUT;
 	sess->async = p->async;
-        sess->type = GG_SESSION_GG;
+	sess->type = GG_SESSION_GG;
 	sess->initial_status = p->status;
 	sess->callback = gg_session_callback;
 	sess->destroy = gg_free_session;
@@ -1336,6 +1336,11 @@ int gg_send_message_richtext(struct gg_session *sess, int msgclass, uin_t recipi
 		errno = EFAULT;
 		return -1;
 	}
+
+	if (!message) {
+		errno = EINVAL;
+		return -1;
+	}
 	
 	if (sess->state != GG_STATE_CONNECTED) {
 		errno = ENOTCONN;
@@ -1404,6 +1409,11 @@ int gg_send_message_confer_richtext(struct gg_session *sess, int msgclass, int r
 
 	if (!sess) {
 		errno = EFAULT;
+		return -1;
+	}
+
+	if (!message) {
+		errno = EINVAL;
 		return -1;
 	}
 	

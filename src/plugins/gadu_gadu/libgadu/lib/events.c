@@ -1,4 +1,4 @@
-/* $Id: events.c,v 1.7 2005/01/05 10:48:06 krzyzak Exp $ */
+/* $Id: events.c,v 1.8 2005/03/09 12:34:55 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -375,7 +375,20 @@ static int gg_handle_recv_msg(struct gg_header *h, struct gg_event *e, struct gg
 			case 0x05:		/* image_reply */
 			case 0x06:
 			{
-				if (p + sizeof(struct gg_msg_image_reply) + 1 > packet_end) {
+				struct gg_msg_image_reply *rep = (void*) p;
+
+				if (p + sizeof(struct gg_msg_image_reply) == packet_end) {
+
+					e->type = GG_EVENT_IMAGE_REPLY;
+					e->event.image_reply.sender = gg_fix32(r->sender);
+					e->event.image_reply.size = gg_fix32(rep->size);
+					e->event.image_reply.crc32 = gg_fix32(rep->crc32);
+					e->event.image_reply.filename = strdup("");
+					e->event.image_reply.image = strdup("");
+					return 0;
+
+				} else if (p + sizeof(struct gg_msg_image_reply) + 1 > packet_end) {
+
 					gg_debug(GG_DEBUG_MISC, "// gg_handle_recv_msg() packet out of bounds (4)\n");
 					goto malformed;
 				}
@@ -925,7 +938,7 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 				sess->client_version = NULL;
 			}
 
-    			gg_debug(GG_DEBUG_MISC, "=> -----BEGIN-HTTP-QUERY-----\n%s\n=> -----END-HTTP-QUERY-----\n", buf);
+			gg_debug(GG_DEBUG_MISC, "=> -----BEGIN-HTTP-QUERY-----\n%s\n=> -----END-HTTP-QUERY-----\n", buf);
 	 
 			/* zapytanie jest krótkie, wiêc zawsze zmie¶ci siê
 			 * do bufora gniazda. je¶li write() zwróci mniej,

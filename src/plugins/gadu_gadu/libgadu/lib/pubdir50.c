@@ -1,4 +1,4 @@
-/* $Id: pubdir50.c,v 1.3 2004/11/18 09:47:53 krzyzak Exp $ */
+/* $Id: pubdir50.c,v 1.4 2005/03/09 12:34:55 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2003 Wojtek Kaniewski <wojtekka@irc.pl>
