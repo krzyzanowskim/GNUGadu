@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.26 2004/01/09 02:39:39 shaster Exp $ */
+/* $Id: sms_core.c,v 1.27 2004/01/09 22:56:46 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -402,8 +402,11 @@ gpointer send_IDEA_stage2(SMS *message)
     }
 
     /* Cut-off prefixes. 'just-in-case' */
-    if (g_str_has_prefix(message->number, "+48"))
-	sms_number += 3;
+    if (g_str_has_prefix(message->number, "+"))
+	sms_number++;
+
+    if (g_str_has_prefix(message->number, "48"))
+	sms_number += 2;
 
     if (g_str_has_prefix(message->number, "0"))
 	sms_number++;
@@ -517,8 +520,11 @@ int send_PLUS(SMS *message)
     }
 
     /* Cut-off prefixes. 'just-in-case' */
-    if (g_str_has_prefix(message->number, "+48"))
-	sms_number += 3;
+    if (g_str_has_prefix(message->number, "+"))
+	sms_number++;
+
+    if (g_str_has_prefix(message->number, "48"))
+	sms_number += 2;
 
     if (g_str_has_prefix(message->number, "0"))
 	sms_number++;
@@ -589,8 +595,11 @@ int send_ERA(SMS *message, int *era_left)
     }
 
     /* Cut-off prefixes. 'just-in-case' */
-    if (g_str_has_prefix(message->number, "+48"))
-	sms_number += 3;
+    if (g_str_has_prefix(message->number, "+"))
+	sms_number++;
+
+    if (g_str_has_prefix(message->number, "48"))
+	sms_number += 2;
 
     if (g_str_has_prefix(message->number, "0"))
 	sms_number++;
@@ -674,8 +683,20 @@ out:
 }
 
 /* sprawdzenie jaka siec */
-int check_operator(const gchar * sms_number)
+int check_operator(gchar * number)
 {
+    gchar *sms_number = number;
+
+    /* Cut-off prefixes. 'just-in-case' */
+    if (g_str_has_prefix(sms_number, "+"))
+	sms_number++;
+
+    if (g_str_has_prefix(sms_number, "48"))
+	sms_number += 2;
+
+    if (g_str_has_prefix(sms_number, "0"))
+	sms_number++;
+
     if (strlen(sms_number) != 9)
 	return FALSE;
 
