@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.58 2004/08/22 16:39:05 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.59 2004/08/23 13:56:32 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -266,7 +266,7 @@ void start_plugin()
 	print_debug("%s : start_plugin", "main-gui");
 
 	config->send_on_enter = TRUE;
-
+	
 	if ((ggadu_config_var_get(gui_handler, "theme")))
 		gui_load_theme();
 	else

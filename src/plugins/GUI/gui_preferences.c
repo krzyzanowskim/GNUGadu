@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.71 2004/08/22 19:09:39 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.72 2004/08/23 13:56:33 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1434,7 +1434,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_save(gui_handler);
 		
 		if (ggadu_strcasecmp(previous_theme,ggadu_config_var_get(gui_handler, "theme")))
-		    gui_load_theme();
+		    gui_load_theme(NULL);
 		    
 		gui_config_emoticons();
 		

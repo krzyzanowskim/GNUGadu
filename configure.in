@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.80 2004/08/22 17:01:21 krzyzak Exp $
+dnl $Id: configure.in,v 1.81 2004/08/23 13:56:31 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.5])
 
@@ -300,8 +300,13 @@ if test "x$with_jabber" != "xno"; then
 	echo
     	AC_MSG_ERROR($JABBER_PKG_ERRORS)
     fi
-    AC_CHECK_LIB([loudmouth],[lm_connection_set_jid],new_loudmouth=yes,new_loudmouth=no)
-    AC_DEFINE(BUILD_WITH_NEW_LOUDMOUTH)
+    
+    AC_CHECK_LIB([loudmouth-1],[lm_connection_set_jid],new_loudmouth=yes,new_loudmouth=no)
+    
+    if test "x$new_loudmouth" != "xno"; then
+	AC_DEFINE(BUILD_WITH_NEW_LOUDMOUTH)
+    fi
+    
     AC_SUBST(JABBER_LIBS)
     AC_SUBST(JABBER_CFLAGS)
 else
