@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.89 2004/10/15 14:14:38 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.90 2004/10/18 09:07:58 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -828,44 +828,47 @@ void gui_msg_receive(GGaduSignal * signal)
 		/* shasta: new "docklet set [default] icon" approach */
 		sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
 		sigdata = g_slist_append(sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
-		sigdata =
-			g_slist_append(sigdata,
-					       g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)));
+		sigdata = g_slist_append(sigdata, g_strdup_printf(_("New message from %s"), (k ? k->nick : msg->id)));
+		
 		if (!session->chat)
 		{
-			if (showwindow == FALSE)
+			if ((showwindow == FALSE) && (find_plugin_by_pattern("docklet-*")))
 			{
-			    if (find_plugin_by_pattern("docklet-*"))
 				signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
-			/*    	    showwindow = FALSE;
-			    else
-				    showwindow = TRUE;
-			*/
 			} else {
 				g_slist_free(sigdata);
+				showwindow = TRUE;
 			}
 	        
-            if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in_first")))
-		        signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
+        		if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in_first")))
+		    		signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
 
 			session->recipients = g_slist_copy(msg->recipients);
 			session->chat = create_chat(session, gp->plugin_name, msg->id, showwindow);
 		} else {
+			GtkWidget *window1;
             
-	        if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in")))
-		        signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
+	    		if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in")))
+		    		signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
             
-			GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
-		        if (!GTK_WIDGET_VISIBLE(window)) {
-				if (showwindow) {
-/*				    GtkWidget *input = g_object_get_data(G_OBJECT(session->chat), "input");
-				    if (!msg->message || ggadu_config_var_get(gui_handler, "chat_window_auto_raise"))
-					gtk_widget_grab_focus(input);*/
-				    gtk_widget_show_all(window);
-				} else if (msg->message && find_plugin_by_pattern("docklet-*")) {
+			window1 = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
+			
+		        if (!GTK_WIDGET_VISIBLE(window1))
+			{
+				if (showwindow) 
+				{
+				    gtk_widget_show_all(window1);
+				}
+				 else if (msg->message && find_plugin_by_pattern("docklet-*")) 
+				{
     				    invisible_chats = g_slist_append(invisible_chats, session->chat);
 				    signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
 				}
+				 else if (msg->message)
+				{
+				    gtk_widget_show_all(window1);
+				}
+				
 			} else {
 				g_slist_free(sigdata);
 			}

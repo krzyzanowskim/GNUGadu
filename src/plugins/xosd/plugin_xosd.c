@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.29 2004/05/04 21:39:13 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.30 2004/10/18 09:07:59 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -185,11 +185,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 			w = from_utf8("ISO8859-2", data);
 
+			g_print("show message 1");
 			if (((ts = ggadu_config_var_get(handler, "timestamp")) != NULL) && ((gboolean) ts == TRUE))
 				msg = g_strdup_printf("[%s] %s", get_timestamp(0), w);
 			else
 				msg = g_strdup(w);
 
+			g_print("show message 2");
 			if (timer != -1)
 			{
 				g_source_remove(timer);
@@ -197,14 +199,17 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				if (xosd_is_onscreen(osd))
 					xosd_hide(osd);
 			}
+			g_print("show message 3");
 
 			xosd_scroll(osd, 1);
 			xosd_display(osd, xosd_get_number_lines(osd) - 1, XOSD_string, msg);
 
+			g_print("show message 4");
 			g_free(w);
 			g_free(msg);
 		}
 
+		g_print("show message 5");
 		return;
 	}
 	return;
