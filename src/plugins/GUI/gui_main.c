@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.55 2004/08/19 13:20:13 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.56 2004/08/20 14:56:47 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -132,12 +132,12 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	g_free(this_configdir);
 	g_free(path);
 
-	ggadu_config_var_add(gui_handler, "theme", VAR_STR);
+	ggadu_config_var_add_with_default(gui_handler, "theme", VAR_STR, g_strdup(_("default")));
 	ggadu_config_var_add(gui_handler, "emot", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "icons", VAR_STR);
 	ggadu_config_var_add(gui_handler, "tree", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "chat_window_auto_raise", VAR_BOOL);
-	ggadu_config_var_add(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL, (gpointer)TRUE);
 	ggadu_config_var_add(gui_handler, "chat_type", VAR_INT);
 #ifdef USE_GTKSPELL
 	ggadu_config_var_add(gui_handler, "use_spell", VAR_BOOL);
@@ -164,7 +164,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "notify_status_changes", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "show_toolbar", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in", VAR_STR,
-					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));
+					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/msg.wav", NULL));
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in_first", VAR_STR,
 					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_out", VAR_STR,
@@ -176,10 +176,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "chat_window_height", VAR_INT,
 					  (gpointer) DEFAULT_CHAT_WINDOW_HEIGHT);
 	ggadu_config_var_add_with_default(gui_handler, "blink", VAR_BOOL, (gpointer) TRUE);
-	ggadu_config_var_add(gui_handler, "blink_interval", VAR_INT);
+	ggadu_config_var_add_with_default(gui_handler, "blink_interval", VAR_INT, (gpointer) 200);
 	ggadu_config_var_add(gui_handler, "auto_away", VAR_BOOL);
-	ggadu_config_var_add(gui_handler, "auto_away_interval", VAR_INT);
-	ggadu_config_var_add(gui_handler, "use_username", VAR_BOOL);
+	ggadu_config_var_add_with_default(gui_handler, "auto_away_interval", VAR_INT,(gpointer)5);
+	ggadu_config_var_add_with_default(gui_handler, "use_username", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "descr_on_list", VAR_BOOL, (gpointer) TRUE);
 
 	if (!ggadu_config_read(gui_handler))

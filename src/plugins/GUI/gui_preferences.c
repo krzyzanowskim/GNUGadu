@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.61 2004/08/20 08:01:50 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.62 2004/08/20 14:56:47 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -719,12 +719,16 @@ static GtkWidget *create_chat_tab()
 
 static GtkWidget *create_advanced_tab()
 {
+	GtkWidget *hide_on_start;
 	GtkWidget *blink_interval = NULL;
 	GtkWidget *blink = NULL;
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *tabbox;
-	GtkWidget *label0_align;
+	GtkWidget *label0_align, *label2_align;
+	GtkWidget *combo_theme;
+	gchar *dirname;
+	GDir *dir;
 	GtkWidget *adv_vbox = gtk_vbox_new(FALSE, 5);
 	GtkWidget *hbox = gtk_hbox_new(FALSE, 5);
 
@@ -737,41 +741,103 @@ static GtkWidget *create_advanced_tab()
 	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
-	blink = gtk_check_button_new_with_label(_("Blink status"));
+	/* blink */
+	blink = gtk_check_button_new_with_label(_("Blink status icon"));
 	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
+	g_object_set_data(G_OBJECT(adv_vbox), "blink", blink);
+	g_object_set_data(G_OBJECT(adv_vbox), "blink_interval", blink_interval);
 	
 	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
 
-	tabbox = gtk_table_new(8, 3, FALSE);
+	tabbox = gtk_table_new(2, 3, FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 
 	gtk_box_pack_start(GTK_BOX(adv_vbox), tabbox, FALSE, FALSE, 0);
 
 	label0_align = gtk_alignment_new(0.9, 0.5, 0, 0);
-
-	label = gtk_label_new(_("Blink interval"));
+	label = gtk_label_new(_("interval"));
 	gtk_container_add(GTK_CONTAINER(label0_align), label);
 
 	if (ggadu_config_var_get(gui_handler, "blink"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(blink), TRUE);
 	else
 		gtk_widget_set_sensitive(blink_interval, FALSE);
-
+		
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink, 0, 1, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 1, 2, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), blink_interval, 2, 3, 0, 1);
+		
+	/* hide_on_start */
+	hide_on_start = gtk_check_button_new_with_label(_("Auto hide window on start"));
+	gtk_box_pack_start(GTK_BOX(adv_vbox), hide_on_start, FALSE, FALSE, 0);
+	g_object_set_data(G_OBJECT(adv_vbox), "hide_on_start", hide_on_start);
 
+
+	/* themes */
+	combo_theme = gtk_combo_box_new_text();
+	label2_align = gtk_alignment_new(0, 0.5, 0, 0);
+	g_object_set_data(G_OBJECT(adv_vbox), "combo_theme", combo_theme);
+	label = gtk_label_new(_("Selected theme"));
+	gtk_container_add(GTK_CONTAINER(label2_align), label);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 3, 1, 2);
+	
+	dirname = g_build_filename(PACKAGE_DATA_DIR, "themes", NULL);
+	dir = g_dir_open(dirname, 0, NULL);
+	print_debug("tryin to read themes directory %s\n", dirname);
+	g_free(dirname);
+
+	if (dir)
+	{
+		GList *list_theme = NULL;
+		gchar *theme_current;
+		gchar *theme_name_file;
+		gchar *theme_name;
+
+		theme_current = ggadu_config_var_get(gui_handler, "theme");
+		
+/*		if (theme_current && !ggadu_strcasecmp(theme_current,_("default")))
+		{
+		    list_theme = g_list_append(list_theme, theme_current);
+		    gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),theme_current);
+		} else	{
+		    list_theme = g_list_append(list_theme, _("default"));
+		    gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),_("default"));
+		}
+*/		
+
+
+		while ((theme_name_file = (gchar *) g_dir_read_name(dir)) != NULL)
+		{
+			print_debug("theme file : %s", theme_name_file);
+
+			if (g_str_has_suffix(theme_name_file, ".theme"))
+			{
+				theme_name = g_strndup(theme_name_file, strlen(theme_name_file) - strlen(".theme"));
+				if (!theme_current || ggadu_strcasecmp(theme_name, theme_current))
+				{
+					list_theme = g_list_append(list_theme, g_strdup(theme_name));
+					gtk_combo_box_append_text (GTK_COMBO_BOX(combo_theme),g_strdup(theme_name));
+				}
+				g_free(theme_name);
+			}
+		}
+
+		g_dir_close(dir);
+//		gtk_combo_set_popdown_strings(GTK_COMBO(combo_theme), list_theme);
+	}
+	
+	/* set */
+	
 	if (ggadu_config_var_get(gui_handler, "blink_interval"))
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(blink_interval),
 					  (gint) ggadu_config_var_get(gui_handler, "blink_interval"));
 
-	ggadu_config_var_set(gui_handler, "blink",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(blink)));
+	if (ggadu_config_var_get(gui_handler, "hide_on_start"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_on_start), TRUE);
 
-	ggadu_config_var_set(gui_handler, "blink_interval",
-				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(blink_interval)));
-	
+
 	return adv_vbox;
 }
 
@@ -794,7 +860,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *expand;
 	GtkWidget *usexosdfornewmsgs = NULL;
 	GtkWidget *notify_status_changes = NULL;
-	GtkWidget *hide_on_start;
 	GtkWidget *show_toolbar;
 	GtkWidget *auto_away;
 	GtkWidget *auto_away_interval;
@@ -803,7 +868,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *tabbox_auto_away;
 	GtkWidget *label1_align, *label2_align, *label3_align;
 	GDir *dir;
-	GtkWidget *combo_theme;
 	GtkWidget *combo_icons;
 	GtkWidget *entry;
 	GdkPixbuf *windowicon = NULL;
@@ -898,8 +962,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_box_pack_start(GTK_BOX(vbox), usexosdfornewmsgs, FALSE, FALSE, 0);
 	}
 
-	hide_on_start = gtk_check_button_new_with_label(_("Auto hide on start"));
-	gtk_box_pack_start(GTK_BOX(vbox), hide_on_start, FALSE, FALSE, 0);
 
 	show_toolbar = gtk_check_button_new_with_label(_("Show toolbar"));
 	gtk_box_pack_start(GTK_BOX(vbox), show_toolbar, FALSE, FALSE, 0);
@@ -910,10 +972,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	tabbox_auto_away = gtk_table_new(1, 3, FALSE);
 	
 	auto_away = gtk_check_button_new_with_label(_("Auto away"));
-//	gtk_box_pack_start(GTK_BOX(vbox), auto_away, FALSE, FALSE, 0);
 
 	label1_align = gtk_alignment_new(0.9, 0.5, 0, 0);
-	label = gtk_label_new(_("interval (minutes)"));
+	label = gtk_label_new(_("Mark away after (minutes)"));
 	auto_away_interval = gtk_spin_button_new_with_range(0, 1440, 1);
 	g_signal_connect(auto_away, "toggled", G_CALLBACK(tree_toggled), auto_away_interval);
 	gtk_container_add(GTK_CONTAINER(label1_align), label);
@@ -931,12 +992,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	gtk_table_set_col_spacings(GTK_TABLE(tabbox), 5);
 	gtk_box_pack_start(GTK_BOX(general_vbox), tabbox, FALSE, FALSE, 0);
 
-	combo_theme = gtk_combo_new();
-	label = gtk_label_new(_("Select theme"));
-	gtk_container_add(GTK_CONTAINER(label2_align), label);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 2, 2, 3);
 
 	combo_icons = gtk_combo_new();
 	label = gtk_label_new(_("Select icon set"));
@@ -1099,8 +1154,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		if (ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs"))
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs), TRUE);
 
-	if (ggadu_config_var_get(gui_handler, "hide_on_start"))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_on_start), TRUE);
 
 	if (ggadu_config_var_get(gui_handler, "show_toolbar"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_toolbar), TRUE);
@@ -1108,38 +1161,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "descr_on_list"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(descr_on_list), TRUE);
 
-	/* read available themes */
-	dirname = g_build_filename(PACKAGE_DATA_DIR, "themes", NULL);
-	print_debug("tryin to read themes directory %s\n", dirname);
-	dir = g_dir_open(dirname, 0, NULL);
-	g_free(dirname);
-
-	if (dir)
-	{
-		GList *list_theme = NULL;
-		gchar *theme_current;
-		gchar *theme_name_file;
-		gchar *theme_name;
-
-		theme_current = ggadu_config_var_get(gui_handler, "theme");
-		list_theme = g_list_append(list_theme, theme_current);
-
-		while ((theme_name_file = (gchar *) g_dir_read_name(dir)) != NULL)
-		{
-			print_debug("%s", theme_name_file);
-
-			if (g_str_has_suffix(theme_name_file, ".theme"))
-			{
-				theme_name = g_strndup(theme_name_file, strlen(theme_name_file) - strlen(".theme"));
-				if (!theme_current || ggadu_strcasecmp(theme_name, theme_current))
-					list_theme = g_list_append(list_theme, g_strdup(theme_name));
-				g_free(theme_name);
-			}
-		}
-
-		g_dir_close(dir);
-		gtk_combo_set_popdown_strings(GTK_COMBO(combo_theme), list_theme);
-	}
 
 	dirname = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", NULL);
 	print_debug("Trying to read icons directory %s", dirname);
@@ -1266,6 +1287,19 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "hide_on_start");
+		ggadu_config_var_set(gui_handler, "hide_on_start",
+				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "blink");
+		ggadu_config_var_set(gui_handler, "blink",
+				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "blink_interval");
+		ggadu_config_var_set(gui_handler, "blink_interval",
+				     (gpointer) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+
+
 		ggadu_config_var_set(gui_handler, "auto_away",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(auto_away)));
 
@@ -1299,8 +1333,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 					     (gpointer)
 					     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs)));
 
-		ggadu_config_var_set(gui_handler, "hide_on_start",
-				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(hide_on_start)));
 
 		ggadu_config_var_set(gui_handler, "show_toolbar",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(show_toolbar)));
@@ -1308,8 +1340,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "descr_on_list", 
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));
 
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_theme");
 		ggadu_config_var_set(gui_handler, "theme",
-				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_theme)->entry))));
+				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(entry)->entry))));
 				     
 		ggadu_config_var_set(gui_handler, "icons",
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_icons)->entry))));
