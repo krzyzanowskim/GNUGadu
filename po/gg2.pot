@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
-"POT-Creation-Date: 2004-08-02 02:35+0200\n"
+"POT-Creation-Date: 2004-08-02 13:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,6 +43,27 @@ msgstr ""
 
 #: src/main.c:195
 msgid "GNU Gadu 2"
+msgstr ""
+
+#: contrib/gghist/gghist.c:291
+msgid "_First page"
+msgstr ""
+
+#: contrib/gghist/gghist.c:294
+msgid "_Previous page"
+msgstr ""
+
+#: contrib/gghist/gghist.c:297
+msgid "_Next page"
+msgstr ""
+
+#: contrib/gghist/gghist.c:300
+msgid "_Last page"
+msgstr ""
+
+#: contrib/gghist/gghist.c:303 src/plugins/GUI/gui_chat.c:581
+#: src/plugins/GUI/gui_search.c:189
+msgid "_Close"
 msgstr ""
 
 #: lib/plugins.c:128
@@ -106,10 +127,6 @@ msgstr ""
 #: src/plugins/GUI/GUI_plugin.c:794 src/plugins/GUI/GUI_plugin.c:839
 #, c-format
 msgid "New message from %s"
-msgstr ""
-
-#: src/plugins/GUI/gui_chat.c:581 src/plugins/GUI/gui_search.c:189
-msgid "_Close"
 msgstr ""
 
 #: src/plugins/GUI/gui_chat.c:794
@@ -313,7 +330,7 @@ msgstr ""
 #: src/plugins/GUI/gui_preferences.c:763
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1530
 #: src/plugins/tlen/tlen_plugin.c:846 src/plugins/xosd/plugin_xosd.c:407
-#: src/plugins/jabber/jabber_plugin.c:832
+#: src/plugins/jabber/jabber_plugin.c:836
 #: src/plugins/remote/remote_plugin.c:645 src/plugins/sms/sms_gui.c:173
 #: src/plugins/update/update_plugin.c:345
 msgid "Preferences"
@@ -531,7 +548,7 @@ msgid "Program is about to leave"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:846
-#: src/plugins/jabber/jabber_plugin.c:166
+#: src/plugins/jabber/jabber_plugin.c:167
 msgid "Are You sure You want to delete selected user(s)?"
 msgstr ""
 
@@ -562,7 +579,7 @@ msgid "Phone"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:896
-#: src/plugins/jabber/jabber_plugin.c:135 src/plugins/sms/sms_gui.c:101
+#: src/plugins/jabber/jabber_plugin.c:136 src/plugins/sms/sms_gui.c:101
 msgid "Add contact"
 msgstr ""
 
@@ -571,7 +588,7 @@ msgid "Gadu-gadu plugin configuration"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:927
-#: src/plugins/tlen/tlen_plugin.c:823 src/plugins/jabber/jabber_plugin.c:796
+#: src/plugins/tlen/tlen_plugin.c:823 src/plugins/jabber/jabber_plugin.c:800
 msgid "Password"
 msgstr ""
 
@@ -590,12 +607,12 @@ msgid "Default reason"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:938
-#: src/plugins/tlen/tlen_plugin.c:825 src/plugins/jabber/jabber_plugin.c:798
+#: src/plugins/tlen/tlen_plugin.c:825 src/plugins/jabber/jabber_plugin.c:802
 msgid "Log chats to history file"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:940
-#: src/plugins/tlen/tlen_plugin.c:827 src/plugins/jabber/jabber_plugin.c:800
+#: src/plugins/tlen/tlen_plugin.c:827 src/plugins/jabber/jabber_plugin.c:804
 msgid "Autoconnect on startup"
 msgstr ""
 
@@ -656,12 +673,12 @@ msgid "Password:"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1050
-#: src/plugins/jabber/jabber_plugin.c:260
+#: src/plugins/jabber/jabber_plugin.c:261
 msgid "Update settings on success?"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1075
-#: src/plugins/tlen/tlen_plugin.c:775 src/plugins/jabber/jabber_plugin.c:760
+#: src/plugins/tlen/tlen_plugin.c:775 src/plugins/jabber/jabber_plugin.c:764
 msgid "You have to be connected to perform searching!"
 msgstr ""
 
@@ -772,13 +789,13 @@ msgid "Select File :"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1529
-#: src/plugins/tlen/tlen_plugin.c:845 src/plugins/jabber/jabber_plugin.c:831
+#: src/plugins/tlen/tlen_plugin.c:845 src/plugins/jabber/jabber_plugin.c:835
 #: src/plugins/sms/sms_gui.c:172
 msgid "Add Contact"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1531
-#: src/plugins/tlen/tlen_plugin.c:847 src/plugins/jabber/jabber_plugin.c:833
+#: src/plugins/tlen/tlen_plugin.c:847 src/plugins/jabber/jabber_plugin.c:837
 msgid "Search for friends"
 msgstr ""
 
@@ -795,7 +812,7 @@ msgid "Delete userlist"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1537
-#: src/plugins/jabber/jabber_plugin.c:835
+#: src/plugins/jabber/jabber_plugin.c:839
 msgid "Register account"
 msgstr ""
 
@@ -804,7 +821,7 @@ msgid "Gadu-Gadu(c) protocol"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1670
-#: src/plugins/tlen/tlen_plugin.c:703 src/plugins/jabber/jabber_plugin.c:698
+#: src/plugins/tlen/tlen_plugin.c:703 src/plugins/jabber/jabber_plugin.c:702
 msgid "Available"
 msgstr ""
 
@@ -846,7 +863,7 @@ msgid "no reason"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1793
-#: src/plugins/tlen/tlen_plugin.c:906 src/plugins/jabber/jabber_plugin.c:273
+#: src/plugins/tlen/tlen_plugin.c:906 src/plugins/jabber/jabber_plugin.c:274
 msgid "Chat"
 msgstr ""
 
@@ -854,24 +871,24 @@ msgstr ""
 msgid "Send File"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1799
-#: src/plugins/tlen/tlen_plugin.c:907 src/plugins/jabber/jabber_plugin.c:274
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1797
+#: src/plugins/tlen/tlen_plugin.c:907 src/plugins/jabber/jabber_plugin.c:275
 msgid "View History"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1801
-#: src/plugins/jabber/jabber_plugin.c:289 src/plugins/sms/sms_gui.c:231
+#: src/plugins/jabber/jabber_plugin.c:293 src/plugins/sms/sms_gui.c:231
 msgid "Edit"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1802
-#: src/plugins/tlen/tlen_plugin.c:914 src/plugins/jabber/jabber_plugin.c:290
+#: src/plugins/tlen/tlen_plugin.c:914 src/plugins/jabber/jabber_plugin.c:294
 #: src/plugins/sms/sms_gui.c:232
 msgid "Remove"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1804
-#: src/plugins/tlen/tlen_plugin.c:915 src/plugins/jabber/jabber_plugin.c:292
+#: src/plugins/tlen/tlen_plugin.c:915 src/plugins/jabber/jabber_plugin.c:296
 #: src/plugins/sms/sms_gui.c:234
 msgid "Add New"
 msgstr ""
@@ -881,12 +898,12 @@ msgid "Unable to create file"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2065
-#: src/plugins/tlen/tlen_plugin.c:978 src/plugins/jabber/jabber_plugin.c:428
+#: src/plugins/tlen/tlen_plugin.c:978 src/plugins/jabber/jabber_plugin.c:432
 msgid "Enter status description"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2067
-#: src/plugins/jabber/jabber_plugin.c:431
+#: src/plugins/jabber/jabber_plugin.c:435
 msgid "Description:"
 msgstr ""
 
@@ -944,7 +961,7 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: src/plugins/tlen/tlen_plugin.c:709 src/plugins/jabber/jabber_plugin.c:708
+#: src/plugins/tlen/tlen_plugin.c:709 src/plugins/jabber/jabber_plugin.c:712
 msgid "Away"
 msgstr ""
 
@@ -956,15 +973,15 @@ msgstr ""
 msgid "Very busy"
 msgstr ""
 
-#: src/plugins/tlen/tlen_plugin.c:727 src/plugins/jabber/jabber_plugin.c:718
+#: src/plugins/tlen/tlen_plugin.c:727 src/plugins/jabber/jabber_plugin.c:722
 msgid "DND"
 msgstr ""
 
-#: src/plugins/tlen/tlen_plugin.c:739 src/plugins/jabber/jabber_plugin.c:735
+#: src/plugins/tlen/tlen_plugin.c:739 src/plugins/jabber/jabber_plugin.c:739
 msgid "Unavailable"
 msgstr ""
 
-#: src/plugins/tlen/tlen_plugin.c:745 src/plugins/jabber/jabber_plugin.c:740
+#: src/plugins/tlen/tlen_plugin.c:745 src/plugins/jabber/jabber_plugin.c:744
 msgid "Set description ..."
 msgstr ""
 
@@ -1044,126 +1061,126 @@ msgstr ""
 msgid "On Screen Display"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:136
-#: src/plugins/jabber/jabber_plugin.c:155
+#: src/plugins/jabber/jabber_plugin.c:137
+#: src/plugins/jabber/jabber_plugin.c:156
 msgid "Jabber ID (jid)"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:137
-#: src/plugins/jabber/jabber_plugin.c:156
+#: src/plugins/jabber/jabber_plugin.c:138
+#: src/plugins/jabber/jabber_plugin.c:157
 msgid "Nickname"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:138
+#: src/plugins/jabber/jabber_plugin.c:139
 msgid "Request authorization from"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:153 src/plugins/sms/sms_gui.c:82
+#: src/plugins/jabber/jabber_plugin.c:154 src/plugins/sms/sms_gui.c:82
 msgid "Edit contact"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:255
+#: src/plugins/jabber/jabber_plugin.c:256
 msgid "Register Jabber account"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:257
+#: src/plugins/jabber/jabber_plugin.c:258
 msgid "Server : "
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:258
+#: src/plugins/jabber/jabber_plugin.c:259
 msgid "Username : "
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:259
+#: src/plugins/jabber/jabber_plugin.c:260
 msgid "Password : "
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:277
+#: src/plugins/jabber/jabber_plugin.c:282
 msgid "Authorization"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:279
+#: src/plugins/jabber/jabber_plugin.c:284
 msgid "Request presence subscription"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:280
+#: src/plugins/jabber/jabber_plugin.c:285
 msgid "Send presence authorization"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:283
+#: src/plugins/jabber/jabber_plugin.c:288
 msgid "Remove authorization"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:384
+#: src/plugins/jabber/jabber_plugin.c:388
 msgid "Invalid data passed, try again"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:605
-#: src/plugins/jabber/jabber_plugin.c:668
+#: src/plugins/jabber/jabber_plugin.c:609
+#: src/plugins/jabber/jabber_plugin.c:672
 msgid "Can't perform search!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:703
+#: src/plugins/jabber/jabber_plugin.c:707
 msgid "Free for chat"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:713
+#: src/plugins/jabber/jabber_plugin.c:717
 msgid "eXtended Away"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:723
+#: src/plugins/jabber/jabber_plugin.c:727
 msgid "is subscribed to you presence"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:729
+#: src/plugins/jabber/jabber_plugin.c:733
 msgid "No authorization"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:745
+#: src/plugins/jabber/jabber_plugin.c:749
 msgid "Error"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:781
+#: src/plugins/jabber/jabber_plugin.c:785
 msgid "Jabber search: server"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:783
+#: src/plugins/jabber/jabber_plugin.c:787
 msgid "Server:"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:793
+#: src/plugins/jabber/jabber_plugin.c:797
 msgid "Jabber plugin configuration"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:794
+#: src/plugins/jabber/jabber_plugin.c:798
 msgid "Jabber ID"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:805
+#: src/plugins/jabber/jabber_plugin.c:809
 msgid "Use SSL"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:809
+#: src/plugins/jabber/jabber_plugin.c:813
 msgid "Resource"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:812
+#: src/plugins/jabber/jabber_plugin.c:816
 msgid ""
 "Server\n"
 "(optional)"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:816
+#: src/plugins/jabber/jabber_plugin.c:820
 msgid ""
 "Proxy server (optional)\n"
 "[user:pass@]host.com[:8080]"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:887
+#: src/plugins/jabber/jabber_plugin.c:891
 msgid "Jabber protocol"
 msgstr ""
 
-#: src/plugins/jabber/jabber_plugin.c:909
+#: src/plugins/jabber/jabber_plugin.c:913
 msgid "Unable to read configuration file for plugin jabber"
 msgstr ""
 

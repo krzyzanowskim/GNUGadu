@@ -1,6 +1,7 @@
 02.08.2004
 - tropic.theme and office.theme sent by Krzysztof Foltman <krzysztof@foltman.com>
 - keep history in utf-8, and some cleanups (gghist/krzak)
+- fixed make dist, more changes in gghist (krzak)
 
 01.08.2004
 - ggadu_save_history() as a base for history in every plugin, to keep similar
