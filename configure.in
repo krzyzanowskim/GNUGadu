@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.5 2003/04/09 16:07:15 thrulliq Exp $
+dnl $Id: configure.in,v 1.6 2003/04/11 15:22:57 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -220,6 +220,9 @@ fi
 AC_ARG_WITH(docklet, [  --with-docklet	  Build docklet plugin		default=no])
 if test "x$with_docklet" = "xyes"; then 
     want_docklet=yes
+    PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
+    AC_SUBST(GTK_CFLAGS)
+    AC_SUBST(GTK_LIBS)
     else
     want_docklet=no
 fi
