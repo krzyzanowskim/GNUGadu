@@ -1,18 +1,21 @@
-/* $Id: jabber_protocol.h,v 1.7 2004/01/07 23:49:17 thrulliq Exp $ */
+/* $Id: jabber_protocol.h,v 1.8 2004/01/13 22:22:44 krzyzak Exp $ */
 
-#ifndef JABBER_PROTOCOL_H
-#define JABBER_PROTOCOL_H 1
+#ifndef GGADU_JABBER_PROTOCOL_H
+#define GGADU_JABBER_PROTOCOL_H 1
 
 #include "jabber_plugin.h"
 
-waiting_action* action_queue_add (gchar *id, gchar *type, gpointer action_callback, gchar *data);
+//waiting_action *action_queue_add (gchar *id, gchar *type, gpointer action_callback, gchar *data);
+waiting_action *action_queue_add(gchar * id, gchar * type, gpointer action_callback, gchar * data, gboolean str_dup);
+
 void action_queue_del (waiting_action *action);
 
 void jabber_change_status (enum states status);
-void jabber_fetch_roster (void);
+void jabber_fetch_roster (gpointer user_data);
 
 void action_roster_add_result (LmConnection *connection, LmMessage *message, gpointer id);
 void action_roster_remove_result (LmConnection *connection, LmMessage *message, gpointer data);
+void action_roster_fetch_result (LmConnection * connection, LmMessage * message, gpointer user_data);
 
 void action_search_form (LmConnection *connection, LmMessage *message, gpointer data);
 void action_search_result (LmConnection *connection, LmMessage *message, gpointer data);

@@ -1,7 +1,7 @@
-/* $Id: jabber_login.h,v 1.4 2004/01/07 23:49:17 thrulliq Exp $ */
+/* $Id: jabber_login.h,v 1.5 2004/01/13 22:22:44 krzyzak Exp $ */
 
-#ifndef JABBER_LOGIN_H
-#define JABBER_LOGIN_H 1
+#ifndef GGADU_JABBER_LOGIN_H
+#define GGADU_JABBER_LOGIN_H 1
 
 #include "jabber_plugin.h"
 

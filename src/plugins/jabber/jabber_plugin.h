@@ -1,7 +1,7 @@
-/* $Id: jabber_plugin.h,v 1.17 2004/01/07 23:49:17 thrulliq Exp $ */
+/* $Id: jabber_plugin.h,v 1.18 2004/01/13 22:22:44 krzyzak Exp $ */
 
-#ifndef JABBER_PLUGIN_H
-#define JABBER_PLUGIN_H 1
+#ifndef GGADU_JABBER_PLUGIN_H
+#define GGADU_JABBER_PLUGIN_H 1
 
 #include <loudmouth/loudmouth.h>
 
