@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.71 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.72 2004/05/06 10:27:47 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -764,9 +764,6 @@ void gui_msg_receive(GGaduSignal * signal)
 
 	print_debug("%s : %s -> %s | %s", "gui-main", msg->id, msg->message, signal->source_plugin_name);
 
-	if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in")))
-		signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
-
 	if (gp != NULL)
 	{
 		gui_chat_session *session = NULL;
@@ -808,10 +805,17 @@ void gui_msg_receive(GGaduSignal * signal)
 			} else {
 				g_slist_free(sigdata);
 			}
+	        
+            if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in_first")))
+		        signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
 
 			session->recipients = g_slist_copy(msg->recipients);
 			session->chat = create_chat(session, gp->plugin_name, msg->id, showwindow);
 		} else {
+            
+	        if (msg->message && (soundfile = ggadu_config_var_get(gui_handler, "sound_msg_in")))
+		        signal_emit_full("main-gui", "sound play file", soundfile, "sound*", NULL);
+            
 			GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
 		        if (!GTK_WIDGET_VISIBLE(window)) {
 				if (showwindow) {

@@ -1,3 +1,6 @@
+06.05.2004
+- firstsound.patch by emes (GUI/emes)
+
 05.05.2004
 - g_get_tmp_dir() used for register-token.tmp file (gadu-gadu/krzak)
 

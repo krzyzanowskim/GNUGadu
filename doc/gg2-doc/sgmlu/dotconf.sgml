@@ -246,6 +246,14 @@ jest kolejnością, w jakiej będą ładowane moduły.</para>
     <entry>Plik dźwiękowy, jaki zostanie odegrany po przyjściu nowej
     wiadomości.</entry>
   </row>
+  
+  <row>
+    <entry>sound_msg_in_first</entry>
+    <entry>VAR_STR</entry>
+    <entry>(brak)</entry>
+    <entry>Plik dźwiękowy, jaki zostanie odegrany po przyjściu
+    wiadomości, która rozpoczyna nową konwersację.</entry>
+  </row>
 
   <row>
     <entry>sound_msg_out</entry>

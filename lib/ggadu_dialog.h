@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.5 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.6 2004/05/06 10:27:47 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -49,26 +49,26 @@ typedef struct
 #define ggadu_dialog_new(type, title, callback_signal) \
 		ggadu_dialog_new_full(type, title, callback_signal, NULL)
 
-GGaduDialog*	ggadu_dialog_new_full			(guint type, gchar * title, gchar * callback_signal, gpointer user_data);
+GGaduDialog*		ggadu_dialog_new_full			(guint type, gchar * title, gchar * callback_signal, gpointer user_data);
 
 void 			ggadu_dialog_add_entry			(GGaduDialog * dialog, gint key, gchar * desc, gint type, gpointer value, gint flags);
 
 GSList*			ggadu_dialog_get_entries		(GGaduDialog * dialog);
 
-void			ggadu_dialog_set_callback_signal(GGaduDialog * dialog, const gchar * signal);
+void			ggadu_dialog_set_callback_signal	(GGaduDialog * dialog, const gchar * signal);
 
-void			ggadu_dialog_set_progress_watch (GGaduDialog * dialog, watch_func watch);
+void			ggadu_dialog_set_progress_watch		(GGaduDialog * dialog, watch_func watch);
 
 void			ggadu_dialog_set_title			(GGaduDialog * dialog, const gchar * title);
 
-const gchar*	ggadu_dialog_get_title			(GGaduDialog * dialog);
+const gchar*		ggadu_dialog_get_title			(GGaduDialog * dialog);
 
 void			ggadu_dialog_set_type			(GGaduDialog *, GGaduDialogType);
 
-GGaduDialogType ggadu_dialog_get_type			(GGaduDialog * dialog);
+GGaduDialogType		ggadu_dialog_get_type			(GGaduDialog * dialog);
 
 gint 			ggadu_dialog_get_response		(GGaduDialog * dialog);
 
-void			GGaduDialog_free				(GGaduDialog * dialog);
+void			GGaduDialog_free			(GGaduDialog * dialog);
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.52 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.53 2004/05/06 10:27:48 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -163,6 +163,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
 	ggadu_config_var_add_with_default(gui_handler, "show_toolbar", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in", VAR_STR,
+					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));
+	ggadu_config_var_add_with_default(gui_handler, "sound_msg_in_first", VAR_STR,
 					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));
 	ggadu_config_var_add_with_default(gui_handler, "sound_msg_out", VAR_STR,
 					  g_strconcat(PACKAGE_DATA_DIR, "/sounds/", NULL));

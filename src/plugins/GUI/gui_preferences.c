@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.54 2004/03/13 07:44:19 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.55 2004/05/06 10:27:48 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -554,14 +554,27 @@ static GtkWidget *create_sound_tab()
 
 	if (ggadu_config_var_get(gui_handler, "sound_msg_in"))
 		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "sound_msg_in"));
-
-	label = gtk_label_new(_("Outgoing message:"));
+	
+    label = gtk_label_new(_("Initial message:"));
 	entry = gtk_entry_new();
 	button = gtk_button_new_from_stock("gtk-open");
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 1, 2);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_file_select_dialog), entry);
+	g_object_set_data(G_OBJECT(sound_vbox), "sound_msg_in_first", entry);
+
+	if (ggadu_config_var_get(gui_handler, "sound_msg_in_first"))
+		gtk_entry_set_text(GTK_ENTRY(entry), (gchar *) ggadu_config_var_get(gui_handler, "sound_msg_in_first"));
+
+	label = gtk_label_new(_("Outgoing message:"));
+	entry = gtk_entry_new();
+	button = gtk_button_new_from_stock("gtk-open");
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label, 0, 1, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), entry, 1, 2, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), button, 2, 3, 2, 3);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_file_select_dialog), entry);
 	g_object_set_data(G_OBJECT(sound_vbox), "sound_msg_out", entry);
 
@@ -1272,6 +1285,11 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_in");
 		g_return_if_fail(entry != NULL);
 		ggadu_config_var_set(gui_handler, "sound_msg_in",
+				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
+		
+        entry = g_object_get_data(G_OBJECT(sound_vbox), "sound_msg_in_first");
+		g_return_if_fail(entry != NULL);
+		ggadu_config_var_set(gui_handler, "sound_msg_in_first",
 				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))));
 
 		entry = g_object_get_data(G_OBJECT(fonts_vbox), "contact_list_contact_font");
