@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.61 2004/03/15 20:27:14 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.62 2004/03/15 21:55:45 thrulliq Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -762,8 +762,12 @@ void gui_msg_receive(GGaduSignal * signal)
 		} else {
 		    GtkWidget *window = gtk_widget_get_ancestor(session->chat, GTK_TYPE_WINDOW);
 		        if (!GTK_WIDGET_VISIBLE(window)) {
-				invisible_chats = g_slist_append(invisible_chats, session->chat);
-				signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
+				if (msg->message) {
+    				    invisible_chats = g_slist_append(invisible_chats, session->chat);
+				    signal_emit_full("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free);
+				} else {
+				    gtk_widget_show(window);
+				}
 			} else {
 				g_slist_free(sigdata);
 			}
