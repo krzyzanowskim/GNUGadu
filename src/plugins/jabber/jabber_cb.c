@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.63 2004/09/24 08:05:26 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.64 2004/09/27 07:51:31 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -32,24 +32,44 @@
 
 extern jabber_data_type jabber_data;
 
-void jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, gpointer user_data)
+void 	jabber_disconnect_cb(LmConnection * connection, LmDisconnectReason reason, gpointer user_data)
 {
 	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
 	g_static_mutex_lock(&connect_mutex);
 
-	lm_connection_unregister_message_handler(connection, iq_handler, LM_MESSAGE_TYPE_IQ);
+	if (iq_handler)
+	    lm_connection_unregister_message_handler(connection, iq_handler, LM_MESSAGE_TYPE_IQ);
+	    
 	iq_handler = NULL;
-	lm_connection_unregister_message_handler(connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ);
+
+	if (iq_roster_handler)
+	    lm_connection_unregister_message_handler(connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ);
+
 	iq_roster_handler = NULL;
-	lm_connection_unregister_message_handler(connection, iq_version_handler, LM_MESSAGE_TYPE_IQ);
+
+	if (iq_version_handler)
+	    lm_connection_unregister_message_handler(connection, iq_version_handler, LM_MESSAGE_TYPE_IQ);
+
 	iq_version_handler = NULL;
-	lm_connection_unregister_message_handler(connection, iq_vcard_handler, LM_MESSAGE_TYPE_IQ);
+	
+	if (iq_vcard_handler)	
+	    lm_connection_unregister_message_handler(connection, iq_vcard_handler, LM_MESSAGE_TYPE_IQ);
+
 	iq_vcard_handler = NULL;
-	lm_connection_unregister_message_handler(connection, iq_account_data_handler, LM_MESSAGE_TYPE_IQ);
+
+	if (iq_account_data_handler)
+	    lm_connection_unregister_message_handler(connection, iq_account_data_handler, LM_MESSAGE_TYPE_IQ);
+
 	iq_account_data_handler = NULL;
-	lm_connection_unregister_message_handler(connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE);
+
+	if (presence_handler)
+	    lm_connection_unregister_message_handler(connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE);
+
 	presence_handler = NULL;
-	lm_connection_unregister_message_handler(connection, message_handler, LM_MESSAGE_TYPE_MESSAGE);
+
+	if (message_handler)
+	    lm_connection_unregister_message_handler(connection, message_handler, LM_MESSAGE_TYPE_MESSAGE);
+
 	message_handler = NULL;
 	
 	jabber_data.status = JABBER_STATUS_UNAVAILABLE;

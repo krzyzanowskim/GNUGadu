@@ -1,3 +1,9 @@
+27.09.2004
+- fixed lib/ggadu_conf.c/ggadu_config_var_set() with g_strstrip() not called with NULL argument.
+  Close bug #82 thanks Marcin Grzeskowiak.
+- check for messages handlers before unregister them.
+  suggested by Michael Hallendal (micke@imendio.com)
+
 24.09.2004
 - "remote" plugin do not build by default anymore
   this plugin propably do not work as it should anymore, there were 
