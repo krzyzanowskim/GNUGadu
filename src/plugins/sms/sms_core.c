@@ -359,10 +359,12 @@ int send_PLUS(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
 int send_ERA(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
 {
     gchar *temp = g_malloc0(10);
+    gchar *token_name = g_malloc0(10);
+    gchar *token = g_malloc0(10);
     gchar *recv_buff = g_malloc0(10000);
     gchar *cookie = g_malloc0(2000);
     gint i;
-    
+
     if (!sms_connect("ERA","boa.eragsm.com.pl")) return ERR_SERVICE;
 
     strcpy(HTTP.Command,"POST");
@@ -378,18 +380,23 @@ int send_ERA(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
 	recv_buff[i++] = temp[0];
     }
 
-
     recv_buff = g_strstr_len(recv_buff, i, "Cookie:");
     if (!recv_buff) return ERR_READ_TOKEN;
     cookie = g_strstr_len(recv_buff, strlen(recv_buff), ";");
     if (!cookie) return ERR_READ_TOKEN;
     cookie = g_strndup(recv_buff, strlen(recv_buff) - strlen(cookie));
 
-    recv_buff = g_strstr_len(recv_buff, strlen(recv_buff), "\"Code\"");
+    recv_buff = g_strstr_len(recv_buff, strlen(recv_buff), "\"Kod");
     if (!recv_buff) return ERR_READ_TOKEN;
+    token_name = g_strndup(recv_buff + 1, 5);
+
     recv_buff = g_strstr_len(recv_buff, strlen(recv_buff), "=\"");
     if (!recv_buff) return ERR_READ_TOKEN;
-    temp = g_strndup(recv_buff + 2, 4);
+    token = g_strndup(recv_buff + 2, 4);
+
+    if (token[2]=='"') token[2]=0;
+    if (token_name[4]=='"') token_name[4]=0;
+    
 
     if (!sms_connect("ERA","boa.eragsm.com.pl")) return ERR_SERVICE;
 
@@ -398,7 +405,7 @@ int send_ERA(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
     strcpy(HTTP.Host,recv_buff);
     strcpy(HTTP.Url,"/sms/sendsms.asp");
     strcpy(HTTP.Url_Params," ");
-    recv_buff = g_strconcat("Telefony=Telefony&Kasuj=nie-skasowaæ&Code=", temp, "&Nadaj=  tak-nadaæ  &kontakt=&podpis=", sms_sender, "&messagebis=", sms_body, "&message=", sms_body, "&ksiazka=ksi±¿ka telefoniczna&bookopen=&numer=", sms_number, NULL);
+    recv_buff = g_strconcat("Telefony=Telefony&Kasuj=nie-skasowaæ&", token_name, "=", token, "&kod=", token, "&Send=  tak-nadaæ  &kontakt=&podpis=", sms_sender, "&messagebis=", sms_body, "&message=", sms_body, "&ksiazka=ksi±¿ka telefoniczna&bookopen=&numer=", sms_number, NULL);
     strcpy(HTTP.Post_Data, recv_buff);
     HTTP.Post_Lenght = strlen(recv_buff);
     HTTP_io(HTTP);
@@ -409,6 +416,7 @@ int send_ERA(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
     {
 	recv_buff[i++] = temp[0];
     }
+
     g_free(temp);
 
     if (!recv_buff) return ERR_SERVICE;
