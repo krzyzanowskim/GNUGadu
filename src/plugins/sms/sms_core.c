@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.32 2004/01/27 01:19:54 shaster Exp $ */
+/* $Id: sms_core.c,v 1.33 2004/02/13 21:51:55 thrulliq Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -194,13 +194,11 @@ void SMS_free(SMS * message)
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
 gboolean IDEA_logo(SMS * user_data)
 {
-	GGaduDialog *d = ggadu_dialog_new();
-	ggadu_dialog_set_title(d, _("IDEA token"));
-	ggadu_dialog_callback_signal(d, "get token");
+	GGaduDialog *d = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("IDEA token"), "get token");
 	d->user_data = (gpointer) user_data;
-
-	ggadu_dialog_add_entry(&(d->optlist), 0, "", VAR_IMG, idea_token_path, VAR_FLAG_NONE);
-	ggadu_dialog_add_entry(&(d->optlist), 1, _("Enter token text"), VAR_STR, NULL, VAR_FLAG_NONE);
+	
+	ggadu_dialog_add_entry1(d, 0, "", VAR_IMG, idea_token_path, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry1(d, 1, _("Enter token text"), VAR_STR, NULL, VAR_FLAG_NONE);
 
 	signal_emit_from_thread("sms", "gui show dialog", d, "main-gui");
 
@@ -438,7 +436,7 @@ gpointer send_IDEA_stage2(SMS * message)
 		sms_warning(message->number, _("Please enter token"));
 		goto out;
 	}
-
+	
 	/* Cut-off prefixes. 'just-in-case' */
 	if (g_str_has_prefix(message->number, "+"))
 		sms_number++;
@@ -451,7 +449,6 @@ gpointer send_IDEA_stage2(SMS * message)
 
 	sender = ggadu_sms_urlencode(g_strdup(message->sender));
 	body = ggadu_sms_urlencode(g_strdup(message->body));
-
 	post = g_strconcat("token=", message->idea_token, "&SENDER=", sender, "&RECIPIENT=", sms_number, "&SHORT_MESSAGE=", body, "&pass=",
 			   message->idea_pass, "&respInfo=2", NULL);
 

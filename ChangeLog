@@ -1,3 +1,7 @@
+13.02.2004
+- smashed nasty bug in sms plugin & started to move towards new dialog API (sms/THrull)
+- some code cleanups (jabber/THrull)
+
 10.02.2004
 - dialog.c api change process... it's to hard to change it everywhere at one time (krzak)
 
