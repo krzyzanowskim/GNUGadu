@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.217 2004/12/22 16:54:28 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.218 2004/12/26 17:26:24 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -464,18 +464,41 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		print_debug("GG_EVENT_MSG from: %d type: %d", e->event.msg.sender, e->event.msg.msgclass);
 
 		if ((e->event.msg.msgclass & GG_CLASS_CTCP))
-		{		/* dcc part */
-/*			GGaduDialog *dialog = NULL;
+		{		
+			/* dcc part */
+			GGaduDialog *dialog = NULL;
 			gchar *tmp = NULL;
-			
+			struct gg_dcc *dcc = NULL;
+			gchar **addr_arr = NULL;
+			gint port = 0;
+			guint32 ip = 0;
+			gchar *id = g_strdup_printf("%d", e->event.msg.sender);
+			GGaduContact *k = ggadu_repo_find_value("gadu-gadu", ggadu_repo_key_from_string(id));
+
 			print_debug("somebody want to send you a file");
+			
+			addr_arr = g_strsplit(k->ip, ":", 2);
+			if (!addr_arr[0] || !addr_arr[1])
+			{
+			    g_strfreev(addr_arr);
+			    g_free(id);
+			    break;
+			}
+
+			ip = inet_addr(addr_arr[0]);
+			port = atoi(addr_arr[1]);
+			dcc = gg_dcc_get_file(ip,
+					      port,
+					      (int) ggadu_config_var_get(handler, "uin"),
+					      e->event.msg.sender);
+			
 			tmp = g_strdup_printf(_("%d sending you a  file"), e->event.msg.sender);
-			dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, tmp, "get file", (gpointer) e->event.msg.sender);
-
+//			tmp = g_strdup_printf(_("%s (%d) wants to send You a file: %s (%d bytes)"), k->nick, dcc->peer_uin, dcc->file_info.filename, dcc->file_info.size);
+			dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, tmp, "get file", dcc);
 			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
-*/
-			/* ZONK */
-
+			
+			g_free(id);
+			/* dupa */
 			break;
 		}
 		/* end of dcc part */
@@ -1212,6 +1235,8 @@ gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer
 	if (!(gboolean) ggadu_config_var_get(handler, "dcc"))
 	{
 		gadu_gadu_enable_dcc_socket(FALSE);
+		gg_event_free(e);
+		gg_dcc_free(d);
 		return FALSE;
 	}
 
@@ -1219,7 +1244,8 @@ gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer
 	{
 		if (d->type != GG_SESSION_DCC_SOCKET)
 		{
-			gg_free_dcc(d);
+			gg_dcc_free(d);
+			gg_event_free(e);
 			print_debug("wylazimy stad albercik");
 			return FALSE;
 		}
@@ -1271,6 +1297,17 @@ gboolean test_chan_dcc_get(GIOChannel * source, GIOCondition condition, gpointer
 		return FALSE;
 	}
 
+	if (d->state == GG_STATE_SENDING_FILE_ACK)
+	{
+	    gchar *dest_path = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S, d->file_info.filename, NULL);
+	    d->file_fd = open(dest_path, O_WRONLY | O_CREAT, 0600);
+
+	    if (d->file_fd == -1)
+			signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf(_("Unable to create file %s ."),dest_path), "main-gui");
+
+	    g_free(dest_path);
+
+	}
 /*	if (d->state == GG_STATE_READING_FILE_HEADER)
 	{
 		print_debug("GG_CHECK_READ DCC_GET\n");
@@ -1296,7 +1333,8 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 
 	if (!(gboolean) ggadu_config_var_get(handler, "dcc"))
 	{
-		gg_free_dcc(d);
+		gg_dcc_free(d);
+		gg_event_free(e);
 		return FALSE;
 	}
 
@@ -1304,7 +1342,8 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 	{
 		if (d->type != GG_SESSION_DCC_SOCKET)
 		{
-			gg_free_dcc(d);
+			gg_dcc_free(d);
+			gg_event_free(e);
 			print_debug("wylazimy staq albercik\n");
 			return FALSE;
 		}
@@ -1324,9 +1363,11 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 		gg_event_free(e);
 		break;
 	case GG_EVENT_DCC_NEED_FILE_INFO:
+		{
 		print_debug("GG_EVENT_DCC_NEED_FILE_INFO");
 		gg_dcc_fill_file_info(d, dcc_send_request_filename);
 		gg_event_free(e);
+		}
 		break;
 	case GG_EVENT_DCC_NEED_FILE_ACK:	/* dotyczy odbierania plikow */
 		{
@@ -1340,6 +1381,7 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 			{
 				g_free(idtmp);
 				g_free(tmp);
+				gg_event_free(e);
 				gg_dcc_free(d);
 				return FALSE;
 			}
@@ -1356,28 +1398,30 @@ gboolean test_chan_dcc(GIOChannel * source, GIOCondition condition, gpointer dat
 			tmp = g_strdup_printf(_("%s (%d) wants to send You a file: %s (%d bytes)"), k->nick, d->peer_uin, d->file_info.filename, d->file_info.size);
 			dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, tmp, "get file", (gpointer) d);
 			signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
+
 			g_free(tmp);
 			g_free(idtmp);
-
+			gg_dcc_free(d);
+			gg_event_free(e);
 			return FALSE;
 		}
-		gg_event_free(e);
 		break;
 	case GG_EVENT_DCC_DONE:
 		{
 			gint state = d->state;
 			gchar *filename = g_strdup(d->file_info.filename);
 			print_debug("GG_EVENT_DCC_DONE");
-			gg_event_free(e);
-			gg_dcc_free(d);
+
 			if (state == GG_STATE_GETTING_FILE)
 				signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup_printf(_("File %s received succesful"), filename), "main-gui");
 			else
 				signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("File sent succesful")), "main-gui");
+				
 			g_free(filename);
+			gg_dcc_free(d);
+			gg_event_free(e);
 			return FALSE;
 		}
-		gg_event_free(e);
 		break;
 	case GG_EVENT_DCC_ERROR:
 		print_debug("GG_EVENT_DCC_ERROR\n");
@@ -1587,8 +1631,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "private", VAR_BOOL);
 	ggadu_config_var_add(handler, "dcc", VAR_BOOL);
 	/* todo */
-	ggadu_config_var_add(handler, "dcc_dir", VAR_STR);
-	ggadu_config_var_add(handler, "ignore_unknown_sender", VAR_BOOL);
+//	ggadu_config_var_add_with_default(handler, "dcc_dir", VAR_STR);
+	/* ggadu_config_var_add(handler, "ignore_unknown_sender", VAR_BOOL); */
 
 	if (g_getenv("HOME_ETC"))
 	{
@@ -1757,28 +1801,22 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == GET_FILE_SIG)
 	{
 		GGaduDialog *d = signal->data;
-		struct gg_dcc *dcc = d->user_data;
+		struct gg_dcc *dcc = NULL;
 
-		if (ggadu_dialog_get_response(d) == GGADU_OK)
+		dcc = d->user_data;
+		if (dcc && ggadu_dialog_get_response(d) == GGADU_OK)
 		{
 			GIOChannel *ch;
 			gchar *dest_path = NULL;
-
+			
 			ch = g_io_channel_unix_new(dcc->fd);
 
-			dest_path = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S, dcc->file_info.filename, NULL);
-			dcc->file_fd = open(dest_path, O_WRONLY | O_CREAT, 0600);
-			g_free(dest_path);
-
-			if (dcc->file_fd == -1)
-			{
-				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup(_("Unable to create file")), "main-gui");
-			}
 
 			if (dcc->check == GG_CHECK_READ)
 			{
 				print_debug("GG_CHECK_READ DCC\n");
 				watch_dcc_file = g_io_add_watch(ch, G_IO_IN | G_IO_ERR, test_chan_dcc_get, dcc);
+				GGaduDialog_free(d);
 				return;
 			}
 
@@ -1786,9 +1824,21 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			{
 				print_debug("GG_CHECK_WRITE DCC\n");
 				watch_dcc_file = g_io_add_watch(ch, G_IO_OUT | G_IO_ERR, test_chan_dcc_get, dcc);
+				GGaduDialog_free(d);
 				return;
 			}
 
+/*
+			dest_path = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S, dcc->file_info.filename, NULL);
+			dcc->file_fd = open(dest_path, O_WRONLY | O_CREAT, 0600);
+
+			if (dcc->file_fd == -1)
+			{
+				signal_emit(GGadu_PLUGIN_NAME, "gui show warning", g_strdup_printf(_("Unable to create file %s ."),dest_path), "main-gui");
+			}
+			g_free(dest_path);
+
+*/
 		}
 		else
 		{
@@ -2605,11 +2655,8 @@ void save_addressbook_file()
 	else if (!g_file_test(dir, G_FILE_TEST_IS_DIR))
 	{
 		g_warning("Unable to open/create directory %s\n", dir);
-		g_free(dir);
-		g_free(path);
-		return;
+		goto finish;
 	}
-	g_free(dir);
 
 	ch = g_io_channel_new_file(path, "w", NULL);
 	if (ch)
@@ -2626,6 +2673,9 @@ void save_addressbook_file()
 		g_io_channel_shutdown(ch, TRUE, NULL);
 		g_io_channel_unref(ch);
 	}
-	g_free(path);
 
+	finish:
+	g_free(dir);
+	g_free(path);
+	return;
 }
