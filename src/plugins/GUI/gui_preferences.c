@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.73 2004/08/24 12:04:31 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.74 2004/08/26 10:21:46 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -725,6 +725,7 @@ static GtkWidget *create_advanced_tab()
 	GtkWidget *combo_theme = NULL;
 	GtkWidget *combo_icons = NULL;
 	GtkWidget *chat_paned_size;
+	GtkWidget *notify_status_changes = NULL;
 
 	gchar *dirname = NULL;
 	GDir *dir;
@@ -745,6 +746,10 @@ static GtkWidget *create_advanced_tab()
 	gtk_box_pack_start(GTK_BOX(adv_vbox), hide_on_start, FALSE, FALSE, 0);
 	g_object_set_data(G_OBJECT(adv_vbox), "hide_on_start", hide_on_start);
 
+	/* notify status changes in Chat window */
+	notify_status_changes = gtk_check_button_new_with_label(_("Notify about status changes inside chat window"));
+	gtk_box_pack_start(GTK_BOX(adv_vbox), notify_status_changes, FALSE, FALSE, 0);
+	g_object_set_data(G_OBJECT(adv_vbox), "notify_status_changes", notify_status_changes);
 
 	/* blink */
 	blink = gtk_check_button_new_with_label(_("Blink status icon while connecting every:"));
@@ -774,6 +779,23 @@ static GtkWidget *create_advanced_tab()
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label0_align, 2, 3, 0, 1);
 		
 
+	/* chat_paned_size */
+	/* ZONK - how to name it ? */
+	label = gtk_label_new(_("Chat window split position at:"));
+	chat_paned_size = gtk_spin_button_new_with_range(5, 100, 5);
+	gtk_container_add(GTK_CONTAINER(label4_align), label);
+
+	g_object_set_data(G_OBJECT(adv_vbox), "chat_paned_size", chat_paned_size);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label4_align, 0, 1, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 1, 2);
+
+	label = gtk_label_new(_("percent"));
+	label5_align = gtk_alignment_new(0, 0.5, 0, 0);
+	gtk_container_add(GTK_CONTAINER(label5_align), label);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label5_align, 2, 3, 1, 2);
+
+
 
 	/* themes */
 	combo_theme = gtk_combo_box_new_text();
@@ -781,8 +803,8 @@ static GtkWidget *create_advanced_tab()
 	
 	label = gtk_label_new(_("Selected theme:"));
 	gtk_container_add(GTK_CONTAINER(label2_align), label);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 3, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_theme, 1, 3, 2, 3);
 	
 	dirname = g_build_filename(PACKAGE_DATA_DIR, "themes", NULL);
 	dir = g_dir_open(dirname, 0, NULL);
@@ -830,8 +852,8 @@ static GtkWidget *create_advanced_tab()
 	label = gtk_label_new(_("Selected icon set:"));
 	gtk_container_add(GTK_CONTAINER(label3_align), label);
 
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 3, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 3, 4);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_icons, 1, 3, 3, 4);
 
 	dirname = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", NULL);
 	print_debug("Trying to read icons directory %s", dirname);
@@ -869,21 +891,6 @@ static GtkWidget *create_advanced_tab()
 		g_object_set_data(G_OBJECT(combo_icons), "combo_icons_slist", list_icons);
 	}
 
-	/* chat_paned_size */
-	/* ZONK - how to name it ? */
-	label = gtk_label_new(_("Chat window split position at:"));
-	chat_paned_size = gtk_spin_button_new_with_range(5, 100, 5);
-	gtk_container_add(GTK_CONTAINER(label4_align), label);
-
-	g_object_set_data(G_OBJECT(adv_vbox), "chat_paned_size", chat_paned_size);
-
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label4_align, 0, 1, 3, 4);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 3, 4);
-
-	label = gtk_label_new(_("percent"));
-	label5_align = gtk_alignment_new(0, 0.5, 0, 0);
-	gtk_container_add(GTK_CONTAINER(label5_align), label);
-	gtk_table_attach_defaults(GTK_TABLE(tabbox), label5_align, 2, 3, 3, 4);
 	
 	/* set */
 	
@@ -897,6 +904,10 @@ static GtkWidget *create_advanced_tab()
 	if (ggadu_config_var_get(gui_handler, "chat_paned_size"))
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(chat_paned_size),
 					  (gint) ggadu_config_var_get(gui_handler, "chat_paned_size"));
+
+	if (ggadu_config_var_get(gui_handler, "notify_status_changes"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(notify_status_changes), TRUE);
+
 
 	return adv_vbox;
 }
@@ -919,7 +930,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *tree;
 	GtkWidget *expand;
 	GtkWidget *usexosdfornewmsgs = NULL;
-	GtkWidget *notify_status_changes = NULL;
 	GtkWidget *show_toolbar;
 	GtkWidget *auto_away;
 	GtkWidget *auto_away_interval;
@@ -1008,10 +1018,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	g_signal_connect(tree, "toggled", G_CALLBACK(tree_toggled), expand);
 
-	notify_status_changes = gtk_check_button_new_with_label(_("Notify about status changes"));
-	gtk_box_pack_start(GTK_BOX(vbox), notify_status_changes, FALSE, FALSE, 0);
-
-	g_object_set_data(G_OBJECT(chat_vbox), "notify_status_changes", notify_status_changes);
 
 	if (find_plugin_by_name("xosd"))
 	{
@@ -1184,12 +1190,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "send_on_enter"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
 
-	entry = g_object_get_data(G_OBJECT(chat_vbox), "notify_status_changes");
-	g_return_if_fail(entry != NULL);
-
-	if (ggadu_config_var_get(gui_handler, "notify_status_changes"))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
-
 	if (usexosdfornewmsgs)
 		if (ggadu_config_var_get(gui_handler, "use_xosd_for_new_msgs"))
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usexosdfornewmsgs), TRUE);
@@ -1332,7 +1332,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "send_on_enter",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
-		entry = g_object_get_data(G_OBJECT(chat_vbox), "notify_status_changes");
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "notify_status_changes");
 		g_return_if_fail(entry != NULL);
 
 		ggadu_config_var_set(gui_handler, "notify_status_changes",
