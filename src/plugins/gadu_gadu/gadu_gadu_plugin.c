@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.6 2003/03/24 17:30:51 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.7 2003/03/24 19:05:25 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -40,6 +40,7 @@ GIOChannel *source_chan = NULL;
 gboolean connected = FALSE;
 gchar *this_configdir = NULL;
 
+GGaduProtocol *p;
 GGaduMenu *menu_pluginmenu;
 
 GGadu_PLUGIN_INIT("gadu-gadu",GGADU_PLUGIN_TYPE_PROTOCOL);
@@ -1041,7 +1042,6 @@ GSList *status_init()
 
 void start_plugin()
 {
-	GGaduProtocol *p;
 	
 	print_debug("%s : start_plugin\n",GGadu_PLUGIN_NAME);
 
@@ -1547,6 +1547,7 @@ void destroy_plugin()
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
     if (menu_pluginmenu)
     {
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
       signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
     }
 }

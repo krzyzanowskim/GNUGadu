@@ -40,6 +40,7 @@ gint watch = 0;
 static guint tag = 0;
 gboolean connected = FALSE;
 
+GGaduProtocol *p = NULL;
 GGaduMenu *menu_jabbermenu;
 
 struct netdata *jabber_session = NULL;
@@ -401,7 +402,6 @@ GGaduMenu *build_jabber_menu()
 
 void start_plugin()
 {
-    GGaduProtocol *p = NULL;
     
     p = g_new0(GGaduProtocol,1);
     p->display_name = g_strdup("Jabber");
@@ -467,6 +467,7 @@ void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
     if (menu_jabbermenu)
     {
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
       signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_jabbermenu, "main-gui");
     }
 }

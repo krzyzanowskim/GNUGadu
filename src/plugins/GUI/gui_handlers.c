@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.2 2003/03/23 11:51:31 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.3 2003/03/24 19:05:18 zapal Exp $ */
 
 #include <gtk/gtk.h>
 
@@ -92,6 +92,28 @@ void handle_register_protocol(GGaduSignal *signal)
     gui_user_view_register(gp);
 
     protocols = g_slist_append(protocols, gp);
+}
+
+void handle_unregister_protocol(GGaduSignal *signal)
+{
+    GGaduProtocol *p = signal->data;
+    gui_protocol *gp;
+    GSList *tmp;
+
+    print_debug("%s: %s protocol unregistered %s\n", "main-gui",
+	p->display_name, signal->source_plugin_name);
+    tmp = protocols;
+    while (tmp)
+    {
+      gp = (gui_protocol *)tmp->data;
+      if (!ggadu_strcasecmp(gp->plugin_name, (char *)signal->data))
+      {
+	gui_user_view_unregister(gp);
+	protocols = g_slist_remove (protocols, gp);
+	return;
+      }
+      tmp = tmp->next;
+    }
 }
 
 /* przyjmuje menu ktore moge dodac*/

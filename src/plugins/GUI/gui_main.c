@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.2 2003/03/23 11:51:31 zapal Exp $ */
+/* $Id: gui_main.c,v 1.3 2003/03/24 19:05:18 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -40,6 +40,7 @@ gui_signal_handler handlers[] = {
 	{"gui msg receive", handle_msg_receive},
 	{"gui show invisible chats", handle_show_invisible_chats},
 	{"gui register protocol", handle_register_protocol},
+	{"gui unregister protocol", handle_unregister_protocol},
 	{"gui register menu", handle_register_menu},
 	{"gui unregister menu", handle_unregister_menu},
 	{"gui register userlist menu", handle_register_userlist_menu},

@@ -33,6 +33,7 @@ gchar *this_configdir = NULL;
 gchar *nick = NULL;
 gchar *mobile = NULL;
 
+GGaduProtocol *p;
 GGaduMenu *menu_smsmenu;
 
 GGadu_PLUGIN_INIT("sms", GGADU_PLUGIN_TYPE_PROTOCOL);
@@ -485,7 +486,6 @@ GSList *button_send()
 /* gdzies to musi sie zaczac */
 void start_plugin()
 {
-    GGaduProtocol *p;
     
     p = g_new0(GGaduProtocol,1);
     p->display_name = g_strdup("SMS");
@@ -525,6 +525,7 @@ void destroy_plugin()
     print_debug("destroy_plugin%s\n",GGadu_PLUGIN_NAME);
     if (menu_smsmenu)
     {
+      signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui"); 
       signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_smsmenu, "main-gui");
     }
     
