@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.83 2004/11/18 13:34:34 krzyzak Exp $
+# $Id: pl.po,v 1.84 2004/12/02 09:22:54 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
@@ -1205,7 +1205,7 @@ msgstr "Ignorowani:\n"
 
 #: src/plugins/jabber/jabber_plugin.c:220
 msgid "No one is ignored."
-msgstr "Nikt nie jest ignorowny."
+msgstr "Nikt nie jest ignorowany."
 
 #: src/plugins/jabber/jabber_plugin.c:320
 #: src/plugins/jabber/jabber_plugin.c:1386
@@ -1281,7 +1281,7 @@ msgstr "Nie ignoruj kontaktu"
 #: src/plugins/jabber/jabber_plugin.c:477
 #: src/plugins/jabber/jabber_plugin.c:1380
 msgid "Show ignored"
-msgstr "Wyświetl ignorowych"
+msgstr "Wyświetl ignorowanych"
 
 #: src/plugins/jabber/jabber_plugin.c:558
 msgid "Couldn't open connection for account registration."
