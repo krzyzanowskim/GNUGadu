@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.11 2003/12/20 23:17:23 krzyzak Exp $ */
+/* $Id: update_plugin.c,v 1.12 2004/01/11 15:25:43 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -271,7 +271,7 @@ gpointer update_check_real(gboolean show)
 
 void _update_check_real(gboolean show) 
 {
-    g_thread_create(update_check_real, (gpointer)show, FALSE, NULL);
+    g_thread_create((gpointer (*)()) update_check_real, (gpointer) show, FALSE, NULL);
 }
 
 /* for g_timeout_add */
