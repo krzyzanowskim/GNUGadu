@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.5 2003/05/11 14:13:41 zapal Exp $ */
+/* $Id: signals.c,v 1.6 2003/05/11 18:07:25 zapal Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -153,11 +153,9 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	while (hooks)
 	{
 	  GGaduSignalHook *hook = (GGaduSignalHook *) hooks->data;
-	  print_debug ("hook: %s, %s\n", tmpsignal->name, hook->name);
 	  if (!g_strcasecmp (tmpsignal->name, hook->name))
 	  {
 	    GSList *list = hook->hooks;
-	    print_debug ("Hooked %s, %p\n", hook->name, list);
 	    
 	    while (list)
 	    {

@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.10 2003/05/11 14:13:41 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.11 2003/05/11 18:07:25 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -146,109 +146,6 @@ char *execute_perl_string_one (char *function, char *args)
 {
   char *perl_args[2] = {args, NULL};
   return execute_perl_string (function, perl_args);
-}
-
-void sig_xosd_show_message (GGaduSignal *signal, gchar *perl_func)
-{
-  int count, junk;
-  SV *sv_name;
-  SV *sv_src;
-  SV *sv_dst;
-  SV *sv_data;
-    
-  dSP;
- 
-  ENTER;
-  SAVETMPS;
-
-  sv_name = sv_2mortal (newSVpv (signal->name, 0));
-  sv_src  = sv_2mortal (newSVpv (signal->source_plugin_name, 0));
-  if (signal->destination_plugin_name)
-    sv_dst  = sv_2mortal (newSVpv (signal->destination_plugin_name, 0));
-  else
-    sv_dst  = sv_2mortal (newSVpv ("", 0));
-  sv_data = sv_2mortal (newSVpv (signal->data, 0));
-
-  PUSHMARK (SP);
-  XPUSHs (sv_name);
-  XPUSHs (sv_src);
-  XPUSHs (sv_dst);
-  XPUSHs (sv_data);
-  PUTBACK;
-
-  count = call_pv (perl_func, G_DISCARD);
-
-  if (count == 0)
-  {
-    gchar *dst;
-    signal->name = g_strdup (SvPV (sv_name, junk));
-    signal->source_plugin_name = g_strdup (SvPV (sv_src, junk));
-    dst = SvPV (sv_dst, junk);
-    if (dst[0] != '\0')
-      signal->destination_plugin_name = g_strdup (dst);
-    signal->data = g_strdup (SvPV (sv_data, junk));
-  }
-
-  FREETMPS;
-  LEAVE;
-}
-
-void sig_gui_msg_receive (GGaduSignal *signal, gchar *perl_func)
-{
-  int count, junk;
-  GGaduMsg *msg = (GGaduMsg *) signal->data;
-  SV *sv_name;
-  SV *sv_src;
-  SV *sv_dst;
-  SV *sv_data_id;
-  SV *sv_data_message;
-  SV *sv_data_class;
-  SV *sv_data_time;
-    
-  dSP;
- 
-  ENTER;
-  SAVETMPS;
-
-  sv_name = sv_2mortal (newSVpv (signal->name, 0));
-  sv_src  = sv_2mortal (newSVpv (signal->source_plugin_name, 0));
-  if (signal->destination_plugin_name)
-    sv_dst  = sv_2mortal (newSVpv (signal->destination_plugin_name, 0));
-  else
-    sv_dst  = sv_2mortal (newSVpv ("", 0));
-  sv_data_id      = sv_2mortal (newSVpv (msg->id, 0));
-  sv_data_message = sv_2mortal (newSVpv (msg->message, 0));
-  sv_data_class   = sv_2mortal (newSViv (msg->class));
-  sv_data_time    = sv_2mortal (newSViv (msg->time));
-
-  PUSHMARK (SP);
-  XPUSHs (sv_name);
-  XPUSHs (sv_src);
-  XPUSHs (sv_dst);
-  XPUSHs (sv_data_id);
-  XPUSHs (sv_data_message);
-  XPUSHs (sv_data_class);
-  XPUSHs (sv_data_time);
-  PUTBACK;
-
-  count = call_pv (perl_func, G_DISCARD);
-
-  if (count == 0)
-  {
-    gchar *dst;
-    signal->name = g_strdup (SvPV (sv_name, junk));
-    signal->source_plugin_name = g_strdup (SvPV (sv_src, junk));
-    dst = SvPV (sv_dst, junk);
-    if (dst[0] != '\0')
-      signal->destination_plugin_name = g_strdup (dst);
-    msg->id      = g_strdup (SvPV (sv_data_id, junk));
-    msg->message = g_strdup (SvPV (sv_data_message, junk));
-    msg->class   = SvIV (sv_data_class);
-    msg->time    = SvIV (sv_data_time);
-  }
-
-  FREETMPS;
-  LEAVE;
 }
 
 void hook_handler (GGaduSignal *signal, void (*perl_func) (GGaduSignal *, gchar *, void *))
@@ -488,29 +385,5 @@ gint perl_load_scripts (void)
 
   return loaded;
 }
-/*
-char *perl_action_on_msg_receive (char *uid, char *msg)
-{
-  char *ret = msg;
-  GSList *list;
-  perlscript *script;
 
-  print_debug ("Hejlo\n");
-  
-  list = perlscripts;
-  while (list)
-  {
-    script = (perlscript *) list->data;
-    if (script->loaded && script->on_msg_receive)
-    {
-      PERL_SET_CONTEXT (script->perl);
-      my_perl = script->perl;
-      ret = execute_perl_string_one (script->on_msg_receive, ret);
-    }
-    list = list->next;
-  }
-
-  return ret;
-}
-*/
 #endif

@@ -1,7 +1,10 @@
-/* $Id: gui_handlers.c,v 1.11 2003/05/01 20:18:09 shaster Exp $ */
+/* $Id: gui_handlers.c,v 1.12 2003/05/11 18:07:27 zapal Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
+
+#include <EXTERN.h>
+#include <perl.h>
 
 #include "gg-types.h"
 #include "unified-types.h"
@@ -54,6 +57,65 @@ void handle_show_about(GGaduSignal *signal)
 void handle_change_user_window(GGaduSignal *signal)
 {
 	gui_user_data_window(signal,TRUE);
+}
+
+void perl_gui_msg_receive (GGaduSignal *signal, gchar *perl_func, void *pperl)
+{
+  int count, junk;
+  GGaduMsg *msg = (GGaduMsg *) signal->data;
+  SV *sv_name;
+  SV *sv_src;
+  SV *sv_dst;
+  SV *sv_data_id;
+  SV *sv_data_message;
+  SV *sv_data_class;
+  SV *sv_data_time;
+  PerlInterpreter *my_perl = (PerlInterpreter *) pperl;
+    
+  dSP;
+ 
+  ENTER;
+  SAVETMPS;
+
+  sv_name = sv_2mortal (newSVpv (signal->name, 0));
+  sv_src  = sv_2mortal (newSVpv (signal->source_plugin_name, 0));
+  if (signal->destination_plugin_name)
+    sv_dst  = sv_2mortal (newSVpv (signal->destination_plugin_name, 0));
+  else
+    sv_dst  = sv_2mortal (newSVpv ("", 0));
+  sv_data_id      = sv_2mortal (newSVpv (msg->id, 0));
+  sv_data_message = sv_2mortal (newSVpv (msg->message, 0));
+  sv_data_class   = sv_2mortal (newSViv (msg->class));
+  sv_data_time    = sv_2mortal (newSViv (msg->time));
+
+  PUSHMARK (SP);
+  XPUSHs (sv_name);
+  XPUSHs (sv_src);
+  XPUSHs (sv_dst);
+  XPUSHs (sv_data_id);
+  XPUSHs (sv_data_message);
+  XPUSHs (sv_data_class);
+  XPUSHs (sv_data_time);
+  PUTBACK;
+
+  count = call_pv (perl_func, G_DISCARD);
+
+  if (count == 0)
+  {
+    gchar *dst;
+    signal->name = g_strdup (SvPV (sv_name, junk));
+    signal->source_plugin_name = g_strdup (SvPV (sv_src, junk));
+    dst = SvPV (sv_dst, junk);
+    if (dst[0] != '\0')
+      signal->destination_plugin_name = g_strdup (dst);
+    msg->id      = g_strdup (SvPV (sv_data_id, junk));
+    msg->message = g_strdup (SvPV (sv_data_message, junk));
+    msg->class   = SvIV (sv_data_class);
+    msg->time    = SvIV (sv_data_time);
+  }
+
+  FREETMPS;
+  LEAVE;
 }
 
 void handle_msg_receive(GGaduSignal *signal)
