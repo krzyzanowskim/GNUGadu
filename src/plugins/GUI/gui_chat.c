@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.8 2003/03/24 11:13:07 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.9 2003/04/06 15:42:17 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -390,6 +390,7 @@ void gui_chat_update_tags()
 GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id, gboolean visible)
 {
 	gint chat_type = (gint)config_var_get(gui_handler,"chat_type");
+	gboolean conference = (g_slist_length(session->recipients) > 1) ? TRUE : FALSE;
 	GtkWidget *history;
 	GtkWidget *frame;
 	GtkWidget *input;
@@ -405,73 +406,49 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	GtkWidget *button_stick;
 	GtkTextBuffer *buf = NULL;
 	gchar *title = NULL;
+	gchar *confer_title = NULL;
 	gchar *colorstr, *fontstr;
-	
-	/** ugly topic create - have to be changed **/
-	if (g_slist_length(session->recipients) > 1) 
-	{
-		gchar *prev = NULL, *tmp = "";
+	GGaduContact *k = gui_find_user(id,gui_find_protocol(plugin_name,protocols));	
+
+	/** confer_topic create **/
+	if (conference)	{
+		gchar *prev = NULL;
+		gchar *tmp = "";
 		GSList *tmprl = session->recipients;
 		
-		while (tmprl)
-		{
-			GGaduContact *k = gui_find_user(tmprl->data,gui_find_protocol(plugin_name,protocols));
-			
-			if (tmprl->next != NULL)
-				tmp = g_strconcat(tmp,k ? k->nick : tmprl->data,",",NULL);
-			else
-				tmp = g_strconcat(tmp,k ? k->nick : tmprl->data,NULL);
-				
+		while (tmprl) {
+			GGaduContact *k1 = gui_find_user(tmprl->data,gui_find_protocol(plugin_name,protocols));
+			tmp = (tmprl->next) ? g_strconcat(tmp,k1 ? k1->nick : tmprl->data,",",NULL) : g_strconcat(tmp,k1 ? k1->nick : tmprl->data,NULL);
 			g_free(prev);
 			prev = tmp;
 			tmprl = tmprl->next;
 		}
-		
-		if (chat_type == CHAT_TYPE_CLASSIC)
-			title = g_strdup_printf(_("Conference with %s"),tmp);
-		else
-			title = g_strdup(tmp);
-		
+		confer_title = g_strdup(tmp);
 		g_free(tmp);
-		
-	} else {
-	    
-		GGaduContact *k = gui_find_user(id,gui_find_protocol(plugin_name,protocols));
-		
-		if (chat_type == CHAT_TYPE_TABBED) {
-			
-			title = g_strdup_printf("%s",k ? k->nick : id);
-			
-		} else if (chat_type == CHAT_TYPE_CLASSIC) {
-				
-				if (k) {
-					gui_protocol	*gp = gui_find_protocol(plugin_name, protocols);
-					GGaduStatusPrototype	*sp = gui_find_status_prototype(gp->p,k->status);
-					gchar	*st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
-					
-					title = g_strdup_printf(_("Talking to %s (%s) %s"),k->nick,id, (sp ? st : ""));
-					
-					g_free(st);
-				} else 
-					title = g_strdup_printf(_("Talking to %s"),id);
-		}
-	}
-
-	print_debug("chat_type = %d\n",chat_type);
+	};
 
 	vbox = gtk_vbox_new(FALSE, 0);
 	session->chat = vbox;
 
 	switch (chat_type) 
 	{
-	case CHAT_TYPE_CLASSIC: 
+	case CHAT_TYPE_CLASSIC: {
+			if (k) {
+					gui_protocol	*gp = gui_find_protocol(plugin_name, protocols);
+					GGaduStatusPrototype	*sp = gui_find_status_prototype(gp->p,k->status);
+					gchar	*st = g_strdup_printf("- (%s)", (sp ? sp->description : ""));
+					title = (conference) ? confer_title : g_strdup_printf(_("Talking to %s (%s) %s"),k->nick,id, (sp ? st : ""));
+					g_free(st);
+				} else 
+					title = (conference) ? confer_title : g_strdup_printf(_("Talking to %s"),id);
+
 			chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 			gtk_window_set_title(GTK_WINDOW(chat_window), title);
 			gtk_container_add(GTK_CONTAINER(chat_window), vbox);
 			g_free(title);
+			}
 			break;
-	case CHAT_TYPE_TABBED: 
-	    {
+	case CHAT_TYPE_TABBED: {
 	    GtkWidget *chat_notebook = NULL;
 	    GtkWidget *tab_label_hbox = NULL;
 	    GtkWidget *tab_label_txt = NULL;
@@ -500,6 +477,8 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 			} else {
 				chat_notebook = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
 			}
+
+			title = (conference) ? confer_title : g_strdup_printf("%s",k ? k->nick : id);
 
 			tab_label_hbox  = gtk_hbox_new(FALSE,FALSE);
 			tab_label_txt   = gtk_label_new(title);
