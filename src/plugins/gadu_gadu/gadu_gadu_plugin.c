@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.221 2004/12/28 17:48:05 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.222 2004/12/29 01:44:56 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2107,6 +2107,17 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    }
 				}
 */				
+				ggadu_config_var_set(handler, "reason", NULL);
+				sp->status_description = NULL;
+				ggadu_config_save(handler);
+				
+				print_debug("KURWA");
+				
+				if (!ggadu_config_var_get(handler, "reason"))
+				    print_debug("puste");
+				else
+				    print_debug("NIE puste");
+
 				if (ggadu_config_var_get(handler, "private"))
 					_status |= GG_STATUS_FRIENDS_MASK;
 					
@@ -2125,6 +2136,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				{
 					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
 				}
+				
 			}
 		}
 		else
@@ -2154,7 +2166,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 				print_debug(" _status %d status %d\n ", _status,sp->status);
 
-				if (kv)
+				if (kv && kv->value)
 				{
 				    desc_utf = kv->value;
 				    /* do sesji */
@@ -2165,7 +2177,8 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				    ggadu_config_var_set(handler, "reason", desc_iso);
 				}
 
-				if (kv || sp->status_description)
+				if ((kv && kv->value && (strlen((gchar *)kv->value) > 0)) || 
+				    (sp->status_description && (strlen(sp->status_description) > 0)))
 				{
 				    switch (sp->status)
 				    {
@@ -2490,6 +2503,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == GET_CURRENT_STATUS_SIG)
 	{
 		GGaduStatusPrototype *sp;
+		gchar *reason = ggadu_config_var_get(handler, "reason");
 
 		if (session)
 		{
@@ -2503,13 +2517,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			sp = ggadu_find_status_prototype(p, GG_STATUS_NOT_AVAIL);
 		}
 	
-		if (session && ggadu_config_var_get(handler, "reason") && 
+		if (session && reason &&
+		    (strlen(reason) > 0) &&
 		    ggadu_gadu_gadu_is_status_descriptive(sp))
 		{
 			    sp->status_description = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
 		}
 			    
-		print_debug("GG get current status return data = %d",sp ? sp->status : -1);
+//		print_debug("GG get current status return data = %d  %s",sp ? sp->status : -1,sp->status_description ? sp->status_description : "NULL");
 		signal->data_return = sp;
 	}
 

@@ -69,7 +69,7 @@ gint get_idle()
 	{
 		mit_info = XScreenSaverAllocInfo();
 		XScreenSaverQueryInfo(GDK_DISPLAY(), GDK_ROOT_WINDOW(), mit_info);
-		idle_time = (mit_info->idle) / 1000;
+		idle_time = (mit_info->idle) / 100;
 		XFree(mit_info);
 	}
 	else
@@ -101,6 +101,7 @@ static gboolean check_idle_time()
 		    GGaduProtocol *protocol = plugin->plugin_data;
 		    if (plugin && protocol && (plugin->type == GGADU_PLUGIN_TYPE_PROTOCOL))
 		    {
+			print_debug("lustruje %s",plugin->name);
 			GGaduStatusPrototype *sp = signal_emit(GGadu_PLUGIN_NAME, "get current status", NULL, plugin->name);
 			
 			if (sp && ggadu_is_in_status(sp->status, protocol->online_status))
@@ -110,16 +111,19 @@ static gboolean check_idle_time()
 			    GGaduDialog *dialog;
 			    GGaduKeyValue *kv;
 			    gint newstatus;
-			    
-			    if (sp->status_description && !strstr(sp->status_description,ggadu_config_var_get(handler, "message_back")))
+
+			    if (sp->status_description)
+			    {
 				message = g_strdup(sp->status_description);
-			    else
+			    } else
+			    {
 				message = g_strdup(ggadu_config_var_get(handler, "message"));
-			    
+			    }
+
 			    dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, NULL, NULL);
 			    
 			    kv = g_new0(GGaduKeyValue, 1);
-			    kv->value = (gpointer) message;
+			    kv->value = (gpointer) g_strdup(message);
 			    kv->type = VAR_STR;
 			    
 			    newstatus = (gint)protocol->away_status->data;
@@ -164,13 +168,32 @@ static gboolean check_idle_time()
 			    GGaduStatusPrototype *sp2;
 			    gint newstatus;
 
-			    if (sp->status_description && !strstr(sp->status_description,ggadu_config_var_get(handler, "message")))
+/*			    if (sp->status_description && 
+			        !strstr(sp->status_description,ggadu_config_var_get(handler, "message")))
+			    {
 				message = g_strdup(sp->status_description);
+			    }
+			    else if (!message_back || (strlen(message_back) <= 0))
+			    {
+				message = NULL;
+			    }
 			    else
-				message = g_strdup(ggadu_config_var_get(handler, "message_back"));
-
+			    {
+				message = g_strdup(message_back);
+			    }
+*/
+			    if (sp->status_description && 
+			        !strstr(sp->status_description,ggadu_config_var_get(handler, "message")))
+			    {
+				message = g_strdup(sp->status_description);
+			    }
+//			    else
+//			    {
+//				message = ggadu_config_var_get(handler, "message");
+//			    }
+			    
 			    kv = g_new0(GGaduKeyValue, 1);
-			    kv->value = (gpointer) message;
+			    kv->value = (gpointer) g_strdup(message);
 			    kv->type = VAR_STR;
 			    
 			    dialog = ggadu_dialog_new(GGADU_DIALOG_GENERIC, NULL, NULL);
@@ -307,7 +330,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(handler, "interval", VAR_INT, (gpointer) 5);
 	ggadu_config_var_add_with_default(handler, "enable_message", VAR_BOOL,(gpointer) FALSE);
 	ggadu_config_var_add_with_default(handler, "message", VAR_STR, _("I'm away from computer"));
-	ggadu_config_var_add_with_default(handler, "message_back", VAR_STR, _("I'm back"));
 
 	if (!ggadu_config_read(handler))
 		g_warning(_("Unable to read configuration file for plugin %s"), "aaway");
