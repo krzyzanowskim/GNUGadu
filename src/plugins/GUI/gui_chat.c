@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.17 2003/04/14 21:11:17 shaster Exp $ */
+/* $Id: gui_chat.c,v 1.18 2003/04/14 21:13:49 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -564,19 +564,17 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	switch (chat_type) 
 	{
 		case CHAT_TYPE_CLASSIC: {
-			gchar *wintitleC = NULL;
 			if (k)
-				wintitleC = (conference) ? confer_title : g_strdup_printf(_("Talking to %s (%s) %s"),k->nick,id, (sp ? st : ""));
+				wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf(_("Talking to %s (%s) %s"),k->nick,id, (sp ? st : ""));
 			else 
-				wintitleC = (conference) ? confer_title : g_strdup_printf(_("Talking to %s"),id);
+				wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf(_("Talking to %s"),id);
 
 			chat_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-			gtk_window_set_title(GTK_WINDOW(chat_window), wintitleC);
+			gtk_window_set_title(GTK_WINDOW(chat_window), g_strdup(wintitle));
 		
 			gtk_box_pack_start(GTK_BOX(vbox), vbox_in_out, TRUE, TRUE, 0);
 			gtk_box_pack_end(GTK_BOX(vbox), hbox_buttons, FALSE, FALSE, 0);
 			gtk_container_add(GTK_CONTAINER(chat_window), vbox);
-			g_free(wintitleC);
 		}
 			break;
 
@@ -616,9 +614,9 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 			}
 
 			/* for labels */
-			title = (conference) ? confer_title : g_strdup_printf("%s",k ? k->nick : id);
+			title = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s",k ? k->nick : id);
 			/* for window title */
-			wintitle = (conference) ? confer_title : g_strdup_printf("%s %s",k ? k->nick : id, sp ? st : "");
+			wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s %s",k ? k->nick : id, sp ? st : "");
 
 			tab_label_hbox  = gtk_hbox_new(FALSE,FALSE);
 			tab_label_txt   = gtk_label_new(title);
@@ -816,6 +814,9 @@ GtkWidget *create_chat(gui_chat_session *session, gchar *plugin_name, gchar *id,
 	gtk_widget_grab_focus(GTK_WIDGET(input));
     
 	g_free(st);
+	g_free(title);
+	g_free(wintitle);
+	g_free(confer_title);
 
 	return vbox_in_out;
 }
