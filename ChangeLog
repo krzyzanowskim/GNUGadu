@@ -1,6 +1,7 @@
 07.01.2004
 - fixed some memory leaks (gadu-gadu/THrull)
 - added some of long-awaited functionality to docklet (docklet/THrull)
+- fixed setting status description (jabber/krzak)
 
 06.01.2004
 - jabber plugin finished, a lot o work has been done imho.

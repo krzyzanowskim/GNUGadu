@@ -292,7 +292,8 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 
 	  if (d->response == GGADU_OK)
 	    {
-
+        LmMessage *m;
+        
 		if (jabber_data.status_descr)
 		    g_free (jabber_data.status_descr);
 

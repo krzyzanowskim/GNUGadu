@@ -55,7 +55,7 @@ void jabber_change_status (enum states status)
   gchar *show_dnd  = "dnd";
   gchar *show_chat = "chat";
 
-  if (status == jabber_data.status) return;
+  if ((status == jabber_data.status) && (!jabber_data.status_descr)) return;
 
   m = lm_message_new_with_sub_type (NULL, LM_MESSAGE_TYPE_PRESENCE,
       status == JABBER_STATUS_UNAVAILABLE ?
@@ -73,6 +73,7 @@ void jabber_change_status (enum states status)
 
   if (show)
     lm_message_node_add_child (m->node, "show", show);
+  
   if (jabber_data.status_descr)
     lm_message_node_add_child (m->node, "status", jabber_data.status_descr);
   
