@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.10 2003/08/23 19:52:48 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.11 2003/09/17 11:04:29 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -141,7 +141,7 @@ typedef struct {
     void *plugin_so_handler;
 
     gchar  *config_file;		// plik konfiguracyjny dla tego pluginu
-    GSList *variables;  		// zmienne czyane z pliku
+    GSList *variables;  		// zmienne czytane z pliku
     GSList *signals;			// lista zarejestrowanych signali
     
     GGaduProtocol *protocol; 		/* stuff specyficzna dla kazdego typu */
@@ -153,6 +153,9 @@ typedef struct {
 } GGaduPlugin;
 
 
+/*
+ * GGaduPluginFile
+ */
 typedef struct {
     gchar *name;
     gchar *path;
@@ -169,13 +172,16 @@ typedef struct {
 	guint height;
 	gint pos_x;
 	gint pos_y;
+	
+	gboolean all_plugins_loaded;	/* TRUE if all plugins are loaded */
 	GSList *all_available_plugins;	// wszystkie dostepne, zainstalowane w systemie pluginy
 	GSList *plugins;		// lista pluginow
 
 	gchar  *configdir;		// katalog z plikami konfiguracyjnymi programu do dowolnego wykorzystania przez plugin (.gg2)
+	
 	GSList *waiting_signals;
 	GSList *signal_hooks;
-	gboolean all_plugins_loaded;
+	
 	GMainLoop *main_loop;
 
 	gpointer repos;
@@ -185,11 +191,14 @@ typedef struct {
 /*
  *  GGaduSignalHook
  */
-
 typedef struct {
+
   GQuark name;
-  void (*perl_handler) (GGaduSignal *, gchar *, void *);
+  
   GSList *hooks;
+
+  void (*perl_handler) (GGaduSignal *, gchar *, void *);
+  
 } GGaduSignalHook;
 
 #endif
