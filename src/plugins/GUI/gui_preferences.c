@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.18 2003/05/28 09:52:43 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.19 2003/05/31 09:50:46 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -112,6 +112,16 @@ GtkWidget *gui_plugins_mgr_tab()
 
 	g_object_unref(G_OBJECT(store));
 
+	renderer = gtk_cell_renderer_toggle_new();
+	column = gtk_tree_view_column_new_with_attributes(_("Enable"), renderer,
+						     "active",
+						     PLUGINS_MGR_ENABLE,
+						     NULL);
+
+	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+	
+	g_signal_connect(renderer, "toggled", G_CALLBACK(enable_toggled), store);
+
 	renderer = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(_("Plugin name"),
 						     renderer, "text",
@@ -119,16 +129,6 @@ GtkWidget *gui_plugins_mgr_tab()
 						     NULL);
 
 	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
-
-	renderer = gtk_cell_renderer_toggle_new();
-	column = gtk_tree_view_column_new_with_attributes(_("Enable"), renderer,
-						     "active",
-						     PLUGINS_MGR_ENABLE,
-						     NULL);
-	
-	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
-	
-	g_signal_connect(renderer, "toggled", G_CALLBACK(enable_toggled), store);
 
 	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(list), TRUE, TRUE, 0);
 
