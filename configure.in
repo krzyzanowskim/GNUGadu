@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.76 2004/08/17 15:00:08 krzyzak Exp $
+dnl $Id: configure.in,v 1.77 2004/08/17 19:25:55 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.4])
 
@@ -198,8 +198,9 @@ dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
 dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
 dnl fi
 
-AC_ARG_WITH(gghist, [  --with-gghist		  Build gghist		default=yes])
-if test "x$with_gghist" = "xyes"; then 
+AC_ARG_WITH(gghist, [  --without-gghist		  Build gghist		default=yes])
+if test "x$with_gghist" != "xno"; then 
+    with_gghist=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
@@ -207,8 +208,9 @@ else
     with_gghist=no
 fi
 
-AC_ARG_WITH(gui, [  --with-gui		  Build gtk2 GUI plugin		default=yes])
-if test "x$with_gui" = "xyes"; then 
+AC_ARG_WITH(gui, [  --without-gui		  Build gtk2 GUI plugin		default=yes])
+if test "x$with_gui" != "xno"; then 
+    with_gui=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
@@ -216,8 +218,9 @@ else
     with_gui=no
 fi
 
-AC_ARG_WITH(gtkspell, [  --with-gtkspell	  Build GUI plugin with gtkspell support 	default=yes])
-if test "x$with_gtkspell" = "xyes"; then 
+AC_ARG_WITH(gtkspell, [  --without-gtkspell	  Build GUI plugin with gtkspell support 	default=yes])
+if test "x$with_gtkspell" != "xno"; then 
+    with_gtkspell=yes
     PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],with_gtkspell=no)
     if test "$with_gtkspell" = "no"; then 
     	AC_MSG_ERROR([*** unable to find gtkspell (http://gtkspell.sourceforge.net/) ***])
@@ -228,7 +231,7 @@ else
     with_gtkspell=no
 fi
 
-AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=yes])
+AC_ARG_WITH(gadu, [  --without-gadu		  Build gadu-gadu plugin	default=yes])
 AC_ARG_WITH(external_libgadu, [  --with-external-libgadu	Build gadu-gadu plugin with external libgadu default=no])
 
 if test "x$with_external_libgadu" = "xyes"; then 
@@ -241,7 +244,8 @@ fi
 
 AM_CONDITIONAL(EXTERNAL_LIBGADU, test "$with_external_libgadu" = "yes")
 
-if test "x$with_gadu" = "xyes"; then 
+if test "x$with_gadu" != "xno"; then 
+    with_gadu=yes
     if test "x$with_external_libgadu" = "xno"; then
 	if test "x$without_openssl" != "xyes"; then
 	
@@ -261,8 +265,9 @@ else
     with_gadu=no
 fi
 
-AC_ARG_WITH(tlen, [  --with-tlen		  Build tlen plugin		default=yes])
-if test "x$with_tlen" = "xyes"; then 
+AC_ARG_WITH(tlen, [  --without-tlen		  Build tlen plugin		default=yes])
+if test "x$with_tlen" != "xno"; then 
+    with_tlen=yes
     AC_CHECK_LIB([tlen], [tlen_set_hub_blocking], with_tlen=yes, with_tlen=no)
     if test "x$with_tlen" != "xno"; then
 	AC_CHECK_HEADERS(libtlen/libtlen.h)
@@ -275,8 +280,9 @@ else
     with_tlen=no
 fi
 
-AC_ARG_WITH(jabber, [  --with-jabber		  Build jabber plugin		default=yes])
-if test "x$with_jabber" = "xyes"; then 
+AC_ARG_WITH(jabber, [  --without-jabber		  Build jabber plugin		default=yes])
+if test "x$with_jabber" != "xno"; then 
+    with_jabber=yes
     PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.16, [],with_jabber=no)
     if test "$with_jabber" = "no"; then 
 	echo
@@ -298,8 +304,9 @@ else
     with_jabber=no
 fi
 
-AC_ARG_WITH(xosd, [  --with-xosd		  Build XOSD plugin		default=yes])
-if test "x$with_xosd" = "xyes"; then 
+AC_ARG_WITH(xosd, [  --without-xosd		  Build XOSD plugin		default=yes])
+if test "x$with_xosd" != "xno"; then 
+    with_xosd=yes
     AC_PATH_PROG(xosd_config_script, xosd-config, "none")
     
     if test "x$xosd_config_script" != "xnone"; then
@@ -323,23 +330,23 @@ else
     with_xosd=no
 fi
 
-AC_ARG_WITH(sms, [  --with-sms		  Build sms plugin		default=yes])
-if test "x$with_sms" = "xyes"; then 
+AC_ARG_WITH(sms, [  --without-sms		  Build sms plugin		default=yes])
+if test "x$with_sms" != "xno"; then 
 	with_sms=yes
     else
 	with_sms=no
 fi
 
-AC_ARG_WITH(remote, [  --with-remote		  Build remote plugin		default=yes])
-if test "x$with_remote" = "xyes"; then 
+AC_ARG_WITH(remote, [  --without-remote		  Build remote plugin		default=yes])
+if test "x$with_remote" != "xno"; then 
 	with_remote=yes
 else
 	with_remote=no
 fi
 
 
-AC_ARG_WITH(docklet_system_tray, [  --with-docklet-system-tray	  Build docklet plugin		default=yes])
-if test "x$with_docklet_system_tray" = "xyes"; then 
+AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build docklet plugin		default=yes])
+if test "x$with_docklet_system_tray" != "xno"; then 
     with_docklet_system_tray=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_system_tray=no)
     if test "$with_docklet_system_tray" = "no"; then 
@@ -351,8 +358,8 @@ else
     with_docklet_system_tray=no
 fi
 
-AC_ARG_WITH(docklet_dockapp, [  --with-docklet-dockapp	  Build dockapp plugin		default=yes])
-if test "x$with_docklet_dockapp" = "xyes"; then 
+AC_ARG_WITH(docklet_dockapp, [  --without-docklet-dockapp	  Build dockapp plugin		default=yes])
+if test "x$with_docklet_dockapp" != "xno"; then 
     with_docklet_dockapp=yes
     PKG_CHECK_MODULES(GTK,gtk+-2.0 >= 2.2.0, [], with_docklet_dockapp=no)
     if test "$with_docklet_dockapp" = "no"; then 
@@ -364,8 +371,9 @@ else
     with_docklet_dockapp=no
 fi
 
-AC_ARG_WITH(esd, [  --with-esd		  Build esd sound plugin	default=yes])
-if test "x$with_esd" = "xyes"; then
+AC_ARG_WITH(esd, [  --without-esd		  Build esd sound plugin	default=yes])
+if test "x$with_esd" != "xno"; then
+    with_esd=yes
     have_libesd=no
     AM_PATH_ESD(0.2.7 ,have_libesd=yes,
     [AC_MSG_ERROR([*** sound support for esd need EsounD installed (http://www.tux.org/~ricdude/EsounD.html) ***])])
@@ -409,8 +417,9 @@ else
     with_arts=no
 fi
 
-AC_ARG_WITH(oss, [  --with-oss		  Build OSS sound plugin	default=yes])
-if test "x$with_oss" = "xyes"; then
+AC_ARG_WITH(oss, [  --without-oss		  Build OSS sound plugin	default=yes])
+if test "x$with_oss" != "xno"; then
+    with_oss=yes
     have_soundcardh=no
     AC_CHECK_HEADERS(sys/soundcard.h, have_soundcardh=yes, have_soundcardh=no)
     if test "$have_soundcardh" = yes; then
@@ -423,22 +432,22 @@ else
     with_oss=no
 fi
 
-AC_ARG_WITH(external, [  --with-external	  Build external player sound plugin	default=yes])
-if test "x$with_external" = "xyes"; then
+AC_ARG_WITH(external, [  --without-external	  Build external player sound plugin	default=yes])
+if test "x$with_external" != "xno"; then
     with_external=yes
 else
     with_external=no
 fi
 
-AC_ARG_WITH(history_external_viewer, [  --with-history-external-viewer	  Build external history plugin	default=yes])
-if test "x$with_history_external_viewer" = "xyes"; then
+AC_ARG_WITH(history_external_viewer, [  --without-history-external-viewer	  Build external history plugin	default=yes])
+if test "x$with_history_external_viewer" != "xno"; then
     with_history_external_viewer=yes
 else
     with_history_external_viewer=no
 fi
 
-AC_ARG_WITH(update, [  --with-update		  Build update plugin		default=yes])
-if test "x$with_update" = "xyes"; then 
+AC_ARG_WITH(update, [  --without-update		  Build update plugin		default=yes])
+if test "x$with_update" != "xno"; then 
 	with_update=yes
 else
 	with_update=no
