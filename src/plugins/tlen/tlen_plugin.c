@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.95 2005/01/19 21:02:20 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.96 2005/02/01 10:50:16 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -519,6 +519,7 @@ gpointer ggadu_tlen_login(gpointer data)
 		print_debug("ooops, updatewatch() failed !!\n");
 
 	loginstatus = data;
+	session->status = data;
 
 	return NULL;
 }
