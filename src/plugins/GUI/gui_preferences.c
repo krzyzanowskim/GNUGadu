@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.36 2004/01/11 04:01:19 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.37 2004/01/11 12:07:55 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -691,36 +691,35 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_table_set_row_spacings (GTK_TABLE (tabbox), 7);
     gtk_box_pack_start (GTK_BOX (general_vbox), tabbox, FALSE, FALSE, 0);
 
-
     label = gtk_label_new (_("Blink interval"));
     blink_interval = gtk_spin_button_new_with_range (0, 2000, 100);
     gtk_container_add (GTK_CONTAINER (label2_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label2_align, 0, 1, 2, 3);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), blink_interval, 1, 2, 2, 3);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label2_align, 0, 1, 0, 1);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), blink_interval, 1, 2, 0, 1);
     g_signal_connect (blink, "toggled", G_CALLBACK (tree_toggled), blink_interval);
 
     label = gtk_label_new (_("Auto away interval\n(minutes)"));
     auto_away_interval = gtk_spin_button_new_with_range (0, 1440, 1);
     gtk_container_add (GTK_CONTAINER (label3_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label3_align, 0, 1, 3, 4);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), auto_away_interval, 1, 2, 3, 4);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label3_align, 0, 1, 1, 2);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), auto_away_interval, 1, 2, 1, 2);
     g_signal_connect (auto_away, "toggled", G_CALLBACK (tree_toggled), auto_away_interval);
 
     label = gtk_label_new (_("Chat window width"));
     chatwindowwidth = gtk_spin_button_new_with_range (100, 1000, 10);
     gtk_container_add (GTK_CONTAINER (label0_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label0_align, 0, 1, 0, 1);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowwidth, 1, 2, 0, 1);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label0_align, 0, 1, 2, 3);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowwidth, 1, 2, 2, 3);
 
     label = gtk_label_new (_("Chat window height"));
     chatwindowheight = gtk_spin_button_new_with_range (50, 1000, 10);
     gtk_container_add (GTK_CONTAINER (label1_align), label);
 
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), label1_align, 0, 1, 1, 2);
-    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowheight, 1, 2, 1, 2);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), label1_align, 0, 1, 3, 4);
+    gtk_table_attach_defaults (GTK_TABLE (tabbox), chatwindowheight, 1, 2, 3, 4);
 
     /* ZONK - how to name it ? */
     label = gtk_label_new (_("Chat window split size\n(percent)"));
