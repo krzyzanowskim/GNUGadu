@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.53 2004/08/26 10:58:05 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.54 2004/08/27 08:53:48 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -370,11 +370,12 @@ LmHandlerResult iq_version_cb(LmMessageHandler * handler, LmConnection * connect
 LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message,
 			      gpointer user_data)
 {
-	if(!lm_message_node_get_attribute(message->node, "id") ||
-	   !lm_message_node_find_child(message->node, "vCard"))
+	if(!lm_message_node_get_attribute(message->node, "id"))
 	        return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 
-        if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "v1"))
+        if(!strcmp(lm_message_node_get_attribute(message->node, "id"), "v1") &&
+	   lm_message_node_get_attribute(message->node, "from") &&
+	   !lm_message_node_get_attribute(message->node, "to"))
 	{
 		LmMessageNode *node;
 		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Personal info:"), "user edit vcard");
@@ -495,7 +496,12 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 	}
 
-        return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+	if((!strcmp(lm_message_node_get_attribute(message->node, "id"), "v1") ||
+	    !strcmp(lm_message_node_get_attribute(message->node, "id"), "v3")) &&
+	    !lm_message_node_find_child(message->node, "vCard"))
+		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+		else
+        	return LM_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
 LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connection, LmMessage * message, gpointer data)
