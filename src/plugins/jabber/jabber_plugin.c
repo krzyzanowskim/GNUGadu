@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.106 2004/09/22 10:33:00 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.107 2004/09/27 16:47:32 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1178,16 +1178,19 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_SEARCH_NICKNAME:
 					if (kv->value)
-						lm_message_node_add_child(node, "nick", kv->value);
-					break;
-				case GGADU_SEARCH_ID:
-					if (kv->value)
 					{
-						gchar *nick = g_strndup(kv->value, strlen(kv->value)-strlen(g_strrstr(kv->value,"@")));
+						gchar *nick = g_strrstr(kv->value,"@")
+						? g_strndup(kv->value, strlen(kv->value)-strlen(g_strrstr(kv->value,"@")))
+						: g_strdup(kv->value);
 						lm_message_node_add_child(node, "nick", nick);
 						g_free(nick);
 					}
 					break;
+				case GGADU_SEARCH_EMAIL:
+					if(kv->value)
+						lm_message_node_add_child(node, "email", kv->value);
+					break;
+
 				default:
 					break;
 				}

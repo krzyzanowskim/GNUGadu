@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.30 2004/09/23 08:41:26 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.31 2004/09/27 16:47:33 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -171,7 +171,6 @@ void action_search_form(LmConnection * connection, LmMessage * message, gpointer
 {
 	GGaduDialog *dialog;
 	LmMessageNode *node;
-	LmMessageNode *child_first, *child_last, *child_nick, *child_email, *child_instr;
 	
 	dialog =  ggadu_dialog_new_full(GGADU_DIALOG_GENERIC,_("Jabber search: form"),"search", 
 			    (gpointer) g_strdup(lm_message_node_get_attribute(message->node, "from")));
@@ -179,22 +178,18 @@ void action_search_form(LmConnection * connection, LmMessage * message, gpointer
 	node = lm_message_node_get_child(message->node, "query");
 	if (!strcmp(lm_message_node_get_attribute(node, "xmlns"), "jabber:iq:search"))
 	{
-		child_first = lm_message_node_get_child(node, "first");
-		child_last = lm_message_node_get_child(node, "last");
-		child_nick = lm_message_node_get_child(node, "nick");
-		child_email = lm_message_node_get_child(node, "email");
-		child_instr = lm_message_node_get_child(node, "instructions");
+		/* child_instr = lm_message_node_get_child(node, "instructions"); */   
 
-		if (child_first)
+		if (lm_message_node_get_child(node, "first"))
 			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_FIRSTNAME, _("First name:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
-		if (child_last)
+		if (lm_message_node_get_child(node, "last"))
 			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_LASTNAME, _("Last name:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
-		if (child_nick)
+		if (lm_message_node_get_child(node, "nick"))
 			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_NICKNAME, _("Nick:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
-		if (child_email)
+		if (lm_message_node_get_child(node, "email"))
 			ggadu_dialog_add_entry(dialog, GGADU_SEARCH_EMAIL, _("Email:"), VAR_STR, NULL,
 					       VAR_FLAG_NONE);
 
@@ -222,24 +217,27 @@ void action_search_result(LmConnection * connection, LmMessage * message, gpoint
 		{
 			gchar *jid = (gchar *) lm_message_node_get_attribute(child, "jid");
 			GGaduContact *k;
-			LmMessageNode *child_first, *child_last, *child_nick, *child_email;
+			LmMessageNode *child_node;
 
 			k = g_new0(GGaduContact, 1);
 			k->id = g_strdup(jid ? jid : "?");
 
-			child_first = lm_message_node_get_child(node, "first");
-			child_last = lm_message_node_get_child(node, "last");
-			child_nick = lm_message_node_get_child(node, "nick");
-			child_email = lm_message_node_get_child(node, "email");
 
-			if (child_first)
-				k->first_name = g_strdup((gchar *) lm_message_node_get_value(child_first));
-			if (child_last)
-				k->last_name = g_strdup((gchar *) lm_message_node_get_value(child_last));
-			if (child_nick)
-				k->nick = g_strdup((gchar *) lm_message_node_get_value(child_nick));
-			if (child_email)
-				k->email = g_strdup((gchar *) lm_message_node_get_value(child_email));
+			child_node = lm_message_node_get_child(node, "first");
+			if (child_node)
+				k->first_name = g_strdup((gchar *) lm_message_node_get_value(child_node));
+
+			child_node = lm_message_node_get_child(node, "last");
+			if (child_node)
+				k->last_name = g_strdup((gchar *) lm_message_node_get_value(child_node));
+
+			child_node = lm_message_node_get_child(node, "nick");
+			if (child_node)
+				k->nick = g_strdup((gchar *) lm_message_node_get_value(child_node));
+
+			child_node = lm_message_node_get_child(node, "email");
+			if (child_node)
+				k->email = g_strdup((gchar *) lm_message_node_get_value(child_node));
 
 			k->status = JABBER_STATUS_UNAVAILABLE;
 			list = g_slist_append(list, k);
