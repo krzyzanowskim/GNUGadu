@@ -1,6 +1,7 @@
 3.11.2003
 - configure does not stop with an error when libgadu or loudmouth not found (THrull)
 - aRts headers search with "artsc-config" (krzak)
+- send sms messages in iso8859-2, not in utf8 (sms/shasta)
 
 31.10.2003
 - NEW docklet-dockapp plugin (by emvi) 

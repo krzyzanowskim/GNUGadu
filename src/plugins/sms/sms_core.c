@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.19 2003/10/28 02:59:51 shaster Exp $ */
+/* $Id: sms_core.c,v 1.20 2003/11/03 22:01:15 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -597,6 +597,7 @@ void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_num
 {
     gint result, gsm_oper;
     int era_left = 10;
+    gchar *sms_body_iso = NULL;
 
     if (!sms_number)
     {
@@ -623,35 +624,40 @@ void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_num
     if (g_str_has_prefix(sms_number, "0"))
 	sms_number++;
 
+    from_utf8("ISO-8859-2", sms_body, sms_body_iso);
+
     gsm_oper = check_operator(sms_number);
     switch (gsm_oper)
     {
     case SMS_IDEA:
 	if (external)
 	{
-	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ", sms_sender, "\"", NULL));
+	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body_iso, " ", sms_sender, "\"", NULL));
+	    g_free(sms_body_iso);
 	    return;
 	}
 	else
-	    result = send_IDEA(sms_sender, sms_number, sms_body);
+	    result = send_IDEA(sms_sender, sms_number, sms_body_iso);
 
 	break;
 
     case SMS_PLUS:
 	if (external)
 	{
-	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ", sms_sender, "\"", NULL));
+	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body_iso, " ", sms_sender, "\"", NULL));
+	    g_free(sms_body_iso);
 	    return;
 	}
 	else
-	    result = send_PLUS(sms_sender, sms_number, sms_body);
+	    result = send_PLUS(sms_sender, sms_number, sms_body_iso);
 
 	break;
 
     case SMS_ERA:
 	if (external)
 	{
-	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ", sms_sender, "\"", NULL));
+	    result = system(g_strconcat("sms ", sms_number, " \"", sms_body_iso, " ", sms_sender, "\"", NULL));
+	    g_free(sms_body_iso);
 	    return;
 	}
 	else
@@ -659,21 +665,24 @@ void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_num
 	    if (!era_login)
 	    {
 		sms_warning(sms_number, _("Empty Era login!"));
+		g_free(sms_body_iso);
 		return;
 	    }
 
 	    if (!era_password)
 	    {
 		sms_warning(sms_number, _("Empty Era password!"));
+		g_free(sms_body_iso);
 		return;
 	    }
-	    result = send_ERA(sms_sender, sms_number, sms_body, era_login, era_password, &era_left);
+	    result = send_ERA(sms_sender, sms_number, sms_body_iso, era_login, era_password, &era_left);
 	}
 
 	break;
 
     case FALSE:
 	sms_warning(sms_number, _("Invalid number!"));
+	g_free(sms_body_iso);
 	return;
     }
 
@@ -734,6 +743,8 @@ void send_sms(gboolean external, const gchar * sms_sender, const gchar * sms_num
 	print_debug("SMS: Strange, we got ERR_NONE for %s. Shouldn't happen.\n", sms_number);
 	break;
     }
+
+    g_free(sms_body_iso);
 
     return;
 }
