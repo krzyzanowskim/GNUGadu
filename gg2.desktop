@@ -1,11 +1,12 @@
 [Desktop Entry]
+Version=1.0
 Encoding=UTF-8
 Name=GNU Gadu
 Comment=Instant Messanger Client
 Comment[pl]=Wolne Gadanie
 Exec=gg2
 Icon=gg2.png
-Terminal=0
+Terminal=false
 Type=Application
-Categories=GTK;Application;Network;InstantMessaging
+Categories=GTK;Application;Network;InstantMessaging;
 # vi: encoding=utf-8

@@ -3,7 +3,7 @@ BEFORE 2.0:
  - userlist tree view doesn't expand/collapse rows while userlist changes (GUI)
  - applying theme should refresh everything (it's not doing that for menubar) (GUI)
  ? some kind of dcc get acknowledge dialog box (gadu-gadu)
- - Jabber SSL (not working)
+(done)- Jabber SSL (not working)
 
 Later:
 - current status description text somewhere
@@ -12,8 +12,8 @@ Later:
 - sound configuration (all)
 - authorization dialogs (jabber/tlen)
 - jabber confference (jabber)
-- jabber search (jabber)
-- docklet should work in wmaker as dockapp (docklet)
+(done)- jabber search (jabber)
+(done)- docklet should work in wmaker as dockapp (docklet)
 (done)- status caption not necessary in utf8 (gadu-gadu)
 (done)- plugin docklet cant core dump if there is no gui-gtk2 plugin (docklet)
 (done)- scrolled emoticons window

@@ -1,243 +1,338 @@
-# $Revision: 1.8 $, $Date: 2003/06/19 13:52:44 $
-
-%define		snap	snap
-
+# $Revision: 1.9 $, $Date: 2003/12/13 14:43:17 $
+#
+# Conditional build:
+%bcond_with	arts
+%bcond_without	perl
+%bcond_without	esd
+#
+%define		_snap	20031211
 Summary:	GNU Gadu 2 - free talking
+Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	%{snap}
-Release:	1
-Epoch:		1
+Version:	2.0
+Release:	2.%{_snap}.1
+Epoch:		2
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://www.hakore.com/~krzak/gg2/%{name}-%{snap}.tar.gz
-#Source0:	http://telia.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}%{_pre}.tar.bz2
-# Source0-md5: dc131e52db8fa2f9c16e8024b5236c99
+Source0:	http://gg.tiwek.com/gg2/snapshots/%{name}-%{_snap}.tar.bz2
+# Source0-md5:	4e5167ba819531a7cf057c44d76e527f
 Source1:	%{name}.desktop
 URL:		http://www.gadu.gnu.pl/
-#BuildRequires:	arts-devel
+%{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.7
-BuildRequires:	esound-devel >= 0.2.7
-BuildRequires:	loudmouth-devel >= 0.9.1
+%{?with_esd:BuildRequires:	esound-devel >= 0.2.7}
+BuildRequires:	gettext-devel >= 0.11.0
 BuildRequires:	glib2-devel  >= 2.2.0
 BuildRequires:	gtk+2-devel  >= 2.2.0
-BuildRequires:	libgadu-devel >= 1.0
+BuildRequires:	intltool
+BuildRequires:	libgadu-devel >= 4:1.4
 BuildRequires:	libtlen-devel
 BuildRequires:	libtool
-BuildRequires:	intltool
-BuildRequires:	gettext-devel >= 0.11.0
+BuildRequires:	loudmouth-devel >= 0.13.1
+BuildRequires:	openssl-devel
+%{?with_perl:BuildRequires:	perl-devel}
+BuildRequires:	pkgconfig
 BuildRequires:	xosd-devel   >= 2.0.0
-BuildRequires:  pkgconfig
-BuildRequires:	fontconfig-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Gadu-Gadu, Tlen.pl and others instant messanger client with
 GTK+2 GUI on GNU/GPL.
 
+%description -l es
+Un cliente para Gadu-Gadu, Tlen.pl y otros protocolos con un GUI de
+GTK+2, bajo la licencia GNU/GPL.
+
 %description -l pl
 Klient Gadu-Gadu, Tlen.pl oraz innych protoko³ów z GUI pod GTK+2 na
 licencji GNU/GPL.
 
 %package devel
-Summary:	Headers to develop plugins
-Summary(pl):	Pliki potrzebne do rozwijania pluginow
+Summary:	Headers for libgg2_core library to develop plugins
+Summary(es):	Cabeceras para la biblioteca libgg2_core para desarrollar plugins
+Summary(pl):	Pliki nag³ówkowe biblioteki libgg2_core potrzebne do rozwijania wtyczek
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	glib2-devel
+Requires:	perl-devel
 
 %description devel
-Gadu-Gadu, Tlen.pl and others instant messanger client with
-GTK+2 GUI on GNU/GPL. Package contain header files.
+This package contains header files for libgg2_core library, needed to
+develop plugins for GNU Gadu 2.
+
+%description devel -l es
+Este paquete contiene los ficheros de cabeceras de la biblioteca
+libgg2_core necesarios para desarrollar plugins para GNU Gadu 2.
 
 %description devel -l pl
-Klient Gadu-Gadu, Tlen.pl oraz innych protoko³ów z GUI pod GTK+2 na
-licencji GNU/GPL. - Pakiet zawiera pliki naglowkowe.
-
+Ten pakiet zawiera pliki nag³ówkowe biblioteki libgg2_core, potrzebne
+do rozwijania wtyczek do GNU Gadu 2.
 
 %package gui-gtk+2
 Summary:	GTK+2 GUI plugin
+Summary(es):	Plugin de GUI en GTK+2
 Summary(pl):	Wtyczka z GUI w GTK+2
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description gui-gtk+2
 GTK+2 GUI plugin for GNU Gadu 2.
+
+%description gui-gtk+2 -l es
+Un plugin con un GUI en GTK+2 para GNU Gadu 2.
 
 %description gui-gtk+2 -l pl
 Wtyczka z GUI w GTK+2 do GNU Gadu 2.
 
 %package emoticons
 Summary:	Emoticons
+Summary(es):	Emoticons
 Summary(pl):	Emotikony
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description emoticons
 Emotions icons and description files.
+
+%description emoticons -l es
+Iconas de emociones y sus ficheros de descripción.
 
 %description emoticons -l pl
 Zestaw ikon z emotikonami, oraz plikiem konfiguracyjnym.
 
 %package gadu-gadu
 Summary:	Gadu-Gadu plugin
+Summary(es):	Plugin de Gadu-Gadu
 Summary(pl):	Wtyczka protoko³u Gadu-Gadu
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description gadu-gadu
 Gadu-Gadu protocol plugin.
+
+%description gadu-gadu -l es
+Un plugin para el protocolo Gadu-Gadu.
 
 %description gadu-gadu -l pl
 Wtyczka protoko³u Gadu-Gadu.
 
 %package tlen
 Summary:	Tlen.pl plugin
+Summary(es):	Plugin de Tlen.pl
 Summary(pl):	Wtyczka protoko³u Tlen.pl
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description tlen
 Tlen.pl protocol plugin.
+
+%description tlen -l es
+Un plugin para el protocolo Tlen.pl.
 
 %description tlen -l pl
 Wtyczka protoko³u Tlen.pl.
 
 %package jabber
 Summary:	Jabber.org plugin
+Summary(es):	Plugin de Jabber.org
 Summary(pl):	Wtyczka protoko³u Jabber
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description jabber
 Jabber protocol plugin.
+
+%description jabber -l es
+Un plugin para el protocolo Jabber.
 
 %description jabber -l pl
 Wtyczka protoko³u Jabber.
 
 %package sound-esd
 Summary:	Sound support with ESD
+Summary(es):	Soporte de sonido a través de ESD
 Summary(pl):	Obs³uga d¼wiêku poprzez ESD
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description sound-esd
 Sound support with ESD.
+
+%description sound-esd -l es
+Soporte de sonido a través de ESD.
 
 %description sound-esd -l pl
 Obs³uga d¼wiêku poprzez ESD.
 
 %package sound-oss
 Summary:	OSS sound support
+Summary(es):	Soporte de sonido a través de OSS
 Summary(pl):	Obs³uga d¼wiêku OSS
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description sound-oss
 OSS sound support.
+
+%description sound-oss -l es
+Soporte de sonido a través de OSS.
 
 %description sound-oss -l pl
 Obs³uga d¼wiêku OSS.
 
 %package sound-external
 Summary:	Sound support with external player
+Summary(es):	Soporte de sonido vía un reproductor externo
 Summary(pl):	Obs³uga d¼wiêku przez zewnêtrzny program
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description sound-external
 Sound support with external player.
 
+%description sound-external -l es
+Soporte de sonido a través de un reproductor externo.
+
 %description sound-external -l pl
-Obs³uga d¼wiêku przez zewnêtrzny program
+Obs³uga d¼wiêku przez zewnêtrzny program.
 
-#%package sound-aRts
-#Summary:	Sound support with aRts
-#Summary(pl):	Obs³uga d¼wiêku poprzez aRts
-#Group:		Applications/Communications
-#Requires:	%{name} = %{version}
+%package sound-aRts
+Summary:	Sound support with aRts
+Summary(es):	Soporte de sonido a través de aRts
+Summary(pl):	Obs³uga d¼wiêku poprzez aRts
+Group:		Applications/Communications
+Requires:	%{name} = %{version}
 
-#%description sound-aRts
-#Sound support with aRts.
+%description sound-aRts
+Sound support with aRts.
 
-#%description sound-aRts -l pl
-#Obs³uga d¼wiêku poprzez aRts.
+%description sound-aRts -l es
+Soporte de sonido a través de aRts.
+
+%description sound-aRts -l pl
+Obs³uga d¼wiêku poprzez aRts.
 
 %package xosd
 Summary:	Support for X On Screen Display
+Summary(es):	Soporte para plasmar mensajes sobre el fondo de X
 Summary(pl):	Wy¶wietlanie komunikatów na ekranie X
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description xosd
 Support for X On Screen Display.
 
+%description xosd -l es
+Soporte para plasmar mensajes sobre el fondo (XOSD).
+
 %description xosd -l pl
 Wy¶wietlanie komunikatów na ekranie X.
 
-%package docklet
-Summary:	Support for Window Managers docklets
-Summary(pl):	Obs³uga dokletów w ró¿nych zarz±dcach okien
+%package docklet-system-tray
+Summary:	Support for Window Managers notification areas
+Summary(es):	Soporte para áreas de notificación de los Manejantes de Ventanas
+Summary(pl):	Obs³uga obszarów powiadomieñ w ró¿nych zarz±dcach okien
 Group:		Applications/Communications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-docklet
 
-%description docklet
-Support for Window Managers docklets (GNOME, KDE).
+%description docklet-system-tray
+Support for Window Managers notification areas (GNOME, KDE).
 
-%description docklet -l pl
-Obs³uga dokletów w ró¿nych zarz±dcach okien (GNOME, KDE).
+%description docklet-system-tray -l es
+Soporte para áreas de notificación de los Manejantes de Ventanas
+(GNOME, KDE).
+
+%description docklet-system-tray -l pl
+Obs³uga obszarów powiadomieñ w ró¿nych zarz±dcach okien (GNOME, KDE).
+
+%package docklet-dockapp
+Summary:	Support for WindowMaker-style dockapp
+Summary(es):	Soporte de dockapp estilo WindowMaker
+Summary(pl):	Obs³uga dokowalnego apletu zgodnego z WindowMakerem
+Group:		Applications/Communications
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-docklet
+
+%description docklet-dockapp
+Support for WindowMaker-style dockapp.
+
+%description docklet-dockapp -l es
+Suporte de dockapp estilo WindowMaker.
+
+%description docklet-dockapp -l pl
+Obs³uga dokowalnego apletu zgodnego z WindowMakerem.
 
 %package sms
-Summary:        SMS Gateway
-Summary(pl):    Bramka SMS
-Group:          Applications/Communications
-Requires:       %{name} = %{version}
+Summary:	SMS Gateway
+Summary(es):	Puerta SMS
+Summary(pl):	Bramka SMS
+Group:		Applications/Communications
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description sms
 Send SMS to cellular phones via web gateways.
 
+%description sms -l es
+Manda mensajes SMS a móviles vía puertas del Web.
+
 %description sms -l pl
-Wtyczka wysy³aj±ca wiadomo¶ci SMS na telefony komórkowe przez bramki WWW.
+Wtyczka wysy³aj±ca wiadomo¶ci SMS na telefony komórkowe przez bramki
+WWW.
 
 %package remote
-Summary:        Remote access from other applications
-Summary(pl):    Dostêp do programu z innych aplikacji
-Group:          Applications/Communications
-Requires:       %{name} = %{version} 
+Summary:	Remote access from other applications
+Summary(es):	Acceso remoto desde otras aplicaciones
+Summary(pl):	Dostêp do programu z innych aplikacji
+Group:		Applications/Communications
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description remote
 Make possible exchange data with other applications.
+
+%description remote -l es
+Permite intercambiar los datos con otras aplicaciones.
 
 %description remote -l pl
 Wtyczka umo¿liwiaj±ca wymianê informacji z innymi aplikacjami.
 
 %package update
-Summary:        Update checker
-Summary(pl):    Wyszukiwanie aktualizacji
-Group:          Applications/Communications
-Requires:       %{name} = %{version}
+Summary:	Check for new GNU Gadu newer version
+Summary(es):	Verifica si hay versiones nuevas de GNU Gadu
+Summary(pl):	Sprawdza czy jest dostêpna nowsza wersja GNU Gadu
+Group:		Applications/Communications
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description update
-Automatically check for available updates.
+Check for new GNU Gadu newer version.
+
+%description update -l es
+Verifica si hay nuevas versiones de GNU Gadu.
 
 %description update -l pl
-Wtyczka umo¿liwiaj±ca automatyczne wyszukiwanie dostêpnych aktualizacji.
+Sprawdza czy jest dostêpna nowsza wersja GNU Gadu
 
 %package themes
 Summary:	Themes for GNU Gadu 2 GUI
+Summary(es):	Temas para el GUI de GNU Gadu 2
 Summary(pl):	Motywy graficzne dla GUI GNU Gadu 2
 Group:		Applications/Communications
-Requires:       %{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	%{name}-gui-gtk+2
 
 %description themes
 Themes for GNU Gadu 2 GUI.
 
-%description themes
+%description themes -l es
+Temas para el GUI de GNU Gadu 2.
+
+%description themes -l pl
 Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{_snap}
 
 %build
 rm -f missing
@@ -248,21 +343,23 @@ intltoolize --copy --force
 %{__autoconf}
 
 %configure \
-	--disable-gdb \
-	--disable-debug \
+	%{!?debug:--disable-gdb} \
+	%{!?debug:--disable-debug} \
  	--with-gui \
  	--with-gadu \
  	--with-tlen \
  	--with-jabber \
  	--with-xosd \
- 	--with-docklet \
- 	--with-esd \
- 	--with-oss \
  	--with-sms \
+ 	--with-docklet_system_tray \
+	--with-docklet_dockapp \
+	--with%{!?with_esd:out}-esd \
+ 	--with-oss \
  	--with-external \
-	--with-update \
+ 	--with-update \
+	--with%{!?with_arts:out}-arts \
+	--%{?with_perl:enable}%{!?with_perl:disable}-perl \
  	--with-remote
-#	--with-arts
 
 %{__make}
 
@@ -272,24 +369,29 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_datadir}/applications
-install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/applications
+install -d $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
 install -d $RPM_BUILD_ROOT%{_pixmapsdir}
 install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/sounds
 install $RPM_BUILD_ROOT%{_datadir}/%{name}/pixmaps/icon.png $RPM_BUILD_ROOT%{_pixmapsdir}/%{name}.png
 
 %find_lang %{name} --all-name --with-gnome
 
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/*.la
+
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc A* C* N* R* T* contrib doc/*
 %attr(755,root,root) %{_bindir}/gg2
+%attr(755,root,root) %{_libdir}/libgg2_core.so.*.*.*
 %dir %{_libdir}/gg2
 %{_datadir}/%{name}/sounds
-%{_libdir}/libgg2_core.so*
 
 %files gui-gtk+2
 %defattr(644,root,root,755)
@@ -298,14 +400,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/gg2/pixmaps
 %{_datadir}/gg2/pixmaps/*.png
 %{_datadir}/gg2/pixmaps/*.gif
-
 %{_pixmapsdir}/%{name}.png
-%{_datadir}/applications/gg2.desktop
+%{_desktopdir}/gg2.desktop
 
 %files devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libgg2_core.so
+%{_libdir}/libgg2_core.la
 %{_includedir}/gg2_core.h
-%dir %{_libdir}/pkgconfig
-%{_libdir}/pkgconfig/gg2_core.pc
+%{_pkgconfigdir}/gg2_core.pc
 
 %files emoticons
 %defattr(644,root,root,755)
@@ -323,9 +426,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libjabber_plugin.so
 
+%if %{with esd}
 %files sound-esd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsound_esd_plugin.so
+%endif
 
 %files sound-oss
 %defattr(644,root,root,755)
@@ -335,13 +440,23 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsound_external_plugin.so
 
+%if %{with arts}
+%files sound-aRts
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gg2/libsound_arts_plugin.so
+%endif
+
 %files xosd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libxosd_plugin.so
 
-%files docklet
+%files docklet-system-tray
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gg2/libdocklet_plugin.so
+%attr(755,root,root) %{_libdir}/gg2/libdocklet_system_tray_plugin.so
+
+%files docklet-dockapp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gg2/libdocklet_dockapp_plugin.so
 
 %files sms
 %defattr(644,root,root,755)
@@ -377,21 +492,141 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gg2/pixmaps/icons/tlen-3d/README
 %{_datadir}/gg2/pixmaps/icons/tlen-3d/*.png
 
-
 %define date	%(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 %changelog
 * %{date} PLD Team <feedback@pld-linux.org>
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.8  2003/06/19 13:52:44  krzyzak
-- Loudmouth library instead iksemel for Jabber - Thanks Zapal !
+Revision 1.9  2003/12/13 14:43:17  krzyzak
+. cosmetics and update
 
-Revision 1.7  2003/06/10 10:30:54  shaster
-added update plugin
+Revision 1.78  2003/12/12 20:41:14  tiwek
+- update to 20031211 snap, more change (see ChangeLog)
+- added missing BR openssl-devel
 
-Revision 1.6  2003/06/03 21:43:18  krzyzak
-- update to latest snap
+Revision 1.77  2003/12/03 09:13:36  krzak
+- fixed rel number
+
+Revision 1.76  2003/12/03 02:12:29  krzak
+- up to 20031202
+
+Revision 1.75  2003/11/22 18:50:10  saq
+- missing es translations
+- typo
+
+Revision 1.74  2003/11/22 18:39:52  qboosh
+- some cosmetics and simplifications
+- fixed pl summary for dockapp, removed bogus es one
+
+Revision 1.73  2003/11/22 15:31:11  krzak
+- up to snap 20031122
+- additional sub package docklet-dockapp
+- remove tyop.patch (already in sources)
+
+Revision 1.72  2003/11/18 21:15:19  tiwek
+- BR libgadu >=4:1.4 fore rebuild with new libgadu
+
+Revision 1.71  2003/11/17 23:03:17  radek
+- reverted (not a typo)
+
+Revision 1.70  2003/11/17 22:43:41  radek
+- typo (?): s/3:1.3.1/3:1.3-1/ in libgadu req
+
+Revision 1.69  2003/11/17 22:04:55  saq
+- fix the libgadu-devel BR
+
+Revision 1.68  2003/11/17 21:56:19  saq
+- es translations, fixed the pl ones
+- don't ignore --without*
+- typo.patch (for configure.in)
+
+Revision 1.67  2003/11/17 20:51:32  krzak
+- up to 20031117
+- docklet -> docklet-system-tray
+- bcond esd
+- added package "update"
+
+Revision 1.66  2003/11/11 10:58:56  matkor
+- Release 2. Rebuild against ekg-1.4-1.rc2.1.
+
+Revision 1.65  2003/11/11 10:30:08  gotar
+- debug ready
+
+Revision 1.64  2003/10/30 10:32:49  qboosh
+- removed BR fontconfig-devel and xcursor-devel - already in proper places
+
+Revision 1.63  2003/10/30 08:57:32  luzik
+ - added xcursor-devel BR
+
+Revision 1.62  2003/10/30 00:23:55  krzak
+- changed BR: libgadu-devel
+- package gadu-gadu R: libgadu <= 3:1.3-1
+
+Revision 1.61  2003/10/21 09:43:28  saq
+- snapshot 20031020
+- some es translations
+
+Revision 1.60  2003/10/10 13:47:51  radek
+- added epoch to BR'ed libgadu-devel version
+
+Revision 1.59  2003/10/09 21:55:24  krzak
+- BR: libgadu-devel <= 1.3-1
+
+Revision 1.58  2003/09/17 21:34:03  krzak
+- epoch 2
+
+Revision 1.57  2003/09/17 21:22:59  misi3k
+- typo
+
+Revision 1.56  2003/09/17 21:12:29  krzak
+- up to snap 20030917
+- bcond without perl (perl support)
+
+Revision 1.55  2003/09/12 09:57:21  krzak
+- add bcond for arts plugin
+
+Revision 1.54  2003/08/18 08:08:06  gotar
+- mass commit: cosmetics (removed trailing white spaces)
+
+Revision 1.53  2003/08/13 22:52:22  ankry
+- description fixes / unification
+
+Revision 1.52  2003/08/11 22:46:30  ankry
+- cosmetics
+
+Revision 1.51  2003/08/11 20:44:54  ankry
+cosmetics
+
+Revision 1.50  2003/07/13 14:37:43  erjot
+- fix release, epoch++ ?
+
+Revision 1.49  2003/06/27 13:10:45  mmazur
+- mass commit; now req: name = epoch:version
+
+Revision 1.48  2003/06/12 10:19:35  qboosh
+- cosmetics
+
+Revision 1.47  2003/06/10 08:08:26  qboosh
+- libgg2_core is regular shared library, so use standard procedure
+
+Revision 1.46  2003/06/10 07:58:44  qboosh
+- missing defattr for devel
+
+Revision 1.45  2003/06/10 06:09:33  aflinta
+- typo
+
+Revision 1.44  2003/06/10 06:07:53  aflinta
+- simplification, don't be owner of pkgconfigdir!
+
+Revision 1.43  2003/06/10 05:59:28  aflinta
+- updated source
+
+Revision 1.42  2003/06/09 22:53:54  krzak
+- update to 2.0pre3
+
+Revision 1.4  2003/06/03 11:30:54  krzyzak
+SPEC file update
 
 Revision 1.41  2003/05/25 11:00:51  malekith
 - massive attack, adding Source-md5

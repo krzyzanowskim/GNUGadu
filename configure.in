@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.37 2003/11/19 06:46:14 krzyzak Exp $
+dnl $Id: configure.in,v 1.38 2003/12/13 14:43:17 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -245,7 +245,7 @@ fi
 AC_ARG_WITH(jabber, [  --with-jabber		  Build jabber plugin		default=no])
 if test "x$with_jabber" = "xyes"; then 
     want_jabber=yes
-    PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.12, [],want_jabber=no)
+    PKG_CHECK_MODULES(JABBER,loudmouth-1.0 >= 0.13, [],want_jabber=no)
     if test "$want_jabber" = "no"; then 
     	AC_MSG_WARN($JABBER_PKG_ERRORS)
 	echo
