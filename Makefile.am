@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-SUBDIRS = intl m4 lib src po pixmaps sounds themes contrib
+SUBDIRS = intl lib src po pixmaps sounds themes contrib
 
 EXTRA_DIST = \
 	autogen.sh \
@@ -23,11 +23,12 @@ EXTRA_DIST = \
 	gg2.desktop \
 	gg2.spec \
 	gg2-devel.SlackBuild \
-	slack-desc
+	slack-desc \
+	esd.m4
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I .
 

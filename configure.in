@@ -1,10 +1,10 @@
-dnl $Id: configure.in,v 1.116 2005/01/05 13:24:13 krzyzak Exp $
+dnl $Id: configure.in,v 1.117 2005/01/31 11:19:34 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.4])
 
 AC_INIT(gg2,[gg2_version])
 AM_INIT_AUTOMAKE([gg2],[gg2_version])
-AC_CONFIG_HEADERS(config.h)
+AM_CONFIG_HEADER(config.h)
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
@@ -15,6 +15,12 @@ GTK_MIN_VER="2.4.0"
 GETTEXT_PACKAGE=$PACKAGE
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
+
+if test `uname -s` = "Darwin"; then
+ 	AC_DEFINE_UNQUOTED(LIB_SUFFIX,"dynlib")
+else
+	AC_DEFINE_UNQUOTED(LIB_SUFFIX,"so")
+fi
 
 AC_PROG_CPP
 AC_PROG_CC
@@ -697,7 +703,6 @@ gg2_perl_embed=$srcdir/lib/perl_embed.h
 
 AC_OUTPUT([ 
 intl/Makefile 
-m4/Makefile 
 po/Makefile.in
 Makefile
 lib/Makefile

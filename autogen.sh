@@ -18,6 +18,9 @@ have_libtool=false
 if libtoolize --version < /dev/null > /dev/null 2>&1 ; then
     libtool_version=`libtoolize --version | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
     case $libtool_version in
+	1.3*)
+	    have_libtool=true
+	    ;;
 	1.4*)
 	    have_libtool=true
 	    ;;
@@ -28,7 +31,7 @@ if libtoolize --version < /dev/null > /dev/null 2>&1 ; then
 fi
 if $have_libtool ; then : ; else
         echo
-        echo "You must have libtool 1.4 or better installed to compile $PROJECT."
+        echo "You must have libtool 1.3.5 or better installed to compile $PROJECT."
         echo "Install the appropriate package for your distribution,"
         echo "or get the source tarball at http://ftp.gnu.org/gnu/libtool/"
         DIE=1
@@ -86,7 +89,7 @@ echo "libtoolize"
 libtoolize --force --copy --automake || exit 1
 
 echo "aclocal"
-$ACLOCAL $ACPATH -I m4 -I src/plugins/gadu_gadu/libgadu/m4 || exit 1
+$ACLOCAL $ACPATH -I . -I src/plugins/gadu_gadu/libgadu/m4 || exit 1
 
 echo "automake"
 $AUTOMAKE --no-force --copy --add-missing || exit 1
