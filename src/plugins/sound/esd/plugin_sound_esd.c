@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_esd.c,v 1.1 2003/03/20 10:37:08 krzyzak Exp $ */
+/* $Id: plugin_sound_esd.c,v 1.2 2003/04/03 09:14:50 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -50,7 +50,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 
 void start_plugin() {
-    register_signal(handler,"sound play file");
 }
 
 
@@ -60,6 +59,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     GGadu_PLUGIN_ACTIVATE(conf_ptr);
 
     handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,_("ESD sound driver"));
+
+    register_signal(handler,"sound play file");
 
     register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
     

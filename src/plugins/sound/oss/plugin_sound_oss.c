@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_oss.c,v 1.1 2003/03/20 10:37:08 krzyzak Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.2 2003/04/03 09:14:51 thrulliq Exp $ */
 
 /*
  *    Originally written by Igor Truszkowski <pol128@polsl.gliwice.pl>
@@ -146,7 +146,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 
 void start_plugin() {
-    register_signal(handler,"sound play file");
 }
 
 
@@ -156,6 +155,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
     GGadu_PLUGIN_ACTIVATE(conf_ptr);
 
     handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,_("OSS sound driver"));
+
+    register_signal(handler,"sound play file");
 
     register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
     
