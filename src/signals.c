@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.3 2003/05/10 10:20:32 zapal Exp $ */
+/* $Id: signals.c,v 1.4 2003/05/10 18:21:00 zapal Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -56,12 +56,12 @@ void register_signal(GGaduPlugin * plugin_handler, gpointer name)
 
 void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal))
 {
-  GGaduSignalHook *hook;
+  GGaduSignalHook *signalhook;
 
-  hook = g_new0 (GGaduSignalHook, 1);
-  hook->name = g_strdup (name);
-  hook->hook = hook;
-  config->signal_hooks = g_slist_append (config->signal_hooks, hook);
+  signalhook = g_new0 (GGaduSignalHook, 1);
+  signalhook->name = g_strdup (name);
+  signalhook->hook = hook;
+  config->signal_hooks = g_slist_append (config->signal_hooks, signalhook);
 }
 
 GGaduSignalinfo *find_signal(gpointer signal_name)
@@ -107,6 +107,7 @@ gpointer do_signal(GGaduSignal * tmpsignal, GGaduSignalinfo * signalinfo)
 	while (hooks)
 	{
 	  GGaduSignalHook *hook = (GGaduSignalHook *) hooks->data;
+	  print_debug ("hook: %s, %s\n", tmpsignal->name, hook->name);
 	  if (!g_strcasecmp (tmpsignal->name, hook->name))
 	  {
 	    print_debug ("Hooked %s\n", hook->name);

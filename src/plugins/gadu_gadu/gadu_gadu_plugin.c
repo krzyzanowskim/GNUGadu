@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.50 2003/05/10 11:45:21 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.51 2003/05/10 18:21:01 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -362,8 +362,6 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			
 			}
 
-			msg->message = perl_action_on_msg_receive (1, msg->message);
-			
 			{
 			    gchar *line = g_strdup_printf(":: %s (%s)::\n%s\n\n",msg->id,get_timestamp(msg->time),msg->message);
 			    print_debug("%s\n",line);

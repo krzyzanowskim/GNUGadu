@@ -1,4 +1,4 @@
-/* $Id: perl_embed.c,v 1.8 2003/05/10 10:20:32 zapal Exp $ */
+/* $Id: perl_embed.c,v 1.9 2003/05/10 18:20:59 zapal Exp $ */
 
 /* Written by Bartosz Zapalowski <zapal@users.sf.net>
  * based on perl plugin in X-Chat
@@ -26,11 +26,16 @@
 extern GGaduConfig *config;
 
 typedef struct {
+  char *name;
+  char *func;
+} signal_hook;
+
+typedef struct {
   char loaded;
   char *filename;
 
-  char *on_msg_receive;
-  
+  GSList *hooks;
+
   PerlInterpreter *perl;
 } perlscript;
 
@@ -39,6 +44,29 @@ GSList *perlscripts = NULL;
 PerlInterpreter *my_perl;
 
 extern void boot_DynaLoader (pTHX_ CV* cv);
+
+perlscript *find_perl_script (gchar *name)
+{
+  perlscript *script;
+  GSList *list = perlscripts;
+
+  while (list)
+  {
+    gchar *fn_dup, *tmp;
+    script = (perlscript *) list->data;
+    fn_dup = g_strdup (script->filename);
+    tmp = basename (fn_dup);
+    if (!strcmp (tmp, name))
+    {
+      g_free (fn_dup);
+      return script;
+    } else
+      g_free (fn_dup);
+    list = list->next;
+  }
+
+  return NULL;
+}
 
 int execute_perl (char *function, char **perl_args)
 {
@@ -120,41 +148,190 @@ char *execute_perl_string_one (char *function, char *args)
   return execute_perl_string (function, perl_args);
 }
 
+void sig_xosd_show_message (GGaduSignal *signal, gchar *perl_func)
+{
+  int count, junk;
+  SV *sv_name;
+  SV *sv_src;
+  SV *sv_dst;
+  SV *sv_data;
+    
+  dSP;
+ 
+  ENTER;
+  SAVETMPS;
+
+  sv_name = sv_2mortal (newSVpv (signal->name, 0));
+  sv_src  = sv_2mortal (newSVpv (signal->source_plugin_name, 0));
+  if (signal->destination_plugin_name)
+    sv_dst  = sv_2mortal (newSVpv (signal->destination_plugin_name, 0));
+  else
+    sv_dst  = sv_2mortal (newSVpv ("", 0));
+  sv_data = sv_2mortal (newSVpv (signal->data, 0));
+
+  PUSHMARK (SP);
+  XPUSHs (sv_name);
+  XPUSHs (sv_src);
+  XPUSHs (sv_dst);
+  XPUSHs (sv_data);
+  PUTBACK;
+
+  count = call_pv (perl_func, G_DISCARD);
+
+  if (count == 0)
+  {
+    gchar *dst;
+    signal->name = g_strdup (SvPV (sv_name, junk));
+    signal->source_plugin_name = g_strdup (SvPV (sv_src, junk));
+    dst = SvPV (sv_dst, junk);
+    if (dst[0] != '\0')
+      signal->destination_plugin_name = g_strdup (dst);
+    signal->data = g_strdup (SvPV (sv_data, junk));
+  }
+
+  FREETMPS;
+  LEAVE;
+}
+
+void sig_gui_msg_receive (GGaduSignal *signal, gchar *perl_func)
+{
+  int count, junk;
+  GGaduMsg *msg = (GGaduMsg *) signal->data;
+  SV *sv_name;
+  SV *sv_src;
+  SV *sv_dst;
+  SV *sv_data_id;
+  SV *sv_data_message;
+  SV *sv_data_class;
+  SV *sv_data_time;
+    
+  dSP;
+ 
+  ENTER;
+  SAVETMPS;
+
+  sv_name = sv_2mortal (newSVpv (signal->name, 0));
+  sv_src  = sv_2mortal (newSVpv (signal->source_plugin_name, 0));
+  if (signal->destination_plugin_name)
+    sv_dst  = sv_2mortal (newSVpv (signal->destination_plugin_name, 0));
+  else
+    sv_dst  = sv_2mortal (newSVpv ("", 0));
+  sv_data_id      = sv_2mortal (newSVpv (msg->id, 0));
+  sv_data_message = sv_2mortal (newSVpv (msg->message, 0));
+  sv_data_class   = sv_2mortal (newSViv (msg->class));
+  sv_data_time    = sv_2mortal (newSViv (msg->time));
+
+  PUSHMARK (SP);
+  XPUSHs (sv_name);
+  XPUSHs (sv_src);
+  XPUSHs (sv_dst);
+  XPUSHs (sv_data_id);
+  XPUSHs (sv_data_message);
+  XPUSHs (sv_data_class);
+  XPUSHs (sv_data_time);
+  PUTBACK;
+
+  count = call_pv (perl_func, G_DISCARD);
+
+  if (count == 0)
+  {
+    gchar *dst;
+    signal->name = g_strdup (SvPV (sv_name, junk));
+    signal->source_plugin_name = g_strdup (SvPV (sv_src, junk));
+    dst = SvPV (sv_dst, junk);
+    if (dst[0] != '\0')
+      signal->destination_plugin_name = g_strdup (dst);
+    msg->id      = g_strdup (SvPV (sv_data_id, junk));
+    msg->message = g_strdup (SvPV (sv_data_message, junk));
+    msg->class   = SvIV (sv_data_class);
+    msg->time    = SvIV (sv_data_time);
+  }
+
+  FREETMPS;
+  LEAVE;
+}
+
+struct {
+  gchar *signame;
+  void (*func) (GGaduSignal *signal, gchar *perl_func);
+} SIGNAL_HOOKS[] = 
+{
+  {"xosd show message", sig_xosd_show_message},
+  {"gui msg receive",   sig_gui_msg_receive},
+  {NULL, NULL}
+};
+
+void for_each_hook (gchar *name, gpointer data)
+{
+  GSList *list_script;
+  GSList *list_hooks;
+  perlscript *script;
+  signal_hook *hook;
+  void (*func) (GGaduSignal *signal, gchar *perl_func);
+  int q;
+
+  func = NULL;
+
+  for (q = 0; SIGNAL_HOOKS[q].signame != NULL; q++)
+  {
+    if (!ggadu_strcasecmp (name, SIGNAL_HOOKS[q].signame))
+    {
+      func = SIGNAL_HOOKS[q].func;
+      break;
+    }
+  }
+
+  if (func == NULL)
+    return;
+
+  list_script = perlscripts;
+  while (list_script)
+  {
+    script = (perlscript *) list_script->data;
+
+    list_hooks = script->hooks;
+    while (list_hooks)
+    {
+      hook = (signal_hook *) list_hooks->data;
+
+      if (!ggadu_strcasecmp (name, hook->name))
+      {
+	PERL_SET_CONTEXT (script->perl);
+	my_perl = script->perl;
+	func (data, hook->func);
+      }
+      
+      list_hooks = list_hooks->next;
+    }
+    
+    list_script = list_script->next;
+  }
+}
+
+void sig_handle (GGaduSignal *signal)
+{
+  for_each_hook (signal->name, signal);
+}
+
 static XS (XS_GGadu_register_script)
 {
   char *name;
-  char *on_msg_receive;
   int junk;
-  gchar *tmp;
   perlscript *script;
-  GSList *list;
   dXSARGS;
 
+  items = items;
+
   name = SvPV (ST (0), junk);
-  on_msg_receive = SvPV (ST (1), junk);
 
-  print_debug ("registering %s with %s\n", name, on_msg_receive);
+  print_debug ("registering %s\n", name);
   
-  list = perlscripts;
-  while (list)
-  {
-    gchar *fn_dup;
-    script = (perlscript *) list->data;
-    fn_dup = g_strdup (script->filename);
-    tmp = basename (fn_dup);
-    print_debug ("%s, %s\n", script->filename, tmp);
-    if (!strcmp (tmp, name))
-    {
-      script->loaded = 1;
-      print_debug ("found %s in %s\n", name, script->filename);
-
-      script->on_msg_receive = g_strdup (on_msg_receive);
-      
-      g_free (fn_dup);
-    } else
-      g_free (fn_dup);
-    list = list->next;
-  }
+  script = find_perl_script (name);
+  if (!script)
+    XSRETURN (1);
+  script->loaded = 1;
+  print_debug ("found %s in %s\n", name, script->filename);
+  XSRETURN (0);
 }
 
 static XS (XS_GGadu_hello)
@@ -162,6 +339,8 @@ static XS (XS_GGadu_hello)
   char *world;
   int junk;
   dXSARGS;
+
+  items = items;
 
   world = SvPV (ST (0), junk);
   printf ("Perl: Hello %s\n", world);
@@ -177,6 +356,8 @@ static XS (XS_GGadu_signal_emit)
   int junk;
   dXSARGS;
 
+  items = items;
+
   signame = SvPV (ST (0), junk);
   sigdata = SvPV (ST (1), junk);
   sigdst  = SvPV (ST (2), junk);
@@ -185,6 +366,39 @@ static XS (XS_GGadu_signal_emit)
   signal_emit_full ("perl:", signame,
       sigdata ? (must_dup ? g_strdup (sigdata) : sigdata) : NULL, sigdst, NULL);
   XSRETURN_EMPTY;
+}
+
+static XS (XS_GGadu_signal_hook)
+{
+  char *name;
+  char *signame;
+  char *func;
+  int junk;
+  signal_hook *hook;
+  perlscript *script;
+  dXSARGS;
+
+  items = items;
+
+  name    = SvPV (ST(0), junk);
+  signame = SvPV (ST(1), junk);
+  func    = SvPV (ST(2), junk);
+
+  print_debug ("hooking %s, %s, %s\n", name, signame, func);
+
+  script = find_perl_script (name);
+  if (!script)
+    XSRETURN (1);
+
+  print_debug ("still hooking\n");
+
+  hook = g_new0 (signal_hook, 1);
+  hook->name = g_strdup (signame);
+  hook->func = g_strdup (func);
+  script->hooks = g_slist_append (script->hooks, hook);
+  hook_signal (signame, sig_handle);
+  
+  XSRETURN (0);
 }
 
 static void xs_init (pTHX)
@@ -197,6 +411,7 @@ static void xs_init (pTHX)
   newXS ("GGadu::register_script", XS_GGadu_register_script, "GGadu");
   newXS ("GGadu::signal_emit", XS_GGadu_signal_emit, "GGadu");
   newXS ("GGadu::hello", XS_GGadu_hello, "GGadu");
+  newXS ("GGadu::signal_hook", XS_GGadu_signal_hook, "GGadu");
 }
 
 int perl_load_script (char *script_name)
@@ -304,7 +519,7 @@ gint perl_load_scripts (void)
 
   return loaded;
 }
-
+/*
 char *perl_action_on_msg_receive (char *uid, char *msg)
 {
   char *ret = msg;
@@ -328,4 +543,5 @@ char *perl_action_on_msg_receive (char *uid, char *msg)
 
   return ret;
 }
+*/
 #endif
