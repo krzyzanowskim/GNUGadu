@@ -14,5 +14,5 @@ libdbus_plugin_la_LDFLAGS = -avoid-version
 servicesdir = $(DESTDIR)`pkg-config dbus-1 --variable=prefix`/share/dbus-1.0/services
 services_DATA = org.freedesktop.im.GG.service
 
-EXTRA_DIST = $(services_DATA)
+EXTRA_DIST = $(services_DATA) README
 
