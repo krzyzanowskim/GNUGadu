@@ -1,4 +1,4 @@
-/* $Id: gui_support.h,v 1.1 2003/03/20 10:37:06 krzyzak Exp $ */
+/* $Id: gui_support.h,v 1.2 2003/11/07 20:56:45 krzyzak Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_FIND_H
 #define GGadu_GUI_PLUGIN_FIND_H 1
@@ -8,8 +8,10 @@
 
 void gui_remove_all_chat_sessions(gpointer protocols_list);
 
+/* obsolete */
 gui_chat_session *gui_session_find_confer(gui_protocol *gp, GSList *recipients);
 
+/* obsolete */
 gui_chat_session *gui_session_find(gui_protocol *gp, gchar *id);
 
 gui_protocol *gui_find_protocol(gchar *plugin_name, GSList *protocolsl);

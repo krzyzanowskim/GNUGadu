@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.35 2003/11/06 20:03:27 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.36 2003/11/07 20:56:45 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -318,7 +318,7 @@ void gui_show_hide_window ()
  */
 
 /*
- * Wyjście z programu poprzez menu
+ * WyjĹcie z programu poprzez menu
  */
 void gui_quit (GtkWidget * widget, gpointer user_data)
 {
@@ -342,7 +342,7 @@ void gui_quit (GtkWidget * widget, gpointer user_data)
 }
 
 /*
- * Obsługuje sygnał "skasownaia" głównego okna
+ * ObsĹuguje sygnaĹ "skasownaia" gĹĂłwnego okna
  */
 
 gboolean gui_main_window_delete (GtkWidget * window, GdkEvent * event, gpointer user_data)
@@ -366,7 +366,7 @@ gboolean gui_main_window_delete (GtkWidget * window, GdkEvent * event, gpointer 
  */
 void gui_main_window_create (gboolean visible)
 {
-    GtkWidget *main_vbox;
+    GtkWidget *main_vbox = NULL;
     GdkPixbuf *image;
     gint width, height;
     gint top, left;
@@ -408,7 +408,7 @@ void gui_main_window_create (gboolean visible)
     gdk_pixbuf_unref (image);
 
     main_vbox = gtk_vbox_new (FALSE, 0);
-    
+
     gtk_box_pack_start (GTK_BOX (main_vbox), main_menu_bar, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (main_vbox), toolbar_handle_box, FALSE, FALSE, 0);
 
@@ -430,8 +430,7 @@ void gui_main_window_create (gboolean visible)
 
     if (visible)
       {
-          gtk_widget_show (GTK_WIDGET (window));
-
+	  gtk_widget_show_all (GTK_WIDGET (window));
 	  gdk_window_set_decorations (GTK_WIDGET (window)->window, GDK_DECOR_MENU);
       }
 
