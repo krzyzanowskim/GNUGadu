@@ -3,6 +3,7 @@
 - repo.{c,h} -> ggadu_repo.{c,h} (krzak)
 - support.{c,h} -> ggadu_support.{c,h} (krzak)
 - menu.{c,h} -> ggadu_menu.{c,h} (krzak)
+- enable "blink" by deault (krzak/GUI)
 
 15.02.2004
 - GGaduMsg_free usage (krzak/GUI/gadu-gadu)
