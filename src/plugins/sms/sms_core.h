@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.19 2004/12/20 09:15:38 krzyzak Exp $ */
+/* $Id: sms_core.h,v 1.20 2005/03/27 00:16:07 shaster Exp $ */
 
 /* 
  * SMS plugin for GNU Gadu 2 
@@ -28,7 +28,7 @@
 #define GGADU_SMS_PLUS_URL 		"/sms/sendsms.php"
 
 #define GGADU_SMS_IDEA_HOST 		"sms.idea.pl"
-#define GGADU_SMS_IDEA_URL_GET 		"/default_.aspx"
+#define GGADU_SMS_IDEA_URL_GET 		"/"
 #define GGADU_SMS_IDEA_URL_SEND		"/sendsms.aspx"
 
 #define GGADU_SMS_ERA_HOST 	"www.eraomnix.pl"
