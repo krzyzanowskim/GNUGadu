@@ -1,5 +1,16 @@
+SUBDIRS = plugins
+
+# bin
+bin_PROGRAMS = gg2
+
+gg2_SOURCES = main.c
+gg2_DEPENDENCIES = libgg2_core.la
+
+gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\" 
+gg2_LDADD = $(PERL_OPTION_LDFLAGS) -ldl libgg2_core.la
+
 # libgg2.so
-pkgdir = $(libdir)/gg2
+pkgdir = $(libdir)
 pkg_LTLIBRARIES = libgg2_core.la
 noinst_LIBRARIES =
 
@@ -24,14 +35,3 @@ libgg2_core_la_SOURCES = gg-types.h \
 libgg2_core_la_LIBADD = $(PERL_OPTION_LDFLAGS) -ldl 
 libgg2_core_la_LDFLAGS = -version-info 2:0:0
 
-
-# bin
-bin_PROGRAMS = gg2
-
-gg2_SOURCES = main.c
-gg2_DEPENDENCIES = libgg2_core.la
-
-gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\" 
-gg2_LDADD = $(PERL_OPTION_LDFLAGS) -ldl libgg2_core.la
-
-SUBDIRS = plugins
