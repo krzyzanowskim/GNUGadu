@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.40 2004/09/12 21:02:47 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.h,v 1.41 2004/10/15 14:14:41 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -41,8 +41,6 @@
 	    ggadu_save_history(_type, path, _nick, _msg); \
 	    g_free(path); \
 	}
-
-//	    gchar *path = g_build_filename(config->configdir, "jabber_history", (_msg->id ? _msg->id : "UNKOWN"), NULL); 
 
 enum
 {
@@ -125,7 +123,7 @@ typedef struct
 } GGaduJabberRegister;
 
 extern GGaduPlugin *jabber_handler;
-
+extern GGaduProtocol *p;
 extern LmMessageHandler *iq_handler;
 extern LmMessageHandler *iq_roster_handler;
 extern LmMessageHandler *iq_version_handler;
@@ -137,7 +135,6 @@ extern LmMessageHandler *message_handler;
 typedef struct
 {
     gint status;
-    gchar *status_descr;
     GSList *actions;
     LmConnection *connection;
     LmProxy *proxy;

@@ -4,6 +4,10 @@
 - sound plugins fixes.. more messages about errors (sound-*/krzak)
 - use GtkColorButton for color selection (GUI/krzak)
 - "get current status" signal now return GGaduSignalPrototype value instead just status id. (krzak)
+-  new functions in ggadu_support.c (protocols are adaptarized to use it) (krzak):
+   gchar *ggadu_get_protocol_status_description(GGaduProtocol *gp);
+   void   ggadu_set_protocol_status_description(GGaduProtocol *gp,gchar *description);
+
 
 13.10.2004
 - try to reconnect jabber connection three times before disconnect (jabber/krzak)

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.70 2004/10/13 13:34:30 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.71 2004/10/15 14:14:41 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -338,7 +338,6 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 
 			if ((k->status != oldstatus) || (olddescr != k->status_descr))
 			{
-				//k->status_descr = g_strstrip(k->status_descr);
 				ggadu_repo_change_value("jabber", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
 			}
 

@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.9 2004/10/15 13:04:14 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.10 2004/10/15 14:14:38 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -61,10 +61,10 @@
 #endif
 
 #define array_length(arr,type) sizeof(arr) / sizeof(type)
-#define to_iso(from_enc,text) ggadu_convert(from_enc,"ISO-8859-2",text);
-#define to_cp(from_enc,text) ggadu_convert(from_enc,"CP1250",text);
-#define to_utf8(from_enc,text) ggadu_convert(from_enc,"UTF-8",text);
-#define from_utf8(to_enc,text) ggadu_convert("UTF-8",to_enc,text);
+#define to_iso(from_enc,text) ggadu_convert(from_enc,"ISO-8859-2",text)
+#define to_cp(from_enc,text) ggadu_convert(from_enc,"CP1250",text)
+#define to_utf8(from_enc,text) ggadu_convert(from_enc,"UTF-8",text)
+#define from_utf8(to_enc,text) ggadu_convert("UTF-8",to_enc,text)
 #define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1 ? s1 : "",-1) , g_utf8_casefold(s2 ? s2 : "",-1))
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
 
@@ -96,6 +96,9 @@ gboolean	write_line_to_file(gchar * path, gchar * line, gchar * enc);
 gchar		*check_file_exists(const gchar * directory, const gchar * filename);
 
 GGaduStatusPrototype *ggadu_find_status_prototype(GGaduProtocol * gp, gint status);
+
+gchar		*ggadu_get_protocol_status_description(GGaduProtocol *gp);
+void		ggadu_set_protocol_status_description(GGaduProtocol *gp,gchar *description);
 
 
 

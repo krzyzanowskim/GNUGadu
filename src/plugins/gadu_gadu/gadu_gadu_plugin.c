@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.192 2004/10/15 13:04:16 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.193 2004/10/15 14:14:39 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2014,8 +2014,17 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			if (ggadu_is_status_descriptive(sp->status))
 			{
 				GGaduDialog *dialog = NULL;
-				gchar *reason_c = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
+				gchar *reason_c = NULL;
 
+				if (ggadu_get_protocol_status_description(p))
+				{
+				    reason_c = g_strdup(ggadu_get_protocol_status_description(p));
+				}
+				 else
+				{
+				    reason_c = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "reason"));
+				}
+				
 				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
 							       "change status descr", sp);
 				ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, (gpointer) reason_c,
@@ -2083,6 +2092,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				desc_iso = from_utf8("ISO-8859-2", desc_utf);
 
 				ggadu_config_var_set(handler, "reason", desc_iso);
+				ggadu_set_protocol_status_description(p,desc_utf);
 
 				if (!connected)
 				{
@@ -2385,16 +2395,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		}
 		else
 			signal->data_return = ggadu_find_status_prototype(p, GG_STATUS_NOT_AVAIL);
-	
-	
-/*		signal->data_return = (gpointer) GG_STATUS_NOT_AVAIL;
-		if (!session)
-			return;
-		signal->data_return =
-			(gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? (session->
-										  status ^ GG_STATUS_FRIENDS_MASK) :
-				    session->status);
-*/
 	}
 
 	if (signal->name == REGISTER_ACCOUNT)

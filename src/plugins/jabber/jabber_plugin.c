@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.111 2004/10/15 13:04:17 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.112 2004/10/15 14:14:41 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -36,6 +36,7 @@
 #include "jabber_cb.h"
 
 GGaduPlugin *jabber_handler;
+GGaduProtocol *p;
 
 LmMessageHandler *iq_handler;
 LmMessageHandler *iq_roster_handler;
@@ -66,7 +67,6 @@ static GQuark USER_GET_SOFTWARE_SIG;
 
 jabber_data_type jabber_data;
 
-GGaduProtocol *p;
 GGaduMenu *jabbermenu;
 
 GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
@@ -694,11 +694,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				gchar *desc_utf = NULL;
 				kv = (GGaduKeyValue *) ggadu_dialog_get_entries(dialog)->data;
 				desc_utf = kv->value;
-
-				if (jabber_data.status_descr)
-					g_free(jabber_data.status_descr);
 				
-				jabber_data.status_descr = g_strdup(desc_utf);
+				ggadu_set_protocol_status_description(p,desc_utf);
 				jabber_change_status(sp->status);
 			}
 			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
@@ -720,12 +717,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"),
 						       "change status descr", sp);
 
-			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, jabber_data.status_descr,
-						VAR_FLAG_FOCUS);
+			ggadu_dialog_add_entry(dialog, 0, _("Description:"), VAR_STR, ggadu_get_protocol_status_description(p),VAR_FLAG_FOCUS);
 			signal_emit("jabber", "gui show dialog", dialog, "main-gui");
-			/*jabber_change_status(jabber_data.status); "change status descr" should do it */
 			return;
-		} else {
 		}
 		
 		jabber_change_status(sp->status);
@@ -733,17 +727,10 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
 	{
-
 		if (jabber_data.connection)
 			signal->data_return = ggadu_find_status_prototype(p, jabber_data.status);
 		else
 			signal->data_return = ggadu_find_status_prototype(p, JABBER_STATUS_UNAVAILABLE);
-
-/*		if (jabber_data.connection)
-		    signal->data_return = (gpointer) jabber_data.status;
-		else
-		    signal->data_return = JABBER_STATUS_UNAVAILABLE;
-*/		    
 	}
 	else if (signal->name == SEND_MESSAGE_SIG)
 	{

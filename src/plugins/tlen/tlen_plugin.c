@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.67 2004/10/15 13:04:18 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.68 2004/10/15 14:14:42 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -60,8 +60,6 @@ static GSList *search_results = NULL;
 GIOChannel *source_chan = NULL;
 gboolean connected = FALSE;
 static guint tag = 0;
-
-gchar *description = NULL;
 
 gint watch = 0;
 
@@ -972,7 +970,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				/* end */
 
 				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC,_("Enter status description"),"change status descr", _sp);
-				desc_utf = to_utf8("ISO-8859-2", description);
+				desc_utf = to_utf8("ISO-8859-2", ggadu_get_protocol_status_description(p));
 				ggadu_dialog_add_entry(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR,
 						       desc_utf, VAR_FLAG_NONE);
 				g_free(desc_utf);
@@ -983,7 +981,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 			else
 			{
-				tlen_presence(session, sp->status, description);
+				tlen_presence(session, sp->status, ggadu_get_protocol_status_description(p));
 				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
 			}
 		}
@@ -1030,6 +1028,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 						{
 							GGaduStatusPrototype *sp =
 								(GGaduStatusPrototype *) statuslist_tmp->data;
+								
 							if (!ggadu_strcasecmp
 							    (sp->description, ((GSList *) kv->value)->data))
 							{
@@ -1069,13 +1068,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 					/* w kv->value jest opis, w utf8 */
 					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
 
-					/* zwolnij obecny opis */
-					g_free(description);
-					/* zaalokuj pamiec na nowy */
-					description = from_utf8("ISO-8859-2", kv->value);
+					ggadu_set_protocol_status_description(p,from_utf8("ISO-8859-2", kv->value));
 
 					/* ustaw nowy opis w sesji */
-					tlen_presence(session, sp->status, description);
+					tlen_presence(session, sp->status, ggadu_get_protocol_status_description(p));
 					
 					/* uaktualnij GUI */
 					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
@@ -1258,11 +1254,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			signal->data_return = ggadu_find_status_prototype(p, session->status);
 		else
 			signal->data_return = ggadu_find_status_prototype(p, TLEN_STATUS_UNAVAILABLE);
-			
-/*			signal->data_return = (gpointer) session->status;
-		else
-			signal->data_return = (gpointer) TLEN_STATUS_UNAVAILABLE;
-*/			
 	}
 }
 

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.88 2004/10/15 13:04:14 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.89 2004/10/15 14:14:38 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -632,7 +632,7 @@ void change_status(GPtrArray * ptra)
 		print_debug("requested status ID : %d, last_resort_status : %d\n", status, last_resort_status);
 		
 		sp1 = ggadu_find_status_prototype(gp->p, status != 0 ? status : last_resort_status);
-		/* sp1 = ggadu_find_status_prototype(gp->p, status != 0 ? status : *(int *) &last_resort_status); */
+
 		if (sp1 != NULL && is_in_status(status, gp->p->offline_status))
 		{
 			/* *INDENT-OFF* */

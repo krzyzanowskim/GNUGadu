@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.9 2004/10/15 13:04:14 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.10 2004/10/15 14:14:38 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -134,6 +134,7 @@ typedef struct
 {
     gchar *display_name;
     gchar *img_filename;	/* ¶cie¿ka do obrazka z etykiet± na zak³adkê */
+    gchar *status_description;	/* current description - description of current status */
     GSList *statuslist;		/* lista dostêpnych statusów danego protoko³u */
     GSList *offline_status;	/* ktory status oznacza offline */
     GSList *away_status;	/* ktory status oznacza away (NULL = brak) */
@@ -171,7 +172,7 @@ typedef struct
 {
     guint type;
     gchar *name;		/* nazwa zeby mozna bylo po niej znajdowac plugin */
-    gchar *description;
+    gchar *description;		/* descriptive text about plugin */
     gpointer ptr;		/* wskaznik na strukture charakterystyczna dla pluginu (np. protokolu) */
     void *plugin_so_handler;
 
