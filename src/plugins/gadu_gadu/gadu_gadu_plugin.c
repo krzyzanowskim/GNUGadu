@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.174 2004/06/11 00:19:02 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.175 2004/06/12 07:04:53 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -523,10 +523,25 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 						       (gpointer) g_strdup_printf("%d", recipients_gg[i]));
 
 		}
-
-		hist_line = g_strdup_printf("-> (%s) %s :: %s\n", get_timestamp(msg->time), msg->id, msg->message);
+		
+		GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
+		GSList *us = list;
+		gchar *line2 = NULL;
+		
+		while(us)
+		{
+			GGaduContact *k = (GGaduContact *) us->data;
+			if(strcmp(k->id, msg->id)==0) line2 = g_strdup_printf("%s", k->nick);
+			
+			us = us->next;
+		}
+		
+		hist_line = g_strdup_printf("chatrcv,%s,%s,%d,%d,%s\n", msg->id, line2, msg->time, (int)time(0), msg->message);
+		
 		ggadu_gg_save_history(msg->id, hist_line);
+		g_free(line2);
 		g_free(hist_line);
+		g_slist_free(list);
 
 		signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui", GGaduMsg_free);
 
@@ -557,12 +572,33 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 						g_free(k->ip);
 						k->ip = g_strdup_printf("%s:%d", strIP,e->event.notify60[i].remote_port);
 					}
-
+					
 					k->status = e->event.notify60[i].status;
 					g_free(k->status_descr);
-					k->status_descr = ggadu_convert("CP1250", "UTF-8", ggadu_strchomp(e->event.notify60[i].descr));
+					k->status_descr = ggadu_convert("CP1250", "UTF-8", e->event.notify60[i].descr);
 
 					ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(id), k, REPO_VALUE_DC);
+					
+					/* Zapiszmy sobie zmiane opisu do pliku historii */
+					
+					gchar *status = NULL;
+					if((k->status == GG_STATUS_AVAIL)||(k->status == GG_STATUS_AVAIL_DESCR))		status = g_strdup_printf("avail");
+					else if((k->status == GG_STATUS_BUSY)||(k->status == GG_STATUS_BUSY_DESCR))		status = g_strdup_printf("busy");
+					else if((k->status == GG_STATUS_INVISIBLE)||(k->status == GG_STATUS_INVISIBLE_DESCR))	status = g_strdup_printf("notavail");
+					else if((k->status == GG_STATUS_NOT_AVAIL)||(k->status == GG_STATUS_NOT_AVAIL_DESCR))	status = g_strdup_printf("notavail");
+					else if(k->status == GG_STATUS_BLOCKED)							status = g_strdup_printf("blocked");
+					else											status = g_strdup_printf("unknown");
+					
+					/* Format kompatybilny z histori± Kadu ;) 			*/
+					/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;)	*/
+
+					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
+							    ((k->ip == NULL) ? "0.0.0.0" : k->ip), (int)time(0), status,
+							    ((k->status_descr == NULL) ? "" : g_strdup_printf(",%s",k->status_descr)));
+					ggadu_gg_save_history((gchar *) k->id, line);
+					
+					g_free(line);
+					g_free(status);
 				}
 				else
 				{
@@ -608,8 +644,28 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 					k->status = n->status;
 					ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k,REPO_VALUE_DC);
+					
+					/* Zapiszmy sobie zmiane opisu do pliku historii */
+					
+					gchar *status = NULL;
+					if((k->status == GG_STATUS_AVAIL)||(k->status == GG_STATUS_AVAIL_DESCR))		status = g_strdup_printf("avail");
+					else if((k->status == GG_STATUS_BUSY)||(k->status == GG_STATUS_BUSY_DESCR))		status = g_strdup_printf("busy");
+					else if((k->status == GG_STATUS_INVISIBLE)||(k->status == GG_STATUS_INVISIBLE_DESCR))	status = g_strdup_printf("notavail");
+					else if((k->status == GG_STATUS_NOT_AVAIL)||(k->status == GG_STATUS_NOT_AVAIL_DESCR))	status = g_strdup_printf("notavail");
+					else if(k->status == GG_STATUS_BLOCKED)							status = g_strdup_printf("blocked");
+					else											status = g_strdup_printf("unknown");
+					
+					/* Format kompatybilny z histori± Kadu ;) 			*/
+					/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;)	*/
+					
+					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
+							    ((k->ip == NULL) ? "0.0.0.0" : k->ip), (gint)time(0), status,
+							    ((k->status_descr == NULL) ? "" : g_strdup_printf(",%s",k->status_descr)));
+					ggadu_gg_save_history((gchar *) k->id, line);
+					
+					g_free(line);
+					g_free(status);
 				}
-				
 				g_free(id);
 				n++;
 			}
@@ -633,11 +689,33 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			
 			g_free(k->status_descr);
 			tmp = ggadu_convert("CP1250", "UTF-8",((e->type == GG_EVENT_STATUS) ? e->event.status.descr : e->event.status60.descr));
+
 			k->status_descr = ggadu_strchomp(tmp);
 			
 			/* *INDENT-ON* */
 
 			ggadu_repo_change_value("gadu-gadu", ggadu_repo_key_from_string(k->id), k, REPO_VALUE_DC);
+			
+			/* Zapiszmy sobie zmiane opisu do pliku historii */
+
+			gchar *status = NULL;
+			if((k->status == GG_STATUS_AVAIL)||(k->status == GG_STATUS_AVAIL_DESCR))		status = g_strdup_printf("avail");
+			else if((k->status == GG_STATUS_BUSY)||(k->status == GG_STATUS_BUSY_DESCR))		status = g_strdup_printf("busy");
+			else if((k->status == GG_STATUS_INVISIBLE)||(k->status == GG_STATUS_INVISIBLE_DESCR))	status = g_strdup_printf("notavail");
+			else if((k->status == GG_STATUS_NOT_AVAIL)||(k->status == GG_STATUS_NOT_AVAIL_DESCR))	status = g_strdup_printf("notavail");
+			else if(k->status == GG_STATUS_BLOCKED)							status = g_strdup_printf("blocked");
+			else											status = g_strdup_printf("unknown");
+
+			/* Format kompatybilny z histori± Kadu ;) 			*/
+			/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;)	*/
+
+			gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
+				    ((k->ip == NULL) ? "0.0.0.0" : k->ip), (gint)time(0), status,
+				    ((k->status_descr == NULL) ? "" : g_strdup_printf(",%s",k->status_descr)));
+			ggadu_gg_save_history((gchar *) k->id, line);
+
+			g_free(line);
+			g_free(status);
 
 			g_free(id);
 		}
@@ -2196,12 +2274,26 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				{
 					GSList *tmp = msg->recipients;
 					while (tmp)
-					{
+					{	
+						GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
+						GSList *us = list;
+						gchar *line2 = NULL;
+						
+						while(us)
+						{
+							GGaduContact *k = (GGaduContact *) us->data;
+							if(strcmp(k->id, msg->id)==0) line2 = g_strdup_printf("%s", k->nick);
+							
+							us = us->next;
+						}
+						
+						
 						gchar *line =
-							g_strdup_printf("<- (%s) %s :: %s\n", get_timestamp(0), _("Me"),
-									msg->message);
+							g_strdup_printf("chatsend,%s,%s,%d,%s\n", msg->id, line2, (gint)time(0), msg->message);
 						ggadu_gg_save_history((gchar *) tmp->data, line);
+						g_free(line2);
 						g_free(line);
+						g_slist_free(list);
 						tmp = tmp->next;
 					}
 				}
@@ -2220,10 +2312,25 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				else if (ggadu_config_var_get(handler, "log"))
 				{
-					gchar *line = g_strdup_printf("<- (%s) %s :: %s\n", get_timestamp(0), _("Me"),
-								      msg->message);
+					GSList *list = ggadu_repo_get_as_slist("gadu-gadu", REPO_VALUE_CONTACT);
+					GSList *us = list;
+					gchar *line2 = NULL;
+					
+					while(us)
+					{
+						GGaduContact *k = (GGaduContact *) us->data;
+						if(strcmp(k->id, msg->id)==0) line2 = g_strdup_printf("%s", k->nick);
+						
+						us = us->next;
+					}
+						
+					gchar *line =
+						g_strdup_printf("chatsend,%s,%s,%d,%s\n", msg->id, line2, (gint)time(0), msg->message);
 					ggadu_gg_save_history(msg->id, line);
+
+					g_free(line2);
 					g_free(line);
+					g_slist_free(list);
 				}
 			}
 
