@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.27 2003/08/28 17:51:50 krzyzak Exp $
+dnl $Id: configure.in,v 1.28 2003/09/18 13:38:51 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -198,8 +198,18 @@ fi
 
 AC_ARG_WITH(gadu, [  --with-gadu		  Build gadu-gadu plugin	default=no])
 if test "x$with_gadu" = "xyes"; then 
-    PKG_CHECK_MODULES(GG,libgadu >= 0.15.0 ,[],AC_MSG_ERROR($GG_PKG_ERRORS))
     want_gadu=yes
+    PKG_CHECK_MODULES(GG,libgadu >= 1.0 ,[],want_gadu=no)
+
+	if test "$want_gadu" = "no"; then 
+	    PKG_CHECK_MODULES(GG,libgadu = CVS,want_gadu=yes,want_gadu=no)
+	    AC_MSG_RESULT([*****************\nI don't know what is you libgadu version, "CVS" as a Version doesn't get me any information about it, so you use it on you own risk\n*****************])
+	fi
+	
+    if test "$want_gadu" = "no"; then 
+    	AC_MSG_ERROR($GG_PKG_ERRORS)
+    fi
+    
     AC_SUBST(GG_LIBS)
     AC_SUBST(GG_CFLAGS)
 fi
