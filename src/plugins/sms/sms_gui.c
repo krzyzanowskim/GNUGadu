@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.38 2004/01/21 17:43:42 thrulliq Exp $ */
+/* $Id: sms_gui.c,v 1.39 2004/01/25 16:18:38 shaster Exp $ */
 
 /*
  * Sms gui plugin for GNU Gadu 2
@@ -74,17 +74,19 @@ gpointer sms_edit_contact(gpointer user_data)
 	GSList *optlist = NULL;
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) users->data;
+	gchar *id = g_strconcat(k->nick, "@", k->mobile, NULL);
 
 	print_debug("%s : Edit Contact\n", GGadu_PLUGIN_NAME);
 
     /* *INDENT-OFF* */
-    ggadu_dialog_add_entry(&optlist, GGADU_SMS_CONTACT_ID, _("Id"), VAR_STR, g_strconcat(k->nick, "@", k->mobile, NULL), VAR_FLAG_INSENSITIVE);
+    ggadu_dialog_add_entry(&optlist, GGADU_SMS_CONTACT_ID, _("Id"), VAR_STR, id, VAR_FLAG_INSENSITIVE);
     ggadu_dialog_add_entry(&optlist, GGADU_SMS_CONTACT_NICK, _("Nick"), VAR_STR, k->nick, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&optlist, GGADU_SMS_CONTACT_NUMBER, _("Number"), VAR_STR, k->mobile, VAR_FLAG_NONE);
     /* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui change user window", optlist, "main-gui");
 
+	g_free(id);
 	return NULL;
 }
 
@@ -221,18 +223,14 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		GGaduMenu *umenu = ggadu_menu_create();
 
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send SMS"), sms_send_sms, NULL));
-
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), sms_edit_contact, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Remove"), sms_remove_contact, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Add New"), sms_add_contact, NULL));
 
 		ggadu_menu_print(umenu, NULL);
 
-		signal_emit(GGadu_PLUGIN_NAME, "gui register userlist menu", umenu, "main-gui");
-
 		signal->data_return = umenu;
 	}
-
 
 	if (signal->name == g_quark_from_static_string("update config"))
 	{
@@ -442,16 +440,23 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		while (uslist)
 		{
 			GGaduContact *kvtmp = (GGaduContact *) uslist->data;
+			gchar *id = g_strconcat(kvtmp->nick, "@", kvtmp->mobile, NULL);
 
-			if (!ggadu_strcasecmp(g_strconcat(kvtmp->nick, "@", kvtmp->mobile, NULL), k->id))
+			if (!ggadu_strcasecmp(id, k->id))
 			{
 				ggadu_repo_del_value("sms", kvtmp->id);
+				g_free(kvtmp->id);
+				g_free(kvtmp->nick);
+				g_free(kvtmp->mobile);
 				kvtmp->mobile = k->mobile;
 				kvtmp->id = k->mobile;
 				kvtmp->nick = k->nick;
+				print_debug("mobile:%s, id:%s, nick:%s\n", kvtmp->mobile, kvtmp->id, kvtmp->nick);
 				ggadu_repo_add_value("sms", kvtmp->id, kvtmp, REPO_VALUE_CONTACT);
+				g_free(id);
 				break;
 			}
+			g_free(id);
 			uslist = uslist->next;
 		}
 /*
@@ -482,7 +487,6 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		}
 		GGaduDialog_free(d);
 	}
-
 }
 
 /* guziczki na dole, podpiete pod zmiane statusu */
@@ -491,7 +495,7 @@ GSList *button_send()
 	GSList *list = NULL;
 	GGaduStatusPrototype *sp;
 
-	sp = g_new0(GGaduStatusPrototype, 3);
+	sp = g_new0(GGaduStatusPrototype, 2);
 
 	sp->status = 1;
 	sp->description = g_strdup(_("Send SMS (internal)"));
@@ -503,7 +507,6 @@ GSList *button_send()
 	sp->description = g_strdup(_("Send SMS (external)"));
 	sp->image = g_strdup("sms_i.png");
 	list = g_slist_append(list, sp);
-	sp++;
 
 	return list;
 }
@@ -519,9 +522,8 @@ void start_plugin()
 
 	p->statuslist = button_send();
 	p->offline_status =
-		g_slist_append(p->offline_status,
-			       (gint *) ggadu_config_var_get(sms_handler,
-							     "show_in_status") ? (gpointer) 2 : (gpointer) 3);
+		g_slist_append(p->offline_status, (gint *)
+			ggadu_config_var_get(sms_handler,"show_in_status") ? (gpointer) 2 : (gpointer) 3);
 
 	register_signal(sms_handler, "update config");
 	register_signal(sms_handler, "change status");

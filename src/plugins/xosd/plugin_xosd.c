@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.19 2004/01/17 19:41:14 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.20 2004/01/25 16:19:15 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -390,6 +390,9 @@ gpointer osd_preferences(gpointer user_data)
     /* *INDENT-ON* */
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+
+	g_slist_free(pos_list);
+	g_slist_free(align_list);
 
 	return NULL;
 }

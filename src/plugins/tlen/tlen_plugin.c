@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.50 2004/01/21 23:42:39 shaster Exp $ */
+/* $Id: tlen_plugin.c,v 1.51 2004/01/25 16:18:53 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -102,7 +102,7 @@ gpointer user_view_history_action(gpointer user_data)
 	GIOChannel *ch = NULL;
 	gchar *line = NULL;
 	gchar *path = NULL;
-	GString *hist_buf = g_string_new(NULL);
+	GString *hist_buf = NULL;
 	GSList *users = (GSList *) user_data;
 	GGaduContact *k = (users) ? (GGaduContact *) users->data : NULL;
 
@@ -115,6 +115,8 @@ gpointer user_view_history_action(gpointer user_data)
 
 	if (!ch)
 		return NULL;
+
+	hist_buf = g_string_new(NULL);
 
 	g_io_channel_set_encoding(ch, "ISO-8859-2", NULL);
 
@@ -282,6 +284,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 	while ((e = tlen_getevent(session)) != NULL)
 	{
+		gchar *desc_utf8 = NULL;
+
 		print_debug("%d", e->type);
 		switch (e->type)
 		{
@@ -294,8 +298,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			break;
 
 		case TLEN_EVENT_GOTROSTERITEM:
-
-
 			if (e->roster->jid == NULL)
 			{
 				print_debug("%s \t\t B£¡D PODCZAS GOTROSTERITEM!\n", GGadu_PLUGIN_NAME);
@@ -309,9 +311,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			if (e->roster->name)
 			{
-				const gchar *temp;
-				temp = to_utf8("ISO-8859-2", e->roster->name);
-				k->nick = g_strdup(temp);
+				k->nick = to_utf8("ISO-8859-2", e->roster->name);
 			}
 			else
 			{
@@ -447,17 +447,15 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			print_debug("STATUS IN EVENT: %d\n", e->presence->status);
 
-			{
-				gchar *desc_utf8 = NULL;
-				desc_utf8 = ggadu_convert("ISO-8859-2", "UTF-8", e->presence->description);
-				set_userlist_status(notify, desc_utf8, userlist);
-			}
+			desc_utf8 = ggadu_convert("ISO-8859-2", "UTF-8", e->presence->description);
+			set_userlist_status(notify, desc_utf8, userlist);
+			g_free(desc_utf8);
 
 			while (l)
 			{
 				GGaduContact *k = (GGaduContact *) l->data;
 
-				if (!g_strcasecmp(k->id, notify->id))
+				if (!ggadu_strcasecmp(k->id, notify->id))
 				{
 					ggadu_repo_change_value("tlen", k->id, k, REPO_VALUE_DC);
 				}
@@ -608,28 +606,10 @@ gpointer user_remove_user_action(gpointer user_data)
 gpointer user_add_user_action(gpointer user_data)
 {
 	GSList *optlist = NULL;
-	GGaduKeyValue *kv = NULL;
 
-	kv = g_new0(GGaduKeyValue, 1);
-	kv->key = GGADU_TLEN_UIN;
-	kv->description = g_strdup("Tlen ID");
-	kv->type = VAR_STR;
-
-	optlist = g_slist_append(optlist, kv);
-
-	kv = g_new0(GGaduKeyValue, 1);
-	kv->key = GGADU_TLEN_NICK;
-	kv->description = g_strdup(_("Nick"));
-	kv->type = VAR_STR;
-
-	optlist = g_slist_append(optlist, kv);
-
-	kv = g_new0(GGaduKeyValue, 1);
-	kv->key = GGADU_TLEN_GROUP;
-	kv->description = g_strdup(_("Group"));
-	kv->type = VAR_STR;
-
-	optlist = g_slist_append(optlist, kv);
+	ggadu_dialog_add_entry(&optlist, GGADU_TLEN_UIN, "Tlen ID", VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&optlist, GGADU_TLEN_NICK, _("Nick"), VAR_STR, NULL, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(&optlist, GGADU_TLEN_GROUP, _("Group"), VAR_STR, NULL, VAR_FLAG_NONE);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui add user window", optlist, "main-gui");
 
@@ -823,6 +803,8 @@ gpointer user_preferences_action(gpointer user_data)
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
+	g_slist_free(statuslist_names);
+
 	return NULL;
 }
 
@@ -844,7 +826,6 @@ GGaduMenu *build_tlen_menu()
 
 void start_plugin()
 {
-
 	print_debug("%s : start_plugin\n", GGadu_PLUGIN_NAME);
 
 	p = g_new0(GGaduProtocol, 1);
@@ -933,9 +914,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			else if (sp->status == TLEN_STATUS_DESC)
 			{
 				GGaduDialog *d = ggadu_dialog_new();
-				GGaduKeyValue *kv = NULL;
 				GGaduStatusPrototype *_sp;
 				GSList *tmp = NULL;
+				gchar *desc_utf = NULL;
 
 				/* Wyszukiwanie StatusPrototype :-D */
 
@@ -965,16 +946,14 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				ggadu_dialog_set_title(d, _("Enter status description"));
 				ggadu_dialog_callback_signal(d, "change status descr");
 
-				kv = g_new0(GGaduKeyValue, 1);
-				kv->description = g_strdup(_("Description:"));
-				kv->type = VAR_STR;
-				kv->value = to_utf8("ISO-8859-2", description);
-
-				d->optlist = g_slist_append(d->optlist, kv);
 				d->user_data = _sp;
+
+				desc_utf = to_utf8("ISO-8859-2", description);
+				ggadu_dialog_add_entry(&(d->optlist), 666, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
+				g_free(desc_utf);
+
 				signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _sp->status,
-					    "main-gui");
+				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) _sp->status, "main-gui");
 			}
 			else
 			{
@@ -986,7 +965,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			ggadu_tlen_login((gpointer) sp->status);
 		return;
 	}
-
 
 	if (signal->name == g_quark_from_static_string("update config"))
 	{
@@ -1070,6 +1048,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 */
 					desc_utf = kv->value;
 					desc_iso = from_utf8("ISO-8859-2", desc_utf);
+					g_free(description);
 					description = g_strdup(desc_iso);
 					tlen_presence(session, sp->status, description);
 
@@ -1143,13 +1122,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("send message"))
 	{
-
 		GGaduMsg *msg = signal->data;
 		if (connected && msg)
 		{
-			gchar *message = NULL;
-
-			message = from_utf8("ISO-8859-2", msg->message);
+			gchar *message = from_utf8("ISO-8859-2", msg->message);
 
 			if (msg->class == GGADU_CLASS_CHAT)
 				msg->class = TLEN_CHAT;
@@ -1197,7 +1173,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 		if ((d->response == GGADU_OK) || (d->response == GGADU_NONE))
 		{
-
 			if (!(req = tlen_new_pubdir()))
 			{
 				GGaduDialog_free(d);
@@ -1229,19 +1204,15 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				case GGADU_SEARCH_GENDER:
 					if (kv->value)
 					{
-						if (!g_strcasecmp(kv->value, _("female")))
+						if (!ggadu_strcasecmp(kv->value, _("female")))
 							req->gender = 2;
-						if (!g_strcasecmp(kv->value, _("male")))
+						if (!ggadu_strcasecmp(kv->value, _("male")))
 							req->gender = 1;
 					};
 					break;
 				case GGADU_SEARCH_ID:
-				{
 					if (kv->value)
-					{
 						req->id = g_strdup(kv->value);
-					}
-				}
 					break;
 				}
 
@@ -1264,8 +1235,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			signal->data_return = (gpointer) TLEN_STATUS_UNAVAILABLE;
 	}
 }
-
-
 
 void destroy_plugin()
 {

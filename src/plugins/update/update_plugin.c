@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.14 2004/01/17 00:45:06 shaster Exp $ */
+/* $Id: update_plugin.c,v 1.15 2004/01/25 16:19:10 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -386,10 +386,7 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
     if (signal->name == g_quark_from_static_string("get current version"))
     {
-	gchar *tmp = update_get_current_version(0);
-	signal->data_return = (gpointer) g_strdup(tmp);
-	g_free(tmp);
-
+	signal->data_return = (gpointer) update_get_current_version(0);
 	return;
     }
 }

@@ -1,3 +1,6 @@
+25.01.2004
+- massive memory leaks fixes, minor code cleanups (tlen/sms/update/xosd/shasta)
+
 24.01.2004
 - massive memory leaks fixes, minor code cleanups (gadu-gadu/shasta)
 
