@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.49 2004/09/23 08:41:24 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.50 2004/10/09 13:30:48 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -696,7 +696,7 @@ void gui_about(GtkWidget * widget, gpointer data)
 				 "Igor Popik &lt;thrull@slackware.pl&gt;\n"
 				 "Marcin Krzyzanowski &lt;krzak@hakore.com&gt;\n\n" "<b>Also:</b>\n"
 				 "Bartosz Zapalowski\n" "Mateusz Papiernik\n" "HelDoRe\n" "Jakub 'shasta' Jankowski\n"
-				 "Pawel Jan Maczewski\n\n" "<b>Thanks to:</b>\n" "Aflinta\n" "GammaRay\n" "Plavi\n"
+				 "Pawel Jan Maczewski\nMarcin P. Kobierzycki\n\n" "<b>Thanks to:</b>\n" "Aflinta\n" "GammaRay\n" "Plavi\n"
 				 "Dwuziu\nInfecto\n" "see AUTHORS file for details\n\n" "<i>Compile time:\n%s %s</i>"), VERSION,
 				__DATE__, __TIME__);
 
