@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.88 2004/08/04 20:43:50 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.89 2004/08/16 13:15:27 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -115,6 +115,95 @@ static gpointer user_edit_action(gpointer user_data)
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	return NULL;
+}
+
+static gpointer user_ignore_action(gpointer user_data)
+{
+	GSList *user = (GSList *) user_data;
+	GGaduContact *k = (GGaduContact *) user->data;
+	gchar *ignored;
+
+	if(!user)
+	        return NULL;
+
+	ignored=ggadu_config_var_get(jabber_handler, "ignored");
+	if(!g_strrstr(ignored, k->id))
+	{
+		gchar *string=g_strconcat(ignored, k->id, NULL);
+
+                ggadu_config_var_set(jabber_handler, "ignored", string);
+	        ggadu_config_save(jabber_handler);
+		g_free(string);
+	}
+	       
+	return NULL;
+}
+
+static gpointer user_unignore_action(gpointer user_data)
+{
+        GSList *user = (GSList *) user_data;
+	GGaduContact *k = (GGaduContact *) user->data;
+	gchar *ignored;
+
+	if(!user)
+	        return NULL;
+
+	ignored=ggadu_config_var_get(jabber_handler, "ignored");
+	if(g_strrstr(ignored, k->id))
+	{
+	        gchar **tab;
+		gchar *string;
+
+	        tab=g_strsplit(ignored, k->id, 2);
+		string=g_strconcat(tab[0], tab[1], NULL);
+                ggadu_config_var_set(jabber_handler, "ignored", string);
+	        ggadu_config_save(jabber_handler);
+		g_strfreev(tab);
+		g_free(string);
+	}
+
+        return NULL;
+}
+
+static gpointer user_show_ignored_action(gpointer user_data)
+{
+        GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+	GGaduContact *k;
+	gchar *string=NULL;
+	gchar *tmp;
+
+	while(roster)
+	{
+                k=roster->data;
+	        if(g_strrstr(ggadu_config_var_get(jabber_handler, "ignored"), k->id))
+	        {
+		        if(string)
+			{
+				tmp=string;
+                                string=g_strconcat(string, k->id, "\n", NULL);
+				g_free(tmp);
+			} else
+			{
+                                string=g_strconcat(k->id, "\n", NULL);
+			}
+	        }
+	        roster=roster->next;
+	}
+
+	g_slist_free(roster);
+
+	if(string)
+	{
+	        g_strchomp(string);
+                signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strconcat(_("Ignored:\n"), string, NULL), "main-gui");
+	} else
+	{
+                signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("No one is ignored.")), "main-gui");
+	}
+
+	g_free(string);
+
+        return NULL;
 }
 
 static gpointer user_ask_remove_action(gpointer user_data)
@@ -246,6 +335,10 @@ static GGaduMenu *build_userlist_menu(void)
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Edit"), user_edit_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Remove"), user_ask_remove_action, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Ignore"), user_ignore_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Unignore"), user_unignore_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Show ignored"), user_show_ignored_action, NULL));
+	ggadu_menu_add_submenu(menu, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(menu, ggadu_menu_new_item(_("Add New"), user_add_action, NULL));
 
 
@@ -279,6 +372,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_JABBER_LOG:
 					ggadu_config_var_set(jabber_handler, "log", kv->value);
 					break;
+				case GGADU_JABBER_ONLY_FRIENDS:
+					ggadu_config_var_set(jabber_handler, "only_friends", kv->value);
+					break;
 				case GGADU_JABBER_AUTOCONNECT:
 					ggadu_config_var_set(jabber_handler, "autoconnect", kv->value);
 					break;
@@ -293,6 +389,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 					break;
 				case GGADU_JABBER_PROXY:
 			       		ggadu_config_var_set(jabber_handler, "proxy", kv->value);
+					break;
+				case GGADU_JABBER_IGNORED:
+			       		ggadu_config_var_set(jabber_handler, "ignored", kv->value);
 					break;
 				}
 				tmplist = tmplist->next;
@@ -754,6 +853,8 @@ gpointer user_preferences_action(gpointer user_data)
 				ggadu_config_var_get(jabber_handler, "password"), VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
 				ggadu_config_var_get(jabber_handler, "log"), VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_ONLY_FRIENDS, _("Receive messages from friends only"), VAR_BOOL,
+				ggadu_config_var_get(jabber_handler, "only_friends"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 				ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
@@ -855,9 +956,11 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(jabber_handler, "password", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "server", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "log", VAR_BOOL);
+	ggadu_config_var_add(jabber_handler, "only_friends", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "resource", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "proxy", VAR_STR);
+	ggadu_config_var_add_with_default(jabber_handler, "ignored", VAR_STR, "");
 
 	if (lm_ssl_is_supported())
 		ggadu_config_var_add(jabber_handler, "use_ssl", VAR_BOOL);

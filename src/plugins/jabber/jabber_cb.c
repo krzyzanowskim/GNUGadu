@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.46 2004/08/04 20:43:49 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.47 2004/08/16 13:15:27 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -529,6 +529,29 @@ LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection
 	if (strchr(jid, '/'))
 		strchr(jid, '/')[0] = '\0';
 
+ 	if(ggadu_config_var_get(jabber_handler, "only_friends"))
+ 	{
+ 	    GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+ 	    gboolean handle_it = FALSE;
+ 
+ 	    while(roster)
+ 	    {
+                GGaduContact *k = (GGaduContact *) roster->data;
+ 		if(!g_strcasecmp(jid, k->id) || lm_message_get_type(message)!=LM_MESSAGE_TYPE_MESSAGE)
+ 		{
+ 		    handle_it=TRUE;
+ 		    break;
+ 		}
+                roster=roster->next;
+ 	    }
+ 
+ 	    g_slist_free(roster);
+ 	    if(!handle_it) return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+ 	}
+
+	if(g_strrstr(ggadu_config_var_get(jabber_handler, "ignored"), jid))
+	    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+ 
 	if (lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_ERROR)
 	{
 		print_debug("jabber: Error message : \n%s", lm_message_node_to_string(message->node));

@@ -1,3 +1,6 @@
+16.08.2004
+- jabber ignore/unignore functionality (jabber/m-kobierzycki@debian.linux.org.pl)
+
 12.08.2004
 - fixed gghist if build without debug (ughhh) (gghist/krzak)
 
