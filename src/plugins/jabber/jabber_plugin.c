@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.108 2004/09/28 14:01:33 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.109 2004/09/28 14:25:52 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -726,8 +726,9 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			/*jabber_change_status(jabber_data.status); "change status descr" should do it */
 			return;
 		} else {
-			jabber_change_status(sp->status);
 		}
+		
+		jabber_change_status(sp->status);
 
 	}
 	else if (signal->name == GET_CURRENT_STATUS_SIG)
