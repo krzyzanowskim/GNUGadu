@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.121 2004/10/15 13:04:15 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.122 2004/10/15 14:38:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -691,12 +691,11 @@ static gboolean window_event_signal(GtkWidget *window, GdkEvent *event, gpointer
 	    && g_object_get_data(G_OBJECT(window),"new-message-mark"))
 	{
 	    GdkPixbuf *image = NULL;
-
 	    print_debug("chat_window : GDK_WINDOW_STATE || GDK_FOCUS_CHANGE");
-	    g_object_set_data(G_OBJECT(window),"new-message-mark",(gpointer) FALSE);
 	    image = create_pixbuf(GGADU_DEFAULT_ICON_FILENAME);
-	    gtk_window_set_icon(GTK_WINDOW(chat_window), image);
+	    gtk_window_set_icon(GTK_WINDOW(window), image);
 	    gdk_pixbuf_unref(image);
+	    g_object_set_data(G_OBJECT(window),"new-message-mark",(gpointer) FALSE);
 	}
 	    
 	return FALSE;
@@ -1335,13 +1334,10 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 		if (!g_object_get_data(G_OBJECT(window),"new-message-mark"))
 		{
 		    GdkPixbuf *image = NULL;
-		    g_object_set_data(G_OBJECT(window),"new-message-mark",(gpointer) TRUE);
-		    
 		    image = create_pixbuf(GGADU_MSG_ICON_FILENAME);
 		    gtk_window_set_icon(GTK_WINDOW(chat_window), image);
 		    gdk_pixbuf_unref(image);
-		    
-		    
+		    g_object_set_data(G_OBJECT(window),"new-message-mark",(gpointer) TRUE);
 		}
 	    }
 	}
