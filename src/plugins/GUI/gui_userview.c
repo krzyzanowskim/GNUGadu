@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.53 2004/10/15 13:04:15 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.54 2004/10/19 21:51:54 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -90,14 +90,14 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 	GGaduContact *k = NULL;
 
 	gtk_tree_model_get(model, iter, 2, &k, -1);
-
+	
 	if (!k) {
 		gchar *font = ggadu_config_var_get(gui_handler, "contact_list_protocol_font");
 		g_object_set(G_OBJECT(renderer), "font", (font) ? font : "bold", NULL);
 	} else {
 		gchar *font = ggadu_config_var_get(gui_handler, "contact_list_contact_font");
 		g_object_set(G_OBJECT(renderer), "font", (font) ? font : "normal", NULL);
-		
+
 		if (ggadu_config_var_get(gui_handler, "descr_on_list") && k->status_descr) {
 		    gchar *markup_descr = g_markup_escape_text(k->status_descr, strlen(k->status_descr));
 		    gchar *markup = g_strdup_printf("%s\n<small>%s</small>", k->nick, markup_descr);
@@ -113,9 +113,9 @@ void add_columns(GtkTreeView * tv)
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
 
-	renderer = gtk_cell_renderer_pixbuf_new();
-
 	column = gtk_tree_view_column_new();
+
+	renderer = gtk_cell_renderer_pixbuf_new();
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes(column, renderer, "pixbuf", 0, NULL);
 	gtk_tree_view_column_set_cell_data_func(column, renderer, on_pixbuf_data, NULL, NULL);
@@ -126,7 +126,6 @@ void add_columns(GtkTreeView * tv)
 	gtk_tree_view_column_set_cell_data_func(column, renderer, on_text_data, NULL, NULL);
 
 	gtk_tree_view_column_set_sizing(GTK_TREE_VIEW_COLUMN(column), GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tv), FALSE);
 }
@@ -330,6 +329,8 @@ void gui_list_add(gui_protocol * gp)
 
 	gp->users_liststore = users_liststore;
 	
+	//forcing realize treeview before we render contacts
+	gtk_widget_realize(treeview); 
 }
 
 void gui_tree_add(gui_protocol * gp)
@@ -541,6 +542,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 			gchar *st = NULL;
 
 			found = TRUE;
+
 			if (k->status_descr)
 				st = g_strdup_printf("- %s (%s)", k->status_descr, (sp ? sp->description : ""));
 			else
@@ -576,9 +578,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 
 					gtk_window_set_title(GTK_WINDOW(window), tmp);
 					/* g_free(tmp);  tmp shoud be const char */
-				}
-
-				if (chat_type == CHAT_TYPE_TABBED)
+				} else if (chat_type == CHAT_TYPE_TABBED)
 				{
 					GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(window), "chat_notebook");
 					guint curr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
@@ -620,10 +620,13 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 			if (!tree)
 			{
 				gtk_list_store_set(gp->users_liststore, &users_iter, 0, image, -1);
+				gtk_list_store_set(gp->users_liststore, &users_iter, 1, k->nick, -1);
+
 			}
 			else
 			{
 				gtk_tree_store_set(users_treestore, &users_iter, 0, image, -1);
+				gtk_tree_store_set(users_treestore, &users_iter, 1, k->nick, -1);
 			}
 
 			if (k->status_descr)
@@ -836,10 +839,11 @@ void gui_user_view_register(gui_protocol * gp)
 {
 	g_return_if_fail(gp != NULL);
 
-	if (!tree)
+	if (!tree) {
 		gui_list_add(gp);
-	else
+	} else {
 		gui_tree_add(gp);
+	}	
 }
 
 /* ZONK */

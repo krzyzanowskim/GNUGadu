@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.57 2004/10/19 10:54:34 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.58 2004/10/19 21:51:54 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -287,10 +287,11 @@ void handle_notify(GGaduSignal * signal)
 	gui_protocol *gp = NULL;
 	GGaduNotify *n = (GGaduNotify *) signal->data;
 
+	g_return_if_fail(n != NULL);
+
 	gp = gui_find_protocol(signal->source_plugin_name, protocols);
 
 	g_return_if_fail(gp != NULL);
-	g_return_if_fail(n != NULL);
 
 	gui_user_view_notify(gp, n);
 }
