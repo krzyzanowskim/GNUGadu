@@ -30,3 +30,8 @@ src/plugins/aaway/aaway.c
 src/plugins/update/update_plugin.c
 src/plugins/ignore/ignore.c
 src/plugins/history/external/history_viewer.c
+src/plugins/sound/arts/plugin_sound_arts.c
+src/plugins/sound/esd/plugin_sound_esd.c
+src/plugins/sound/external/plugin_sound_external.c
+src/plugins/sound/oss/plugin_sound_oss.c
+
