@@ -1,4 +1,25 @@
-/* $Id: sms_core.h,v 1.16 2004/01/17 00:45:03 shaster Exp $ */
+/* $Id: sms_core.h,v 1.17 2004/01/27 01:19:54 shaster Exp $ */
+
+/* 
+ * SMS plugin for GNU Gadu 2 
+ * 
+ * Copyright (C) 2003 Bartlomiej Pawlak 
+ * Copyright (C) 2003-2004 GNU Gadu Team 
+ * 
+ * This program is free software; you can redistribute it and/or modify 
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation; either version 2 of the License, or 
+ * (at your option) any later version. 
+ * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details. 
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ */
 
 #ifndef SMS_CORE_PLUGIN_H
 #define SMS_CORE_PLUGIN_H 1
@@ -40,55 +61,55 @@
 
 enum
 {
-    SMS_IDEA = 2,
-    SMS_ERA,
-    SMS_PLUS
+	SMS_IDEA = 2,
+	SMS_ERA,
+	SMS_PLUS
 };
 
 enum
 {
-    ERR_NONE = 2,
-    ERR_BAD_TOKEN,
-    ERR_READ_TOKEN,
-    ERR_WRITE_TOKEN,
-    ERR_LIMIT_EX,
-    ERR_GATEWAY,
-    ERR_SERVICE,
-    ERR_DISABLE_G,
-    ERR_UNAUTH,
-    ERR_ACCESS_DENIED,
-    ERR_SYNTAX,
-    ERR_BAD_RCPT,
-    ERR_MSG_TOO_LONG,
-    ERR_UNKNOWN
+	ERR_NONE = 2,
+	ERR_BAD_TOKEN,
+	ERR_READ_TOKEN,
+	ERR_WRITE_TOKEN,
+	ERR_LIMIT_EX,
+	ERR_GATEWAY,
+	ERR_SERVICE,
+	ERR_DISABLE_G,
+	ERR_UNAUTH,
+	ERR_ACCESS_DENIED,
+	ERR_SYNTAX,
+	ERR_BAD_RCPT,
+	ERR_MSG_TOO_LONG,
+	ERR_UNKNOWN
 };
 
 enum
 {
-    GGADU_SMS_TYPE_WARN = 1,
-    GGADU_SMS_TYPE_INFO
+	GGADU_SMS_TYPE_WARN = 1,
+	GGADU_SMS_TYPE_INFO
 };
 
 typedef struct
 {
-    char *method;
-    char *host;
-    char *url;
-    char *url_params;
-    char *post_data;
-    int post_length;
+	gchar *method;
+	gchar *host;
+	gchar *url;
+	gchar *url_params;
+	gchar *post_data;
+	gint post_length;
 } HTTPstruct;
 
 typedef struct
 {
-    gboolean external;
-    gchar *number;		/* free() me */
-    gchar *body;		/* free() me */
-    gchar *sender;		/* free() me */
-    gchar *era_login;
-    gchar *era_password;
-    gchar *idea_token;		/* free() me */
-    gchar *idea_pass;		/* free() me */
+	gboolean external;
+	gchar *number;		/* free() me */
+	gchar *body;		/* free() me */
+	gchar *sender;		/* free() me */
+	gchar *era_login;
+	gchar *era_password;
+	gchar *idea_token;	/* free() me */
+	gchar *idea_pass;	/* free() me */
 } SMS;
 
 gpointer send_sms(SMS * message);
