@@ -1,3 +1,6 @@
+25.05.2003
+- allow +48 and 0 prefixes in phone numbers (sms/shasta)
+ 
 24.05.2003
 - blink statuslist while connecting (GUI/zapal)
 - SMS protocol is now shown in status list (sms/zapal)

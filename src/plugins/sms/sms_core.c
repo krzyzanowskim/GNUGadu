@@ -327,6 +327,13 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
 	return FALSE;
     }
 
+    if (g_strstr_len(recv_buff, i, "adres odbiorcy wiadomosci jest nieprawid"))
+    {
+	sms_message(sms_number, _("Invalid number"));
+	g_free(recv_buff);
+	return FALSE;
+    }
+
     g_free(recv_buff);
     return FALSE;
 }
@@ -494,6 +501,9 @@ int send_ERA(gchar *sms_sender,gchar *sms_number,gchar *sms_body)
 /* sprawdzenie jaka siec */
 int check_operator(gchar *sms_number)
 {
+    if (strlen(sms_number) != 9)
+	return FALSE;
+
     if (*sms_number == '5')
 	return SMS_IDEA;
 	
@@ -514,7 +524,7 @@ void sms_message(gchar *sms_number, gchar *message)
 
     if (method == GGADU_SMS_METHOD_CHAT) {
 	GGaduMsg *msg = g_new0(GGaduMsg,1);
-	msg->id = sms_number;
+	msg->id = (sms_number ? sms_number : g_strdup(_("None")));
 	msg->class = GGADU_CLASS_CHAT;
 	msg->message = g_strconcat(_("SMS plugin : "), message, NULL);
 	signal_emit("sms", "gui msg receive", msg, "main-gui");
@@ -526,9 +536,9 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 {
     gint result, gsm_oper;
     
-    if (!sms_sender && !sms_body) 
+    if (!sms_number) 
     {
-	sms_message(sms_number, _("Specify sender name and message!"));
+	sms_message(sms_number, _("Specify recipient number!"));
 	return;
     }
 
@@ -544,56 +554,56 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	return;
     }
     
-    if (strlen(sms_number) == 9)
+    if (*sms_number == '+') {
+	*sms_number++;
+
+	if (sms_number[0] == '4' && sms_number[1] == '8')
+            sms_number += 2;
+
+    } else if (sms_number[0] == '0')
+        *sms_number++;
+
+
+    gsm_oper = check_operator(sms_number);
+    switch (gsm_oper)
     {
-	gsm_oper = check_operator(sms_number);
-	switch (gsm_oper)
-	{
-	    case SMS_IDEA:
-	        if (external) 
-		{
-		    sms_message(sms_number, _("IDEA does not work this way!"));
-		    return;
-		}
-		else
-		    result = send_IDEA(sms_sender,sms_number,sms_body);
+	case SMS_IDEA:
+	    if (external) 
+	    {
+		sms_message(sms_number, _("IDEA does not work this way!"));
+		return;
+	    }
+	    else
+	        result = send_IDEA(sms_sender,sms_number,sms_body);
 
-		break;
+	    break;
 
-	    case SMS_PLUS:
-	        if (external) 
-		{
-		    result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ",sms_sender, "\"", NULL));
-		    return;
-		}
-		else
-		    result = send_PLUS(sms_sender,sms_number,sms_body);
+	case SMS_PLUS:
+	    if (external) 
+	    {
+	        result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ",sms_sender, "\"", NULL));
+		return;
+	    }
+	    else
+	        result = send_PLUS(sms_sender,sms_number,sms_body);
 
-		break;
+	    break;
 
-	    case SMS_ERA:
-	        if (external) 
-		{
-		    result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ",sms_sender, "\"", NULL));
-		    return;
-		}
-		else
-		    result = send_ERA(sms_sender,sms_number,sms_body);
+        case SMS_ERA:
+	    if (external) 
+	    {
+		result = system(g_strconcat("sms ", sms_number, " \"", sms_body, " ",sms_sender, "\"", NULL));
+		return;
+	    }
+	    else
+	        result = send_ERA(sms_sender,sms_number,sms_body);
 
-		break;
-	    		
-	    case FALSE:
-		sms_message(sms_number, _("Unknown number!"));
-		return;	    
-	}
+	    break;
 
+	case FALSE:
+	    sms_message(sms_number, _("Invalid number!"));
+	    return;	    
     }
-    else 
-    {
-	sms_message(sms_number, _("Invalid number!"));
-	return;
-    }
-
 
     if (!result) 
     {
