@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.35 2003/04/14 17:25:28 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.36 2003/04/14 20:35:59 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -314,7 +314,10 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			g_free(uins);
 			/* pingpong */
 			g_timeout_add(100000, gadu_gadu_ping,NULL);
-			signal_emit(GGadu_PLUGIN_NAME, "sound play file", config_var_get(handler, "sound_app_file"),"sound*");
+
+			if (config_var_get(handler, "sound_app_file") != NULL)
+			    signal_emit(GGadu_PLUGIN_NAME, "sound play file", config_var_get(handler, "sound_app_file"),"sound*");
+
 			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", 
 				    (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->status ^ GG_STATUS_FRIENDS_MASK : session->status), 
 				    "main-gui");
@@ -363,7 +366,9 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			}
 			
 			signal_emit(GGadu_PLUGIN_NAME, "gui msg receive",msg,"main-gui");
-			signal_emit(GGadu_PLUGIN_NAME, "sound play file", config_var_get(handler, "sound_msg_file"),"sound*");
+
+			if (config_var_get(handler, "sound_msg_file") != NULL)
+			    signal_emit(GGadu_PLUGIN_NAME, "sound play file", config_var_get(handler, "sound_msg_file"),"sound*");
 			break;
 
 		case GG_EVENT_NOTIFY:
@@ -1076,6 +1081,11 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 		  	g_warning(_("Unable to read configuration file for plugin %s"),"gadu-gadu");
 	}
 
+/* shasta: commented out for now.
+ *         allow empty sound_*_file. this way one can prevent playing sounds on certain events.
+ *	   couldn't find any better solution. anyone?
+ */
+/*
 	if (config_var_get(handler,"sound_msg_file") == NULL)
 		config_var_set(handler,"sound_msg_file",g_build_filename(PACKAGE_DATA_DIR,"sounds","usr.wav",NULL));
 
@@ -1084,6 +1094,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	if (config_var_get(handler,"sound_chat_file") == NULL)
 		config_var_set(handler,"sound_chat_file",g_build_filename(PACKAGE_DATA_DIR,"sounds","msg.wav",NULL));
+*/
 	
 	register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
 
