@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.41 2003/11/16 13:48:56 maticompxp Exp $ */
+/* $Id: tlen_plugin.c,v 1.42 2003/11/16 14:13:51 maticompxp Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -360,6 +360,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	     * Cholerka, czemu to nie dziala? Zachowuje sie tak jakby libtlen
 	     * w ogole nie rozpoznawal tego eventu :/
 	     * 
+	     *
 	    case TLEN_EVENT_NOTIFY:
 	    {
 		gchar *notifytype;
