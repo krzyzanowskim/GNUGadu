@@ -1,5 +1,6 @@
 02.06.2003
 - autoaway in minutes, not miliseconds (GUI/shasta)
+- massive attack - introduce to build libgg2_core.so, install may not work now (krzak)
 
 01.06.2003
 - configurable autoconnect status, small cleanups (tlen/shasta)

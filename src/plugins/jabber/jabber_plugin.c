@@ -370,7 +370,7 @@ gboolean updatewatch(struct netdata *sess)
 		cond |= G_IO_ERR;
 		cond |= G_IO_HUP;
 
-		if ((tag = g_io_add_watch(source_chan, cond, test_chan, NULL)) == 0) {
+		if ((tag = g_io_add_watch_full(source_chan, G_PRIORITY_LOW, cond, test_chan, NULL,NULL)) == 0) {
 			g_io_channel_unref(source_chan);
 			return FALSE;
 		}

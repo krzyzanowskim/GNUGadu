@@ -27,13 +27,7 @@ libGUI_plugin_la_SOURCES = gui_main.c \
     gui_preferences.h
 
     
-libGUI_plugin_la_LIBADD = ../../plugins.lo \
-    ../../support.lo \
-    ../../signals.lo \
-    ../../menu.lo \
-    ../../dialog.lo \
-    ../../unified-types.lo \
-    ../../repo.lo \
-    $(GTK_LIBS)
+libGUI_plugin_la_LIBADD = $(GTK_LIBS) 
+#libGUI_plugin_la_LIBADD = $(GTK_LIBS)  $(top_builddir)/src/libgg2_core.la
     
 libGUI_plugin_la_LDFLAGS = -module -avoid-version  

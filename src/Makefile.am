@@ -1,11 +1,9 @@
-SUBDIRS = plugins
+# libgg2.so
+pkgdir = $(libdir)/gg2
+pkg_LTLIBRARIES = libgg2_core.la
+noinst_LIBRARIES =
 
-
-bin_PROGRAMS = gg2
-
-
-gg2_SOURCES = main.c \
-	gg-types.h \
+libgg2_core_la_SOURCES = gg-types.h \
 	unified-types.h \
 	unified-types.c \
 	signals.c \
@@ -23,8 +21,17 @@ gg2_SOURCES = main.c \
 	perl_embed.c \
 	perl_embed.h
 
+libgg2_core_la_LIBADD = $(PERL_OPTION_LDFLAGS) -ldl 
+libgg2_core_la_LDFLAGS = -version-info 2:0:0
+
+
+# bin
+bin_PROGRAMS = gg2
+
+gg2_SOURCES = main.c
+gg2_DEPENDENCIES = libgg2_core.la
+
 gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\" 
+gg2_LDADD = $(PERL_OPTION_LDFLAGS) -ldl libgg2_core.la
 
-gg2_LDADD = $(PERL_OPTION_LDFLAGS) -ldl 
-#      AC_SUBST(PERL_OPTION_LIBS)
-
+SUBDIRS = plugins

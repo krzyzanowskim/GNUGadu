@@ -97,3 +97,7 @@ dist-hook:
 	  cp -rfp contrib/* $(distdir)/contrib; \
 	fi
 	find ./$(distdir) -name "CVS" -type d -exec rm -rf {} \;
+
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck

@@ -10,13 +10,7 @@ libjabber_plugin_la_SOURCES = jabber_plugin.c \
     jabber_plugin_protocol.c \
     jabber_plugin_protocol.h
 
-libjabber_plugin_la_LIBADD = ../../plugins.lo \
-    ../../support.lo \
-    ../../signals.lo \
-    ../../menu.lo \
-    ../../unified-types.lo \
-    ../../dialog.lo \
-    ../../repo.lo \
-    $(JABBER_LIBS)
-    
+libjabber_plugin_la_LIBADD = $(JABBER_LIBS)
+
+
 libjabber_plugin_la_LDFLAGS = -module -avoid-version  
