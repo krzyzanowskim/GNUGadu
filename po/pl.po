@@ -1,18 +1,18 @@
-# $Id: pl.po,v 1.28 2003/06/21 19:26:15 zapal Exp $
+# $Id: pl.po,v 1.29 2003/06/21 19:51:16 krzyzak Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-21 21:21+0200\n"
+"POT-Creation-Date: 2003-06-21 21:43+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: src/main.c:60
 msgid "Cannot open any modules directory\n"
@@ -924,7 +924,7 @@ msgstr "Identyfikator Jabbera"
 
 #: src/plugins/jabber/jabber_plugin.c:287
 msgid "Use SSL"
-msgstr ""
+msgstr "U¿yj SSL"
 
 #: src/plugins/jabber/jabber_plugin.c:311
 #: src/plugins/jabber/jabber_plugin.c:328
@@ -933,7 +933,7 @@ msgstr "Identyfikator Jabbera (jid)"
 
 #: src/plugins/jabber/jabber_plugin.c:329
 msgid "Nickname"
-msgstr "Ksywa"
+msgstr "Pseudo"
 
 #: src/plugins/jabber/jabber_plugin.c:400 src/plugins/sms/sms_gui.c:147
 msgid "Edit"
@@ -1062,7 +1062,7 @@ msgstr "Tre¶æ wiadomo¶ci jest pusta"
 
 #: src/plugins/sms/sms_core.c:585
 msgid "IDEA does not work this way!"
-msgstr "IDE nie dzia³a w ten sposób!"
+msgstr "IDEA nie dzia³a w ten sposób!"
 
 #: src/plugins/sms/sms_core.c:616
 msgid "Invalid number!"
@@ -1201,70 +1201,9 @@ msgstr "Sprawdzanie aktualizacji"
 msgid "Unable to read config file for plugin update"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki update"
 
-#~ msgid "Unable to authenticate (probably)"
-#~ msgstr "Nie mo¿na przeprowadziæ uwierzytelnienia (prawdopodobnie)"
-
-#~ msgid "Server"
-#~ msgstr "Serwer"
-
-#~ msgid "Please check configuration file"
-#~ msgstr "Sprawd¼ zawarto¶æ pliku konfiguracyjnego"
-
-#~ msgid "Authorisation failed"
-#~ msgstr "Nie uzyskano autoryzacji"
-
-#~ msgid ""
-#~ "User : %s@%s \n"
-#~ "wants to UNSUBSCRIBE your presence"
-#~ msgstr ""
-#~ "Osoba : %s@%s \n"
-#~ "chce zaprzestaæ ¶ledzenia twojego stanu"
-
-#~ msgid "[error]"
-#~ msgstr "[b³±d]"
-
-#~ msgid "Auto connect on startup"
-#~ msgstr "Automatyczne ³±czenie po uruchomieniu"
-
-#~ msgid "Specify sender name and message!"
-#~ msgstr "Okre¶l nazwê nadawcy oraz wiadomo¶æ!"
-
-#~ msgid "Unknown number!"
-#~ msgstr "Nieznany numer!"
-
 #, fuzzy
 #~ msgid "(none)"
 #~ msgstr "(Brak)"
 
-#~ msgid "Not valid GG#"
-#~ msgstr "Niepoprawny numer GG"
-
-#~ msgid "Conference with %s"
-#~ msgstr "Konferencja z %s"
-
-# FIXME - co to?
-#~ msgid "Something went bad witn iksemel!\n"
-#~ msgstr "Sta³o siê co¶ niedobrego z iksemel!\n"
-
 #~ msgid "Connection error"
 #~ msgstr "Wyst±pi³ b³±d na poziomie po³±czenia"
-
-#~ msgid ""
-#~ "Changes take effect\n"
-#~ "after program restart!"
-#~ msgstr ""
-#~ "Zmiany odnios± skutek po\n"
-#~ "ponownym uruchomieniu programu!"
-
-#~ msgid " "
-#~ msgstr " "
-
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#~ msgid ""
-#~ "Copyright (C) 2002 GNU Gadu Team\n"
-#~ "\tGNU Gadu "
-#~ msgstr ""
-#~ "Copyright (C) 2002 GNU Gadu Team\n"
-#~ "\tGNU Gadu "
