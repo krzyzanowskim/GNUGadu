@@ -1,13 +1,12 @@
-# $Id: pl.po,v 1.55 2004/04/05 21:21:34 aflinta Exp $
+# $Id: pl.po,v 1.56 2004/04/06 21:52:47 krzyzak Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004.
-
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-05 21:25+0200\n"
+"Report-Msgid-Bugs-To: http://www.gadu.gnu.pl/\n"
+"POT-Creation-Date: 2004-04-02 20:24+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: GNU Gadu Team\n"
 "Language-Team: GNU Gadu Team\n"
@@ -24,7 +23,6 @@ msgstr "Nie mo¿na odczytaæ zawarto¶ci ¿adnego katalogu z modu³ami\n"
 msgid "Unable to open directory with plugins (%s)\n"
 msgstr "Nie mo¿na odczytaæ zawarto¶ci katalogu z wtyczkami (%s)\n"
 
-#. zaladowanie plugina
 #: src/main.c:88
 #, c-format
 msgid "Cannot load plugin %s\n"
@@ -297,7 +295,6 @@ msgstr "Szeroko¶æ okna rozmowy"
 msgid "Chat window height"
 msgstr "Wysoko¶æ okna rozmowy"
 
-#. ZONK - how to name it ?
 #: src/plugins/GUI/gui_preferences.c:684
 msgid "Chat window split size (percent)"
 msgstr "Podzia³ okna rozmowy (w procentach)"
@@ -410,7 +407,6 @@ msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki GUI, nie martw siê"
 msgid "Status"
 msgstr "Stan"
 
-#. *INDENT-OFF*
 #: src/plugins/GUI/gui_search.c:47 src/plugins/sms/sms_gui.c:88
 msgid "Id"
 msgstr "Id"
@@ -497,12 +493,10 @@ msgstr ""
 "<i>Data kompilacji:\n"
 "%s %s</i>"
 
-#. create dialog
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:276
 msgid "Dockapp plugin configuration"
 msgstr "Konfiguracja wtyczki Dockapp"
 
-#. plugin_visible=(int)*ggadu_config_var_get(handler,"dockapp_visible");
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:280
 msgid "Visible"
 msgstr "Widoczny"
@@ -511,7 +505,6 @@ msgstr "Widoczny"
 msgid "Protocol"
 msgstr "Protokó³"
 
-#. It must be here
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:598
 msgid "WindowMaker Dockapp"
 msgstr "Dokowalny aplet WindowMakera"
@@ -539,7 +532,6 @@ msgstr "Niedostêpny (wszystkie)"
 msgid "Quit"
 msgstr "Zakoñcz"
 
-#. wazne zeby to bylo tutaj
 #: src/plugins/docklet/system-tray/docklet_plugin.c:515
 msgid "Dockable icon"
 msgstr "Dokowalna ikona"
@@ -574,7 +566,6 @@ msgstr "Program zakoñczy swoje dzia³anie"
 msgid "Change contact informations"
 msgstr "Zmiana informacji o kontakcie"
 
-#. *INDENT-OFF*
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:799
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:812
 #: src/plugins/tlen/tlen_plugin.c:648 src/plugins/sms/sms_gui.c:89
@@ -844,7 +835,6 @@ msgid "Register account"
 msgstr "Zarejestruj konto"
 
 # FIXME - co ma znaczyæ (c) w tym miejscu??!
-#. wazne zeby wywolac to makro w tym miejscu
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1481
 msgid "Gadu-Gadu(c) protocol"
 msgstr "Protokó³ Gadu-Gadu(c)"
@@ -925,7 +915,6 @@ msgstr "Wy¶wietl historiê"
 msgid "Unable to create file"
 msgstr "Nie mo¿na utworzyæ pliku"
 
-#. end
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1923
 #: src/plugins/tlen/tlen_plugin.c:975 src/plugins/jabber/jabber_plugin.c:410
 msgid "Enter status description"
@@ -1055,7 +1044,6 @@ msgstr ""
 msgid "XOSD Preferences"
 msgstr "Ustawienia XOSD"
 
-#. *INDENT-OFF*
 #: src/plugins/xosd/plugin_xosd.c:385
 msgid "Timestamp"
 msgstr "Znacznik czasowy"
@@ -1432,12 +1420,10 @@ msgstr "Nieznany b³±d!"
 msgid "SMS Preferences"
 msgstr "Ustawienia SMS"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:65
 msgid "Use \"SMS\" program to send"
 msgstr "U¿ycie programu \"SMS\" do wysy³ania wiadomo¶ci"
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:66 src/plugins/sms/sms_gui.c:158
 #: src/plugins/sms/sms_gui.c:302
 msgid "Sender"
@@ -1468,7 +1454,6 @@ msgstr "Brak numeru telefonu"
 msgid "Send to : "
 msgstr "Wy¶lij do: "
 
-#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:157
 msgid "Use external program"
 msgstr "U¿ycie zewnêtrznego programu"
@@ -1544,7 +1529,6 @@ msgstr "Brak dostêpnych aktualizacji"
 msgid "Update Preferences"
 msgstr "Ustawienia wtyczki aktualizacji"
 
-#. *INDENT-OFF*
 #: src/plugins/update/update_plugin.c:329
 msgid "Check for updates on startup"
 msgstr "Sprawdzanie aktualizacji przy uruchomieniu"

@@ -42,11 +42,13 @@ libtool: $(LIBTOOL_DEPS)
 
 ACLOCAL_AMFLAGS = -I m4
 
-if BUILD_GG
+#if BUILD_GG
+#all: config.h
+#	(cd $(top_srcdir)/src/plugins/gadu_gadu/libgadu/; make)
+#	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+#else
+
 all: config.h
-	(cd $(top_srcdir)/src/plugins/gadu_gadu/libgadu/; make)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
-else
-all: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-recursive
-endif
+	
+#endif

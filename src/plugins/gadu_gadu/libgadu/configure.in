@@ -1,72 +1,17 @@
-dnl $Id: configure.in,v 1.4 2004/04/02 16:43:23 krzyzak Exp $
+dnl $Id: configure.in,v 1.5 2004/04/06 21:52:50 krzyzak Exp $
 
 AC_INIT(lib/libgadu.h)
-AM_INIT_AUTOMAKE([lib/libgadu.h],[1.4])
 AC_PREREQ(2.50)
-AC_CONFIG_HEADERS(config.h)
-AM_PROG_LIBTOOL
 
-AC_SUBST(CFLAGS_LIBGADU)
-AC_SUBST(LIBS_LIBGADU)
-AC_SUBST(OBJS)
-AC_SUBST(IOCTLD_OBJS)
-
-AC_SUBST(strip_ekg, "")
-AC_SUBST(strip_ioctld, "")
-AC_SUBST(strip_libgadu_so, "")
-
-AC_SUBST(ioctld, "")
-AC_SUBST(install_ioctld, "")
-
-AC_SUBST(shared, "")
-AC_SUBST(install_shared, "")
-
-AC_SUBST(lgadu, "")
-AC_SUBST(libgadu_a, "")
-
-AC_SUBST(static, "static")
-AC_SUBST(install_static, "install-static")
-
-AC_SUBST(ekg, "")
-AC_SUBST(install_ekg, "")
-AC_SUBST(clean_ekg, "")
-AC_SUBST(distclean_ekg, "")
-AC_SUBST(uninstall_ekg, "")
-AC_SUBST(dep_ekg, "")
-
-AC_SUBST(make_ekgwap, "")
-AC_SUBST(install_ekgwap, "")
+dnl AC_SUBST(CFLAGS_LIBGADU)
+dnl AC_SUBST(LIBS_LIBGADU)
+dnl AC_SUBST(OBJS)
 
 dnl
 dnl  Zaczynamy testy...
 dnl
 
-AC_PROG_CC
-AC_PROG_CPP
-AC_PROG_INSTALL
-AC_PROG_RANLIB
-AC_PROG_LN_S
 AC_C_CONST
-
-AC_PATH_PROG(GMAKE, gmake, no)
-
-if test "x$GMAKE" = "xno"; then
-	AC_PATH_PROG(MAKE, make, no)
-
-	if test "x$MAKE" = "xno"; then
-		AC_MSG_ERROR([make ])
-	fi
-else
-	MAKE="$GMAKE"
-fi
-
-AC_CHECK_TOOL(AR, ar, no)
-
-if test "x$AR" = "xno"; then
-	AC_MSG_ERROR([ar ])
-fi
-
-AC_CHECK_TOOL(STRIP, strip, :)
 
 dnl
 dnl  Tworzymy osobny plik lib/libgadu-config.h niezale¿ny od autoconfa
@@ -76,14 +21,12 @@ dnl
 
 AC_DEFUN([AC_LIBGADU_DEFINE],
 [
-	sed 's/#undef __GG_LIBGADU_$1/#define __GG_LIBGADU_$1/' < lib/libgadu-config.h > lib/libgadu-config.h-
-	mv -f lib/libgadu-config.h- lib/libgadu-config.h
+	AC_DEFINE([__GG_LIBGADU_$1])
 ])
 
 AC_DEFUN([AC_LIBGADU_UNDEF],
 [
-	sed 's/#undef __GG_LIBGADU_$1.*/\/* & *\//' < lib/libgadu-config.h > lib/libgadu-config.h-
-	mv -f lib/libgadu-config.h- lib/libgadu-config.h
+	AC_UNDEFINE([__GG_LIBGADU_$1])
 ])
 
 echo "/* Generated automatically by configure. Do not edit. */" > lib/libgadu-config.h
@@ -110,17 +53,16 @@ sed "s/#include <stdint.h>/#include <$STDINT_H>/" < lib/libgadu-config.h > lib/l
 mv -f lib/libgadu-config.h- lib/libgadu-config.h
 
 dnl SunOS
-AC_CHECK_LIB(nsl, t_accept, LIBS="$LIBS -lnsl")
-AC_CHECK_LIB(socket, socket, LIBS="$LIBS -lsocket")
+dnl AC_CHECK_LIB(nsl, t_accept, LIBS="$LIBS -lnsl")
+dnl AC_CHECK_LIB(socket, socket, LIBS="$LIBS -lsocket")
 
 dnl BeOS
-
-AC_ARG_WITH(bind,
-  [  --without-bind          Disable linking with libbind when found])
-
-if test "x$with_bind" != "xno"; then
-	AC_CHECK_LIB(bind, __inet_addr, LIBS="$LIBS -lbind")
-fi
+dnl AC_ARG_WITH(bind,
+dnl   [  --without-bind          Disable linking with libbind when found])
+dnl 
+dnl if test "x$with_bind" != "xno"; then
+dnl 	AC_CHECK_LIB(bind, __inet_addr, LIBS="$LIBS -lbind")
+dnl fi
 
 dnl threadsafe
 AC_CHECK_FUNCS([gethostbyname_r], [AC_LIBGADU_DEFINE([HAVE_GETHOSTBYNAME_R])])
@@ -143,34 +85,7 @@ AC_TRY_LINK([#include <stdarg.h>], [va_list a, b; __va_copy(a, b);],
 	AC_MSG_RESULT([no])
 ])
 
-AC_ARG_ENABLE(debug, 
-	[  --disable-debug         Compile without debugging support])
-
-if test "x$enable_debug" = "xno"; then
-	AC_MSG_WARN([--disable-debug is obsolete.])
-fi
-
-lib_shared_enabled=no
-
-AC_ARG_ENABLE(static,
-	[  --disable-static        Don't compile static version of libgadu
-
-Optional ekg Features:])
-
 lib_static_enabled=yes
-
-if test "x$enable_static" = "xno"; then
-	static=""
-	install_static=""
-	lib_static_enabled=no
-fi
-
-if test "x$enable_static" = "xno" -a "x$enable_shared" != "xyes"; then
-  AC_MSG_ERROR([You must choose either static or shared version of libgadu.])
-fi
-
-AC_ARG_ENABLE(dynamic,
-  [  --enable-dynamic        Link ekg dynamically with libgadu])
 
 dnl
 dnl  Sprawd¼my, jak± wersjê vsnprintf() dostajemy. Dodatkowa opcja jest
@@ -206,28 +121,24 @@ dnl
 dnl  Resolver libgadu oparty na pthread
 dnl
 
-AC_ARG_WITH(pthread,
-  [  --with-pthread          Use pthread in resolver])
-
-if test "x$with_pthread" = "xyes"; then
-	ACX_PTHREAD(
-	[
-	 	dnl workaround dla pkconfiga
-		if test "x$PTHREAD_CFLAGS" = "x-pthread"; then
-			PTHREAD_LIBS="$PTHREAD_LIBS -pthread"
-		fi
-
-		LIBS="$PTHREAD_LIBS $LIBS"
-		CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-		CFLAGS_LIBGADU="$CFLAGS_LIBGADU $PTHREAD_CFLAGS"
-		CC="$PTHREAD_CC"
-		have_pthread=yes
-
-		AC_LIBGADU_DEFINE([HAVE_PTHREAD])
+ACX_PTHREAD(
+[
+ 	dnl workaround dla pkconfiga
+	if test "x$PTHREAD_CFLAGS" = "x-pthread"; then
+		PTHREAD_LIBS="$PTHREAD_LIBS -pthread"
+	fi
+	
+	LIBS="$PTHREAD_LIBS $LIBS"
+	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+	CFLAGS_LIBGADU="$CFLAGS_LIBGADU $PTHREAD_CFLAGS"
+	CC="$PTHREAD_CC"
+	
+	have_pthread=yes
+	
+	AC_LIBGADU_DEFINE([HAVE_PTHREAD])
 	], [
-		AC_MSG_ERROR([Your system is not supporting pthreads])
-	])
-fi
+	AC_MSG_ERROR([Your system is not supporting pthreads])
+])
 
 dnl
 dnl  Sprawdzamy, czy jest ,,long long'' na potrzeby obliczeñ czasów DCC
@@ -248,107 +159,28 @@ dnl
 dnl  Sprawdzamy OpenSSL
 dnl
 
-AC_CHECK_OPENSSL
+dnl AC_CHECK_OPENSSL
 
-if test "x$have_openssl" = "xyes"; then
-	OBJS="$OBJS simlite.o"
-	LDFLAGS="$OPENSSL_LIBS $LDFLAGS"
-	LIBS_LIBGADU="$LIBS_LIBGADU $OPENSSL_LIBS"
-	CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
-	CFLAGS_LIBGADU="$CFLAGS_LIBGADU $OPENSSL_INCLUDES"
-	AC_LIBGADU_DEFINE([HAVE_OPENSSL])
-fi
+dnl if test "x$have_openssl" = "xyes"; then
+dnl 	OBJS="$OBJS simlite.o"
+dnl 	LDFLAGS="$OPENSSL_LIBS $LDFLAGS"
+dnl 	LIBS_LIBGADU="$LIBS_LIBGADU $OPENSSL_LIBS"
+dnl 	CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
+dnl 	CFLAGS_LIBGADU="$CFLAGS_LIBGADU $OPENSSL_INCLUDES"
+AC_LIBGADU_DEFINE([HAVE_OPENSSL])
+dnl fi
 
 dnl
 dnl  Zachowujemy opcje dla libgadu
 dnl
 
-LIBS_LIBGADU="$LIBS_LIBGADU $LIBS"
+dnl LIBS_LIBGADU="$LIBS_LIBGADU $LIBS"
 
-dnl <ekg>
-dnl
-dnl  I zaczynamy wykrywaæ ¶mieci dla ekg...
-dnl
-
-dnl  dirname - get rid of libgen
-AC_CHECK_HEADERS(libgen.h)
-AC_CHECK_FUNC(dirname, , [OBJS="$OBJS ../compat/dirname.o"])
-
-dnl  sprawdzamy, czy system ma getopt_long
-AC_CHECK_FUNC(getopt_long, , [OBJS="$OBJS ../compat/getopt.o ../compat/getopt1.o"; CFLAGS="-I../compat $CFLAGS"])
-
-dnl  na SunOSach nie ma scandir()
-AC_CHECK_FUNCS(scandir, , [OBJS="$OBJS ../compat/scandir.o"])
-
-dnl  setenv dla pythona
-dnl AC_CHECK_FUNCS(setenv)
-
-dnl  strlcat/strlcpy wiele systemów nie posiada
-AC_CHECK_FUNCS(strlcat, , [OBJS="$OBJS ../compat/strlcat.o"; IOCTLD_OBJS="$IOCTLD_OBJS ../compat/strlcat.o"])
-AC_CHECK_FUNCS(strlcpy, , [OBJS="$OBJS ../compat/strlcpy.o"; IOCTLD_OBJS="$IOCTLD_OBJS ../compat/strlcpy.o"])
-
-dnl  utimes do sprawdzania poczty
-AC_CHECK_FUNCS(utimes)
-
-dnl  mkstemp do zapisywania tokenów przy braku libjpeg
-AC_CHECK_FUNCS(mkstemp)
-
-if test "x$enable_static" = "xno" -o "x$enable_dynamic" = "xyes"; then 
-	lib_shared_default=yes
-	lib_static_default=no
-	lgadu="-lgadu"
-else
-	libgadu_a="../lib/libgadu.a"
-	lib_shared_default=no
-	lib_static_default=yes
-fi
-
-lib_shared_default=no
-lib_static_default=yes
-
-ekg="ekg"
-install_ekg="install-ekg"
-clean_ekg="clean-ekg"
-distclean_ekg="distclean-ekg"
-uninstall_ekg="uninstall-ekg"
-dep_ekg="dep-ekg"
-
-dnl </ekg>
-
-AC_CONFIG_FILES(Makefile lib/Makefile)
-
-AC_OUTPUT
+AC_CONFIG_FILES(Makefile)
+AC_OUTPUT([lib/libgadu-config.h])
 
 echo
 echo "configured options:"
-
-if test "x$lib_static_enabled" = "xyes"; then
-	if test "x$lib_static_default" = "xyes"; then
-		echo " - static libgadu: enabled (default)"
-	else
-		echo " - static libgadu: enabled"
-	fi
-else
-	echo " - static libgadu: disabled"
-fi
-
-if test "x$lib_shared_enabled" = "xyes"; then
-	if test "x$lib_shared_default" = "xyes"; then
-		echo " - shared libgadu: enabled (default)"
-	else
-		echo " - shared libgadu: enabled"
-	fi
-else
-	echo " - shared libgadu: disabled"
-fi
-
-dnl <ekg>
-
-if test "x$have_openssl" = "xyes"; then
-	echo " - openssl: enabled"
-else
-	echo " - openssl: disabled"
-fi
 
 
 if test "x$have_pthread" = "xyes"; then
@@ -360,4 +192,3 @@ fi
 
 echo
 
-dnl </ekg>
