@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.96 2004/05/18 12:09:11 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.97 2004/05/25 16:26:33 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1198,6 +1198,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	gchar *text = NULL;
 	gchar *tmp = NULL;
 	GtkTextMark *mark_start;
+	GtkTextMark *mark_append;
 	GtkTextIter istart;
 	GtkTextIter iend;
 	GtkWidget *widget = NULL;
@@ -1277,6 +1278,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(history));
 	gtk_text_buffer_get_end_iter(buf, &iter);
+	mark_append = gtk_text_buffer_create_mark(buf, NULL, &iter, TRUE);
 	
 	tmp = g_strconcat(header, (conference) ? "" : "\n" , NULL);
 	gtk_text_buffer_insert_with_tags_by_name(buf, &iter, tmp, -1, self ? "outgoing_header" : "incoming_header", NULL);
@@ -1308,17 +1310,19 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 	/*
 	 * emoticons engine initial, it works !, but is case sensitive 
 	 */
+	gtk_text_buffer_get_iter_at_mark(buf, &iter, mark_append);
 	gtk_text_buffer_get_iter_at_mark(buf, &istart, mark_start);
 	gtk_text_buffer_get_start_iter(buf, &iend);
 	gtk_text_iter_backward_char(&istart);
-
+	
+	
 	emottmp = emoticons;
 	while (emottmp)
 	{
 		gui_emoticon *gemo = (gui_emoticon *) emottmp->data;
 
 		while (gtk_text_iter_backward_search
-		       (&istart, gemo->emoticon, GTK_TEXT_SEARCH_VISIBLE_ONLY, &istart, &iend, NULL))
+		       (&istart, gemo->emoticon, GTK_TEXT_SEARCH_VISIBLE_ONLY, &istart, &iend, &iter))
 		{
 			GtkTextChildAnchor *anchor = NULL;
 
@@ -1334,6 +1338,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self)
 
 				gtk_widget_show(widget);
 			}
+			gtk_text_buffer_get_iter_at_mark(buf, &iter, mark_append);
 		}
 		emottmp = emottmp->next;
 	}

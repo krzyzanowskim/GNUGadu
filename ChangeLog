@@ -1,3 +1,6 @@
+25.05.2004
+- fixed chat window latency with emoticons turned on (GUI/THrull)
+
 21.05.2004
 - filter out transports entries from the list (jabber/krzak)
 
