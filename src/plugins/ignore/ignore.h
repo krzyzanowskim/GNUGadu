@@ -1,4 +1,4 @@
-/* $Id: ignore.h,v 1.5 2004/12/26 22:27:04 shaster Exp $ */
+/* $Id: ignore.h,v 1.6 2004/12/27 09:43:43 krzyzak Exp $ */
 
 /* 
  * Ignore plugin for GNU Gadu 2 
@@ -25,12 +25,15 @@
 
 
 GGaduSigID IGNORE_ADD_CONTACT_SIG;
+GGaduSigID IGNORE_DIALOG_ADD_ID_SIG;
+GGaduSigID IGNORE_DIALOG_REMOVE_ID_SIG;
 GGaduSigID IGNORE_REMOVE_CONTACT_SIG;
 GGaduSigID IGNORE_CHECK_CONTACT_SIG;
 
 enum
 {
-    GGADU_SE_CONFIG_PLAYER
+    GGADU_IGNORE_ADD_ID,
+    GGADU_IGNORE_REMOVE_ID
 };
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.77 2004/12/22 15:56:29 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.78 2004/12/27 09:43:43 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -624,7 +624,6 @@ LmHandlerResult iq_account_data_cb(LmMessageHandler * handler, LmConnection * co
 			signal_emit("jabber", "gui show message", g_strdup(_("Account successfully removed")), "main-gui");
 			ggadu_config_var_set(jabber_handler, "jid", NULL);
 			ggadu_config_var_set(jabber_handler, "password", NULL);
-//			ggadu_config_var_set(jabber_handler, "ignored", NULL);
 			ggadu_config_var_set(jabber_handler, "log", 0);
 			ggadu_config_var_set(jabber_handler, "only_friends", 0);
 			ggadu_config_var_set(jabber_handler, "autoconnect", 0);
@@ -840,12 +839,11 @@ LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection
  	    }
  
  	    g_slist_free(roster);
- 	    if(!handle_it) return LM_HANDLER_RESULT_REMOVE_MESSAGE;
+	    
+ 	    if(!handle_it) 
+		return LM_HANDLER_RESULT_REMOVE_MESSAGE;
  	}
 
-//	if(g_strrstr(ggadu_config_var_get(jabber_handler, "ignored"), jid))
-//	    return LM_HANDLER_RESULT_REMOVE_MESSAGE;
- 
 	if (lm_message_get_sub_type(message) == LM_MESSAGE_SUB_TYPE_ERROR)
 	{
 		print_debug("jabber: Error message : \n%s", lm_message_node_to_string(message->node));
