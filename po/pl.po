@@ -1,12 +1,12 @@
-# $Id: pl.po,v 1.91 2005/01/05 13:24:14 krzyzak Exp $
+# $Id: pl.po,v 1.92 2005/01/07 21:05:13 aflinta Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-01-05 14:17+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-01-07 21:59+0100\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: Artur Flinta\n"
 "Language-Team: GNU Gadu Team\n"
@@ -23,6 +23,7 @@ msgstr "Nie można odczytać zawartości żadnego katalogu z modułami\n"
 msgid "Unable to open directory with plugins (%s)\n"
 msgstr "Nie można odczytać zawartości katalogu z wtyczkami (%s)\n"
 
+#. zaladowanie plugina
 #: src/main.c:88
 #, c-format
 msgid "Cannot load plugin %s\n"
@@ -50,6 +51,7 @@ msgstr ""
 msgid "There is no history file"
 msgstr "Nie ma pliku historii"
 
+#. button = PutNewButton(field, _("Find"));
 #: contrib/gghist/gghist.c:320
 msgid "Go to first page"
 msgstr "Przechodzi do pierwszej strony"
@@ -85,7 +87,7 @@ msgstr "core : próba wyładowania nie załadowanej wtyczki %s\n"
 msgid "Couldn't find pixmap file: %s"
 msgstr "Nie można odnaleźć pliku piksmapy: %s"
 
-#: src/plugins/GUI/GUI_plugin.c:161
+#: src/plugins/GUI/GUI_plugin.c:178
 msgid ""
 "\n"
 "[not in userlist]"
@@ -93,48 +95,48 @@ msgstr ""
 "\n"
 "[nie ma Cię w kontaktach]"
 
-#: src/plugins/GUI/GUI_plugin.c:192 src/plugins/GUI/gui_userview.c:762
+#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:762
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/GUI_plugin.c:631
+#: src/plugins/GUI/GUI_plugin.c:801
 msgid "/GNU Gadu/_Preferences"
 msgstr "/GNU Gadu/_Ustawienia"
 
-#: src/plugins/GUI/GUI_plugin.c:632
+#: src/plugins/GUI/GUI_plugin.c:802
 msgid "/GNU Gadu/"
 msgstr "/GNU Gadu/"
 
-#: src/plugins/GUI/GUI_plugin.c:633
+#: src/plugins/GUI/GUI_plugin.c:803
 msgid "/GNU Gadu/_About"
 msgstr "/GNU Gadu/_Informacje o"
 
-#: src/plugins/GUI/GUI_plugin.c:634
+#: src/plugins/GUI/GUI_plugin.c:804
 msgid "/GNU Gadu/_Quit"
 msgstr "/GNU Gadu/Za_kończ"
 
-#: src/plugins/GUI/GUI_plugin.c:703
+#: src/plugins/GUI/GUI_plugin.c:873
 msgid "Open preferences window"
 msgstr "Otwiera okno ustawień"
 
-#: src/plugins/GUI/GUI_plugin.c:704
+#: src/plugins/GUI/GUI_plugin.c:874
 msgid "Exit program"
 msgstr "Kończy działanie programu"
 
-#: src/plugins/GUI/GUI_plugin.c:707
+#: src/plugins/GUI/GUI_plugin.c:877
 msgid "Show/hide inactive users"
 msgstr "Wyświetla/ukrywa nieaktywnych użytkowników"
 
-#: src/plugins/GUI/GUI_plugin.c:710
+#: src/plugins/GUI/GUI_plugin.c:880
 msgid "Show/hide descriptions on userlist"
 msgstr "Wyświetla/ukrywa opisy na liście kontaktów"
 
-#: src/plugins/GUI/GUI_plugin.c:758 src/plugins/GUI/GUI_plugin.c:838
+#: src/plugins/GUI/GUI_plugin.c:928 src/plugins/GUI/GUI_plugin.c:1008
 #, c-format
 msgid "New message from %s"
 msgstr "Nowa wiadomość od %s"
 
-#: src/plugins/GUI/GUI_plugin.c:799 src/plugins/GUI/GUI_plugin.c:1012
+#: src/plugins/GUI/GUI_plugin.c:969 src/plugins/GUI/GUI_plugin.c:1182
 msgid "GNU Gadu"
 msgstr "GNU Gadu"
 
@@ -228,11 +230,13 @@ msgstr ""
 msgid "Incoming messages"
 msgstr "Wiadomości przychodzące"
 
+#.
 #: src/plugins/GUI/gui_preferences.c:256 src/plugins/GUI/gui_preferences.c:298
 #: src/plugins/GUI/gui_preferences.c:394 src/plugins/GUI/gui_preferences.c:428
 msgid "Message header"
 msgstr "Nagłówek wiadomości"
 
+#.
 #: src/plugins/GUI/gui_preferences.c:273 src/plugins/GUI/gui_preferences.c:315
 #: src/plugins/GUI/gui_preferences.c:407 src/plugins/GUI/gui_preferences.c:441
 msgid "Message body"
@@ -341,8 +345,8 @@ msgid "Spell Checking"
 msgstr "Sprawdzanie pisowni"
 
 #: src/plugins/GUI/gui_preferences.c:676
-msgid "Dictionary"
-msgstr "Słownik"
+msgid "Dictionary:"
+msgstr "Słownik:"
 
 #: src/plugins/GUI/gui_preferences.c:697
 msgid "More advanced options"
@@ -360,6 +364,8 @@ msgstr "Szerokość:"
 msgid "Height:"
 msgstr "Wysokość:"
 
+#. chat_paned_size
+#. ZONK - how to name it ?
 #: src/plugins/GUI/gui_preferences.c:725
 msgid "Window split (percent):"
 msgstr "Podział okna (w procentach):"
@@ -374,18 +380,22 @@ msgstr ""
 "Ustawienia zaawansowane\n"
 "\n"
 
+#. hide_on_start
 #: src/plugins/GUI/gui_preferences.c:780
 msgid "Auto hide window on start"
 msgstr "Automatyczne ukrywanie okna po uruchomieniu"
 
+#. notify status changes in Chat window
 #: src/plugins/GUI/gui_preferences.c:785
 msgid "Notify about status changes inside chat window"
 msgstr "Powiadamianie o zmianie stanu wewnątrz okna rozmowy"
 
+#. close_on_esc
 #: src/plugins/GUI/gui_preferences.c:790
 msgid "'ESC' - close chat window"
 msgstr "Zamknięcie okna rozmowy klawiszem \"Esc\""
 
+#. blink
 #: src/plugins/GUI/gui_preferences.c:795
 msgid "Blink status icon while connecting every:"
 msgstr "Mruganie ikony stanu podczas łączenia:"
@@ -462,7 +472,7 @@ msgstr "Domyślne rozwijanie drzewa"
 
 #: src/plugins/GUI/gui_preferences.c:1052
 msgid "Show only active users"
-msgstr "Tylko aktywni użytkownicy"
+msgstr "Wyświetlanie tylko aktywnych użytkowników"
 
 #: src/plugins/GUI/gui_preferences.c:1057
 msgid "Notify about new messages via XOSD"
@@ -525,7 +535,7 @@ msgstr "Zapis obrazu"
 msgid "_Save Image..."
 msgstr "_Zapisz obraz..."
 
-#: src/plugins/GUI/gui_main.c:190
+#: src/plugins/GUI/gui_main.c:191
 msgid "Unable to read configuration file for plugin GUI, don't worry"
 msgstr "Nie można odczytać pliku z konfiguracją wtyczki GUI, nie martw się"
 
@@ -533,6 +543,7 @@ msgstr "Nie można odczytać pliku z konfiguracją wtyczki GUI, nie martw się"
 msgid "Status"
 msgstr "Stan"
 
+#. *INDENT-OFF*
 #: src/plugins/GUI/gui_search.c:47 src/plugins/sms/sms_gui.c:87
 msgid "Id"
 msgstr "Id"
@@ -625,6 +636,7 @@ msgstr ""
 "<i>Data kompilacji:\n"
 "%s %s</i>"
 
+#. It must be here
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:427
 msgid "Docklet-dockapp2"
 msgstr "Docklet-dockapp2"
@@ -662,6 +674,7 @@ msgstr "Zakończ"
 msgid "Unable to create system-tray docklet"
 msgstr "Nie można utworzyć elmentu w obszarze powiadamaina"
 
+#. wazne zeby to bylo tutaj
 #: src/plugins/docklet/system-tray/docklet_plugin.c:527
 msgid "Dockable icon"
 msgstr "Ikona obszaru powiadamiania"
@@ -674,12 +687,17 @@ msgstr "Nie można nawiązać połączenia!"
 msgid "Gadu-gadu plugin configuration"
 msgstr "Konfiguracja wtyczki Gadu-gadu"
 
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:218
+msgid "GG#:"
+msgstr "Numer GG:"
+
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:219
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1056
 #: src/plugins/jabber/jabber_plugin.c:1286
 msgid "_Password:"
 msgstr "_Hasło:"
 
+#. ggadu_dialog_add_entry(dialog, GGADU_GADU_GADU_CONFIG_REASON, _("_Default reason:"), VAR_STR, ggadu_config_var_get(handler, "reason"), VAR_FLAG_NONE);
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:221
 msgid "Available only for _friends"
 msgstr "D_ostępność tylko dla znajomych"
@@ -711,7 +729,7 @@ msgid ""
 "Pro_xy server\n"
 "[user:pass@]host.com[:port]"
 msgstr ""
-"Serwer proxy)\n"
+"Serwer pro_xy\n"
 "[użytkownik:hasło@]komputer.domena[:port]"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:317
@@ -867,8 +885,8 @@ msgid "_Birthyear:"
 msgstr "Rok _urodzenia:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1094
-msgid "_GG#"
-msgstr "_GG#"
+msgid "_GG#:"
+msgstr "Numer _GG:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1095
 msgid "G_ender:"
@@ -1006,6 +1024,7 @@ msgid "Blocked"
 msgstr "Zablokowany"
 
 # FIXME - co ma znaczyć (c) w tym miejscu??!
+#. wazne zeby wywolac to makro w tym miejscu
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1659
 msgid "Gadu-Gadu(c) protocol"
 msgstr "Protokół Gadu-Gadu(c)"
@@ -1014,6 +1033,7 @@ msgstr "Protokół Gadu-Gadu(c)"
 msgid "no reason"
 msgstr "brak powodu"
 
+#. GGaduMenu *listmenu = NULL;
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1831
 #: src/plugins/tlen/tlen_plugin.c:845 src/plugins/jabber/jabber_plugin.c:384
 msgid "_Chat"
@@ -1043,6 +1063,7 @@ msgstr "_Usuń"
 msgid "Add _New"
 msgstr "_Nowy kontakt"
 
+#. end
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2122
 #: src/plugins/tlen/tlen_plugin.c:912 src/plugins/jabber/jabber_plugin.c:681
 msgid "Enter status description"
@@ -1111,10 +1132,12 @@ msgstr "Błąd przy operacji GETROSTERITEM"
 msgid "You received sound alert"
 msgstr "Otrzymałeś alarm"
 
+#. warning pokazujemy pozniej, bo jest modalny!
 #: src/plugins/tlen/tlen_plugin.c:508
 msgid "You have to enter your login and password first!"
 msgstr "Podaj swoją nazwę użytkownika i hasło"
 
+#. *INDENT-OFF*
 #: src/plugins/tlen/tlen_plugin.c:594 src/plugins/jabber/jabber_cb.c:478
 #: src/plugins/jabber/jabber_cb.c:545 src/plugins/sms/sms_gui.c:88
 #: src/plugins/sms/sms_gui.c:106
@@ -1193,6 +1216,7 @@ msgstr "_Nowy kontakt"
 msgid "XOSD Preferences"
 msgstr "Ustawienia XOSD"
 
+#. *INDENT-OFF*
 #: src/plugins/xosd/plugin_xosd.c:384
 msgid "Timestamp"
 msgstr "Znacznik czasowy"
@@ -1819,10 +1843,12 @@ msgstr "Nieznany błąd!"
 msgid "SMS Preferences"
 msgstr "Ustawienia SMS"
 
+#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:64
 msgid "Use \"SMS\" program to send"
 msgstr "Użycie programu \"SMS\" do wysyłania wiadomości"
 
+#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:65 src/plugins/sms/sms_gui.c:303
 msgid "Sender"
 msgstr "Nadawca:"
@@ -1852,6 +1878,7 @@ msgstr "Brak numeru telefonu"
 msgid "Send to : "
 msgstr "Wyślij do: "
 
+#. *INDENT-OFF*
 #: src/plugins/sms/sms_gui.c:156
 msgid "Use _external program"
 msgstr "Użycie z_ewnętrznego programu"
@@ -1921,9 +1948,10 @@ msgstr "Plugin interfejsu DBUS"
 msgid "Auto-Away Preferences"
 msgstr "Ustawienia"
 
+#. gchar *utf = NULL;
 #: src/plugins/aaway/aaway.c:251
 msgid "Enable auto-away"
-msgstr "Włączony automatyczny stan zajętości"
+msgstr "Automatyczne przejście w stan zajętości"
 
 #: src/plugins/aaway/aaway.c:252
 msgid "Auto away after time (minutes)"
@@ -1975,6 +2003,7 @@ msgstr "Brak dostępnych aktualizacji"
 msgid "Update Preferences"
 msgstr "Ustawienia wtyczki aktualizacji"
 
+#. *INDENT-OFF*
 #: src/plugins/update/update_plugin.c:328
 msgid "Check for updates on startup"
 msgstr "Sprawdzanie aktualizacji przy uruchomieniu"
@@ -2045,11 +2074,11 @@ msgstr "Obsługa opcji ignorowania"
 
 #: src/plugins/history/external/history_viewer.c:39
 msgid "External History Viewer Preferences"
-msgstr "Ustawienia Zewnętrznej przeglądarki historii"
+msgstr "Ustawienia zewnętrznej przeglądarki historii"
 
 #: src/plugins/history/external/history_viewer.c:42
-msgid "_Path to external viewer"
-msgstr "Ś_cieżka do przeglądarki historii"
+msgid "_Path to external viewer:"
+msgstr "Ś_cieżka do zewnętrznej przeglądarki:"
 
 #: src/plugins/history/external/history_viewer.c:89
 msgid "User not selected"
