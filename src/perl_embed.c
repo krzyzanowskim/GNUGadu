@@ -5,18 +5,13 @@
 
 #ifndef PERL_EMBED
 
-void perl_init (void)
-{
-  /* empty */
-}
-
-int perl_load_file (char *script_name)
+int perl_load_script (char *script_name)
 {
   /* empty */
   return -1;
 }
 
-void perl_deinit (void)
+void perl_unload_script (char *script_name)
 {
   /* empty */
 }
@@ -28,14 +23,18 @@ void perl_deinit (void)
 #include <perl.h>
 #include <XSUB.h>
 #include <glib.h>
+#include <libgen.h>
 
 #include "perl_embed.h"
 #include "signals.h"
 #include "support.h"
 
 typedef struct {
-  char *name;
+  char loaded;
   char *filename;
+
+  char *on_msg_receive;
+  
   PerlInterpreter *perl;
 } perlscript;
 
@@ -43,7 +42,7 @@ GSList *perlscripts = NULL;
 
 extern void boot_DynaLoader (pTHX_ CV* cv);
 
-static int execute_perl (char *function, char *args)
+int execute_perl (char *function, char *args)
 {
   char *perl_args[2] = {args, NULL};
   int count, ret_value = 1;
@@ -76,14 +75,69 @@ static int execute_perl (char *function, char *args)
   return ret_value;
 }
 
+char *execute_perl_string (char *function, char *args)
+{
+  char *perl_args[2] = {args, NULL};
+  int count;
+  char *ret_value = NULL;
+  SV *sv;
+  STRLEN n_a;
+
+  dSP;
+  ENTER;
+  SAVETMPS;
+  PUSHMARK(sp);
+  count = perl_call_argv (function, G_EVAL | G_SCALAR, perl_args);
+  SPAGAIN;
+
+  sv = GvSV (gv_fetchpv ("@", TRUE, SVt_PV));
+  if (SvTRUE (sv))
+  {
+    printf ("perl: Error %s\n", SvPV (sv, count));
+    POPs;
+  } else if (count != 1)
+  {
+    printf ("perl: Error: expected 1 value from %s, got %d\n", function, count);
+  } else
+  {
+    ret_value = g_strdup (POPpx);
+  }
+
+  PUTBACK;
+  FREETMPS;
+  LEAVE;
+
+  return ret_value;
+}
 static XS (XS_GGadu_register_script)
 {
   char *name;
+  char *on_msg_receive;
   int junk;
-  struct perlscript *script;
+  char *tmp;
+  perlscript *script;
+  GSList *list;
   dXSARGS;
 
   name = SvPV (ST (0), junk);
+  on_msg_receive = SvPV (ST (0), junk);
+
+  list = perlscripts;
+  while (list)
+  {
+    script = (perlscript *) list->data;
+    tmp = basename (script->filename);
+    if (!strcmp (tmp, name))
+    {
+      script->loaded = 1;
+
+      script->on_msg_receive = g_strdup (on_msg_receive);
+      
+      g_free (tmp);
+    }
+    g_free (tmp);
+    list = list->next;
+  }
 }
 
 static XS (XS_GGadu_hello)
@@ -134,6 +188,7 @@ int perl_load_script (char *script_name)
   char *perl_args[] = {"", "-e", "0", "-w"};
 
   script = g_new0 (perlscript, 1);
+  script->loaded = 0;
   script->filename = g_strdup (script_name);
   script->perl = perl_alloc ();
   PERL_SET_CONTEXT (script->perl);

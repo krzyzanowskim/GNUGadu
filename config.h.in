@@ -6,3 +6,4 @@
 #undef DEBUG
 #undef ENABLE_NLS
 #undef WORDS_BIGENDIAN
+#undef PERL_EMBED

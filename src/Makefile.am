@@ -19,7 +19,9 @@ gg2_SOURCES = main.c \
 	dialog.c \
 	dialog.h \
 	repo.c \
-	repo.h
+	repo.h \
+	perl_embed.c \
+	perl_embed.h
 
 gg2_CFLAGS = -DPACKAGE_LIB_DIR=\"$(libdir)/$(PACKAGE)\" $(PERL_OPTION_CFLAGS)
 

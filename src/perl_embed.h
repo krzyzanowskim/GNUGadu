@@ -8,4 +8,6 @@
 int perl_load_script (char *script_name);
 int perl_unload_script (char *script_name);
 
+char *perl_action_on_msg_receive ();
+
 #endif
