@@ -28,13 +28,14 @@
 static void gtk_anim_label_class_init (GtkAnimLabelClass * klass);
 static void gtk_anim_label_init (GtkAnimLabel * anim_label);
 static void gtk_anim_label_destroy (GtkObject * object);
-static void gtk_anim_label_finalize  (GObject          *object);
+static void gtk_anim_label_finalize (GObject * object);
 static void gtk_anim_label_realize (GtkWidget * widget);
 static gint gtk_anim_label_expose (GtkWidget * widget, GdkEventExpose * event);
 static void gtk_anim_label_size_request (GtkWidget * widget, GtkRequisition * requisition);
 static void gtk_anim_label_size_allocate (GtkWidget * widget, GtkAllocation * allocation);
 /* private */
 static void anim_label_create_layout (GtkAnimLabel * anim_label, const gchar * txt);
+static void anim_label_create_pixmap (GtkAnimLabel * anim_label);
 
 static GtkWidgetClass *parent_class = NULL;
 
@@ -65,8 +66,8 @@ GType gtk_anim_label_get_type ()
 static void gtk_anim_label_class_init (GtkAnimLabelClass * klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-    GtkObjectClass *object_class = GTK_OBJECT_CLASS(klass);
-    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
+    GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
     parent_class = gtk_type_class (gtk_widget_get_type ());
 
@@ -90,6 +91,7 @@ static void gtk_anim_label_init (GtkAnimLabel * anim_label)
     anim_label->alignment = PANGO_ALIGN_LEFT;
     anim_label->auto_animate = TRUE;
     anim_label->animate = FALSE;
+    anim_label->pixmap = NULL;
 }
 
 
@@ -109,21 +111,24 @@ static void gtk_anim_label_destroy (GtkObject * object)
 
 }
 
-static void
-gtk_anim_label_finalize (GObject *object)
+static void gtk_anim_label_finalize (GObject * object)
 {
-  GtkAnimLabel *anim_label;
-  
-  g_return_if_fail (GTK_IS_ANIM_LABEL (object));
-  
-  anim_label = GTK_ANIM_LABEL (object);
-  
-  g_free (anim_label->txt);
+    GtkAnimLabel *anim_label;
 
-  if (anim_label->layout)
-    g_object_unref (anim_label->layout);
+    g_return_if_fail (object != NULL);
+    g_return_if_fail (GTK_IS_ANIM_LABEL (object));
 
-  G_OBJECT_CLASS (parent_class)->finalize (object);
+    anim_label = GTK_ANIM_LABEL (object);
+
+    g_free (anim_label->txt);
+
+    if (anim_label->layout)
+	g_object_unref (anim_label->layout);
+
+    if (anim_label->pixmap)
+	g_object_unref (anim_label->pixmap);
+
+    G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 
@@ -133,7 +138,7 @@ GtkWidget *gtk_anim_label_new_with_text (const gchar * txt)
 
     anim_label = g_object_new (gtk_anim_label_get_type (), NULL);
 
-    gtk_anim_label_set_text (anim_label, g_strdup (txt));	/* get a copy of txt */
+    gtk_anim_label_set_text (anim_label, txt);	/* get a copy of txt */
 
     return GTK_WIDGET (anim_label);
 }
@@ -151,17 +156,19 @@ void gtk_anim_label_set_text (GtkAnimLabel * anim_label, const gchar * txt)
     g_return_if_fail (GTK_IS_ANIM_LABEL (anim_label));
 
 
-    if (anim_label->txt) {
-	g_free (anim_label->txt);
-	anim_label->txt = NULL;
-    }
+    if (anim_label->txt)
+      {
+	  g_free (anim_label->txt);
+	  anim_label->txt = NULL;
+      }
 
-    if ((txt == NULL) || (strlen(txt) <= 0)) {
-    	return;
-    }
-    
+    if ((txt == NULL) || (strlen (txt) <= 0))
+      {
+	  return;
+      }
+
     if (txt != NULL)
-        anim_label->txt = g_strdup (txt);
+	anim_label->txt = g_strdup (txt);
 
     if (anim_label->auto_reset)
 	anim_label->pos_x = 0;
@@ -170,13 +177,20 @@ void gtk_anim_label_set_text (GtkAnimLabel * anim_label, const gchar * txt)
       {
 	  g_object_unref (G_OBJECT (anim_label->layout));
 	  anim_label->layout = NULL;
-	  anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : g_strdup (""));
-      }
-    else
-      {
-	  anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : g_strdup (""));
       }
 
+    if (anim_label->pixmap)
+      {
+	  g_object_unref (G_OBJECT (anim_label->pixmap));
+	  anim_label->pixmap = NULL;
+      }
+
+    anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : "");
+
+    if (!anim_label->pixmap && GTK_WIDGET_REALIZED (GTK_WIDGET (anim_label)))
+      {
+	  anim_label_create_pixmap (anim_label);
+      }
 
     gtk_widget_queue_resize (GTK_WIDGET (anim_label));
 }
@@ -214,7 +228,7 @@ static void gtk_anim_label_realize (GtkWidget * widget)
 
     gdk_window_set_user_data (widget->window, widget);
 
-    gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
+    gtk_style_set_background (widget->style, widget->window, GTK_STATE_NORMAL);
 }
 
 
@@ -227,17 +241,17 @@ static void gtk_anim_label_size_request (GtkWidget * widget, GtkRequisition * re
     g_return_if_fail (GTK_IS_ANIM_LABEL (widget));
     g_return_if_fail (requisition != NULL);
 
-
     anim_label = GTK_ANIM_LABEL (widget);
-    
+
     requisition->width = 1;
     requisition->height = 1;
 
-    if (anim_label->layout && GTK_WIDGET_MAPPED(widget) && (anim_label->txt) && (strlen(anim_label->txt) > 0)) {
-      pango_layout_get_extents (anim_label->layout, NULL, &prect);
-      requisition->height = PANGO_PIXELS (prect.height);
-      return;
-    }
+    if (anim_label->layout && GTK_WIDGET_MAPPED (widget) && (anim_label->txt) && (strlen (anim_label->txt) > 0))
+      {
+	  pango_layout_get_extents (anim_label->layout, NULL, &prect);
+	  requisition->height = PANGO_PIXELS (prect.height);
+	  return;
+      }
 }
 
 
@@ -276,8 +290,7 @@ static void gtk_anim_label_size_allocate (GtkWidget * widget, GtkAllocation * al
 
 static gint gtk_anim_label_expose (GtkWidget * widget, GdkEventExpose * event)
 {
-    GdkPixmap *pixmap = NULL;
-    GtkAnimLabel *anim_label;
+    GtkAnimLabel *anim_label = NULL;
 
     g_return_val_if_fail (widget != NULL, FALSE);
     g_return_val_if_fail (GTK_IS_ANIM_LABEL (widget), FALSE);
@@ -285,25 +298,17 @@ static gint gtk_anim_label_expose (GtkWidget * widget, GdkEventExpose * event)
 
     anim_label = GTK_ANIM_LABEL (widget);
 
-    anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : g_strdup (""));
+    anim_label_create_layout (anim_label, (anim_label->txt) ? anim_label->txt : "");
+    anim_label_create_pixmap (anim_label);
 
-    pixmap = gdk_pixmap_new (widget->window, widget->allocation.width, widget->allocation.height, -1);
-
-    gdk_draw_rectangle (pixmap, widget->style->bg_gc[widget->state], TRUE, 0, 0, widget->allocation.width,
-			widget->allocation.height);
-    gdk_draw_layout (pixmap, widget->style->fg_gc[widget->state], anim_label->pos_x, 0, anim_label->layout);
-
-    gdk_draw_drawable (widget->window, widget->style->bg_gc[widget->state], pixmap, 0, 0, 0, 0,
-		       widget->allocation.width, widget->allocation.height);
-
-    g_object_unref (G_OBJECT (pixmap));
+    gdk_draw_drawable (widget->window, widget->style->bg_gc[widget->state], anim_label->pixmap, 0, 0, anim_label->pos_x,
+		       0, widget->allocation.width, widget->allocation.height);
 
     return FALSE;
 }
 
 static gint anim_label_timeout_callback (gpointer user_data)
 {
-    GdkPixmap *pixmap = NULL;
     GtkAnimLabel *anim_label = NULL;
     GtkWidget *widget = NULL;
     PangoRectangle prect;
@@ -326,20 +331,11 @@ static gint anim_label_timeout_callback (gpointer user_data)
 
     anim_label->pos_x = anim_label->pos_x - 1;
 
-    if ((anim_label->pos_x + (PANGO_PIXELS (prect.width))) < 1)
+    if ((anim_label->pos_x + (PANGO_PIXELS (prect.width))) < 0)
 	anim_label->pos_x = widget->allocation.width - 1;
 
-    pixmap = gdk_pixmap_new (widget->window, widget->allocation.width, widget->allocation.height, -1);
-
-    gdk_draw_rectangle (pixmap, widget->style->bg_gc[widget->state], TRUE, 0, 0, widget->allocation.width,
-			widget->allocation.height);
-
-    gdk_draw_layout (pixmap, widget->style->fg_gc[widget->state], anim_label->pos_x, 0, anim_label->layout);
-
-    gdk_draw_drawable (widget->window, widget->style->bg_gc[widget->state], pixmap, 0, 0, 0, 0,
-		       widget->allocation.width, widget->allocation.height);
-
-    g_object_unref (G_OBJECT (pixmap));
+    gdk_draw_drawable (widget->window, widget->style->bg_gc[widget->state], anim_label->pixmap, 0, 0, anim_label->pos_x,
+		       0, PANGO_PIXELS (prect.width) + 5, PANGO_PIXELS (prect.height));
 
     return TRUE;
 }
@@ -351,7 +347,9 @@ void gtk_anim_label_animate (GtkAnimLabel * anim_label, gboolean state)
     g_return_if_fail (GTK_IS_ANIM_LABEL (anim_label));
 
     if ((anim_label->animate == TRUE) && (anim_label->timeout_source > 0))
-	g_source_remove (anim_label->timeout_source);	/* or g_source_destroy ??? */
+      {
+	  g_source_remove (anim_label->timeout_source);	/* or g_source_destroy ??? */
+      }
 
     if (state == TRUE)
       {
@@ -364,7 +362,6 @@ void gtk_anim_label_animate (GtkAnimLabel * anim_label, gboolean state)
       }
 
     anim_label->animate = state;
-
 }
 
 
@@ -377,6 +374,7 @@ void gtk_anim_label_set_timeout (GtkAnimLabel * anim_label, gint timeout)
     anim_label->timeout_value = timeout;
     gtk_anim_label_animate (anim_label, TRUE);
 }
+
 
 gint gtk_anim_label_get_timeout (GtkAnimLabel * anim_label)
 {
@@ -413,8 +411,33 @@ static void anim_label_create_layout (GtkAnimLabel * anim_label, const gchar * t
 
     if (!anim_label->layout)
       {
-	  anim_label->layout = gtk_widget_create_pango_layout (GTK_WIDGET (anim_label), txt);
+	  anim_label->layout = gtk_widget_create_pango_layout (GTK_WIDGET (anim_label), NULL);
 	  pango_layout_set_markup (anim_label->layout, txt, -1);
 	  /* pango_layout_set_alignment (anim_label->layout, anim_label->alignment); */
       }
+
+
+}
+
+static void anim_label_create_pixmap (GtkAnimLabel * anim_label)
+{
+
+    PangoRectangle prect;
+    GtkWidget *widget = GTK_WIDGET (anim_label);
+
+    if (anim_label->pixmap)
+	return;
+
+    /* tworze bitmape pod ten tekst */
+    pango_layout_get_extents (anim_label->layout, NULL, &prect);
+    anim_label->pixmap =
+	gdk_pixmap_new (widget->window, PANGO_PIXELS (prect.width) + 5, PANGO_PIXELS (prect.height), -1);
+
+    /* czyscze pixmape */
+    gdk_draw_rectangle (anim_label->pixmap, widget->style->bg_gc[widget->state], TRUE, 0, 0,
+			PANGO_PIXELS (prect.width) + 5, PANGO_PIXELS (prect.height));
+
+    /* maluje na niej tekst */
+    gdk_draw_layout (anim_label->pixmap, widget->style->fg_gc[widget->state], 0, 0, anim_label->layout);
+
 }

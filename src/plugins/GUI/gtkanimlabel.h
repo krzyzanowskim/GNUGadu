@@ -31,6 +31,7 @@ extern "C"
 	gboolean auto_animate;	/* default TRUE */
 	gboolean auto_reset;	/* default TRUE */
 	gint alignment;		/* default LEFT */
+	GdkPixmap *pixmap;	/* pixmap for drawing */
     };
 
     struct _GtkAnimLabelClass
