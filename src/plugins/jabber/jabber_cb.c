@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.41 2004/05/21 07:54:40 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.42 2004/05/21 08:58:38 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -209,6 +209,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
     }
 */
 	status = lm_message_node_get_child(message->node, "status");
+
 	if (status)
 		descr = ggadu_strchomp((gchar *) lm_message_node_get_value(status));
 
@@ -421,6 +422,13 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 			strchr(jid, '/')[0] = '\0';
 
 		print_debug("jabber: roster: jid= %s ,name= %s ,subscription= %s", jid, name, subs);
+
+		/* filter out transports entries if there is no '@' in jid */		
+		if (strchr(jid,'@') == NULL)
+		{
+			child = child->next;
+			continue;
+		}
 
 		if (subs && (!strcmp(subs, "remove")))
 		{
