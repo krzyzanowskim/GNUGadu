@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.25 2004/01/28 23:41:17 shaster Exp $ */
+/* $Id: jabber_login.c,v 1.26 2004/01/29 22:15:06 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -76,6 +76,12 @@ void jabber_login(enum states status)
 	}
 }
 
+static LmSSLResponse jabber_connection_ssl_func (LmSSL *ssl, LmSSLStatus status, gpointer data)
+ {
+	 print_debug("BBBB %d",status);
+	 return LM_SSL_RESPONSE_CONTINUE;
+ }
+
 gpointer jabber_login_connect(gpointer status)
 {
 	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
@@ -136,10 +142,11 @@ gpointer jabber_login_connect(gpointer status)
 
 	if (ggadu_config_var_get(jabber_handler, "use_ssl"))
 	{
-		if (lm_connection_supports_ssl())
+		if (lm_ssl_is_supported())
 		{
-			lm_connection_set_use_ssl(connection, 1);
-			lm_connection_set_port(connection, LM_CONNECTION_DEFAULT_PORT_SSL);
+			LmSSL *ssl = lm_ssl_new (NULL,jabber_connection_ssl_func,NULL,NULL);
+			lm_connection_set_ssl(connection,ssl);
+			lm_ssl_unref(ssl);
 		}
 		else
 		{

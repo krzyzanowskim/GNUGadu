@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.21 2004/01/28 23:41:29 shaster Exp $ */
+/* $Id: jabber_plugin.h,v 1.22 2004/01/29 22:15:07 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -75,6 +75,7 @@ typedef struct
 
 extern GGaduPlugin *jabber_handler;
 extern LmConnection *connection;
+//extern LmSSL	*lm_ssl;
 
 extern LmMessageHandler *iq_handler;
 extern LmMessageHandler *iq_roster_handler;

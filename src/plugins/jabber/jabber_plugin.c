@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.57 2004/01/28 23:41:18 shaster Exp $ */
+/* $Id: jabber_plugin.c,v 1.58 2004/01/29 22:15:06 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -676,7 +676,7 @@ gpointer user_preferences_action(gpointer user_data)
 	ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
 			       ggadu_config_var_get(jabber_handler, "autoconnect"), VAR_FLAG_NONE);
 
-	if (lm_connection_supports_ssl())
+	if (lm_ssl_is_supported())
 	{
 		ggadu_dialog_add_entry(&(d->optlist), GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
 				       ggadu_config_var_get(jabber_handler, "use_ssl"), VAR_FLAG_NONE);
@@ -771,7 +771,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(jabber_handler, "resource", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "search_server", VAR_STR);
 
-	if (lm_connection_supports_ssl())
+	if (lm_ssl_is_supported())
 		ggadu_config_var_add(jabber_handler, "use_ssl", VAR_BOOL);
 
 	if (!ggadu_config_read(jabber_handler))
