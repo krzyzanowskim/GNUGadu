@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.30 2004/01/10 21:53:23 shaster Exp $ */
+/* $Id: gui_main.c,v 1.31 2004/01/11 12:47:07 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -121,8 +121,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     ggadu_config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
     ggadu_config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
     ggadu_config_var_add(gui_handler, "hide_toolbar", VAR_BOOL);
-    ggadu_config_var_add(gui_handler, "sound_msg_in", VAR_STR);
-    ggadu_config_var_add(gui_handler, "sound_msg_out", VAR_STR);
+    ggadu_config_var_add_with_default(gui_handler, "sound_msg_in", VAR_STR,g_strconcat(PACKAGE_DATA_DIR,"/sounds/",NULL));
+    ggadu_config_var_add_with_default(gui_handler, "sound_msg_out", VAR_STR,g_strconcat(PACKAGE_DATA_DIR,"/sounds/",NULL));
     ggadu_config_var_add(gui_handler, "contact_list_contact_font", VAR_STR);
     ggadu_config_var_add(gui_handler, "contact_list_protocol_font", VAR_STR);
     ggadu_config_var_add_with_default(gui_handler, "chat_window_width", VAR_INT, (gpointer) DEFAULT_CHAT_WINDOW_WIDTH);
