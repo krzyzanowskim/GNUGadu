@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.9 2003/10/27 21:46:19 krzyzak Exp $ */
+/* $Id: gui_main.h,v 1.10 2004/01/10 21:53:23 shaster Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -10,6 +10,10 @@
 
 #define DEFAULT_WIDTH 160
 #define DEFAULT_HEIGHT 488
+
+// default size of a chat window
+#define DEFAULT_CHAT_WINDOW_WIDTH 400
+#define DEFAULT_CHAT_WINDOW_HEIGHT 300
 
 /* default icon's filename */
 #define GGADU_DEFAULT_ICON_FILENAME "icon.png"

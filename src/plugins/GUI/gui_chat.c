@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.53 2004/01/08 20:46:56 krzyzak Exp $ 
+ * $Id: gui_chat.c,v 1.54 2004/01/10 21:53:23 shaster Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -646,6 +646,8 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
 GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar * id, gboolean visible)
 {
     gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
+    gint width = (gint) ggadu_config_var_get (gui_handler, "chat_window_width");
+    gint height = (gint) ggadu_config_var_get (gui_handler, "chat_window_height");
     gboolean conference;	/* Conference ? */
     GGaduContact *k = NULL;	/* Contact that we talk to */
     gui_protocol *gp = NULL;	/* data for this protocol */
@@ -853,8 +855,13 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  break;
       }
 
+    if (width < 50 || width > 2000)
+	width = DEFAULT_CHAT_WINDOW_WIDTH;
 
-    gtk_window_set_default_size (GTK_WINDOW (chat_window), 400, 300);
+    if (height < 50 || height > 2000)
+	height = DEFAULT_CHAT_WINDOW_HEIGHT;
+
+    gtk_window_set_default_size (GTK_WINDOW (chat_window), width, height);
     gtk_window_set_modal (GTK_WINDOW (chat_window), FALSE);
     gtk_widget_set_name (GTK_WIDGET (chat_window), "GGChat");
 
