@@ -1,8 +1,8 @@
 src/main.c
-src/plugins.c
-src/signals.c
-src/support.c
-src/dialog.c
+lib/plugins.c
+lib/signals.c
+lib/support.c
+lib/dialog.c
 src/plugins/GUI/GUI_plugin.c
 src/plugins/GUI/gui_chat.c
 src/plugins/GUI/gui_preferences.c
