@@ -1,7 +1,7 @@
-/* $Id: plugin_sound_oss.c,v 1.17 2004/12/23 12:53:25 krzyzak Exp $ */
+/* $Id: plugin_sound_oss.c,v 1.18 2004/12/26 22:01:26 shaster Exp $ */
 
 /* 
- * XOSD plugin for GNU Gadu 2 
+ * sound-OSS plugin for GNU Gadu 2 
  * 
  * Originally written by Igor Truszkowski <pol128@polsl.gliwice.pl>
  *
