@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.91 2004/10/19 10:51:25 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.92 2004/10/22 07:47:52 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -814,6 +814,18 @@ void gui_msg_receive(GGaduSignal * signal)
 			else
 			{
 				g_slist_free(sigdata);
+			}
+
+			if(ggadu_config_var_get(gui_handler, "close_on_esc"))
+			{
+				if((gint) ggadu_config_var_get(gui_handler, "chat_type") == CHAT_TYPE_CLASSIC)
+				g_signal_connect(window1, "key-press-event",
+					G_CALLBACK(on_key_press_event_chat_window), (gpointer) CHAT_TYPE_CLASSIC);
+			} else
+			{
+				if((gint) ggadu_config_var_get(gui_handler, "chat_type") == CHAT_TYPE_CLASSIC)
+				g_signal_handlers_disconnect_by_func(window1, G_CALLBACK(on_key_press_event_chat_window),
+					(gpointer) CHAT_TYPE_CLASSIC);
 			}
 		}
 

@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.80 2004/10/19 10:51:26 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.81 2004/10/22 07:47:53 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -723,6 +723,7 @@ static GtkWidget *create_advanced_tab(
 )
 {
 	GtkWidget *hide_on_start;
+	GtkWidget *close_on_esc;
 	GtkWidget *blink_interval = NULL;
 	GtkWidget *blink = NULL;
 	GtkWidget *image;
@@ -762,6 +763,11 @@ static GtkWidget *create_advanced_tab(
 	gtk_box_pack_start(GTK_BOX(adv_vbox), notify_status_changes, FALSE, FALSE, 0);
 	g_object_set_data(G_OBJECT(adv_vbox), "notify_status_changes", notify_status_changes);
 
+	/* close_on_esc */
+	close_on_esc = gtk_check_button_new_with_label(_("'ESC' - close chatwindow"));
+	gtk_box_pack_start(GTK_BOX(adv_vbox), close_on_esc, FALSE, FALSE, 0);
+	g_object_set_data(G_OBJECT(adv_vbox), "close_on_esc", close_on_esc);
+	
 	/* blink */
 	blink = gtk_check_button_new_with_label(_("Blink status icon while connecting every:"));
 	blink_interval = gtk_spin_button_new_with_range(0, 2000, 100);
@@ -910,6 +916,9 @@ static GtkWidget *create_advanced_tab(
 
 	if (ggadu_config_var_get(gui_handler, "hide_on_start"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(hide_on_start), TRUE);
+
+	if (ggadu_config_var_get(gui_handler, "close_on_esc"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(close_on_esc), TRUE);
 
 	if (ggadu_config_var_get(gui_handler, "chat_paned_size"))
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(chat_paned_size), (gint) ggadu_config_var_get(gui_handler, "chat_paned_size"));
@@ -1288,6 +1297,9 @@ void gui_preferences(GtkWidget * widget, gpointer data
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "hide_on_start");
 		ggadu_config_var_set(gui_handler, "hide_on_start", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+
+		entry = g_object_get_data(G_OBJECT(adv_vbox), "close_on_esc");
+		ggadu_config_var_set(gui_handler, "close_on_esc", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "blink");
 		ggadu_config_var_set(gui_handler, "blink", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));

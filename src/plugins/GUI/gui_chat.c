@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.124 2004/10/19 10:51:25 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.125 2004/10/22 07:47:52 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -217,6 +217,22 @@ static gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey * eve
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(chat_notebook), act_tab_page);
 			return TRUE;
 		}
+	}
+
+	return FALSE;
+}
+
+gboolean on_key_press_event_chat_window(GtkWidget *widget, GdkEventKey *event, gpointer data)
+{
+	if (event->keyval == GDK_Escape)
+	{
+		if ((gint) data == CHAT_TYPE_TABBED)
+			on_destroy_chat(widget, NULL);
+
+		if ((gint) data == CHAT_TYPE_CLASSIC)
+			gtk_widget_hide(widget);
+
+		return TRUE;
 	}
 
 	return FALSE;
@@ -1245,6 +1261,12 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	g_signal_connect(button_stick, "toggled", G_CALLBACK(on_stick_clicked), session);
 	g_signal_connect(button_find, "clicked", G_CALLBACK(on_chat_find_clicked), session);
 	g_signal_connect(button_clear, "clicked", G_CALLBACK(on_clear_clicked), session);
+	
+	if(ggadu_config_var_get(gui_handler, "close_on_esc"))
+	{
+		g_signal_connect(chat_window, "key-press-event",
+			    G_CALLBACK(on_key_press_event_chat_window), (gpointer) chat_type);
+	}
 
 	switch (chat_type)
 	{
@@ -1255,7 +1277,6 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	case CHAT_TYPE_CLASSIC:
 		g_signal_connect_swapped(button_close, "clicked", G_CALLBACK(gtk_widget_hide), chat_window);
 		g_signal_connect(chat_window, "destroy", G_CALLBACK(on_destroy_chat), session);
-
 		break;
 	}
 

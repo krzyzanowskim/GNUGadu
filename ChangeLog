@@ -1,3 +1,6 @@
+22.10.2004
+- close chat window on ESC option (mkobierzycki/GUI)
+
 20.10.2004
 - default font set to -*-*-*-r-*-*-20-*-*-*-*-*-iso8859-2
   default color set to #67FF40,  suggested by misior  (xosd/krzak)
