@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.31 2004/10/18 15:50:49 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.32 2004/10/18 15:59:36 krzyzak Exp $ */
 
 /*
  * XOSD plugin for GNU Gadu 2
@@ -504,8 +504,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(handler, "vertical_offset", VAR_INT);
 	ggadu_config_var_add(handler, "timestamp", VAR_BOOL);
 	ggadu_config_var_add_with_default(handler, "align", VAR_STR,g_strdup("center"));
-//	ggadu_config_var_add(handler, "align", VAR_STR);
-//	ggadu_config_var_add(handler, "pos", VAR_STR);
+	ggadu_config_var_add_with_default(handler, "pos", VAR_STR,g_strdup("middle"));
 	ggadu_config_var_add(handler, "numlines", VAR_INT);
 
 	if (g_getenv("HOME_ETC"))

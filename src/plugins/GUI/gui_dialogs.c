@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.55 2004/10/18 15:50:46 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.56 2004/10/18 15:59:35 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -381,17 +381,17 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 				break;
 			case VAR_LIST:
 				{
+				GSList *ltmp = NULL;
+				gchar *val = NULL;
 				/* KURWA co z tym zwalnianiem, bo do chuja nie wiem czy to zwolnione czy 
 				   nie zwolnione ma byc do chuja NOOOOOOOOOOOO 
-				   i czemu KURWA XOSD SIE WYPIERDALA */
+				   i czemu KURWA XOSD SIE WYPIERDALA 
+				   dobra, dziala, ale tu JEST SIECZKA JAKAS */
 				g_slist_free(kv->value);
 
-				GSList *ltmp = g_object_get_data(G_OBJECT(kv->user_data),"options-list");
-				GSList *aa = g_slist_nth(ltmp,gtk_combo_box_get_active (GTK_COMBO_BOX(kv->user_data)));
-				kv->value = g_slist_copy(aa);
-				
-//				print_debug("!!!!!!!!!!!!!!!!!! %d",gtk_combo_box_get_active (GTK_COMBO_BOX(kv->user_data)));
-//				print_debug("!!!!!!!!!!!!!!!!!! %s",aa->data);
+				ltmp = g_object_get_data(G_OBJECT(kv->user_data),"options-list");
+				val  = g_slist_nth_data(ltmp,gtk_combo_box_get_active (GTK_COMBO_BOX(kv->user_data)));
+				kv->value = g_slist_append(NULL,g_strdup(val));
 			
 				break;
 				}
