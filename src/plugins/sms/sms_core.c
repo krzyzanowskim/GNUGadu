@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.29 2004/01/10 16:21:54 thrulliq Exp $ */
+/* $Id: sms_core.c,v 1.30 2004/01/11 01:01:13 shaster Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -163,7 +163,22 @@ void httpstruct_free(HTTPstruct *h)
     g_free(h->post_data);
     g_free(h);
 }
-                                                                                                    
+
+void SMS_free(SMS *message)
+{
+    if (!message)
+	return;
+
+    g_free(message->number);
+    g_free(message->sender);
+    g_free(message->body);
+    g_free(message->idea_token);
+    g_free(message->idea_pass);
+    g_free(message);
+
+    return;
+}
+
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
 gboolean IDEA_logo(SMS *user_data)
 {
@@ -228,6 +243,7 @@ int send_IDEA(SMS *message)
     gint i = 0, j, k, retries = 3;
     FILE *idea_logo;
     HTTPstruct *HTTP = NULL;
+    SMS *message2 = NULL;
     int sock_s;
 
     HTTP = httpstruct_new();
@@ -369,10 +385,16 @@ get_token:
 
     g_free(recv_buff);
 
-    message->idea_token = token;
-    message->idea_pass = NULL;
+    /* allocate another message, because this one will be free()d outside this function */
+    message2 = (SMS *) g_new0(SMS, 1);
+    message2->number = g_strdup(message->number);
+    message2->sender = g_strdup(message->sender);
+    message2->body   = g_strdup(message->body);
 
-    IDEA_logo(message);
+    message2->idea_token = token;
+    message2->idea_pass = NULL;
+
+    IDEA_logo(message2);
 
     return TRUE;
 }
@@ -383,22 +405,25 @@ gpointer send_IDEA_stage2(SMS *message)
     gchar *post = NULL;
     gchar *sms_number = message->number;
     gchar temp[2];
+    gchar *sender = NULL;
+    gchar *body = NULL;
     gint i, retries = 3;
     HTTPstruct *HTTP = NULL;
     int sock_s;
 
+    /* is there any better place for this? */
+    unlink(idea_token_path);
+
     if (!message)
     {
 	print_debug("Oops! message==NULL!\n");
-	g_thread_exit(NULL);
-	return NULL;
+	goto out;
     }
 
     if (!message->idea_pass)
     {
 	sms_warning(message->number, _("Please enter token"));
-	g_thread_exit(NULL);
-	return NULL;
+        goto out;
     }
 
     /* Cut-off prefixes. 'just-in-case' */
@@ -411,16 +436,19 @@ gpointer send_IDEA_stage2(SMS *message)
     if (g_str_has_prefix(message->number, "0"))
 	sms_number++;
 
+    sender = ggadu_sms_urlencode(g_strdup(message->sender));
+    body = ggadu_sms_urlencode(g_strdup(message->body));
+
     post = g_strconcat("token=", message->idea_token,
-			"&SENDER=", ggadu_sms_urlencode(g_strdup(message->sender)),
+			"&SENDER=", sender,
 			"&RECIPIENT=", sms_number,
-			"&SHORT_MESSAGE=", ggadu_sms_urlencode(g_strdup(message->body)),
+			"&SHORT_MESSAGE=", body,
 			 "&pass=", message->idea_pass, "&respInfo=2", NULL);
 
-    print_debug("Post data: %s\n", post);
+    g_free(sender);
+    g_free(body);
 
-    /* is there any better place for this? */
-    unlink(idea_token_path);
+    print_debug("Post data: %s\n", post);
 
     HTTP = httpstruct_new();
     HTTP->method = g_strdup("POST");
@@ -490,12 +518,7 @@ send_sms:
     g_free(recv_buff);
 
 out:
-    g_free(message->idea_token);
-    g_free(message->idea_pass);
-    g_free(message->sender);
-    g_free(message->number);
-    g_free(message->body);
-    g_free(message);
+    SMS_free(message);
 
     g_thread_exit(NULL);
     return NULL;
@@ -509,6 +532,8 @@ int send_PLUS(SMS *message)
     gchar tprefix[4];
     gchar temp[2];
     gchar *sms_number = message->number;
+    gchar *sender = NULL;
+    gchar *body = NULL;
     int i = 0, ret = ERR_UNKNOWN;
     HTTPstruct *HTTP = NULL;
     int sock_s;
@@ -532,11 +557,16 @@ int send_PLUS(SMS *message)
     strncpy(tprefix, sms_number, 3);
     tprefix[3] = 0;
 
+    sender = ggadu_sms_urlencode(g_strdup(message->sender));
+    body = ggadu_sms_urlencode(g_strdup(message->body));
+
     /* *INDENT-OFF* */
     post = g_strconcat("tprefix=", tprefix, "&numer=", (sms_number + 3),
-		"&odkogo=", ggadu_sms_urlencode(g_strdup(message->sender)),
-		"&tekst=", ggadu_sms_urlencode(g_strdup(message->body)), NULL);
+			"&odkogo=", sender, "&tekst=", body, NULL);
     /* *INDENT-ON* */
+
+    g_free(sender);
+    g_free(body);
 
     HTTP = httpstruct_new();
     HTTP->method = g_strdup("POST");
@@ -567,11 +597,6 @@ int send_PLUS(SMS *message)
     g_free(recv_buff);
 
 out:
-    g_free(message->sender);
-    g_free(message->number);
-    g_free(message->body);
-    g_free(message);
-
     return ret;
 }
 
@@ -583,6 +608,10 @@ int send_ERA(SMS *message, int *era_left)
     gchar *get = NULL;
     gchar temp[2];
     gchar *sms_number = message->number;
+    gchar *sender = NULL;
+    gchar *body = NULL;
+    gchar *era_login = NULL;
+    gchar *era_password = NULL;
     int i = 0;
     int ret = ERR_UNKNOWN;
     HTTPstruct *HTTP;
@@ -604,15 +633,22 @@ int send_ERA(SMS *message, int *era_left)
     if (g_str_has_prefix(message->number, "0"))
 	sms_number++;
 
+    sender = ggadu_sms_urlencode(g_strdup(message->sender));
+    body = ggadu_sms_urlencode(g_strdup(message->body));
+    era_login = ggadu_sms_urlencode(g_strdup(message->era_login));
+    era_password = ggadu_sms_urlencode(g_strdup(message->era_password));
+
     /* *INDENT-OFF* */
-    get = g_strconcat ("?login=", ggadu_sms_urlencode(g_strdup(message->era_login)),
-		"&password=", ggadu_sms_urlencode(g_strdup(message->era_password)),
-		"&message=", ggadu_sms_urlencode(g_strdup(message->body)),
-		"&number=48", sms_number,
-		"&contact=", "&signature=", ggadu_sms_urlencode(g_strdup(message->sender)),
-		"&success=OK", "&failure=FAIL", 
-		"&minute=", "&hour= ", NULL);
+    get = g_strconcat ("?login=", era_login, "&password=", era_password,
+		"&message=", body, "&number=48", sms_number,
+		"&contact=", "&signature=", sender,
+		"&success=OK", "&failure=FAIL", "&minute=", "&hour= ", NULL);
     /* *INDENT-ON* */
+
+    g_free(sender);
+    g_free(body);
+    g_free(era_login);
+    g_free(era_password);
 
     HTTP = httpstruct_new();
     HTTP->method = g_strdup("GET");
@@ -640,8 +676,7 @@ int send_ERA(SMS *message, int *era_left)
 	*era_left = (int) (*(returncode + 17) - '0');
 	ret = TRUE;
     }
-
-    if ((returncode = g_strstr_len(recv_buff, i, "FAIL?X-ERA-error=")) != NULL)
+    else if ((returncode = g_strstr_len(recv_buff, i, "FAIL?X-ERA-error=")) != NULL)
     {
 	int r = (int) (*(returncode + 17) - '0');
 
@@ -666,18 +701,9 @@ int send_ERA(SMS *message, int *era_left)
 	    ret = ERR_UNKNOWN;
     }
 
-
 out:
-    if (recv_buff)
-	g_free(recv_buff);
-
-    if (returncode)
-	g_free(returncode);
-
-    g_free(message->sender);
-    g_free(message->number);
-    g_free(message->body);
-    g_free(message);
+    g_free(recv_buff);
+    g_free(returncode);
 
     return ret;
 }
@@ -715,11 +741,17 @@ int check_operator(gchar * number)
 }
 
 /* wywolanie z sms_gui.c , tutaj wybiera co zrobic */
-/* nie zwalnia niczego zwiazanego z *message, wlasciwe send_*() musza sie o to zatroszczyc */
 gpointer send_sms(SMS *message)
 {
     gint result, gsm_oper;
     int era_left = 10;
+
+    if (!message)
+    {
+	print_debug("OOPS! Something BAD happened!\n");
+	g_thread_exit(NULL);
+	return NULL;
+    }
 
     if (!message->number)
     {
@@ -855,8 +887,8 @@ gpointer send_sms(SMS *message)
     }
 
 out:
-    g_thread_exit(0);
-
+    SMS_free(message);
+    g_thread_exit(NULL);
     return NULL;
 }
 
