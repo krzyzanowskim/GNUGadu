@@ -50,6 +50,10 @@ if BUILD_REMOTE
 REMOTE=remote
 endif
 
+if BUILD_DBUS
+DBUS=dbus
+endif
+
 if BUILD_UPDATE
 UPDATE=update
 endif
@@ -59,7 +63,7 @@ HISTORY=history
 endif
 
 
-SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE) $(HISTORY)
+SUBDIRS = $(GUI) $(GG) $(TLEN) $(XOSD) $(DOCKLET) $(SOUND) $(JABBER) $(SMS) $(REMOTE) $(UPDATE) $(HISTORY) $(DBUS)
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)/$(pkglibdir)

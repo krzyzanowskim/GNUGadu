@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.22 2004/10/18 09:59:55 krzyzak Exp $ */
+/* $Id: main.c,v 1.23 2004/10/25 14:03:33 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -151,6 +151,7 @@ void start_plugins_ordered()
 gboolean gnu_gadu_init(gpointer data)
 {
     config = g_new0(GGaduConfig, 1);
+    config->main_loop = g_main_loop_new(NULL, FALSE);
 
     /* configure directory */
     if (g_getenv("HOME_ETC"))
@@ -196,7 +197,6 @@ int main(int argc, char **argv)
 
     g_thread_init(NULL);
     gnu_gadu_init(NULL);
-    config->main_loop = g_main_loop_new(NULL, FALSE);
     g_main_loop_run(config->main_loop);
 
     return 0;

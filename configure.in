@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.97 2004/10/22 20:52:57 krzyzak Exp $
+dnl $Id: configure.in,v 1.98 2004/10/25 14:03:29 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.1])
 
@@ -214,6 +214,7 @@ if test x$with_all_plugins = xyes; then
     with_arts=yes
     with_sms=yes
     with_remote=yes
+    with_dbus=yes
     with_external=yes
     with_history_external_viewer=yes
     with_update=yes
@@ -416,6 +417,19 @@ else
 	with_remote=yes
 fi
 
+AC_ARG_WITH(dbus, [  --with-dbus		  Build DBUS plugin])
+if test "x$with_dbus" != "xyes"; then 
+	with_dbus=no
+else
+	with_dbus=yes
+	PKG_CHECK_MODULES(DBUS,dbus-1 dbus-glib-1, [], with_dbus=no)
+	if test "$with_dbus" = "no"; then
+	    AC_MSG_ERROR(DBUS_PKG_ERRORS)
+	fi
+	AC_SUBST(DBUS_CFLAGS)
+	AC_SUBST(DBUS_LIBS)
+fi
+
 
 AC_ARG_WITH(docklet_system_tray, [  --without-docklet-system-tray	  Build docklet plugin])
 if test "x$with_docklet_system_tray" != "xno"; then 
@@ -548,6 +562,7 @@ AM_CONDITIONAL(BUILD_SOUND_EXTERNAL, test "$with_external" = "yes")
 AM_CONDITIONAL(BUILD_HISTORY_EXTERNAL_VIEWER_PLUGIN, test "$with_history_external_viewer" = "yes")
 AM_CONDITIONAL(BUILD_SMS, test "$with_sms" = "yes")
 AM_CONDITIONAL(BUILD_REMOTE, test "$with_remote" = "yes")
+AM_CONDITIONAL(BUILD_DBUS, test "$with_dbus" = "yes")
 AM_CONDITIONAL(BUILD_UPDATE, test "$with_update" = "yes")
 
 dnl Set PACKAGE_DATA_DIR in config.h.
@@ -632,6 +647,7 @@ src/plugins/sound/oss/Makefile
 src/plugins/sound/external/Makefile
 src/plugins/sms/Makefile
 src/plugins/remote/Makefile
+src/plugins/dbus/Makefile
 src/plugins/update/Makefile
 src/plugins/history/Makefile
 src/plugins/history/external/Makefile
@@ -666,9 +682,10 @@ echo Build plugin sound aRts................ : $with_arts
 echo Build plugin sound OSS................. : $with_oss
 echo Build plugin sound external............ : $with_external
 echo Build plugin sms....................... : $with_sms
-echo Build plugin remote.................... : $with_remote
 echo Build plugin update.................... : $with_update
 echo Build plugin external history viewer... : $with_history_external_viewer
+echo Build plugin remote.................... : $with_remote
+echo Build plugin DBUS...................... : $with_dbus
 echo Build gghist - history viewer.......... : $with_gghist
 echo Build with perl support................ : $with_perl
 echo
