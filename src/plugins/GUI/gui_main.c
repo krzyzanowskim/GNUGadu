@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.39 2004/01/18 21:13:25 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.40 2004/01/25 09:32:25 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -37,8 +37,6 @@ static GQuark GUI_REGISTER_MENU_SIG;
 static GQuark GUI_UNREGISTER_MENU_SIG;
 static GQuark GUI_SEND_USERLIST_SIG;
 static GQuark GUI_MSG_RECEIVE_SIG;
-static GQuark GUI_REGISTER_USERLIST_MENU_SIG;
-static GQuark GUI_UNREGISTER_USERLIST_MENU_SIG;
 static GQuark GUI_ADD_USER_WINDOW_SIG;
 static GQuark GUI_CHANGE_USER_WINDOW_SIG;
 static GQuark GUI_SHOW_WARNING_SIG;
@@ -194,9 +192,6 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 #ifdef PERL_EMBED
 	register_signal_perl("gui msg receive", perl_gui_msg_receive);
 #endif
-	GUI_REGISTER_USERLIST_MENU_SIG = register_signal(gui_handler, "gui register userlist menu");	/* !!! DODAC FREE */
-	GUI_UNREGISTER_USERLIST_MENU_SIG = register_signal(gui_handler, "gui unregister userlist menu");	/* !!! o to chodzi? ;) */
-
 	GUI_ADD_USER_WINDOW_SIG = register_signal(gui_handler, "gui add user window");
 	GUI_CHANGE_USER_WINDOW_SIG = register_signal(gui_handler, "gui change user window");
 
