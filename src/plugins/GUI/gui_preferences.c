@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.7 2003/04/03 11:07:48 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.8 2003/04/03 21:28:07 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -181,7 +181,8 @@ static GtkWidget *create_colors_tab()
     hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(colors_vbox), hbox, FALSE, FALSE, 0);
 
-    image = create_image("color-browser.png");
+    image = gtk_image_new();
+    gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-select-color",GTK_ICON_SIZE_DND);
     label = gtk_label_new(_("\nColors settings\n\n"));
 	
     gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
@@ -296,7 +297,8 @@ static GtkWidget *create_fonts_tab()
     hbox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(fonts_vbox), hbox, FALSE, FALSE, 0);
 
-    image = create_image("font-browser.png");
+    image = gtk_image_new();
+    gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-select-font",GTK_ICON_SIZE_DND);
     label = gtk_label_new(_("\nFonts settings\n\n"));
 	
     gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
@@ -434,7 +436,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	hbox = gtk_hbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(general_vbox), hbox, FALSE, FALSE, 0);
 
-	image = create_image("preferences.png");
+	image = gtk_image_new();
+	gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-preferences",GTK_ICON_SIZE_DND);
 	label = gtk_label_new(_("\nGUI plugin preferences\n\n"));
 	
 	gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);

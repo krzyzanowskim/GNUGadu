@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.11 2003/04/03 12:18:56 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.12 2003/04/03 21:28:06 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "unified-types.h"
+#include "dialog.h"
 #include "signals.h"
 #include "support.h"
 #include "gui_support.h"
@@ -178,7 +179,10 @@ GtkWidget *gui_build_dialog_gtk_table(GSList *list, gint cols)
 	    
 	    gtk_container_add(GTK_CONTAINER(vbox), label);
 	    gtk_table_attach_defaults(GTK_TABLE(tab), vbox, 0, 1, actR, actR+1);
-	    gtk_table_attach_defaults(GTK_TABLE(tab), entry, 1, 2, actR, actR+1);
+	    
+	    if (entry)
+		gtk_table_attach_defaults(GTK_TABLE(tab), entry, 1, 2, actR, actR+1);
+		
 	} else {
 	    gtk_table_attach(GTK_TABLE(tab), entry, actC, actC+2, actR, actR+1, GTK_FILL, GTK_SHRINK, 0, 0);
 	}
@@ -270,9 +274,13 @@ void gui_dialog_response(GtkDialog *dialog, int resid, gpointer user_data) {
 	}
 	
 	signal_emit("main-gui", d->callback_signal, d, signal->source_plugin_name);
-    } 
-	else if (resid == GTK_RESPONSE_CANCEL) {
-			GGaduDialog_free(d);	
+	
+    } else if (resid == GTK_RESPONSE_CANCEL) {
+    
+	if (d && d->callback_cancel_signal)
+	    signal_emit("main-gui", d->callback_cancel_signal, d, signal->source_plugin_name);
+	    
+	GGaduDialog_free(d);	
     }
 
     GGaduSignal_free(signal);
@@ -348,8 +356,10 @@ void gui_show_dialog(gpointer signal, gboolean change)
     GtkWidget *table;
     GtkWidget *label;
     GtkWidget *hbox;
-    GGaduDialog *d = sig->data;
+    GGaduDialog *d = (sig) ? sig->data : NULL;
     gchar *markup;
+    
+    if (!sig) return;
     
     dialog = gtk_dialog_new_with_buttons(d->title,GTK_WINDOW(window),
 					GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -363,7 +373,12 @@ void gui_show_dialog(gpointer signal, gboolean change)
 	print_debug("d->type = %d\n", d->type);
 	switch (d->type) {
 	    case GGADU_DIALOG_CONFIG:
-		image = create_image("preferences.png");
+		image = gtk_image_new();
+		gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-preferences",GTK_ICON_SIZE_DND);
+		break;
+	    case GGADU_DIALOG_YES_NO:
+		image = gtk_image_new();
+		gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-dialog-question",GTK_ICON_SIZE_DND);
 		break;
 	    default:
 		break;

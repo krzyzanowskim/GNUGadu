@@ -3,6 +3,12 @@
 
 #include "unified-types.h"
 
+enum {
+    GGADU_DIALOG_GENERIC,
+    GGADU_DIALOG_CONFIG,
+    GGADU_DIALOG_YES_NO
+};
+
 GGaduDialog *ggadu_dialog_new();
 
 void ggadu_dialog_add_entry(

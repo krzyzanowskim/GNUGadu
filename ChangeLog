@@ -1,4 +1,6 @@
 3.04.2003
+- it's possible get cancel response from dialog (d->callback_cancel_signal) and GGADU_DIALOG_YES_NO type added (core/GUI/krzak)
+- replace images with gtk stock images :) (GUI/krzak)
 - load plugins in order in which they are listed in modules.load file (core/zapal)
 - fix in plugins dynamic load (GUI/krzak)
 - small cleanups in sound plugins, signal registration (sound/THrull)

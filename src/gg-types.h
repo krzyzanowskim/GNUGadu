@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.4 2003/04/03 11:07:46 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.5 2003/04/03 21:28:05 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -38,7 +38,8 @@ enum {
     VAR_BOOL,
     VAR_IMG,
     VAR_FILE_CHOOSER,
-    VAR_LIST
+    VAR_LIST,
+    VAR_NULL
 };
 
 enum {
@@ -47,6 +48,14 @@ enum {
     VAR_FLAG_INSENSITIVE  = 1 << 4,
     VAR_FLAG_PASSWORD     = 1 << 5
 };
+
+enum {
+    GGADU_OK,
+    GGADU_CANCEL,
+    GGADU_YES,
+    GGADU_NO
+};
+
 
 /*
  * GGaduMenu
@@ -153,11 +162,5 @@ typedef struct {
 } GGaduConfig;
 
 
-enum {
-    GGADU_OK,
-    GGADU_CANCEL,
-    GGADU_YES,
-    GGADU_NO
-};
 
 #endif

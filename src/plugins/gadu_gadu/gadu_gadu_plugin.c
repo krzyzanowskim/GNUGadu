@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.16 2003/04/02 18:40:33 zapal Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.17 2003/04/03 21:28:08 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -259,16 +259,16 @@ void ggadu_gg_save_history(gchar *to,gchar *txt)
 
 gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data) 
 {
-	struct gg_event *e;
-	struct gg_notify_reply *n;
-	GSList *slistmp;
+	struct gg_event *e = NULL;
+	struct gg_notify_reply *n = NULL;
+	GSList *slistmp = NULL;
 	uint32_t  *uins;
-	GGaduNotify *notify;
+	GGaduNotify *notify = NULL;
+	GGaduMsg *msg = NULL;
 	gint    i,j;
-	GGaduMsg *msg;
 
     /* w przypadku b³êdu/utraty po³±czenia post±p tak jak w przypadku disconnect */
-	if ((condition & G_IO_ERR) || (condition & G_IO_HUP)) {
+	if (!(e = gg_watch_fd(session)) || (condition & G_IO_ERR) || (condition & G_IO_HUP)) {
 		connected = FALSE;
 
 		if ( ++connect_count < 3){
@@ -280,13 +280,9 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			connect_count = 0;
 			g_free(txt);
 		}
+		
 		return FALSE;
-    }
-
-	if (!(e = gg_watch_fd(session))) {
-		print_debug("gg_watch_fd ERROR\n");
-		ggadu_gadu_gadu_disconnect_msg(_("Connection error"));
-		return FALSE;
+		
 	}
 
 	switch (e->type) 
@@ -1327,7 +1323,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		    gint _status = sp->status;
 		    
 		    if (config_var_get(handler, "private")) 
-			_status |= GG_STATUS_FRIENDS_MASK;
+						_status |= GG_STATUS_FRIENDS_MASK;
 
 		    kv = (GGaduKeyValue *)d->optlist->data;
 		    
