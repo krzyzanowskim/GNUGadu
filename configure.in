@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.43 2004/01/19 19:55:28 krzyzak Exp $
+dnl $Id: configure.in,v 1.44 2004/01/20 01:25:27 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -435,9 +435,11 @@ dnl Set PACKAGE_SOURCE_DIR in config.h.
 packagesrcdir=`cd $srcdir && pwd`
 AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
+CFLAGS_CLEAN="$CFLAGS"
 CFLAGS="$CFLAGS -I${packagesrcdir}/lib"
  
 AC_SUBST(CFLAGS)
+AC_SUBST(CFLAGS_CLEAN)
 AC_SUBST(LDFLAGS)
 
 AC_OUTPUT([
