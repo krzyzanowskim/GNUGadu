@@ -1,19 +1,19 @@
-# $Revision: 1.1 $, $Date: 2003/03/20 10:37:01 $
+# $Revision: 1.2 $, $Date: 2003/04/15 18:03:47 $
 
-%define		pre pre1
+%define		_pre	pre2
 
 Summary:	GNU Gadu 2 - free talking
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	%{pre}
-Release:	1
+Version:	2.0
+Release:	0.%{_pre}.1
 Epoch:		1
 License:	GPL v2+
 Group:		Applications/Communications
 #Source0:	http://www.hakore.com/~krzak/gg2/%{name}-%{snap}.tar.gz
-Source0:	ftp://ftp.slackware.pl/pub/gg/%{name}-2.0%{pre}.tar.gz
+Source0:	http://telia.dl.sourceforge.net/sourceforge/ggadu/%{name}-%{version}%{_pre}.tar.bz2
 Source1:	%{name}.desktop
-URL:		http://gadu.gnu.pl/
+URL:		http://www.gadu.gnu.pl/
 #BuildRequires:	arts-devel
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.6
@@ -21,13 +21,14 @@ BuildRequires:	esound-devel >= 0.2.7
 BuildRequires:	iksemel-devel >= 0.0.1
 BuildRequires:	glib2-devel  >= 2.2.0
 BuildRequires:	gtk+2-devel  >= 2.2.0
-BuildRequires:	libgadu-devel >= 20030211
+BuildRequires:	libgadu-devel >= 1.0
 BuildRequires:	libtlen-devel
 BuildRequires:	libtool
 BuildRequires:	intltool
+BuildRequires:	gettext-devel >= 0.11.0
 BuildRequires:	xosd-devel   >= 2.0.0
 BuildRequires:  pkgconfig
-BuildRequires:	XFree86-fontconfig-devel
+BuildRequires:	fontconfig-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -122,6 +123,18 @@ OSS sound support.
 %description sound-oss -l pl
 Obs³uga d¼wiêku OSS.
 
+%package sound-external
+Summary:	Sound support with external player
+Summary(pl):	Obs³uga d¼wiêku przez zewnêtrzny program
+Group:		Applications/Communications
+Requires:	%{name} = %{version}
+
+%description sound-external
+Sound support with external player.
+
+%description sound-external -l pl
+Obs³uga d¼wiêku przez zewnêtrzny program
+
 #%package sound-aRts
 #Summary:	Sound support with aRts
 #Summary(pl):	Obs³uga d¼wiêku poprzez aRts
@@ -158,7 +171,6 @@ Support for Window Managers docklets (GNOME, KDE).
 %description docklet -l pl
 Obs³uga dokletów w ró¿nych zarz±dcach okien (GNOME, KDE).
 
-
 %package sms
 Summary:        SMS Gateway
 Summary(pl):    Bramka SMS
@@ -166,15 +178,14 @@ Group:          Applications/Communications
 Requires:       %{name} = %{version}
 
 %description sms
-Send SMS to cellurar phones via web gateways
+Send SMS to cellurar phones via web gateways.
 
 %description sms -l pl
-Wysyla SMS'u na telefony komórkowe przez bramki internetowe
-
+Wtyczka wysy³aj±ca SMS-y na telefony komórkowe przez bramki WWW.
 
 %package remote
 Summary:        Remote access from other applications
-Summary(pl):    Dostep do programu z innych aplikacji
+Summary(pl):    Dostêp do programu z innych aplikacji
 Group:          Applications/Communications
 Requires:       %{name} = %{version} 
 
@@ -182,28 +193,26 @@ Requires:       %{name} = %{version}
 Make possible exchange data with other applications.
 
 %description remote -l pl
-Daje mozliwosc wymiany informacji z innymi aplikacjami.
-
+Wtyczka umo¿liwiaj±ca wymianê informacji z innymi aplikacjami.
 
 %package themes
-Summary:	Themes for GNU Gadu 2 GUI
-Summary(pl):	Motywy graficzne dla GUI GNU Gadu 2
+Summary:	Themes for GnuGadu 2 GUI
+Summary(pl):	Motywy graficzne dla GUI GnuGadu 2
 Group:		Applications/Communications
 Requires:       %{name} = %{version}
 Requires:	%{name}-gui-gtk+2
 
 %description themes
-Themes for GNU Gadu 2 GUI.
+Themes for GnuGadu 2 GUI.
 
 %description themes
-Motywy graficzne dla GUI GNU Gadu 2.
+Motywy graficzne dla GUI GnuGadu 2.
 
 %prep
-%setup -q -n %{name}-2.0%{pre}
+%setup -q -n %{name}-%{version}%{_pre}
 
 %build
 rm -f missing
-glib-gettextize --copy --force
 intltoolize --copy --force
 %{__libtoolize}
 %{__aclocal}
@@ -213,8 +222,8 @@ intltoolize --copy --force
 %configure \
 	--disable-gdb \
 	--disable-debug \
-	--with-gtk2-gui \
-	--with-gadu-gadu \
+	--with-gui \
+	--with-gadu \
 	--with-tlen \
 	--with-jabber \
 	--with-xosd \
@@ -222,6 +231,7 @@ intltoolize --copy --force
 	--with-esd \
 	--with-oss \
 	--with-sms \
+	--with-external \
 	--with-remote
 #	--with-arts
 
@@ -246,7 +256,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README
+%doc A* C* N* R* T* contrib doc/*
 %attr(755,root,root) %{_bindir}/gg2
 %dir %{_libdir}/gg2
 %{_datadir}/%{name}/sounds
@@ -263,6 +273,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/gg2.desktop
 
 %files emoticons
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_datadir}/gg2/pixmaps/emoticons
 
 %files gadu-gadu
@@ -284,6 +295,10 @@ rm -rf $RPM_BUILD_ROOT
 %files sound-oss
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libsound_oss_plugin.so
+
+%files sound-external
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gg2/libsound_external_plugin.so
 
 %files xosd
 %defattr(644,root,root,755)
@@ -317,6 +332,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gg2/pixmaps/icons/modern/*.png
 %{_datadir}/gg2/pixmaps/icons/modern/README
 %{_datadir}/gg2/pixmaps/icons/rozgwiazda/*.png
+%{_datadir}/gg2/pixmaps/icons/rozgwiazda/license.txt
+%{_datadir}/gg2/pixmaps/icons/ghosts/*.png
+%{_datadir}/gg2/pixmaps/icons/ghosts/README
+%{_datadir}/gg2/pixmaps/icons/tlen-3d/README
+%{_datadir}/gg2/pixmaps/icons/tlen-3d/*.png
+
 
 %define date	%(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 %changelog
@@ -324,14 +345,36 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld.org.pl
 
 $Log: gg2.spec,v $
-Revision 1.1  2003/03/20 10:37:01  krzyzak
-Initial revision
+Revision 1.2  2003/04/15 18:03:47  krzyzak
+- sync with PLD repository
 
-Revision 1.14  2003/03/16 20:14:50  krzak
-GNU Gadu 2 ATTAAAAAACK
+Revision 1.39  2003/04/11 21:07:02  adgor
+- Fixed %%doc
+- Version 2.0; Release 0.%%{_pre}.1
 
-Revision 1.13  2003/03/15 11:39:45  krzak
-- sync with PLD
+Revision 1.38  2003/04/11 20:45:13  misi3k
+- changed source from gz to bz2.
+
+Revision 1.37  2003/04/11 20:39:18  krzak
+- upgrade to pre2
+
+Revision 1.36  2003/03/25 11:10:37  krzak
+- release 2
+- updated source0, url
+- no more gettextize
+- missing license.txt file
+- STBR
+
+Revision 1.35  2003/03/25 10:56:02  krzak
+- s/glib-gettextize/gettextize/
+- BR: libgadu-devel >= 1.0
+- BR: gettext-devel >= 0.11.0
+
+Revision 1.34  2003/03/15 13:19:41  qboosh
+- pl fixes (sms,remote)
+
+Revision 1.33  2003/03/15 12:00:24  aflinta
+- pure fontconfig is enough
 
 Revision 1.32  2003/03/15 11:27:05  krzak
 - update to 2.0pre1
