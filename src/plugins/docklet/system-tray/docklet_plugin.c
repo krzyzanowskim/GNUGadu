@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.14 2004/02/17 09:29:55 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.15 2004/02/17 15:15:34 thrulliq Exp $ */
 
 /* 
  * Docklet plugin for GNU Gadu 2 
@@ -46,12 +46,13 @@ GGaduPlugin *handler;
 /*
 GtkWidget *status_docklet = NULL;
 */
-GtkWidget *pixmap = NULL;
-GdkPixbuf *logopix = NULL;
-GtkTooltips *tooltips = NULL;
-gchar *tooltipstr = NULL;
-gchar *icons_dir = NULL;
-EggTrayIcon *docklet = NULL;
+static GtkWidget *pixmap = NULL;
+static GdkPixbuf *logopix = NULL;
+static GtkTooltips *tooltips = NULL;
+static gchar *tooltipstr = NULL;
+static gchar *icons_dir = NULL;
+static EggTrayIcon *docklet = NULL;
+static gboolean plugin_destroyed = FALSE;
 
 GGadu_PLUGIN_INIT(DOCKLET_PLUGIN_NAME, GGADU_PLUGIN_TYPE_MISC);
 
@@ -352,7 +353,8 @@ static void docklet_destroyed_cb(GtkWidget * widget, gpointer data)
 
 	docklet = NULL;
 
-	g_idle_add((GSourceFunc) docklet_create_cb, NULL);
+	if (!plugin_destroyed)
+	    g_idle_add((GSourceFunc) docklet_create_cb, NULL);
 }
 
 static void docklet_embedded_cb(GtkWidget * widget, gpointer data)
@@ -495,6 +497,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
 	print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
+	plugin_destroyed = TRUE;
 	gtk_widget_destroy(GTK_WIDGET(docklet));
+	docklet = NULL;
 	g_free(icons_dir);
+	icons_dir = NULL;
 }

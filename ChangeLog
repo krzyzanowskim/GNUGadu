@@ -1,9 +1,10 @@
 17.02.2004
+- systray-docklet unload crash fixed (THrull/system-tray-docklet)
 - gadu-gadu protocol use repo since now (krzak/gadu-gadu)
 - repo.{c,h} -> ggadu_repo.{c,h} (krzak)
 - support.{c,h} -> ggadu_support.{c,h} (krzak)
 - menu.{c,h} -> ggadu_menu.{c,h} (krzak)
-- enable "blink" by deault (krzak/GUI)
+- enable "blink" by default (krzak/GUI)
 
 15.02.2004
 - GGaduMsg_free usage (krzak/GUI/gadu-gadu)
