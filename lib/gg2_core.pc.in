@@ -6,6 +6,7 @@ includedir=@includedir@
 Name: libgg2_core
 Version: @PACKAGE_VERSION@
 Description: GNU Gadu 2 development
+Requires: glib-2.0
 Libs: -L${libdir} -lgg2_core @LDFLAGS@
 Cflags: -I${includedir} @CFLAGS_CLEAN@
 
