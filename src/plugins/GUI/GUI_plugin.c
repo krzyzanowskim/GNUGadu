@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.93 2004/10/22 09:22:29 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.94 2004/11/05 18:04:21 shaster Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -688,8 +688,8 @@ gpointer show_hide_descriptions(GtkWidget * widget, gpointer user_data)
 
 void gui_build_default_toolbar()
 {
-	toolbar_handle_box = gtk_handle_box_new();
 	GtkWidget *main_toolbar = gtk_toolbar_new();
+	toolbar_handle_box = gtk_handle_box_new();
 
 	gtk_container_add(GTK_CONTAINER(toolbar_handle_box), main_toolbar);
 
