@@ -1,3 +1,7 @@
+3.04.2003
+- dynamically load/unload plugins from GUI (restart isn't necessary)
+  (GUI/krzak)
+
 2.04.2003
 - fix "reason" variable encoding (gadu-gadu/krzak)
 - fixed removal of protocols upon unregistering (GUI/zapal)
