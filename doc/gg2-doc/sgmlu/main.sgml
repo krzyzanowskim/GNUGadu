@@ -1,0 +1,15 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+  "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+<!ENTITY autor "Bartosz Zapałowski">
+<!ENTITY gad "GNU Gadu2">
+]>
+<book lang="pl">
+<bookinfo>
+<title>Podręcznik użytkownika &gad</title>
+<author>
+	<firstname>Bartosz</firstname> 
+	<surname>Zapałowski</surname>
+</author>
+</bookinfo>
+</book>
