@@ -131,7 +131,7 @@ gpointer sms_send_sms (gpointer user_data)
     GGaduDialog *d;
 
         d = ggadu_dialog_new();
-        ggadu_dialog_set_title(d,_(g_strconcat("Send to : ", k->nick, " (", k->mobile, ")", NULL)));
+        ggadu_dialog_set_title(d,g_strconcat(_("Send to : "), k->nick, " (", k->mobile, ")", NULL));
         ggadu_dialog_callback_signal(d,"sms send");
 	config_var_set(sms_handler, "number", k->mobile);
 
@@ -466,13 +466,13 @@ GSList *button_send()
     sp = g_new0(GGaduStatusPrototype, 3);
     
     sp->status = 1;
-    sp->description = g_strdup("Send SMS (internal)");
+    sp->description = g_strdup(_("Send SMS (internal)"));
     sp->image = g_strdup("sms_i.png");
     list = g_slist_append(list,sp);
     sp++;
 
     sp->status = 2;
-    sp->description = g_strdup("Send SMS (external)");
+    sp->description = g_strdup(_("Send SMS (external)"));
     sp->image = g_strdup("sms_i.png");
     list = g_slist_append(list,sp);
     sp++;

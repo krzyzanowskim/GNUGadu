@@ -17,3 +17,6 @@ src/plugins/xosd/plugin_xosd.c
 src/plugins/jabber/jabber_plugin.c
 src/plugins/jabber/jabber_plugin_protocol.c
 src/plugins/jabber/jabber_plugin_roster.c
+src/plugins/remote/remote_plugin.c
+src/plugins/sms/sms_core.c
+src/plugins/sms/sms_gui.c

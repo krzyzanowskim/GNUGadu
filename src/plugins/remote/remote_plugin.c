@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.2 2003/03/23 11:51:33 zapal Exp $ */
+/* $Id: remote_plugin.c,v 1.3 2003/03/29 21:24:13 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -664,7 +664,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
   config_var_add(handler, "same_gid", VAR_BOOL);
 
   if (!config_read(handler))
-    g_warning("Unable to read config file for plugin remote");
+    g_warning(_("Unable to read config file for plugin remote"));
   
   read_remote_config ();
   

@@ -234,7 +234,7 @@ int send_IDEA_stage2(gchar *pass, gpointer user_data)
     print_debug("token %s, data %s\n", pass, user_data);
     
     if (!pass) {
-	sms_message("IDEA", "Please enter token");
+	sms_message("IDEA", _("Please enter token"));
 	return FALSE;
     }
     
@@ -465,7 +465,7 @@ void sms_message(gchar *sms_number, gchar *message)
     GGaduMsg *msg = g_new0(GGaduMsg,1);
     msg->id = sms_number;
     msg->class = GGADU_CLASS_CHAT;
-    msg->message = g_strconcat("SMS plugin : ", message, NULL);
+    msg->message = g_strconcat(_("SMS plugin : "), message, NULL);
     signal_emit("sms", "gui msg receive",msg, "main-gui");
     }
 
@@ -483,18 +483,18 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
     
     if (!sms_sender && !sms_body) 
     {
-	sms_message(sms_number, "Specify sender name and message!");
+	sms_message(sms_number, _("Specify sender name and message!"));
 	return;
     }
 
     if (!sms_sender) 
     {
-	sms_message(sms_number, "Specify sender name!");
+	sms_message(sms_number, _("Specify sender name!"));
 	return;
     }
     if (!sms_body) 
     {
-	sms_message(sms_number, "Message is empty!");
+	sms_message(sms_number, _("Message is empty!"));
 	return;
     }
     
@@ -509,7 +509,7 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	    case SMS_IDEA:
 	        if (external) 
 		{
-		    sms_message(sms_number, "IDEA does not work this way!");
+		    sms_message(sms_number, _("IDEA does not work this way!"));
 		    return;
 		}
 		else
@@ -544,27 +544,27 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 		break;
 	    		
 	    case FALSE:
-		sms_message(sms_number, "Unknown number!");
+		sms_message(sms_number, _("Unknown number!"));
 		return;	    
 	 }
 
     }	else 
 	{
-	    sms_message(sms_number, "Invalid number!");
+	    sms_message(sms_number, _("Invalid number!"));
 	    return;
 	}
 
 
 	if (!result) 
 	{
-	    sms_message(sms_number, "SMS not delivered!");
+	    sms_message(sms_number, _("SMS not delivered!"));
 	    return;
 	}
 	
 
 	if (result == 1 && method == GGADU_SMS_METHOD_CHAT)
 	{
-	    sms_message(sms_number, "SMS delivered :-)");
+	    sms_message(sms_number, _("SMS delivered :-)"));
 	    return;
 	}
 
@@ -572,22 +572,22 @@ void send_sms(gboolean external,gchar *sms_sender,gchar *sms_number,gchar *sms_b
 	switch (result)
 	{
 	    case ERR_READ_TOKEN:
-	    sms_message(sms_number, "Token not found!");
+	    sms_message(sms_number, _("Token not found!"));
 	    break;
 	    case ERR_BAD_TOKEN:
-	    sms_message(sms_number, "Bad token entered!");
+	    sms_message(sms_number, _("Bad token entered!"));
 	    break;
 	    case ERR_LIMIT_EX:
-	    sms_message(sms_number, "Daily limit exceeded!");
+	    sms_message(sms_number, _("Daily limit exceeded!"));
 	    break;
 	    case ERR_GATEWAY:
-	    sms_message(sms_number, "Gateway error!");
+	    sms_message(sms_number, _("Gateway error!"));
 	    break;
 	    case ERR_SERVICE:
-	    sms_message(sms_number, "Cannot connect!");
+	    sms_message(sms_number, _("Cannot connect!"));
 	    break;
 	    case ERR_DISABLE_G:
-	    sms_message(sms_number, "Service not activated!");
+	    sms_message(sms_number, _("Service not activated!"));
 	    break;
 	}
     
