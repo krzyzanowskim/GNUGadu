@@ -1,4 +1,4 @@
-/* $Id: ignore.c,v 1.4 2004/12/24 13:12:20 krzyzak Exp $ */
+/* $Id: ignore.c,v 1.5 2004/12/25 14:47:43 krzyzak Exp $ */
 
 /* 
  * Ignore: plugin code for GNU Gadu 2 
@@ -28,6 +28,8 @@
 #include "ignore.h"
 
 static GGaduPlugin *ignore_handler;
+static GGaduPluginExtension *ext_in, *ext_un;
+static GGaduMenu *menu_ignoremenu;
 
 GGadu_PLUGIN_INIT("ignore-main", GGADU_PLUGIN_TYPE_MISC);
 
@@ -150,7 +152,6 @@ static gpointer ignore_show_list(gpointer user_data)
 /* MAIN */
 void start_plugin()
 {
-	GGaduMenu *root = ggadu_menu_create();
 	GGaduMenu *item_gg;
 
 	GGaduPluginExtension *ext_in, *ext_un;
@@ -166,14 +167,16 @@ void start_plugin()
 	ext_un->txt = _("_UnIgnore");
 	register_extension_for_plugin(ext_un, GGADU_PLUGIN_TYPE_PROTOCOL);
 
-	item_gg = ggadu_menu_add_item(root, _("_Ignore"), NULL, NULL);
+
+	menu_ignoremenu = ggadu_menu_create();
+	item_gg = ggadu_menu_add_item(menu_ignoremenu, _("_Ignore"), NULL, NULL);
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_List"), ignore_show_list, NULL));
 /*
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item("", NULL, NULL));
 	ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("_List"), ignore_show_list, NULL));
 */	
 
-	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", root, "main-gui");
+	signal_emit(GGadu_PLUGIN_NAME, "gui register menu", menu_ignoremenu, "main-gui");
 }
 
 /* PLUGIN INITIALISATION */
@@ -208,4 +211,13 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
 	print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
+	
+	if (ext_in)
+		unregister_extension_for_plugins(ext_in);
+
+	if (ext_un)
+		unregister_extension_for_plugins(ext_un);
+
+	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_ignoremenu, "main-gui");
+	
 }
