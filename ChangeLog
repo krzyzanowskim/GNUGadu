@@ -1,3 +1,6 @@
+23.12.2003
+- fixed problem with main window decoration on some WM's (GUI/krzak)
+
 21.12.2003
 - changes in API, config_* functions renamed to ggadu_config_* 
   and stored in ggadu_conf.{c,h} (all/krzak)

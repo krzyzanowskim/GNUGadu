@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.38 2003/12/20 23:17:19 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.39 2003/12/23 05:01:23 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -431,8 +431,9 @@ void gui_main_window_create (gboolean visible)
 
     if (visible)
       {
-	  gtk_widget_show_all (GTK_WIDGET (window));
-	  gdk_window_set_decorations (GTK_WIDGET (window)->window, GDK_DECOR_MENU);
+      gtk_window_set_decorated(GTK_WINDOW(window),TRUE);
+      gtk_widget_show_all (GTK_WIDGET (window));
+      //  gdk_window_set_decorations (GTK_WIDGET (window)->window, GDK_DECOR_MENU);
       }
 
     if (ggadu_config_var_get (gui_handler, "hide_toolbar"))
