@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
-<sect2><title>gadu-gadu</title>
-<table frame="all"><title>Sygnały obsługiwane przez gadu-gadu</title>
+<sect2><title>icq</title>
+<table frame="all"><title>Sygnały obsługiwane przez icq</title>
 <tgroup cols='3' align="center" colsep='1' rowsep='1'>
 <colspec colname='Nazwa'/>
 <colspec colnum='3' colname='Opis'/>
@@ -19,12 +19,6 @@
     <entry>Zmienia stan użytkownika na podany.</entry>
   </row>
   <row>
-    <entry><computeroutput>change status descr</computeroutput></entry>
-    <entry><xref linkend="GGaduDialog"/> *</entry>
-    <entry>Zmienia stan użytkownika na podany wraz z opisem podanym
-    w okienku dialogowym podanym w danych.</entry>
-  </row>
-  <row>
     <entry><computeroutput>send message</computeroutput></entry>
     <entry><xref linkend="GGaduMsg"/> *</entry>
     <entry>Wysyła wiadomość określoną w danych.</entry>
@@ -33,13 +27,13 @@
     <entry><computeroutput>add user</computeroutput></entry>
     <entry>GSList *</entry>
     <entry>Dodaje użytkowników podanych jako lista danych typu
-    <type>GGaduKeyValue *</type>.</entry>
+    <xref linkend="GGaduKeyValue"/>.</entry>
   </row>
   <row>
     <entry><computeroutput>change user</computeroutput></entry>
     <entry>GSList *</entry>
     <entry>Zmienia dane o użytkownikach podanych jako lista danych
-    typu <type>GGaduKeyValue *</type>.</entry>
+    typu <xref linkend="GGaduKeyValue"/>.</entry>
   </row>
   <row>
     <entry><computeroutput>update config</computeroutput></entry>
@@ -48,31 +42,10 @@
     zawierającego poszczególne ustawienia pluginu.</entry>
   </row>
   <row>
-    <entry><computeroutput>search</computeroutput></entry>
-    <entry><xref linkend="GGaduDialog"/> *</entry>
-    <entry>Inicjuje wyszukiwanie znajomych na podstawie danych podanych
-    w okienku dialogowym.</entry>
-  </row>
-  <row>
-    <entry><computeroutput>exit</computeroutput></entry>
-    <entry>NULL</entry>
-    <entry></entry>
-  </row>
-  <row>
-    <entry><computeroutput>add user search</computeroutput></entry>
-    <entry><xref linkend="GGaduContact"/> *</entry>
-    <entry>Dodaje jednego użytkownika podanego w danych.</entry>
-  </row>
-  <row>
     <entry><computeroutput>get current status</computeroutput></entry>
     <entry>NULL</entry>
     <entry>Zwraca aktualny stan użytkownika. Zwrócony stan jest typu
     <type>gint</type>.</entry>
-  </row>
-  <row>
-    <entry><computeroutput>send file</computeroutput></entry>
-    <entry><xref linkend="GGaduDialog"/> *</entry>
-    <entry>Wysyła plik.</entry>
   </row>
 </tbody>
 
