@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.14 2003/04/13 15:13:51 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.15 2003/04/13 22:03:11 krzyzak Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -67,6 +67,7 @@ void on_destroy_chat(GtkWidget *button, gpointer user_data)
 			GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window),"chat_notebook");
 			guint			nr;
 			GtkWidget *chat = NULL;
+			gulong id;
 		
 			if (!user_data) {
 				nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
@@ -81,7 +82,7 @@ void on_destroy_chat(GtkWidget *button, gpointer user_data)
 			session = (gui_chat_session *)g_object_get_data(G_OBJECT(chat), "gui_session");
 			gp = gui_find_protocol(plugin_name,protocols);
 
-			gulong id = (gulong)g_object_get_data(G_OBJECT(chat_window),"switch_page_id");
+			id = (gulong)g_object_get_data(G_OBJECT(chat_window),"switch_page_id");
 		
 			g_signal_handler_block(chat_notebook,id);
 			gtk_notebook_remove_page(GTK_NOTEBOOK(chat_notebook),nr);
