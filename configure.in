@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.3 2003/03/23 11:18:45 krzyzak Exp $
+dnl $Id: configure.in,v 1.4 2003/04/03 09:12:14 thrulliq Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -114,6 +114,7 @@ want_remote=no
 want_esd=no
 want_oss=no
 want_arts=no
+want_external=no
 want_all=no
 
 AC_ARG_WITH(all_plugins, [  --with-all_plugins	  Build all plugins		default=no])
@@ -128,6 +129,7 @@ if test "x$with_all_plugins" = "xyes"; then
     with_oss=yes
     with_sms=yes
     with_remote=yes
+    with_external=yes
 fi
 
 
@@ -254,6 +256,11 @@ if test "x$with_oss" = "xyes"; then
     want_oss=yes
 fi
 
+AC_ARG_WITH(external, [  --with-external		  Build external player sound plugin	default=no])
+if test "x$with_external" = "xyes"; then
+    want_external=yes
+fi
+
 
 dnl AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
 dnl AC_CHECK_FUNCS(bswap_32 bswap_16)
@@ -269,6 +276,7 @@ AM_CONDITIONAL(BUILD_DOCKLET, test "$want_docklet" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_ESD, test "$want_esd" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_ARTS, test "$want_arts" = "yes")
 AM_CONDITIONAL(BUILD_SOUND_OSS, test "$want_oss" = "yes")
+AM_CONDITIONAL(BUILD_SOUND_EXTERNAL, test "$want_external" = "yes")
 AM_CONDITIONAL(BUILD_SMS, test "$want_sms" = "yes")
 AM_CONDITIONAL(BUILD_REMOTE, test "$want_remote" = "yes")
 
@@ -320,6 +328,7 @@ src/plugins/sound/Makefile
 src/plugins/sound/esd/Makefile
 src/plugins/sound/arts/Makefile
 src/plugins/sound/oss/Makefile
+src/plugins/sound/external/Makefile
 src/plugins/sms/Makefile
 src/plugins/remote/Makefile
 po/Makefile.in
@@ -337,6 +346,7 @@ echo Build plugin docklet........... : $want_docklet
 echo Build plugin sound ESD......... : $want_esd
 echo Build plugin sound aRts........ : $want_arts
 echo Build plugin sound OSS......... : $want_oss
+echo Build plugin sound external.... : $want_external
 echo Build plugin sms............... : $want_sms
 echo Build plugin remote............ : $want_remote
 echo

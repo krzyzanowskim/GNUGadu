@@ -10,4 +10,8 @@ if BUILD_SOUND_OSS
 OSS=oss
 endif
 
-SUBDIRS = $(ESD) $(ARTS) $(OSS)
+if BUILD_SOUND_EXTERNAL
+EXTERNAL=external
+endif
+
+SUBDIRS = $(ESD) $(ARTS) $(OSS) $(EXTERNAL)
