@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.11 2003/09/17 11:04:29 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.12 2004/01/09 23:40:48 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -126,7 +126,6 @@ typedef struct {
  */
 typedef struct {
     GQuark name;
-//    void (*signal_free)(gpointer signal);
 } GGaduSignalinfo;
 
 /*
@@ -185,20 +184,15 @@ typedef struct {
 	GMainLoop *main_loop;
 
 	gpointer repos;
-
 } GGaduConfig;
 
 /*
  *  GGaduSignalHook
  */
 typedef struct {
-
   GQuark name;
-  
   GSList *hooks;
-
   void (*perl_handler) (GGaduSignal *, gchar *, void *);
-  
 } GGaduSignalHook;
 
 #endif

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.42 2004/01/03 14:54:08 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.43 2004/01/09 23:40:49 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -651,23 +651,19 @@ void gui_msg_receive (GGaduSignal * signal)
 	  if (!session->chat)
 	    {
 		GSList *sigdata = NULL;
+		GGaduContact *k = gui_find_user (msg->id, gp);
 
 		/* shasta: new "docklet set [default] icon" approach */
 		sigdata = g_slist_append (sigdata, (gchar *) ggadu_config_var_get (gui_handler, "icons"));
 		sigdata = g_slist_append (sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
-		sigdata = g_slist_append (sigdata, _("You Have Message"));
+		sigdata = g_slist_append (sigdata, g_strdup_printf(_("New Message from %s"),(k ? k->nick : msg->id)));
 
 		if (showwindow == FALSE)
 		  {
-		      if (signal_emit_full ("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free) ==
-			  NULL)
-			{
+		      if (signal_emit_full ("main-gui", "docklet set icon", sigdata, NULL, (gpointer) g_slist_free) ==  NULL)
 			    showwindow = TRUE;
-			}
 		      else
-			{
 			    showwindow = FALSE;
-			}
 		  }
 
 
@@ -677,7 +673,6 @@ void gui_msg_receive (GGaduSignal * signal)
 		if ((gint) ggadu_config_var_get (gui_handler, "use_xosd_for_new_msgs") == TRUE && find_plugin_by_name ("xosd")
 		    && msg->message)
 		  {
-		      GGaduContact *k = gui_find_user (msg->id, gp);
 		      signal_emit ("main-gui", "xosd show message",
 				   g_strdup_printf (_("New message from %s"), (k ? k->nick : msg->id)), "xosd");
 		  }

@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.32 2004/01/07 21:22:21 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.33 2004/01/09 23:40:49 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -504,7 +504,7 @@ static GtkWidget *create_sound_tab ()
     gtk_box_pack_start (GTK_BOX (sound_vbox), hbox, FALSE, FALSE, 0);
 
     image = gtk_image_new ();
-    gtk_image_set_from_stock (GTK_IMAGE (image), "gtk-stock-cdrom", GTK_ICON_SIZE_DND);
+    gtk_image_set_from_stock (GTK_IMAGE (image), "gtk-cdrom", GTK_ICON_SIZE_DND);
     label = gtk_label_new (_("\nSound settings\n\n"));
 
     gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
