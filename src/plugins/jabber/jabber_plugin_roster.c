@@ -69,7 +69,7 @@ void roster_update_presence(ikspak *pak)
 	while (l) {
 	  GGaduContact *k = (GGaduContact *)l->data;
 
-	  if (!g_strcasecmp(k->id, notify->id) && notify->status != k->status) {
+	  if (!g_strcasecmp(k->id, notify->id)) {
 	    ggadu_repo_change_value ("jabber", k->id, k, REPO_VALUE_DC);
 	  }
 	  l = l->next;
