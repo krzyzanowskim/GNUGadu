@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.40 2004/06/28 10:14:30 shaster Exp $ */
+/* $Id: sms_core.c,v 1.41 2004/07/21 19:16:27 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -513,7 +513,7 @@ gpointer send_IDEA_stage2(SMS * message)
 	else if (g_strstr_len(recv_buff, i, "serwis chwilowo"))
 		sms_warning(message->number, _("Gateway error!"));
 
-	else if (g_strstr_len(recv_buff, i, "Odbiorca nie ma aktywnej"))
+	else if (g_strstr_len(recv_buff, i, "nie ma aktywnej us³ugi"))
 		sms_warning(message->number, _("Service not activated!"));
 
 	else if (g_strstr_len(recv_buff, i, "adres odbiorcy wiadomosci jest nieprawid"))
