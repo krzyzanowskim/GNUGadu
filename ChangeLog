@@ -1,3 +1,7 @@
+06.06.2003
+- apply new auto away interval after configuration change (GUI/zapal)
+- auto away only if current status is marked as online (all/zapal)
+
 05.06.2003
 - tabbed/classic chat type fixes && segfaults--; (GUI/shasta)
 
