@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.18 2003/05/25 19:20:21 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.19 2003/05/26 12:27:06 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -169,6 +169,8 @@ void handle_register_protocol(GGaduSignal *signal)
     print_debug("%s: %s protocol registered %s\n", "main-gui", p->display_name,signal->source_plugin_name);
     gp->plugin_name = g_strdup(signal->source_plugin_name);
     gp->p = p;
+    gp->aaway_timer = -1;
+    gp->blinker = -1;
 	    
     gui_user_view_register(gp);
 
@@ -321,6 +323,8 @@ void handle_disconnected(GGaduSignal *signal)
     GtkWidget		 *status_image;
     gboolean 		 valid;
     GtkTreeModel 	*model;
+    GtkTreeIter parent_iter;
+    
     gp = gui_find_protocol(signal->source_plugin_name,protocols);
 		
     g_return_if_fail(gp != NULL);
@@ -330,15 +334,11 @@ void handle_disconnected(GGaduSignal *signal)
     g_return_if_fail(sp != NULL);
     
     if (gp->blinker > 0)
-      gtk_timeout_remove (gp->blinker);
+      g_source_remove (gp->blinker);
     gp->blinker = -1;
-    if (gp->blinker_image1)
-      g_free (gp->blinker_image1);
-    if (gp->blinker_image2)
-      g_free (gp->blinker_image2);
-
+    
     if (gp->aaway_timer > 0)
-      gtk_timeout_remove (gp->aaway_timer);
+      g_source_remove (gp->aaway_timer);
     gp->aaway_timer = -1;
       
     image = create_pixbuf(sp->image);
@@ -373,8 +373,6 @@ void handle_disconnected(GGaduSignal *signal)
     } else {
 	gui_user_view_clear(gp);
     }
-	    
-    GtkTreeIter parent_iter;
 
     gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (users_treestore),
 	&parent_iter, gp->tree_path);
@@ -388,6 +386,13 @@ void handle_disconnected(GGaduSignal *signal)
     gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), image);
 
     gtk_tree_sortable_sort_column_changed(GTK_TREE_SORTABLE(model));
+    
+    if (gp->blinker_image1)
+      gdk_pixbuf_unref (gp->blinker_image1);
+    if (gp->blinker_image2)
+      gdk_pixbuf_unref (gp->blinker_image2);
+    gp->blinker_image1 = NULL;
+    gp->blinker_image2 = NULL;
 }
 	
 void handle_show_search_results(GGaduSignal *signal)
@@ -411,30 +416,30 @@ void handle_status_changed(GGaduSignal *signal)
     g_return_if_fail(sp != NULL);
 
     if (gp->blinker > 0)
-      gtk_timeout_remove (gp->blinker);
+      g_source_remove (gp->blinker);
     gp->blinker = -1;
-    if (gp->blinker_image1)
-      g_free (gp->blinker_image1);
-    if (gp->blinker_image2)
-      g_free (gp->blinker_image2);
 
-    if (gp->aaway_timer > 0)
-      gtk_timeout_remove (gp->aaway_timer);
-    gp->aaway_timer = -1;
-
-    if (status != gp->p->offline_status && status != gp->p->away_status &&
-	gp->p->away_status != -1 && config_var_get (gui_handler, "auto_away"))
-    {
-      
-      gp->aaway_timer = gtk_timeout_add (
-	  config_var_get (gui_handler, "auto_away_interval") ?
-	  (gint) config_var_get (gui_handler, "auto_away_interval"):300000,
-	  auto_away_func, gp);
-    }
-    	    
     image = create_pixbuf(sp->image);
     status_image = gtk_bin_get_child(GTK_BIN(gp->statuslist_eventbox));
     gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), image);
+
+    if (gp->blinker_image1)
+      gdk_pixbuf_unref (gp->blinker_image1);
+    if (gp->blinker_image2)
+      gdk_pixbuf_unref (gp->blinker_image2);
+    gp->blinker_image1 = NULL;
+    gp->blinker_image2 = NULL;
+    
+     if (status != gp->p->offline_status &&
+	 status != gp->p->away_status && gp->p->away_status != -1 &&
+	 config_var_get (gui_handler, "auto_away"))
+    {
+      gp->aaway_timer = g_timeout_add (
+	  config_var_get (gui_handler, "auto_away_interval") ?
+	  (gint) config_var_get (gui_handler, "auto_away_interval"):300000,
+	  auto_away_func, gp);
+    } else
+      gp->aaway_timer = -1;
 }
 
 void notify_callback (gchar *repo_name, gpointer key, gint actions)
@@ -462,14 +467,20 @@ gboolean auto_away_func (gpointer data)
   gui_protocol *gp = (gui_protocol *) data;
   GGaduStatusPrototype *sp;
 
+  print_debug ("auto_away_func %p\n", data);
   if (!gp)
     return FALSE;
 
   sp = gui_find_status_prototype (gp->p, gp->p->away_status);
   if (!sp)
+  {
+    gp->aaway_timer = -1;
     return FALSE;
+  }
 
-  signal_emit_full ("main-gui", "change status", sp, gp->plugin_name, g_free);
+  print_debug ("changing status to %d\n", sp->status);
+
+  signal_emit ("main-gui", "change status", sp, gp->plugin_name);
   
   return FALSE;
 }

@@ -1,4 +1,4 @@
-/* $Id: gui_main.h,v 1.5 2003/05/24 14:30:18 zapal Exp $ */
+/* $Id: gui_main.h,v 1.6 2003/05/26 12:27:06 zapal Exp $ */
 
 #ifndef GGadu_GUI_PLUGIN_MAIN_H
 #define GGadu_GUI_PLUGIN_MAIN_H 1
@@ -30,8 +30,8 @@ typedef struct {
     GGaduProtocol *p;
     gchar 	  *tree_path;
     guint	  blinker;
-    gchar	  *blinker_image1;
-    gchar	  *blinker_image2;
+    GdkPixbuf	  *blinker_image1;
+    GdkPixbuf	  *blinker_image2;
     guint	  aaway_timer;
 } gui_protocol;
 

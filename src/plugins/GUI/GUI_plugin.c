@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.17 2003/05/25 19:20:21 zapal Exp $ */
+/* $Id: GUI_plugin.c,v 1.18 2003/05/26 12:27:06 zapal Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -360,19 +360,23 @@ void gui_main_window_create(gboolean visible)
 gboolean status_blinker (gpointer data)
 {
   gui_protocol *gp = (gui_protocol *) data;
-  gchar *tmp;
+  GdkPixbuf *tmp;
   GdkPixbuf *image = NULL;
   GtkWidget *status_image;
 
+  print_debug ("status_blinker %p\n", data);
+
   if (!data)
+  {
     return FALSE; /* stop blinking */
+  }
 
   /* a little weird algorythm ;) */
   tmp = gp->blinker_image1;
   gp->blinker_image1 = gp->blinker_image2;
   gp->blinker_image2 = tmp;
 
-  image = create_pixbuf (gp->blinker_image1);
+  image = gp->blinker_image1;
   status_image = gtk_bin_get_child (GTK_BIN (gp->statuslist_eventbox));
   gtk_image_set_from_pixbuf (GTK_IMAGE (status_image), image);
 
@@ -397,18 +401,21 @@ void change_status(GPtrArray *ptra)
     if (gp && sp->status != gp->p->offline_status &&
 	config_var_get (gui_handler, "blink"))
     {
+      gp->aaway_timer = -1;
+      
+      if (gp->blinker > 0)
+	g_source_remove (gp->blinker);
+      gp->blinker = -1;
+
       status = (gint) signal_emit ("main-gui", "get current status", NULL, gp->plugin_name);
       print_debug ("%d %d\n", status, gp->p->offline_status);
       sp1 = gui_find_status_prototype (gp->p, status != 0 ? status : gp->p->offline_status);
-      if (sp1 != NULL) 
+      if (sp1 != NULL && status == gp->p->offline_status) 
       {
-	if (gp->blinker > 0)
-	  gtk_timeout_remove (gp->blinker);
-	gp->blinker = -1;
-	gp->blinker_image1 = g_strdup (sp1->image);
-	gp->blinker_image2 = g_strdup (sp->image);
+	gp->blinker_image1 = create_pixbuf (sp1->image);
+	gp->blinker_image2 = create_pixbuf (sp->image);
 	print_debug ("gui: blinking %s and %s\n", sp1->image, sp->image);
-	gp->blinker = gtk_timeout_add (
+	gp->blinker = g_timeout_add (
 	    config_var_get (gui_handler, "blink_interval") ?
 	    (gint) config_var_get (gui_handler, "blink_interval"):500,
 	    status_blinker, gp);
