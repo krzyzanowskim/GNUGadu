@@ -1,4 +1,4 @@
-/* $Id: plugin_sound_external.c,v 1.6 2003/12/01 22:43:12 krzyzak Exp $ */
+/* $Id: plugin_sound_external.c,v 1.7 2003/12/20 23:17:22 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -14,6 +14,7 @@
 #include "plugins.h"
 #include "signals.h"
 #include "menu.h"
+#include "ggadu_conf.h"
 #include "support.h"
 #include "dialog.h"
 #include "plugin_sound_external.h"
@@ -26,9 +27,9 @@ GGadu_PLUGIN_INIT("sound-external", GGADU_PLUGIN_TYPE_MISC);
 gpointer ggadu_play_file(gpointer user_data)
 {
     gchar *cmd;
-    if (!config_var_get(handler, "player"))
+    if (!ggadu_config_var_get(handler, "player"))
       return NULL;
-    cmd = g_strdup_printf("%s %s", (char *)config_var_get(handler, "player"), (gchar *)user_data);
+    cmd = g_strdup_printf("%s %s", (char *)ggadu_config_var_get(handler, "player"), (gchar *)user_data);
     system(cmd);
     g_free(cmd);
     return NULL;
@@ -61,13 +62,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
             	    {
                 	case GGADU_SE_CONFIG_PLAYER:
                     	    print_debug("changing var setting player to %s\n", kv->value);
-                    	    config_var_set(handler, "player", kv->value);
+                    	    ggadu_config_var_set(handler, "player", kv->value);
                     	    break;
 		    }
 		    tmplist = tmplist->next;
 		}
 	    }
-	    config_save(handler);
+	    ggadu_config_save(handler);
 	    GGaduDialog_free(d);
 	}
 }
@@ -83,7 +84,7 @@ gpointer se_preferences (gpointer user_data)
     ggadu_dialog_callback_signal(d,"update config");
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
     
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, config_var_get(handler, "player"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_SE_CONFIG_PLAYER, _("Player program name"), VAR_STR, ggadu_config_var_get(handler, "player"), VAR_FLAG_NONE);
     
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
     
@@ -122,13 +123,13 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
     
-    set_config_file_name((GGaduPlugin *)handler, g_build_filename(this_configdir,"sound-external",NULL));
+    ggadu_config_set_filename((GGaduPlugin *)handler, g_build_filename(this_configdir,"sound-external",NULL));
     
     g_free(this_configdir);
 
-    config_var_add(handler, "player", VAR_STR);
+    ggadu_config_var_add(handler, "player", VAR_STR);
                      
-    if (!config_read(handler))
+    if (!ggadu_config_read(handler))
         g_warning(_("Unable to read configuration file for plugin %s"),"");
 	
     register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);

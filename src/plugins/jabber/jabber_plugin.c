@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include "ggadu_conf.h"
 #include "jabber_plugin.h"
 #include "jabber_login.h"
 #include "jabber_protocol.h"
@@ -240,32 +241,32 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 			{
 			case GGADU_JABBER_JID:
 				print_debug ("changing jid to %s\n", kv->value);
-				config_var_set (jabber_handler, "jid", kv->value);
+				ggadu_config_var_set (jabber_handler, "jid", kv->value);
 				break;
 			case GGADU_JABBER_PASSWORD:
 				print_debug ("changing password to %s\n", kv->value);
-				config_var_set (jabber_handler, "password", kv->value);
+				ggadu_config_var_set (jabber_handler, "password", kv->value);
 				break;
 			case GGADU_JABBER_LOG:
 				print_debug ("changing log to %d\n", kv->value);
-				config_var_set (jabber_handler, "log", kv->value);
+				ggadu_config_var_set (jabber_handler, "log", kv->value);
 				break;
 			case GGADU_JABBER_AUTOCONNECT:
 				print_debug ("changing autoconnect to %d\n", kv->value);
-				config_var_set (jabber_handler, "autoconnect", kv->value);
+				ggadu_config_var_set (jabber_handler, "autoconnect", kv->value);
 				break;
 			case GGADU_JABBER_USESSL:
 				print_debug ("changing use_ssl to %d\n", kv->value);
-				config_var_set (jabber_handler, "use_ssl", kv->value);
+				ggadu_config_var_set (jabber_handler, "use_ssl", kv->value);
 				break;
 			case GGADU_JABBER_RESOURCE:
 				print_debug ("changing resource to %s\n", kv->value);
-				config_var_set (jabber_handler, "resource", kv->value);
+				ggadu_config_var_set (jabber_handler, "resource", kv->value);
 				break;
 			}
 			tmplist = tmplist->next;
 		}
-		config_save (jabber_handler);
+		ggadu_config_save (jabber_handler);
 
 		GGaduDialog_free (d);
 	}
@@ -325,7 +326,7 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 			result = lm_connection_send (connection, m, &error);
 			if (!result)
 				print_debug ("jabber: Can't send!\n");
-			else if (config_var_get (jabber_handler, "log"))
+			else if (ggadu_config_var_get (jabber_handler, "log"))
 			{
 				gchar *line =
 					g_strdup_printf (_("\n:: Me (%s) ::\n%s\n"), get_timestamp (0), msg->message);
@@ -453,8 +454,8 @@ void jabber_signal_recv (gpointer name, gpointer signal_ptr)
 										      LM_MESSAGE_SUB_TYPE_GET);
 						lm_message_node_set_attributes (message->node, "to", kv->value, "id",
 										"search1", NULL);
-						config_var_set (jabber_handler, "search_server", kv->value);
-						config_save (jabber_handler);
+						ggadu_config_var_set (jabber_handler, "search_server", kv->value);
+						ggadu_config_save (jabber_handler);
 						node = lm_message_node_add_child (message->node, "query", NULL);
 						lm_message_node_set_attribute (node, "xmlns", "jabber:iq:search");
 
@@ -617,9 +618,9 @@ gpointer user_search_action (gpointer user_data)
 		return NULL;
 	}
 
-	if (!(server = config_var_get (jabber_handler, "search_server")))
+	if (!(server = ggadu_config_var_get (jabber_handler, "search_server")))
 	{
-		server = config_var_get (jabber_handler, "jid");
+		server = ggadu_config_var_get (jabber_handler, "jid");
 		if (server && (server = strchr (server, '@')))
 		{
 			server++;
@@ -646,22 +647,22 @@ gpointer user_preferences_action (gpointer user_data)
 
 	ggadu_dialog_set_type (d, GGADU_DIALOG_CONFIG);
 	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_JID, _("Jabber ID"), VAR_STR,
-				config_var_get (jabber_handler, "jid"), VAR_FLAG_NONE);
+				ggadu_config_var_get (jabber_handler, "jid"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_PASSWORD, _("Password"), VAR_STR,
-				config_var_get (jabber_handler, "password"), VAR_FLAG_PASSWORD);
+				ggadu_config_var_get (jabber_handler, "password"), VAR_FLAG_PASSWORD);
 	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_LOG, _("Log chats to history file"), VAR_BOOL,
-				config_var_get (jabber_handler, "history"), VAR_FLAG_NONE);
+				ggadu_config_var_get (jabber_handler, "history"), VAR_FLAG_NONE);
 	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
-				config_var_get (jabber_handler, "autoconnect"), VAR_FLAG_NONE);
+				ggadu_config_var_get (jabber_handler, "autoconnect"), VAR_FLAG_NONE);
     
     if (lm_connection_supports_ssl ())
     {
         ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_USESSL, _("Use SSL"), VAR_BOOL,
-				config_var_get (jabber_handler, "use_ssl"), VAR_FLAG_NONE);
+				ggadu_config_var_get (jabber_handler, "use_ssl"), VAR_FLAG_NONE);
     }
     
 	ggadu_dialog_add_entry (&(d->optlist), GGADU_JABBER_RESOURCE, _("Resource"), VAR_STR,
-				config_var_get (jabber_handler, "resource"), VAR_FLAG_NONE);
+				ggadu_config_var_get (jabber_handler, "resource"), VAR_FLAG_NONE);
 
 	signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 	return NULL;
@@ -712,7 +713,7 @@ void start_plugin ()
     
 	signal_emit (GGadu_PLUGIN_NAME, "gui register menu", jabbermenu, "main-gui");
 
-	if (config_var_get (jabber_handler, "autoconnect") && !connected)
+	if (ggadu_config_var_get (jabber_handler, "autoconnect") && !connected)
 	{
 		print_debug ("jabber: autoconneting\n");
 		jabber_login (JABBER_STATUS_AVAILABLE);
@@ -731,18 +732,18 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 	register_signal_receiver (jabber_handler, (signal_func_ptr) jabber_signal_recv);
 
 	mkdir (config->configdir, 0700);
-	set_config_file_name (jabber_handler, g_build_filename (config->configdir, "jabber", NULL));
+	ggadu_config_set_filename (jabber_handler, g_build_filename (config->configdir, "jabber", NULL));
 
-	config_var_add (jabber_handler, "jid", VAR_STR);
-	config_var_add (jabber_handler, "password", VAR_STR);
-	config_var_add (jabber_handler, "log", VAR_BOOL);
-	config_var_add (jabber_handler, "autoconnect", VAR_BOOL);
-	config_var_add (jabber_handler, "resource", VAR_STR);
-	config_var_add (jabber_handler, "search_server", VAR_STR);
+	ggadu_config_var_add (jabber_handler, "jid", VAR_STR);
+	ggadu_config_var_add (jabber_handler, "password", VAR_STR);
+	ggadu_config_var_add (jabber_handler, "log", VAR_BOOL);
+	ggadu_config_var_add (jabber_handler, "autoconnect", VAR_BOOL);
+	ggadu_config_var_add (jabber_handler, "resource", VAR_STR);
+	ggadu_config_var_add (jabber_handler, "search_server", VAR_STR);
     
-    if (lm_connection_supports_ssl ()) config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
+    if (lm_connection_supports_ssl ()) ggadu_config_var_add (jabber_handler, "use_ssl", VAR_BOOL);
 
-	if (!config_read (jabber_handler))
+	if (!ggadu_config_read (jabber_handler))
 		g_warning (_("Unable to read configuration file for plugin jabber"));
 
 	ggadu_repo_add ("jabber");

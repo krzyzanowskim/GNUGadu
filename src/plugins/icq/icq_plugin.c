@@ -1,4 +1,4 @@
-/* $Id: icq_plugin.c,v 1.7 2003/04/10 21:49:47 thrulliq Exp $ */
+/* $Id: icq_plugin.c,v 1.8 2003/12/20 23:17:20 krzyzak Exp $ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -457,7 +457,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
     register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
 
-    set_config_file_name((GGaduPlugin *)handler,g_build_filename(config->configdir,"icq",NULL));
+    ggadu_config_set_filename((GGaduPlugin *)handler,g_build_filename(config->configdir,"icq",NULL));
     
     config_var_add(handler, "uin",    VAR_INT);
     config_var_add(handler, "password", VAR_STR);
@@ -846,4 +846,3 @@ void save_addressbook_file(gpointer userlist)
 
 	g_free(path);
 }
-

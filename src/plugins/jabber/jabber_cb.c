@@ -4,6 +4,7 @@
 #  include <config.h>
 #endif
 
+#include "ggadu_conf.h"
 #include "jabber_cb.h"
 #include "jabber_protocol.h"
 
@@ -41,12 +42,12 @@ void connection_open_result_cb (LmConnection * connection, gboolean success, gin
 	connected = 1;
 	print_debug ("jabber: Connection succeeded. Authenticating... (%p)\n", status);
 
-	jid = g_strdup (config_var_get (jabber_handler, "jid"));
+	jid = g_strdup (ggadu_config_var_get (jabber_handler, "jid"));
 	strchr (jid, '@')[0] = '\0';
 
 	if (!lm_connection_authenticate
-	    (connection, jid, config_var_get (jabber_handler, "password"),
-	     config_var_get (jabber_handler, "resource") ? config_var_get (jabber_handler, "resource") : "GNU Gadu 2",
+	    (connection, jid, ggadu_config_var_get (jabber_handler, "password"),
+	     ggadu_config_var_get (jabber_handler, "resource") ? ggadu_config_var_get (jabber_handler, "resource") : "GNU Gadu 2",
 	     (LmResultFunction) connection_auth_cb, status, NULL, NULL))
 	{
 		print_debug ("jabber: lm_connection_authenticate() failed.\n");
@@ -425,7 +426,7 @@ LmHandlerResult message_cb (LmMessageHandler * handler, LmConnection * connectio
 
 	signal_emit ("jabber", "gui msg receive", msg, "main-gui");
 
-	if (config_var_get (jabber_handler, "log"))
+	if (ggadu_config_var_get (jabber_handler, "log"))
 	{
 		gchar *line = g_strdup_printf ("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp (0), msg->message);
 		ggadu_jabber_save_history (msg->id, line);

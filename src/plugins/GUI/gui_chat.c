@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.49 2003/09/16 22:56:08 shaster Exp $ 
+ * $Id: gui_chat.c,v 1.50 2003/12/20 23:17:19 krzyzak Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -8,6 +8,7 @@
 #include "support.h"
 #include "signals.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "dialog.h"
 #include "GUI_plugin.h"
 #include "gui_main.h"
@@ -77,7 +78,7 @@ static void on_destroy_chat_window (GtkWidget * chat, gpointer user_data)
 
 static void on_destroy_chat (GtkWidget * button, gpointer user_data)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
     gui_chat_session *session = NULL;
     gui_protocol *gp = NULL;
     gchar *plugin_name = NULL;
@@ -173,7 +174,7 @@ static void on_destroy_chat (GtkWidget * button, gpointer user_data)
 
 static gboolean on_press_event_switching_tabs (gpointer object, GdkEventKey * event, gpointer user_data)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
 
     if ((chat_type == CHAT_TYPE_TABBED) && (event->state & GDK_CONTROL_MASK))
       {
@@ -197,9 +198,9 @@ static gboolean on_press_event_switching_tabs (gpointer object, GdkEventKey * ev
 
 void on_autosend_clicked (GtkWidget * button, gpointer user_data)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
 
-    config_var_set (gui_handler, "send_on_enter", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)));
+    ggadu_config_var_set (gui_handler, "send_on_enter", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)));
     /*
      * change in every open session 
      */
@@ -229,7 +230,7 @@ void on_autosend_clicked (GtkWidget * button, gpointer user_data)
 
 static void on_send_clicked (GtkWidget * button, gpointer user_data)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
     gui_chat_session *session = NULL;
     GGaduMsg *msg = NULL;
     gchar *plugin_name = NULL;
@@ -280,7 +281,7 @@ static void on_send_clicked (GtkWidget * button, gpointer user_data)
 	  msg->recipients = session->recipients;
 
 	  gui_chat_append (session->chat, msg->message, TRUE);
-	  if ((soundfile = config_var_get (gui_handler, "sound_msg_out")))
+	  if ((soundfile = ggadu_config_var_get (gui_handler, "sound_msg_out")))
 	    {
 		signal_emit_full ("main-gui", "sound play file", soundfile, "sound*", NULL);
 	    }
@@ -302,7 +303,7 @@ static gboolean on_input_press_event (gpointer object, GdkEventKey * event, gpoi
 {
     gui_chat_session *s = user_data;
 
-    if ((event->keyval == 65293) && (config_var_get (gui_handler, "send_on_enter")))
+    if ((event->keyval == 65293) && (ggadu_config_var_get (gui_handler, "send_on_enter")))
       {
 	  print_debug ("main-gui : chat : wcisnieto Enter \n");
 	  on_send_clicked (s->chat, user_data);
@@ -384,7 +385,7 @@ static gboolean find_emoticon (gchar * name, GSList * here)
 
 static void on_emoticons_clicked (GtkWidget * button, gpointer user_data)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
     GtkWidget *emoticons_window = NULL;
     GtkWidget *vbox = NULL;
     GtkWidget *outervbox = NULL;
@@ -508,7 +509,7 @@ static void on_emoticons_clicked (GtkWidget * button, gpointer user_data)
 
 static void on_chat_find_clicked (GtkWidget * button, gpointer user_data)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
     GGaduDialog *d = ggadu_dialog_new ();
     gui_chat_session *session = NULL;
     gchar *plugin_name = NULL;
@@ -562,34 +563,34 @@ void gui_chat_update_tags ()
 
 		tag = gtk_text_tag_table_lookup (tagtable, "incoming_header");
 
-		tagstr = config_var_get (gui_handler, "msg_header_color");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_header_color");
 		g_object_set (G_OBJECT (tag), "foreground", (tagstr) ? tagstr : DEFAULT_TEXT_COLOR, NULL);
 
-		tagstr = config_var_get (gui_handler, "msg_header_font");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_header_font");
 		g_object_set (G_OBJECT (tag), "font", (tagstr) ? tagstr : DEFAULT_FONT, NULL);
 
 		tag = gtk_text_tag_table_lookup (tagtable, "incoming_text");
 
-		tagstr = config_var_get (gui_handler, "msg_body_color");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_body_color");
 		g_object_set (G_OBJECT (tag), "foreground", (tagstr) ? tagstr : DEFAULT_TEXT_COLOR, NULL);
 
-		tagstr = config_var_get (gui_handler, "msg_body_font");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_body_font");
 		g_object_set (G_OBJECT (tag), "font", (tagstr) ? tagstr : DEFAULT_FONT, NULL);
 
 		tag = gtk_text_tag_table_lookup (tagtable, "outgoing_header");
 
-		tagstr = config_var_get (gui_handler, "msg_out_header_color");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_out_header_color");
 		g_object_set (G_OBJECT (tag), "foreground", (tagstr) ? tagstr : DEFAULT_TEXT_COLOR, NULL);
 
-		tagstr = config_var_get (gui_handler, "msg_out_header_font");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_out_header_font");
 		g_object_set (G_OBJECT (tag), "font", (tagstr) ? tagstr : DEFAULT_FONT, NULL);
 
 		tag = gtk_text_tag_table_lookup (tagtable, "outgoing_text");
 
-		tagstr = config_var_get (gui_handler, "msg_out_body_color");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_out_body_color");
 		g_object_set (G_OBJECT (tag), "foreground", (tagstr) ? tagstr : DEFAULT_TEXT_COLOR, NULL);
 
-		tagstr = config_var_get (gui_handler, "msg_out_body_font");
+		tagstr = ggadu_config_var_get (gui_handler, "msg_out_body_font");
 		g_object_set (G_OBJECT (tag), "font", (tagstr) ? tagstr : DEFAULT_FONT, NULL);
 
 		tmpsessions = tmpsessions->next;
@@ -603,11 +604,11 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
 
     if (event->send_event == FALSE)
       {
-	  gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+	  gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
 	  gui_chat_session *session = user_data;
 	  GtkWidget *paned = g_object_get_data (G_OBJECT (session->chat), "paned");
 	  GtkWidget *hbox_buttons = g_object_get_data (G_OBJECT (session->chat), "hbox_buttons");
-	  gint percent = (gint) config_var_get (gui_handler, "chat_paned_size");
+	  gint percent = (gint) ggadu_config_var_get (gui_handler, "chat_paned_size");
 
 	  if ((paned != NULL) && (GTK_IS_PANED (paned)))
 	    {
@@ -644,7 +645,7 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
 
 GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar * id, gboolean visible)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
     gboolean conference;	/* Conference ? */
     GGaduContact *k = NULL;	/* Contact that we talk to */
     gui_protocol *gp = NULL;	/* data for this protocol */
@@ -876,32 +877,32 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 
     buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (history));
 
-    colorstr = config_var_get (gui_handler, "msg_header_color");
-    fontstr = config_var_get (gui_handler, "msg_header_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_header_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_header_font");
 
     gtk_text_buffer_create_tag (buf, "incoming_header", "foreground",
 				(colorstr &&
 				 (strlen (colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 				(fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
-    colorstr = config_var_get (gui_handler, "msg_body_color");
-    fontstr = config_var_get (gui_handler, "msg_body_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_body_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_body_font");
 
     gtk_text_buffer_create_tag (buf, "incoming_text", "foreground",
 				(colorstr &&
 				 (strlen (colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 				(fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
-    colorstr = config_var_get (gui_handler, "msg_out_header_color");
-    fontstr = config_var_get (gui_handler, "msg_out_header_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_out_header_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_out_header_font");
 
     gtk_text_buffer_create_tag (buf, "outgoing_header", "foreground",
 				(colorstr &&
 				 (strlen (colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 				(fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
-    colorstr = config_var_get (gui_handler, "msg_out_body_color");
-    fontstr = config_var_get (gui_handler, "msg_out_body_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_out_body_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_out_body_font");
 
     gtk_text_buffer_create_tag (buf, "outgoing_text", "foreground",
 				(colorstr &&
@@ -975,7 +976,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
     g_object_set_data (G_OBJECT (session->chat), "autosend_button", button_autosend);
     g_signal_connect (G_OBJECT (input), "key-press-event", G_CALLBACK (on_input_press_event), session);
 
-    if (config_var_get (gui_handler, "send_on_enter"))
+    if (ggadu_config_var_get (gui_handler, "send_on_enter"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button_autosend), TRUE);
 
     if (emoticons)
@@ -1002,13 +1003,13 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 	  invisible_chats = g_slist_append (invisible_chats, session->chat);
       }
 
-    if ((config_var_get (gui_handler, "chat_paned_size") == NULL || 0))
+    if ((ggadu_config_var_get (gui_handler, "chat_paned_size") == NULL || 0))
 	gtk_paned_set_position (GTK_PANED (paned), 160);
     else
       {
 	  GtkRequisition r, rb;
 	  GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (chat_window), "chat_notebook");
-	  gint percent = (gint) config_var_get (gui_handler, "chat_paned_size");
+	  gint percent = (gint) ggadu_config_var_get (gui_handler, "chat_paned_size");
 	  float position = 0;
 	  float tab_minus = 0;
 
@@ -1062,7 +1063,7 @@ GtkWidget *create_chat (gui_chat_session * session, gchar * plugin_name, gchar *
 
 void gui_chat_append (GtkWidget * chat, gpointer msg, gboolean self)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
     GtkWidget *history = g_object_get_data (G_OBJECT (chat), "history");
     GtkTextBuffer *buf = NULL;
     GtkTextIter iter;
@@ -1189,7 +1190,7 @@ void gui_chat_append (GtkWidget * chat, gpointer msg, gboolean self)
       }
 
 
-    if (((gint) config_var_get (gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
+    if (((gint) ggadu_config_var_get (gui_handler, "chat_window_auto_raise") == TRUE) && (!self) &&
 	(GTK_WIDGET_VISIBLE (chat)))
 	gtk_window_present (GTK_WINDOW (g_object_get_data (G_OBJECT (chat), "top_window")));
 

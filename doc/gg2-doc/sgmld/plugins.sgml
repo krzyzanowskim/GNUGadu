@@ -179,7 +179,7 @@ konfiguracyjnym, to musisz wykonać poniższe czynności.</para>
 nazwę pliku konfiguracyjnego:</para>
 
 <programlisting>
-  set_config_file_name((<xref linkend="GGaduPlugin"/> *)handler, "/ściezka/do/pliku/konfiguracyjnego");
+  ggadu_config_set_filename((<xref linkend="GGaduPlugin"/> *)handler, "/ściezka/do/pliku/konfiguracyjnego");
 </programlisting>
 
 <para>Następnie określ, jakie zmienne będę wczytane z podanego pliku:</para>
@@ -238,7 +238,7 @@ wartość jednej zmiennej:</para>
 użyj poniższej funkcji:</para>
 
 <programlisting>
-  config_var_check(plugin_handler, "uin");
+  ggadu_config_var_check(plugin_handler, "uin");
 </programlisting>
 
 <para>Ta funkcja, w przeciwieństwie do <function>config_var_get()</function>

@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.7 2003/12/17 16:10:53 thrulliq Exp $ */
+/* $Id: dockapp_plugin.c,v 1.8 2003/12/20 23:17:19 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -14,6 +14,7 @@
 #include "plugins.h"
 #include "signals.h"
 #include "support.h"
+#include "ggadu_conf.h"
 #include "repo.h"
 #include "dialog.h"
 #include "menu.h"
@@ -234,7 +235,7 @@ gpointer dockapp_preferences_action()
   gint count=0;
 
   /* prepare list of protocol plugins */
-  current_proto = config_var_get(handler, "dockapp_protocol");
+  current_proto = ggadu_config_var_get(handler, "dockapp_protocol");
   if (current_proto)
     pluginlist_names = g_slist_append(pluginlist_names, current_proto);
   index =
@@ -261,10 +262,10 @@ gpointer dockapp_preferences_action()
   ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
   ggadu_dialog_callback_signal(d, "update config");
 
-//  plugin_visible=(int)*config_var_get(handler,"dockapp_visible");
+//  plugin_visible=(int)*ggadu_config_var_get(handler,"dockapp_visible");
 
   ggadu_dialog_add_entry(&(d->optlist),GGADU_DOCKAPP_CONFIG_VISIBLE,
-    _("Visible"),VAR_BOOL,config_var_get(handler,"dockapp_visible"),VAR_FLAG_NONE);
+    _("Visible"),VAR_BOOL,ggadu_config_var_get(handler,"dockapp_visible"),VAR_FLAG_NONE);
 
 
   if(count>0)
@@ -366,7 +367,7 @@ void create_dockapp()
      NULL);
   gdk_window_set_group(status_dockapp->window, status_dockapp->window);
   
-  visible=(int *)config_var_get(NULL,"dockapp_visible");
+  visible=(int *)ggadu_config_var_get(NULL,"dockapp_visible");
   
   
   gtk_widget_show_all(icon_dockapp);
@@ -388,7 +389,7 @@ void notify_callback(gchar * repo_name, gpointer key, gint actions)
   print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
 
   /* stop if no dockapp_protocol set or notify from other protocol */
-  dockapp_protocol = config_var_get(handler, "dockapp_protocol");
+  dockapp_protocol = ggadu_config_var_get(handler, "dockapp_protocol");
   if (!dockapp_protocol || ggadu_strcasecmp(dockapp_protocol, repo_name))
     return;
 
@@ -500,7 +501,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
         switch (kv->key) {
         case GGADU_DOCKAPP_CONFIG_VISIBLE:{
           print_debug("changing visible setting to %d\n",kv->value);
-          config_var_set(handler, "dockapp_visible", kv->value);
+          ggadu_config_var_set(handler, "dockapp_visible", kv->value);
           if(kv->value) gtk_widget_show_all(status_dockapp);
           else gtk_widget_hide(status_dockapp);
           break;
@@ -514,19 +515,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
             print_debug("changing var setting dockapp_protocol to %s\n",
                kv->value);
             from_utf8("ISO-8859-2", kv->value, iso);
-            if (ggadu_strcasecmp(config_var_get(handler, "dockapp_protocol"),
+            if (ggadu_strcasecmp(ggadu_config_var_get(handler, "dockapp_protocol"),
                   iso)) {
               /* dockapp_plugin really changed, clear existent notifies */
               for (i = 0; i < NNICK; i++)
                 g_strlcpy(prev_nick[i], "\0\0\0\0\0\0\0\0\0\0", 9);
             };
-            config_var_set(handler, "dockapp_protocol", iso);
+            ggadu_config_var_set(handler, "dockapp_protocol", iso);
             break;
           }
         }
         tmplist = tmplist->next;
       }
-      config_save(handler);
+      ggadu_config_save(handler);
       draw_pixmap();
       redraw_dockapp();
     }
@@ -583,8 +584,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
      (signal_func_ptr) my_signal_receive);
 
   /* configure plugin */
-  config_var_add(handler, "dockapp_protocol", VAR_STR);
-  config_var_add(handler, "dockapp_visible", VAR_BOOL);
+  ggadu_config_var_add(handler, "dockapp_protocol", VAR_STR);
+  ggadu_config_var_add(handler, "dockapp_visible", VAR_BOOL);
 
   if (g_getenv("CONFIG_DIR") || g_getenv("HOME_ETC"))
     this_configdir =
@@ -596,8 +597,8 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 
   path = g_build_filename(this_configdir, "config", NULL);
-  set_config_file_name((GGaduPlugin *) handler, path);
-  if (!config_read(handler))
+  ggadu_config_set_filename((GGaduPlugin *) handler, path);
+  if (!ggadu_config_read(handler))
     g_warning(_("Unable to read configuration file for plugin %s"),
        GGadu_PLUGIN_NAME);
 

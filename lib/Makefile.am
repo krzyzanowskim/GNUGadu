@@ -11,6 +11,7 @@ libgg2_core_la_SOURCES = unified-types.c \
 	menu.c \
 	dialog.c \
 	repo.c \
+	ggadu_conf.c \
 	perl_embed.c \
 	gg-types.h \
 	unified-types.h \
@@ -20,6 +21,7 @@ libgg2_core_la_SOURCES = unified-types.c \
 	menu.h \
 	dialog.h \
 	repo.h \
+	ggadu_conf.h \
 	perl_embed.h 
 	
 libgg2_core_la_HEADERS = gg2_core.h
@@ -43,6 +45,7 @@ all:
 	@cat $(top_builddir)/lib/support.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/menu.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/plugins.h >> $(top_builddir)/lib/gg2_core.h
+	@cat $(top_builddir)/lib/ggadu_conf.h >> $(top_builddir)/lib/gg2_core.h
 	@cat $(top_builddir)/lib/signals.h >> $(top_builddir)/lib/gg2_core.h
 	@echo "#endif" >> $(top_builddir)/lib/gg2_core.h
 	sed -e 's/#include \"unified-types.h\"//g' $(top_builddir)/lib/gg2_core.h > $(top_builddir)/lib/gg2_core.h-

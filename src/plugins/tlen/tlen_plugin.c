@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.44 2003/12/01 22:43:13 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.45 2003/12/20 23:17:22 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -18,6 +18,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
@@ -395,7 +396,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 			msg->class = TLEN_CHAT;
 			signal_emit (GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
 
-			if (config_var_get(handler, "log"))
+			if (ggadu_config_var_get(handler, "log"))
 			{
 			    gchar *line = g_strdup_printf ("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp (msg->time), msg->message);
 			    ggadu_tlen_save_history (msg->id, line);
@@ -424,7 +425,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		msg->class = e->message->type;
 		signal_emit (GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
 
-		if (config_var_get(handler, "log"))
+		if (ggadu_config_var_get(handler, "log"))
 		{
 		  gchar *line = g_strdup_printf ("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp (msg->time), msg->message);
 		  ggadu_tlen_save_history (msg->id, line);
@@ -507,8 +508,8 @@ gpointer ggadu_tlen_login (gpointer data)
 	  session = tlen_init ();
       }
 
-    login = config_var_get (handler, "login");
-    password = config_var_get (handler, "password");
+    login = ggadu_config_var_get (handler, "login");
+    password = ggadu_config_var_get (handler, "password");
 
     if ((!login || !*login) || (!password || !*password))
       {
@@ -649,17 +650,17 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".tlen", NULL);
 
-    mkdir (this_configdir, 0700);
+    mkdir (this_configdir,0700);
+    
+    ggadu_config_set_filename ((GGaduPlugin *) handler, g_build_filename (this_configdir, "config", NULL));
 
-    set_config_file_name ((GGaduPlugin *) handler, g_build_filename (this_configdir, "config", NULL));
+    ggadu_config_var_add (handler, "login", VAR_STR);
+    ggadu_config_var_add (handler, "password", VAR_STR);
+    ggadu_config_var_add (handler, "log", VAR_BOOL);
+    ggadu_config_var_add (handler, "autoconnect", VAR_BOOL);
+    ggadu_config_var_add (handler, "autoconnect_status", VAR_INT);
 
-    config_var_add (handler, "login", VAR_STR);
-    config_var_add (handler, "password", VAR_STR);
-    config_var_add (handler, "log", VAR_BOOL);
-    config_var_add (handler, "autoconnect", VAR_BOOL);
-    config_var_add (handler, "autoconnect_status", VAR_INT);
-
-    config_read (handler);
+    ggadu_config_read (handler);
 
     ggadu_repo_add ("tlen");
 
@@ -787,7 +788,7 @@ gpointer user_preferences_action (gpointer user_data)
 	  if ((!sp->receive_only) && (sp->status != TLEN_STATUS_UNAVAILABLE) && (sp->status != TLEN_STATUS_DESC))
 	      statuslist_names = g_slist_append (statuslist_names, sp->description);
 
-	  if (sp->status == (gint) config_var_get (handler, "autoconnect_status"))
+	  if (sp->status == (gint) ggadu_config_var_get (handler, "autoconnect_status"))
 	      statuslist_names = g_slist_prepend (statuslist_names, sp->description);
 
 	  tmplist = tmplist->next;
@@ -797,14 +798,14 @@ gpointer user_preferences_action (gpointer user_data)
     ggadu_dialog_callback_signal (d, "update config");
     ggadu_dialog_set_type (d, GGADU_DIALOG_CONFIG);
 
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_TLEN_UIN, _("Tlen login"), VAR_STR, config_var_get (handler, "login"),
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_TLEN_UIN, _("Tlen login"), VAR_STR, ggadu_config_var_get (handler, "login"),
 			    VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_TLEN_PASSWORD, _("Password"), VAR_STR,
-			    config_var_get (handler, "password"), VAR_FLAG_PASSWORD);
+			    ggadu_config_var_get (handler, "password"), VAR_FLAG_PASSWORD);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_TLEN_LOG, _("Log chats to history file"), VAR_BOOL,
-			    config_var_get (handler, "log"), VAR_FLAG_NONE);
+			    ggadu_config_var_get (handler, "log"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_TLEN_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
-			    config_var_get (handler, "autoconnect"), VAR_FLAG_NONE);
+			    ggadu_config_var_get (handler, "autoconnect"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_TLEN_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
 			    statuslist_names, VAR_FLAG_NONE);
 
@@ -860,9 +861,9 @@ void start_plugin ()
     
     build_tlen_menu();
 
-    if (config_var_get (handler, "autoconnect") && !connected)
-	ggadu_tlen_login (config_var_get (handler, "autoconnect_status") ? (gpointer)
-			  config_var_get (handler, "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
+    if (ggadu_config_var_get (handler, "autoconnect") && !connected)
+	ggadu_tlen_login (ggadu_config_var_get (handler, "autoconnect_status") ? (gpointer)
+			  ggadu_config_var_get (handler, "autoconnect_status") : (gpointer) TLEN_STATUS_AVAILABLE);
 }
 
 void my_signal_receive (gpointer name, gpointer signal_ptr)
@@ -988,19 +989,19 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			{
 			case GGADU_TLEN_UIN:
 			    print_debug ("changing var setting uin to %s\n", kv->value);
-			    config_var_set (handler, "login", kv->value);
+			    ggadu_config_var_set (handler, "login", kv->value);
 			    break;
 			case GGADU_TLEN_PASSWORD:
 			    print_debug ("changing var setting password to %s\n", kv->value);
-			    config_var_set (handler, "password", kv->value);
+			    ggadu_config_var_set (handler, "password", kv->value);
 			    break;
 			case GGADU_TLEN_LOG:
 			    print_debug ("changing var setting log to %d\n", kv->value);
-			    config_var_set (handler, "log", kv->value);
+			    ggadu_config_var_set (handler, "log", kv->value);
 			    break;
 			case GGADU_TLEN_AUTOCONNECT:
 			    print_debug ("changing var setting autoconnect to %d\n", kv->value);
-			    config_var_set (handler, "autoconnect", kv->value);
+			    ggadu_config_var_set (handler, "autoconnect", kv->value);
 			    break;
 			case GGADU_TLEN_AUTOCONNECT_STATUS:
 			    {
@@ -1018,13 +1019,13 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 				  }
 
 				print_debug ("changing var setting autoconnect_status to %d\n", val);
-				config_var_set (handler, "autoconnect_status", (gpointer) val);
+				ggadu_config_var_set (handler, "autoconnect_status", (gpointer) val);
 			    }
 			    break;
 			}
 		      tmplist = tmplist->next;
 		  }
-		config_save (handler);
+		ggadu_config_save (handler);
 	    }
 	  GGaduDialog_free (d);
 	  return;
@@ -1144,7 +1145,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		  case TLEN_CHAT:
 		      if (!tlen_sendmsg (session, msg->id, message, TLEN_CHAT))
 			  print_debug ("zjebka podczas send message %s\n", msg->id, TLEN_CHAT);
-                      else if (config_var_get (handler, "log"))
+                      else if (ggadu_config_var_get (handler, "log"))
                         {
 			  gchar *line = g_strdup_printf (_("\n:: Me (%s) ::\n%s\n"), get_timestamp(0), msg->message);
 			  ggadu_tlen_save_history (msg->id, line);
@@ -1156,7 +1157,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		      print_debug("Inside 'send message' handler: TLEN_MESSAGE!\n");
 		      if (!tlen_sendmsg (session, msg->id, message, TLEN_MESSAGE))
 			  print_debug ("zjebka podczas send message %s\n", msg->id, TLEN_MESSAGE);
-		      else if (config_var_get (handler, "log"))
+		      else if (ggadu_config_var_get (handler, "log"))
 			{
 			  gchar *line = g_strdup_printf (_("\n:: Me (%s) ::\n%s\n"), get_timestamp(0), msg->message);
 			  ggadu_tlen_save_history (msg->id, line);

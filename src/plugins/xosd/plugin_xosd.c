@@ -1,4 +1,4 @@
-/* $Id: plugin_xosd.c,v 1.16 2003/12/01 22:43:14 krzyzak Exp $ */
+/* $Id: plugin_xosd.c,v 1.17 2003/12/20 23:17:23 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -21,6 +21,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
@@ -50,7 +51,7 @@ GGadu_PLUGIN_INIT("xosd", GGADU_PLUGIN_TYPE_MISC);
 /* helper */
 gint ggadu_xosd_get_align(void)
 {
-    gchar *conf_align = (gchar *) config_var_get(handler, "align");
+    gchar *conf_align = (gchar *) ggadu_config_var_get(handler, "align");
     gint result = GGADU_XOSD_DEFAULT_ALIGN;	/* defaults to XOSD_center */
 
     if (conf_align)
@@ -73,7 +74,7 @@ gint ggadu_xosd_get_align(void)
 /* helper */
 gint ggadu_xosd_get_pos(void)
 {
-    gchar *conf_pos = (gchar *) config_var_get(handler, "pos");
+    gchar *conf_pos = (gchar *) ggadu_config_var_get(handler, "pos");
     gint result = GGADU_XOSD_DEFAULT_POS;	/* defaults to XOSD_top */
 
     if (conf_pos)
@@ -113,48 +114,48 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 		case GGADU_XOSD_CONFIG_COLOUR:
 		    print_debug("changing var setting colour to %s\n", kv->value);
-		    config_var_set(handler, "colour", kv->value);
+		    ggadu_config_var_set(handler, "colour", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_NUMLINES:
 		    print_debug("changing var setting numlines to %d\n", kv->value);
-		    config_var_set(handler, "numlines", kv->value);
+		    ggadu_config_var_set(handler, "numlines", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_TIMEOUT:
 		    print_debug("changing var setting timeout to %d\n", kv->value);
-		    config_var_set(handler, "timeout", kv->value);
+		    ggadu_config_var_set(handler, "timeout", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_TIMESTAMP:
 		    print_debug("changing var setting timestamp to %d\n", kv->value);
-		    config_var_set(handler, "timestamp", kv->value);
+		    ggadu_config_var_set(handler, "timestamp", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_ALIGN:
 		    print_debug("changing var setting align to %s\n", kv->value);
-		    config_var_set(handler, "align", kv->value);
+		    ggadu_config_var_set(handler, "align", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_POS:
 		    print_debug("changing var setting pos to %s\n", kv->value);
-		    config_var_set(handler, "pos", kv->value);
+		    ggadu_config_var_set(handler, "pos", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_FONT:
 		    print_debug("changing var setting font to %s\n", kv->value);
-		    config_var_set(handler, "font", kv->value);
+		    ggadu_config_var_set(handler, "font", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_SHADOW_OFFSET:
 		    print_debug("changing var setting shadow_offset to %d\n", kv->value);
-		    config_var_set(handler, "shadow_offset", kv->value);
+		    ggadu_config_var_set(handler, "shadow_offset", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_HORIZONTAL_OFFSET:
 		    print_debug("changing var setting horizontal_offset to %d\n", kv->value);
-		    config_var_set(handler, "horizontal_offset", kv->value);
+		    ggadu_config_var_set(handler, "horizontal_offset", kv->value);
 		    break;
 		case GGADU_XOSD_CONFIG_VERTICAL_OFFSET:
 		    print_debug("changing var setting vertical_offset to %d\n", kv->value);
-		    config_var_set(handler, "vertical_offset", kv->value);
+		    ggadu_config_var_set(handler, "vertical_offset", kv->value);
 		    break;
 		}
 		tmplist = tmplist->next;
 	    }
-	    config_save(handler);
+	    ggadu_config_save(handler);
 	    set_configuration();
 	}
 	GGaduDialog_free(d);
@@ -172,7 +173,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 
 	    from_utf8("ISO8859-2", data, w);
 
-	    if (((ts = config_var_get(handler, "timestamp")) != NULL) && ((gboolean) ts == TRUE))
+	    if (((ts = ggadu_config_var_get(handler, "timestamp")) != NULL) && ((gboolean) ts == TRUE))
 		msg = g_strdup_printf("[%s] %s", get_timestamp(0), w);
 	    else
 		msg = g_strdup(w);
@@ -210,10 +211,10 @@ gint set_configuration(void)
     ALIGN = ggadu_xosd_get_align();
     POS = ggadu_xosd_get_pos();
 
-    if (!config_var_check(handler, "numlines"))
+    if (!ggadu_config_var_check(handler, "numlines"))
 	print_debug("xosd: No numlines config found, setting default\n");
     else
-	NUMLINES = (gint) config_var_get(handler, "numlines");
+	NUMLINES = (gint) ggadu_config_var_get(handler, "numlines");
 
     if (NUMLINES < 1)
     {
@@ -241,35 +242,35 @@ gint set_configuration(void)
 
     /* Read settings from configfile */
 
-    if (!config_var_check(handler, "font"))
+    if (!ggadu_config_var_check(handler, "font"))
 	print_debug("xosd: No font config found, setting default\n");
     else
-	FONT = (gchar *) config_var_get(handler, "font");
+	FONT = (gchar *) ggadu_config_var_get(handler, "font");
 
-    if (!config_var_check(handler, "colour"))
+    if (!ggadu_config_var_check(handler, "colour"))
 	print_debug("xosd: No colour config found, setting default\n");
     else
-	COLOUR = (gchar *) config_var_get(handler, "colour");
+	COLOUR = (gchar *) ggadu_config_var_get(handler, "colour");
 
-    if (!config_var_check(handler, "timeout"))
+    if (!ggadu_config_var_check(handler, "timeout"))
 	print_debug("xosd: No timeout config found, setting default\n");
     else
-	TIMEOUT = (gint) config_var_get(handler, "timeout");
+	TIMEOUT = (gint) ggadu_config_var_get(handler, "timeout");
 
-    if (!config_var_check(handler, "shadow_offset"))
+    if (!ggadu_config_var_check(handler, "shadow_offset"))
 	print_debug("xosd: No shadow_offset config found, setting default\n");
     else
-	SHADOW_OFFSET = (gint) config_var_get(handler, "shadow_offset");
+	SHADOW_OFFSET = (gint) ggadu_config_var_get(handler, "shadow_offset");
 
-    if (!config_var_check(handler, "horizontal_offset"))
+    if (!ggadu_config_var_check(handler, "horizontal_offset"))
 	print_debug("xosd: No horizontal_offset config found, setting default\n");
     else
-	HORIZONTAL_OFFSET = (gint) config_var_get(handler, "horizontal_offset");
+	HORIZONTAL_OFFSET = (gint) ggadu_config_var_get(handler, "horizontal_offset");
 
-    if (!config_var_check(handler, "vertical_offset"))
+    if (!ggadu_config_var_check(handler, "vertical_offset"))
 	print_debug("xosd: No vertical_offset config found, setting default\n");
     else
-	VERTICAL_OFFSET = (gint) config_var_get(handler, "vertical_offset");
+	VERTICAL_OFFSET = (gint) ggadu_config_var_get(handler, "vertical_offset");
 
     /* *INDENT-OFF* */
     print_debug("FONT=%s COLOUR=%s TIMEOUT=%d SHADOW_OFFSET=%d HORIZONTAL_OFFSET=%d VERTICAL_OFFSET=%d ALIGN=%d POS=%d\n", FONT, COLOUR, TIMEOUT, SHADOW_OFFSET, HORIZONTAL_OFFSET, VERTICAL_OFFSET, ALIGN, POS);
@@ -327,7 +328,7 @@ gpointer osd_show_messages(gpointer user_data)
     xosd_show(osd);
 
     timer =
-	g_timeout_add((config_var_get(handler, "timeout") ? (guint) config_var_get(handler, "timeout") * 1000 : 3000),
+	g_timeout_add((ggadu_config_var_get(handler, "timeout") ? (guint) ggadu_config_var_get(handler, "timeout") * 1000 : 3000),
 		      osd_hide_window, NULL);
 
     return NULL;
@@ -373,7 +374,7 @@ gpointer osd_preferences(gpointer user_data)
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
 
     /* *INDENT-OFF* */
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_TIMESTAMP, _("Timestamp"), VAR_BOOL, (gpointer) ggadu_config_var_get(handler,"timestamp"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_COLOUR, _("Colour"), VAR_COLOUR_CHOOSER, (gpointer) COLOUR, VAR_FLAG_NONE);
 //    ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_FONT, _("Font"), VAR_FONT_CHOOSER, (gpointer) FONT, VAR_FLAG_NONE);
     ggadu_dialog_add_entry(&(d->optlist), GGADU_XOSD_CONFIG_ALIGN, _("Alignment"), VAR_LIST, align_list, VAR_FLAG_NONE);
@@ -481,27 +482,27 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
     print_debug("%s : READ CONFIGURATION\n", GGadu_PLUGIN_NAME);
 
-    config_var_add(handler, "font", VAR_STR);
-    config_var_add(handler, "colour", VAR_STR);
-    config_var_add(handler, "timeout", VAR_INT);
-    config_var_add(handler, "shadow_offset", VAR_INT);
-    config_var_add(handler, "horizontal_offset", VAR_INT);
-    config_var_add(handler, "vertical_offset", VAR_INT);
-    config_var_add(handler, "timestamp", VAR_BOOL);
-    config_var_add(handler, "align", VAR_STR);
-    config_var_add(handler, "pos", VAR_STR);
-    config_var_add(handler, "numlines", VAR_INT);
+    ggadu_config_var_add(handler, "font", VAR_STR);
+    ggadu_config_var_add(handler, "colour", VAR_STR);
+    ggadu_config_var_add(handler, "timeout", VAR_INT);
+    ggadu_config_var_add(handler, "shadow_offset", VAR_INT);
+    ggadu_config_var_add(handler, "horizontal_offset", VAR_INT);
+    ggadu_config_var_add(handler, "vertical_offset", VAR_INT);
+    ggadu_config_var_add(handler, "timestamp", VAR_BOOL);
+    ggadu_config_var_add(handler, "align", VAR_STR);
+    ggadu_config_var_add(handler, "pos", VAR_STR);
+    ggadu_config_var_add(handler, "numlines", VAR_INT);
 
     if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
 	this_configdir = g_build_filename (g_get_home_dir (), g_getenv ("CONFIG_DIR") ? g_getenv ("CONFIG_DIR") : g_getenv ("HOME_ETC"), "gg2", NULL);
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
 
-    set_config_file_name((GGaduPlugin *) handler, g_build_filename(this_configdir, "xosd", NULL));
+    ggadu_config_set_filename((GGaduPlugin *) handler, g_build_filename(this_configdir, "xosd", NULL));
 
     g_free(this_configdir);
 
-    if (!config_read(handler))
+    if (!ggadu_config_read(handler))
 	g_warning(_("Unable to read configuration file for plugin %s"), "xosd");
 
     register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);

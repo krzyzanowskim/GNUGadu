@@ -1,4 +1,4 @@
-/* $Id: update_plugin.c,v 1.10 2003/12/01 22:43:14 krzyzak Exp $ */
+/* $Id: update_plugin.c,v 1.11 2003/12/20 23:17:23 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -18,6 +18,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
@@ -34,14 +35,14 @@ GGadu_PLUGIN_INIT("update", GGADU_PLUGIN_TYPE_MISC);
 /* helper */
 int update_get_interval(void)
 {
-    return (((gint) config_var_get(update_handler, "check_interval") >
-	     0 ? (gint) config_var_get(update_handler, "check_interval") * 60 : 3600) * 1000);
+    return (((gint) ggadu_config_var_get(update_handler, "check_interval") >
+	     0 ? (gint) ggadu_config_var_get(update_handler, "check_interval") * 60 : 3600) * 1000);
 }
 
 /* helper */
 int update_use_xosd(void)
 {
-    return (((gboolean) config_var_get(update_handler, "use_xosd") && find_plugin_by_name("xosd")) ? 1 : 0);
+    return (((gboolean) ggadu_config_var_get(update_handler, "use_xosd") && find_plugin_by_name("xosd")) ? 1 : 0);
 }
 
 /* connects, parses.
@@ -309,10 +310,10 @@ gpointer update_preferences(gpointer user_data)
     ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
 
     /* *INDENT-OFF* */
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_ON_STARTUP, _("Check for updates on startup"), VAR_BOOL, (gpointer) config_var_get(update_handler, "check_on_startup"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_AUTOMATICALLY, _("Check for updates automatically"), VAR_BOOL, (gpointer) config_var_get(update_handler, "check_automatically"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_INTERVAL, _("Check interval (minutes)"), VAR_INT, (gpointer) config_var_get(update_handler, "check_interval"), VAR_FLAG_NONE);
-    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_USE_XOSD, _("Use XOSD instead of dialog boxes"), VAR_BOOL, (gpointer) config_var_get(update_handler, "use_xosd"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_ON_STARTUP, _("Check for updates on startup"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_on_startup"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_AUTOMATICALLY, _("Check for updates automatically"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "check_automatically"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_CHECK_INTERVAL, _("Check interval (minutes)"), VAR_INT, (gpointer) ggadu_config_var_get(update_handler, "check_interval"), VAR_FLAG_NONE);
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_UPDATE_CONFIG_USE_XOSD, _("Use XOSD instead of dialog boxes"), VAR_BOOL, (gpointer) ggadu_config_var_get(update_handler, "use_xosd"), VAR_FLAG_NONE);
     /* *INDENT-ON* */
 
     signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
@@ -351,30 +352,30 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 		{
 		case GGADU_UPDATE_CONFIG_CHECK_ON_STARTUP:
 		    print_debug("change var check_on_startup to %d\n", kv->value);
-		    config_var_set(update_handler, "check_on_startup", kv->value);
+		    ggadu_config_var_set(update_handler, "check_on_startup", kv->value);
 		    break;
 		case GGADU_UPDATE_CONFIG_CHECK_AUTOMATICALLY:
 		    print_debug("change var check_automatically to %d\n", kv->value);
-		    config_var_set(update_handler, "check_automatically", kv->value);
+		    ggadu_config_var_set(update_handler, "check_automatically", kv->value);
 		    break;
 		case GGADU_UPDATE_CONFIG_CHECK_INTERVAL:
 		    print_debug("change var check_interval to %d\n", kv->value);
-		    config_var_set(update_handler, "check_interval", kv->value);
+		    ggadu_config_var_set(update_handler, "check_interval", kv->value);
 		    break;
 		case GGADU_UPDATE_CONFIG_USE_XOSD:
 		    print_debug("change var use_xosd to %d\n", kv->value);
-		    config_var_set(update_handler, "use_xosd", kv->value);
+		    ggadu_config_var_set(update_handler, "use_xosd", kv->value);
 		    break;
 		}
 		tmplist = tmplist->next;
 	    }
-	    config_save(update_handler);
+	    ggadu_config_save(update_handler);
 
 	    /* re-do timers */
 	    if (timer != -1)
 		g_source_remove(timer);
 
-	    if ((gint) config_var_get(update_handler, "check_automatically"))
+	    if ((gint) ggadu_config_var_get(update_handler, "check_automatically"))
 	    {
 		timer = g_timeout_add(update_get_interval(), update_check, NULL);
 		print_debug("%s : Timer ID set to %d\n", GGadu_PLUGIN_NAME, timer);
@@ -411,16 +412,16 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
 
-    set_config_file_name((GGaduPlugin *) update_handler, g_build_filename(this_configdir, "update", NULL));
+    ggadu_config_set_filename((GGaduPlugin *) update_handler, g_build_filename(this_configdir, "update", NULL));
 
     g_free(this_configdir);
 
-    config_var_add(update_handler, "check_on_startup", VAR_BOOL);
-    config_var_add(update_handler, "check_automatically", VAR_BOOL);
-    config_var_add(update_handler, "check_interval", VAR_INT);
-    config_var_add(update_handler, "use_xosd", VAR_BOOL);
+    ggadu_config_var_add(update_handler, "check_on_startup", VAR_BOOL);
+    ggadu_config_var_add(update_handler, "check_automatically", VAR_BOOL);
+    ggadu_config_var_add(update_handler, "check_interval", VAR_INT);
+    ggadu_config_var_add(update_handler, "use_xosd", VAR_BOOL);
 
-    if (!config_read(update_handler))
+    if (!ggadu_config_read(update_handler))
 	g_warning(_("Unable to read config file for plugin update"));
 
     register_signal_receiver((GGaduPlugin *) update_handler, (signal_func_ptr) signal_receive);
@@ -442,7 +443,7 @@ void start_plugin()
 	g_source_remove(timer);
 
     /* initialize timers */
-    if ((gint) config_var_get(update_handler, "check_automatically"))
+    if ((gint) ggadu_config_var_get(update_handler, "check_automatically"))
     {
 	timer = g_timeout_add(update_get_interval(), update_check, NULL);
 	print_debug("%s : Timer ID set to %d\n", GGadu_PLUGIN_NAME, timer);
@@ -453,7 +454,7 @@ void start_plugin()
 	timer = -1;
     }
 
-    if ((gint) config_var_get(update_handler, "check_on_startup"))
+    if ((gint) ggadu_config_var_get(update_handler, "check_on_startup"))
 	/* wait a while before looking for updates */
 	g_timeout_add(3000, update_check_on_startup, NULL);
 }

@@ -1,4 +1,4 @@
-/* $Id: remote_plugin.c,v 1.11 2003/12/01 22:43:11 krzyzak Exp $ */
+/* $Id: remote_plugin.c,v 1.12 2003/12/20 23:17:21 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -18,6 +18,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "menu.h"
 #include "support.h"
@@ -118,8 +119,8 @@ GGadu_PLUGIN_INIT("remote",GGADU_PLUGIN_TYPE_MISC);
 
 void read_remote_config (void)
 {
-  var_same_uid = (gboolean) config_var_get (handler, "same_uid");
-  var_same_gid = (gboolean) config_var_get (handler, "same_gid");
+  var_same_uid = (gboolean) ggadu_config_var_get (handler, "same_uid");
+  var_same_gid = (gboolean) ggadu_config_var_get (handler, "same_gid");
 }
 
 int remote_send (char *text)
@@ -339,16 +340,16 @@ void signal_recv(gpointer name, gpointer signal_ptr)
         {
 	    case REMOTE_CONFIG_SAME_UID:
 	        print_debug("change same_uid to %d\n",kv->value);
-	        config_var_set(handler, "same_uid", kv->value);
+	        ggadu_config_var_set(handler, "same_uid", kv->value);
 	        break;
 	    case REMOTE_CONFIG_SAME_GID:
 	        print_debug("change same_gid to %d\n",kv->value);
-	        config_var_set(handler, "same_gid", kv->value);
+	        ggadu_config_var_set(handler, "same_gid", kv->value);
 		break;
         }
         tmplist = tmplist->next;
 	}
-    config_save(handler);
+    ggadu_config_save(handler);
     read_remote_config ();
     }
     GGaduDialog_free(d);
@@ -616,11 +617,11 @@ gpointer remote_menu_preferences (gpointer user_data)
 
   ggadu_dialog_add_entry(&(d->optlist), REMOTE_CONFIG_SAME_UID,
       _("Ignore commands with different uid"), VAR_BOOL,
-      (gpointer)config_var_get(handler, "same_uid"),
+      (gpointer)ggadu_config_var_get(handler, "same_uid"),
       VAR_FLAG_NONE);
   ggadu_dialog_add_entry(&(d->optlist), REMOTE_CONFIG_SAME_GID,
       _("Ignore commands with different gid"), VAR_BOOL,
-      (gpointer)config_var_get(handler, "same_gid"),
+      (gpointer)ggadu_config_var_get(handler, "same_gid"),
       VAR_FLAG_NONE);
 
   signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
@@ -679,13 +680,13 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename (g_get_home_dir (), ".gg2", NULL);
 
-  set_config_file_name((GGaduPlugin *)handler,
+  ggadu_config_set_filename((GGaduPlugin *)handler,
       g_build_filename(this_configdir, "remote", NULL));
   
-  config_var_add(handler, "same_uid", VAR_BOOL);
-  config_var_add(handler, "same_gid", VAR_BOOL);
+  ggadu_config_var_add(handler, "same_uid", VAR_BOOL);
+  ggadu_config_var_add(handler, "same_gid", VAR_BOOL);
 
-  if (!config_read(handler))
+  if (!ggadu_config_read(handler))
     g_warning(_("Unable to read config file for plugin remote"));
   
   read_remote_config ();

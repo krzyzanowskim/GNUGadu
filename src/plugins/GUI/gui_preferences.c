@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.26 2003/11/06 20:03:27 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.27 2003/12/20 23:17:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -7,6 +7,7 @@
 #include <string.h>
 #include "support.h"
 #include "signals.h"
+#include "ggadu_conf.h"
 #include "plugins.h"
 #include "gui_preferences.h"
 #include "gui_support.h"
@@ -238,8 +239,8 @@ static GtkWidget *create_colors_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_colors_select_dialog), entry);
     g_object_set_data (G_OBJECT (colors_vbox), "msg_header_color", entry);
 
-    if (config_var_get (gui_handler, "msg_header_color"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_header_color"));
+    if (ggadu_config_var_get (gui_handler, "msg_header_color"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_header_color"));
 
     label = gtk_label_new (_("Message body"));
     entry = gtk_entry_new ();
@@ -251,8 +252,8 @@ static GtkWidget *create_colors_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_colors_select_dialog), entry);
     g_object_set_data (G_OBJECT (colors_vbox), "msg_body_color", entry);
 
-    if (config_var_get (gui_handler, "msg_body_color"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_body_color"));
+    if (ggadu_config_var_get (gui_handler, "msg_body_color"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_body_color"));
 
     frame = gtk_frame_new (_("Outgoing messages"));
     gtk_box_pack_start (GTK_BOX (colors_vbox), frame, FALSE, FALSE, 0);
@@ -270,8 +271,8 @@ static GtkWidget *create_colors_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_colors_select_dialog), entry);
     g_object_set_data (G_OBJECT (colors_vbox), "msg_out_header_color", entry);
 
-    if (config_var_get (gui_handler, "msg_out_header_color"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_out_header_color"));
+    if (ggadu_config_var_get (gui_handler, "msg_out_header_color"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_out_header_color"));
 
     label = gtk_label_new (_("Message body"));
     entry = gtk_entry_new ();
@@ -283,8 +284,8 @@ static GtkWidget *create_colors_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_colors_select_dialog), entry);
     g_object_set_data (G_OBJECT (colors_vbox), "msg_out_body_color", entry);
 
-    if (config_var_get (gui_handler, "msg_out_body_color"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_out_body_color"));
+    if (ggadu_config_var_get (gui_handler, "msg_out_body_color"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_out_body_color"));
 
     return colors_vbox;
 }
@@ -358,8 +359,8 @@ static GtkWidget *create_fonts_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_fonts_select_dialog), entry);
     g_object_set_data (G_OBJECT (fonts_vbox), "msg_header_font", entry);
 
-    if (config_var_get (gui_handler, "msg_header_font"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_header_font"));
+    if (ggadu_config_var_get (gui_handler, "msg_header_font"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_header_font"));
 
     label = gtk_label_new (_("Message body"));
     entry = gtk_entry_new ();
@@ -371,8 +372,8 @@ static GtkWidget *create_fonts_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_fonts_select_dialog), entry);
     g_object_set_data (G_OBJECT (fonts_vbox), "msg_body_font", entry);
 
-    if (config_var_get (gui_handler, "msg_body_font"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_body_font"));
+    if (ggadu_config_var_get (gui_handler, "msg_body_font"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_body_font"));
 
     frame = gtk_frame_new (_("Outgoing messages"));
     gtk_box_pack_start (GTK_BOX (fonts_vbox), frame, FALSE, FALSE, 0);
@@ -390,8 +391,8 @@ static GtkWidget *create_fonts_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_fonts_select_dialog), entry);
     g_object_set_data (G_OBJECT (fonts_vbox), "msg_out_header_font", entry);
 
-    if (config_var_get (gui_handler, "msg_out_header_font"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_out_header_font"));
+    if (ggadu_config_var_get (gui_handler, "msg_out_header_font"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_out_header_font"));
 
     label = gtk_label_new (_("Message body"));
     entry = gtk_entry_new ();
@@ -403,8 +404,8 @@ static GtkWidget *create_fonts_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_fonts_select_dialog), entry);
     g_object_set_data (G_OBJECT (fonts_vbox), "msg_out_body_font", entry);
 
-    if (config_var_get (gui_handler, "msg_out_body_font"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "msg_out_body_font"));
+    if (ggadu_config_var_get (gui_handler, "msg_out_body_font"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "msg_out_body_font"));
 
     frame = gtk_frame_new (_("Contact list"));
     gtk_box_pack_start (GTK_BOX (fonts_vbox), frame, FALSE, FALSE, 0);
@@ -422,8 +423,8 @@ static GtkWidget *create_fonts_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_fonts_select_dialog), entry);
     g_object_set_data (G_OBJECT (fonts_vbox), "contact_list_contact_font", entry);
 
-    if (config_var_get (gui_handler, "contact_list_contact_font"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "contact_list_contact_font"));
+    if (ggadu_config_var_get (gui_handler, "contact_list_contact_font"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "contact_list_contact_font"));
 
     label = gtk_label_new (_("Protocol (tree view)"));
     entry = gtk_entry_new ();
@@ -435,8 +436,8 @@ static GtkWidget *create_fonts_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_fonts_select_dialog), entry);
     g_object_set_data (G_OBJECT (fonts_vbox), "contact_list_protocol_font", entry);
 
-    if (config_var_get (gui_handler, "contact_list_protocol_font"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "contact_list_protocol_font"));
+    if (ggadu_config_var_get (gui_handler, "contact_list_protocol_font"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "contact_list_protocol_font"));
 
     return fonts_vbox;
 }
@@ -504,8 +505,8 @@ static GtkWidget *create_sound_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_file_select_dialog), entry);
     g_object_set_data (G_OBJECT (sound_vbox), "sound_msg_in", entry);
 
-    if (config_var_get (gui_handler, "sound_msg_in"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "sound_msg_in"));
+    if (ggadu_config_var_get (gui_handler, "sound_msg_in"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "sound_msg_in"));
 
     label = gtk_label_new (_("Outgoing message:"));
     entry = gtk_entry_new ();
@@ -517,8 +518,8 @@ static GtkWidget *create_sound_tab ()
     g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (show_file_select_dialog), entry);
     g_object_set_data (G_OBJECT (sound_vbox), "sound_msg_out", entry);
 
-    if (config_var_get (gui_handler, "sound_msg_out"))
-	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) config_var_get (gui_handler, "sound_msg_out"));
+    if (ggadu_config_var_get (gui_handler, "sound_msg_out"))
+	gtk_entry_set_text (GTK_ENTRY (entry), (gchar *) ggadu_config_var_get (gui_handler, "sound_msg_out"));
 
     return sound_vbox;
 }
@@ -681,68 +682,68 @@ void gui_preferences (GtkWidget * widget, gpointer data)
     gtk_table_attach_defaults (GTK_TABLE (tabbox), auto_away_interval, 1, 2, 4, 5);
     g_signal_connect (auto_away, "toggled", G_CALLBACK (tree_toggled), auto_away_interval);
 
-    if (config_var_get (gui_handler, "emot"))
+    if (ggadu_config_var_get (gui_handler, "emot"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (emotic), TRUE);
 
-    if (config_var_get (gui_handler, "show_active"))
+    if (ggadu_config_var_get (gui_handler, "show_active"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_active), TRUE);
 
-    if (config_var_get (gui_handler, "tree"))
+    if (ggadu_config_var_get (gui_handler, "tree"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tree), TRUE);
     else
 	gtk_widget_set_sensitive (expand, FALSE);
 
 
-    if (config_var_get (gui_handler, "expand"))
+    if (ggadu_config_var_get (gui_handler, "expand"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (expand), TRUE);
 	
-    if ((gint) config_var_get (gui_handler, "chat_type") == CHAT_TYPE_TABBED)
+    if ((gint) ggadu_config_var_get (gui_handler, "chat_type") == CHAT_TYPE_TABBED)
       {
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatstyle), TRUE);
       }
-    else if ((gint) config_var_get (gui_handler, "chat_type") == CHAT_TYPE_CLASSIC)
+    else if ((gint) ggadu_config_var_get (gui_handler, "chat_type") == CHAT_TYPE_CLASSIC)
       {
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatstyle), FALSE);
       }
 
-    if (config_var_get (gui_handler, "blink"))
+    if (ggadu_config_var_get (gui_handler, "blink"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (blink), TRUE);
     else
 	gtk_widget_set_sensitive (blink_interval, FALSE);
 
-    if (config_var_get (gui_handler, "blink_interval"))
+    if (ggadu_config_var_get (gui_handler, "blink_interval"))
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (blink_interval),
-				   (gint) config_var_get (gui_handler, "blink_interval"));
+				   (gint) ggadu_config_var_get (gui_handler, "blink_interval"));
 
-    if (config_var_get (gui_handler, "auto_away"))
+    if (ggadu_config_var_get (gui_handler, "auto_away"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_away), TRUE);
     else
 	gtk_widget_set_sensitive (auto_away_interval, FALSE);
 
-    if (config_var_get (gui_handler, "auto_away_interval"))
+    if (ggadu_config_var_get (gui_handler, "auto_away_interval"))
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (auto_away_interval),
-				   (gint) config_var_get (gui_handler, "auto_away_interval"));
+				   (gint) ggadu_config_var_get (gui_handler, "auto_away_interval"));
 
-    if (config_var_get (gui_handler, "chat_window_auto_show"))
+    if (ggadu_config_var_get (gui_handler, "chat_window_auto_show"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatwindowshow), TRUE);
 
-    if (config_var_get (gui_handler, "chat_window_auto_raise"))
+    if (ggadu_config_var_get (gui_handler, "chat_window_auto_raise"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chatwindowraise), TRUE);
 
-    if (config_var_get (gui_handler, "chat_paned_size"))
+    if (ggadu_config_var_get (gui_handler, "chat_paned_size"))
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (chat_paned_size),
-				   (gint) config_var_get (gui_handler, "chat_paned_size"));
+				   (gint) ggadu_config_var_get (gui_handler, "chat_paned_size"));
 
-    if (config_var_get (gui_handler, "send_on_enter"))
+    if (ggadu_config_var_get (gui_handler, "send_on_enter"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (send_on_enter), TRUE);
 
-    if (config_var_get (gui_handler, "use_xosd_for_new_msgs"))
+    if (ggadu_config_var_get (gui_handler, "use_xosd_for_new_msgs"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs), TRUE);
 	
-    if (config_var_get (gui_handler, "hide_on_start"))
+    if (ggadu_config_var_get (gui_handler, "hide_on_start"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (hide_on_start), TRUE);
 
-    if (config_var_get (gui_handler, "hide_toolbar"))
+    if (ggadu_config_var_get (gui_handler, "hide_toolbar"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (hide_toolbar), TRUE);
 
     /* read available themes */
@@ -758,7 +759,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	  gchar *theme_name_file;
 	  gchar *theme_name;
 
-	  theme_current = config_var_get (gui_handler, "theme");
+	  theme_current = ggadu_config_var_get (gui_handler, "theme");
 	  list_theme = g_list_append (list_theme, theme_current);
 
 	  while ((theme_name_file = (gchar *) g_dir_read_name (dir)) != NULL)
@@ -789,7 +790,7 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	  gchar *icons_current;
 	  gchar *icons_dir;
 
-	  icons_current = config_var_get (gui_handler, "icons");
+	  icons_current = ggadu_config_var_get (gui_handler, "icons");
 	  list_icons = g_list_append (list_icons, icons_current);
 
 	  while ((icons_dir = (gchar *) g_dir_read_name (dir)) != NULL)
@@ -825,36 +826,36 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 
 	  g_io_channel_shutdown (ch, TRUE, NULL);
 
-	  config_var_set (gui_handler, "emot", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (emotic)));
+	  ggadu_config_var_set (gui_handler, "emot", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (emotic)));
 
-	  config_var_set (gui_handler, "show_active",
+	  ggadu_config_var_set (gui_handler, "show_active",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_active)));
 
-	  config_var_set (gui_handler, "tree", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tree)));
+	  ggadu_config_var_set (gui_handler, "tree", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tree)));
 
-	  config_var_set (gui_handler, "expand", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (expand)));
+	  ggadu_config_var_set (gui_handler, "expand", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (expand)));
 
-	  config_var_set (gui_handler, "chat_type",
+	  ggadu_config_var_set (gui_handler, "chat_type",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (chatstyle)));
 
-	  config_var_set (gui_handler, "chat_window_auto_show",
+	  ggadu_config_var_set (gui_handler, "chat_window_auto_show",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (chatwindowshow)));
 
-	  config_var_set (gui_handler, "chat_window_auto_raise",
+	  ggadu_config_var_set (gui_handler, "chat_window_auto_raise",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (chatwindowraise)));
 
-	  config_var_set (gui_handler, "chat_paned_size",
+	  ggadu_config_var_set (gui_handler, "chat_paned_size",
 			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (chat_paned_size)));
 
-	  config_var_set (gui_handler, "blink", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (blink)));
+	  ggadu_config_var_set (gui_handler, "blink", (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (blink)));
 
-	  config_var_set (gui_handler, "blink_interval",
+	  ggadu_config_var_set (gui_handler, "blink_interval",
 			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (blink_interval)));
 
-	  config_var_set (gui_handler, "auto_away",
+	  ggadu_config_var_set (gui_handler, "auto_away",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auto_away)));
 
-	  config_var_set (gui_handler, "auto_away_interval",
+	  ggadu_config_var_set (gui_handler, "auto_away_interval",
 			  (gpointer) gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (auto_away_interval)));
 
 	  {
@@ -867,79 +868,79 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 		}
 	  }
 
-	  config_var_set (gui_handler, "send_on_enter",
+	  ggadu_config_var_set (gui_handler, "send_on_enter",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (send_on_enter)));
 
-	  config_var_set (gui_handler, "use_xosd_for_new_msgs",
+	  ggadu_config_var_set (gui_handler, "use_xosd_for_new_msgs",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (usexosdfornewmsgs)));
 
-	  config_var_set (gui_handler, "hide_on_start",
+	  ggadu_config_var_set (gui_handler, "hide_on_start",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (hide_on_start)));
 
-	  config_var_set (gui_handler, "hide_toolbar",
+	  ggadu_config_var_set (gui_handler, "hide_toolbar",
 			  (gpointer) gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (hide_toolbar)));
 
-	  config_var_set (gui_handler, "theme",
+	  ggadu_config_var_set (gui_handler, "theme",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_theme)->entry))));
-	  config_var_set (gui_handler, "icons",
+	  ggadu_config_var_set (gui_handler, "icons",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_icons)->entry))));
 
 	  entry = g_object_get_data (G_OBJECT (colors_vbox), "msg_header_color");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_header_color",
+	  ggadu_config_var_set (gui_handler, "msg_header_color",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (colors_vbox), "msg_body_color");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_body_color", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
+	  ggadu_config_var_set (gui_handler, "msg_body_color", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (fonts_vbox), "msg_header_font");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_header_font", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
+	  ggadu_config_var_set (gui_handler, "msg_header_font", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (fonts_vbox), "msg_body_font");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_body_font", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
+	  ggadu_config_var_set (gui_handler, "msg_body_font", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (colors_vbox), "msg_out_header_color");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_out_header_color",
+	  ggadu_config_var_set (gui_handler, "msg_out_header_color",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (colors_vbox), "msg_out_body_color");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_out_body_color",
+	  ggadu_config_var_set (gui_handler, "msg_out_body_color",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (fonts_vbox), "msg_out_header_font");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_out_header_font",
+	  ggadu_config_var_set (gui_handler, "msg_out_header_font",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (fonts_vbox), "msg_out_body_font");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "msg_out_body_font",
+	  ggadu_config_var_set (gui_handler, "msg_out_body_font",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (sound_vbox), "sound_msg_out");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "sound_msg_out", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
+	  ggadu_config_var_set (gui_handler, "sound_msg_out", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (sound_vbox), "sound_msg_in");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "sound_msg_in", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
+	  ggadu_config_var_set (gui_handler, "sound_msg_in", (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (fonts_vbox), "contact_list_contact_font");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "contact_list_contact_font",
+	  ggadu_config_var_set (gui_handler, "contact_list_contact_font",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
 	  entry = g_object_get_data (G_OBJECT (fonts_vbox), "contact_list_protocol_font");
 	  g_return_if_fail (entry != NULL);
-	  config_var_set (gui_handler, "contact_list_protocol_font",
+	  ggadu_config_var_set (gui_handler, "contact_list_protocol_font",
 			  (gpointer) g_strdup (gtk_entry_get_text (GTK_ENTRY (entry))));
 
-	  config_save (gui_handler);
+	  ggadu_config_save (gui_handler);
 	  gui_load_theme ();
 	  gui_config_emoticons ();
 	  gui_reload_images ();

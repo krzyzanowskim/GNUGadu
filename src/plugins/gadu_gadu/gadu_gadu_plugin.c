@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.97 2003/12/17 16:10:54 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.98 2003/12/20 23:17:20 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -23,6 +23,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "support.h"
 #include "menu.h"
@@ -142,12 +143,12 @@ gchar *insert_cr (gchar * txt)
 void gadu_gadu_enable_dcc_socket (gboolean state)
 {
 
-    if ((state == TRUE) && (!dcc_session_get) && ((gboolean) config_var_get (handler, "dcc")))
+    if ((state == TRUE) && (!dcc_session_get) && ((gboolean) ggadu_config_var_get (handler, "dcc")))
       {
 	  GIOChannel *dcc_channel_get = NULL;
 	  gint cond = G_IO_IN;
 
-	  dcc_session_get = gg_dcc_socket_create ((int) config_var_get (handler, "uin"), 0);
+	  dcc_session_get = gg_dcc_socket_create ((int) ggadu_config_var_get (handler, "uin"), 0);
 	  gg_dcc_ip = inet_addr ("255.255.255.255");
 	  gg_dcc_port = dcc_session_get->port;
 
@@ -169,7 +170,7 @@ void gadu_gadu_enable_dcc_socket (gboolean state)
 gpointer gadu_gadu_login (gpointer desc, gint status)
 {
     struct gg_login_params p;
-    gchar *serveraddr = (gchar *) config_var_get (handler, "server");
+    gchar *serveraddr = (gchar *) ggadu_config_var_get (handler, "server");
     gchar **serv_addr = NULL;
 
     if (connected)
@@ -202,9 +203,9 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
       }
 
     /* jesli jest proxy zerzniete z ekg */
-    if (config_var_check (handler, "proxy"))
+    if (ggadu_config_var_check (handler, "proxy"))
       {
-	  char **auth = array_make ((gchar *) config_var_get (handler, "proxy"), "@", 0, 0, 0);
+	  char **auth = array_make ((gchar *) ggadu_config_var_get (handler, "proxy"), "@", 0, 0, 0);
 	  char **proxy_userpass = NULL;
 	  char **proxy_hostport = NULL;
 
@@ -227,13 +228,13 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 
       }
 
-    p.uin = (int) config_var_get (handler, "uin");
-    p.password = (gchar *) config_var_get (handler, "password");
+    p.uin = (int) ggadu_config_var_get (handler, "uin");
+    p.password = (gchar *) ggadu_config_var_get (handler, "password");
     p.async = 1;
     p.status = status;
     p.status_descr = desc;
 
-    if ((gint) config_var_get (handler, "private") == 1)
+    if ((gint) ggadu_config_var_get (handler, "private") == 1)
 	p.status |= GG_STATUS_FRIENDS_MASK;
 
     if (serveraddr != NULL)
@@ -251,7 +252,7 @@ gpointer gadu_gadu_login (gpointer desc, gint status)
 	  return NULL;
       }
 
-    print_debug ("loguje sie GG# %d do serwera %s %d, status %d\n", (gint) config_var_get (handler, "uin"), serveraddr,
+    print_debug ("loguje sie GG# %d do serwera %s %d, status %d\n", (gint) ggadu_config_var_get (handler, "uin"), serveraddr,
 		 p.server_port, status);
 
     g_free (serveraddr);
@@ -336,7 +337,7 @@ void handle_search_event (struct gg_event *e)
 void ggadu_gg_save_history (gchar * to, gchar * txt)
 {
 
-    if (config_var_get (handler, "log"))
+    if (ggadu_config_var_get (handler, "log"))
       {
 	  gchar *dir = g_build_filename (this_configdir, "history", NULL);
 	  gchar *path = g_build_filename (this_configdir, "history", to, NULL);
@@ -427,8 +428,8 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 	  /* pingpong */
 	  g_timeout_add (100000, gadu_gadu_ping, NULL);
 
-	  if (config_var_get (handler, "sound_app_file") != NULL)
-	      signal_emit (GGadu_PLUGIN_NAME, "sound play file", config_var_get (handler, "sound_app_file"), "sound*");
+	  if (ggadu_config_var_get (handler, "sound_app_file") != NULL)
+	      signal_emit (GGadu_PLUGIN_NAME, "sound play file", ggadu_config_var_get (handler, "sound_app_file"), "sound*");
 
 	  signal_emit (GGadu_PLUGIN_NAME, "gui status changed",
 		       (gpointer) ((session->status & GG_STATUS_FRIENDS_MASK) ? session->
@@ -506,7 +507,7 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 		    return TRUE;
 
 		d = gg_dcc_get_file (inet_addr (addr_arr[0]), atoi (addr_arr[1]),
-				     (gint) config_var_get (handler, "uin"), e->event.msg.sender);
+				     (gint) ggadu_config_var_get (handler, "uin"), e->event.msg.sender);
 
 		ch = g_io_channel_unix_new (d->fd);
 		watch_dcc_file = g_io_add_watch (ch, G_IO_ERR | G_IO_IN | G_IO_OUT, test_chan_dcc, d);
@@ -551,8 +552,8 @@ gboolean test_chan (GIOChannel * source, GIOCondition condition, gpointer data)
 
 	  signal_emit (GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui");
 
-	  if (config_var_get (handler, "sound_msg_file") != NULL)
-	      signal_emit (GGadu_PLUGIN_NAME, "sound play file", config_var_get (handler, "sound_msg_file"), "sound*");
+	  if (ggadu_config_var_get (handler, "sound_msg_file") != NULL)
+	      signal_emit (GGadu_PLUGIN_NAME, "sound play file", ggadu_config_var_get (handler, "sound_msg_file"), "sound*");
 
 	  break;
 
@@ -874,7 +875,7 @@ gpointer user_preferences_action (gpointer user_data)
 	  if ((!sp->receive_only) && (sp->status != GG_STATUS_NOT_AVAIL_DESCR) && (sp->status != GG_STATUS_NOT_AVAIL))
 	      statuslist_names = g_slist_append (statuslist_names, sp->description);
 
-	  if (sp->status == (gint) config_var_get (handler, "status"))
+	  if (sp->status == (gint) ggadu_config_var_get (handler, "status"))
 	      statuslist_names = g_slist_prepend (statuslist_names, sp->description);
 
 	  tmplist = tmplist->next;
@@ -884,37 +885,37 @@ gpointer user_preferences_action (gpointer user_data)
     ggadu_dialog_set_title (d, _("Gadu-gadu plugin configuration"));
     ggadu_dialog_set_type (d, GGADU_DIALOG_CONFIG);
     ggadu_dialog_callback_signal (d, "update config");
-    ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, config_var_get (handler, "uin"),
+    ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_ID, "GG#", VAR_INT, ggadu_config_var_get (handler, "uin"),
 			    VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_PASSWORD, _("Password"), VAR_STR,
-			    config_var_get (handler, "password"), VAR_FLAG_PASSWORD);
+			    ggadu_config_var_get (handler, "password"), VAR_FLAG_PASSWORD);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SERVER, _("Server (optional)"), VAR_STR,
-			    config_var_get (handler, "server"), VAR_FLAG_NONE);
+			    ggadu_config_var_get (handler, "server"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_PROXY,
-			    _("Proxy server (optional)\n[user:pass@]host.com[:80]"), VAR_STR, config_var_get (handler,
+			    _("Proxy server (optional)\n[user:pass@]host.com[:80]"), VAR_STR, ggadu_config_var_get (handler,
 													      "proxy"),
 			    VAR_FLAG_NONE);
 
-    to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), utf);
+    to_utf8 ("ISO-8859-2", ggadu_config_var_get (handler, "reason"), utf);
 
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_REASON, _("Default reason"), VAR_STR, utf,
 			    VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_HISTORY, _("Log chats to history file"), VAR_BOOL,
-			    config_var_get (handler, "log"), VAR_FLAG_NONE);
+			    ggadu_config_var_get (handler, "log"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT, _("Autoconnect on startup"), VAR_BOOL,
-			    config_var_get (handler, "autoconnect"), VAR_FLAG_NONE);
+			    ggadu_config_var_get (handler, "autoconnect"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS, _("Autoconnect status"), VAR_LIST,
 			    statuslist_names, VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_FRIENDS_MASK, _("Available only for friends"),
-			    VAR_BOOL, config_var_get (handler, "private"), VAR_FLAG_NONE);
+			    VAR_BOOL, ggadu_config_var_get (handler, "private"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_DCC, _("Enable DCC"), VAR_BOOL,
-			    config_var_get (handler, "dcc"), VAR_FLAG_NONE);
+			    ggadu_config_var_get (handler, "dcc"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE, _("Sound file (app)"),
-			    VAR_FILE_CHOOSER, config_var_get (handler, "sound_app_file"), VAR_FLAG_NONE);
+			    VAR_FILE_CHOOSER, ggadu_config_var_get (handler, "sound_app_file"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE, _("Sound file (chat)"),
-			    VAR_FILE_CHOOSER, config_var_get (handler, "sound_chat_file"), VAR_FLAG_NONE);
+			    VAR_FILE_CHOOSER, ggadu_config_var_get (handler, "sound_chat_file"), VAR_FLAG_NONE);
     ggadu_dialog_add_entry (&(d->optlist), GGADU_GADU_GADU_CONFIG_SOUND_MSG_FILE, _("Sound file (msg)"),
-			    VAR_FILE_CHOOSER, config_var_get (handler, "sound_msg_file"), VAR_FLAG_NONE);
+			    VAR_FILE_CHOOSER, ggadu_config_var_get (handler, "sound_msg_file"), VAR_FLAG_NONE);
 
     signal_emit (GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 
@@ -1125,7 +1126,7 @@ gboolean test_chan_dcc_get (GIOChannel * source, GIOCondition condition, gpointe
     struct gg_event *e = NULL;
     struct gg_dcc *d = data;
 
-    if (!(gboolean) config_var_get (handler, "dcc"))
+    if (!(gboolean) ggadu_config_var_get (handler, "dcc"))
       {
 	  gadu_gadu_enable_dcc_socket (FALSE);
 	  return FALSE;
@@ -1207,7 +1208,7 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
     struct gg_dcc *d = data;
     static gint prev_check = -1;
 
-    if (!(gboolean) config_var_get (handler, "dcc"))
+    if (!(gboolean) ggadu_config_var_get (handler, "dcc"))
       {
 	  gg_free_dcc (d);
 	  return FALSE;
@@ -1228,7 +1229,7 @@ gboolean test_chan_dcc (GIOChannel * source, GIOCondition condition, gpointer da
       {
       case GG_EVENT_DCC_CLIENT_ACCEPT:
 	  print_debug ("GG_EVENT_DCC_CLIENT_ACCEPT %ld %ld %ld\n", (guint32) d->uin, (guint32) d->peer_uin,
-		       config_var_get (handler, "uin"));
+		       ggadu_config_var_get (handler, "uin"));
 	  gg_event_free (e);
 	  break;
 
@@ -1430,7 +1431,7 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 {
     gchar *path = NULL;
 
-    print_debug ("%s : initialize\n", GGadu_PLUGIN_NAME);
+    print_debug ("%s : initialize", GGadu_PLUGIN_NAME);
 
     signal (SIGHUP, handle_sighup);
 
@@ -1442,19 +1443,19 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 
     handler = (GGaduPlugin *) register_plugin (GGadu_PLUGIN_NAME, _("Gadu-Gadu(c) protocol"));
 
-    config_var_add (handler, "uin", VAR_INT);
-    config_var_add (handler, "password", VAR_STR);
-    config_var_add (handler, "proxy", VAR_STR);
-    config_var_add (handler, "server", VAR_STR);
-    config_var_add (handler, "sound_msg_file", VAR_STR);
-    config_var_add (handler, "sound_chat_file", VAR_STR);
-    config_var_add (handler, "sound_app_file", VAR_STR);
-    config_var_add (handler, "log", VAR_BOOL);
-    config_var_add (handler, "autoconnect", VAR_BOOL);
-    config_var_add (handler, "status", VAR_INT);
-    config_var_add (handler, "reason", VAR_STR);
-    config_var_add (handler, "private", VAR_BOOL);
-    config_var_add (handler, "dcc", VAR_BOOL);
+    ggadu_config_var_add (handler, "uin", VAR_INT);
+    ggadu_config_var_add (handler, "password", VAR_STR);
+    ggadu_config_var_add (handler, "proxy", VAR_STR);
+    ggadu_config_var_add (handler, "server", VAR_STR);
+    ggadu_config_var_add (handler, "sound_msg_file", VAR_STR);
+    ggadu_config_var_add (handler, "sound_chat_file", VAR_STR);
+    ggadu_config_var_add (handler, "sound_app_file", VAR_STR);
+    ggadu_config_var_add (handler, "log", VAR_BOOL);
+    ggadu_config_var_add (handler, "autoconnect", VAR_BOOL);
+    ggadu_config_var_add (handler, "status", VAR_INT);
+    ggadu_config_var_add (handler, "reason", VAR_STR);
+    ggadu_config_var_add (handler, "private", VAR_BOOL);
+    ggadu_config_var_add (handler, "dcc", VAR_BOOL);
 
 
     if (g_getenv ("CONFIG_DIR") || g_getenv ("HOME_ETC"))
@@ -1470,17 +1471,17 @@ GGaduPlugin *initialize_plugin (gpointer conf_ptr)
 
     mkdir (this_configdir, 0700);
 
-    set_config_file_name ((GGaduPlugin *) handler, path);
+    ggadu_config_set_filename ((GGaduPlugin *) handler, path);
 
-    if (!config_read (handler))
+    if (!ggadu_config_read (handler))
       {
 	  g_free (path);
 #endif*/
     path = g_build_filename (this_configdir, "config", NULL);
 
-    set_config_file_name ((GGaduPlugin *) handler, path);
+    ggadu_config_set_filename ((GGaduPlugin *) handler, path);
 
-    if (!config_read (handler))
+    if (!ggadu_config_read (handler))
 	g_warning (_("Unable to read configuration file for plugin %s"), "gadu-gadu");
 /*#if GGADU_DEBUG
       }
@@ -1610,9 +1611,9 @@ void start_plugin ()
 
     test ();
 
-    if (config_var_get (handler, "autoconnect") && !connected)
-	gadu_gadu_login ((config_var_check (handler, "reason")) ? config_var_get (handler, "reason") : _("no reason"),
-			 (config_var_check (handler, "status")) ? (gint) config_var_get (handler,
+    if (ggadu_config_var_get (handler, "autoconnect") && !connected)
+	gadu_gadu_login ((ggadu_config_var_check (handler, "reason")) ? ggadu_config_var_get (handler, "reason") : _("no reason"),
+			 (ggadu_config_var_check (handler, "status")) ? (gint) ggadu_config_var_get (handler,
 											 "status") : GG_STATUS_AVAIL);
 
 }
@@ -1636,7 +1637,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 
 	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Chat"), user_chat_action, NULL));
 
-	  if ((gboolean) config_var_get (handler, "dcc"))
+	  if ((gboolean) ggadu_config_var_get (handler, "dcc"))
 	      ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Send File"), send_file_action, NULL));
 
 	  ggadu_menu_add_submenu (umenu, ggadu_menu_new_item (_("Edit"), user_change_user_action, NULL));
@@ -1658,7 +1659,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 	  GGaduDialog *d = signal->data;
 	  GSList *tmplist = d->optlist;
 
-	  gint uin = (gint) config_var_get (handler, "uin");
+	  gint uin = (gint) ggadu_config_var_get (handler, "uin");
 	  struct gg_dcc *dcc_file_session = NULL;
 	  gchar **addr_arr = NULL;
 	  gint port = 0;
@@ -1888,7 +1889,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		      GGaduDialog *d = ggadu_dialog_new ();
 		      gchar *reason_c = NULL;
 
-		      to_utf8 ("ISO-8859-2", config_var_get (handler, "reason"), reason_c);
+		      to_utf8 ("ISO-8859-2", ggadu_config_var_get (handler, "reason"), reason_c);
 
 		      ggadu_dialog_set_title (d, _("Enter status description"));
 		      ggadu_dialog_callback_signal (d, "change status descr");
@@ -1901,7 +1902,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		else
 		  {
 		      gint _status = sp->status;
-		      if (config_var_get (handler, "private"))
+		      if (ggadu_config_var_get (handler, "private"))
 			  _status |= GG_STATUS_FRIENDS_MASK;
 
 		      /* if not connected, login. else, just change status */
@@ -1944,7 +1945,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		      gchar *desc_utf = NULL, *desc_cp = NULL, *desc_iso = NULL;
 		      gint _status = sp->status;
 
-		      if (config_var_get (handler, "private"))
+		      if (ggadu_config_var_get (handler, "private"))
 			  _status |= GG_STATUS_FRIENDS_MASK;
 
 		      kv = (GGaduKeyValue *) d->optlist->data;
@@ -1956,7 +1957,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		      from_utf8 ("CP1250", desc_utf, desc_cp);
 		      /* do konfiga */
 		      from_utf8 ("ISO-8859-2", desc_utf, desc_iso);
-		      config_var_set (handler, "reason", desc_iso);
+		      ggadu_config_var_set (handler, "reason", desc_iso);
 
 		      if (!connected)
 			{
@@ -1969,7 +1970,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 		      g_free (desc_cp);
 		      g_free (desc_iso);
 
-		      config_save (handler);
+		      ggadu_config_save (handler);
 		  }
 
 		if (sp->status == GG_STATUS_NOT_AVAIL_DESCR)
@@ -1997,44 +1998,44 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 			{
 			case GGADU_GADU_GADU_CONFIG_ID:
 			    print_debug ("changing var setting uin to %d\n", kv->value);
-			    config_var_set (handler, "uin", kv->value);
+			    ggadu_config_var_set (handler, "uin", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_PASSWORD:
 			    print_debug ("changing var setting password to %s\n", kv->value);
-			    config_var_set (handler, "password", kv->value);
+			    ggadu_config_var_set (handler, "password", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_SERVER:
 			    print_debug ("changing var setting server to %s\n", kv->value);
-			    config_var_set (handler, "server", kv->value);
+			    ggadu_config_var_set (handler, "server", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_PROXY:
 			    print_debug ("changing var setting proxy to %s\n", kv->value);
-			    config_var_set (handler, "proxy", kv->value);
+			    ggadu_config_var_set (handler, "proxy", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_SOUND_CHAT_FILE:
 			    print_debug ("changing var setting sound_chat_file to %s\n", kv->value);
-			    config_var_set (handler, "sound_chat_file", kv->value);
+			    ggadu_config_var_set (handler, "sound_chat_file", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_SOUND_MSG_FILE:
 			    print_debug ("changing var setting sound_msg_file to %s\n", kv->value);
-			    config_var_set (handler, "sound_msg_file", kv->value);
+			    ggadu_config_var_set (handler, "sound_msg_file", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_SOUND_APP_FILE:
 			    print_debug ("changing var setting sound_app_file to %s\n", kv->value);
-			    config_var_set (handler, "sound_app_file", kv->value);
+			    ggadu_config_var_set (handler, "sound_app_file", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_HISTORY:
 			    print_debug ("changing var setting log to %d\n", kv->value);
-			    config_var_set (handler, "log", kv->value);
+			    ggadu_config_var_set (handler, "log", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_DCC:
 			    print_debug ("changing var setting dcc to %d\n", kv->value);
-			    config_var_set (handler, "dcc", kv->value);
-			    gadu_gadu_enable_dcc_socket ((gboolean) config_var_get (handler, "dcc"));
+			    ggadu_config_var_set (handler, "dcc", kv->value);
+			    gadu_gadu_enable_dcc_socket ((gboolean) ggadu_config_var_get (handler, "dcc"));
 			    break;
 			case GGADU_GADU_GADU_CONFIG_AUTOCONNECT:
 			    print_debug ("changing var setting autoconnect to %d\n", kv->value);
-			    config_var_set (handler, "autoconnect", kv->value);
+			    ggadu_config_var_set (handler, "autoconnect", kv->value);
 			    break;
 			case GGADU_GADU_GADU_CONFIG_AUTOCONNECT_STATUS:
 			    {
@@ -2053,7 +2054,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 				  }
 
 				print_debug ("changing var setting status to %d\n", val);
-				config_var_set (handler, "status", (gpointer) val);
+				ggadu_config_var_set (handler, "status", (gpointer) val);
 			    }
 			    break;
 			case GGADU_GADU_GADU_CONFIG_REASON:
@@ -2061,17 +2062,17 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 				gchar *utf = NULL;
 				print_debug ("changing derault reason %s\n", kv->value);
 				from_utf8 ("ISO-8859-2", kv->value, utf);
-				config_var_set (handler, "reason", utf);
+				ggadu_config_var_set (handler, "reason", utf);
 			    }
 			    break;
 			case GGADU_GADU_GADU_CONFIG_FRIENDS_MASK:
 			    print_debug ("changing var setting private to %d\n", kv->value);
-			    config_var_set (handler, "private", kv->value);
+			    ggadu_config_var_set (handler, "private", kv->value);
 			    break;
 			}
 		      tmplist = tmplist->next;
 		  }
-		config_save (handler);
+		ggadu_config_save (handler);
 	    }
 	  GGaduDialog_free (d);
 	  return;
@@ -2112,7 +2113,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 					 "main-gui");
 			    print_debug ("zjebka podczas send message %s\n", msg->id);
 			}
-		      else if (config_var_get (handler, "log"))
+		      else if (ggadu_config_var_get (handler, "log"))
 			{
 			    GSList *tmp = msg->recipients;
 
@@ -2139,7 +2140,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 					 "main-gui");
 			    print_debug ("zjebka podczas send message %s\n", msg->id);
 			}
-		      else if (config_var_get (handler, "log"))
+		      else if (ggadu_config_var_get (handler, "log"))
 			{
 			    gchar *line = g_strdup_printf (_(":: Me (%s) ::\n%s\n\n"), get_timestamp (0),
 							   msg->message);
@@ -2263,7 +2264,7 @@ void my_signal_receive (gpointer name, gpointer signal_ptr)
 
 void destroy_plugin ()
 {
-    config_save (handler);
+    ggadu_config_save (handler);
 
     print_debug ("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
 

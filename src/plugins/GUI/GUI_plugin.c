@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.37 2003/11/09 10:34:28 thrulliq Exp $ */
+/* $Id: GUI_plugin.c,v 1.38 2003/12/20 23:17:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -10,6 +10,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "support.h"
 #include "menu.h"
@@ -305,8 +306,8 @@ void gui_show_hide_window ()
       {
 	  gint top, left;
 	  gtk_window_get_position (GTK_WINDOW (window), &left, &top);
-	  config_var_set (gui_handler, "top", (gpointer) top);
-	  config_var_set (gui_handler, "left", (gpointer) left);
+	  ggadu_config_var_set (gui_handler, "top", (gpointer) top);
+	  ggadu_config_var_set (gui_handler, "left", (gpointer) left);
 	  gtk_widget_hide (window);
       }
 }
@@ -327,15 +328,15 @@ void gui_quit (GtkWidget * widget, gpointer user_data)
 
     gtk_window_get_size (GTK_WINDOW (window), &width, &height);
 
-    config_var_set (gui_handler, "height", (gpointer) height);
-    config_var_set (gui_handler, "width", (gpointer) width);
+    ggadu_config_var_set (gui_handler, "height", (gpointer) height);
+    ggadu_config_var_set (gui_handler, "width", (gpointer) width);
 
     gtk_window_get_position (GTK_WINDOW (window), &left, &top);
 
-    config_var_set (gui_handler, "top", (gpointer) top);
-    config_var_set (gui_handler, "left", (gpointer) left);
+    ggadu_config_var_set (gui_handler, "top", (gpointer) top);
+    ggadu_config_var_set (gui_handler, "left", (gpointer) left);
 
-    config_save (gui_handler);
+    ggadu_config_save (gui_handler);
 
     signal_emit ("main-gui", "exit", NULL, NULL);
     g_main_loop_quit (config->main_loop);
@@ -379,8 +380,8 @@ void gui_main_window_create (gboolean visible)
     gtk_window_set_has_frame (GTK_WINDOW (window), FALSE);
     gtk_window_set_role (GTK_WINDOW (window), "GNUGadu");
 
-    width = (gint) config_var_get (gui_handler, "width");
-    height = (gint) config_var_get (gui_handler, "height");
+    width = (gint) ggadu_config_var_get (gui_handler, "width");
+    height = (gint) ggadu_config_var_get (gui_handler, "height");
 
 
     if (width <= 0 || width > 3000)
@@ -391,8 +392,8 @@ void gui_main_window_create (gboolean visible)
 
     gtk_window_set_default_size (GTK_WINDOW (window), width, height);
 
-    top = (gint) config_var_get (gui_handler, "top");
-    left = (gint) config_var_get (gui_handler, "left");
+    top = (gint) ggadu_config_var_get (gui_handler, "top");
+    left = (gint) ggadu_config_var_get (gui_handler, "left");
 
     if (top < 0 || top > 3000)
 	top = 0;
@@ -434,7 +435,7 @@ void gui_main_window_create (gboolean visible)
 	  gdk_window_set_decorations (GTK_WIDGET (window)->window, GDK_DECOR_MENU);
       }
 
-    if (config_var_get (gui_handler, "hide_toolbar"))
+    if (ggadu_config_var_get (gui_handler, "hide_toolbar"))
 	gtk_widget_hide(toolbar_handle_box);
 
     if (tree)
@@ -482,7 +483,7 @@ void change_status (GPtrArray * ptra)
 
 
     gp = gui_find_protocol (plugin_source, protocols);
-    if (gp && !is_in_status (sp->status, gp->p->offline_status) && config_var_get (gui_handler, "blink"))
+    if (gp && !is_in_status (sp->status, gp->p->offline_status) && ggadu_config_var_get (gui_handler, "blink"))
       {
 	  gp->aaway_timer = -1;
 
@@ -499,8 +500,8 @@ void change_status (GPtrArray * ptra)
 		gp->blinker_image2 = create_pixbuf (sp->image);
 		print_debug ("gui: blinking %s and %s\n", sp1->image, sp->image);
 		gp->blinker =
-		    g_timeout_add (config_var_get (gui_handler, "blink_interval") ? (gint)
-				   config_var_get (gui_handler, "blink_interval") : 500, status_blinker, gp);
+		    g_timeout_add (ggadu_config_var_get (gui_handler, "blink_interval") ? (gint)
+				   ggadu_config_var_get (gui_handler, "blink_interval") : 500, status_blinker, gp);
 	    }
       }
     else if (is_in_status (sp->status, gp->p->offline_status) && gp->blinker > 0)
@@ -575,13 +576,13 @@ void gui_build_default_menu ()
 
 gpointer show_hide_inactive(GtkWidget *widget, gpointer user_data)
 {
-    if (config_var_get (gui_handler, "show_active")) {
-	config_var_set (gui_handler, "show_active", (gpointer)FALSE);
+    if (ggadu_config_var_get (gui_handler, "show_active")) {
+	ggadu_config_var_set (gui_handler, "show_active", (gpointer)FALSE);
     } else {
-	config_var_set (gui_handler, "show_active", (gpointer)TRUE);
+	ggadu_config_var_set (gui_handler, "show_active", (gpointer)TRUE);
     }
     
-    config_save (gui_handler);
+    ggadu_config_save (gui_handler);
     
     gui_user_view_refresh();
     
@@ -625,7 +626,7 @@ void gui_msg_receive (GGaduSignal * signal)
     if (gp != NULL)
       {
 	  gui_chat_session *session = NULL;
-	  gboolean showwindow = config_var_get (gui_handler, "chat_window_auto_show") ? TRUE : FALSE;
+	  gboolean showwindow = ggadu_config_var_get (gui_handler, "chat_window_auto_show") ? TRUE : FALSE;
 
 	  if (msg->class == GGADU_CLASS_CONFERENCE)
 	      session = gui_session_find_confer (gp, msg->recipients);
@@ -647,7 +648,7 @@ void gui_msg_receive (GGaduSignal * signal)
 		GSList *sigdata = NULL;
 
 		/* shasta: new "docklet set [default] icon" approach */
-		sigdata = g_slist_append (sigdata, (gchar *) config_var_get (gui_handler, "icons"));
+		sigdata = g_slist_append (sigdata, (gchar *) ggadu_config_var_get (gui_handler, "icons"));
 		sigdata = g_slist_append (sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
 		sigdata = g_slist_append (sigdata, _("You Have Message"));
 
@@ -668,7 +669,7 @@ void gui_msg_receive (GGaduSignal * signal)
 		session->recipients = msg->recipients;
 		session->chat = create_chat (session, gp->plugin_name, msg->id, showwindow);
 
-		if ((gint) config_var_get (gui_handler, "use_xosd_for_new_msgs") == TRUE && find_plugin_by_name ("xosd")
+		if ((gint) ggadu_config_var_get (gui_handler, "use_xosd_for_new_msgs") == TRUE && find_plugin_by_name ("xosd")
 		    && msg->message)
 		  {
 		      GGaduContact *k = gui_find_user (msg->id, gp);
@@ -775,7 +776,7 @@ GSList *gui_read_emoticons (gchar * path)
 void gui_config_emoticons ()
 {
 
-    if (config_var_get (gui_handler, "emot"))
+    if (ggadu_config_var_get (gui_handler, "emot"))
       {
 	  gchar *path;
 
@@ -814,7 +815,7 @@ void gui_load_theme ()
     gchar *themepath;
     gchar *themefilename;
 
-    themefilename = g_strconcat (config_var_get (gui_handler, "theme"), ".theme", NULL);
+    themefilename = g_strconcat (ggadu_config_var_get (gui_handler, "theme"), ".theme", NULL);
     themepath = g_build_filename (PACKAGE_DATA_DIR, "themes", themefilename, NULL);
 
     print_debug ("%s : Loading theme from %s\n", "main-gui", themepath);
@@ -830,14 +831,14 @@ void gui_reload_images ()
     GSList *sigdata = NULL;
     
     /* Shouldn't be here but anyway... */
-    if (config_var_get(gui_handler, "hide_toolbar")) {
+    if (ggadu_config_var_get(gui_handler, "hide_toolbar")) {
 	gtk_widget_hide(toolbar_handle_box);
     } else {
     	gtk_widget_show(toolbar_handle_box);
     }
 //    gui_user_view_refresh();
 
-    sigdata = g_slist_append (sigdata, (gchar *) config_var_get (gui_handler, "icons"));
+    sigdata = g_slist_append (sigdata, (gchar *) ggadu_config_var_get (gui_handler, "icons"));
     sigdata = g_slist_append (sigdata, GGADU_DEFAULT_ICON_FILENAME);
     sigdata = g_slist_append (sigdata, "GNU Gadu 2");
 

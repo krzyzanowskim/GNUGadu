@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.27 2003/12/01 22:43:10 krzyzak Exp $ */
+/* $Id: gui_main.c,v 1.28 2003/12/20 23:17:19 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -11,6 +11,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "support.h"
 #include "repo.h"
@@ -91,46 +92,46 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
 	this_configdir = g_build_filename(g_get_home_dir(),".gg2",NULL);
 
-    set_config_file_name((GGaduPlugin *)gui_handler, g_build_filename(this_configdir,"gui",NULL));
+    ggadu_config_set_filename((GGaduPlugin *)gui_handler, g_build_filename(this_configdir,"gui",NULL));
     g_free (this_configdir);
 
-    config_var_add(gui_handler, "theme", VAR_STR);
-    config_var_add(gui_handler, "emot", VAR_BOOL);
-    config_var_add(gui_handler, "icons", VAR_STR);
-    config_var_add(gui_handler, "tree", VAR_BOOL);
-    config_var_add(gui_handler, "chat_window_auto_raise", VAR_BOOL);
-    config_var_add(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL);
-    config_var_add(gui_handler, "chat_type",  VAR_INT);
-    config_var_add(gui_handler, "chat_window_auto_show", VAR_BOOL);
-    config_var_add(gui_handler, "chat_paned_size", VAR_INT);
-    config_var_add(gui_handler, "expand", VAR_BOOL);
-    config_var_add(gui_handler, "show_active", VAR_BOOL);
-    config_var_add(gui_handler, "width", VAR_INT);
-    config_var_add(gui_handler, "height", VAR_INT);
-    config_var_add(gui_handler, "top", VAR_INT);
-    config_var_add(gui_handler, "left", VAR_INT);
-    config_var_add(gui_handler, "send_on_enter", VAR_BOOL);
-    config_var_add(gui_handler, "msg_header_color", VAR_STR);
-    config_var_add(gui_handler, "msg_body_color", VAR_STR);
-    config_var_add(gui_handler, "msg_header_font", VAR_STR);
-    config_var_add(gui_handler, "msg_body_font", VAR_STR);
-    config_var_add(gui_handler, "msg_out_header_color", VAR_STR);
-    config_var_add(gui_handler, "msg_out_body_color", VAR_STR);
-    config_var_add(gui_handler, "msg_out_header_font", VAR_STR);
-    config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
-    config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
-    config_var_add(gui_handler, "hide_toolbar", VAR_BOOL);
-    config_var_add(gui_handler, "sound_msg_in", VAR_STR);
-    config_var_add(gui_handler, "sound_msg_out", VAR_STR);
-    config_var_add(gui_handler, "contact_list_contact_font", VAR_STR);
-    config_var_add(gui_handler, "contact_list_protocol_font", VAR_STR);
-    config_var_add(gui_handler, "blink", VAR_BOOL);
-    config_var_add(gui_handler, "blink_interval", VAR_INT);
-    config_var_add(gui_handler, "auto_away", VAR_BOOL);
-    config_var_add(gui_handler, "auto_away_interval", VAR_INT);
+    ggadu_config_var_add(gui_handler, "theme", VAR_STR);
+    ggadu_config_var_add(gui_handler, "emot", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "icons", VAR_STR);
+    ggadu_config_var_add(gui_handler, "tree", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "chat_window_auto_raise", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "chat_type",  VAR_INT);
+    ggadu_config_var_add(gui_handler, "chat_window_auto_show", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "chat_paned_size", VAR_INT);
+    ggadu_config_var_add(gui_handler, "expand", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "show_active", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "width", VAR_INT);
+    ggadu_config_var_add(gui_handler, "height", VAR_INT);
+    ggadu_config_var_add(gui_handler, "top", VAR_INT);
+    ggadu_config_var_add(gui_handler, "left", VAR_INT);
+    ggadu_config_var_add(gui_handler, "send_on_enter", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "msg_header_color", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_body_color", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_header_font", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_body_font", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_out_header_color", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_out_body_color", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_out_header_font", VAR_STR);
+    ggadu_config_var_add(gui_handler, "msg_out_body_font", VAR_STR);
+    ggadu_config_var_add(gui_handler, "hide_on_start", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "hide_toolbar", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "sound_msg_in", VAR_STR);
+    ggadu_config_var_add(gui_handler, "sound_msg_out", VAR_STR);
+    ggadu_config_var_add(gui_handler, "contact_list_contact_font", VAR_STR);
+    ggadu_config_var_add(gui_handler, "contact_list_protocol_font", VAR_STR);
+    ggadu_config_var_add(gui_handler, "blink", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "blink_interval", VAR_INT);
+    ggadu_config_var_add(gui_handler, "auto_away", VAR_BOOL);
+    ggadu_config_var_add(gui_handler, "auto_away_interval", VAR_INT);
 
-    if (!config_read(gui_handler))
-	g_warning(_("Unable to read configuration file for plugin GUI"));
+    if (!ggadu_config_read(gui_handler))
+        g_warning(_("Unable to read configuration file for plugin GUI"));
 
     /* 
      * SIGNAL : gui register menu
@@ -236,26 +237,26 @@ void start_plugin()
     gui_build_default_menu();
     gui_build_default_toolbar();
 
-    if (config_var_get(gui_handler, "tree"))
-	tree = TRUE;
+    if (ggadu_config_var_get(gui_handler, "tree"))
+        tree = TRUE;
 
-    if (config_var_get(gui_handler, "hide_on_start") && find_plugin_by_pattern("docklet*"))
-	gui_main_window_create(FALSE);
+    if (ggadu_config_var_get(gui_handler, "hide_on_start") && find_plugin_by_pattern("docklet*"))
+        gui_main_window_create(FALSE);
     else
-	gui_main_window_create(TRUE);
+        gui_main_window_create(TRUE);
 
     print_debug("%s : start_plugin\n","main-gui");
 
     config->send_on_enter = TRUE;
 
-    if ((config_var_get(gui_handler, "theme")))
-	gui_load_theme();
+    if ((ggadu_config_var_get(gui_handler, "theme")))
+        gui_load_theme();
     else
-	print_debug("%s : No theme variable set, using defaults\n", "main-gui");
+        print_debug("%s : No theme variable set, using defaults\n", "main-gui");
     
     gui_config_emoticons();
     
-    sigdata = g_slist_append(sigdata, (gchar *) config_var_get(gui_handler, "icons"));
+    sigdata = g_slist_append(sigdata, (gchar *) ggadu_config_var_get(gui_handler, "icons"));
     sigdata = g_slist_append(sigdata, GGADU_DEFAULT_ICON_FILENAME);
     sigdata = g_slist_append(sigdata, "GNU Gadu 2");
 

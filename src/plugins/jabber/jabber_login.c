@@ -1,5 +1,6 @@
 #include <string.h>
 
+#include "ggadu_conf.h"
 #include "jabber_login.h"
 #include "jabber_cb.h"
 #include "jabber_protocol.h"
@@ -55,7 +56,7 @@ gpointer jabber_login_connect (gpointer status)
 	gchar *server;
 
 	g_static_mutex_lock (&connect_mutex);
-	if (!(jid = g_strdup (config_var_get (jabber_handler, "jid"))))
+	if (!(jid = g_strdup (ggadu_config_var_get (jabber_handler, "jid"))))
 	{
 		g_warning ("I want jid!");
 		g_static_mutex_unlock (&connect_mutex);
@@ -76,7 +77,7 @@ gpointer jabber_login_connect (gpointer status)
 	print_debug ("jabber: Connection to %s.\n", server);
 	connection = lm_connection_new (server);
 
-	if (config_var_get (jabber_handler, "use_ssl"))
+	if (ggadu_config_var_get (jabber_handler, "use_ssl"))
 	{
 		if (lm_connection_supports_ssl ())
 		{

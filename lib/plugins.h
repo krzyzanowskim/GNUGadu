@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.3 2003/08/23 19:52:48 krzyzak Exp $ */
+/* $Id: plugins.h,v 1.4 2003/12/20 23:17:18 krzyzak Exp $ */
 #ifndef GGadu_PROTOCOLS_H
 #define GGadu_PROTOCOLS_H 1
 
@@ -21,33 +21,16 @@
     
 #define GGadu_MAX_PLUGIN_NAME 100
 
-
-
 gboolean load_plugin(gchar *path);
 
 void unload_plugin(gchar *name);
-
-gboolean config_read(GGaduPlugin *plugin_handler);
-
-gboolean config_save(GGaduPlugin *plugin_handler);
-
-gpointer config_var_get(GGaduPlugin *handler, gchar *name);
-
-void config_var_add(GGaduPlugin *handler, gchar * name, gint type);
-
-void config_var_set(GGaduPlugin *handler, gchar *name, gpointer val);
-
-gint config_var_get_type(GGaduPlugin *handler, gchar *name);
-
-gint config_var_check(GGaduPlugin *handler, gchar *name);
-
-void set_config_file_name(GGaduPlugin *plugin_handler, gchar *config_file);
 
 GGaduPlugin *register_plugin(gchar *name, gchar *desc);
 
 void register_signal_receiver(GGaduPlugin *plugin_handler,void (*sgr)(gpointer,gpointer));
 
 void register_extension_for_plugins(GGaduPluginExtension *ext);
+
 void unregister_extension_for_plugins(GGaduPluginExtension *ext);
 
 GGaduPlugin *find_plugin_by_name(gchar *name);

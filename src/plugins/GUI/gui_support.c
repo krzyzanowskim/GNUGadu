@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.4 2003/09/16 22:56:08 shaster Exp $ */
+/* $Id: gui_support.c,v 1.5 2003/12/20 23:17:19 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -7,6 +7,7 @@
 #include <gtk/gtk.h>
 #include "support.h"
 #include "signals.h"
+#include "ggadu_conf.h"
 #include "plugins.h"
 #include "gui_main.h"
 #include "gui_chat.h"
@@ -188,8 +189,8 @@ GtkWidget *create_image(const gchar * filename) {
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif
-	if (config_var_get(gui_handler, "icons")) {
-	    iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", config_var_get(gui_handler, "icons"), NULL);
+	if (ggadu_config_var_get(gui_handler, "icons")) {
+	    iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", ggadu_config_var_get(gui_handler, "icons"), NULL);
 	    dir = g_slist_prepend(dir, iconsdir);
 	}
 	
@@ -237,8 +238,8 @@ GdkPixbuf *create_pixbuf(const gchar * filename) {
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps");
 	dir = g_slist_prepend(dir,PACKAGE_SOURCE_DIR "/pixmaps/emoticons");
 #endif
-	if (config_var_get(gui_handler, "icons")) {
-	    iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", config_var_get(gui_handler, "icons"), NULL);
+	if (ggadu_config_var_get(gui_handler, "icons")) {
+	    iconsdir = g_build_filename(PACKAGE_DATA_DIR, "pixmaps", "icons", ggadu_config_var_get(gui_handler, "icons"), NULL);
 	    dir = g_slist_prepend(dir, iconsdir);
 	}
 	

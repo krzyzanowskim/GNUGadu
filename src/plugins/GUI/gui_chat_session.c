@@ -5,6 +5,7 @@
 #include "unified-types.h"
 #include "support.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "gui_main.h"
 #include "gui_chat_session.h"
 #include "gui_support.h"
@@ -181,7 +182,7 @@ static GtkWidget *gui_chat_session_create_buttons_box (GUIChatSession * gcs)
       }
 */
 
-    if (config_var_get (gui_handler, "send_on_enter"))
+    if (ggadu_config_var_get (gui_handler, "send_on_enter"))
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button_autosend), TRUE);
 
     gcs->buttons_widget = hbox_buttons;
@@ -201,7 +202,7 @@ void gui_chat_sessions_create_visible_chat_window (GUIChatSession * gcs)
 
 static void gui_chat_sessions_create_chat_window (GUIChatSession * gcs)
 {
-    gint chat_type = (gint) config_var_get (gui_handler, "chat_type");
+    gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
     GtkWidget *chat_window = NULL;
     GtkWidget *vbox = NULL;
     GdkPixbuf *image = NULL;
@@ -267,32 +268,32 @@ GtkWidget *gui_chat_session_create_gtk_widget (GUIChatSession * gcs)
 
     buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (history));
 
-    colorstr = config_var_get (gui_handler, "msg_header_color");
-    fontstr = config_var_get (gui_handler, "msg_header_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_header_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_header_font");
 
     gtk_text_buffer_create_tag (buf, "incoming_header", "foreground",
 				(colorstr &&
 				 (strlen (colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 				(fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
-    colorstr = config_var_get (gui_handler, "msg_body_color");
-    fontstr = config_var_get (gui_handler, "msg_body_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_body_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_body_font");
 
     gtk_text_buffer_create_tag (buf, "incoming_text", "foreground",
 				(colorstr &&
 				 (strlen (colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 				(fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
-    colorstr = config_var_get (gui_handler, "msg_out_header_color");
-    fontstr = config_var_get (gui_handler, "msg_out_header_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_out_header_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_out_header_font");
 
     gtk_text_buffer_create_tag (buf, "outgoing_header", "foreground",
 				(colorstr &&
 				 (strlen (colorstr) > 0)) ? colorstr : DEFAULT_TEXT_COLOR, "font",
 				(fontstr) ? fontstr : DEFAULT_FONT, NULL);
 
-    colorstr = config_var_get (gui_handler, "msg_out_body_color");
-    fontstr = config_var_get (gui_handler, "msg_out_body_font");
+    colorstr = ggadu_config_var_get (gui_handler, "msg_out_body_color");
+    fontstr = ggadu_config_var_get (gui_handler, "msg_out_body_font");
 
     gtk_text_buffer_create_tag (buf, "outgoing_text", "foreground",
 				(colorstr &&

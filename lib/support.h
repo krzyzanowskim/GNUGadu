@@ -1,4 +1,4 @@
-/* $Id: support.h,v 1.3 2003/06/22 17:36:00 krzyzak Exp $ */
+/* $Id: support.h,v 1.4 2003/12/20 23:17:18 krzyzak Exp $ */
 
 #ifndef GGadu_SUPPORT_H
 #define GGadu_SUPPORT_H 1
@@ -7,6 +7,7 @@
 #  include <config.h>
 #endif
 
+#include <glib.h>
 #include <time.h>
 #include "unified-types.h"
 #include "gg-types.h"

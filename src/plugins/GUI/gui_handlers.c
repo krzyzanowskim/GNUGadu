@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.36 2003/12/17 16:10:53 thrulliq Exp $ */
+/* $Id: gui_handlers.c,v 1.37 2003/12/20 23:17:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -14,6 +14,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "support.h"
 #include "menu.h"
@@ -132,7 +133,7 @@ void perl_gui_msg_receive (GGaduSignal * signal, gchar * perl_func, void *pperl)
 void handle_msg_receive (GGaduSignal * signal)
 {
     gchar *soundfile;
-    if ((soundfile = config_var_get (gui_handler, "sound_msg_in")))
+    if ((soundfile = ggadu_config_var_get (gui_handler, "sound_msg_in")))
       {
 	  signal_emit_full ("main-gui", "sound play file", soundfile, "sound*", NULL);
       }
@@ -146,8 +147,8 @@ void handle_show_invisible_chats (GGaduSignal * signal)
     if (!invisible_chats)
       {
 	  gui_show_hide_window ();
-	  gtk_window_move (GTK_WINDOW (window), (gint) config_var_get (gui_handler, "left"),
-			   (gint) config_var_get (gui_handler, "top"));
+	  gtk_window_move (GTK_WINDOW (window), (gint) ggadu_config_var_get (gui_handler, "left"),
+			   (gint) ggadu_config_var_get (gui_handler, "top"));
 
 	  return;
       }
@@ -346,7 +347,7 @@ void handle_disconnected (GGaduSignal * signal)
 	  g_free (path);
       }
 
-    if (!config_var_get (gui_handler, "show_active"))
+    if (!ggadu_config_var_get (gui_handler, "show_active"))
       {
 	  while (valid)
 	    {
@@ -478,11 +479,11 @@ void auto_away_start (gui_protocol * gp)
 	return;
 
     status = (gint) signal_emit ("main-gui", "get current status", NULL, gp->plugin_name);
-    if (is_in_status (status, gp->p->online_status) && config_var_get (gui_handler, "auto_away"))
+    if (is_in_status (status, gp->p->online_status) && ggadu_config_var_get (gui_handler, "auto_away"))
       {
 	  gp->aaway_timer =
-	      g_timeout_add (config_var_get (gui_handler, "auto_away_interval")
-			     ? ((gint) config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000,
+	      g_timeout_add (ggadu_config_var_get (gui_handler, "auto_away_interval")
+			     ? ((gint) ggadu_config_var_get (gui_handler, "auto_away_interval")) * 60000 : 300000,
 			     auto_away_func, gp);
       }
 

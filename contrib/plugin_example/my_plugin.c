@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.3 2003/06/09 11:55:27 krzyzak Exp $ */
+/* $Id: my_plugin.c,v 1.4 2003/12/20 23:17:17 krzyzak Exp $ */
 /*
 
 	This is example plugin based on sound-external plugin
@@ -130,7 +130,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     else
         this_configdir = g_build_filename(g_get_home_dir(),".gg2",NULL);
     
-    set_config_file_name((GGaduPlugin *)handler, g_build_filename(this_configdir,"my-plugin",NULL));
+    ggadu_config_set_filename((GGaduPlugin *)handler, g_build_filename(this_configdir,"my-plugin",NULL));
     
     g_free(this_configdir);
 

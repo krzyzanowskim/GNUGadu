@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.20 2003/11/06 20:03:27 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.21 2003/12/20 23:17:19 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -10,6 +10,7 @@
 #include "gg-types.h"
 #include "unified-types.h"
 #include "plugins.h"
+#include "ggadu_conf.h"
 #include "signals.h"
 #include "support.h"
 #include "menu.h"
@@ -75,10 +76,10 @@ void on_text_data(GtkTreeViewColumn *column, GtkCellRenderer *renderer,
     gtk_tree_model_get(model, iter, 2, &k, -1);
     
     if (!k) {
-	gchar *font = config_var_get(gui_handler, "contact_list_protocol_font");
+	gchar *font = ggadu_config_var_get(gui_handler, "contact_list_protocol_font");
 	g_object_set(G_OBJECT(renderer), "font", (font) ? font : "bold", NULL);
     } else {
-	gchar *font = config_var_get(gui_handler, "contact_list_contact_font");
+	gchar *font = ggadu_config_var_get(gui_handler, "contact_list_contact_font");
 	g_object_set(G_OBJECT(renderer), "font", (font) ? font : "normal", NULL);
     }
 }
@@ -298,7 +299,7 @@ void gui_tree_add(gui_protocol *gp)
     
     gp->add_info_label = g_object_get_data(G_OBJECT(treeview), "add_info_label");
 
-    if (config_var_get(gui_handler, "expand"))
+    if (ggadu_config_var_get(gui_handler, "expand"))
 	gtk_tree_view_expand_all(GTK_TREE_VIEW(treeview));
 }
 
@@ -447,7 +448,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 		st = g_strdup_printf("- %s", (sp ? sp->description : ""));
 
 	    if (session) {
-		gint chat_type = (gint)config_var_get(gui_handler,"chat_type");
+		gint chat_type = (gint)ggadu_config_var_get(gui_handler,"chat_type");
 		GtkWidget *window = (GtkWidget *)g_object_get_data(G_OBJECT(session->chat),"top_window");
 		
 		if (chat_type == CHAT_TYPE_CLASSIC) {
@@ -477,7 +478,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 		    g_free(tmp);
 		}
 	    }
-	    if (config_var_get(gui_handler, "show_active") && is_in_status (n->status, gp->p->offline_status)) {
+	    if (ggadu_config_var_get(gui_handler, "show_active") && is_in_status (n->status, gp->p->offline_status)) {
 	        if (tree)
 		    gtk_tree_store_remove(GTK_TREE_STORE(users_treestore), &users_iter);
 		else 
@@ -514,7 +515,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
 	valid = gtk_tree_model_iter_next(model, &users_iter);
     }
     
-    if (config_var_get(gui_handler, "show_active") && !found) {
+    if (ggadu_config_var_get(gui_handler, "show_active") && !found) {
 	GSList *tmplist = gp->userlist;
 	GGaduContact *k;
 
@@ -545,7 +546,7 @@ void gui_user_view_notify(gui_protocol *gp, GGaduNotify *n)
     
     if (tree) {
 	gchar *tmp;
-	if(config_var_get(gui_handler, "expand")) {
+	if(ggadu_config_var_get(gui_handler, "expand")) {
 	    GtkTreePath *path = gtk_tree_path_new_from_string(gp->tree_path);
 	    gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), path, TRUE);
 	    gtk_tree_path_free(path);
@@ -579,7 +580,7 @@ void gui_user_view_add_userlist(gui_protocol *gp)
 	
 	print_debug("Adding %s %s\n",k->id, k->nick);
 	
-        if (config_var_get(gui_handler, "show_active") && is_in_status (k->status, gp->p->offline_status)) {
+        if (ggadu_config_var_get(gui_handler, "show_active") && is_in_status (k->status, gp->p->offline_status)) {
 	    tmplist = tmplist->next;
 	    continue;
 	} 
@@ -702,7 +703,7 @@ void gui_user_view_refresh()
 {
     GSList *tmplist;
     
-    tree = (gboolean) config_var_get(gui_handler, "tree");
+    tree = (gboolean) ggadu_config_var_get(gui_handler, "tree");
     
     print_debug("refreshing user view\n");
 
@@ -726,13 +727,13 @@ void gui_user_view_refresh()
 	tmplist = tmplist->next;
     }
   
-    if (tree && config_var_get(gui_handler, "expand"))
+    if (tree && ggadu_config_var_get(gui_handler, "expand"))
 	gtk_tree_view_expand_all(GTK_TREE_VIEW(treeview));
 }
 
 void gui_user_view_switch()
 {
-    gboolean current_tree_var = (gboolean) config_var_get(gui_handler, "tree");
+    gboolean current_tree_var = (gboolean) ggadu_config_var_get(gui_handler, "tree");
     print_debug("switching user view\n");
     if (tree == current_tree_var) 
 	return;
@@ -742,4 +743,3 @@ void gui_user_view_switch()
     gui_user_view_refresh();
 
 }
-
