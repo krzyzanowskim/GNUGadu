@@ -88,4 +88,12 @@ dist-hook:
 	    fi \
 	  done \
 	fi
-
+	if test -d doc; then \
+	  mkdir $(distdir)/doc; \
+	  cp -rfp doc/* $(distdir)/doc; \
+	fi
+	if test -d doc; then \
+	  mkdir $(distdir)/contrib; \
+	  cp -rfp contrib/* $(distdir)/contrib; \
+	fi
+	find ./$(distdir) -name "CVS" -type d -exec rm -rf {} \;
