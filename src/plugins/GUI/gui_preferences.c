@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.29 2003/12/29 01:07:25 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.30 2004/01/05 15:20:58 thrulliq Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -24,6 +24,8 @@ GtkWidget *list = NULL;
 extern GSList *protocols;
 extern GGaduPlugin *gui_handler;
 extern GGaduConfig *config;
+
+static gboolean plugins_updated = FALSE;
 
 static gboolean save_selected_plugins (GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer data)
 {
@@ -88,7 +90,8 @@ static void enable_toggled (GtkCellRendererToggle * cell, gchar * path_str, gpoi
     gtk_tree_store_set (GTK_TREE_STORE (model), &iter, PLUGINS_MGR_ENABLE, enable, -1);
 
     gtk_tree_path_free (path);
-
+    
+    plugins_updated = TRUE;
 }
 
 GtkWidget *gui_plugins_mgr_tab ()
@@ -100,6 +103,8 @@ GtkWidget *gui_plugins_mgr_tab ()
     GtkCellRenderer *renderer = NULL;
     GtkTreeViewColumn *column = NULL;
 
+    plugins_updated = FALSE;
+    
     vbox = gtk_vbox_new (FALSE, 0);
     store = gtk_tree_store_new (PLUGINS_MGR_COUNT, G_TYPE_STRING, G_TYPE_BOOLEAN);
 
@@ -854,7 +859,8 @@ void gui_preferences (GtkWidget * widget, gpointer data)
 	  GIOChannel *ch =
 	      g_io_channel_new_file (g_build_filename (config->configdir, "modules.load", NULL), "w", NULL);
 
-	  gtk_tree_model_foreach (GTK_TREE_MODEL (store), save_selected_plugins, ch);
+	  if (plugins_updated)
+	    gtk_tree_model_foreach (GTK_TREE_MODEL (store), save_selected_plugins, ch);
 
 	  g_io_channel_shutdown (ch, TRUE, NULL);
 

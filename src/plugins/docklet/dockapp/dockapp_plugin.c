@@ -1,4 +1,4 @@
-/* $Id: dockapp_plugin.c,v 1.8 2003/12/20 23:17:19 krzyzak Exp $ */
+/* $Id: dockapp_plugin.c,v 1.9 2004/01/05 15:20:59 thrulliq Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -608,8 +608,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 void destroy_plugin()
 {
   print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
-  gtk_widget_destroy(GTK_WIDGET(status_dockapp));
-  gtk_widget_destroy(GTK_WIDGET(icon_dockapp));
+  gtk_widget_destroy(status_dockapp);
   g_object_unref(launch_pixmap);
   launch_pixmap = NULL;
   g_object_unref(launch_mask);

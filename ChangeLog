@@ -1,5 +1,7 @@
 05.01.2004
 - fixed segfault when emoticon file was not found (GUI/THrull)
+- fixed segfault in dockapp destroy_plugin() (dockapp/THrull)
+- plugins remain intact when no changes made in preferences plugins settings (GUI/THrull)
 
 04.01.2004
 - more work with jabber protocol plugin, soon will be finished (jabber/krzak)
