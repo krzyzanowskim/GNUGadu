@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.88 2004/12/29 02:08:58 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.89 2004/12/29 15:09:39 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -187,13 +187,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	GGaduMsg *msg;
 	GSList *l = userlist;
 
-/*
-	if (condition & G_IO_ERR || condition & G_IO_HUP) {
-		connected = FALSE;
-		tlen_presence(session,TLEN_STATUS_UNAVAILABLE,""); 
-		return FALSE;
-	}
-*/
 	tlen_watch_fd(session);
 
 	if (session->error)
@@ -818,7 +811,7 @@ void start_plugin()
 	signal_emit(GGadu_PLUGIN_NAME, "gui register protocol", p, "main-gui");
 
 	register_signal(handler, "change status");
-	register_signal(handler, "change status descr");
+	register_signal(handler, "change status descr dialog");
 	register_signal(handler, "send message");
 	register_signal(handler, "add user");
 	register_signal(handler, "change user");
@@ -916,7 +909,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				}
 				/* end */
 
-				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr", _sp);
+				dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("Enter status description"), "change status descr dialog", _sp);
 				desc_utf = to_utf8("ISO-8859-2", session->description);
 				ggadu_dialog_add_entry(dialog, TLEN_STATUS_DESC, _("Description"), VAR_STR, desc_utf, VAR_FLAG_NONE);
 				g_free(desc_utf);
@@ -932,6 +925,42 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		}
 		else if (sp && sp->status != TLEN_STATUS_UNAVAILABLE && sp->status != TLEN_STATUS_DESC)
 			ggadu_tlen_login((gpointer) sp->status);
+		return;
+	}
+
+	if (signal->name == g_quark_from_static_string("change status descr dialog"))
+	{
+		GGaduDialog *d = signal->data;
+		GGaduStatusPrototype *sp = d->user_data;
+
+		if (ggadu_dialog_get_response(d) == GGADU_OK)
+		{
+			if (connected == FALSE)
+			{
+				ggadu_tlen_login((gpointer) TLEN_STATUS_AVAILABLE);
+			}
+			else if (connected && sp)
+			{
+				if (ggadu_dialog_get_entries(d))
+				{
+					/* w kv->value jest opis, w utf8 */
+					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
+					
+					if (kv && kv->value && (strlen(kv->value) > 0))
+					{
+						/* ustaw nowy opis w sesji  ZONK free */
+						tlen_presence(session, sp->status, from_utf8("ISO-8859-2", kv->value));
+					} else {
+						g_free(sp->status_description);
+						sp->status_description = NULL;
+					}
+
+					/* uaktualnij GUI */
+					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
+				}
+			}
+		}
+		GGaduDialog_free(d);
 		return;
 	}
 
@@ -990,42 +1019,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			ggadu_config_save(handler);
 		}
 		GGaduDialog_free(dialog);
-		return;
-	}
-
-	if (signal->name == g_quark_from_static_string("change status descr"))
-	{
-		GGaduDialog *d = signal->data;
-		GGaduStatusPrototype *sp = d->user_data;
-
-		if (ggadu_dialog_get_response(d) == GGADU_OK)
-		{
-			if (connected == FALSE)
-			{
-				ggadu_tlen_login((gpointer) TLEN_STATUS_AVAILABLE);
-			}
-			else if (connected && sp)
-			{
-				if (ggadu_dialog_get_entries(d))
-				{
-					/* w kv->value jest opis, w utf8 */
-					GGaduKeyValue *kv = (GGaduKeyValue *) d->optlist->data;
-					
-					if (kv && kv->value && (strlen(kv->value) > 0))
-					{
-						/* ustaw nowy opis w sesji  ZONK free */
-						tlen_presence(session, sp->status, from_utf8("ISO-8859-2", kv->value));
-					} else {
-						g_free(sp->status_description);
-						sp->status_description = NULL;
-					}
-
-					/* uaktualnij GUI */
-					signal_emit(GGadu_PLUGIN_NAME, "gui status changed", (gpointer) sp->status, "main-gui");
-				}
-			}
-		}
-		GGaduDialog_free(d);
 		return;
 	}
 
