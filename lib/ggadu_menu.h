@@ -1,4 +1,4 @@
-/* $Id: ggadu_menu.h,v 1.3 2004/06/14 14:53:23 krzyzak Exp $ */
+/* $Id: ggadu_menu.h,v 1.4 2004/08/01 22:09:03 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -66,6 +66,9 @@ GSList *ggadu_menu_get_items(GGaduMenu * menu);
  * zwraca menu nadrzedne
  */
 GGaduMenu *ggadu_menu_get_parent(GGaduMenu * children);
+
+
+void ggadu_menu_add_user_menu_extensions(GGaduMenu * menu, GGaduPlugin *handler);
 
 /*
  * wypisuje strukture zbudowanego drzewa, raczej przydatne tylko do debugu

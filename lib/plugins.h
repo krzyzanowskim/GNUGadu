@@ -1,4 +1,4 @@
-/* $Id: plugins.h,v 1.9 2004/08/01 17:28:20 krzyzak Exp $ */
+/* $Id: plugins.h,v 1.10 2004/08/01 22:09:03 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -56,7 +56,11 @@ void register_extension_for_plugins(GGaduPluginExtension * ext);
 
 void unregister_extension_for_plugins(GGaduPluginExtension * ext);
 
-gpointer ggadu_find_extension(GGaduPlugin * handler, gint type);
+GGaduPluginExtension *ggadu_find_extension(GGaduPlugin * handler, gint type);
+
+gpointer ggadu_get_extensions_list(GGaduPlugin * handler);
+
+guint	ggadu_extension_get_type(GGaduPluginExtension *ext);
 
 GGaduPlugin *find_plugin_by_name(gchar * name);
 

@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.17 2004/08/01 17:28:20 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.18 2004/08/01 22:09:03 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -447,7 +447,7 @@ void unregister_extension_for_plugins(GGaduPluginExtension * ext)
 
 }
 
-gpointer ggadu_find_extension(GGaduPlugin * handler, gint type)
+GGaduPluginExtension *ggadu_find_extension(GGaduPlugin * handler, gint type)
 {
 	GSList *extensions;
 
@@ -465,6 +465,22 @@ gpointer ggadu_find_extension(GGaduPlugin * handler, gint type)
 		extensions = extensions->next;
 	}
 	return NULL;
+}
+
+gpointer ggadu_get_extensions_list(GGaduPlugin * handler)
+{
+	if (!handler)
+		return NULL;
+
+	return handler->extensions;
+}
+
+guint	ggadu_extension_get_type(GGaduPluginExtension *ext)
+{
+	if (!ext)
+		return 0;
+	
+	return ext->type;
 }
 
 

@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.177 2004/08/01 21:05:05 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.178 2004/08/01 22:09:04 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1789,12 +1789,13 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == GET_USER_MENU_SIG)
 	{
 		GGaduMenu *umenu = ggadu_menu_create();
-		GGaduPluginExtension *ext = NULL;
+		
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Chat"), user_chat_action, NULL));
 		if ((gboolean) ggadu_config_var_get(handler, "dcc"))
 			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Send File"), send_file_action, NULL));
-		if ((ext = ggadu_find_extension(handler, GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE)))
-			ggadu_menu_add_submenu(umenu, ggadu_menu_new_item((gpointer) ext->txt, ext->callback, NULL));
+			
+		ggadu_menu_add_user_menu_extensions(umenu,handler);
+		
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("View History"), user_view_history_action, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item("", NULL, NULL));
 		ggadu_menu_add_submenu(umenu, ggadu_menu_new_item(_("Edit"), user_change_user_action, NULL));
