@@ -1,3 +1,7 @@
+31.05.2003
+- distinguish messages from warnings (sms/shasta)
+- forbid negative values in VAR_INT spin buttons (GUI/shasta)
+
 30.05.2003
 - new plugin, able to check for new releases (update/shasta)
 
