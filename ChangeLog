@@ -2,6 +2,7 @@
 - fixed crash of gghist if no file is given (gghist/krzak)
 - fixed timeout with jabber plugin by sending empty message every 100000 sec. (jabber/krzak)
 - some changes with tooltips (GUI/krzak)
+- release 2.0.4
 
 03.08.2004
 - ~/.gg create if do not exist, fixed save userlist after import (gadu-gadu/krzak)

@@ -1,4 +1,4 @@
-# $Revision: 1.15 $, $Date: 2004/06/12 07:58:46 $
+# $Revision: 1.16 $, $Date: 2004/08/04 22:48:12 $
 #
 # Conditional build:
 %bcond_with	arts
@@ -10,12 +10,14 @@ Summary:	GNU Gadu 2 - free talking
 Summary(es):	GNU Gadu 2 - charlar libremente
 Summary(pl):	GNU Gadu 2 - wolne gadanie
 Name:		gg2
-Version:	2.0.3
+Version:	2.0.4
 Release:	1
 Epoch:		3
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}.tar.bz2
+# Source0-md5:	e8795ba49b9817a1db5e8628c9c9e30a
+Patch0:		%{name}-jabber_login.patch
 URL:		http://www.gnugadu.org/
 %{?with_arts:BuildRequires:	arts-devel}
 BuildRequires:	autoconf
@@ -26,7 +28,7 @@ BuildRequires:	glib2-devel  >= 2.2.0
 BuildRequires:	gtk+2-devel  >= 2.2.0
 BuildRequires:	libtlen-devel
 BuildRequires:	libtool
-BuildRequires:	loudmouth-devel >= 0.15.1
+BuildRequires:	loudmouth-devel >= 0.16-4
 BuildRequires:	openssl-devel >= 0.9.7d
 %{?with_perl:BuildRequires:	perl-devel}
 %{?with_gtkspell:BuildRequires:	gtkspell-devel}
@@ -37,7 +39,7 @@ Requires:	gg2-ui
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Gadu-Gadu, Tlen.pl and others instant messanger client with
+Gadu-Gadu, Tlen.pl and others instant messenger client with
 GTK+2 GUI on GNU/GPL.
 
 %description -l es
@@ -140,6 +142,7 @@ Summary(es):	Plugin de Jabber.org
 Summary(pl):	Wtyczka protoko³u Jabber
 Group:		Applications/Communications
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	loudmouth >= 0.16-4
 
 %description jabber
 Jabber protocol plugin.
@@ -296,8 +299,23 @@ Make possible exchange data with other applications.
 %description remote -l es
 Permite intercambiar los datos con otras aplicaciones.
 
+
 %description remote -l pl
 Wtyczka umo¿liwiaj±ca wymianê informacji z innymi aplikacjami.
+
+
+%package history-external
+Summary:	Allow to view GNU Gadu chat history
+Summary(pl):	Pozwala przegl±daæ historiê rozmów GNU Gadu.
+Group:		Applications/Communications
+Requires:	gtk+2
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description history-external
+Allow to view GNU Gadu chat history
+
+%description history-external -l pl
+Pozwala przegl±daæ historiê rozmów GNU Gadu.
 
 %package update
 Summary:	Check for new GNU Gadu newer version
@@ -333,7 +351,8 @@ Temas para el GUI de GNU Gadu 2.
 Motywy graficzne dla GUI GNU Gadu 2.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
+%patch0 -p1
 
 %build
 rm -f missing
@@ -358,6 +377,8 @@ rm -f missing
  	--with-oss \
  	--with-external \
  	--with-update \
+	--with-history-external-viewer \
+	--with-gghist \
 	--with%{!?with_arts:out}-arts \
 	--with%{!?with_gtkspell:out}-gtkspell \
 	--%{?with_perl:with}%{!?with_perl:without}-perl \
@@ -465,6 +486,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libremote_plugin.so
 
+%files history-external
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/gghist
+%attr(755,root,root) %{_libdir}/gg2/libhistory_external_plugin.so
+
 %files update
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gg2/libupdate_plugin.so
@@ -497,14 +523,43 @@ rm -rf $RPM_BUILD_ROOT
 All persons listed below can be reached at <cvs_login>@pld-linux.org
 
 $Log: gg2.spec,v $
-Revision 1.15  2004/06/12 07:58:46  krzyzak
-- 2.0.3 release
+Revision 1.16  2004/08/04 22:48:12  krzyzak
+- up to 2.0.4
 
-Revision 1.14  2004/05/03 22:02:50  krzyzak
-- 2.0.2
+Revision 1.110  2004/06/22 16:13:52  malekith
+- gg2-jabber R: new enough loudmouth
 
-Revision 1.13  2004/04/23 21:19:24  krzyzak
-- 2.0.1
+Revision 1.109  2004/06/22 16:05:14  malekith
+- release 2
+- add patch with  functions needed to login into server diffrent then the @-part
+  of the jid (like jabber.pld-linux.org)
+
+Revision 1.108  2004/06/12 07:55:03  krzak
+- up to 2.0.3
+- remove tmpdir.patch (already in sources)
+
+Revision 1.107  2004/05/06 08:14:41  krzak
+- rel 2
+- gg2-tmpdir.patch
+
+Revision 1.106  2004/05/05 19:18:00  krzak
+- remove gg2-path.patch, path is proper.
+
+Revision 1.105  2004/05/04 08:25:42  adamg
+- simplifed %%setup
+
+Revision 1.104  2004/05/04 08:23:51  adamg
+- added path.patch - improper dir in initialize_plugin() function (from
+  src/plugins/gadu_gadu/gadu_gadu_plugin.c)
+
+Revision 1.103  2004/05/04 08:03:39  krzak
+- up to 2.0.2
+
+Revision 1.102  2004/04/26 19:58:38  emes
+- fixed a typo
+
+Revision 1.101  2004/04/23 20:50:41  krzak
+- up to 2.0.1
 
 Revision 1.100  2004/04/04 16:22:58  adamg
 - use dl.sourceforge.net in Source0 URL
