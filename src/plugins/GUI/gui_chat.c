@@ -1,5 +1,5 @@
 /*
- * $Id: gui_chat.c,v 1.60 2004/01/12 19:03:32 thrulliq Exp $ 
+ * $Id: gui_chat.c,v 1.61 2004/01/12 19:45:48 thrulliq Exp $ 
  */
 
 #include <gtk/gtk.h>
@@ -601,7 +601,6 @@ void gui_chat_update_tags ()
 
 static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * event, gpointer user_data)
 {
-
     if (event->send_event == FALSE)
       {
 	  gint chat_type = (gint) ggadu_config_var_get (gui_handler, "chat_type");
@@ -610,55 +609,61 @@ static gboolean window_resize_signal (GtkWidget * window, GdkEventConfigure * ev
 	  GtkWidget *chat;
 	  GtkWidget *paned;
 	  GtkWidget *hbox_buttons;
+	  GtkRequisition r;
+	  GtkRequisition rb;
+	  float tab_minus = 0;
+	  float position = 0;
 	  
 	  if (chat_type == CHAT_TYPE_CLASSIC) {
 	    session = user_data;
 	    chat = session->chat;
+	    
+	    paned = g_object_get_data (G_OBJECT (chat), "paned");
+	    hbox_buttons = g_object_get_data (G_OBJECT (chat), "hbox_buttons");
+	  
+	    if ((paned != NULL) && (GTK_IS_PANED (paned))) {
+
+		r.height = event->height;
+		if (hbox_buttons)
+		    gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
+		position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
+		gtk_paned_set_position (GTK_PANED (paned), (gint) position);
+	    }
 	  } else {
 	    GtkWidget *chat_notebook;
-	    guint page_num;
+	    gint current_page = 0;
+	    gint num_pages;
 	    
 	    if (chat_window)
 		chat_notebook = g_object_get_data (G_OBJECT (chat_window), "chat_notebook");
 	    
-	    if ((chat_notebook) && (chat_window)) {
-		page_num = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
-	    	chat = (GtkWidget *) gtk_notebook_get_nth_page (GTK_NOTEBOOK (chat_notebook), page_num);
-	    }
-	  }
+	    if ((chat_notebook) && (chat_window))
+		num_pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(chat_notebook));
 	  
-	  paned = g_object_get_data (G_OBJECT (chat), "paned");
-	  hbox_buttons = g_object_get_data (G_OBJECT (chat), "hbox_buttons");
+	    while (current_page < num_pages) {
+		chat = (GtkWidget *) gtk_notebook_get_nth_page (GTK_NOTEBOOK (chat_notebook), current_page);
+	    
+		paned = g_object_get_data (G_OBJECT (chat), "paned");
+		hbox_buttons = g_object_get_data (G_OBJECT (chat), "hbox_buttons");
 	  
+		if ((paned != NULL) && (GTK_IS_PANED (paned))) {
 
-	  if ((paned != NULL) && (GTK_IS_PANED (paned)))
-	    {
-		GtkRequisition r;
-		GtkRequisition rb;
-		float tab_minus = 0;
-		float position = 0;
-
-		if (chat_type == CHAT_TYPE_TABBED)
-		  {
-		      GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (window), "chat_notebook");
-		      if (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook)))
-			{
-			    GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook),
-									   GTK_WIDGET (chat));
-			    GtkRequisition rbnl;
-
-			    gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
-
-			    tab_minus = -rbnl.height;
-			}
-		  }
-
-		r.height = event->height;
-		if (hbox_buttons)
+		    GtkWidget *chat_notebook = g_object_get_data (G_OBJECT (window), "chat_notebook");
+		    if (gtk_notebook_get_show_tabs (GTK_NOTEBOOK (chat_notebook))) {
+			GtkWidget *label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (chat_notebook), GTK_WIDGET (chat));
+			GtkRequisition rbnl;
+			gtk_widget_size_request (GTK_WIDGET (label), &rbnl);
+			tab_minus = -rbnl.height;
+		    }
+		    r.height = event->height;
+		    if (hbox_buttons)
 			gtk_widget_size_request (GTK_WIDGET (hbox_buttons), &rb);
-		position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
-		gtk_paned_set_position (GTK_PANED (paned), (gint) position);
+		    position = ((((float) r.height - (float) rb.height) / 100) * (float) percent) + tab_minus;
+		    gtk_paned_set_position (GTK_PANED (paned), (gint) position);
+		}
+		current_page++;
 	    }
+	 }
       }
     return FALSE;
 }
