@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.60 2004/08/19 23:28:30 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.61 2004/08/20 08:01:50 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1030,12 +1030,6 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		
 		g_object_set_data(G_OBJECT(entry2), "dictionary_slist", dict_list);
 
-
-		if (gui_check_for_sessions(protocols))
-		{
-	   		gtk_widget_set_sensitive(GTK_WIDGET(entry), FALSE);
-			gtk_widget_set_sensitive(GTK_WIDGET(entry2), FALSE);
-		}
 	}
 #endif
 
