@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.83 2004/08/24 13:55:45 krzyzak Exp $
+dnl $Id: configure.in,v 1.84 2004/08/24 14:41:17 krzyzak Exp $
 
 m4_define([gg2_version],[2.0.5.1])
 
@@ -133,7 +133,7 @@ dnl with_sms=yes
 dnl with_remote=yes
 dnl with_esd=yes
 dnl with_oss=yes
-dnl with_arts=no
+dnl with_arts=yes
 dnl with_external=yes
 dnl with_external_libgadu=no
 dnl with_history_external_viewer=yes
@@ -398,8 +398,10 @@ else
     with_esd=no
 fi
 
-AC_ARG_WITH(arts, [  --with-arts		  Build aRts! sound plugin	default=no])
-if test "x$with_arts" = "xyes"; then 
+AC_ARG_WITH(arts, [  --without-arts		  Build aRts! sound plugin	default=yes])
+if test "x$with_arts" != "xno"; then 
+    with_arts=yes
+
     AC_PATH_PROG(ARTSC, artsc-config, no)
     if test "x$ARTSC" = "xno"; then
 	AC_MSG_ERROR([*** sound support for aRts! - unable to find artsc-config ***])
