@@ -52,8 +52,8 @@ int remote_init (void)
     if (!katalog)
       abort ();
     strcpy (katalog, pw->pw_dir);
-    katalog[strlen (pw->pw_dir) - 1] = '/';
-    katalog[strlen (pw->pw_dir)    ] = '.';
+    katalog[strlen (pw->pw_dir)    ] = '/';
+    katalog[strlen (pw->pw_dir) + 1] = '.';
   }
   
 
