@@ -1,4 +1,4 @@
-/* $Id: ggadu_dialog.h,v 1.10 2004/10/19 10:51:24 krzyzak Exp $ */
+/* $Id: ggadu_dialog.h,v 1.11 2004/10/25 07:35:20 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -23,7 +23,9 @@
 #ifndef GGadu_DIALOG_H
 #define GGadu_DIALOG_H
 
+#ifndef GG2_CORE_H 
 #include "ggadu_types.h"
+#endif
 
 typedef gboolean(*watch_func) (gpointer);
 
