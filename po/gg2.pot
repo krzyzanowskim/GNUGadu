@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-05-27 20:22+0200\n"
+"POT-Creation-Date: 2003-05-30 13:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,34 +65,36 @@ msgstr ""
 msgid "New message from %s"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:440 src/plugins/GUI/gui_search.c:167
+#: src/plugins/GUI/gui_chat.c:484 src/plugins/GUI/gui_search.c:167
 msgid "_Close"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:604 src/plugins/GUI/gui_userview.c:430
+#: src/plugins/GUI/gui_chat.c:712 src/plugins/GUI/gui_userview.c:430
 #, c-format
 msgid "Talking to %s (%s) %s"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:606
+#: src/plugins/GUI/gui_chat.c:715
 #, c-format
 msgid "Talking to %s"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:644
+#: src/plugins/GUI/gui_chat.c:759
 msgid "Chat Window"
 msgstr ""
 
-#. buttons
-#: src/plugins/GUI/gui_chat.c:805
+#.
+#. * buttons
+#.
+#: src/plugins/GUI/gui_chat.c:939
 msgid "_Send"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:809
+#: src/plugins/GUI/gui_chat.c:943
 msgid "S_tick"
 msgstr ""
 
-#: src/plugins/GUI/gui_chat.c:916
+#: src/plugins/GUI/gui_chat.c:1096
 #, c-format
 msgid "Me :: %s ::\n"
 msgstr ""
@@ -270,7 +272,7 @@ msgstr ""
 
 #. ZONK - how to name it ?
 #: src/plugins/GUI/gui_preferences.c:634
-msgid "Chat window split size"
+msgid "Chat window split size (%)"
 msgstr ""
 
 #: src/plugins/GUI/gui_preferences.c:641
