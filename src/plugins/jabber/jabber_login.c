@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.45 2004/12/20 09:15:20 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.46 2005/02/17 22:28:33 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -24,6 +24,7 @@
 #include <stdlib.h>
 
 #include "ggadu_conf.h"
+#include "jabber_plugin.h"
 #include "jabber_login.h"
 #include "jabber_cb.h"
 #include "jabber_protocol.h"
@@ -38,16 +39,20 @@ static LmSSLResponse jabber_connection_ssl_func (LmSSL *ssl, LmSSLStatus status,
 gpointer jabber_login_connect(gpointer status)
 {
 	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
-	gchar *jid = NULL;
+	gchar *jid = g_strdup(ggadu_config_var_get(jabber_handler, "jid"));
 	gchar *server = NULL;
 
 	g_static_mutex_lock(&connect_mutex);
 	
-	if (!(jid = g_strdup(ggadu_config_var_get(jabber_handler, "jid"))))
+	if (!jid || !ggadu_config_var_get(jabber_handler, "password"))
 	{
-		print_debug("I want jid!");
+		print_debug("I want jid && password!");
+
+		user_preferences_action(NULL);
+		signal_emit_from_thread("jabber", "gui show warning",
+				        g_strdup(_("Jabber ID and password must be specified in preferences!")), "main-gui");
 		signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
-		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Check you Jabber ID in properties!")), "main-gui");
+
 		g_static_mutex_unlock(&connect_mutex);
 		return NULL;
 	}
@@ -59,7 +64,7 @@ gpointer jabber_login_connect(gpointer status)
 		if (!(server = g_strstr_len(jid, strlen(jid), "@")))
 		{
 			signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
-			signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Invalid jid!")), "main-gui");
+			signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Invalid Jabber ID!")), "main-gui");
 			g_free(jid);
 			g_static_mutex_unlock(&connect_mutex);
 			return NULL;
@@ -72,7 +77,7 @@ gpointer jabber_login_connect(gpointer status)
 	if (!server || !*server)
 	{
 		signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");
-		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Invalid jid!")), "main-gui");
+		signal_emit_from_thread("jabber", "gui show warning", g_strdup(_("Invalid Jabber ID!")), "main-gui");
 		g_free(jid);
 		g_static_mutex_unlock(&connect_mutex);
 		return NULL;
