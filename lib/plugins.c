@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.21 2004/09/29 13:22:16 krzyzak Exp $ */
+/* $Id: plugins.c,v 1.22 2004/10/18 09:59:55 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -40,7 +40,20 @@ gboolean plugin_at_list(gchar * name)
 	GString *buffer = g_string_new(NULL);
 	gchar *filename;
 	gint lines = 0;
+	gchar *pattern_start = g_utf8_strchr(name,g_utf8_strlen(name,-1),'-');
 
+	if (pattern_start)
+	{
+		gint pattern_length = g_utf8_strlen(name,-1) - g_utf8_strlen(pattern_start,-1);
+		gchar *pattern = g_strndup(name,pattern_length);
+		if (find_plugin_by_pattern(g_strconcat(pattern,"*",NULL)))
+		{	
+		    g_free(pattern);
+		    return FALSE;
+		}
+		g_free(pattern);
+	}	
+	
 	filename = g_build_filename(config->configdir, "modules.load", NULL);
 
 	ch = g_io_channel_new_file(filename, "r", NULL);
@@ -50,21 +63,25 @@ gboolean plugin_at_list(gchar * name)
 	if (!ch)
 	{
 		g_string_free(buffer, TRUE);
-		return TRUE;
+		return FALSE;
 	}
+	
 	while (g_io_channel_read_line_string(ch, buffer, NULL, NULL) != G_IO_STATUS_EOF)
 	{
 		if (buffer->str && *buffer->str == '\n')
 		{
 			continue;
 		}
+		
 		if (!g_strncasecmp(buffer->str, name, buffer->len - 1))
 		{
 			g_string_free(buffer, TRUE);
 			return TRUE;
 		}
+		
 		lines++;
 	}
+	
 	g_io_channel_shutdown(ch, TRUE, NULL);
 	g_io_channel_unref(ch);
 	g_string_free(buffer, TRUE);

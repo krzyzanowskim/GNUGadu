@@ -1,5 +1,7 @@
 18.10.2004
 - fix showing windows with new messages if docklet plugin isn't loaded (krzak/GUI)
+- do not load modules with the same prefix ex. multiple sound-* plugins, just load
+  first met. Char '-' is a separator family-name in module name (core/krzak)
 
 15.10.2004
 - fixed registration procedure, close #86 (gadu-gadu/krzak)

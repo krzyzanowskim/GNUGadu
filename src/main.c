@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.21 2004/09/29 13:22:17 krzyzak Exp $ */
+/* $Id: main.c,v 1.22 2004/10/18 09:59:55 krzyzak Exp $ */
 
 /*
  * GNU Gadu 2
@@ -61,7 +61,7 @@ void load_available_modules()
 
 	if ((directory = g_dir_open(dirpath, 0, NULL)) == NULL)
 	{
-	    show_error(_("Cannot open any modules directory\n"));
+	    g_error(_("Cannot open any modules directory\n"));
 	    exit(1);
 	}
     }
