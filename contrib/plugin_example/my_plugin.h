@@ -1,4 +1,7 @@
-/* $Id: my_plugin.h,v 1.1 2003/06/03 21:30:07 krzyzak Exp $ */
+/* $Id: my_plugin.h,v 1.2 2003/06/09 11:55:27 krzyzak Exp $ */
+
+GGaduSigID SOUND_PLAY_FILE_SIG;
+GGaduSigID UPDATE_CONFIG_SIG;
 
 enum {
     GGADU_SE_CONFIG_PLAYER

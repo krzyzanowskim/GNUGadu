@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.25 2003/06/07 10:47:09 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.26 2003/06/09 11:55:29 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -83,7 +83,7 @@ void perl_gui_msg_receive (GGaduSignal *signal, gchar *perl_func, void *pperl)
   ENTER;
   SAVETMPS;
 
-  sv_name = sv_2mortal (newSVpv (signal->name, 0));
+  sv_name = sv_2mortal (newSVpv (g_quark_to_string(signal->name), 0));
   sv_src  = sv_2mortal (newSVpv (signal->source_plugin_name, 0));
   if (signal->destination_plugin_name)
     sv_dst  = sv_2mortal (newSVpv (signal->destination_plugin_name, 0));
@@ -109,7 +109,7 @@ void perl_gui_msg_receive (GGaduSignal *signal, gchar *perl_func, void *pperl)
   if (count == 0)
   {
     gchar *dst;
-    signal->name = g_strdup (SvPV (sv_name, junk));
+    signal->name = g_quark_from_string (SvPV (sv_name, junk));
     signal->source_plugin_name = g_strdup (SvPV (sv_src, junk));
     dst = SvPV (sv_dst, junk);
     if (dst[0] != '\0')

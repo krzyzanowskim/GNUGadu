@@ -1,4 +1,4 @@
-/* $Id: my_plugin.c,v 1.2 2003/06/09 01:01:20 krzyzak Exp $ */
+/* $Id: my_plugin.c,v 1.3 2003/06/09 11:55:27 krzyzak Exp $ */
 /*
 
 	This is example plugin based on sound-external plugin
@@ -60,7 +60,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	
         print_debug("%s : receive signal %d\n",GGadu_PLUGIN_NAME,signal->name);
 
-	if (signal->name == g_quark_from_static_string("sound play file")) 
+	if (signal->name == SOUND_PLAY_FILE_SIG) 
 	{
 	    gchar *filename = signal->data;
 	    
@@ -68,7 +68,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		g_thread_create(ggadu_play_file, filename, FALSE, NULL);
 	}
 
-	if (signal->name == g_quark_from_static_string("update config"))
+	if (signal->name == UPDATE_CONFIG_SIG)
 	{
             GGaduDialog *d = signal->data;
             GSList *tmplist = d->optlist;
@@ -121,8 +121,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     GGadu_PLUGIN_ACTIVATE(conf_ptr);
     handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,_("External player sound driver"));
     
-    register_signal(handler,"sound play file");
-    register_signal(handler,"update config");
+    SOUND_PLAY_FILE_SIG = register_signal(handler,"sound play file");
+    UPDATE_CONFIG_SIG = register_signal(handler,"update config");
+    
     
     if (g_getenv("CONFIG_DIR"))
         this_configdir = g_build_filename(g_get_home_dir(),g_getenv("CONFIG_DIR"),"gg2",NULL);

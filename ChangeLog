@@ -1,5 +1,6 @@
 09.06.2003
 - revolution, internal, signals are not any longer strings, they are GQuark NOW. perl may not work for a while (all/krzak)
+- fixes (all/krzak)
 
 07.06.2003
 - default action on Enter, and VAR_FLAG_FOCUS that foucus selected element (GUI/krzak)

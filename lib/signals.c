@@ -1,4 +1,4 @@
-/* $Id: signals.c,v 1.4 2003/06/09 01:28:17 krzyzak Exp $ */
+/* $Id: signals.c,v 1.5 2003/06/09 11:55:28 krzyzak Exp $ */
 #include <glib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -46,7 +46,6 @@ GQuark register_signal(GGaduPlugin * plugin_handler, gpointer name)
 	GGaduPlugin *tmplugin = (GGaduPlugin *) plugin_handler;
 	GGaduSignalinfo *signalinfo;
 
-//	print_debug("%s : signal_register : %s\n", tmplugin->name, name);
 	print_debug("%s : register_signal : %s %d\n", tmplugin->name, name, q_name);
 
 	signalinfo = g_new0(GGaduSignalinfo, 1);
@@ -56,13 +55,14 @@ GQuark register_signal(GGaduPlugin * plugin_handler, gpointer name)
 	tmplugin->signals = g_slist_append(tmplugin->signals, signalinfo);
 
 #ifdef GGadu_PERL_EMBED_H
-	register_signal_perl ((gpointer)q_name, NULL);	
+	register_signal_perl (q_name, NULL);	
 #endif
 	return q_name;
 }
 
-void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, gchar *, void *))
+void register_signal_perl (gchar *name, void (*perl_handler) (GGaduSignal *, gchar *, void *))
 {
+  GGaduSigID q_name = g_quark_from_string(name);
   GSList *list;
   GGaduSignalHook *hook;
 
@@ -70,7 +70,7 @@ void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, g
   while (list)
   {
     hook = (GGaduSignalHook *) list->data;
-    if (hook->name == (GQuark)name)
+    if (hook->name == q_name)
     {
       hook->perl_handler = perl_handler;
       return;
@@ -79,14 +79,14 @@ void register_signal_perl (gpointer name, void (*perl_handler) (GGaduSignal *, g
   }
 
   hook = g_new0 (GGaduSignalHook, 1);
-  hook->name = (GQuark)name;
+  hook->name = q_name;
   hook->perl_handler = perl_handler;
   hook->hooks = NULL;
 
   config->signal_hooks = g_slist_append (config->signal_hooks, hook);
 }
 
-void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal, void (*perl_handler) (GGaduSignal *, gchar *, void *)))
+void hook_signal (GGaduSigID q_name, void (*hook) (GGaduSignal *signal, void (*perl_handler) (GGaduSignal *, gchar *, void *)))
 {
   GGaduSignalHook *signalhook;
   GSList *list = config->signal_hooks;
@@ -94,7 +94,7 @@ void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal, void (*perl_
   while (list)
   {
     signalhook = (GGaduSignalHook *) list->data;
-    if (signalhook->name == (GQuark)name)
+    if (signalhook->name == q_name)
     {
       signalhook->hooks = g_slist_append (signalhook->hooks, (void *) hook);
       return;
@@ -107,7 +107,7 @@ void hook_signal (gpointer name, void (*hook) (GGaduSignal *signal, void (*perl_
    * we have any signals, so we just create one here
    */
   signalhook = g_new0 (GGaduSignalHook, 1);
-  signalhook->name = (GQuark)name;
+  signalhook->name = q_name;
   signalhook->perl_handler = NULL;
   signalhook->hooks = g_slist_append (signalhook->hooks, (void *) hook);
 

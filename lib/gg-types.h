@@ -1,4 +1,4 @@
-/* $Id: gg-types.h,v 1.4 2003/06/09 00:20:34 krzyzak Exp $ */
+/* $Id: gg-types.h,v 1.5 2003/06/09 11:55:28 krzyzak Exp $ */
 
 /*
  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
@@ -15,6 +15,7 @@
 
 typedef gpointer (*function_ptr)(gpointer);
 typedef void (*signal_func_ptr)(gpointer,gpointer);
+typedef GQuark GGaduSigID;
 
 enum {
     GGADU_PLUGIN_TYPE_UI = 1,
