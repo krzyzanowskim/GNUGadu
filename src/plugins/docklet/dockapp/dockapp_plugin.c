@@ -12,6 +12,8 @@
 #include "signals.h"
 #include "support.h"
 #include "repo.h"
+#include "dialog.h"
+#include "menu.h"
 
 #include "dockapp_plugin.h"
 
@@ -47,6 +49,9 @@ static GdkColor clUnk	= {0,  3000, 30000,  3000};	//unknown
 GdkRectangle icon1 = {5, 4, 16, 16};
 GdkRectangle icon2 = {23, 4, 16, 16};
 GdkRectangle icon3 = {41, 4, 16, 16};
+
+static GGaduMenu *dockapp_menu;
+static gchar *this_configdir = NULL;
 
 GGadu_PLUGIN_INIT(DOCKLET_PLUGIN_NAME,GGADU_PLUGIN_TYPE_MISC);
 
@@ -136,21 +141,17 @@ void draw_pixmap()
 	/* set color and draw notify (last 3 nicks) */
 	for (i=0; i<NNICK; i++) {
 	    switch (prev_status[i]) {
-		case GG_STATUS_NOT_AVAIL:
-		case GG_STATUS_NOT_AVAIL_DESCR:
+		case GGADU_DOCKAPP_STATUS_OFFLINE:
     		    gdk_gc_set_foreground(dock_gc, &clOffline);
 		    break;
-		case GG_STATUS_BUSY:
-		case GG_STATUS_BUSY_DESCR:
+		case GGADU_DOCKAPP_STATUS_AWAY:
     		    gdk_gc_set_foreground(dock_gc, &clAway);
 		    break;
-		case GG_STATUS_AVAIL:
-		case GG_STATUS_AVAIL_DESCR:
+		case GGADU_DOCKAPP_STATUS_ONLINE:
     		    gdk_gc_set_foreground(dock_gc, &clOnline);
 		    break;
 		default:
     		    gdk_gc_set_foreground(dock_gc, &clUnk);
-		    break;
 	    }
 	    gdk_draw_text(launch_pixmap, font, dock_gc, 6, 34+(i*10), prev_nick[i], strlen(prev_nick[i]));
 	}
@@ -205,6 +206,54 @@ gboolean msgicon_blink(gpointer data) {
     }
     /* else stop timer */
     return FALSE;
+}
+
+/* create dockapp preferences window */
+gpointer dockapp_preferences_action ()
+{
+    GSList *pluginlist_names = NULL;		/* list of plugins */
+    gpointer key = NULL, index = NULL;
+    gchar *utf = NULL, *current_proto;
+    GGaduProtocol *proto;
+
+    /* prepare list of protocol plugins */
+    current_proto = config_var_get(handler, "dockapp_protocol");
+    if (current_proto)
+	pluginlist_names = g_slist_append(pluginlist_names, current_proto);
+    index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *)&key);
+    while (index) {
+	/* key == name but better find display_name */
+	proto = ggadu_repo_find_value("_protocols_", key);
+	to_utf8("ISO-8859-2", proto->display_name, utf);
+	if (!current_proto || ggadu_strcasecmp(utf, current_proto))
+	    pluginlist_names = g_slist_append(pluginlist_names, utf);
+	index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *)&key, index);
+    }
+
+    /* create dialog */
+    GGaduDialog *d = ggadu_dialog_new();
+    ggadu_dialog_set_title(d, _("Dockapp plugin configuration"));
+    ggadu_dialog_set_type(d, GGADU_DIALOG_CONFIG);
+    ggadu_dialog_callback_signal(d, "update config");
+
+    ggadu_dialog_add_entry(&(d->optlist), GGADU_DOCKAPP_CONFIG_PROTOCOL, _("Protocol"), VAR_LIST,
+			    pluginlist_names, VAR_FLAG_NONE);
+
+    signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
+
+    g_slist_free(pluginlist_names);
+    return NULL;
+}
+
+/* create menu for this plugin */
+GGaduMenu *build_plugin_menu()
+{
+    GGaduMenu *root = ggadu_menu_create();
+    GGaduMenu *item_gg = ggadu_menu_add_item(root, "Dockapp", NULL, NULL);
+    
+    ggadu_menu_add_submenu(item_gg, ggadu_menu_new_item(_("Preferences"), dockapp_preferences_action, NULL));
+
+    return root;
 }
 
 /* Create dockapp window */
@@ -275,6 +324,64 @@ void create_dockapp()
 	gtk_widget_show_all(status_dockapp);
 }
 
+/* do when user notify changed */
+void notify_callback(gchar * repo_name, gpointer key, gint actions)
+{
+    print_debug("%s : notify on protocol %s\n", GGadu_PLUGIN_NAME, repo_name);
+
+    gchar *dockapp_protocol, *utf;
+    GGaduContact *k = NULL;
+    GGaduProtocol *p = NULL;
+    int i;
+    gpointer key2 = NULL, index = NULL;
+
+    /* stop if no dockapp_protocol set or notify from other protocol */
+    dockapp_protocol = config_var_get(handler, "dockapp_protocol");
+    if (!dockapp_protocol || ggadu_strcasecmp(dockapp_protocol, repo_name))
+	return;
+
+    /* stop if unknown contact */
+    if ((k = ggadu_repo_find_value(repo_name, key)) == NULL)
+	return;
+    
+    /* shift existent notifies */
+    for (i=0; i<NNICK-1; i++) {
+	g_strlcpy(prev_nick[i], prev_nick[i+1], 9);
+	prev_status[i] = prev_status[i+1];
+    }
+
+    /* add new notify */
+    g_strlcpy(prev_nick[NNICK-1], (k->nick != NULL)?k->nick:k->id, 9);
+
+    /* find protocol in repo */
+    index = ggadu_repo_value_first("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *)&key2);
+    while (index) {
+	p = ggadu_repo_find_value("_protocols_", key2);
+	to_utf8("ISO-8859-2", p->display_name, utf);
+	if (!ggadu_strcasecmp(utf, dockapp_protocol))
+	    break;
+	index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, (gpointer *)&key2, index);
+    }
+    if (!index)
+	return;		/* unknown protocol */
+
+    /* search for status online */
+    if (g_slist_find(p->online_status, (gint *)k->status) != NULL)
+	prev_status[NNICK-1] = GGADU_DOCKAPP_STATUS_ONLINE;
+    /* search for status away */
+    else if (g_slist_find(p->away_status, (gint *)k->status) != NULL)
+	prev_status[NNICK-1] = GGADU_DOCKAPP_STATUS_AWAY;
+    /* search for status offline */
+    else if (g_slist_find(p->offline_status, (gint *)k->status) != NULL)
+	prev_status[NNICK-1] = GGADU_DOCKAPP_STATUS_OFFLINE;
+    /* not found? set unknown status */
+    else
+	prev_status[NNICK-1] = GGADU_DOCKAPP_STATUS_UNKNOWN;
+
+    draw_pixmap();
+    redraw_dockapp();
+}
+
 void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	GGaduSignal *signal = (GGaduSignal *)signal_ptr;
         GSList *sigdata = (GSList *)signal->data;
@@ -293,32 +400,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    draw_pixmap();
 	    redraw_dockapp();
 	    g_free(plugin_name);
-	    return;
-	}
-
-	/* some user status changed */
-	if (signal->name == g_quark_from_static_string("dockapp user notify")) {
-	    int i;
-	    gchar *plugin_name = g_strdup(g_slist_nth_data(sigdata,0));
-	    /* stop if wrong protocol */
-	    if (g_strcasecmp(plugin_name, "gadu-gadu")) {
-		g_free(plugin_name);
-		return;
-	    }
-	    gchar *nick = g_strdup(g_slist_nth_data(sigdata,1));
-	    guint status = (guint) g_slist_nth_data(sigdata,2);
-	    /* shift existent notifies */
-	    for (i=0; i<NNICK-1; i++) {
-		g_strlcpy(prev_nick[i], prev_nick[i+1], 9);
-		prev_status[i] = prev_status[i+1];
-	    }
-	    /* add new notify */
-	    g_strlcpy(prev_nick[NNICK-1], nick, 9);
-	    prev_status[NNICK-1] = status;
-	    draw_pixmap();
-	    redraw_dockapp();
-	    g_free(plugin_name);
-	    g_free(nick);
 	    return;
 	}
 
@@ -350,35 +431,92 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    g_free(filename);
 	    return;
 	}
+
+	/* read new settings, remember and save */
+	if (signal->name == g_quark_from_static_string("update config")) {
+	    GGaduDialog *d = signal->data;
+	    GSList *tmplist = d->optlist;
+
+	    if (d->response == GGADU_OK) {
+		while (tmplist) {
+		    GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
+		    switch (kv->key) {
+			case GGADU_DOCKAPP_CONFIG_PROTOCOL: {
+			    gchar *iso = NULL;
+			    int i;
+			    print_debug("changing var setting dockapp_protocol to %s\n", kv->value);
+			    from_utf8("ISO-8859-2", kv->value, iso);
+			    if (ggadu_strcasecmp(config_var_get(handler, "dockapp_protocol"),iso)) {
+				/* dockapp_plugin really changed, clear existent notifies */
+				for (i=0; i<NNICK; i++)
+				    g_strlcpy(prev_nick[i], "\0\0\0\0\0\0\0\0\0\0", 9);
+			    };
+			    config_var_set(handler, "dockapp_protocol", iso);
+			    break;
+			}
+		    }
+		    tmplist = tmplist->next;
+		}
+		config_save(handler);
+		draw_pixmap();
+		redraw_dockapp();
+	    }
+	    GGaduDialog_free(d);
+	    return;
+	}
 }
 
 void start_plugin() 
 {
     print_debug("%s : start\n",GGadu_PLUGIN_NAME);
 
+    /* create and register menu for this plugin */
+    dockapp_menu = build_plugin_menu();
+    signal_emit(GGadu_PLUGIN_NAME, "gui register menu", dockapp_menu, "main-gui");
+
     create_dockapp();
 
     /* signals */
     /* my status changed */
-    register_signal(handler, "dockapp status changed");
+    //register_signal(handler, "dockapp status changed");
     /* status of some user changed */
-    register_signal(handler, "dockapp user notify");
+    //register_signal(handler, "dockapp user notify");
+
+    register_signal(handler, "update config");
 
     /* join to docklet signal */
     /* message received */
     register_signal(handler,"docklet set icon");
+    
+    ggadu_repo_watch_add(NULL, REPO_ACTION_VALUE_CHANGE, REPO_VALUE_CONTACT, notify_callback);
 }
 
 /* Initialize dockapp plugin
 Return plugin handler */
-GGaduPlugin *initialize_plugin(gpointer conf_ptr) {
-    print_debug("%s : initialize\n",GGadu_PLUGIN_NAME);
+GGaduPlugin *initialize_plugin(gpointer conf_ptr)
+{
+    gchar *path = NULL;
 
+    print_debug("%s : initialize\n",GGadu_PLUGIN_NAME);
+    
     /* Gtk have to be initialized */
     gtk_init(NULL, NULL);
     GGadu_PLUGIN_ACTIVATE(conf_ptr); /* It must be here */
     handler = (GGaduPlugin *)register_plugin(GGadu_PLUGIN_NAME,_("WindowMaker Dockapp"));
     register_signal_receiver((GGaduPlugin *)handler, (signal_func_ptr)my_signal_receive);
+
+    /* configure plugin */
+    config_var_add(handler, "dockapp_protocol", VAR_STR);
+    
+    if (g_getenv("CONFIG_DIR"))
+	this_configdir = g_build_filename(g_get_home_dir(), g_getenv("CONFIG_DIR"), "gg", NULL);
+    else
+	this_configdir = g_build_filename(g_get_home_dir(), ".gg", NULL);
+    path = g_build_filename(this_configdir, "config", NULL);
+    set_config_file_name((GGaduPlugin *) handler, path);
+    if (!config_read(handler))
+	g_warning(_("Unable to read configuration file for plugin %s"), GGadu_PLUGIN_NAME);
+
     return handler;
 }
 
@@ -400,6 +538,10 @@ void destroy_plugin() {
     icon2_img = NULL;
     //g_object_unref(icon3_img);
     //icon3_img = NULL;
+    if (dockapp_menu) {
+	signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", dockapp_menu, "main-gui");
+	ggadu_menu_free(dockapp_menu);
+    }
 
     /* remove blinker function if exist */
     if (blinker_id >0) {
