@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.8 2003/06/09 00:20:36 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.9 2003/06/11 19:57:13 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -87,7 +87,7 @@ GdkPixbuf *docklet_create_pixbuf(const gchar * directory, const gchar * filename
 	GSList		*dir		= NULL;
 	gchar 		*iconsdir	= NULL;
 
-	print_debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %s %s\n",directory,filename);
+	print_debug("%s %s\n",directory,filename);
 
 	if (!filename || !filename[0])
 		return NULL;
@@ -316,7 +316,6 @@ void my_signal_receive(gpointer name, gpointer signal_ptr) {
 	    logopix = (GdkPixbuf *)docklet_create_pixbuf(directory, filename);
 	    
 	    gtk_image_set_from_pixbuf(GTK_IMAGE(pixmap),logopix);
-	    gtk_widget_unref (GTK_WIDGET(logopix));
 	    
 	    signal->data_return = logopix;
 	    
