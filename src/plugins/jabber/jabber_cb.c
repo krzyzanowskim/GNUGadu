@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.85 2005/02/23 16:18:33 mkobierzycki Exp $ */
+/* $Id: jabber_cb.c,v 1.86 2005/03/04 15:48:49 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -240,6 +240,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 	gchar *show;
 	LmMessageNode *node;
 	GSList *list;
+	GSList *temp;
 	gchar **tab;
 	gchar *res;
 
@@ -281,9 +282,10 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 		descr = ggadu_strchomp((gchar *) lm_message_node_get_value(status));
 
 	list = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
-	while (list)
+	temp = list;
+	while (temp)
 	{
-		k = (GGaduContact *) list->data;
+		k = (GGaduContact *) temp->data;
 		if (!ggadu_strcasecmp(k->id, jid))
 		{
 			gint oldstatus = k->status;
@@ -352,7 +354,7 @@ LmHandlerResult presence_cb(LmMessageHandler * handler, LmConnection * connectio
 			}
 
 		}
-		list = list->next;
+		temp = temp->next;
 	}
 
 	g_slist_free(list);
@@ -824,11 +826,12 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 	if (first_time)
 	{
 		GSList *list3 = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+		GSList *temp = list3;
 
-		while (list3)
+		while (temp)
 		{
 			LmMessage *m;
-			GGaduContact *k = (GGaduContact *) list3->data;
+			GGaduContact *k = (GGaduContact *) temp->data;
 
 			jabber_data.software = g_slist_prepend(jabber_data.software, NULL);
 			(jabber_data.software)->data = g_new0(GGaduJabberSoftware, 1);
@@ -838,7 +841,7 @@ LmHandlerResult iq_roster_cb(LmMessageHandler * handler, LmConnection * connecti
 			lm_connection_send(connection, m, NULL);
 			lm_message_unref(m);
 
-			list3 = list3->next;
+			temp = temp->next;
 		}
 		g_slist_free(list3);
 	}
@@ -863,17 +866,18 @@ LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection
  	if(ggadu_config_var_get(jabber_handler, "only_friends"))
  	{
  	    GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+	    GSList *temp = roster;
  	    gboolean handle_it = FALSE;
  
- 	    while(roster)
+ 	    while(temp)
  	    {
-                GGaduContact *k = (GGaduContact *) roster->data;
+                GGaduContact *k = (GGaduContact *) temp->data;
  		if(!ggadu_strcasecmp(jid, k->id) || lm_message_get_type(message)!=LM_MESSAGE_TYPE_MESSAGE)
  		{
  		    handle_it=TRUE;
  		    break;
  		}
-                roster=roster->next;
+                temp = temp->next;
  	    }
  
  	    g_slist_free(roster);

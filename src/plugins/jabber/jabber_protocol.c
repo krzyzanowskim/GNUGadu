@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.46 2005/02/23 15:28:57 mkobierzycki Exp $ */
+/* $Id: jabber_protocol.c,v 1.47 2005/03/04 15:48:49 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -197,15 +197,16 @@ void jabber_get_version(gpointer user_data)
 	GGaduContact *k = user_data;
 	GGaduContact *k0;
 	GSList *roster = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
+	GSList *temp = roster;
 	gchar *string0, *string1;
 
-	while (roster)
+	while (temp)
 	{
-		k0 = roster->data;
+		k0 = temp->data;
 		if (!ggadu_strcmp(k->id, k0->id))
 			break;
 
-		roster = roster->next;
+		temp = temp->next;
 	}
 
 	string0 = g_strconcat(k0->id, "/", k0->resource, NULL);
