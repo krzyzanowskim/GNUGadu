@@ -56,7 +56,8 @@ LmHandlerResult presence_cb (LmMessageHandler *handler, LmConnection *connection
   gchar *jid;
   GSList *list = rosterlist;
   GGaduContact *k = NULL;
-  gchar *descr;
+  LmMessageNode *status;
+  gchar *descr = NULL;
   gchar *show;
   LmMessageNode *node;
 
@@ -95,12 +96,18 @@ LmHandlerResult presence_cb (LmMessageHandler *handler, LmConnection *connection
     return LM_HANDLER_RESULT_REMOVE_MESSAGE;
   }
 
-  descr = (gchar *) lm_message_node_get_attribute (message->node, "status");
+  status = lm_message_node_get_child (message->node, "status");
+  if (status)
+    descr = (gchar *) lm_message_node_get_value (status);
 
   while (list) {
     k = (GGaduContact *) list->data;
     if (!ggadu_strcasecmp (k->id, jid)) {
       gint oldstatus = k->status;
+      gchar *olddescr = k->status_descr;
+      if (k->status_descr)
+	g_free (k->status_descr);
+      k->status_descr = NULL;
 
       switch (lm_message_get_sub_type (message)) {
 	default:
@@ -131,7 +138,7 @@ LmHandlerResult presence_cb (LmMessageHandler *handler, LmConnection *connection
 	  break;
       }
       
-      if (k->status != oldstatus)
+      if ((k->status != oldstatus) || (olddescr != k->status_descr))
 	ggadu_repo_change_value ("jabber", k->id, k, REPO_VALUE_DC);
     }
     list = list->next;
