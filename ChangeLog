@@ -2,6 +2,7 @@
 - added gg2-devel.SlackBuild, script for building Slackware binary
   packages directly from CVS sources (shasta)
 - history file format compatible with Kadu format by <kazik.cz interia.pl> (gadu-gadu/krzak)
+- release 2.0.3
 
 11.06.2004
 - timestamping notices (GUI/shasta)
