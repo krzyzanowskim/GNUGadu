@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.28 2004/01/10 16:12:16 thrulliq Exp $ */
+/* $Id: sms_core.c,v 1.29 2004/01/10 16:21:54 thrulliq Exp $ */
 
 /*
  * Sms send plugin for GNU Gadu 2
@@ -202,7 +202,6 @@ void sms_dialog_box(const gchar * sms_number, const gchar * message, gint type)
 	msg->class = GGADU_CLASS_CHAT;
 	msg->message = g_strconcat(_("SMS plugin: "), message, NULL);
 	signal_emit_from_thread("sms", "gui msg receive", msg, "main-gui");
-	g_free(message);
     }
 }
 
@@ -804,8 +803,11 @@ gpointer send_sms(SMS *message)
 	   send_idea*() eventually notifies about success itself. */
 	if (gsm_oper == SMS_PLUS)
 	    sms_message(message->number, _("SMS has been sent"));
-	else if (gsm_oper == SMS_ERA)
-	    sms_message(message->number, g_strdup_printf(_("SMS has been sent. Left: %d"), era_left));
+	else if (gsm_oper == SMS_ERA) {
+	    gchar *tmp = g_strdup_printf(_("SMS has been sent. Left: %d"), era_left);
+	    sms_message(message->number, tmp);
+	    g_free(tmp);
+	}
 	break;
 
 	/* failures */
