@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.54 2004/10/19 21:51:54 thrulliq Exp $ */
+/* $Id: gui_userview.c,v 1.55 2004/11/17 10:56:27 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -247,7 +247,6 @@ void gui_list_add(gui_protocol * gp)
 	g_object_unref(model);
 
 	/* podwojne klikniecie na liscie na kolesia */
-	g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(nick_list_clicked), users_liststore);
 	g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(nick_list_clicked), users_liststore);
 	g_signal_connect(G_OBJECT(treeview), "row-activated", G_CALLBACK(nick_list_row_activated), users_liststore);
 
@@ -401,7 +400,6 @@ void gui_create_tree()
 	gtk_tree_view_columns_autosize(GTK_TREE_VIEW(treeview));
 
 	/* podwojne klikniecie na liscie na kolesia */
-	g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(nick_list_clicked), users_treestore);
 	g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(nick_list_clicked), users_treestore);
 	g_signal_connect(G_OBJECT(treeview), "row-activated", G_CALLBACK(nick_list_row_activated), users_treestore);
 	

@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.94 2004/11/05 18:04:21 shaster Exp $ */
+/* $Id: GUI_plugin.c,v 1.95 2004/11/17 10:56:27 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -93,7 +93,7 @@ gboolean nick_list_row_changed(GtkTreeSelection * selection, GtkTreeModel * mode
 {
 	GtkTreeIter iter;
 	gchar *markup_id = NULL;
-	gchar *markup_desc = g_strdup("");
+	gchar *markup_desc = NULL;
 	gboolean is_desc = FALSE;
 	gchar *desc_text = NULL;
 	gchar *ip = NULL;
@@ -122,7 +122,7 @@ gboolean nick_list_row_changed(GtkTreeSelection * selection, GtkTreeModel * mode
 	if (!gp || !k)
 		return FALSE;
 
-	print_debug("oiuytrew %s", k->id);
+	/*print_debug("oiuytrew %s", k->id);*/
 
 	add_info_label_desc = g_object_get_data(G_OBJECT(gp->add_info_label), "add_info_label_desc");
 
@@ -197,7 +197,7 @@ gboolean nick_list_row_changed(GtkTreeSelection * selection, GtkTreeModel * mode
 
 	gtk_label_set_markup(GTK_LABEL(gp->add_info_label), markup_id);
 
-	print_debug("%s", markup_desc);
+	/*print_debug("%s", markup_desc);*/
 
 	if (!GTK_WIDGET_VISIBLE(gp->add_info_label))
 	{
