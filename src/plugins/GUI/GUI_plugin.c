@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.43 2004/01/09 23:40:49 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.44 2004/01/11 14:21:46 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -656,7 +656,7 @@ void gui_msg_receive (GGaduSignal * signal)
 		/* shasta: new "docklet set [default] icon" approach */
 		sigdata = g_slist_append (sigdata, (gchar *) ggadu_config_var_get (gui_handler, "icons"));
 		sigdata = g_slist_append (sigdata, (gpointer) GGADU_MSG_ICON_FILENAME);
-		sigdata = g_slist_append (sigdata, g_strdup_printf(_("New Message from %s"),(k ? k->nick : msg->id)));
+		sigdata = g_slist_append (sigdata, g_strdup_printf(_("New message from %s"),(k ? k->nick : msg->id)));
 
 		if (showwindow == FALSE)
 		  {
