@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.24 2005/01/31 13:57:13 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.25 2005/03/09 12:56:57 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -121,7 +121,7 @@ gchar *ggadu_strchomp(gchar * str)
 		string = g_strchomp(string ? string : "");
 	}
 
-	return string;
+	return g_strdup(string);
 }
 
 /*! \fn ggadu_get_image_path(const gchar * directory, const gchar * filename)
