@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.90 2004/04/02 14:14:03 thrulliq Exp $ */
+/* $Id: gui_chat.c,v 1.91 2004/04/02 15:30:06 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1079,8 +1079,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 
 	button_close = gtk_button_new_from_stock("gtk-close");
 	button_stick = gtk_toggle_button_new();
-	bas_image = gtk_image_new();
-	gtk_image_set_from_stock(GTK_IMAGE(bas_image), "gtk-close", GTK_ICON_SIZE_SMALL_TOOLBAR);
+	bas_image = create_image("push-pin.png");
 	gtk_container_add(GTK_CONTAINER(button_stick), bas_image);
 
 	//_with_mnemonic(_("S_tick"));

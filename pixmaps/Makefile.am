@@ -48,7 +48,8 @@ pixmap_DATA = \
     tlen-occupied.png \
     tlen-offline.png \
     tlen-online.png \
-    tlen.png
+    tlen.png \
+    push-pin.png
     
 icondir = $(datadir)/pixmaps
 icon_DATA = gg2.png
