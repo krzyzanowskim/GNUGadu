@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.18 2003/06/03 21:30:04 krzyzak Exp $
+dnl $Id: configure.in,v 1.19 2003/06/04 08:53:41 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -394,6 +394,8 @@ CFLAGS="$CFLAGS -I${packagesrcdir}/lib"
  
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
+
+echo "/* do not edit */" > ${packagesrcdir}/lib/gg2_core.h
 
 AC_OUTPUT([
 Makefile
