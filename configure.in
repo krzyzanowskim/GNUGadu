@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.16 2003/06/02 13:46:58 krzyzak Exp $
+dnl $Id: configure.in,v 1.17 2003/06/03 18:25:43 krzyzak Exp $
 
 m4_define([gg2_version],[2.0_CVS])
 
@@ -396,6 +396,7 @@ AC_SUBST(LDFLAGS)
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/libgg2_core.pc
 src/plugins/Makefile
 src/plugins/GUI/Makefile
 src/plugins/gadu_gadu/Makefile

@@ -38,6 +38,9 @@ libgg2_core_la_HEADERS = libgg2_core.h
 libgg2_core_la_LIBADD = $(PERL_OPTION_LDFLAGS) -ldl 
 libgg2_core_la_LDFLAGS = -version-info 2:0:0
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libgg2_core.pc
+
 all:
 	@echo "/* This file is generated automatically. Do not edit. */\n" > $(top_builddir)/src/libgg2_core.h
 	@echo "#ifndef LIBGG2_CORE_H\n" >> $(top_builddir)/src/libgg2_core.h
