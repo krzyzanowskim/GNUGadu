@@ -1,4 +1,5 @@
 2.04.2004
+- some changes in chat window button placement (GUI/THrull)
 - keyboard support in userlist - chat init, key up, key down (GUI/THrull)
 - integrate library libgadu into gadu-gadu plugin (krzak)
 
