@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.43 2004/02/14 02:08:11 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.44 2004/02/14 02:52:17 thrulliq Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -101,7 +101,7 @@ gpointer sms_edit_contact(gpointer user_data)
 /* okienko do dodawania usera */
 gpointer sms_add_contact(gpointer user_data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC,_("Add contact"),"user add");
+	GGaduDialog *dialog = ggadu_dialog_new1(GGADU_DIALOG_GENERIC, _("Add contact"), "add user");
 
 	print_debug("%s : Add Contact\n", GGadu_PLUGIN_NAME);
 
@@ -389,104 +389,97 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 
 	if (signal->name == g_quark_from_static_string("add user"))
 	{
-		GGaduDialog *dialog = signal->data;
-		GSList *tmplist = ggadu_dialog_get_entries(dialog);
-		GGaduContact *k = g_new0(GGaduContact, 1);
+		GGaduDialog *d = signal->data;
+		
+		if (ggadu_dialog_get_response(d) == GGADU_OK) {
+			GGaduContact *k = g_new0(GGaduContact, 1);
+			GSList *entry = NULL;
 
-		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
-		{
-			while (tmplist)
-			{
-				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
-				switch (kv->key)
-				{
-				case GGADU_SMS_CONTACT_NICK:
-					k->nick = g_strdup(kv->value);
-					break;
-				case GGADU_SMS_CONTACT_NUMBER:
-					k->mobile = g_strdup(kv->value);
-					k->id = k->mobile;
-					k->status = 1;
-					break;
+			entry = ggadu_dialog_get_entries(d);
+			while (entry)	{
+				GGaduKeyValue *kv = (GGaduKeyValue *) entry->data;
+				switch (kv->key) {
+					case GGADU_SMS_CONTACT_NICK:
+						k->nick = g_strdup(kv->value);
+						break;
+					case GGADU_SMS_CONTACT_NUMBER:
+						k->mobile = g_strdup(kv->value);
+						k->id = k->mobile;
+						k->status = 1;
+						break;
 				}
-				tmplist = tmplist->next;
+				entry = entry->next;
 			}
-			g_slist_free(tmplist);
 
 			smslist = g_slist_append(smslist, k);
 			ggadu_repo_add_value("sms", k->id, k, REPO_VALUE_CONTACT);
 			signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 
 			save_smslist();
+
 		}
-		GGaduDialog_free(dialog);
+		GGaduDialog_free(d);
 		return;
 	}
 
 	if (signal->name == g_quark_from_static_string("change user"))
 	{
-		GGaduDialog *dialog = signal->data;
-		GSList *tmplist = ggadu_dialog_get_entries(dialog);
-		GSList *uslist = smslist;
-		GGaduContact *k = g_new0(GGaduContact, 1);
+		GGaduDialog *d = signal->data;
 
-		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
-		{
+		if (ggadu_dialog_get_response(d) == GGADU_OK) {
+			GGaduContact *k = g_new0(GGaduContact, 1);
+			GSList *uslist = smslist;
+			GSList *entry = NULL;
 
-			while (tmplist)
-			{
-				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
-				switch (kv->key)
-				{
-				case GGADU_SMS_CONTACT_ID:
-					k->id = g_strdup(kv->value);
-					break;
-				case GGADU_SMS_CONTACT_NICK:
-					k->nick = g_strdup(kv->value);
-					break;
-				case GGADU_SMS_CONTACT_NUMBER:
-					k->mobile = g_strdup(kv->value);
-					k->status = 1;
-					break;
+			entry = ggadu_dialog_get_entries(d);
+			while (entry) {
+				GGaduKeyValue *kv = (GGaduKeyValue *) entry->data;
+				switch (kv->key){
+					case GGADU_SMS_CONTACT_ID:
+						k->id = g_strdup(kv->value);
+						break;
+					case GGADU_SMS_CONTACT_NICK:
+						k->nick = g_strdup(kv->value);
+						break;
+					case GGADU_SMS_CONTACT_NUMBER:
+						k->mobile = g_strdup(kv->value);
+						k->status = 1;
+						break;
 				}
-				tmplist = tmplist->next;
+				entry = entry->next;
 			}
-			g_slist_free(tmplist);
 
-			while (uslist)
-			{
+			/*while (uslist) {
 				GGaduContact *kvtmp = (GGaduContact *) uslist->data;
 				gchar *id = g_strconcat(kvtmp->nick, "@", kvtmp->mobile, NULL);
 
 				if (!ggadu_strcasecmp(id, k->id))
 				{
-					ggadu_repo_del_value("sms", kvtmp->id);
+					//ggadu_repo_del_value("sms", kvtmp->id);
 					g_free(kvtmp->id);
 					g_free(kvtmp->nick);
 					g_free(kvtmp->mobile);
 					kvtmp->mobile = k->mobile;
-					kvtmp->id = k->mobile;
+					kvtmp->id = g_strdup(k->mobile);
 					kvtmp->nick = k->nick;
-					print_debug("mobile:%s, id:%s, nick:%s\n", kvtmp->mobile, kvtmp->id,
-						    kvtmp->nick);
-					ggadu_repo_add_value("sms", kvtmp->id, kvtmp, REPO_VALUE_CONTACT);
-					g_free(id);
+					//ggadu_repo_add_value("sms", kvtmp->id, kvtmp, REPO_VALUE_CONTACT);
+					g_free(k);
 					break;
 				}
 				g_free(id);
 				uslist = uslist->next;
 			}
-/*
-		smslist = g_slist_append(smslist,k);
-*/
+		}*/
 			save_smslist();
 			signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
-		}
-		GGaduDialog_free(dialog);
 
+			GGaduContact_free(k);
+		}
+		
+		GGaduDialog_free(d);
 		return;
 	}
-
+	
 	if (signal->name == g_quark_from_static_string("get token"))
 	{
 		GGaduDialog *d = signal->data;
