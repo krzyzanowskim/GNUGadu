@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-05-23 21:10+0200\n"
+"POT-Creation-Date: 2003-05-24 12:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,34 +33,34 @@ msgstr ""
 #: src/plugins/GUI/GUI_plugin.c:148
 msgid ""
 "\n"
-"[nie ma Cie w kontaktach]"
+"[not in userlist]"
 msgstr ""
 
 #: src/plugins/GUI/GUI_plugin.c:170 src/plugins/GUI/gui_userview.c:562
 msgid "(None)"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:417
+#: src/plugins/GUI/GUI_plugin.c:460
 msgid "/GnuGadu/_Preferences"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:418
+#: src/plugins/GUI/GUI_plugin.c:461
 msgid "/GnuGadu/"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:419
+#: src/plugins/GUI/GUI_plugin.c:462
 msgid "/GnuGadu/_About"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:420
+#: src/plugins/GUI/GUI_plugin.c:463
 msgid "/GnuGadu/_Quit"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:475
+#: src/plugins/GUI/GUI_plugin.c:518
 msgid "You Have Message"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:492
+#: src/plugins/GUI/GUI_plugin.c:535
 #, c-format
 msgid "New message from %s"
 msgstr ""
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Outgoing message:"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:526
+#: src/plugins/GUI/gui_preferences.c:528
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1066
 #: src/plugins/tlen/tlen_plugin.c:651 src/plugins/xosd/plugin_xosd.c:311
 #: src/plugins/jabber/jabber_plugin.c:462
@@ -189,87 +189,95 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:553
+#: src/plugins/GUI/gui_preferences.c:555
 msgid "General"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:556
+#: src/plugins/GUI/gui_preferences.c:558
 msgid "Sound"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:559
+#: src/plugins/GUI/gui_preferences.c:561
 msgid "Colors"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:562
+#: src/plugins/GUI/gui_preferences.c:564
 msgid "Fonts"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:566
+#: src/plugins/GUI/gui_preferences.c:568
 msgid "Plugins manager"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:573
+#: src/plugins/GUI/gui_preferences.c:575
 msgid ""
 "\n"
 "GUI plugin preferences\n"
 "\n"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:581
+#: src/plugins/GUI/gui_preferences.c:583
 msgid "Enable emoticons"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:584
+#: src/plugins/GUI/gui_preferences.c:586
 msgid "Show only active users"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:587
+#: src/plugins/GUI/gui_preferences.c:589
 msgid "Tree user list"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:590
+#: src/plugins/GUI/gui_preferences.c:592
 msgid "Expand Tree by default"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:595
+#: src/plugins/GUI/gui_preferences.c:597
 msgid "Tabbed chat window style"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:598
+#: src/plugins/GUI/gui_preferences.c:600
 msgid "Automatically show chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:601
+#: src/plugins/GUI/gui_preferences.c:603
 msgid "Automatically raise chat window"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:604
+#: src/plugins/GUI/gui_preferences.c:606
 msgid "Send messages after 'Enter' button pressed"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:607
+#: src/plugins/GUI/gui_preferences.c:609
 msgid "Notify about new messages via XOSD"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:610
+#: src/plugins/GUI/gui_preferences.c:612
 msgid "Auto hide on start"
 msgstr ""
 
+#: src/plugins/GUI/gui_preferences.c:615
+msgid "Blink status"
+msgstr ""
+
+#: src/plugins/GUI/gui_preferences.c:621
+msgid "Blink interval"
+msgstr ""
+
 #. ZONK - how to name it ?
-#: src/plugins/GUI/gui_preferences.c:617
+#: src/plugins/GUI/gui_preferences.c:629
 msgid "Chat window split size"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:624
+#: src/plugins/GUI/gui_preferences.c:636
 msgid "Select Theme"
 msgstr ""
 
-#: src/plugins/GUI/gui_preferences.c:630
+#: src/plugins/GUI/gui_preferences.c:642
 msgid "Select icon set"
 msgstr ""
 
-#: src/plugins/GUI/gui_main.c:133
+#: src/plugins/GUI/gui_main.c:135
 msgid "Unable to read configuration file for plugin GUI"
 msgstr ""
 

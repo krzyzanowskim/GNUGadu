@@ -1,11 +1,11 @@
-# $Id: pl.po,v 1.19 2003/05/23 19:19:19 shaster Exp $
+# $Id: pl.po,v 1.20 2003/05/24 10:20:30 zapal Exp $
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Igor Popik <thrull@slackware.pl>, 2002.
 msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
-"POT-Creation-Date: 2003-05-23 21:10+0200\n"
+"POT-Creation-Date: 2003-05-24 12:17+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,34 +31,36 @@ msgstr "Nie mo¿na za³adowaæ wtyczki %s\n"
 #: src/plugins/GUI/GUI_plugin.c:148
 msgid ""
 "\n"
-"[nie ma Cie w kontaktach]"
+"[not in userlist]"
 msgstr ""
+"\n"
+"[nie ma Ciê w kontaktach]"
 
 #: src/plugins/GUI/GUI_plugin.c:170 src/plugins/GUI/gui_userview.c:562
 msgid "(None)"
 msgstr "(Brak)"
 
-#: src/plugins/GUI/GUI_plugin.c:417
+#: src/plugins/GUI/GUI_plugin.c:460
 msgid "/GnuGadu/_Preferences"
 msgstr "/GnuGadu/_Ustawienia"
 
-#: src/plugins/GUI/GUI_plugin.c:418
+#: src/plugins/GUI/GUI_plugin.c:461
 msgid "/GnuGadu/"
 msgstr "/GnuGadu/"
 
-#: src/plugins/GUI/GUI_plugin.c:419
+#: src/plugins/GUI/GUI_plugin.c:462
 msgid "/GnuGadu/_About"
 msgstr "/GnuGadu/_Informacje o"
 
-#: src/plugins/GUI/GUI_plugin.c:420
+#: src/plugins/GUI/GUI_plugin.c:463
 msgid "/GnuGadu/_Quit"
 msgstr "/GnuGadu/Za_koñcz"
 
-#: src/plugins/GUI/GUI_plugin.c:475
+#: src/plugins/GUI/GUI_plugin.c:518
 msgid "You Have Message"
 msgstr "Masz wiadomo¶æ"
 
-#: src/plugins/GUI/GUI_plugin.c:492
+#: src/plugins/GUI/GUI_plugin.c:535
 #, c-format
 msgid "New message from %s"
 msgstr "Nowa wiadomo¶æ od %s"
@@ -188,7 +190,7 @@ msgstr "Wiadomo¶ci przychodz±ce:"
 msgid "Outgoing message:"
 msgstr "Wiadomo¶ci wychodz±ce:"
 
-#: src/plugins/GUI/gui_preferences.c:526
+#: src/plugins/GUI/gui_preferences.c:528
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1066
 #: src/plugins/tlen/tlen_plugin.c:651 src/plugins/xosd/plugin_xosd.c:311
 #: src/plugins/jabber/jabber_plugin.c:462
@@ -196,27 +198,27 @@ msgstr "Wiadomo¶ci wychodz±ce:"
 msgid "Preferences"
 msgstr "Ustawienia"
 
-#: src/plugins/GUI/gui_preferences.c:553
+#: src/plugins/GUI/gui_preferences.c:555
 msgid "General"
 msgstr "Ogólne"
 
-#: src/plugins/GUI/gui_preferences.c:556
+#: src/plugins/GUI/gui_preferences.c:558
 msgid "Sound"
 msgstr "D¼wiêk"
 
-#: src/plugins/GUI/gui_preferences.c:559
+#: src/plugins/GUI/gui_preferences.c:561
 msgid "Colors"
 msgstr "Kolory"
 
-#: src/plugins/GUI/gui_preferences.c:562
+#: src/plugins/GUI/gui_preferences.c:564
 msgid "Fonts"
 msgstr "Czcionki"
 
-#: src/plugins/GUI/gui_preferences.c:566
+#: src/plugins/GUI/gui_preferences.c:568
 msgid "Plugins manager"
 msgstr "Zarz±dzanie wtyczkami"
 
-#: src/plugins/GUI/gui_preferences.c:573
+#: src/plugins/GUI/gui_preferences.c:575
 msgid ""
 "\n"
 "GUI plugin preferences\n"
@@ -226,60 +228,68 @@ msgstr ""
 "Ustawienia wtyczki GUI\n"
 "\n"
 
-#: src/plugins/GUI/gui_preferences.c:581
+#: src/plugins/GUI/gui_preferences.c:583
 msgid "Enable emoticons"
 msgstr "U¿ycie emotikonów"
 
-#: src/plugins/GUI/gui_preferences.c:584
+#: src/plugins/GUI/gui_preferences.c:586
 msgid "Show only active users"
 msgstr "Tylko aktywni u¿ytkownicy"
 
-#: src/plugins/GUI/gui_preferences.c:587
+#: src/plugins/GUI/gui_preferences.c:589
 msgid "Tree user list"
 msgstr "Lista kontaktów w postaci drzewa"
 
-#: src/plugins/GUI/gui_preferences.c:590
+#: src/plugins/GUI/gui_preferences.c:592
 msgid "Expand Tree by default"
 msgstr "Domy¶lne rozwijanie drzewa"
 
-#: src/plugins/GUI/gui_preferences.c:595
+#: src/plugins/GUI/gui_preferences.c:597
 msgid "Tabbed chat window style"
 msgstr "Zak³adki w oknie rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:598
+#: src/plugins/GUI/gui_preferences.c:600
 msgid "Automatically show chat window"
 msgstr "Automatyczne otwieranie okna rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:601
+#: src/plugins/GUI/gui_preferences.c:603
 msgid "Automatically raise chat window"
 msgstr "Automatyczne wyskakiwanie okna rozmowy"
 
-#: src/plugins/GUI/gui_preferences.c:604
+#: src/plugins/GUI/gui_preferences.c:606
 msgid "Send messages after 'Enter' button pressed"
 msgstr "Wysy³anie wiadomo¶ci po przyci¶niêciu klawisza \"Enter\""
 
-#: src/plugins/GUI/gui_preferences.c:607
+#: src/plugins/GUI/gui_preferences.c:609
 msgid "Notify about new messages via XOSD"
 msgstr "Powiadamianie o nowych wiadomo¶ciach poprzez XOSD"
 
-#: src/plugins/GUI/gui_preferences.c:610
+#: src/plugins/GUI/gui_preferences.c:612
 msgid "Auto hide on start"
 msgstr "Automatyczne ukrywanie po uruchomieniu"
 
+#: src/plugins/GUI/gui_preferences.c:615
+msgid "Blink status"
+msgstr "Mruganie statusem podczas ³±czenia"
+
+#: src/plugins/GUI/gui_preferences.c:621
+msgid "Blink interval"
+msgstr "Odstêp miêdzy mrugniêciami w ms"
+
 #. ZONK - how to name it ?
-#: src/plugins/GUI/gui_preferences.c:617
+#: src/plugins/GUI/gui_preferences.c:629
 msgid "Chat window split size"
 msgstr "Rozmiar obszaru wiadomo¶ci przychodz±cych"
 
-#: src/plugins/GUI/gui_preferences.c:624
+#: src/plugins/GUI/gui_preferences.c:636
 msgid "Select Theme"
 msgstr "Motyw:"
 
-#: src/plugins/GUI/gui_preferences.c:630
+#: src/plugins/GUI/gui_preferences.c:642
 msgid "Select icon set"
 msgstr "Zestaw ikon:"
 
-#: src/plugins/GUI/gui_main.c:133
+#: src/plugins/GUI/gui_main.c:135
 msgid "Unable to read configuration file for plugin GUI"
 msgstr "Nie mo¿na odczytaæ pliku z konfiguracj± wtyczki GUI"
 
@@ -886,6 +896,8 @@ msgid ""
 "User : %s@%s \n"
 "wants to SUBSCRIBE your presence"
 msgstr ""
+"Osoba : %s@%s \n"
+"chce ¶ledziæ zmiany Twojego stanu"
 
 #: src/plugins/jabber/jabber_plugin_roster.c:219
 #: src/plugins/jabber/jabber_plugin_roster.c:243
@@ -895,7 +907,7 @@ msgstr "Potwierdzenie"
 #: src/plugins/jabber/jabber_plugin_roster.c:232
 #, c-format
 msgid "%s accepts your subscription"
-msgstr ""
+msgstr "Osoba %s wyrazi³a zgodê na ¶ledzenie jej stanu"
 
 #: src/plugins/jabber/jabber_plugin_roster.c:241
 #, c-format
@@ -903,11 +915,13 @@ msgid ""
 "User : %s@%s \n"
 "wants to UNSUBSCRIBE your presence"
 msgstr ""
+"Osoba : %s@%s \n"
+"chce zaprzestaæ ¶ledzenia twojego stanu"
 
 #: src/plugins/jabber/jabber_plugin_roster.c:258
 #, c-format
 msgid "%s unsubscribe you from presence"
-msgstr ""
+msgstr "Osoba %s przesta³a ¶ledziæ twoje zmiany stanu"
 
 #: src/plugins/remote/remote_plugin.c:593
 msgid "Remote Preferences"
