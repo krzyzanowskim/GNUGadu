@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.43 2004/06/28 11:27:50 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.44 2004/08/01 21:05:05 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -536,12 +536,7 @@ LmHandlerResult message_cb(LmMessageHandler * handler, LmConnection * connection
 
 	signal_emit("jabber", "gui msg receive", msg, "main-gui");
 
-	if (ggadu_config_var_get(jabber_handler, "log"))
-	{
-		gchar *line = g_strdup_printf("\n:: %s (%s) ::\n%s\n", msg->id, get_timestamp(0), msg->message);
-		ggadu_jabber_save_history(msg->id, line);
-		g_free(line);
-	}
+	ggadu_jabber_save_history(GGADU_HISTORY_TYPE_RECEIVE,msg, msg->id);
 
 	lm_message_unref(message);
 

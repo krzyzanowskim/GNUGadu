@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.h,v 1.4 2004/08/01 17:28:20 krzyzak Exp $ */
+/* $Id: ggadu_support.h,v 1.5 2004/08/01 21:05:04 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -61,52 +61,43 @@
 #endif
 
 #define array_length(arr,type) sizeof(arr) / sizeof(type)
-
 #define to_iso(from_enc,text) ggadu_convert(from_enc,"ISO-8859-2",text);
 #define to_cp(from_enc,text) ggadu_convert(from_enc,"CP1250",text);
 #define to_utf8(from_enc,text) ggadu_convert(from_enc,"UTF-8",text);
 #define from_utf8(to_enc,text) ggadu_convert("UTF-8",to_enc,text);
-
 #define ggadu_strcasecmp(s1,s2) g_utf8_collate(g_utf8_casefold(s1,-1) , g_utf8_casefold(s2,-1))
-
 #define print_debug(...) print_debug_raw(__func__,__VA_ARGS__)
 
-gchar *ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text);
+gchar		*ggadu_get_image_path(const gchar * directory, const gchar * filename);
+gboolean	is_in_status(gint status, GSList * list);
 
-gchar *ggadu_strchomp(gchar * str);
+void		print_debug_raw(const gchar * func, const char *format, ...);
+void		show_error(gchar * errstr);
 
-gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename);
+char		*base64_decode(char *);
+char		*base64_encode(const char *buf);
 
-gboolean is_in_status(gint status, GSList * list);
+gchar		*get_timestamp(time_t t);
 
-/* DEPRECATED */
- void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist); 
-/* DEPRECATED */
- GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id); 
-/* DEPRECATED */
- GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id); 
+char		**array_make(const char *string, const char *sep, int max, int trim, int quotes);
+void		array_free(char **array);
 
-gboolean str_has_suffix(const gchar * str, const gchar * suffix);
+gchar		*ggadu_strchomp(gchar * str);
+gchar		*ggadu_convert(gchar * from_encoding, gchar * to_encoding, gchar * text);
+const char	*itoa(long int i);
+gboolean	str_has_suffix(const gchar * str, const gchar * suffix);
 
-void print_debug_raw(const gchar * func, const char *format, ...);
-
-char *base64_decode(char *);
-
-char *base64_encode(const char *buf);
-
-void show_error(gchar * errstr);
-
-gchar *get_timestamp(time_t t);
-
+gboolean	ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick, GGaduMsg *msg, gchar *encoding);
+gboolean	write_line_to_file(gchar * path, gchar * line, gchar * enc);
 /* This is an internally used function to check if a pixmap file exists. */
-gchar *check_file_exists(const gchar * directory, const gchar * filename);
+gchar		*check_file_exists(const gchar * directory, const gchar * filename);
 
-char **array_make(const char *string, const char *sep, int max, int trim, int quotes);
 
-void array_free(char **array);
-
-const char *itoa(long int i);
-
-gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc);
+/* DEPRECATED */
+void set_userlist_status(GGaduNotify * n, gchar * status_descr, GSList * userlist);
+/* DEPRECATED */
+GSList *ggadu_userlist_remove_id(GSList * userlist, gchar * id);
+/* DEPRECATED */
+GGaduContact *ggadu_find_contact_in_userlist(GSList * list, gchar * id);
 
 #endif

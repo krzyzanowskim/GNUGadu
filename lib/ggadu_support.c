@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.5 2004/08/01 17:28:20 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.6 2004/08/01 21:05:04 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -593,3 +593,23 @@ gboolean write_line_to_file(gchar * path, gchar * line, gchar * enc)
 	return TRUE;
 }
 
+gboolean ggadu_save_history(GGaduHistoryType type, gchar *filepath, gchar *nick, GGaduMsg *msg, gchar *encoding)
+{
+	gchar *line = NULL;
+	
+	g_return_val_if_fail(filepath != NULL,FALSE);
+	g_return_val_if_fail(msg   != NULL,FALSE);
+	g_return_val_if_fail(nick  != NULL,FALSE);
+	
+	switch (type)
+	{
+	    case GGADU_HISTORY_TYPE_RECEIVE:
+		line = g_strdup_printf("chatrcv,%s,%s,%d,%d,%s\n", msg->id, nick, msg->time, (int)time(0), msg->message);
+	    break;
+	    case GGADU_HISTORY_TYPE_SEND:
+		line = g_strdup_printf("chatsend,%s,%s,%d,%s\n", msg->id, nick, (int)time(0), msg->message);
+	    break;
+	}
+	
+	return write_line_to_file(filepath, line, encoding);
+}

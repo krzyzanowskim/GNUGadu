@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.176 2004/07/28 10:13:36 shaster Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.177 2004/08/01 21:05:05 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -349,7 +349,7 @@ void handle_search_event(struct gg_event *e)
 	signal_emit(GGadu_PLUGIN_NAME, "gui show search results", list, "main-gui");
 }
 
-void ggadu_gg_save_history(gchar * to, gchar * txt)
+/*void ggadu_gg_save_history(gchar * to, gchar * txt)
 {
 	if (ggadu_config_var_get(handler, "log"))
 	{
@@ -358,7 +358,7 @@ void ggadu_gg_save_history(gchar * to, gchar * txt)
 		g_free(path);
 	}
 }
-
+*/
 void ggadu_gadu_gadu_reconnect()
 {
 	if (++connect_count < 3)
@@ -383,7 +383,6 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 	GSList *slistmp = NULL;
 	uint32_t *uins;
 	GGaduMsg *msg = NULL;
-	gchar *hist_line = NULL;
 	gint i, j;
 
 	/* w przypadku bledu/utraty polaczenia postap tak jak w przypadku disconnect */
@@ -536,11 +535,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			us = us->next;
 		}
 		
-		hist_line = g_strdup_printf("chatrcv,%s,%s,%d,%d,%s\n", msg->id, line2, msg->time, (int)time(0), msg->message);
-		
-		ggadu_gg_save_history(msg->id, hist_line);
+		ggadu_gg_save_history(GGADU_HISTORY_TYPE_RECEIVE,msg,line2);
 		g_free(line2);
-		g_free(hist_line);
 		g_slist_free(list);
 
 		signal_emit_full(GGadu_PLUGIN_NAME, "gui msg receive", msg, "main-gui", GGaduMsg_free);
@@ -592,12 +588,13 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 					/* Format kompatybilny z histori± Kadu ;) 			*/
 					/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;)	*/
 
-					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
+/* DUPA					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
 							    ((k->ip == NULL) ? "0.0.0.0" : k->ip), (int)time(0), status,
 							    ((k->status_descr == NULL) ? "" : g_strdup_printf(",%s",k->status_descr)));
 					ggadu_gg_save_history((gchar *) k->id, line);
+*/					
 					
-					g_free(line);
+//					g_free(line);
 					g_free(status);
 				}
 				else
@@ -658,12 +655,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 					/* Format kompatybilny z histori± Kadu ;) 			*/
 					/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;)	*/
 					
-					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
+/* DUPA					gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
 							    ((k->ip == NULL) ? "0.0.0.0" : k->ip), (gint)time(0), status,
 							    ((k->status_descr == NULL) ? "" : g_strdup_printf(",%s",k->status_descr)));
 					ggadu_gg_save_history((gchar *) k->id, line);
-					
-					g_free(line);
+*/					
+//					g_free(line);
 					g_free(status);
 				}
 				g_free(id);
@@ -709,12 +706,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 			/* Format kompatybilny z histori± Kadu ;) 			*/
 			/* Jednak pierw nale¿y skasowaæ [numerek].idx aby uaktualniæ ;)	*/
 
-			gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
+/* DUPA			gchar *line = g_strdup_printf("status,%s,%s,%s,%d,%s%s\n", k->id, k->nick, 
 				    ((k->ip == NULL) ? "0.0.0.0" : k->ip), (gint)time(0), status,
 				    ((k->status_descr == NULL) ? "" : g_strdup_printf(",%s",k->status_descr)));
 			ggadu_gg_save_history((gchar *) k->id, line);
-
-			g_free(line);
+*/
+//			g_free(line);
 			g_free(status);
 
 			g_free(id);
@@ -2286,13 +2283,10 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 							
 							us = us->next;
 						}
-						
-						
-						gchar *line =
-							g_strdup_printf("chatsend,%s,%s,%d,%s\n", msg->id, line2, (gint)time(0), msg->message);
-						ggadu_gg_save_history((gchar *) tmp->data, line);
+
+						ggadu_gg_save_history(GGADU_HISTORY_TYPE_SEND,msg,line2);
+
 						g_free(line2);
-						g_free(line);
 						g_slist_free(list);
 						tmp = tmp->next;
 					}
@@ -2324,12 +2318,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 						us = us->next;
 					}
 						
-					gchar *line =
-						g_strdup_printf("chatsend,%s,%s,%d,%s\n", msg->id, line2, (gint)time(0), msg->message);
-					ggadu_gg_save_history(msg->id, line);
+					ggadu_gg_save_history(GGADU_HISTORY_TYPE_SEND,msg,line2);
 
 					g_free(line2);
-					g_free(line);
 					g_slist_free(list);
 				}
 			}

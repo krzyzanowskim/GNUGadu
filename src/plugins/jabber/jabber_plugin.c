@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.82 2004/06/28 11:27:50 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.83 2004/08/01 21:05:05 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -62,22 +62,6 @@ GGaduProtocol *p;
 GGaduMenu *jabbermenu;
 
 GGadu_PLUGIN_INIT("jabber", GGADU_PLUGIN_TYPE_PROTOCOL);
-
-void ggadu_jabber_save_history(gchar * to, gchar * txt)
-{
-	gchar *dir = g_build_filename(config->configdir, "jabber_history", NULL);
-	gchar *path = g_build_filename(config->configdir, "jabber_history", (to ? to : "UNKOWN"), NULL);
-
-	print_debug("logging: dir:%s, path:%s", dir, path);
-
-	if (!g_file_test(dir, G_FILE_TEST_IS_DIR))
-		mkdir(dir, 0700);
-
-	write_line_to_file(path, txt, "ISO-8859-2");
-
-	g_free(path);
-	g_free(dir);
-}
 
 gpointer user_view_history_action(gpointer user_data)
 {
@@ -472,13 +456,8 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			{
 				print_debug("jabber: Can't send!\n");
 			}
-			else if (ggadu_config_var_get(jabber_handler, "log"))
-			{
-				gchar *line =
-					g_strdup_printf(_("\n:: Me (%s) ::\n%s\n"), get_timestamp(0), msg->message);
-				ggadu_jabber_save_history(msg->id, line);
-				g_free(line);
-			}
+
+			ggadu_jabber_save_history(GGADU_HISTORY_TYPE_SEND,msg, msg->id);
 
 			lm_message_unref(m);
 		}

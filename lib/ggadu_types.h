@@ -1,4 +1,4 @@
-/* $Id: ggadu_types.h,v 1.4 2004/08/01 17:28:20 krzyzak Exp $ */
+/* $Id: ggadu_types.h,v 1.5 2004/08/01 21:05:04 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -51,7 +51,6 @@ enum
     GGADU_PASSWORD
 };
 
-
 enum
 {
     VAR_STR = 1,
@@ -88,6 +87,12 @@ enum
     GGADU_YES,
     GGADU_NO
 };
+
+typedef enum
+{
+    GGADU_HISTORY_TYPE_RECEIVE,
+    GGADU_HISTORY_TYPE_SEND    
+} GGaduHistoryType;
 
 
 /*

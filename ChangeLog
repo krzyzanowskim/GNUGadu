@@ -1,3 +1,7 @@
+01.08.2004
+- ggadu_save_history() as a base for history in every plugin, to keep similar
+  history format
+  
 28.07.2004
 - fixed fd leak (sound-oss/HelDoRe)
 - fixed some memory allocation issues, closing #63 (gadu-gadu/su829)

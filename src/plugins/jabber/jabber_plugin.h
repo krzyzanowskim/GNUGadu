@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.31 2004/06/28 11:27:50 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.32 2004/08/01 21:05:06 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -32,6 +32,15 @@
 #include "ggadu_support.h"
 #include "ggadu_dialog.h"
 #include "ggadu_repo.h"
+
+
+#define ggadu_jabber_save_history(_type,_msg,_nick)	\
+	if (ggadu_config_var_get(jabber_handler, "log")) \
+	{ \
+	    gchar *path = g_build_filename(config->configdir, "jabber_history", (_msg->id ? _msg->id : "UNKOWN"), NULL); \
+	    ggadu_save_history(_type, path, _nick, _msg, "ISO-8859-2"); \
+	    g_free(path); \
+	}
 
 enum
 {
@@ -104,7 +113,6 @@ typedef struct
 } jabber_data_type;
 
 
-void ggadu_jabber_save_history(gchar * to, gchar * txt);
 gpointer jabber_register_account_dialog(gpointer user_data);
 
 #endif
