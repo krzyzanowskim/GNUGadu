@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.85 2004/03/09 23:59:40 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.86 2004/03/13 07:44:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -134,7 +134,7 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 		input = g_object_get_data(G_OBJECT(chat), "input");
 
 #ifdef USE_GTKSPELL
-		{
+		if (ggadu_config_var_get(gui_handler, "use_spell")) {
 		    GtkSpell  *spell = NULL;
 		    if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
 			gtkspell_detach (spell);
@@ -172,7 +172,7 @@ static void on_destroy_chat(GtkWidget * button, gpointer user_data)
 		input = g_object_get_data(G_OBJECT(session->chat), "input");
 
 #ifdef USE_GTKSPELL
-		{
+		if (ggadu_config_var_get(gui_handler, "use_spell")) {
 		    GtkSpell  *spell = NULL;
 		    if ((spell = gtkspell_get_from_text_view(GTK_TEXT_VIEW(input))) != NULL)
 			gtkspell_detach (spell);
@@ -997,11 +997,19 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	input = gtk_text_view_new();
 
 #ifdef USE_GTKSPELL
-	{
+	if (ggadu_config_var_get(gui_handler, "use_spell")) {
 	    GError *err = NULL;
-	    if (!gtkspell_new_attach(GTK_TEXT_VIEW(input), g_getenv("LANG"), &err)) 
+
+	    gchar *conf_dict = ggadu_config_var_get(gui_handler, "dictionary");
+	    gchar *dictionary = NULL;
+	    if (strcmp(conf_dict, "default") == 0)
+	    	dictionary = g_strdup(g_getenv("LANG"));
+	    else
+	       	dictionary = g_strdup(conf_dict);
+
+	    if (!gtkspell_new_attach(GTK_TEXT_VIEW(input), dictionary, &err)) 
 	    {
-/*		GtkWidget *errdlg;
+		GtkWidget *errdlg;
         	errdlg = gtk_message_dialog_new(GTK_WINDOW(chat_window),
                         GTK_DIALOG_DESTROY_WITH_PARENT,
                         GTK_MESSAGE_ERROR,
@@ -1011,8 +1019,8 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
         	gtk_dialog_run(GTK_DIALOG(errdlg));
         	gtk_widget_destroy(errdlg);
         	g_error_free(err);
-*/
 	    }
+	    g_free(dictionary);
 	}
 #endif
 	gtk_widget_set_name(GTK_WIDGET(input), "GGInput");

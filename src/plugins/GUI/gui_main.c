@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.48 2004/02/29 23:35:51 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.49 2004/03/13 07:44:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -143,6 +143,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add(gui_handler, "chat_window_auto_raise", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "use_xosd_for_new_msgs", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "chat_type", VAR_INT);
+#ifdef USE_GTKSPELL
+	ggadu_config_var_add(gui_handler, "use_spell", VAR_BOOL);
+	ggadu_config_var_add(gui_handler, "dictionary", VAR_STR);
+#endif
 	ggadu_config_var_add(gui_handler, "chat_window_auto_show", VAR_BOOL);
 	ggadu_config_var_add(gui_handler, "chat_paned_size", VAR_INT);
 	ggadu_config_var_add(gui_handler, "expand", VAR_BOOL);

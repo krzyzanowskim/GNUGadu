@@ -1,4 +1,4 @@
-/* $Id: gui_chat.h,v 1.7 2004/03/12 13:01:48 shaster Exp $ */
+/* $Id: gui_chat.h,v 1.8 2004/03/13 07:44:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 #ifdef USE_GTKSPELL
 #include <gtkspell/gtkspell.h>
+#include <aspell.h>
 #endif /* USE_GTKSPELL */
 #include "gui_main.h"
 

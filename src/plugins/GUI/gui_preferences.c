@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.53 2004/02/29 23:35:51 thrulliq Exp $ */
+/* $Id: gui_preferences.c,v 1.54 2004/03/13 07:44:19 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -588,6 +588,11 @@ static GtkWidget *create_chat_tab()
 	GtkWidget *chatwindowshow;
 	GtkWidget *chatwindowraise;
 	GtkWidget *use_username;
+#ifdef USE_GTKSPELL
+	GtkWidget *use_spell;
+	GtkWidget *combo_spell;
+	GtkWidget *label3_align;
+#endif
 	GtkWidget *chat_paned_size;
 	GtkWidget *label0_align, *label1_align, *label2_align;
 
@@ -638,6 +643,14 @@ static GtkWidget *create_chat_tab()
 
 	g_object_set_data(G_OBJECT(chat_vbox), "use_username", use_username);
 
+#ifdef USE_GTKSPELL
+	use_spell = gtk_check_button_new_with_label(_("Use spell check in chat window"));
+	gtk_box_pack_start(GTK_BOX(vbox), use_spell, FALSE, FALSE, 0);
+
+	g_object_set_data(G_OBJECT(chat_vbox), "spell", use_spell);
+
+	label3_align = gtk_alignment_new(0, 0.5, 0, 0);
+#endif
 
 	label0_align = gtk_alignment_new(0, 0.5, 0, 0);
 	label1_align = gtk_alignment_new(0, 0.5, 0, 0);
@@ -676,6 +689,17 @@ static GtkWidget *create_chat_tab()
 
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), label2_align, 0, 1, 2, 3);
 	gtk_table_attach_defaults(GTK_TABLE(tabbox), chat_paned_size, 1, 2, 2, 3);
+
+#ifdef USE_GTKSPELL
+	label = gtk_label_new(_("Dictionary"));
+	combo_spell = gtk_combo_new();
+	gtk_container_add(GTK_CONTAINER(label3_align), label);
+
+	g_object_set_data(G_OBJECT(chat_vbox), "combospell", combo_spell);
+
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), label3_align, 0, 1, 3, 4);
+	gtk_table_attach_defaults(GTK_TABLE(tabbox), combo_spell, 1, 2, 3, 4);
+#endif
 
 	return chat_vbox;
 }
@@ -877,6 +901,54 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (gui_check_for_sessions(protocols))
 		gtk_widget_set_sensitive(GTK_WIDGET(entry), FALSE);
 
+#ifdef USE_GTKSPELL
+	entry = g_object_get_data(G_OBJECT(chat_vbox), "spell");
+	g_return_if_fail(entry != NULL);
+
+	if (ggadu_config_var_get(gui_handler, "use_spell"))
+	   	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), TRUE);
+	else
+	   	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry), FALSE);
+
+	{
+	   	GtkWidget *entry2 = g_object_get_data(G_OBJECT(chat_vbox), "combospell");
+		GList *list_dict = NULL;
+		gchar *cur_dict = ggadu_config_var_get(gui_handler, "dictionary");
+
+  		AspellConfig * config;
+  		AspellDictInfoList * dlist;
+  		AspellDictInfoEnumeration * dels;
+  		const AspellDictInfo * dict_entry;
+
+		g_return_if_fail(entry2 != NULL);
+
+		config = new_aspell_config();
+		/* the returned pointer should _not_ need to be deleted */
+  		dlist = get_aspell_dict_info_list(config);
+		/* config is no longer needed */
+  		delete_aspell_config(config);
+
+  		dels = aspell_dict_info_list_elements(dlist);
+		
+		if ((cur_dict != NULL) && (cur_dict[0] != '\0')) 
+			list_dict = g_list_append(list_dict, cur_dict);
+		list_dict = g_list_append(list_dict, g_strdup("default"));
+
+		while ( (dict_entry = aspell_dict_info_enumeration_next(dels)) != 0)
+			list_dict = g_list_append(list_dict, g_strdup(dict_entry->name));
+
+		delete_aspell_dict_info_enumeration(dels);
+
+		gtk_combo_set_popdown_strings(GTK_COMBO(entry2), list_dict);
+
+		if (gui_check_for_sessions(protocols))
+		{
+	   		gtk_widget_set_sensitive(GTK_WIDGET(entry), FALSE);
+			gtk_widget_set_sensitive(GTK_WIDGET(entry2), FALSE);
+		}
+	}
+#endif
+
 	if (ggadu_config_var_get(gui_handler, "blink"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(blink), TRUE);
 	else
@@ -1054,6 +1126,19 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 		ggadu_config_var_set(gui_handler, "chat_type",
 				     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+
+#ifdef USE_GTKSPELL
+		entry = g_object_get_data(G_OBJECT(chat_vbox), "spell");
+		g_return_if_fail(entry != NULL);
+
+		ggadu_config_var_set(gui_handler, "use_spell",
+		      		     (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+
+		entry = g_object_get_data(G_OBJECT(chat_vbox), "combospell");
+		g_return_if_fail(entry != NULL);
+		ggadu_config_var_set(gui_handler, "dictionary",
+				     (gpointer) g_strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(entry)->entry))));
+#endif
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "chatwindowshow");
 		g_return_if_fail(entry != NULL);
