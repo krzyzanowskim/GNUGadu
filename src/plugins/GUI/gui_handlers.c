@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.10 2003/04/25 07:38:52 zapal Exp $ */
+/* $Id: gui_handlers.c,v 1.11 2003/05/01 20:18:09 shaster Exp $ */
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -44,6 +44,11 @@ void handle_show_dialog(GGaduSignal *signal)
 void handle_show_window_with_text(GGaduSignal *signal) 
 {
         gui_show_window_with_text(signal);
+}
+
+void handle_show_about(GGaduSignal *signal) 
+{
+	gui_show_about(signal);
 }
 
 void handle_change_user_window(GGaduSignal *signal)

@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.11 2003/04/28 15:15:15 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.12 2003/05/01 20:18:09 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -37,6 +37,7 @@ gui_signal_handler handlers[] = {
 	{"gui add user window", handle_add_user_window},
 	{"gui show dialog", handle_show_dialog},
 	{"gui show window with text", handle_show_window_with_text},
+	{"gui show about", handle_show_about},
 	{"gui change user window", handle_change_user_window},
 	{"gui msg receive", handle_msg_receive},
 	{"gui show invisible chats", handle_show_invisible_chats},
@@ -216,6 +217,9 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     
     /* pokazuje okno z tekstem przeslanym, nic wiêcej */
     register_signal(gui_handler,"gui show window with text"); 
+
+    /* pokazuje okno z informacjami o programie */
+    register_signal(gui_handler,"gui show about"); 
 
     /* pokazuje okno z wynikami wyszukiwania uzytkownikow */
     register_signal(gui_handler,"gui show search results"); 

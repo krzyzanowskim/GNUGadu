@@ -1,10 +1,11 @@
-/* $Id: gui_handlers.h,v 1.5 2003/04/25 07:38:52 zapal Exp $ */
+/* $Id: gui_handlers.h,v 1.6 2003/05/01 20:18:09 shaster Exp $ */
 
 #include "signals.h"
 
 void handle_add_user_window(GGaduSignal *signal);
 void handle_show_dialog(GGaduSignal *signal);
 void handle_show_window_with_text(GGaduSignal *signal);
+void handle_show_about(GGaduSignal *signal);
 void handle_change_user_window(GGaduSignal *signal);
 void handle_msg_receive(GGaduSignal *signal);
 void handle_show_invisible_chats(GGaduSignal *signal);

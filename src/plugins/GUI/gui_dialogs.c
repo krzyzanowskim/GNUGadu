@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.18 2003/04/27 08:42:02 krzyzak Exp $ */
+/* $Id: gui_dialogs.c,v 1.19 2003/05/01 20:18:09 shaster Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -597,4 +597,8 @@ void gui_about(GtkWidget *widget, gpointer data)
 	  "<i>Compile time:\n%s %s</i>"), VERSION, __DATE__, __TIME__);
 		
     about_timeout = g_timeout_add(50, timeout, image);
+}
+
+void gui_show_about(gpointer signal) {
+    gui_about(NULL, NULL);
 }

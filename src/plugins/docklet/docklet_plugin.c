@@ -1,4 +1,4 @@
-/* $Id: docklet_plugin.c,v 1.4 2003/04/12 11:05:26 krzyzak Exp $ */
+/* $Id: docklet_plugin.c,v 1.5 2003/05/01 20:18:05 shaster Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -161,18 +161,23 @@ GtkWidget *ggadu_new_item_from_stock(GtkWidget *menu, const char *str, const cha
         return menuitem;
 }
 
+void docklet_about(GtkWidget *widget, gpointer user_data) {
+    signal_emit("docklet", "gui show about", NULL, "main-gui");
+}
+
 void docklet_quit(GtkWidget *widget, gpointer user_data) {
-	signal_emit("docklet", "exit", NULL, NULL);
-	g_main_loop_quit(config->main_loop);
+    signal_emit("docklet", "exit", NULL, NULL);
+    g_main_loop_quit(config->main_loop);
 }
 
 void docklet_menu(GdkEventButton *event) {
-        static GtkWidget *menu = NULL;
+    static GtkWidget *menu = NULL;
 
-        menu = gtk_menu_new();
-        ggadu_new_item_from_stock(menu, _("Quit"), GTK_STOCK_QUIT, G_CALLBACK(docklet_quit), NULL, 0, 0, 0);
-        gtk_widget_show_all(menu);
-        gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
+    menu = gtk_menu_new();
+    ggadu_new_item_from_stock(menu, _("About"), GTK_STOCK_DIALOG_INFO, G_CALLBACK(docklet_about), NULL, 0, 0, 0);
+    ggadu_new_item_from_stock(menu, _("Quit"), GTK_STOCK_QUIT, G_CALLBACK(docklet_quit), NULL, 0, 0, 0);
+    gtk_widget_show_all(menu);
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
 }
 
 
