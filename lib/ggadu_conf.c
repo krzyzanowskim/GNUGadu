@@ -1,4 +1,4 @@
-/* $Id: ggadu_conf.c,v 1.19 2004/05/04 21:39:08 krzyzak Exp $ */
+/* $Id: ggadu_conf.c,v 1.20 2004/05/17 11:24:27 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -375,6 +375,8 @@ gboolean ggadu_config_save(GGaduPlugin * plugin_handler)
 
 void ggadu_config_set_filename(GGaduPlugin * plugin_handler, gchar * config_file)
 {
+	gchar *dir = NULL;
+	
 	if (plugin_handler == NULL)
 		return;
 
@@ -382,6 +384,12 @@ void ggadu_config_set_filename(GGaduPlugin * plugin_handler, gchar * config_file
 		config_file = plugin_handler->name;
 
 	print_debug("core : config_init_register for %s\n", plugin_handler->name);
+	
+	dir = g_path_get_dirname(config_file);
+	if (!g_file_test(dir,G_FILE_TEST_EXISTS) || !g_file_test(dir,G_FILE_TEST_IS_DIR))
+	{
+	    mkdir(dir,0700);
+	}
 
 	plugin_handler->config_file = g_strdup(config_file);
 }

@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.26 2004/02/15 14:11:19 krzyzak Exp $ */
+/* $Id: jabber_protocol.c,v 1.27 2004/05/17 11:24:29 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -112,7 +112,7 @@ void jabber_change_status(enum states status)
 	if (jabber_data.status_descr)
 		lm_message_node_add_child(m->node, "status", jabber_data.status_descr);
 
-	if (!lm_connection_send(connection, m, NULL))
+	if (!lm_connection_send(jabber_data.connection, m, NULL))
 	{
 		print_debug("jabber: Couldn't change status!\n");
 	}
@@ -129,7 +129,7 @@ void jabber_fetch_roster(gpointer user_data)
 	LmMessage *m;
 	LmMessageNode *node;
 
-	print_debug("jabber: Fetching roster. %s", lm_connection_get_server(connection));
+	print_debug("jabber: Fetching roster. %s", lm_connection_get_server(jabber_data.connection));
 
 	m = lm_message_new_with_sub_type(NULL, LM_MESSAGE_TYPE_IQ, LM_MESSAGE_SUB_TYPE_GET);
 
@@ -138,7 +138,7 @@ void jabber_fetch_roster(gpointer user_data)
 
 	lm_message_node_set_attribute(m->node, "id", "fetch_roster");
 
-	if (!lm_connection_send(connection, m, NULL))
+	if (!lm_connection_send(jabber_data.connection, m, NULL))
 		print_debug("jabber: Can't fetch roster (lm_connection_send() failed).\n");
 	else
 		action_queue_add("fetch_roster", "result", action_roster_fetch_result, user_data, FALSE);

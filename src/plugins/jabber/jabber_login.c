@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.28 2004/05/03 23:11:25 krzyzak Exp $ */
+/* $Id: jabber_login.c,v 1.29 2004/05/17 11:24:28 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -45,7 +45,7 @@ void jabber_login(enum states status)
 		list = ggadu_repo_get_as_slist("jabber", REPO_VALUE_CONTACT);
 		jabber_data.status = status;
 
-		if (lm_connection_close(connection, NULL))
+		if (lm_connection_close(jabber_data.connection, NULL))
 		{
 			signal_emit("jabber", "gui disconnected", NULL, "main-gui");
 			jabber_data.connected = 0;
@@ -124,17 +124,17 @@ gpointer jabber_login_connect(gpointer status)
 		return NULL;
 	}
 
-	if (!connection || !lm_connection_is_open(connection))
+	if (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
 	{
 		print_debug("jabber: Connecting to %s with %s", server,jid);
-		connection = lm_connection_new(server);
+		jabber_data.connection = lm_connection_new(server);
 	}
-	else if (ggadu_strcasecmp(lm_connection_get_server(connection), server))
+	else if (ggadu_strcasecmp(lm_connection_get_server(jabber_data.connection), server))
 	{
 		print_debug("jabber: Changing server to %s", server);
-		lm_connection_close(connection, NULL);
-		lm_connection_set_server(connection, server);
-		lm_connection_set_port(connection,LM_CONNECTION_DEFAULT_PORT);
+		lm_connection_close(jabber_data.connection, NULL);
+		lm_connection_set_server(jabber_data.connection, server);
+		lm_connection_set_port(jabber_data.connection,LM_CONNECTION_DEFAULT_PORT);
 		/* lm_connection_unref(connection); */
 	}
 
@@ -143,8 +143,8 @@ gpointer jabber_login_connect(gpointer status)
 		if (lm_ssl_is_supported())
 		{
 			LmSSL *ssl = lm_ssl_new (NULL,jabber_connection_ssl_func,NULL,NULL);
-			lm_connection_set_port(connection,LM_CONNECTION_DEFAULT_PORT_SSL);
-			lm_connection_set_ssl(connection,ssl);
+			lm_connection_set_port(jabber_data.connection,LM_CONNECTION_DEFAULT_PORT_SSL);
+			lm_connection_set_ssl(jabber_data.connection,ssl);
 			lm_ssl_unref(ssl);
 		}
 		else
@@ -158,21 +158,21 @@ gpointer jabber_login_connect(gpointer status)
 	if (!iq_handler)
 	{
 		iq_handler = lm_message_handler_new(iq_cb, NULL, NULL);
-		lm_connection_register_message_handler(connection, iq_handler, LM_MESSAGE_TYPE_IQ,
+		lm_connection_register_message_handler(jabber_data.connection, iq_handler, LM_MESSAGE_TYPE_IQ,
 						       LM_HANDLER_PRIORITY_FIRST);
 	}
 
 	if (!iq_roster_handler)
 	{
 		iq_roster_handler = lm_message_handler_new(iq_roster_cb, NULL, NULL);
-		lm_connection_register_message_handler(connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ,
+		lm_connection_register_message_handler(jabber_data.connection, iq_roster_handler, LM_MESSAGE_TYPE_IQ,
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
 	if (!iq_version_handler)
 	{
 		iq_version_handler = lm_message_handler_new(iq_version_cb, NULL, NULL);
-		lm_connection_register_message_handler(connection, iq_version_handler, LM_MESSAGE_TYPE_IQ,
+		lm_connection_register_message_handler(jabber_data.connection, iq_version_handler, LM_MESSAGE_TYPE_IQ,
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
@@ -180,7 +180,7 @@ gpointer jabber_login_connect(gpointer status)
 	if (!presence_handler)
 	{
 		presence_handler = lm_message_handler_new(presence_cb, NULL, NULL);
-		lm_connection_register_message_handler(connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE,
+		lm_connection_register_message_handler(jabber_data.connection, presence_handler, LM_MESSAGE_TYPE_PRESENCE,
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
@@ -188,15 +188,15 @@ gpointer jabber_login_connect(gpointer status)
 	if (!message_handler)
 	{
 		message_handler = lm_message_handler_new(message_cb, NULL, NULL);
-		lm_connection_register_message_handler(connection, message_handler, LM_MESSAGE_TYPE_MESSAGE,
+		lm_connection_register_message_handler(jabber_data.connection, message_handler, LM_MESSAGE_TYPE_MESSAGE,
 						       LM_HANDLER_PRIORITY_NORMAL);
 	}
 
 
 
-	lm_connection_set_disconnect_function(connection, jabber_disconnect_cb, NULL, NULL);
+	lm_connection_set_disconnect_function(jabber_data.connection, jabber_disconnect_cb, NULL, NULL);
 	
-	if (!lm_connection_open(connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
+	if (!lm_connection_open(jabber_data.connection, (LmResultFunction) connection_open_result_cb, (gint *) status, NULL, NULL))
 	{
 		print_debug("jabber: lm_connection_open() failed.\n");
 		signal_emit_from_thread("jabber", "gui disconnected", NULL, "main-gui");

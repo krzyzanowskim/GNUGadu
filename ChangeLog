@@ -1,3 +1,6 @@
+08.05.2004
+- ggadu_config_set_filename create directory if do not exist yet (core/krzak)
+
 06.05.2004
 - removing users now requires confirmation (gadu-gadu/jabber/THrull)
 - firstsound.patch by emes (GUI/emes)

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.h,v 1.27 2004/05/04 21:39:10 krzyzak Exp $ */
+/* $Id: jabber_plugin.h,v 1.28 2004/05/17 11:24:29 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -43,8 +43,8 @@ enum
     GGADU_JABBER_RESOURCE,
     GGADU_JABBER_SERVER,
     GGADU_JABBER_USERNAME,
-	GGADU_JABBER_UPDATE_CONFIG,
-	GGADU_JABBER_REQUEST_AUTH_FROM
+    GGADU_JABBER_UPDATE_CONFIG,
+    GGADU_JABBER_REQUEST_AUTH_FROM
 };
 
 enum states
@@ -84,8 +84,7 @@ typedef struct
 } GGaduJabberRegister;
 
 extern GGaduPlugin *jabber_handler;
-extern LmConnection *connection;
-//extern LmSSL	*lm_ssl;
+/* extern LmConnection *connection; */
 
 extern LmMessageHandler *iq_handler;
 extern LmMessageHandler *iq_roster_handler;
@@ -99,9 +98,11 @@ typedef struct
     gchar *status_descr;
     GSList *actions;
     gint connected;
+    LmConnection *connection;
 } jabber_data_type;
 
 
 void ggadu_jabber_save_history(gchar * to, gchar * txt);
 gpointer jabber_register_account_dialog(gpointer user_data);
+
 #endif

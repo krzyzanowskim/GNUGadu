@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.75 2004/05/07 13:20:07 thrulliq Exp $ */
+/* $Id: jabber_plugin.c,v 1.76 2004/05/17 11:24:29 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -36,7 +36,6 @@
 #include "jabber_cb.h"
 
 GGaduPlugin *jabber_handler;
-LmConnection *connection;
 
 LmMessageHandler *iq_handler;
 LmMessageHandler *iq_roster_handler;
@@ -211,7 +210,7 @@ gpointer user_remove_action(gpointer user_data)
 				lm_message_node_set_attributes(node, "jid", g_strdup(k->id), "subscription", "remove",
 							       NULL);
 
-				if (lm_connection_send(connection, m, NULL))
+				if (lm_connection_send(jabber_data.connection, m, NULL))
 				{
 					print_debug("send remove request");
 					action_queue_add("roster_remove", "result", action_roster_remove_result, k->id,
@@ -237,7 +236,7 @@ gpointer user_resend_auth_to(gpointer user_data)
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) user->data;
 	LmMessage *m = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBED);
-	lm_connection_send(connection, m, NULL);
+	lm_connection_send(jabber_data.connection, m, NULL);
 	lm_message_unref(m);
 	return NULL;
 }
@@ -252,7 +251,7 @@ gpointer user_rerequest_auth_from(gpointer user_data)
 	
 	k = (GGaduContact *) user->data;
 	m = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_SUBSCRIBE);
-	lm_connection_send(connection, m, NULL);
+	lm_connection_send(jabber_data.connection, m, NULL);
 	lm_message_unref(m);
 	return NULL;
 }
@@ -262,7 +261,7 @@ gpointer user_remove_auth_from(gpointer user_data)
 	GSList *user = (GSList *) user_data;
 	GGaduContact *k = (GGaduContact *) user->data;
 	LmMessage *m = lm_message_new_with_sub_type(k->id, LM_MESSAGE_TYPE_PRESENCE, LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED);
-	lm_connection_send(connection, m, NULL);
+	lm_connection_send(jabber_data.connection, m, NULL);
 	lm_message_unref(m);
 	return NULL;
 }
@@ -446,7 +445,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 			m = lm_message_new_with_sub_type(msg->id, LM_MESSAGE_TYPE_MESSAGE, LM_MESSAGE_SUB_TYPE_CHAT);
 			lm_message_node_add_child(m->node, "body", msg->message);
-			result = lm_connection_send(connection, m, &error);
+			result = lm_connection_send(jabber_data.connection, m, &error);
 			if (!result)
 			{
 				print_debug("jabber: Can't send!\n");
@@ -511,7 +510,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			if (k->nick)
 				lm_message_node_set_attribute(node_item, "name", k->nick);
 
-			if (lm_connection_send(connection, m, NULL))
+			if (lm_connection_send(jabber_data.connection, m, NULL))
 			{
 				print_debug("Add : %s", k->id);
 				action_queue_add("roster_add", "result", action_roster_add_result, k->id, TRUE);
@@ -552,7 +551,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 							   LM_MESSAGE_SUB_TYPE_UNSUBSCRIBED);
 		}
 
-		lm_connection_send(connection, msg, NULL);
+		lm_connection_send(jabber_data.connection, msg, NULL);
 		lm_message_unref(msg);
 		if (jid)
 			g_free(jid);
@@ -597,7 +596,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 						action_queue_add("search1", "result", action_search_form, NULL, FALSE);
 
-						if (!lm_connection_send(connection, message, NULL))
+						if (!lm_connection_send(jabber_data.connection, message, NULL))
 						{
 							signal_emit("jabber", "gui show warning",
 								    g_strdup(_("Can't perform search!")), "main-gui");
@@ -662,7 +661,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 
 			action_queue_add("search2", "result", action_search_result, NULL, FALSE);
 
-			if (!lm_connection_send(connection, message, NULL))
+			if (!lm_connection_send(jabber_data.connection, message, NULL))
 				signal_emit("jabber", "gui show warning", g_strdup(_("Can't perform search!")),
 					    "main-gui");
 			
@@ -870,16 +869,14 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	register_signal_receiver(jabber_handler, (signal_func_ptr) jabber_signal_recv);
 
-	mkdir(config->configdir, 0700);
-
 	path = g_build_filename(config->configdir, "jabber", NULL);
 	ggadu_config_set_filename(jabber_handler, path);
 	g_free(path);
 
+	ggadu_config_var_add_with_default(jabber_handler, "search_server", VAR_STR, "users.jabber.org");
 	ggadu_config_var_add(jabber_handler, "jid", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "password", VAR_STR);
 	ggadu_config_var_add(jabber_handler, "server", VAR_STR);
-	ggadu_config_var_add_with_default(jabber_handler, "search_server", VAR_STR, "users.jabber.org");
 	ggadu_config_var_add(jabber_handler, "log", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "autoconnect", VAR_BOOL);
 	ggadu_config_var_add(jabber_handler, "resource", VAR_STR);
