@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.4 2003/04/01 09:15:41 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.5 2003/04/01 15:38:40 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -44,6 +44,7 @@ gui_signal_handler handlers[] = {
 	{"gui register menu", handle_register_menu},
 	{"gui unregister menu", handle_unregister_menu},
 	{"gui register userlist menu", handle_register_userlist_menu},
+	{"gui unregister userlist menu", handle_unregister_userlist_menu},
 	{"gui send userlist", handle_send_userlist},
 	{"auth request", handle_auth_request},
 	{"auth request accepted", NULL},
@@ -132,6 +133,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
      * 
      */
     register_signal(gui_handler,"gui register protocol");
+    register_signal(gui_handler,"gui unregister protocol");
     
     /*
      * SIGNAL : gui register menu
@@ -157,6 +159,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
     register_signal(gui_handler,"gui msg receive"); /* !!! DODAC FREE */
 
     register_signal(gui_handler,"gui register userlist menu"); /* !!! DODAC FREE */
+    register_signal(gui_handler,"gui unregister userlist menu"); /* !!! o to chodzi? ;) */
 
     /* 
      * SIGNAL : auth request

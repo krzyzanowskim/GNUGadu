@@ -1,6 +1,7 @@
-/* $Id: gui_handlers.c,v 1.5 2003/04/01 09:15:40 thrulliq Exp $ */
+/* $Id: gui_handlers.c,v 1.6 2003/04/01 15:38:38 zapal Exp $ */
 
 #include <gtk/gtk.h>
+#include <string.h>
 
 #include "gg-types.h"
 #include "unified-types.h"
@@ -137,8 +138,22 @@ void handle_unregister_menu(GGaduSignal *signal)
     {
       GGaduMenuItem *it = root->data;
       gchar *path;
+      int len = strlen (it->label);
+      gchar *label = g_new0(char, len + 1);;
+      int i, c;
+      
+      for (i =0, c = 0; i < len; i++)
+      {
+	if (it->label[i] != '_')
+	{
+	  label[c] = it->label[i];
+	  c++;
+	}
+      }
 
-      path = g_strdup_printf("/Menu/%s", it->label);
+      path = g_strdup_printf("/Menu/%s", label);
+      g_free (label);
+      print_debug ("aaaaa: %s\n", path);
       
       gtk_item_factory_delete_item (item_factory, path);
       g_free (path);
@@ -152,7 +167,13 @@ void handle_register_userlist_menu(GGaduSignal *signal)
     if (gp->userlist_menu == NULL)
 		gp->userlist_menu = signal->data;
 }
-	
+
+void handle_unregister_userlist_menu(GGaduSignal *signal)
+{
+    gui_protocol *gp = gui_find_protocol(signal->source_plugin_name,protocols);
+    gp->userlist_menu = NULL;
+}
+
 void handle_send_userlist(GGaduSignal *signal)
 {
     gui_protocol *gp 		= gui_find_protocol(signal->source_plugin_name,protocols);

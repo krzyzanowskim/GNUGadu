@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.7 2003/04/01 13:26:22 thrulliq Exp $ */
+/* $Id: tlen_plugin.c,v 1.8 2003/04/01 15:38:48 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -26,6 +26,7 @@
 #include "dialog.h"
 
 GGaduPlugin *handler;
+GGaduProtocol *p;
 
 struct tlen_session *session = NULL;
 
@@ -647,7 +648,6 @@ GGaduMenu *build_tlen_menu()
 
 void start_plugin()
 {
-	GGaduProtocol *p;
 
         print_debug("%s : start_plugin\n",GGadu_PLUGIN_NAME);
 
@@ -954,6 +954,8 @@ void destroy_plugin() {
     if (menu_tlenmenu)
     {
       signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_tlenmenu, "main-gui");
+      signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+      signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
     }
 
 }

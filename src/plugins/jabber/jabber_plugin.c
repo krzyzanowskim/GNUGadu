@@ -471,7 +471,8 @@ void destroy_plugin() {
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
     if (menu_jabbermenu)
     {
-      signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
       signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_jabbermenu, "main-gui");
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
     }
 }

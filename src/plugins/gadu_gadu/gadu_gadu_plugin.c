@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.13 2003/04/01 00:24:30 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.14 2003/04/01 15:38:42 zapal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1557,8 +1557,9 @@ void destroy_plugin()
     print_debug("destroy_plugin %s\n", GGadu_PLUGIN_NAME);
     if (menu_pluginmenu)
     {
-      signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
       signal_emit (GGadu_PLUGIN_NAME, "gui unregister menu", menu_pluginmenu, "main-gui");
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+      signal_emit (GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
     }
 }
 

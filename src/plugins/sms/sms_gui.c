@@ -486,7 +486,6 @@ GSList *button_send()
 /* gdzies to musi sie zaczac */
 void start_plugin()
 {
-    
     p = g_new0(GGaduProtocol,1);
     p->display_name = g_strdup("SMS");
     p->img_filename = g_strdup("sms.png");
@@ -525,8 +524,9 @@ void destroy_plugin()
     print_debug("destroy_plugin%s\n",GGadu_PLUGIN_NAME);
     if (menu_smsmenu)
     {
-      signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui"); 
       signal_emit(GGadu_PLUGIN_NAME, "gui unregister menu", menu_smsmenu, "main-gui");
+      signal_emit(GGadu_PLUGIN_NAME, "gui unregister userlist menu", NULL, "main-gui");
+      signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui"); 
     }
     
 }
