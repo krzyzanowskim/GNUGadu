@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.226 2004/12/29 16:07:48 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.227 2004/12/29 16:17:22 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -89,8 +89,14 @@ void test()
 
 static gint ggadu_gadu_gadu_is_status_descriptive(GGaduStatusPrototype * sp)
 {
-	gint status = sp->status;
-	gint ret = (gint) (status == GG_STATUS_AVAIL_DESCR || status == GG_STATUS_BUSY_DESCR || status == GG_STATUS_NOT_AVAIL_DESCR || status == GG_STATUS_INVISIBLE_DESCR);
+	gint status
+	gint ret = 0;
+	
+	if (!sp)
+	    return 0;
+	
+	status = sp->status;
+	ret = (gint) (status == GG_STATUS_AVAIL_DESCR || status == GG_STATUS_BUSY_DESCR || status == GG_STATUS_NOT_AVAIL_DESCR || status == GG_STATUS_INVISIBLE_DESCR);
 	return ret;
 }
 
