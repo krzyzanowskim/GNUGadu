@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.102 2004/06/11 13:33:02 shaster Exp $ */
+/* $Id: gui_chat.c,v 1.103 2004/06/25 20:37:33 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -223,8 +223,26 @@ static gboolean on_press_event_switching_tabs(gpointer object, GdkEventKey * eve
 	return FALSE;
 }
 
-void on_clear_clicked(GtkWidget * button, gpointer textview)
+void on_clear_clicked(GtkWidget * button, gpointer user_data)
 {
+	gint chat_type = (gint) ggadu_config_var_get(gui_handler, "chat_type");
+	gui_chat_session *session = NULL;
+	GtkWidget *textview = NULL;
+	
+	if (chat_type == CHAT_TYPE_TABBED)
+	{
+		GtkWidget *chat_notebook = g_object_get_data(G_OBJECT(chat_window), "chat_notebook");
+		guint nr = gtk_notebook_get_current_page(GTK_NOTEBOOK(chat_notebook));
+		GtkWidget *chat = gtk_notebook_get_nth_page(GTK_NOTEBOOK(chat_notebook), nr);
+
+		textview = g_object_get_data(G_OBJECT(chat), "history");
+	}
+	else if (chat_type == CHAT_TYPE_CLASSIC)
+	{
+		session = user_data;
+		textview = g_object_get_data(G_OBJECT(session->chat), "history");
+	}
+	
 	GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
 	gtk_text_buffer_set_text(buf, "", -1);
 }
@@ -1212,7 +1230,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	g_signal_connect(button_send, "clicked", G_CALLBACK(on_send_clicked), session);
 	g_signal_connect(button_stick, "toggled", G_CALLBACK(on_stick_clicked), session);
 	g_signal_connect(button_find, "clicked", G_CALLBACK(on_chat_find_clicked), session);
-	g_signal_connect(button_clear, "clicked", G_CALLBACK(on_clear_clicked), history);
+	g_signal_connect(button_clear, "clicked", G_CALLBACK(on_clear_clicked),session);
 
 	switch (chat_type)
 	{
