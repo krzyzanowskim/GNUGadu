@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.44 2003/05/06 13:30:45 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.45 2003/05/07 09:26:27 krzyzak Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -413,12 +413,16 @@ gboolean test_chan(GIOChannel *source, GIOCondition condition, gpointer data)
 			while (n->uin) 
 			{
 			    gchar *desc_utf8 = NULL;
+			    struct in_addr ip_addr;
+
+			    ip_addr.s_addr = n->remote_ip;
 //			    print_debug("%s : GG_EVENT_NOTIFY_DESCR : %d  %d %s\n",GGadu_PLUGIN_NAME,n->uin,n->status,e->event.notify_descr.descr);
 			
 			    notify = g_new0(GGaduNotify,1);
 			    notify->id = g_strdup_printf("%d",n->uin);
 
 			    notify->status = n->status;
+					notify->ip = g_strdup_printf("%s:%d",inet_ntoa(ip_addr),n->remote_port);
 			    
 			    ggadu_convert("CP1250","UTF-8",e->event.notify_descr.descr,desc_utf8);
 

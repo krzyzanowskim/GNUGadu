@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.11 2003/05/01 20:19:14 shaster Exp $ */
+/* $Id: GUI_plugin.c,v 1.12 2003/05/07 09:26:26 krzyzak Exp $ */
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -113,6 +113,7 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 	    GGaduContact 	*k		= NULL;
 	    gchar 		*markup;
 	    gchar 		*desc_text	= NULL;
+	    gchar		*ip		= NULL;
 	    GtkTooltips		*tooltip	= NULL;
 	    
 	    if (!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(widget),event->x,event->y,&treepath,&treevc,NULL,NULL)) 
@@ -137,13 +138,26 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 	    tooltip = gtk_tooltips_new();
 
 	    if (k) {
+		if (k->ip) {
+		    gchar** strtab;
+		
+		    strtab = g_strsplit(k->ip,":",2);
+		    switch (atoi(strtab[1])) {
+//			case 0: ip = g_strdup_printf("\n[brak p2p]");break;
+			case 1: ip = g_strdup_printf("\n[NAT %s]",strtab[0]);break;
+			case 2: ip = g_strdup_printf(_("\n[nie ma Cie]"));break;
+			default: ip = g_strdup_printf("\n[%s]",strtab[0]);
+			}
+		    g_strfreev(strtab);
+		}
+
 		if (k->status_descr) { 
 		    gchar *desc_esc = g_markup_escape_text(k->status_descr,strlen(k->status_descr));
 	    	    desc_text = g_strdup_printf("\n%s", desc_esc);
 		    g_free(desc_esc);
 		}
 		
-		markup = g_strdup_printf("<span size=\"small\">Id: <b>%s</b>%s</span>", k->id, (k->status_descr) ?  desc_text : "");
+		markup = g_strdup_printf("<span size=\"small\">Id: <b>%s</b> %s%s</span>", k->id, ip?ip:"",(k->status_descr) ?  desc_text : "");
 
 		gtk_tooltips_set_tip(tooltip,gtk_widget_get_ancestor(gp->add_info_label,GTK_TYPE_EVENT_BOX),k->status_descr,"caption");
 	    } else {
@@ -166,7 +180,7 @@ gboolean nick_list_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
 
 	    g_free(markup);
 	    g_free(desc_text);
-	    
+	    g_free(ip);	    
     }
     
     if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3))
