@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.101 2004/12/28 17:48:04 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.102 2004/12/29 13:06:19 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -527,7 +527,6 @@ void change_status(GPtrArray * ptra)
 	gchar *plugin_source = g_ptr_array_index(ptra, 1);
 	gui_protocol *gp = NULL;
 
-//	gint status = 0;
 	/*    
 	 * GtkWidget *status_image = g_ptr_array_index(ptra, 2);
 	 * GtkWidget *image = create_image(sp->image);
@@ -578,7 +577,11 @@ void change_status(GPtrArray * ptra)
 	}
 
 	if (sp)
+	{
+	    g_free(sp->status_description);
+	    sp->status_description = NULL;
 	    signal_emit("main-gui", "change status", sp, plugin_source);
+	}
 	/* ZONK */
 	/* te tablice "ptra" kiedys tam mozna zwolic, ale nie mozna tutaj */
 }
