@@ -2,6 +2,7 @@
 - fixes in dcc options : [enable/disable] dcc (gadu-gadu/krzak)
 - add support for description status (jabber/zapal)
 - notify GUI about disconnection (jabber/zapal)
+- make use of p->online_status and p->offline_status (jabber/zapal)
 - translation update (po/zapal)
 
 20.06.2003
