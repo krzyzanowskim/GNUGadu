@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.44 2004/05/04 21:39:09 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.45 2004/05/18 12:09:12 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -542,7 +542,7 @@ void gui_user_view_notify(gui_protocol * gp, GGaduNotify * n)
 
 			found = TRUE;
 			if (k->status_descr)
-				st = g_strdup_printf("- %s (%s)", (sp ? sp->description : ""), k->status_descr);
+				st = g_strdup_printf("- %s (%s)", k->status_descr, (sp ? sp->description : ""));
 			else
 				st = g_strdup_printf("- %s", (sp ? sp->description : ""));
 
