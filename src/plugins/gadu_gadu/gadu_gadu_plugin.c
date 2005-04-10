@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.244 2005/03/09 14:02:40 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.245 2005/04/10 08:38:33 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1828,7 +1828,7 @@ void start_plugin()
 			status |= GG_STATUS_FRIENDS_MASK;
 
 		cp = from_utf8("CP1250", ggadu_config_var_get(handler, "reason"));
-		gadu_gadu_login((ggadu_config_var_check(handler, "reason")) ? cp : _("no reason"), status);
+		gadu_gadu_login((ggadu_config_var_check(handler, "reason")) ? cp : g_strdup(_("no reason")), status);
 		g_free(cp);
 	}
 }
