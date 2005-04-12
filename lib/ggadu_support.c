@@ -1,4 +1,4 @@
-/* $Id: ggadu_support.c,v 1.25 2005/03/09 12:56:57 krzyzak Exp $ */
+/* $Id: ggadu_support.c,v 1.26 2005/04/12 15:48:53 krzyzak Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -135,6 +135,7 @@ gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename)
 {
 	gchar *found_filename, *iconsdir;
 	GSList *dir = NULL;
+	GSList *dir_tmp = NULL;
 
 	/* We first try any pixmaps directories set by the application. */
 	dir = g_slist_prepend(dir, PACKAGE_DATA_DIR "/pixmaps");
@@ -149,12 +150,15 @@ gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename)
 		dir = g_slist_prepend(dir, iconsdir);
 	}
 
-	while (dir)
+	dir_tmp = dir;
+	while (dir_tmp)
 	{
-		found_filename = check_file_exists((gchar *) dir->data, filename);
+		found_filename = check_file_exists((gchar *) dir_tmp->data, filename);
+		
 		if (found_filename)
 			break;
-		dir = dir->next;
+			
+		dir_tmp = dir_tmp->next;
 	}
 
 	/* If we haven't found the pixmap, try the source directory. */
@@ -168,6 +172,7 @@ gchar *ggadu_get_image_path(const gchar * directory, const gchar * filename)
 		return NULL;
 	}
 
+	/* still memeak with data of this list */
 	g_slist_free(dir);
 	return found_filename;
 }

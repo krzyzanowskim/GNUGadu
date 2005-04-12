@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.18 2005/01/05 18:17:16 thrulliq Exp $ */
+/* $Id: gui_support.c,v 1.19 2005/04/12 15:48:54 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -293,6 +293,7 @@ GdkPixbuf *create_pixbuf(const gchar * filename)
 	gchar *found_filename = NULL;
 	GdkPixbuf *pixbuf = NULL;
 	GSList *dir = NULL;
+	GSList *dir_tmp = NULL;
 	gchar *iconsdir = NULL;
 
 	if (!filename || !filename[0])
@@ -313,14 +314,15 @@ GdkPixbuf *create_pixbuf(const gchar * filename)
 		dir = g_slist_prepend(dir, iconsdir);
 	}
 
-	while (dir)
+	dir_tmp = dir;
+	while (dir_tmp)
 	{
-		found_filename = check_file_exists((gchar *) dir->data, filename);
+		found_filename = check_file_exists((gchar *) dir_tmp->data, filename);
 
 		if (found_filename)
 			break;
 
-		dir = dir->next;
+		dir_tmp = dir_tmp->next;
 	}
 
 	/* If we haven't found the pixmap, try the source directory. */
@@ -329,12 +331,14 @@ GdkPixbuf *create_pixbuf(const gchar * filename)
 
 	if (!found_filename)
 	{
-	 print_debug("Couldn't find pixmap file: %s", filename);
+		print_debug("Couldn't find pixmap file: %s", filename);
 		return NULL;
 	}
 
 	pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
 
+	/* there is memleak with data ot dir slist, but not sure how to free it right now
+	   becaue of const strings */
 	g_slist_free(dir);
 	g_free(iconsdir);
 
