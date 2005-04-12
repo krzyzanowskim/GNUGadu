@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.68 2005/02/16 13:24:15 mkobierzycki Exp $ */
+/* $Id: gui_handlers.c,v 1.69 2005/04/12 10:44:11 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -420,8 +420,10 @@ void handle_status_changed(GGaduSignal * signal)
 	gchar *tipdesc;
 	print_debug("handle_status_changed start");
 
+	if (!sp) return;
+
 	gp = gui_find_protocol(signal->source_plugin_name, protocols);
-	g_return_if_fail(gp != NULL);
+	if (!gp) return;
 
 	if (gp->blinker > 0)
 		g_source_remove(gp->blinker);
