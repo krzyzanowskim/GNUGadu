@@ -1,3 +1,6 @@
+13.04.2005
+- added mutex to handle_status_changed(), and other small fixes (GUI/krzak)
+
 12.04.2005
 - small fixes related to reading pixmaps (GUI/krzak)
 

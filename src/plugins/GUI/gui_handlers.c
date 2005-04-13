@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.71 2005/04/13 14:40:02 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.72 2005/04/13 14:47:28 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -420,6 +420,9 @@ void handle_status_changed(GGaduSignal * signal)
 	GGaduStatusPrototype *sp = signal->data;
 	gchar *tipdesc = NULL;
 	print_debug("handle_status_changed start");
+
+	if (!thread_status_changed_mutex)
+		thread_status_changed_mutex = g_mutex_new();
 
 	g_mutex_lock(thread_status_changed_mutex);
 
