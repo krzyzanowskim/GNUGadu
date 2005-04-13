@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.69 2005/04/12 10:44:11 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.70 2005/04/13 14:29:32 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -415,9 +415,9 @@ void handle_status_changed(GGaduSignal * signal)
 {
 	gui_protocol *gp = NULL;
 	GdkPixbuf *image = NULL;
-	GtkWidget *status_image;
+	GtkWidget *status_image = NULL;
 	GGaduStatusPrototype *sp = signal->data;
-	gchar *tipdesc;
+	gchar *tipdesc = NULL;
 	print_debug("handle_status_changed start");
 
 	if (!sp) return;
@@ -430,6 +430,8 @@ void handle_status_changed(GGaduSignal * signal)
 		
 	gp->blinker = -1;
 
+	print_debug("requested pixbuf:");
+	print_debug("is:%s",sp->image);
 	image = create_pixbuf(sp->image);
 	status_image = gtk_bin_get_child(GTK_BIN(gp->statuslist_eventbox));
 	gtk_image_set_from_pixbuf(GTK_IMAGE(status_image), image);
@@ -442,7 +444,7 @@ void handle_status_changed(GGaduSignal * signal)
 	gp->blinker_image1 = NULL;
 	gp->blinker_image2 = NULL;
 
-	if (sp->status_description && strlen(sp->status_description) > 0)
+	if (sp->status_description && (strlen(sp->status_description) > 0))
 	    tipdesc = g_strconcat(sp->description," - ",sp->status_description,NULL);
 	else
 	    tipdesc = g_strconcat(sp->description,sp->status_description,NULL);
