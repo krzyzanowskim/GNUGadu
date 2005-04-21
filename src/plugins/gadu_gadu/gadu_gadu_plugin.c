@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.245 2005/04/10 08:38:33 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.246 2005/04/21 14:50:12 thrulliq Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -480,8 +480,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				signal_emit(GGadu_PLUGIN_NAME, "sound play file", ggadu_config_var_get(handler, "sound_app_file"), "sound*");
 
 			/* *INDENT-OFF* */
-			signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp_temp, "main-gui");
-			GGaduStatusPrototype_free(sp_temp);
+			signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp_temp, "main-gui", GGaduStatusPrototype_free);
 			/* *INDENT-ON* */
 
 			ggadu_config_var_set(handler, "server", g_strdup_printf("%s:%d", inet_ntoa(*((struct in_addr *) &session->server_addr)), session->port));
