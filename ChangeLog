@@ -1,3 +1,6 @@
+21.04.2005
+- fixed segfault (autoconnect) traced & patched by Grzegorz Grygorczyk <francuz86[at]gmail.com> (gadu-gadu)
+
 13.04.2005
 - added mutex to handle_status_changed(), and other small fixes (GUI/krzak)
 
