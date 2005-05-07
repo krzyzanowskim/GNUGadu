@@ -27,15 +27,15 @@ libgadu_gadu_plugin_la_LIBADD =  \
 	    $(top_srcdir)/lib/libgg2_core.la 
     
 if EXTERNAL_LIBGADU
-libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(OPENSSL_LIBS) $(LIBGADU_LIBS)
+libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(GNUTLS_LIBS) $(LIBGADU_LIBS)
 else
-libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(OPENSSL_LIBS)
+libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(GNUTLS_LIBS)
 endif
 
 if EXTERNAL_LIBGADU
-libgadu_gadu_plugin_la_CFLAGS =  -I/usr/kerberos/include/ $(CFLAGS) $(OPENSSL_INCLUDES) $(LIBGADU_CFLAGS)
+libgadu_gadu_plugin_la_CFLAGS =  -I/usr/kerberos/include/ $(CFLAGS) $(GNUTLS_INCLUDES) $(LIBGADU_CFLAGS)
 else
-libgadu_gadu_plugin_la_CFLAGS =  -I./libgadu/lib -I/usr/kerberos/include/ $(CFLAGS) $(OPENSSL_INCLUDES)
+libgadu_gadu_plugin_la_CFLAGS =  -I./libgadu/lib -I/usr/kerberos/include/ $(CFLAGS) $(GNUTLS_INCLUDES)
 endif
 
 EXTRA_DIST = libgadu/autogen.sh \

@@ -13,10 +13,10 @@
 #endif
 
 /* Defined if libgadu was compiled and linked with TLS support. */
-#ifndef HAVE_OPENSSL
-#undef __GG_LIBGADU_HAVE_OPENSSL
+#ifndef HAVE_GNUTLS
+#undef __GG_LIBGADU_HAVE_GNUTLS
 #else
-#define __GG_LIBGADU_HAVE_OPENSSL 1
+#define __GG_LIBGADU_HAVE_GNUTLS 1
 #endif
 
 /* Defined if this machine has va_copy(). */

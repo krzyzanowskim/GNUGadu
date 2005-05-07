@@ -1,4 +1,4 @@
-/* $Id: events.c,v 1.8 2005/03/09 12:34:55 krzyzak Exp $ */
+/* $Id: events.c,v 1.9 2005/05/07 19:05:51 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -38,9 +38,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
-#  include <openssl/err.h>
-#  include <openssl/x509.h>
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
+#include <gnutls/openssl.h>
+//#  include <openssl/err.h>
+//#  include <openssl/x509.h>
 #endif
 
 #include "compat.h"
@@ -910,7 +911,7 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 			else
 				host = "";
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 			if (sess->ssl)
 				appmsg = "appmsg3.asp";
 			else
@@ -1137,7 +1138,7 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 					errno = ETIMEDOUT;
 #endif
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 				/* je¶li logujemy siê po TLS, nie próbujemy
 				 * siê ³±czyæ ju¿ z niczym innym w przypadku
 				 * b³êdu. nie do¶æ, ¿e nie ma sensu, to i
@@ -1204,7 +1205,7 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 				}
 			}
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 			if (sess->ssl) {
 				SSL_set_fd(sess->ssl, sess->fd);
 
@@ -1223,7 +1224,7 @@ struct gg_event *gg_watch_fd(struct gg_session *sess)
 			break;
 		}
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 		case GG_STATE_TLS_NEGOTIATION:
 		{
 			int res;

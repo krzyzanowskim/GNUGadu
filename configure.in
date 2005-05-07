@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.125 2005/04/01 10:36:18 krzyzak Exp $
+# $Id: configure.in,v 1.126 2005/05/07 19:05:49 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.5])
 
@@ -116,13 +116,13 @@ if test "x$with_c99_vsnprintf" = "x"; then
 	])
 fi
 
-dnl
-dnl  Resolver libgadu oparty na pthread
-dnl
+#
+#  Resolver libgadu oparty na pthread
+#
 
 ACX_PTHREAD(
 [
- 	dnl workaround dla pkconfiga
+ 	# workaround dla pkconfiga
 	if test "x$PTHREAD_CFLAGS" = "x-pthread"; then
 		PTHREAD_LIBS="$PTHREAD_LIBS -pthread"
 	fi
@@ -140,15 +140,15 @@ ACX_PTHREAD(
 ])
 
 
-dnl AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
-dnl AC_CHECK_FUNCS(bswap_32 bswap_16)
+# AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
+# AC_CHECK_FUNCS(bswap_32 bswap_16)
 
 AC_TYPE_SIGNAL
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memset mkdir strcasecmp strchr strlen])
 
-dnl AM_PROG_LIBTOOL
+# AM_PROG_LIBTOOL
 AM_MAINTAINER_MODE
 
 
@@ -212,27 +212,27 @@ if test x$with_gdb = xyes; then
  CFLAGS="$CFLAGS -ggdb"
 fi
 
-dnl not working only for information
+# not working only for information
 
-dnl with_gui=yes
-dnl with_gghist=yes
-dnl with_gtkspell=yes
-dnl with_gadu=yes
-dnl with_tlen=yes
-dnl with_jabber=yes
-dnl with_xosd=yes
-dnl with_sms=yes
-dnl with_remote=yes
-dnl with_esd=yes
-dnl with_oss=yes
-dnl with_arts=yes
-dnl with_external=yes
-dnl with_external_libgadu=no
-dnl with_history_external_viewer=yes
-dnl with_update=yes
-dnl with_docklet_system_tray=yes
-dnl with_docklet_dockapp=yes
-dnl with_perl=no
+# with_gui=yes
+# with_gghist=yes
+# with_gtkspell=yes
+# with_gadu=yes
+# with_tlen=yes
+# with_jabber=yes
+# with_xosd=yes
+# with_sms=yes
+# with_remote=yes
+# with_esd=yes
+# with_oss=yes
+# with_arts=yes
+# with_external=yes
+# with_external_libgadu=no
+# with_history_external_viewer=yes
+# with_update=yes
+# with_docklet_system_tray=yes
+# with_docklet_dockapp=yes
+# with_perl=no
 
 AC_ARG_WITH(all_plugins, [  --with-all-plugins	  Build all plugins with all features])
 if test x$with_all_plugins = xyes; then
@@ -288,14 +288,14 @@ else
     with_perl=no
 fi
 
-dnl if test "x$with_perl" = "xyes"; then
-dnl       PERL_LDFLAGS=`$perlpath -MExtUtils::Embed -e ldopts |$sedpath 's/-lgdbm //'`
-dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-ldb //'`
-dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lndbm //'`
-dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lnsl //'`
-dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
-dnl       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
-dnl fi
+# if test "x$with_perl" = "xyes"; then
+#       PERL_LDFLAGS=`$perlpath -MExtUtils::Embed -e ldopts |$sedpath 's/-lgdbm //'`
+#       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-ldb //'`
+#       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lndbm //'`
+#       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lnsl //'`
+#       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
+#       PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
+# fi
 
 AC_ARG_WITH(gghist, [  --without-gghist		  Build without gghist])
 if test "x$with_gghist" != "xno"; then 
@@ -358,20 +358,46 @@ fi
 
 AM_CONDITIONAL(EXTERNAL_LIBGADU, test "$with_external_libgadu" = "yes")
 
+#
+# GNU TLS Support
+#
+AC_ARG_WITH(gnutls, [  --with-gnutls	Build with gnutls		default=yes])
+
 if test "x$with_gadu" != "xno"; then 
     with_gadu=yes
-    if test "x$with_external_libgadu" = "xno"; then
-	if test "x$without_openssl" != "xyes"; then
-	
-	    AC_CHECK_OPENSSL
-	    
-	    if test "x$have_openssl" = "xno"; then
-		AC_MSG_ERROR([unable to find openssl required for included libgadu])
-	    fi
-	    
-	    AC_SUBST(OPENSSL_LIBS)
-	    AC_SUBST(OPENSSL_INCLUDES)
-	fi
+    if test "x$with_external_libgadu" = "xno"; then	
+
+# GNUTLS
+if test "x$with_gnutls" != "xno"; then
+    with_gnutls=yes
+    AC_PATH_PROG(GNUTLS_CONFIG_SCRIPT, libgnutls-config, no)
+    
+    if test "x$GNUTLS_CONFIG_SCRIPT" != "xno"; then
+	AC_CHECK_LIB([gnutls], [gnutls_init], with_gnutls=yes, with_gnutls=no, `$GNUTLS_CONFIG_SCRIPT --libs`)
+
+	if test "x$with_gnutls" != "xno"; then
+
+	    GNUTLS_CFLAGS=`$GNUTLS_CONFIG_SCRIPT --cflags`
+	    GNUTLS_LIBS=`$GNUTLS_CONFIG_SCRIPT --libs`
+    	    
+	    AC_CHECK_HEADERS(gnutls/gnutls.h gnutls/openssl.h, have_gnutlsh=yes, have_gnutlsh=no)
+	    if test "$have_gnutlsh" = yes; then
+		with_gnutls=yes
+	        AC_SUBST(GNUTLS_LIBS)
+	        AC_SUBST(GNUTLS_CFLAGS)
+    	    else
+		with_gnutls=no
+    		AC_MSG_ERROR([*** unable to find gnutls/gnutls.h and gnutls/openssl.h headers ***])
+ 	    fi
+	 fi
+    else
+    	AC_MSG_ERROR([*** unable to find GNUTLS library (http://www.gnu.org/software/gnutls/) ***])
+	with_gnutls=no
+    fi
+else
+    with_gnutls=no
+fi
+
 	AC_CONFIG_SUBDIRS([src/plugins/gadu_gadu/libgadu])
 	
     fi
@@ -629,6 +655,7 @@ else
 	with_update=no
 fi
 
+
 AM_CONDITIONAL(BUILD_GGHIST, test "$with_gghist" = "yes")
 AM_CONDITIONAL(BUILD_GUI, test "$with_gui" = "yes")
 AM_CONDITIONAL(USE_GTKSPELL, test "$with_gtkspell" = "yes")
@@ -649,8 +676,9 @@ AM_CONDITIONAL(BUILD_IGNORE, test "$with_ignore" = "yes")
 #AM_CONDITIONAL(BUILD_REMOTE, test "$with_remote" = "yes")
 AM_CONDITIONAL(BUILD_DBUS, test "$with_dbus" = "yes")
 AM_CONDITIONAL(BUILD_UPDATE, test "$with_update" = "yes")
+AM_CONDITIONAL(BUILD_GNUTLS, test "$with_gnutls" = "yes")
 
-dnl Set PACKAGE_DATA_DIR in config.h.
+# Set PACKAGE_DATA_DIR in config.h.
 if test "x${datadir}" = 'x${prefix}/share'; then
   if test "x${prefix}" = "xNONE"; then
     AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${ac_default_prefix}/share/${PACKAGE}")
@@ -661,7 +689,7 @@ else
   AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${datadir}/${PACKAGE}")
 fi
 
-dnl Set PACKAGE_LOCAL_DIR in config.h.
+# Set PACKAGE_LOCAL_DIR in config.h.
 if test "x${datadir}" = 'x${prefix}/share'; then
   if test "x${prefix}" = "xNONE"; then
     AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/share/locale")
@@ -673,7 +701,7 @@ else
 fi
 
 
-dnl Set PACKAGE_SOURCE_DIR in config.h.
+# Set PACKAGE_SOURCE_DIR in config.h.
 packagesrcdir=`cd $srcdir && pwd`
 AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
@@ -777,6 +805,7 @@ echo Build plugin external history viewer... : $with_history_external_viewer
 echo Build plugin DBUS...................... : $with_dbus
 echo Build gghist - history viewer.......... : $with_gghist
 echo Build with experimental perl support... : $with_perl
+echo Build with gnutls... : $with_gnutls
 echo
 echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 

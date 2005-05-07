@@ -1,4 +1,4 @@
-/* $Id: libgadu.c,v 1.8 2005/03/09 12:34:55 krzyzak Exp $ */
+/* $Id: libgadu.c,v 1.9 2005/05/07 19:05:52 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -42,9 +42,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
-#  include <openssl/err.h>
-#  include <openssl/rand.h>
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
+#include <gnutls/openssl.h>
+//#  include <openssl/err.h>
+//#  include <openssl/rand.h>
 #endif
 
 #include "compat.h"
@@ -72,7 +73,7 @@ static char rcsid[]
 #ifdef __GNUC__
 __attribute__ ((unused))
 #endif
-= "$Id: libgadu.c,v 1.8 2005/03/09 12:34:55 krzyzak Exp $";
+= "$Id: libgadu.c,v 1.9 2005/05/07 19:05:52 krzyzak Exp $";
 #endif 
 
 /*
@@ -371,7 +372,7 @@ int gg_read(struct gg_session *sess, char *buf, int length)
 {
 	int res;
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 	if (sess->ssl) {
 		int err;
 
@@ -408,7 +409,7 @@ int gg_write(struct gg_session *sess, const char *buf, int length)
 {
 	int res;
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 	if (sess->ssl) {
 		int err;
 
@@ -760,7 +761,7 @@ struct gg_session *gg_login(const struct gg_login_params *p)
 	sess->pid = -1;
 
 	if (p->tls == 1) {
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 		char buf[1024];
 
 		OpenSSL_add_ssl_algorithms();
@@ -923,7 +924,7 @@ void gg_free_session(struct gg_session *sess)
 	if (sess->header_buf)
 		free(sess->header_buf);
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 	if (sess->ssl)
 		SSL_free(sess->ssl);
 
@@ -1073,7 +1074,7 @@ void gg_logoff(struct gg_session *sess)
 	if (GG_S_NA(sess->status & ~GG_STATUS_FRIENDS_MASK))
 		gg_change_status(sess, GG_STATUS_NOT_AVAIL);
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 	if (sess->ssl)
 		SSL_shutdown(sess->ssl);
 #endif

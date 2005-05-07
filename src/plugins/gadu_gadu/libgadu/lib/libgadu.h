@@ -1,4 +1,4 @@
-/* $Id: libgadu.h,v 1.9 2005/03/09 12:34:55 krzyzak Exp $ */
+/* $Id: libgadu.h,v 1.10 2005/05/07 19:05:52 krzyzak Exp $ */
 
 /*
  *  (C) Copyright 2001-2003 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -38,8 +38,9 @@ extern "C" {
 #include <stdio.h>
 #include <stdarg.h>
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
-#include <openssl/ssl.h>
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
+#include <gnutls/openssl.h>
+//#include <openssl/ssl.h>
 #endif
 
 /*
@@ -120,7 +121,7 @@ struct gg_session {
 	char *header_buf;	/* bufor na pocz±tek nag³ówka */
 	unsigned int header_done;/* ile ju¿ mamy */
 
-#ifdef __GG_LIBGADU_HAVE_OPENSSL
+#ifdef __GG_LIBGADU_HAVE_GNUTLS
 	SSL *ssl;		/* sesja TLS */
 	SSL_CTX *ssl_ctx;	/* kontekst sesji? */
 #else
