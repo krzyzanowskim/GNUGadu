@@ -245,6 +245,7 @@ int main(int argc, char **argv)
 	GtkWidget *base_field;
 	GtkTextBuffer *buf;
 	int fd;
+	int *list;
 
 	gtk_init(&argc, &argv);
 
@@ -280,9 +281,7 @@ int main(int argc, char **argv)
 	g_print("Getting lines count..\n");
 #endif
 	lines = lines_count(fd);
-	{
-	int list[lines + 2];
-
+	list = (int *)g_malloc((lines + 2) * sizeof(int));
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "GNU Gadu History");
@@ -323,7 +322,7 @@ int main(int argc, char **argv)
 	PutNewButton(field, "gtk-go-back", _("Go to pevious page"), GTK_SIGNAL_FUNC(prev_page), list);
 	PutNewButton(field, "gtk-go-forward", _("Go to next page"), GTK_SIGNAL_FUNC(next_page), list);
 	PutNewButton(field, "gtk-goto-last", _("Go to last page"), GTK_SIGNAL_FUNC(last_page), list);
-	PutNewButton(field, "gtk-close", _("Close this window"),GTK_SIGNAL_FUNC(close_window), NULL);
+	PutNewButton(field, "gtk-close", _("Close this window"),GTK_SIGNAL_FUNC(close_window), list);
 
 	/* Add 'Base container' to window */
 	gtk_container_add(GTK_CONTAINER(window), base_field);
@@ -345,7 +344,6 @@ int main(int argc, char **argv)
 	else
 	    show_lines(0, display_pages, list);
 
-	}
 	gtk_widget_show_all(window);
 
 	gtk_main();
