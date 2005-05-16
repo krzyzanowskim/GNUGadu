@@ -9,6 +9,14 @@ pixmap_DATA = \
     gadu-gadu-offline.png \
     gadu-gadu-online-descr.png \
     gadu-gadu-online.png \
-    icon.png
+    icon.png \
+    jabber-auth-from.png \
+    jabber-away.png \
+    jabber-dnd.png \
+    jabber-error.png \
+    jabber-noauth.png \
+    jabber-offline.png \
+    jabber-online.png \
+    jabber-xa.png
 
 EXTRA_DIST = $(pixmap_DATA)

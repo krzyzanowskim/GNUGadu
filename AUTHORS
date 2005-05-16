@@ -64,7 +64,8 @@ DBUS
 ----------------------------------------------------------------
 -- THANKS FOR --------------------------------------------------
 ----------------------------------------------------------------
-Aflinta      - gettext patch, testing, translations
-Dwuziu       - testing
-Piotr Smyrak - FreeBSD stuff
-Mateusz Maliszewski - icons and testing.
+Aflinta                     - gettext patch, testing, translations
+Dwuziu                      - testing
+Piotr Smyrak                - FreeBSD stuff
+Mateusz Maliszewski         - icons and testing.
+Everaldo (www.everaldo.com) - icons for Jabber plugin
