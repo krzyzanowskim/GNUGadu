@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.97 2005/02/16 13:24:18 mkobierzycki Exp $ */
+/* $Id: tlen_plugin.c,v 1.98 2005/05/17 10:07:18 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -934,11 +934,17 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			}
 			else
 			{
-				tlen_presence(session, sp->status, session->description);
+				/*
+				* sp->status_description == NULL pozostawia stary opis
+				* sp->status_description == "" czysci opis
+				*/
 			        if(sp->status_description)
-			    	    g_free(sp->status_description);
-
-			    	sp->status_description = session->description ? to_utf8("ISO-8859-2", session->description) : NULL;
+					tlen_presence(session, sp->status, from_utf8("ISO-8859-2", sp->status_description));
+				else
+				{
+					sp->status_description = session->description ? to_utf8("ISO-8859-2", session->description) : NULL;
+					tlen_presence(session, sp->status, session->description);
+				}
 				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp, "main-gui");
 			}
 		}

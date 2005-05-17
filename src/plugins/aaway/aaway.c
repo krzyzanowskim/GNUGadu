@@ -130,11 +130,10 @@ static gboolean check_idle_time()
 			    sp2->status_description = message;
 			    
 			    print_debug("change from %d to %d",sp->status,newstatus);
-			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
+			    signal_emit_full(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name, GGaduStatusPrototype_free);
 			    
 			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)TRUE);
 			    print_debug("SET %d %s",newstatus,plugin->name);
-			    GGaduStatusPrototype_free(sp2);
 //			    g_free(message);
 			}
 			GGaduStatusPrototype_free(sp);
@@ -161,15 +160,16 @@ static gboolean check_idle_time()
 			
 			if (sp && ggadu_is_in_status(sp->status, protocol->away_status))
 			{
-			    gchar *message = NULL;
+			    /* Aby wyczyscic opis message musi == "" */
+			    gchar *message = g_strdup("");
 			    GGaduStatusPrototype *sp2;
 			    gint newstatus;
 
 			    print_debug("%s : Setting ACTIVE state\n", GGadu_PLUGIN_NAME);
-			    
 			    if (sp->status_description && 
 			        !strstr(sp->status_description,ggadu_config_var_get(handler, "message")))
 			    {
+				g_free(message);
 				message = g_strdup(sp->status_description);
 			    }
 			    
@@ -180,10 +180,9 @@ static gboolean check_idle_time()
 			    
 			    
 			    print_debug("change from %d to %d",sp->status,newstatus);
- 			    signal_emit(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name);
+ 			    signal_emit_full(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name, GGaduStatusPrototype_free);
 			    
 			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)FALSE);
-			    GGaduStatusPrototype_free(sp2);
 //			    g_free(message); 
 			}
 			GGaduStatusPrototype_free(sp);
@@ -252,14 +251,14 @@ static gpointer aaway_preferences(gpointer user_data)
 {
 	GGaduDialog *d = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Auto-Away Preferences"), "update config");
 	print_debug("%s: Preferences\n", "aaway");
-//	gchar *utf = NULL;
+	gchar *utf = NULL;
 	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_ENABLE_AUTOAWAY, _("Enable auto-away"), VAR_BOOL, (gpointer) ggadu_config_var_get(handler, "enable"), VAR_FLAG_ADVANCED);
 	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_INTERVAL, _("Auto away after time (minutes)"), VAR_INT, (gpointer) ggadu_config_var_get(handler, "interval"), VAR_FLAG_NONE);
-/*	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_ENABLE_AWAY_MSG, _("Enable away message"), VAR_BOOL,
+	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_ENABLE_AWAY_MSG, _("Enable away message"), VAR_BOOL,
 			       (gpointer) ggadu_config_var_get(handler, "enable_message"), VAR_FLAG_NONE);
 	utf = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "message"));
 	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_AWAY_MSG, _("Away message (%s-time)"), VAR_STR, utf, VAR_FLAG_NONE);
-*/
+
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
 	return NULL;

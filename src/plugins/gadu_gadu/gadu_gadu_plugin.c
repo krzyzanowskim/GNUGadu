@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.246 2005/04/21 14:50:12 thrulliq Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.247 2005/05/17 10:07:15 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -2123,8 +2123,9 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == CHANGE_STATUS_SIG)
 	{
 		GGaduStatusPrototype *sp = signal->data;
+		GGaduStatusPrototype *sp2;
 		gint internal_status;
-
+		
 		if (!sp)
 			return;
 
@@ -2149,31 +2150,56 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		{
 			if (sp->status_description)
 			{
-				switch (sp->status)
+				if(strlen(sp->status_description)>0)
 				{
-				case GG_STATUS_AVAIL:
-					sp->status = GG_STATUS_AVAIL_DESCR;
-					break;
-				case GG_STATUS_BUSY:
-					sp->status = GG_STATUS_BUSY_DESCR;
-					break;
-				case GG_STATUS_NOT_AVAIL:
-					sp->status = GG_STATUS_NOT_AVAIL_DESCR;
-					break;
-				case GG_STATUS_INVISIBLE:
-					sp->status = GG_STATUS_INVISIBLE_DESCR;
-					break;
+					switch (sp->status)
+					{
+					case GG_STATUS_AVAIL:
+						sp->status = GG_STATUS_AVAIL_DESCR;
+						break;
+					case GG_STATUS_BUSY:
+						sp->status = GG_STATUS_BUSY_DESCR;
+						break;
+					case GG_STATUS_NOT_AVAIL:
+						sp->status = GG_STATUS_NOT_AVAIL_DESCR;
+						break;
+					case GG_STATUS_INVISIBLE:
+						sp->status = GG_STATUS_INVISIBLE_DESCR;
+						break;
+					}
+				}
+				else
+				{
+					switch (sp->status)
+					{
+					case GG_STATUS_AVAIL_DESCR:
+						sp->status = GG_STATUS_AVAIL;
+						break;
+					case GG_STATUS_BUSY_DESCR:
+						sp->status = GG_STATUS_BUSY;
+						break;
+					case GG_STATUS_NOT_AVAIL_DESCR:
+						sp->status = GG_STATUS_NOT_AVAIL;
+						break;
+					case GG_STATUS_INVISIBLE_DESCR:
+						sp->status = GG_STATUS_INVISIBLE;
+						break;
+					}
 				}
 				
+				internal_status = sp->status;
+								
 				if (ggadu_config_var_get(handler, "private"))
 				{
-					internal_status = sp->status;
 					if (sp->status != GG_STATUS_NOT_AVAIL_DESCR)
 					    internal_status |= GG_STATUS_FRIENDS_MASK;
 				}
 			}
-
-
+			
+			/* Pobiera nowy prototyp statusu gdyz sp->status mogl ulec zmianie */
+			sp2 = ggadu_find_status_prototype(p, sp->status);
+			sp2->status_description = g_strdup(sp->status_description);
+			
 			ggadu_config_var_set(handler, "reason", sp->status_description);
 			ggadu_config_save(handler);
 
@@ -2192,11 +2218,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				g_free(desc_cp);
 
 				print_debug("changed to %d %d %d %d", internal_status, sp->status, GG_STATUS_NOT_AVAIL, GG_STATUS_NOT_AVAIL_DESCR);
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp, "main-gui");
+				signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp2, "main-gui", GGaduStatusPrototype_free);
 			}
 			else if (gg_change_status(session, internal_status) != -1)
 			{
-				signal_emit(GGadu_PLUGIN_NAME, "gui status changed", sp, "main-gui");
+				signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp2, "main-gui", GGaduStatusPrototype_free);
 			}
 			else
 			{
