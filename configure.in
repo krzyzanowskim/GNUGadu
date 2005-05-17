@@ -1,4 +1,4 @@
-# $Id: configure.in,v 1.126 2005/05/07 19:05:49 krzyzak Exp $
+# $Id: configure.in,v 1.127 2005/05/17 10:14:07 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.5])
 
@@ -773,7 +773,6 @@ pixmaps/icons/classic/Makefile
 pixmaps/icons/ghosts/Makefile
 pixmaps/icons/modern/Makefile
 pixmaps/icons/rozgwiazda/Makefile
-pixmaps/icons/tlen-classic/Makefile
 sounds/Makefile
 themes/Makefile
 ])
