@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.98 2005/05/17 10:07:18 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.99 2005/05/18 22:19:10 mkobierzycki Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -262,7 +262,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			if (e->roster->name)
 			{
-				k->nick = to_utf8("ISO-8859-2", e->roster->name);
+				/*k->nick = to_utf8("ISO-8859-2", e->roster->name);*/
+				k->nick = g_strdup(e->roster->name);
 			}
 			else
 			{
