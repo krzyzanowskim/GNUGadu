@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.81 2005/05/19 14:59:35 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.82 2005/05/19 15:50:20 thrulliq Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -153,10 +153,10 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "msg_out_header_color", VAR_STR, g_strdup("brown"));
 	ggadu_config_var_add_with_default(gui_handler, "msg_out_header_font", VAR_STR, g_strdup("bold"));
 	ggadu_config_var_add_with_default(gui_handler, "msg_body_color", VAR_STR,g_strdup("black"));
-	ggadu_config_var_add_with_default(gui_handler, "msg_body_font", VAR_STR, g_strdup("Sans"));
+	ggadu_config_var_add_with_default(gui_handler, "msg_body_font", VAR_STR, g_strdup("regular"));
 	ggadu_config_var_add_with_default(gui_handler, "msg_out_body_color", VAR_STR,g_strdup("black"));
-	ggadu_config_var_add_with_default(gui_handler, "msg_out_body_font", VAR_STR, g_strdup("Sans"));
-	ggadu_config_var_add_with_default(gui_handler, "msg_out_edit_font", VAR_STR, g_strdup("Sans"));
+	ggadu_config_var_add_with_default(gui_handler, "msg_out_body_font", VAR_STR, g_strdup("regular"));
+	ggadu_config_var_add_with_default(gui_handler, "msg_out_edit_font", VAR_STR, g_strdup("regular"));
 
 	ggadu_config_var_add_with_default(gui_handler, "hide_on_start", VAR_BOOL,(gpointer) FALSE);
 	ggadu_config_var_add_with_default(gui_handler, "close_on_esc", VAR_BOOL, (gpointer) FALSE);
