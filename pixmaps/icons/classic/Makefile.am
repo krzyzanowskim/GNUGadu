@@ -10,6 +10,7 @@ pixmap_DATA = \
     gadu-gadu-online-descr.png \
     gadu-gadu-online.png \
     icon.png \
+    jabber.png \
     jabber-auth-from.png \
     jabber-away.png \
     jabber-dnd.png \
