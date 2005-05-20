@@ -1,9 +1,7 @@
 20.05.2005
 - Changes within iconsets; Thanks go to Piotr Z³ocki. (mkobierzycki)
 - Fixed bug #170. (core/mkobierzycki)
-- Moved tlen plugin configuration file from `config' to `tlen'; closes #174;
-  Please add info about that in the release notes of the new gg2 version.
-  (tlen/mkobierzycki)
+- Moved tlen plugin configuration file from `config' to `tlen'; closes #174. (tlen/mkobierzycki)
 
 19.05.2005
 - Fix for bugreport #146 (tlen/mkobierzycki)
