@@ -130,7 +130,7 @@ static gboolean check_idle_time()
 			    sp2->status_description = message;
 			    
 			    print_debug("change from %d to %d",sp->status,newstatus);
-			    signal_emit_full(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name, GGaduStatusPrototype_free);
+			    signal_emit_full(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name, (gpointer)GGaduStatusPrototype_free);
 			    
 			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)TRUE);
 			    print_debug("SET %d %s",newstatus,plugin->name);
@@ -180,7 +180,7 @@ static gboolean check_idle_time()
 			    
 			    
 			    print_debug("change from %d to %d",sp->status,newstatus);
- 			    signal_emit_full(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name, GGaduStatusPrototype_free);
+ 			    signal_emit_full(GGadu_PLUGIN_NAME, "change status", sp2, plugin->name, (gpointer)GGaduStatusPrototype_free);
 			    
 			    g_hash_table_insert(aaway_hash,plugin->name,(gpointer)FALSE);
 //			    g_free(message); 

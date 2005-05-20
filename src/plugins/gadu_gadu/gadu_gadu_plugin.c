@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.247 2005/05/17 10:07:15 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.248 2005/05/20 17:35:25 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -480,7 +480,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 				signal_emit(GGadu_PLUGIN_NAME, "sound play file", ggadu_config_var_get(handler, "sound_app_file"), "sound*");
 
 			/* *INDENT-OFF* */
-			signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp_temp, "main-gui", GGaduStatusPrototype_free);
+			signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp_temp, "main-gui", (gpointer)GGaduStatusPrototype_free);
 			/* *INDENT-ON* */
 
 			ggadu_config_var_set(handler, "server", g_strdup_printf("%s:%d", inet_ntoa(*((struct in_addr *) &session->server_addr)), session->port));
@@ -2218,11 +2218,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 				g_free(desc_cp);
 
 				print_debug("changed to %d %d %d %d", internal_status, sp->status, GG_STATUS_NOT_AVAIL, GG_STATUS_NOT_AVAIL_DESCR);
-				signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp2, "main-gui", GGaduStatusPrototype_free);
+				signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp2, "main-gui", (gpointer)GGaduStatusPrototype_free);
 			}
 			else if (gg_change_status(session, internal_status) != -1)
 			{
-				signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp2, "main-gui", GGaduStatusPrototype_free);
+				signal_emit_full(GGadu_PLUGIN_NAME, "gui status changed", sp2, "main-gui", (gpointer)GGaduStatusPrototype_free);
 			}
 			else
 			{
