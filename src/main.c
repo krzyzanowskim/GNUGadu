@@ -1,4 +1,4 @@
-/* $Id: main.c,v 1.30 2005/03/02 13:36:04 krzyzak Exp $ */
+/* $Id: main.c,v 1.31 2005/05/20 15:22:12 mkobierzycki Exp $ */
 
 /*
  * GNU Gadu 2
@@ -124,6 +124,7 @@ void start_plugins_ordered()
 
     heap = get_list_modules_load();
     tmp = heap;
+
     while (tmp)
     {
 	plugin = (GGaduPlugin *) tmp->data;
@@ -168,9 +169,9 @@ void start_plugins_ordered()
     if (!main_gui_loaded)
     {
 	g_print(_("\n\t***************************\n \
-	GNU Gadu kindly inform you that because you have no GUI plugin installed/compiled/loaded.\n  \
-	you shouldn't expect common interaction with application.\n \
-	Check README for more information about plugins\n \
+	GNU Gadu kindly informs you that because you have no GUI plugin installed/compiled/loaded\n  \
+	you can't expect common interaction with the application.\n \
+	Check README for more information about plugins.\n \
 	***************************\n"));
     }
 

@@ -1,4 +1,4 @@
-/* $Id: plugins.c,v 1.27 2004/12/26 22:23:16 shaster Exp $ */
+/* $Id: plugins.c,v 1.28 2005/05/20 15:22:12 mkobierzycki Exp $ */
 
 /* 
  * GNU Gadu 2 
@@ -541,7 +541,7 @@ GSList *get_list_modules_load()
 			{
 				plugin = (GGaduPlugin *) tmp->data;
 				
-				if (!g_strncasecmp(buffer->str, plugin->name, buffer->len - 1))
+				if (buffer->len > 1 && !g_strncasecmp(buffer->str, plugin->name, buffer->len - 1))
 					ret = g_slist_append(ret, plugin);
 					
 				tmp = tmp->next;
