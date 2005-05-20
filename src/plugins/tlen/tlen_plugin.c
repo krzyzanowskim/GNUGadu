@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.99 2005/05/18 22:19:10 mkobierzycki Exp $ */
+/* $Id: tlen_plugin.c,v 1.100 2005/05/20 16:39:24 mkobierzycki Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -688,7 +688,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 
 	register_signal_receiver((GGaduPlugin *) handler, (signal_func_ptr) my_signal_receive);
 
-	path = g_build_filename(config->configdir, "config", NULL);
+	path = g_build_filename(config->configdir, "tlen", NULL);
 	ggadu_config_set_filename((GGaduPlugin *) handler, path);
 	g_free(path);
 
