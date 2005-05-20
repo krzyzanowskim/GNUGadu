@@ -9,6 +9,7 @@ pixmap_DATA = \
     gadu-gadu-offline.png \
     gadu-gadu-online-descr.png \
     gadu-gadu-online.png \
+    gadu-gadu.png \
     icon.png
 
 EXTRA_DIST = $(pixmap_DATA)

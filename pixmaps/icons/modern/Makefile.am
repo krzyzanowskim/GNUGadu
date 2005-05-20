@@ -9,6 +9,7 @@ pixmap_DATA = \
     gadu-gadu-offline.png \
     gadu-gadu-online-descr.png \
     gadu-gadu-online.png \
+    gadu-gadu.png \
     tlen-away.png \
     tlen-beback.png \
     tlen-chat.png \

@@ -1,6 +1,7 @@
 pixmapdir   = $(pkgdatadir)/pixmaps/icons/bubble
 pixmap_DATA = \
     README \
+    gadu-gadu.png \
     gadu-gadu-away-descr.png \
     gadu-gadu-away.png \
     gadu-gadu-invisible-descr.png \
