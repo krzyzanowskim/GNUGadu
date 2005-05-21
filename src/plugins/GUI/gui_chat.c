@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.147 2005/03/09 14:02:36 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.148 2005/05/21 11:39:44 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -966,7 +966,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 			 */
 			wintitle = (conference) ? g_strdup(confer_title) : g_strdup_printf("%s %s", k ? k->nick : id, (sp) ? status_desc : "");
 
-			tab_label_hbox = gtk_hbox_new(TRUE, 0);
+			tab_label_hbox = gtk_hbox_new(FALSE, 0);
 			tab_label_txt = gtk_label_new(title);
 			tab_label_close = gtk_button_new();
 
