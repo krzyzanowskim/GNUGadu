@@ -1,3 +1,7 @@
+22.05.2005
+- Reworked the way that GtkImhtml widget is used; closes #148.
+(GUI/mkobierzycki)
+
 21.05.2005
 - Fixed bug #141. (GUI/mkobierzycki)
 

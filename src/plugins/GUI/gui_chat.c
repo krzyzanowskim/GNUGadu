@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.148 2005/05/21 11:39:44 mkobierzycki Exp $ */
+/* $Id: gui_chat.c,v 1.149 2005/05/22 19:50:15 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1530,10 +1530,48 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
     	    pango_font_description_free(fontdesc);
 	}
 	
-	escaped_txt = ggadu_escape_html(tmp);
-	gtk_imhtml_append_text(GTK_IMHTML(history),escaped_txt,0);
-	g_free(tmp);
-	g_free(escaped_txt);
+	if(!strchr(tmp, '<') && !strchr(tmp, '>'))
+	{
+	    escaped_txt = ggadu_escape_html(tmp);
+            gtk_imhtml_append_text(GTK_IMHTML(history), escaped_txt, 0);
+	    g_free(escaped_txt);
+	} else
+	{
+	    gchar **tab;
+	    int count = 0;
+	    int i;
+	    
+	    tab = g_strsplit_set(tmp, "<>", 0);
+	    for(i = 0; i < strlen(tmp); i++)
+	    {
+	        if(strchr("<>", tmp[i]))
+		{
+		    if(i && !strchr("<>", tmp[i-1]))
+		    {
+			while(!strlen(tab[count])) count++;
+		        escaped_txt = ggadu_escape_html(tab[count]);
+	                gtk_imhtml_append_text(GTK_IMHTML(history), escaped_txt, 0);
+			count++;
+
+			g_free(escaped_txt);
+		    }
+
+		    gtk_imhtml_append_text(GTK_IMHTML(history), tmp[i] == '<' ? "&lt;" : "&gt;", 0);
+		}
+	    }
+
+	    if(!strchr("<>", tmp[strlen(tmp)-2]))
+	    {
+	        while(!strlen(tab[count])) count++;
+		escaped_txt = ggadu_escape_html(tab[count]);
+		gtk_imhtml_append_text(GTK_IMHTML(history), escaped_txt, 0);
+		g_free(escaped_txt);
+	    }
+
+	    g_strfreev(tab);
+	}
+
+ 	g_free(tmp);
 
 	if (notice_message)
 	{
