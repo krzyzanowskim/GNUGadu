@@ -5,22 +5,22 @@ To compile all plugins you need:
 - automake 1.7 or better
 - libtool 1.4e or better
 
-- glib 2.2.0 (http://www.gtk.org)
-- gtk+ 2.4.0 (http://www.gtk.org) - GUI
-- libtlen (http://libtlen.sourceforge.net) - Tlen
-- Loudmouth 0.17 or newer (http://www.imendio.com/projects/loudmouth) - Jabber
-- xosd (http://ignavus.net/software.html) - XOSD
-- esound (http://www.tux.org/~ricdude/EsounD.html) - sound-esd
-- audiofile (http://www.68k.org/~michael/audiofile)
-- aRts! (http://www.arts-project.org)
+- glib 2.2.0 - http://www.gtk.org
+- gtk+ 2.4.0 - http://www.gtk.org - GUI
+- libtlen - http://libtlen.sourceforge.net - Tlen
+- Loudmouth 0.17 or newer http://www.imendio.com/projects/loudmouth - Jabber
+- xosd - http://ignavus.net/software.html - XOSD
+- esound - http://www.tux.org/~ricdude/EsounD.html - sound-esd
+- audiofile - http://www.68k.org/~michael/audiofile
+- aRts! - http://www.arts-project.org - sound-arts
 - gtkspell - http://gtkspell.sourceforge.net
-- openssl (http://www.openssl.org)
-- dbus (http://www.freedesktop.org/software/dbus)
+- gnutls - http://www.gnu.org/software/gnutls - gadu-gadu
+- dbus - http://www.freedesktop.org/software/dbus
 
-WARNING: perl support and remote plugin will compile/work only on Linux!
+WARNING: very experimental perl support will compile/work only on Linux!
 
 Read doc/problems and other documentation files BEFORE submitting ANY
-bugreports.
+bugreports to http://bugs.gnugadu.org
 
 Important:
 

@@ -1,12 +1,12 @@
 See README for requirements.
 
-./configure --help
+Check configuration options:
+[home]$ ./configure --help
 
-# if you want to *try* build *all* plugins
-./configure --with-all-plugins 
-or
-./configure --without-gtkspell --without-tlen etc.... (check --help for details)
+# Try default settings with:
+[home]$ ./configure
+...or...
+[home]$ ./configure --without-gtkspell --without-tlen etc.... (check --help for details)
 
-make
-make install (preferably as root)
-
+[home]$ make
+[home]$ make install (preferably as root)

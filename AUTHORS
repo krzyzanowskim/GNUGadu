@@ -1,69 +1,53 @@
---- GNU Gadu 2 credits ---
---- codename:  TNNJNG  ---
---- alphabetical order ---
+GNU Gadu 2.x Credits
 
 
 CORE and MAINTAINERS :
 	Marcin Krzy¿anowski	<krzak@hakore.com>
 	Igor Popik		<igipop@wsfiz.edu.pl>
-also :
-	Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
+also :	Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
 	Jakub Jankowski		<shasta@atn.pl>
 
 -- PLUGINS -----------------------------------------------------
-GUI (gtk+-2)	
-		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+GUI (gtk+ 2.x)	: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
-Gadu-Gadu	(http://www.gadu-gadu.pl)
-		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+Gadu-Gadu	: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
-Tlen		(http://www.tlen.pl)
-		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+Tlen.pl		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Mateusz Papiernik	<mati@mati.rm.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
 
-Jabber		(http://www.jabber.org)
-		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+Jabber		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
 		: Marcin P. Kobierzycki <m-kobierzycki@debian.linux.org.pl>
 
-Docklet 	
-		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+Docklet 	: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Mateusz Papiernik	<mati@mati.rm.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
-Dockapp
-		: emvi			<wamarek@poczta.onet.pl>
+Dockapp		: emvi			<wamarek@poczta.onet.pl>
 		: Jaroslaw Wypychowski	<jarwyp@7bulls.com>
 		: Krzysztof Guc		<linusklan@o2.pl>
 
-XOSD 		
-		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+XOSD 		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Jakub Jankowski	<shasta@atn.pl>
 
-sound-*		
-		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
+sound-*		: Marcin Krzy¿anowski	<krzak@linux.net.pl>
 		: Igor Popik		<igipop@wsfiz.edu.pl>
 
-remote
-		: Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
+remote		: Bartosz Zapa³owski 	<bartek@klepisko.eu.org>
 
-sms
-		: Jakub Jankowski	<shasta@atn.pl>
+sms		: Jakub Jankowski	<shasta@atn.pl>
 		: HelDoRe
 		
-update		
-		: Jakub Jankowski	<shasta@atn.pl>
+update		: Jakub Jankowski	<shasta@atn.pl>
 
-DBUS
-                : Marcin Krzy¿anowski   <krzak@linux.net.pl>
+DBUS            : Marcin Krzy¿anowski   <krzak@linux.net.pl>
 
-----------------------------------------------------------------
--- THANKS FOR --------------------------------------------------
-----------------------------------------------------------------
+THANKS FOR :
+
 Aflinta                     - gettext patch, testing, translations
 Dwuziu                      - testing
 Piotr Smyrak                - FreeBSD stuff
