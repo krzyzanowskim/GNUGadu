@@ -257,7 +257,7 @@ static gpointer aaway_preferences(gpointer user_data)
 	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_ENABLE_AWAY_MSG, _("Enable away message"), VAR_BOOL,
 			       (gpointer) ggadu_config_var_get(handler, "enable_message"), VAR_FLAG_NONE);
 	utf = to_utf8("ISO-8859-2", ggadu_config_var_get(handler, "message"));
-	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_AWAY_MSG, _("Away message (%s-time)"), VAR_STR, utf, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(d, GGADU_AAWAY_CONFIG_AWAY_MSG, _("Away message"), VAR_STR, utf, VAR_FLAG_NONE);
 
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", d, "main-gui");
