@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.149 2005/05/22 19:50:15 mkobierzycki Exp $ */
+/* $Id: gui_chat.c,v 1.150 2005/05/27 16:27:41 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1560,13 +1560,11 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 		}
 	    }
 
-	    if(!strchr("<>", tmp[strlen(tmp)-2]))
-	    {
-	        while(!strlen(tab[count])) count++;
-		escaped_txt = ggadu_escape_html(tab[count]);
-		gtk_imhtml_append_text(GTK_IMHTML(history), escaped_txt, 0);
-		g_free(escaped_txt);
-	    }
+	    while(!strlen(tab[count])) count++;
+	    escaped_txt = ggadu_escape_html(tab[count]);
+	    gtk_imhtml_append_text(GTK_IMHTML(history), escaped_txt, 0);
+
+	    g_free(escaped_txt);
 
 	    g_strfreev(tab);
 	}
