@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.150 2005/05/27 16:27:41 mkobierzycki Exp $ */
+/* $Id: gui_chat.c,v 1.151 2005/05/27 19:01:19 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1530,6 +1530,11 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
     	    pango_font_description_free(fontdesc);
 	}
 	
+	/* Yes, I know - the code below is ugly. But otherwise in order to satisfy
+	 * reports #193 and #148 (http://bugs.gnugadu.org) one should modifiy
+	 * GtkImHtml widget code. Anybody willing to do it? -mkobierzycki
+	 */
+
 	if(!strchr(tmp, '<') && !strchr(tmp, '>'))
 	{
 	    escaped_txt = ggadu_escape_html(tmp);
