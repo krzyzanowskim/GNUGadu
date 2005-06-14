@@ -1,4 +1,4 @@
-/* $Id: jabber_login.c,v 1.46 2005/02/17 22:28:33 mkobierzycki Exp $ */
+/* $Id: jabber_login.c,v 1.47 2005/06/14 16:46:06 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -41,6 +41,7 @@ gpointer jabber_login_connect(gpointer status)
 	static GStaticMutex connect_mutex = G_STATIC_MUTEX_INIT;
 	gchar *jid = g_strdup(ggadu_config_var_get(jabber_handler, "jid"));
 	gchar *server = NULL;
+	gchar *portstr = NULL;
 
 	g_static_mutex_lock(&connect_mutex);
 	
@@ -57,8 +58,14 @@ gpointer jabber_login_connect(gpointer status)
 		return NULL;
 	}
 
-	/* no 'server' variable, get server from JID */
-	if (!(server = ggadu_config_var_get(jabber_handler, "server")))
+	if (ggadu_config_var_check(jabber_handler, "server"))
+	{
+		gchar **serverstr = array_make(ggadu_config_var_get(jabber_handler, "server"), ":", 0, 0, 0);
+		server = g_strdup(serverstr[0]);
+		if(serverstr[1]) portstr = g_strdup(serverstr[1]);
+		array_free(serverstr);
+	}
+	else /* no 'server' variable, get server from JID */
 	{
 		/* look for '@' in JID */
 		if (!(server = g_strstr_len(jid, strlen(jid), "@")))
@@ -85,7 +92,8 @@ gpointer jabber_login_connect(gpointer status)
 
 	if (!jabber_data.connection || !lm_connection_is_open(jabber_data.connection))
 	{
-		print_debug("jabber: Connecting to %s with %s", server,jid);
+		portstr ? print_debug("jabber: Connecting to %s:%s with %s", server, portstr, jid) :
+			print_debug("jabber: Connecting to %s with %s", server, jid);
 		jabber_data.connection = lm_connection_new(server);
 		lm_connection_set_keep_alive_rate(jabber_data.connection,30);
 
@@ -135,7 +143,7 @@ gpointer jabber_login_connect(gpointer status)
 		print_debug("jabber: Changing server to %s", server);
 		lm_connection_close(jabber_data.connection, NULL);
 		lm_connection_set_server(jabber_data.connection, server);
-		lm_connection_set_port(jabber_data.connection,LM_CONNECTION_DEFAULT_PORT);
+		lm_connection_set_port(jabber_data.connection, portstr ? atoi(portstr) : LM_CONNECTION_DEFAULT_PORT);
 		/* lm_connection_unref(connection); */
 		lm_proxy_unref(jabber_data.proxy);
 	}
@@ -149,7 +157,7 @@ gpointer jabber_login_connect(gpointer status)
 		if (lm_ssl_is_supported())
 		{
 			LmSSL *ssl = lm_ssl_new (NULL,jabber_connection_ssl_func,NULL,NULL);
-			lm_connection_set_port(jabber_data.connection,LM_CONNECTION_DEFAULT_PORT_SSL);
+			lm_connection_set_port(jabber_data.connection, portstr ? atoi(portstr) : LM_CONNECTION_DEFAULT_PORT_SSL);
 			lm_connection_set_ssl(jabber_data.connection,ssl);
 			lm_ssl_unref(ssl);
 		}

@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.161 2005/06/14 13:56:16 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.162 2005/06/14 16:46:07 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1359,10 +1359,10 @@ gpointer user_preferences_action(gpointer user_data)
 
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_RESOURCE, _("Re_source:"), VAR_STR, ggadu_config_var_get(jabber_handler, "resource"), VAR_FLAG_ADVANCED);
 
-	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server a_ddress:"), VAR_STR, ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
+	ggadu_dialog_add_entry(dialog, GGADU_JABBER_SERVER, _("Jabber server a_ddress:\nhost[:port]"), VAR_STR, ggadu_config_var_get(jabber_handler, "server"), VAR_FLAG_ADVANCED);
 
 	ggadu_dialog_add_entry(dialog, GGADU_JABBER_PROXY,
-			       _("Pro_xy server\n[user:pass@]host.com[:port]"), VAR_STR, ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
+			       _("Pro_xy server:\n[user:pass@]host[:port]"), VAR_STR, ggadu_config_var_get(jabber_handler, "proxy"), VAR_FLAG_ADVANCED);
 
 	signal_emit(GGadu_PLUGIN_NAME, "gui show dialog", dialog, "main-gui");
 	g_slist_free(statuslist);
