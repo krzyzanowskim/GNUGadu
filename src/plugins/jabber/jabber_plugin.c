@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.160 2005/05/17 10:07:17 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.161 2005/06/14 13:56:16 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -852,6 +852,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 			gint bday;
 			gint bmonth;
 			gint byear;
+			gboolean correct = TRUE;
 
 			lm_message_node_set_attribute(msg->node, "id", "v1");
 			node = lm_message_node_add_child(msg->node, "vCard", NULL);
@@ -899,10 +900,23 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				case GGADU_JABBER_BYEAR:
 					{
 						byear = (gint) kv->value;
-						string = (byear && bmonth && bday) ? g_strdup_printf("%d-%02d-%02d", byear, bmonth, bday) : NULL;
-						lm_message_node_add_child(node, "BDAY", string);
+						if(byear || bmonth || bday)
+						{
+						    if(byear > 0 && byear <= 9999 && bmonth > 0 && bmonth <= 12 &&
+						       bday <= 31 && bday > 0)
+						    {
+						        string = g_strdup_printf("%04d-%02d-%02d", byear, bmonth, bday);
+						        lm_message_node_add_child(node, "BDAY", string);
 
-						g_free(string);
+						        g_free(string);
+						    } else
+						    {
+							 correct = FALSE;
+						         signal_emit("jabber", "gui show warning",
+								     g_strdup(_("Incorrect birthday date specified")),
+								     "main-gui");
+						    }
+						}
 					}
 					break;
 				case GGADU_JABBER_ORGNAME:
@@ -950,7 +964,7 @@ void jabber_signal_recv(gpointer name, gpointer signal_ptr)
 				entries = entries->next;
 			}
 
-			lm_connection_send(jabber_data.connection, msg, NULL);
+			if(correct) lm_connection_send(jabber_data.connection, msg, NULL);
 			lm_message_unref(msg);
 		}
 

@@ -1,4 +1,4 @@
-/* $Id: jabber_cb.c,v 1.89 2005/03/09 13:01:36 krzyzak Exp $ */
+/* $Id: jabber_cb.c,v 1.90 2005/06/14 13:56:15 mkobierzycki Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -496,6 +496,7 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 		LmMessageNode *node;
 		GGaduDialog *dialog = ggadu_dialog_new(GGADU_DIALOG_CONFIG, _("Personal info:"), "user edit vcard");
 		gchar **tab = NULL;
+		gboolean correct_date;
 
 		node = lm_message_node_find_child(message->node, "GIVEN");
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_GIVEN, _("First name"), VAR_STR,
@@ -521,12 +522,21 @@ LmHandlerResult iq_vcard_cb(LmMessageHandler * handler, LmConnection * connectio
 		node = lm_message_node_find_child(message->node, "BDAY");
 		if(node && lm_message_node_get_value(node))
                 	tab = g_strsplit(lm_message_node_get_value(node), "-", 3);
+		if(tab && tab[0] && tab[1] && tab[2] && strlen(tab[0]) && strlen(tab[1]) && strlen(tab[2])
+		   && !strchr(tab[2], '-') && atoi(tab[0]) && atoi(tab[1]) && atoi(tab[2]))
+		{
+		    correct_date = TRUE;
+		} else
+		{
+		    correct_date = FALSE;
+		}
+
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_BDAY, _("Birthday"), VAR_INT,
-				       tab ? (gpointer) atoi(tab[2]) : NULL, VAR_FLAG_NONE);
+				       correct_date ? (gpointer) atoi(tab[2]) : NULL, VAR_FLAG_NONE);
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_BMONTH, _("Month"), VAR_INT,
-				       tab ? (gpointer) atoi(tab[1]) : NULL, VAR_FLAG_NONE);
+				       correct_date ? (gpointer) atoi(tab[1]) : NULL, VAR_FLAG_NONE);
                 ggadu_dialog_add_entry(dialog, GGADU_JABBER_BYEAR, _("Year"), VAR_INT,
-				       tab ? (gpointer) atoi(tab[0]) : NULL, VAR_FLAG_NONE);
+				       correct_date ? (gpointer) atoi(tab[0]) : NULL, VAR_FLAG_NONE);
 		if(tab)
 			g_strfreev(tab);
 
