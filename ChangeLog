@@ -1,3 +1,6 @@
+16.06.2005
+- gg2-devel.SlackBuild fix (ABOUT-NLS), package creation works for Slamd64 now as well (shasta)
+
 14.06.2005
 - A commit for report #203. (jabber/mkobierzycki)
 - Applied patch sent by Przemys³aw Grzegorczyk - report #200.
