@@ -1,3 +1,7 @@
+22.07.2005
+- Implemented wrapping contacts' descriptions - based on a patch sent by Micha³
+Kazior. (GUI/mkobierzycki)
+
 16.06.2005
 - gg2-devel.SlackBuild fix (ABOUT-NLS), package creation works for Slamd64 now as well (shasta)
 
