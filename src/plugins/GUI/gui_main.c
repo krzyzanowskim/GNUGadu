@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.82 2005/05/19 15:50:20 thrulliq Exp $ */
+/* $Id: gui_main.c,v 1.83 2005/07/22 15:49:44 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -181,6 +181,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	ggadu_config_var_add_with_default(gui_handler, "blink_interval", VAR_INT, (gpointer) 200);
 	ggadu_config_var_add_with_default(gui_handler, "use_username", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "descr_on_list", VAR_BOOL, (gpointer) TRUE);
+	ggadu_config_var_add_with_default(gui_handler, "wrap_descr", VAR_BOOL, (gpointer) TRUE);
 	ggadu_config_var_add_with_default(gui_handler, "browser_exec", VAR_STR, "mozilla %s");
 	ggadu_config_var_add_with_default(gui_handler, "skin", VAR_STR,g_strdup("default"));
 

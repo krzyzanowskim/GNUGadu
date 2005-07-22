@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.66 2005/01/17 21:57:35 krzyzak Exp $ */
+/* $Id: gui_userview.c,v 1.67 2005/07/22 15:50:00 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -99,11 +99,77 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 		g_object_set(G_OBJECT(renderer), "font", (font) ? font : "normal", NULL);
 
 		if (ggadu_config_var_get(gui_handler, "descr_on_list") && k->status_descr) {
-		    gchar *markup_descr = g_markup_escape_text(k->status_descr, strlen(k->status_descr));
+		    gchar *descr = ggadu_convert("UTF-8", "ISO-8859-2", k->status_descr);
+		    gchar *tmp = NULL;
+		    
+		    if(ggadu_config_var_get(gui_handler, "wrap_descr"))
+		    {
+		        gint cur_part_width = 0;
+		        gint cur_char_width = 0;
+		        gint max_width	    = 0;
+		        float fix_width	    = 0;
+		        gint last_space	    = 0;
+		        gint skip           = 0;
+		        gint i              = 0;
+		    
+		        if (GTK_WIDGET_VISIBLE(window))
+			    gtk_window_get_size(GTK_WINDOW(window), &max_width, NULL);
+		        else 
+			    max_width = (gint) ggadu_config_var_get(gui_handler, "width");
+			
+		        max_width -= 65;
+			
+		        for (i=1; i<strlen(descr); i++)
+		        {
+			    cur_part_width = cur_char_width;
+			
+			    if (cur_char_width == cur_part_width) fix_width += 6;
+
+			    if ((descr[i] == '.')||(descr[i] == ' ')||(descr[i] == '!')||(descr[i] == ':')) fix_width += 0.4;
+			
+			    if (descr[i] == ' ')
+			        last_space = i;
+			    else if (descr[i] == '\n')
+			        skip = i;
+			    
+			    if ((cur_char_width+(gint)fix_width) >= max_width)
+			    {
+			        if(last_space != 0)
+			        {
+				    descr[last_space] = '\n';
+				    cur_part_width    = 0;
+				    i                 = last_space;
+				    last_space        = 0;
+				    skip              = i;
+				    fix_width         = 0;
+			        }
+			        else
+			        {
+				    tmp            = descr;
+				    descr          = g_strdup_printf("%s\n%s", g_strndup(descr, i), descr+i);
+				    cur_part_width = 0;
+				    skip           = i;
+				    fix_width      = 0;
+				    g_free(tmp);
+				    tmp = NULL;
+			        }
+			    }
+		        }
+		    
+			tmp  = descr;
+		        descr = ggadu_convert("ISO-8859-2", "UTF-8", descr);
+			g_free(tmp);
+			tmp = NULL;
+		    } 
+
+		    gchar *markup_descr = ggadu_config_var_get(gui_handler, "wrap_descr") ?
+		                          g_markup_escape_text(descr, strlen(descr)) :
+			                  g_markup_escape_text(k->status_descr, strlen(k->status_descr));
 		    gchar *markup = g_strdup_printf("%s\n<small>%s</small>", k->nick, markup_descr);
 		    g_object_set(G_OBJECT(renderer), "text", NULL, "markup", markup, NULL);
 		    g_free(markup_descr);
 		    g_free(markup);
+		    if(ggadu_config_var_get(gui_handler, "wrap_descr")) g_free(descr);
 		}
 	}
 }

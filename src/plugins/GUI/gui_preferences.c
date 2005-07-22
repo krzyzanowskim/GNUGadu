@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.103 2005/03/09 14:02:37 krzyzak Exp $ */
+/* $Id: gui_preferences.c,v 1.104 2005/07/22 15:49:44 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1059,6 +1059,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	GtkWidget *usexosdforstatuschange = NULL;
 	GtkWidget *show_toolbar;
 	GtkWidget *descr_on_list;
+	GtkWidget *wrap_descr;
 	GtkWidget *tabbox;
 	GtkWidget *entry;
 	GdkPixbuf *windowicon = NULL;
@@ -1155,8 +1156,11 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	show_toolbar = gtk_check_button_new_with_label(_("Show toolbar"));
 	gtk_box_pack_start(GTK_BOX(vbox), show_toolbar, FALSE, FALSE, 0);
 
-	descr_on_list = gtk_check_button_new_with_label(_("Display contacts descriptions on users list"));
+	descr_on_list = gtk_check_button_new_with_label(_("Display contacts' descriptions on users list"));
 	gtk_box_pack_start(GTK_BOX(vbox), descr_on_list, FALSE, FALSE, 0);
+
+	wrap_descr = gtk_check_button_new_with_label(_("Wrap contacts' descriptions on users list"));
+	gtk_box_pack_start(GTK_BOX(vbox), wrap_descr, FALSE, FALSE, 0);
 
 	tabbox = gtk_table_new(6, 2, FALSE);
 
@@ -1303,6 +1307,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	if (ggadu_config_var_get(gui_handler, "descr_on_list"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(descr_on_list), TRUE);
 
+	if (ggadu_config_var_get(gui_handler, "wrap_descr"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wrap_descr), TRUE);
+
 
 
 //      gtk_window_set_default_size(GTK_WINDOW(preferences), 250, 200);
@@ -1420,6 +1427,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 		ggadu_config_var_set(gui_handler, "descr_on_list", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(descr_on_list)));
 
+		ggadu_config_var_set(gui_handler, "wrap_descr", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wrap_descr)));
 
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_theme");
 		g_return_if_fail(entry != NULL);
