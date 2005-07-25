@@ -1,6 +1,6 @@
-# $Id: configure.in,v 1.128 2005/05/26 14:38:25 krzyzak Exp $
+# $Id: configure.in,v 1.129 2005/07/25 13:48:53 krzyzak Exp $
 
-m4_define([gg2_version],[2.2.6])
+m4_define([gg2_version],[2.2.7])
 
 AC_INIT(gg2,[gg2_version])
 AM_INIT_AUTOMAKE([gg2],[gg2_version])
