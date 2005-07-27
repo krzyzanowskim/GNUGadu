@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.104 2005/07/22 15:49:44 mkobierzycki Exp $ */
+/* $Id: gui_preferences.c,v 1.105 2005/07/27 17:48:50 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -199,12 +199,12 @@ GtkWidget *gui_plugins_mgr_tab(
 	return vbox;
 }
 
-static void tree_toggled(GtkWidget * tree, gpointer data
+static void check_button_toggled(GtkWidget * main, gpointer data
 )
 {
-	GtkWidget *expand = data;
+	GtkWidget *aux = data;
 
-	gtk_widget_set_sensitive(expand, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tree)));
+	gtk_widget_set_sensitive(aux, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(main)));
 }
 
 static void color_select_dialog(GtkColorButton * color_button, gpointer entry
@@ -826,7 +826,7 @@ static GtkWidget *create_advanced_tab()
 	g_object_set_data(G_OBJECT(adv_vbox), "blink", blink);
 	g_object_set_data(G_OBJECT(adv_vbox), "blink_interval", blink_interval);
 
-	g_signal_connect(blink, "toggled", G_CALLBACK(tree_toggled), blink_interval);
+	g_signal_connect(blink, "toggled", G_CALLBACK(check_button_toggled), blink_interval);
 
 	tabbox = gtk_table_new(3, 4, FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(tabbox), 7);
@@ -1138,7 +1138,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	expand = gtk_check_button_new_with_label(_("Expand Tree by default"));
 	gtk_box_pack_start(GTK_BOX(vbox), expand, FALSE, FALSE, 0);
 
-	g_signal_connect(tree, "toggled", G_CALLBACK(tree_toggled), expand);
+	g_signal_connect(tree, "toggled", G_CALLBACK(check_button_toggled), expand);
 
 	show_active = gtk_check_button_new_with_label(_("Show only active users"));
 	gtk_box_pack_start(GTK_BOX(vbox), show_active, FALSE, FALSE, 0);
@@ -1161,6 +1161,8 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 
 	wrap_descr = gtk_check_button_new_with_label(_("Wrap contacts' descriptions on users list"));
 	gtk_box_pack_start(GTK_BOX(vbox), wrap_descr, FALSE, FALSE, 0);
+
+	g_signal_connect(descr_on_list, "toggled", G_CALLBACK(check_button_toggled), wrap_descr);
 
 	tabbox = gtk_table_new(6, 2, FALSE);
 
@@ -1187,6 +1189,11 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tree), TRUE);
 	else
 		gtk_widget_set_sensitive(expand, FALSE);
+
+	if (ggadu_config_var_get(gui_handler, "descr_on_list"))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(descr_on_list), TRUE);
+	else
+		gtk_widget_set_sensitive(wrap_descr, FALSE);
 
 	if (ggadu_config_var_get(gui_handler, "expand"))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(expand), TRUE);

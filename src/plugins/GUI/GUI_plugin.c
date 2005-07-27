@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.111 2005/07/27 15:54:00 mkobierzycki Exp $ */
+/* $Id: GUI_plugin.c,v 1.112 2005/07/27 17:48:50 mkobierzycki Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -226,7 +226,7 @@ gboolean nick_list_row_changed(GtkTreeSelection * selection, GtkTreeModel * mode
 	}
 
 
-	if (is_desc)
+	if (is_desc && (!ggadu_config_var_get(gui_handler, "descr_on_list") || (ggadu_config_var_get(gui_handler, "descr_on_list") && !ggadu_config_var_get(gui_handler, "wrap_descr"))))
 	{
 		gtk_anim_label_set_text(GTK_ANIM_LABEL(add_info_label_desc), markup_desc);
 		gtk_anim_label_animate(GTK_ANIM_LABEL(add_info_label_desc), TRUE);
