@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.110 2005/01/20 16:03:50 krzyzak Exp $ */
+/* $Id: GUI_plugin.c,v 1.111 2005/07/27 15:54:00 mkobierzycki Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -1192,3 +1192,20 @@ void gui_reload_images()
 
 	signal_emit_full("main-gui", "docklet set default icon", sigdata, NULL, (gpointer) g_slist_free);
 }
+
+gpointer gui_status2clipboard_ext(gpointer user_data)
+{
+	GSList *users = (GSList *) user_data;
+	GGaduContact *k = users ? (GGaduContact *) users->data : NULL;
+	
+	if (!k) return NULL;
+
+	if(k->status_descr && strlen(k->status_descr))
+	{
+		gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY), k->status_descr, -1);
+		gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_CLIPBOARD), k->status_descr, -1);
+	}
+
+	return NULL;
+}
+

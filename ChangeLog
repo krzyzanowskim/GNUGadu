@@ -1,3 +1,7 @@
+27.07.2005
+- Implemented patch sent by Przemys³aw Grzegorczyk - copying contact's
+description to clipboard. Closes #190. (GUI/mkobierzycki)
+
 22.07.2005
 - Implemented wrapping contacts' descriptions - based on a patch sent by Micha³ Kazior. (GUI/mkobierzycki)
 - translation update (Aflinta)

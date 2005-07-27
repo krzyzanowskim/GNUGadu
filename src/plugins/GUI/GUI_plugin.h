@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.h,v 1.8 2004/12/20 09:15:14 krzyzak Exp $ */
+/* $Id: GUI_plugin.h,v 1.9 2005/07/27 15:54:00 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -60,5 +60,7 @@ void gui_reload_images();
 void set_selected_users_list(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer data);
 
 void gui_show_hide_window();
+
+gpointer gui_status2clipboard_ext(gpointer user_data);
 
 #endif

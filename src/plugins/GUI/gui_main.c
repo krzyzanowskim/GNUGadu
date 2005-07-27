@@ -1,4 +1,4 @@
-/* $Id: gui_main.c,v 1.83 2005/07/22 15:49:44 mkobierzycki Exp $ */
+/* $Id: gui_main.c,v 1.84 2005/07/27 15:54:00 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -42,6 +42,7 @@
 #include "gui_handlers.h"
 
 GGaduPlugin *gui_handler = NULL;
+GGaduPluginExtension *ext = NULL;
 
 GSList *protocols = NULL;
 GSList *emoticons = NULL;
@@ -255,6 +256,13 @@ void start_plugin()
 {
 	GSList *sigdata = NULL;
 
+	ext = g_new0(GGaduPluginExtension, 1);
+	ext->type = GGADU_PLUGIN_EXTENSION_USER_MENU_TYPE;
+	ext->callback = gui_status2clipboard_ext;
+	ext->txt = _("Copy a description");
+
+	register_extension_for_plugin(ext, GGADU_PLUGIN_TYPE_PROTOCOL);
+	
 	gui_build_default_menu();
 	gui_build_default_toolbar();
 
@@ -288,6 +296,9 @@ void start_plugin()
 void destroy_plugin()
 {
 	print_debug("destroy_plugin %s", GGadu_PLUGIN_NAME);
+
+	if (ext)
+		unregister_extension_for_plugins(ext);
 
 	gtk_widget_destroy(GTK_WIDGET(window));
 }
