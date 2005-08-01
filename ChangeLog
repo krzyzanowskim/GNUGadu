@@ -1,3 +1,7 @@
+01.08.2005
+- Modified status description wrapping functionality, so that it works on
+UTF-8 strings; Fixed a memory leak. (GUI/mkobierzycki)
+
 27.07.2005
 - Implemented patch sent by Przemys³aw Grzegorczyk - copying contact's
 description to clipboard. Closes #190. (GUI/mkobierzycki)

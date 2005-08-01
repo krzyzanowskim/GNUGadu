@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.67 2005/07/22 15:50:00 mkobierzycki Exp $ */
+/* $Id: gui_userview.c,v 1.68 2005/08/01 12:01:12 mkobierzycki Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -90,7 +90,7 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 	GGaduContact *k = NULL;
 
 	gtk_tree_model_get(model, iter, 2, &k, -1);
-	
+
 	if (!k) {
 		gchar *font = ggadu_config_var_get(gui_handler, "contact_list_protocol_font");
 		g_object_set(G_OBJECT(renderer), "font", (font) ? font : "bold", NULL);
@@ -99,8 +99,9 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 		g_object_set(G_OBJECT(renderer), "font", (font) ? font : "normal", NULL);
 
 		if (ggadu_config_var_get(gui_handler, "descr_on_list") && k->status_descr) {
-		    gchar *descr = ggadu_convert("UTF-8", "ISO-8859-2", k->status_descr);
-		    gchar *tmp = NULL;
+		    gchar *descr = g_strdup(k->status_descr);
+		    gchar *tmp0 = NULL;
+		    gchar *tmp1 = NULL;
 		    
 		    if(ggadu_config_var_get(gui_handler, "wrap_descr"))
 		    {
@@ -118,25 +119,29 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 			    max_width = (gint) ggadu_config_var_get(gui_handler, "width");
 			
 		        max_width -= 65;
-			
-		        for (i=1; i<strlen(descr); i++)
+
+			/* We're working on UTF-8 strings here. */
+		        for (i = 0; i < g_utf8_strlen(descr, -1); i++)
 		        {
 			    cur_part_width = cur_char_width;
 			
 			    if (cur_char_width == cur_part_width) fix_width += 6;
 
-			    if ((descr[i] == '.')||(descr[i] == ' ')||(descr[i] == '!')||(descr[i] == ':')) fix_width += 0.4;
+			    if ((g_utf8_offset_to_pointer(descr, i)[0] == '.') ||
+			        (g_utf8_offset_to_pointer(descr, i)[0] == ' ') ||
+				(g_utf8_offset_to_pointer(descr, i)[0] == '!') ||
+				(g_utf8_offset_to_pointer(descr, i)[0] == ':')) fix_width += 0.4;
 			
-			    if (descr[i] == ' ')
+			    if (g_utf8_offset_to_pointer(descr, i)[0] == ' ')
 			        last_space = i;
-			    else if (descr[i] == '\n')
+			    else if (g_utf8_offset_to_pointer(descr, i)[0] == '\n')
 			        skip = i;
 			    
 			    if ((cur_char_width+(gint)fix_width) >= max_width)
 			    {
 			        if(last_space != 0)
 			        {
-				    descr[last_space] = '\n';
+				    g_utf8_offset_to_pointer(descr, last_space)[0] = '\n';
 				    cur_part_width    = 0;
 				    i                 = last_space;
 				    last_space        = 0;
@@ -145,21 +150,19 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 			        }
 			        else
 			        {
-				    tmp            = descr;
-				    descr          = g_strdup_printf("%s\n%s", g_strndup(descr, i), descr+i);
+				    tmp1 = g_strndup(descr, (gint)(g_utf8_offset_to_pointer(descr, i) - descr)/sizeof(gchar));
+				    tmp0           = descr;
+				    descr          = g_strdup_printf("%s\n%s", tmp1, g_utf8_offset_to_pointer(descr, i));
 				    cur_part_width = 0;
 				    skip           = i;
 				    fix_width      = 0;
-				    g_free(tmp);
-				    tmp = NULL;
+				    g_free(tmp0);
+				    g_free(tmp1);
+				    tmp0 = NULL;
+				    tmp1 = NULL;
 			        }
 			    }
 		        }
-		    
-			tmp  = descr;
-		        descr = ggadu_convert("ISO-8859-2", "UTF-8", descr);
-			g_free(tmp);
-			tmp = NULL;
 		    } 
 
 		    gchar *markup_descr = ggadu_config_var_get(gui_handler, "wrap_descr") ?
