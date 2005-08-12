@@ -1,4 +1,4 @@
-# $Id: configure.in,v 1.129 2005/07/25 13:48:53 krzyzak Exp $
+# $Id: configure.in,v 1.130 2005/08/12 09:49:42 thrulliq Exp $
 
 m4_define([gg2_version],[2.2.7])
 
@@ -326,16 +326,16 @@ if test "x$with_gtkspell" != "xno"; then
     with_gtkspell=yes
     PKG_CHECK_MODULES(GTKSPELL,gtkspell-2.0 >= 2.0.0,[],with_gtkspell=no)
     if test "$with_gtkspell" = "no"; then 
-    	AC_MSG_ERROR([*** unable to find gtkspell (http://gtkspell.sourceforge.net) ***])
+    	AC_MSG_ERROR([*** unable to find gtkspell (http://gtkspell.sourceforge.net), try to build --without-gtkspell ***])
     fi
     AC_PATH_PROG(pspell_config,pspell-config,"none")
     if test "$pspell_config" = "none"; then 
-    	AC_MSG_ERROR([*** unable to find pspell-config from aspell (http://aspell.net) ***])
+    	AC_MSG_ERROR([*** unable to find pspell-config from aspell (http://aspell.net), try to build --without-gtkspell ***])
     fi
     
     AC_CHECK_HEADERS(aspell.h,have_aspellh=yes,have_aspellh=no)
     if test "$have_aspellh" = no; then
-    	AC_MSG_ERROR([*** Unable to find aspell.h header file, try build --without-gtkspell ***])
+    	AC_MSG_ERROR([*** Unable to find aspell.h header file, try to build --without-gtkspell ***])
     fi
 
     
@@ -391,7 +391,7 @@ if test "x$with_gnutls" != "xno"; then
  	    fi
 	 fi
     else
-    	AC_MSG_ERROR([*** unable to find GNUTLS library (http://www.gnu.org/software/gnutls/) ***])
+    	AC_MSG_ERROR([*** unable to find GNUTLS library (http://www.gnu.org/software/gnutls/), try to build --without-gnutls ***])
 	with_gnutls=no
     fi
 else
@@ -414,7 +414,7 @@ if test "x$with_tlen" != "xno"; then
 	TLEN_LIBS="-ltlen -lm"
 	AC_SUBST(TLEN_LIBS)
     else
-    	AC_MSG_ERROR([*** unable to find libtlen (http://www.libtlen.eu.org/) ***])
+    	AC_MSG_ERROR([*** unable to find libtlen (http://www.libtlen.eu.org/), try to build --without-tlen ***])
     fi
 else
     with_tlen=no
@@ -432,6 +432,8 @@ if test "x$with_jabber" != "xno"; then
 	echo "You don't have loudmouth installed (or you have wrong version)"
 	echo "Please download loudmouth: http://www.imendio.com/projects/loudmouth/"
 	echo 
+	echo "Try to build --without-jabber"
+	echo
 	echo "**********************************************************"
 	echo
     	AC_MSG_ERROR($JABBER_PKG_ERRORS)
@@ -468,7 +470,7 @@ if test "x$with_xosd" != "xno"; then
 	    AC_SUBST(XOSD_CFLAGS)
 	fi
     else
-    	AC_MSG_ERROR([*** unable to find XOSD library (http://www.ignavus.net/software.html) ***])
+    	AC_MSG_ERROR([*** unable to find XOSD library (http://www.ignavus.net/software.html), try to build --without-xosd ***])
 	with_xosd=no
     fi
 else

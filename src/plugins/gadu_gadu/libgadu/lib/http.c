@@ -1,4 +1,4 @@
-/* $Id: http.c,v 1.5 2005/03/09 12:34:55 krzyzak Exp $ */
+/* $Id: http.c,v 1.6 2005/08/12 09:49:42 thrulliq Exp $ */
 
 /*
  *  (C) Copyright 2001-2002 Wojtek Kaniewski <wojtekka@irc.pl>
@@ -62,12 +62,12 @@ struct gg_http *gg_http_connect(const char *hostname, int port, int async, const
 
 	if (!hostname || !port || !method || !path || !header) {
 		gg_debug(GG_DEBUG_MISC, "// gg_http_connect() invalid arguments\n");
-		errno = EINVAL;
+		errno = EFAULT;
 		return NULL;
 	}
 	
 	if (!(h = malloc(sizeof(*h))))
-		return NULL;        
+		return NULL;
 	memset(h, 0, sizeof(*h));
 
 	h->async = async;
@@ -181,7 +181,7 @@ int gg_http_watch_fd(struct gg_http *h)
 
 	if (!h) {
 		gg_debug(GG_DEBUG_MISC, "// gg_http_watch_fd() invalid arguments\n");
-		errno = EINVAL;
+		errno = EFAULT;
 		return -1;
 	}
 
@@ -243,7 +243,7 @@ int gg_http_watch_fd(struct gg_http *h)
 	}
 
 	if (h->state == GG_STATE_SENDING_QUERY) {
-		unsigned int res;
+		int res;
 
 		if ((res = write(h->fd, h->query, strlen(h->query))) < 1) {
 			gg_debug(GG_DEBUG_MISC, "=> http, write() failed (len=%d, res=%d, errno=%d)\n", strlen(h->query), res, errno);
@@ -272,7 +272,7 @@ int gg_http_watch_fd(struct gg_http *h)
 
 	if (h->state == GG_STATE_READING_HEADER) {
 		char buf[1024], *tmp;
-		unsigned int res;
+		int res;
 
 		if ((res = read(h->fd, buf, sizeof(buf))) == -1) {
 			gg_debug(GG_DEBUG_MISC, "=> http, reading header failed (errno=%d)\n", errno);
@@ -380,7 +380,7 @@ int gg_http_watch_fd(struct gg_http *h)
 
 	if (h->state == GG_STATE_READING_DATA) {
 		char buf[1024];
-		unsigned int res;
+		int res;
 
 		if ((res = read(h->fd, buf, sizeof(buf))) == -1) {
 			gg_debug(GG_DEBUG_MISC, "=> http, reading body failed (errno=%d)\n", errno);
