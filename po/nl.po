@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-07-25 15:42+0200\n"
+"POT-Creation-Date: 2005-08-29 18:11+0200\n"
 "PO-Revision-Date: 04/06/04 21:02\n"
 "Last-Translator: Sander Devrieze <s.devrieze@pandora.be>\n"
 "Language-Team: Nederlands <i18n@kde.nl>\n"
@@ -101,7 +101,7 @@ msgstr ""
 "\n"
 "[niet in gebruikerslijst]"
 
-#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:840
+#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:843
 msgid "(None)"
 msgstr "(Geen)"
 
@@ -576,9 +576,14 @@ msgstr ""
 msgid "_Save Image..."
 msgstr ""
 
-#: src/plugins/GUI/gui_main.c:189
+#: src/plugins/GUI/gui_main.c:190
 msgid "Unable to read configuration file for plugin GUI, don't worry"
 msgstr "Kon configuratiebestand niet lezen voor GUI plugin, niet panikeren"
+
+#: src/plugins/GUI/gui_main.c:262
+#, fuzzy
+msgid "Copy a description"
+msgstr "Bezig met beschrijving"
 
 #: src/plugins/GUI/gui_search.c:43
 msgid "Status"

@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.100 2005/07/25 13:48:54 krzyzak Exp $
+# $Id: pl.po,v 1.101 2005/08/29 16:21:37 thrulliq Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-07-25 15:42+0200\n"
+"POT-Creation-Date: 2005-08-29 18:11+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: Artur Flinta\n"
 "Language-Team: GNU Gadu Team\n"
@@ -94,7 +94,7 @@ msgstr ""
 "\n"
 "[nie ma Cię w kontaktach]"
 
-#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:840
+#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:843
 msgid "(None)"
 msgstr "(Brak)"
 
@@ -549,9 +549,14 @@ msgstr "Zapis obrazu"
 msgid "_Save Image..."
 msgstr "_Zapisz obraz..."
 
-#: src/plugins/GUI/gui_main.c:189
+#: src/plugins/GUI/gui_main.c:190
 msgid "Unable to read configuration file for plugin GUI, don't worry"
 msgstr "Nie można odczytać pliku z konfiguracją wtyczki GUI, nie martw się"
+
+#: src/plugins/GUI/gui_main.c:262
+#, fuzzy
+msgid "Copy a description"
+msgstr "Zajęty z opisem"
 
 #: src/plugins/GUI/gui_search.c:43
 msgid "Status"

@@ -1,3 +1,6 @@
+29.08.2005
+- 2.2.8 release (THrull)
+
 12.08.2005
 - Updated libgadu with fix of security problems - GNU TLS patch applied (gadu-gadu/THrull)
 - Added more user-friendly configure script error messages (do not kill me for that) (THrull)

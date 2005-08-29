@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-07-25 15:42+0200\n"
+"POT-Creation-Date: 2005-08-29 18:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgid ""
 "[not in userlist]"
 msgstr ""
 
-#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:840
+#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:843
 msgid "(None)"
 msgstr ""
 
@@ -512,8 +512,12 @@ msgstr ""
 msgid "_Save Image..."
 msgstr ""
 
-#: src/plugins/GUI/gui_main.c:189
+#: src/plugins/GUI/gui_main.c:190
 msgid "Unable to read configuration file for plugin GUI, don't worry"
+msgstr ""
+
+#: src/plugins/GUI/gui_main.c:262
+msgid "Copy a description"
 msgstr ""
 
 #: src/plugins/GUI/gui_search.c:43
