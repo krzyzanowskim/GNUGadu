@@ -1,4 +1,4 @@
-# $Id: configure.in,v 1.131 2005/08/29 16:21:36 thrulliq Exp $
+# $Id: configure.in,v 1.132 2005/08/31 00:07:25 shaster Exp $
 
 m4_define([gg2_version],[2.2.8])
 
@@ -806,7 +806,7 @@ echo Build plugin external history viewer... : $with_history_external_viewer
 echo Build plugin DBUS...................... : $with_dbus
 echo Build gghist - history viewer.......... : $with_gghist
 echo Build with experimental perl support... : $with_perl
-echo Build with gnutls... : $with_gnutls
+echo Build with gnutls...................... : $with_gnutls
 echo
 echo "*************************************************************"
 echo Remember that GNU Gadu 2 built without any plugin, 

@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.42 2004/12/20 09:15:38 krzyzak Exp $ */
+/* $Id: sms_core.c,v 1.43 2005/08/31 00:07:25 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -605,17 +605,17 @@ gint send_PLUS(SMS * message)
 }
 
 /* wyslanie na ere */
-gint send_ERA(SMS * message, int *era_left)
+gint send_ERA(SMS * message, gint *era_left)
 {
 	gchar *recv_buff = NULL;
 	gchar *returncode = NULL;
 	gchar *get = NULL;
 	gchar temp[2];
 	gchar *sms_number = message->number;
-	gchar *sender = NULL;
 	gchar *body = NULL;
 	gchar *era_login = NULL;
 	gchar *era_password = NULL;
+	gchar *logintmp = message->era_login;
 	gint i = 0;
 	gint ret = ERR_UNKNOWN;
 	HTTPstruct *HTTP;
@@ -637,19 +637,24 @@ gint send_ERA(SMS * message, int *era_left)
 	if (g_str_has_prefix(sms_number, "0"))
 		sms_number++;
 
-	sender = ggadu_sms_urlencode(g_strdup(message->sender));
-	body = ggadu_sms_urlencode(g_strdup(message->body));
-	era_login = ggadu_sms_urlencode(g_strdup(message->era_login));
+	if (g_str_has_prefix(logintmp, "+"))
+		logintmp++;
+
+	if (g_str_has_prefix(logintmp, "48"))
+		logintmp += 2;
+
+	if (g_str_has_prefix(logintmp, "0"))
+		logintmp++;
+
+	body = ggadu_sms_urlencode(g_strdup_printf("%s: %s", message->sender, message->body));
+	era_login = ggadu_sms_urlencode(g_strdup(logintmp));
 	era_password = ggadu_sms_urlencode(g_strdup(message->era_password));
 
 	/* *INDENT-OFF* */
-	get = g_strconcat ("?login=", era_login, "&password=", era_password,
-			"&message=", body, "&number=48", sms_number,
-			"&contact=", "&signature=", sender,
-			"&success=OK", "&failure=FAIL", "&minute=", "&hour= ", NULL);
+	get = g_strdup_printf("?login=48%s&password=%s&message=%s&number=48%s&success=OK&failure=FAIL&mms=no ",
+		 era_login, era_password, body, sms_number);
 	/* *INDENT-ON* */
 
-	g_free(sender);
 	g_free(body);
 	g_free(era_login);
 	g_free(era_password);
@@ -669,15 +674,16 @@ gint send_ERA(SMS * message, int *era_left)
 
 	close(sock_s);
 
+
 	if (!strlen(recv_buff))
 	{
 		ret = ERR_SERVICE;
 		goto out;
 	}
 
-	if ((returncode = g_strstr_len(recv_buff, i, "OK?X-ERA-counter=")) != NULL)
+	if ((returncode = g_strstr_len(recv_buff, i, "OK?X-ERA-error=0&X-ERA-counter=")) != NULL)
 	{
-		*era_left = (int) (*(returncode + 17) - '0');
+		*era_left = (gint) (*(returncode + 31) - '0');
 		ret = TRUE;
 	}
 	else if ((returncode = g_strstr_len(recv_buff, i, "FAIL?X-ERA-error=")) != NULL)
@@ -701,13 +707,15 @@ gint send_ERA(SMS * message, int *era_left)
 			ret = ERR_BAD_RCPT;
 		else if (r == GGADU_SMS_ERA_ERR_MSG_TOO_LONG)
 			ret = ERR_MSG_TOO_LONG;
+		else if (r == GGADU_SMS_ERA_ERR_INSUFF_TOKENS)
+			ret = ERR_INSUFF_TOKENS;
 		else
 			ret = ERR_UNKNOWN;
 	}
 
       out:
-	g_free(recv_buff);
 	g_free(returncode);
+	g_free(recv_buff);
 
 	return ret;
 }
@@ -883,6 +891,9 @@ gpointer send_sms(SMS * message)
 		break;
 	case ERR_SERVICE:
 		sms_warning(message->number, _("Cannot connect!"));
+		break;
+	case ERR_INSUFF_TOKENS:
+		sms_warning(message->number, _("Insufficent number of tokens!"));
 		break;
 
 		/* unknowns */

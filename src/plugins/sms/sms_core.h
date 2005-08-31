@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.20 2005/03/27 00:16:07 shaster Exp $ */
+/* $Id: sms_core.h,v 1.21 2005/08/31 00:07:25 shaster Exp $ */
 
 /* 
  * SMS plugin for GNU Gadu 2 
@@ -32,9 +32,9 @@
 #define GGADU_SMS_IDEA_URL_SEND		"/sendsms.aspx"
 
 #define GGADU_SMS_ERA_HOST 	"www.eraomnix.pl"
-#define GGADU_SMS_ERA_URL 	"/sms/do/extern/tinker/free/send"
+#define GGADU_SMS_ERA_URL 	"/msg/api/do/tinker/sponsored"
 
-/* error codes from www.eraomnix.pl/service/gw/bAPIPrv.jsp */
+/* error codes from http://www.eraomnix.pl/pl/between-us/send-sms-mms/sms_gateway_api */
 #define GGADU_SMS_ERA_ERR_NONE 0
 #define GGADU_SMS_ERA_ERR_GATEWAY 1
 #define GGADU_SMS_ERA_ERR_UNAUTH 2
@@ -43,6 +43,7 @@
 #define GGADU_SMS_ERA_ERR_LIMIT_EX 7
 #define GGADU_SMS_ERA_ERR_BAD_RCPT 8
 #define GGADU_SMS_ERA_ERR_MSG_TOO_LONG 9
+#define GGADU_SMS_ERA_ERR_INSUFF_TOKENS 10
 
 
 #define USER_AGENT          "User-Agent: Mozilla/5.0 (X11; U; Linux i686) Gecko/20030313 Galeon/1.3.4\r\n"
@@ -87,6 +88,7 @@ enum
 	ERR_SYNTAX,
 	ERR_BAD_RCPT,
 	ERR_MSG_TOO_LONG,
+	ERR_INSUFF_TOKENS,
 	ERR_UNKNOWN
 };
 

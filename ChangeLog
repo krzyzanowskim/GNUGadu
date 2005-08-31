@@ -1,4 +1,7 @@
 29.08.2005
+- fix sending sms to ERA, noticed by Quosek <qosek[at]o2.pl> (sms/shasta)
+- improved handling ERA login, pointed out by Quosek <qosek[at]o2.pl> (sms/shasta)
+- small gg2-devel.SlackBuild improvement
 - 2.2.8 release (THrull)
 
 12.08.2005
