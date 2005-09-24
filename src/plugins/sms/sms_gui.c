@@ -1,4 +1,4 @@
-/* $Id: sms_gui.c,v 1.66 2005/01/19 21:02:18 krzyzak Exp $ */
+/* $Id: sms_gui.c,v 1.67 2005/09/24 03:43:21 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -43,7 +43,7 @@
 
 GGaduPlugin *sms_handler;
 GSList *smslist = NULL;
-gchar *idea_token_path = NULL;
+gchar *orange_token_path = NULL;
 gint method;
 
 GGaduProtocol *p;
@@ -200,7 +200,7 @@ GGaduPlugin *initialize_plugin(gpointer conf_ptr)
 	if (!ggadu_config_read(sms_handler))
 		g_warning(_("Unable to read config file for plugin sms"));
 
-	idea_token_path = g_build_filename(config->configdir, IDEA_GFX, NULL);
+	orange_token_path = g_build_filename(config->configdir, ORANGE_GFX, NULL);
 
 	register_signal_receiver((GGaduPlugin *) sms_handler, (signal_func_ptr) signal_receive);
 
@@ -479,11 +479,11 @@ void signal_receive(gpointer name, gpointer signal_ptr)
 			{
 				GGaduKeyValue *kv = (GGaduKeyValue *) tmplist->data;
 				if (kv->key == 1)
-					message->idea_pass = g_strdup(kv->value);
+					message->orange_pass = g_strdup(kv->value);
 					
 				tmplist = tmplist->next;
 			}
-			g_thread_create((gpointer(*)())send_IDEA_stage2, message, FALSE, NULL);
+			g_thread_create((gpointer(*)())send_ORANGE_stage2, message, FALSE, NULL);
 		}
 		
 		GGaduDialog_free(dialog);
@@ -569,7 +569,7 @@ void destroy_plugin()
 	signal_emit(GGadu_PLUGIN_NAME, "gui unregister protocol", p, "main-gui");
 	ggadu_menu_free(menu_smsmenu);
 
-	g_free(idea_token_path);
+	g_free(orange_token_path);
 }
 
 /* zapis listy numerow do pliku */
