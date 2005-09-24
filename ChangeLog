@@ -1,3 +1,8 @@
+24.09.2005
+- s/idea/orange/i  (sms/shasta)
+- fix sending sms to Orange, patch by Artur Gadawski <artur[at]ufo.o.k.pl> (sms)
+- updated Polish translation (po/shasta)
+
 29.08.2005
 - fix sending sms to ERA, noticed by Quosek <qosek[at]o2.pl> (sms/shasta)
 - improved handling ERA login, pointed out by Quosek <qosek[at]o2.pl> (sms/shasta)
