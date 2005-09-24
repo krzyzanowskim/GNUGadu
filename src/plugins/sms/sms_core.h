@@ -1,4 +1,4 @@
-/* $Id: sms_core.h,v 1.21 2005/08/31 00:07:25 shaster Exp $ */
+/* $Id: sms_core.h,v 1.22 2005/09/24 03:44:20 shaster Exp $ */
 
 /* 
  * SMS plugin for GNU Gadu 2 
@@ -27,9 +27,9 @@
 #define GGADU_SMS_PLUS_HOST 		"www.text.plusgsm.pl"
 #define GGADU_SMS_PLUS_URL 		"/sms/sendsms.php"
 
-#define GGADU_SMS_IDEA_HOST 		"sms.idea.pl"
-#define GGADU_SMS_IDEA_URL_GET 		"/"
-#define GGADU_SMS_IDEA_URL_SEND		"/sendsms.aspx"
+#define GGADU_SMS_ORANGE_HOST 		"sms.orange.pl"
+#define GGADU_SMS_ORANGE_URL_GET 	"/Default.aspx?id=A2B6173D-CF1A-4c38-B7A7-E3144D43D70C"
+#define GGADU_SMS_ORANGE_URL_SEND	"/sendsms.aspx"
 
 #define GGADU_SMS_ERA_HOST 	"www.eraomnix.pl"
 #define GGADU_SMS_ERA_URL 	"/msg/api/do/tinker/sponsored"
@@ -56,13 +56,13 @@
 
 #define GGADU_SMS_RECVBUFF_LEN 32768
 
-#define IDEA_GFX "/idea_token.gfx"
-#define GGADU_SMS_IDEA_TOKENLEN 36
+#define ORANGE_GFX "/orange_token.gfx"
+#define GGADU_SMS_ORANGE_TOKENLEN 36
 #define RESERVED_CHARS	"!\"'()*+-.<>[]\\^_`{}|~\t#;/?:&=+,$% \r\n\v\x7f"
 
 enum
 {
-	SMS_IDEA = 2,
+	SMS_ORANGE = 2,
 	SMS_ERA,
 	SMS_PLUS
 };
@@ -116,12 +116,12 @@ typedef struct
 	gchar *sender;		/* free() me */
 	gchar *era_login;
 	gchar *era_password;
-	gchar *idea_token;	/* free() me */
-	gchar *idea_pass;	/* free() me */
+	gchar *orange_token;	/* free() me */
+	gchar *orange_pass;	/* free() me */
 } SMS;
 
 gpointer send_sms(SMS * message);
-gpointer send_IDEA_stage2(SMS * message);
+gpointer send_ORANGE_stage2(SMS * message);
 
 void sms_message(const gchar * sms_number, const gchar * message);
 void sms_warning(const gchar * sms_number, const gchar * warning);

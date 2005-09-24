@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.43 2005/08/31 00:07:25 shaster Exp $ */
+/* $Id: sms_core.c,v 1.44 2005/09/24 03:44:20 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -47,7 +47,7 @@
 #include "sms_gui.h"
 #include "sms_core.h"
 
-extern char *idea_token_path;
+extern char *orange_token_path;
 extern gint method;
 
 /* URLencoding code by Ahmad Baitalmal <ahmad@bitbuilder.com>
@@ -93,7 +93,7 @@ gchar *ggadu_sms_append_char(gchar * url_string, gchar char_to_append, gboolean 
 	return new_string;
 }
 
-/* laczenie sie z wybranym hostem, zwraca -1 przy b³edzie, inaczej 0 */
+/* laczenie sie z wybranym hostem, zwraca -1 przy bÅ‚edzie, inaczej 0 */
 gint sms_connect(gchar * sms_info, gchar * sms_host, int *sock_s)
 {
 	struct hostent *h;
@@ -182,19 +182,19 @@ void SMS_free(SMS * message)
 	g_free(message->number);
 	g_free(message->sender);
 	g_free(message->body);
-	g_free(message->idea_token);
-	g_free(message->idea_pass);
+	g_free(message->orange_token);
+	g_free(message->orange_pass);
 	g_free(message);
 
 	return;
 }
 
 /* tu bedzie wymiana na cos innego, GUI musi to obslugiwac a nie "samowolka" ;-) */
-gboolean IDEA_logo(SMS * user_data)
+gboolean ORANGE_logo(SMS * user_data)
 {
-	GGaduDialog *dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("IDEA token"), "get token", user_data);
+	GGaduDialog *dialog = ggadu_dialog_new_full(GGADU_DIALOG_GENERIC, _("ORANGE token"), "get token", user_data);
 	
-	ggadu_dialog_add_entry(dialog, 0, "", VAR_IMG, idea_token_path, VAR_FLAG_NONE);
+	ggadu_dialog_add_entry(dialog, 0, "", VAR_IMG, orange_token_path, VAR_FLAG_NONE);
 	ggadu_dialog_add_entry(dialog, 1, _("Enter token text"), VAR_STR, NULL, VAR_FLAG_NONE);
 
 	signal_emit_from_thread("sms", "gui show dialog", dialog, "main-gui");
@@ -240,7 +240,7 @@ void sms_warning(const gchar * sms_number, const gchar * warning)
 }
 
 /* wyslanie na idee */
-gint send_IDEA(SMS * message)
+gint send_ORANGE(SMS * message)
 {
 	gchar *token = NULL;
 	gchar temp[2];
@@ -248,20 +248,20 @@ gint send_IDEA(SMS * message)
 	gchar *recv_buff = NULL;
 	gchar *buf = NULL;
 	gint i = 0, j, k, retries = 3;
-	FILE *idea_logo;
+	FILE *orange_logo;
 	HTTPstruct *HTTP = NULL;
 	SMS *message2 = NULL;
 	int sock_s;
 
 	HTTP = httpstruct_new();
 	HTTP->method = SMS_METHOD_GET;
-	HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
-	HTTP->url = g_strdup(GGADU_SMS_IDEA_URL_GET);
+	HTTP->host = g_strdup(GGADU_SMS_ORANGE_HOST);
+	HTTP->url = g_strdup(GGADU_SMS_ORANGE_URL_GET);
 	HTTP->url_params = g_strdup(" ");
 
       get_mainpage:
 	/* pobranie adresu do obrazka */
-	if (sms_connect("IDEA", "213.218.116.131", &sock_s))
+	if (sms_connect("ORANGE", "213.218.116.131", &sock_s))
 	{
 		httpstruct_free(HTTP);
 		return ERR_SERVICE;
@@ -277,7 +277,7 @@ gint send_IDEA(SMS * message)
 
 	close(sock_s);
 
-	print_debug("\n=======retries left: %d=====\nIDEA RECVBUFF1: %s\n\n", retries - 1, recv_buff);
+	print_debug("\n=======retries left: %d=====\nORANGE RECVBUFF1: %s\n\n", retries - 1, recv_buff);
 
 	if (!g_strstr_len(recv_buff, i, "200 OK"))
 	{
@@ -301,13 +301,13 @@ gint send_IDEA(SMS * message)
 		return ERR_READ_TOKEN;
 	}
 
-	if (!(token = g_strndup(buf + 24, GGADU_SMS_IDEA_TOKENLEN)))
+	if (!(token = g_strndup(buf + 24, GGADU_SMS_ORANGE_TOKENLEN)))
 	{
 		g_free(recv_buff);
 		return ERR_READ_TOKEN;
 	}
 
-	if (strlen(token) < GGADU_SMS_IDEA_TOKENLEN)
+	if (strlen(token) < GGADU_SMS_ORANGE_TOKENLEN)
 	{
 		g_free(token);
 		g_free(recv_buff);
@@ -319,12 +319,12 @@ gint send_IDEA(SMS * message)
 
 	HTTP = httpstruct_new();
 	HTTP->method = SMS_METHOD_GET;
-	HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
+	HTTP->host = g_strdup(GGADU_SMS_ORANGE_HOST);
 	HTTP->url = g_strdup(gettoken);
 	HTTP->url_params = g_strdup(" ");
 
       get_token:
-	if (sms_connect("IDEA", GGADU_SMS_IDEA_HOST, &sock_s))
+	if (sms_connect("ORANGE", GGADU_SMS_ORANGE_HOST, &sock_s))
 	{
 		httpstruct_free(HTTP);
 		return ERR_SERVICE;
@@ -340,7 +340,7 @@ gint send_IDEA(SMS * message)
 
 	close(sock_s);
 
-	print_debug("\n============retries left: %d=================\nIDEA RECVBUFF2: %s\n\n", retries, recv_buff);
+	print_debug("\n============retries left: %d=================\nORANGE RECVBUFF2: %s\n\n", retries, recv_buff);
 
 	if (!g_strstr_len(recv_buff, i, "200 OK"))
 	{
@@ -379,8 +379,8 @@ gint send_IDEA(SMS * message)
 		recv_buff[k] = recv_buff[k + j];
 	recv_buff[k] = 0;
 
-	/* oops, bail out if idea_token_path cannot be written. */
-	if (!(idea_logo = fopen(idea_token_path, "w")))
+	/* oops, bail out if orange_token_path cannot be written. */
+	if (!(orange_logo = fopen(orange_token_path, "w")))
 	{
 		g_free(token);
 		g_free(recv_buff);
@@ -388,8 +388,8 @@ gint send_IDEA(SMS * message)
 	}
 
 	/* write token image to file, close fd */
-	fwrite(recv_buff, 1, i - j, idea_logo);
-	fclose(idea_logo);
+	fwrite(recv_buff, 1, i - j, orange_logo);
+	fclose(orange_logo);
 
 	g_free(recv_buff);
 
@@ -399,15 +399,15 @@ gint send_IDEA(SMS * message)
 	message2->sender = g_strdup(message->sender);
 	message2->body = g_strdup(message->body);
 
-	message2->idea_token = token;
-	message2->idea_pass = NULL;
+	message2->orange_token = token;
+	message2->orange_pass = NULL;
 
-	IDEA_logo(message2);
+	ORANGE_logo(message2);
 
 	return TRUE;
 }
 
-gpointer send_IDEA_stage2(SMS * message)
+gpointer send_ORANGE_stage2(SMS * message)
 {
 	gchar *recv_buff = NULL;
 	gchar *post = NULL;
@@ -420,7 +420,7 @@ gpointer send_IDEA_stage2(SMS * message)
 	int sock_s;
 
 	/* is there any better place for this? */
-	unlink(idea_token_path);
+	unlink(orange_token_path);
 
 	if (!message)
 	{
@@ -428,7 +428,7 @@ gpointer send_IDEA_stage2(SMS * message)
 		goto out;
 	}
 
-	if (!message->idea_pass)
+	if (!message->orange_pass)
 	{
 		sms_warning(message->number, _("Please enter token"));
 		goto out;
@@ -446,8 +446,8 @@ gpointer send_IDEA_stage2(SMS * message)
 
 	sender = ggadu_sms_urlencode(g_strdup(message->sender));
 	body = ggadu_sms_urlencode(g_strdup(message->body));
-	post = g_strconcat("token=", message->idea_token, "&SENDER=", sender, "&RECIPIENT=", sms_number, "&SHORT_MESSAGE=", body, "&pass=",
-			   message->idea_pass, "&respInfo=2", NULL);
+	post = g_strconcat("token=", message->orange_token, "&SENDER=", sender, "&RECIPIENT=", sms_number, "&SHORT_MESSAGE=", body, "&pass=",
+			   message->orange_pass, "&respInfo=2", NULL);
 
 	g_free(sender);
 	g_free(body);
@@ -456,15 +456,15 @@ gpointer send_IDEA_stage2(SMS * message)
 
 	HTTP = httpstruct_new();
 	HTTP->method = SMS_METHOD_POST;
-	HTTP->host = g_strdup(GGADU_SMS_IDEA_HOST);
-	HTTP->url = g_strdup(GGADU_SMS_IDEA_URL_SEND);
+	HTTP->host = g_strdup(GGADU_SMS_ORANGE_HOST);
+	HTTP->url = g_strdup(GGADU_SMS_ORANGE_URL_SEND);
 	HTTP->url_params = g_strdup(" ");
 	HTTP->post_data = g_strdup(post);
 	HTTP->post_length = strlen(post);
 	g_free(post);
 
       send_sms:
-	if (sms_connect("IDEA", "213.218.116.131", &sock_s))
+	if (sms_connect("ORANGE", "213.218.116.131", &sock_s))
 	{
 		sms_warning(message->number, _("Cannot connect!"));
 		httpstruct_free(HTTP);
@@ -480,7 +480,7 @@ gpointer send_IDEA_stage2(SMS * message)
 
 	close(sock_s);
 
-	print_debug("\n============retries left: %d===================\nIDEA RECVBUFF3: %s\n\n", retries, recv_buff);
+	print_debug("\n============retries left: %d===================\nORANGE RECVBUFF3: %s\n\n", retries, recv_buff);
 
 	if (!g_strstr_len(recv_buff, i, "200 OK"))
 	{
@@ -498,10 +498,10 @@ gpointer send_IDEA_stage2(SMS * message)
 		httpstruct_free(HTTP);
 	}
 
-	if (g_strstr_len(recv_buff, i, "SMS zosta³ wys³any"))
+	if (g_strstr_len(recv_buff, i, "SMS zostaÅ‚ wysÅ‚any"))
 		sms_message(message->number, _("SMS has been sent"));
 
-	else if (g_strstr_len(recv_buff, i, "Podano b³êdne has³o, SMS nie zosta³ wys³any"))
+	else if (g_strstr_len(recv_buff, i, "Podano bÅ‚Ä™dne hasÅ‚o, SMS nie zostaÅ‚ wysÅ‚any"))
 		sms_warning(message->number, _("Bad token!"));
 
 	else if (g_strstr_len(recv_buff, i, "Object moved"))
@@ -513,7 +513,7 @@ gpointer send_IDEA_stage2(SMS * message)
 	else if (g_strstr_len(recv_buff, i, "serwis chwilowo"))
 		sms_warning(message->number, _("Gateway error!"));
 
-	else if (g_strstr_len(recv_buff, i, "nie ma aktywnej us³ugi"))
+	else if (g_strstr_len(recv_buff, i, "nie ma aktywnej usÅ‚ugi"))
 		sms_warning(message->number, _("Service not activated!"));
 
 	else if (g_strstr_len(recv_buff, i, "adres odbiorcy wiadomosci jest nieprawid"))
@@ -591,11 +591,11 @@ gint send_PLUS(SMS * message)
 
 	if (!strlen(recv_buff))
 		ret = ERR_SERVICE;
-	else if (g_strstr_len(recv_buff, i, "wiadomo¶æ zosta³a wys³ana na numer"))
+	else if (g_strstr_len(recv_buff, i, "wiadomoÅ›Ä‡ zostaÅ‚a wysÅ‚ana na numer"))
 		ret = TRUE;
-	else if (g_strstr_len(recv_buff, i, "podano z³y numer"))
+	else if (g_strstr_len(recv_buff, i, "podano zÅ‚y numer"))
 		ret = ERR_BAD_RCPT;
-	else if (g_strstr_len(recv_buff, i, "Z powodu przekroczenia limitów bramki"))
+	else if (g_strstr_len(recv_buff, i, "Z powodu przekroczenia limitÃ³w bramki"))
 		ret = ERR_LIMIT_EX;
 
 	g_free(recv_buff);
@@ -739,7 +739,7 @@ gint check_operator(gchar * number)
 		return FALSE;
 
 	if (*sms_number == '5')
-		return SMS_IDEA;
+		return SMS_ORANGE;
 
 	if (*sms_number == '6')
 	{
@@ -789,14 +789,14 @@ gpointer send_sms(SMS * message)
 	gsm_oper = check_operator(message->number);
 	switch (gsm_oper)
 	{
-	case SMS_IDEA:
+	case SMS_ORANGE:
 		if (message->external)
 		{
 			result = system(g_strconcat("sms ", message->number, " \"", message->body, " ", message->sender, "\"", NULL));
 			goto out;
 		}
 		else
-			result = send_IDEA(message);
+			result = send_ORANGE(message);
 
 		break;
 
@@ -846,8 +846,8 @@ gpointer send_sms(SMS * message)
 	{
 		/* successes */
 	case TRUE:
-		/* dirty IDEA workaround: we can't handle send_idea*() return values here,
-		   send_idea*() eventually notifies about success itself. */
+		/* dirty ORANGE workaround: we can't handle send_orange*() return values here,
+		   send_orange*() eventually notifies about success itself. */
 		if (gsm_oper == SMS_PLUS)
 			sms_message(message->number, _("SMS has been sent"));
 		else if (gsm_oper == SMS_ERA)
