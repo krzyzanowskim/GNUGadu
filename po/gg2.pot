@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-08-29 18:11+0200\n"
+"POT-Creation-Date: 2005-09-24 05:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1688,7 +1688,7 @@ msgid "Unable to read config file for plugin remote"
 msgstr ""
 
 #: src/plugins/sms/sms_core.c:195
-msgid "IDEA token"
+msgid "ORANGE token"
 msgstr ""
 
 #: src/plugins/sms/sms_core.c:198
@@ -1707,11 +1707,11 @@ msgstr ""
 msgid "Please enter token"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:469 src/plugins/sms/sms_core.c:885
+#: src/plugins/sms/sms_core.c:469 src/plugins/sms/sms_core.c:893
 msgid "Cannot connect!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:502 src/plugins/sms/sms_core.c:844
+#: src/plugins/sms/sms_core.c:502 src/plugins/sms/sms_core.c:852
 msgid "SMS has been sent"
 msgstr ""
 
@@ -1723,11 +1723,11 @@ msgstr ""
 msgid "Bad token entered!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:511 src/plugins/sms/sms_core.c:879
+#: src/plugins/sms/sms_core.c:511 src/plugins/sms/sms_core.c:887
 msgid "Daily limit exceeded!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:514 src/plugins/sms/sms_core.c:882
+#: src/plugins/sms/sms_core.c:514 src/plugins/sms/sms_core.c:890
 msgid "Gateway error!"
 msgstr ""
 
@@ -1739,68 +1739,72 @@ msgstr ""
 msgid "Invalid number"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:765
+#: src/plugins/sms/sms_core.c:773
 msgid "Specify recipient number!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:771
+#: src/plugins/sms/sms_core.c:779
 msgid "Specify sender name!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:777
+#: src/plugins/sms/sms_core.c:785
 msgid "Message is empty!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:816
+#: src/plugins/sms/sms_core.c:824
 msgid "Empty Era login!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:822
+#: src/plugins/sms/sms_core.c:830
 msgid "Empty Era password!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:831
+#: src/plugins/sms/sms_core.c:839
 msgid "Invalid number!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:847
+#: src/plugins/sms/sms_core.c:855
 #, c-format
 msgid "SMS has been sent. Left: %d"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:855
+#: src/plugins/sms/sms_core.c:863
 msgid "SMS not delivered!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:858
+#: src/plugins/sms/sms_core.c:866
 msgid "Unauthorized!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:861
+#: src/plugins/sms/sms_core.c:869
 msgid "Access denied!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:864
+#: src/plugins/sms/sms_core.c:872
 msgid "Syntax error!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:867
+#: src/plugins/sms/sms_core.c:875
 msgid "Invalid recipient!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:870
+#: src/plugins/sms/sms_core.c:878
 msgid "Message too long!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:873
+#: src/plugins/sms/sms_core.c:881
 msgid "Error while reading token!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:876
+#: src/plugins/sms/sms_core.c:884
 msgid "Cannot write token image to file!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:890
+#: src/plugins/sms/sms_core.c:896
+msgid "Insufficent number of tokens!"
+msgstr ""
+
+#: src/plugins/sms/sms_core.c:901
 msgid "Unknown error!"
 msgstr ""
 

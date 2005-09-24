@@ -1,4 +1,4 @@
-# $Id: pl.po,v 1.101 2005/08/29 16:21:37 thrulliq Exp $
+# $Id: pl.po,v 1.102 2005/09/24 03:44:48 shaster Exp $
 # Copyright (C) 2003 GNU Gadu Team.
 # Igor Popik <thrull@slackware.pl>, 2003.
 # Artur Flinta <aflinta@at.kernel.pl>, 2004-2005.
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gg2 2.0_CVS\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-08-29 18:11+0200\n"
+"POT-Creation-Date: 2005-09-24 05:36+0200\n"
 "PO-Revision-Date: 2003-03-19 19:16+0100\n"
 "Last-Translator: Artur Flinta\n"
 "Language-Team: GNU Gadu Team\n"
@@ -495,14 +495,12 @@ msgid "Show toolbar"
 msgstr "Wyświetlanie paska narzędziowego"
 
 #: src/plugins/GUI/gui_preferences.c:1159
-#, fuzzy
 msgid "Display contacts' descriptions on users list"
 msgstr "Wyświetlanie opisów na liście kontaktów"
 
 #: src/plugins/GUI/gui_preferences.c:1162
-#, fuzzy
 msgid "Wrap contacts' descriptions on users list"
-msgstr "Wyświetlanie opisów na liście kontaktów"
+msgstr "Zawijanie opisów na liście kontaktów"
 
 #: src/plugins/GUI/gtkimhtml.c:1005
 msgid "Pa_ste As Text"
@@ -554,9 +552,8 @@ msgid "Unable to read configuration file for plugin GUI, don't worry"
 msgstr "Nie można odczytać pliku z konfiguracją wtyczki GUI, nie martw się"
 
 #: src/plugins/GUI/gui_main.c:262
-#, fuzzy
 msgid "Copy a description"
-msgstr "Zajęty z opisem"
+msgstr "Kopiuj opis"
 
 #: src/plugins/GUI/gui_search.c:43
 msgid "Status"
@@ -1777,8 +1774,8 @@ msgid "Unable to read config file for plugin remote"
 msgstr "Nie można odczytać pliku z konfiguracją wtyczki zdalnego sterowania"
 
 #: src/plugins/sms/sms_core.c:195
-msgid "IDEA token"
-msgstr "Żeton IDEA"
+msgid "ORANGE token"
+msgstr "Żeton ORANGE"
 
 #: src/plugins/sms/sms_core.c:198
 msgid "Enter token text"
@@ -1796,11 +1793,11 @@ msgstr "Wtyczka SMS: "
 msgid "Please enter token"
 msgstr "Wpisz tekst z obrazka"
 
-#: src/plugins/sms/sms_core.c:469 src/plugins/sms/sms_core.c:885
+#: src/plugins/sms/sms_core.c:469 src/plugins/sms/sms_core.c:893
 msgid "Cannot connect!"
 msgstr "Nie można się połączyć!"
 
-#: src/plugins/sms/sms_core.c:502 src/plugins/sms/sms_core.c:844
+#: src/plugins/sms/sms_core.c:502 src/plugins/sms/sms_core.c:852
 msgid "SMS has been sent"
 msgstr "Wiadomość SMS została wysłana"
 
@@ -1812,11 +1809,11 @@ msgstr "Błędne hasło!"
 msgid "Bad token entered!"
 msgstr "Wprowadzono zły żeton!"
 
-#: src/plugins/sms/sms_core.c:511 src/plugins/sms/sms_core.c:879
+#: src/plugins/sms/sms_core.c:511 src/plugins/sms/sms_core.c:887
 msgid "Daily limit exceeded!"
 msgstr "Dzienny limit został wyczerpany!"
 
-#: src/plugins/sms/sms_core.c:514 src/plugins/sms/sms_core.c:882
+#: src/plugins/sms/sms_core.c:514 src/plugins/sms/sms_core.c:890
 msgid "Gateway error!"
 msgstr "Błąd bramki!"
 
@@ -1828,68 +1825,72 @@ msgstr "Usługa nie jest aktywna!"
 msgid "Invalid number"
 msgstr "Nieprawidłowy numer!"
 
-#: src/plugins/sms/sms_core.c:765
+#: src/plugins/sms/sms_core.c:773
 msgid "Specify recipient number!"
 msgstr "Podaj numer odbiorcy!"
 
-#: src/plugins/sms/sms_core.c:771
+#: src/plugins/sms/sms_core.c:779
 msgid "Specify sender name!"
 msgstr "Podaj nazwę nadawcy!"
 
-#: src/plugins/sms/sms_core.c:777
+#: src/plugins/sms/sms_core.c:785
 msgid "Message is empty!"
 msgstr "Treść wiadomości jest pusta!"
 
-#: src/plugins/sms/sms_core.c:816
+#: src/plugins/sms/sms_core.c:824
 msgid "Empty Era login!"
 msgstr "Pusty login Era!"
 
-#: src/plugins/sms/sms_core.c:822
+#: src/plugins/sms/sms_core.c:830
 msgid "Empty Era password!"
 msgstr "Puste hasło Era!"
 
-#: src/plugins/sms/sms_core.c:831
+#: src/plugins/sms/sms_core.c:839
 msgid "Invalid number!"
 msgstr "Nieprawidłowy numer!"
 
-#: src/plugins/sms/sms_core.c:847
+#: src/plugins/sms/sms_core.c:855
 #, c-format
 msgid "SMS has been sent. Left: %d"
 msgstr "Wiadomość SMS została wysłana. Pozostało: %d"
 
-#: src/plugins/sms/sms_core.c:855
+#: src/plugins/sms/sms_core.c:863
 msgid "SMS not delivered!"
 msgstr "Wiadomość SMS nie została dostarczona!"
 
-#: src/plugins/sms/sms_core.c:858
+#: src/plugins/sms/sms_core.c:866
 msgid "Unauthorized!"
 msgstr "Użytkownik nieautoryzowany!"
 
-#: src/plugins/sms/sms_core.c:861
+#: src/plugins/sms/sms_core.c:869
 msgid "Access denied!"
 msgstr "Dostęp zablokowany!"
 
-#: src/plugins/sms/sms_core.c:864
+#: src/plugins/sms/sms_core.c:872
 msgid "Syntax error!"
 msgstr "Błąd składni!"
 
-#: src/plugins/sms/sms_core.c:867
+#: src/plugins/sms/sms_core.c:875
 msgid "Invalid recipient!"
 msgstr "Błędny adres odbiorcy!"
 
-#: src/plugins/sms/sms_core.c:870
+#: src/plugins/sms/sms_core.c:878
 msgid "Message too long!"
 msgstr "Zbyt długa wiadomość!"
 
-#: src/plugins/sms/sms_core.c:873
+#: src/plugins/sms/sms_core.c:881
 msgid "Error while reading token!"
 msgstr "Błąd podczas odcytu żetonu!"
 
-#: src/plugins/sms/sms_core.c:876
+#: src/plugins/sms/sms_core.c:884
 msgid "Cannot write token image to file!"
 msgstr "Błąd podczas zapisu żetonu do pliku!"
 
-#: src/plugins/sms/sms_core.c:890
+#: src/plugins/sms/sms_core.c:896
+msgid "Insufficent number of tokens!"
+msgstr "Niewystarczająca liczba Żetonów!"
+
+#: src/plugins/sms/sms_core.c:901
 msgid "Unknown error!"
 msgstr "Nieznany błąd!"
 
