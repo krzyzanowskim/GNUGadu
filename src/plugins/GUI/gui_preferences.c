@@ -1,4 +1,4 @@
-/* $Id: gui_preferences.c,v 1.105 2005/07/27 17:48:50 mkobierzycki Exp $ */
+/* $Id: gui_preferences.c,v 1.106 2005/10/12 12:07:43 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1329,6 +1329,9 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 	{
 		GSList *combo_theme_slist;
 		GSList *combo_icons_slist;
+		GSList *combo_skins_slist;
+		GSList *dict_slist;
+
 		if (plugins_updated)
 		{
 			GIOChannel *ch = g_io_channel_new_file(g_build_filename(config->configdir, "modules.load", NULL), "w",
@@ -1362,7 +1365,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		ggadu_config_var_set(gui_handler, "use_spell", (gpointer) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
 
 		entry = g_object_get_data(G_OBJECT(chat_vbox), "combo_spell");
-		GSList *dict_slist = g_object_get_data(G_OBJECT(entry), "dictionary_slist");
+		dict_slist = g_object_get_data(G_OBJECT(entry), "dictionary_slist");
 
 		g_return_if_fail(entry != NULL);
 
@@ -1448,7 +1451,7 @@ void gui_preferences(GtkWidget * widget, gpointer data)
 		entry = g_object_get_data(G_OBJECT(adv_vbox), "combo_skins");
 		g_return_if_fail(entry != NULL);
 
-		GSList *combo_skins_slist = g_object_get_data(G_OBJECT(entry), "combo_skins_slist");
+		combo_skins_slist = g_object_get_data(G_OBJECT(entry), "combo_skins_slist");
 
 		if (gtk_combo_box_get_active(GTK_COMBO_BOX(entry))) {
 		    ggadu_config_var_set(gui_handler, "skin", (gpointer) g_strdup(g_slist_nth_data(combo_skins_slist, gtk_combo_box_get_active(GTK_COMBO_BOX(entry)))));

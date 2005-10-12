@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.162 2005/06/14 16:46:07 mkobierzycki Exp $ */
+/* $Id: jabber_plugin.c,v 1.163 2005/10/12 12:07:43 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -1458,6 +1458,8 @@ static GGaduMenu *build_jabber_menu()
 
 void start_plugin()
 {
+	GGaduStatusPrototype *sp;
+
 	p = g_new0(GGaduProtocol, 1);
 	p->display_name = g_strdup("Jabber");
 	p->protocol_uri = g_strdup("xmpp:");
@@ -1505,7 +1507,7 @@ void start_plugin()
 	{
 		gint auto_status = (gint) ggadu_config_var_get(jabber_handler, "auto_status");
 		print_debug("jabber: autoconneting");
-		GGaduStatusPrototype *sp = ggadu_find_status_prototype(p, auto_status ? auto_status : JABBER_STATUS_AVAILABLE);
+		sp = ggadu_find_status_prototype(p, auto_status ? auto_status : JABBER_STATUS_AVAILABLE);
 		jabber_change_status(sp, FALSE);
 		GGaduStatusPrototype_free(sp);
 	}

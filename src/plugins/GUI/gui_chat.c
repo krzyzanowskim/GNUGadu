@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.152 2005/05/30 13:02:08 mkobierzycki Exp $ */
+/* $Id: gui_chat.c,v 1.153 2005/10/12 12:07:43 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -851,6 +851,7 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 	gint percent = 0;
 	gint number_of_workspaces = 0;
 	GtkWidget *chat_notebook_paned_size = NULL;
+	PangoFontDescription *font_desc;
 
 	if (!session || !plugin_name || !id)
 		return NULL;
@@ -1117,7 +1118,6 @@ GtkWidget *create_chat(gui_chat_session * session, gchar * plugin_name, gchar * 
 
     /* set font of the message editing text_view */
 
-    PangoFontDescription *font_desc;
     fontstr = ggadu_config_var_get(gui_handler, "msg_out_edit_font");
     font_desc = pango_font_description_from_string (fontstr);
     gtk_widget_modify_font (input, font_desc);

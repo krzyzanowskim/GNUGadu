@@ -1,4 +1,4 @@
-/* $Id: gui_userview.c,v 1.68 2005/08/01 12:01:12 mkobierzycki Exp $ */
+/* $Id: gui_userview.c,v 1.69 2005/10/12 12:07:43 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -88,6 +88,8 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 			 GtkTreeIter * iter, gpointer data)
 {
 	GGaduContact *k = NULL;
+	gchar *markup_descr;
+	gchar *markup;
 
 	gtk_tree_model_get(model, iter, 2, &k, -1);
 
@@ -165,10 +167,10 @@ static void on_text_data(GtkTreeViewColumn * column, GtkCellRenderer * renderer,
 		        }
 		    } 
 
-		    gchar *markup_descr = ggadu_config_var_get(gui_handler, "wrap_descr") ?
+		    markup_descr = ggadu_config_var_get(gui_handler, "wrap_descr") ?
 		                          g_markup_escape_text(descr, strlen(descr)) :
 			                  g_markup_escape_text(k->status_descr, strlen(k->status_descr));
-		    gchar *markup = g_strdup_printf("%s\n<small>%s</small>", k->nick, markup_descr);
+		    markup = g_strdup_printf("%s\n<small>%s</small>", k->nick, markup_descr);
 		    g_object_set(G_OBJECT(renderer), "text", NULL, "markup", markup, NULL);
 		    g_free(markup_descr);
 		    g_free(markup);
