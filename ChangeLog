@@ -1,3 +1,6 @@
+12.10.2005
+- gcc 2.9.5 compatibility patch by Piotr Smyrak (krzak)
+
 24.09.2005
 - s/idea/orange/i  (sms/shasta)
 - fix sending sms to Orange, patch by Artur Gadawski <artur[at]ufo.o.k.pl> (sms)
