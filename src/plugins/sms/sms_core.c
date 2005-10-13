@@ -1,4 +1,4 @@
-/* $Id: sms_core.c,v 1.44 2005/09/24 03:44:20 shaster Exp $ */
+/* $Id: sms_core.c,v 1.45 2005/10/13 11:22:39 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
@@ -591,11 +591,11 @@ gint send_PLUS(SMS * message)
 
 	if (!strlen(recv_buff))
 		ret = ERR_SERVICE;
-	else if (g_strstr_len(recv_buff, i, "wiadomo≈õƒá zosta≈Ça wys≈Çana na numer"))
+	else if (g_strstr_len(recv_buff, i, "wiadomo∂Ê zosta≥a wys≥ana na numer"))
 		ret = TRUE;
-	else if (g_strstr_len(recv_buff, i, "podano z≈Çy numer"))
+	else if (g_strstr_len(recv_buff, i, "podano z≥y numer"))
 		ret = ERR_BAD_RCPT;
-	else if (g_strstr_len(recv_buff, i, "Z powodu przekroczenia limit√≥w bramki"))
+	else if (g_strstr_len(recv_buff, i, "Z powodu przekroczenia limitÛw bramki"))
 		ret = ERR_LIMIT_EX;
 
 	g_free(recv_buff);

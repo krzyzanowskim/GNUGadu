@@ -1,3 +1,7 @@
+13.10.2005
+- fixed status messages detection when sending SMS to PLUS network,
+  this bug was introduced by 24.09 orange patch (sms/shasta)
+
 12.10.2005
 - gcc 2.9.5 compatibility patch by Piotr Smyrak (krzak)
 
