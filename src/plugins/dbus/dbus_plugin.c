@@ -1,4 +1,4 @@
-/* $Id: dbus_plugin.c,v 1.19 2005/01/10 09:39:11 krzyzak Exp $ */
+/* $Id: dbus_plugin.c,v 1.20 2005/11/23 12:10:10 krzyzak Exp $ */
 
 /* 
  * DBUS plugin code for GNU Gadu 2 
@@ -79,6 +79,8 @@ static DBusHandlerResult ofi_getPresence(DBusConnection * connection, DBusMessag
 			{
 				DBusMessage *return_message;
 				GGaduContact *k = NULL;
+				const gchar *arg_empty = "";
+		
 				
 				return_message = dbus_message_new_method_return(message);
 
@@ -107,13 +109,14 @@ static DBusHandlerResult ofi_getPresence(DBusConnection * connection, DBusMessag
 					/* not sure about this g_strdup() */
 					status_descr = k->status_descr ? g_strdup(k->status_descr) : "";
 					
-					dbus_message_append_args(return_message, DBUS_TYPE_STRING, return_status, DBUS_TYPE_STRING, status_descr,DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
+					dbus_message_append_args(return_message, DBUS_TYPE_STRING, &return_status, DBUS_TYPE_STRING, &status_descr,DBUS_TYPE_STRING, &arg_empty, DBUS_TYPE_INVALID);
 					GGaduContact_free(k);
 				}
 				else
 				{
+					const gchar *arg_unknown = "Unknown";
 					print_debug("NOT FOUND: Unknown");
-					dbus_message_append_args(return_message, DBUS_TYPE_STRING, "Unknown", DBUS_TYPE_STRING, "",DBUS_TYPE_STRING, "", DBUS_TYPE_INVALID);
+					dbus_message_append_args(return_message, DBUS_TYPE_STRING, &arg_unknown, DBUS_TYPE_STRING, &arg_empty,DBUS_TYPE_STRING, &arg_empty, DBUS_TYPE_INVALID);
 				}
 				/* I can free here because signal return copy of GGaduContact */
 				dbus_connection_send(connection, return_message, NULL);
@@ -121,7 +124,7 @@ static DBusHandlerResult ofi_getPresence(DBusConnection * connection, DBusMessag
 			}
 			plugins = plugins->next;
 		}
-		dbus_free(contactURI);
+		//dbus_free(contactURI);
 		g_strfreev(URItab);
 		g_free(contactURIhandler);
 	}
@@ -154,7 +157,7 @@ static DBusHandlerResult ofi_getProtocols(DBusConnection * connection, DBusMessa
 			if (p)
 			{
 				print_debug("proto: %s", p->protocol_uri);
-				dbus_message_append_args(return_message, DBUS_TYPE_STRING, p->protocol_uri, DBUS_TYPE_INVALID);
+				dbus_message_append_args(return_message, DBUS_TYPE_STRING, &p->protocol_uri, DBUS_TYPE_INVALID);
 			}
 
 			index = ggadu_repo_value_next("_protocols_", REPO_VALUE_PROTOCOL, &key, index);
@@ -224,10 +227,10 @@ static DBusHandlerResult ofi_openChat(DBusConnection * connection, DBusMessage *
 		}
 		g_strfreev(URItab);
 		g_free(contactURIhandler);
-		dbus_free(contactURI);
+		//dbus_free(contactURI);
 	}
 	
-	dbus_message_append_args(return_message, DBUS_TYPE_BOOLEAN, ret, DBUS_TYPE_INVALID);
+	dbus_message_append_args(return_message, DBUS_TYPE_BOOLEAN, &ret, DBUS_TYPE_INVALID);
 	dbus_connection_send(connection, return_message, NULL);
 	dbus_message_unref(return_message);
 	dbus_error_free(&error);
@@ -247,7 +250,7 @@ static DBusHandlerResult dbus_plugin_message_func(DBusConnection * connection, D
 		    dbus_message_get_path(message), dbus_message_get_interface(message), dbus_message_get_type(message));
 
 
-	if (dbus_message_is_signal(message, DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL, "Disconnected"))
+	if (dbus_message_is_signal(message, DBUS_INTERFACE_LOCAL, "Disconnected"))
 	{
 		print_debug("dbus signal: Disconnected");
 		return DBUS_HANDLER_RESULT_HANDLED;
@@ -295,7 +298,7 @@ void start_plugin()
 	dbus_g_thread_init();
 
 	bus = dbus_g_connection_get_connection(dbus_g_bus_get(DBUS_BUS_SESSION, &error));
-	if (!bus)
+	if ((int)bus<0)
 	{
 		g_warning("Failed to connect to the D-BUS daemon: %s\n", error->message);
 		g_error_free(error);
@@ -305,7 +308,7 @@ void start_plugin()
 	dbus_connection_setup_with_g_main(bus, g_main_loop_get_context(config->main_loop));
 
 	dbus_error_init(&derror);
-	dbus_bus_acquire_service(bus, DBUS_ORG_FREEDESKTOP_IM_SERVICE, 0, &derror);
+	dbus_bus_request_name(bus, DBUS_ORG_FREEDESKTOP_IM_SERVICE, 0, &derror);
 	if (dbus_error_is_set(&derror))
 	{
 		g_warning("DBUS: Failed to acquire IM service. %s", derror.message);
