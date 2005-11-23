@@ -1,3 +1,7 @@
+23.11.2005
+- utf_tlen.patch  close #139 by Przemyslaw Grzegorczyk
+<francuz86[at]@gmail.com> (tlen/krzak)
+
 13.10.2005
 - fixed status messages detection when sending SMS to PLUS network,
   this bug was introduced by 24.09 orange patch (sms/shasta)

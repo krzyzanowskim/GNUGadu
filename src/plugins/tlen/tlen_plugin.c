@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.100 2005/05/20 16:39:24 mkobierzycki Exp $ */
+/* $Id: tlen_plugin.c,v 1.101 2005/11/23 11:24:56 krzyzak Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -262,8 +262,8 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 			if (e->roster->name)
 			{
-				/*k->nick = to_utf8("ISO-8859-2", e->roster->name);*/
-				k->nick = g_strdup(e->roster->name);
+				k->nick = to_utf8("ISO-8859-2", e->roster->name);
+				/* k->nick = g_strdup(e->roster->name); */
 			}
 			else
 			{
@@ -1078,6 +1078,7 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 		if (ggadu_dialog_get_response(dialog) == GGADU_OK)
 		{
 			GSList *kvlist = ggadu_dialog_get_entries(dialog);
+			gchar *nick_iso, *group_iso;
 
 			while (kvlist)
 			{
@@ -1103,11 +1104,16 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 			userlist = g_slist_append(userlist, k);
 			ggadu_repo_add_value("tlen", k->id, k, REPO_VALUE_CONTACT);
 
-			tlen_addcontact(session, k->nick, k->id, k->group);
+			nick_iso = from_utf8("ISO-8859-2", k->nick);
+			group_iso = from_utf8("ISO-8859-2", k->group);
+			tlen_addcontact(session, nick_iso, k->id, group_iso);
 
 			tlen_request_subscribe(session, k->id);
 
 			signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
+			
+			g_free(nick_iso);
+			g_free(group_iso);
 		}
 		GGaduDialog_free(dialog);
 	}
@@ -1115,13 +1121,19 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 	if (signal->name == g_quark_from_static_string("add user search"))
 	{
 		GGaduContact *k = signal->data;
+		gchar *nick_iso, *group_iso;
 
 		userlist = g_slist_append(userlist, k);
 		ggadu_repo_add_value("tlen", k->id, k, REPO_VALUE_CONTACT);
-		tlen_addcontact(session, k->nick, k->id, k->group);
+		nick_iso = from_utf8("ISO-8859-2", k->nick);
+		group_iso = from_utf8("ISO-8859-2", k->group);
+		tlen_addcontact(session, nick_iso, k->id, group_iso);
 
 		tlen_request_subscribe(session, k->id);
 		signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", userlist, "main-gui");
+
+		g_free(nick_iso);
+		g_free(group_iso);
 
 		return;
 	}
