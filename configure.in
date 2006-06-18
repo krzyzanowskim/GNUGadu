@@ -1,4 +1,4 @@
-# $Id: configure.in,v 1.132 2005/08/31 00:07:25 shaster Exp $
+# $Id: configure.in,v 1.133 2006/06/18 10:30:53 krzyzak Exp $
 
 m4_define([gg2_version],[2.2.8])
 
@@ -490,6 +490,14 @@ AC_ARG_WITH(aaway, [  --without-aaway		  Build without auto away plugin])
 if test "x$with_aaway" != "xno"; then
 	AC_PATH_X
 	AC_PATH_XTRA
+	AC_CHECK_HEADERS(X11/extensions/scrnsaver.h, have_scrnsaverh=yes, have_scrnsaverh=no)
+
+        if test "$have_scrnsaverh" = yes; then
+	    with_aaway=yes
+	else
+    	    AC_MSG_ERROR([*** unable to find X11/extensions/scrnsaver.h header, try to build --without-aaway ***])
+	fi
+
 	PKG_CHECK_MODULES(GTK,gtk+-2.0 >= $GTK_MIN_VER,[],AC_MSG_ERROR($GTK_PKG_ERRORS))
 	AAWAY_LIBS="$GTK_LIBS $X_LIBS $X_EXTRA_LIBS -lXss"
 	AAWAY_CFLAGS="$GTK_CFLAGS $X_CFLAGS"
@@ -497,7 +505,6 @@ if test "x$with_aaway" != "xno"; then
 	AC_SUBST(AAWAY_LIBS)
 	AC_SUBST(GTK_CFLAGS)
 	AC_SUBST(GTK_LIBS)
-	with_aaway=yes
     else
 	with_aaway=no
 fi
