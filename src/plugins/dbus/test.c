@@ -78,24 +78,25 @@ static void get_protocols(DBusConnection *bus)
 	/*dbus_connection_send(bus, message, NULL);*/
 	dbus_connection_send_with_reply(bus,message,&pending_call,-1);
 	dbus_pending_call_block (pending_call);
-	reply = dbus_pending_call_get_reply (pending_call);
+	reply = dbus_pending_call_steal_reply (pending_call);
 	
 	/* process reply */
 	dbus_message_iter_init(reply,&iter);
 	do {
-	    gchar *protocol = NULL;
+	    const char *protocol;
 	    if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
 	          break;
 		  
-	    protocol = g_strdup (dbus_message_iter_get_string (&iter));
+	    dbus_message_iter_get_basic (&iter, &protocol);
 	    g_print("return getProtocols: %s\n",protocol);
-	    g_free(protocol);
+	    //g_free(protocol);
 	    
 	} while (dbus_message_iter_next (&iter));
 
 	dbus_message_unref(message);
 	dbus_message_unref(reply);
 	dbus_pending_call_unref (pending_call);
+	g_print("ZZ");
 }
 
 static void open_chat(DBusConnection *bus)

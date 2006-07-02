@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.248 2005/05/20 17:35:25 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.249 2006/07/02 14:57:39 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -509,7 +509,7 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 
 				print_debug("GG_USERLIST_GET_REPLY");
 
-				list = to_utf8("CP1250", e->event.userlist.reply);
+				list = g_strdup(e->event.userlist.reply);
 				if (import_userlist(list))
 				{
 					signal_emit(GGadu_PLUGIN_NAME, "gui show message", g_strdup(_("Userlist has been imported succesfully!")), "main-gui");
@@ -1176,10 +1176,20 @@ gboolean import_userlist(gchar * list)
 	{
 		gchar *first_name, *last_name, *nick, *comment, *mobile, *group, *uin;
 		gchar **l = NULL;
+		gchar *line = NULL;
 		GGaduContact *k;
 		/* print_debug ("pointer %p -> %p\n", tmp, *tmp); */
-		l = g_strsplit(*tmp, ";", 12);
+		line = to_utf8("CP1250", *tmp);
+		if (!line) // skip bad entries
+		{
+		    tmp++;
+		    continue; 
+		}
+		    
+		l = g_strsplit(line, ";", 12);
+		
 		tmp++;
+		
 		if (!l[0])
 		{
 			g_strfreev(l);

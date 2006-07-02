@@ -1,3 +1,7 @@
+02.07.2006
+- fixed import userlist from server. Skip malformed entries. (gadu-gadu/krzak)
+- welcome back.
+
 23.11.2005
 - utf_tlen.patch  close #139 by Przemyslaw Grzegorczyk
 <francuz86[at]gmail.com> (tlen/krzak)
