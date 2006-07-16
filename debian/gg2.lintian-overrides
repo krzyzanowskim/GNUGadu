@@ -1,0 +1,5 @@
+# Project names stay with capital letters
+gg2 binary: description-synopsis-starts-with-a-capital-letter
+
+# GnuGadu depends on the library anyway, so no need to split it in different packages
+gg2 binary: non-dev-pkg-with-shlib-symlink

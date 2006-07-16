@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2005-09-24 05:36+0200\n"
+"POT-Creation-Date: 2006-07-16 23:18+0200\n"
 "PO-Revision-Date: 04/06/04 21:02\n"
 "Last-Translator: Sander Devrieze <s.devrieze@pandora.be>\n"
 "Language-Team: Nederlands <i18n@kde.nl>\n"
@@ -101,7 +101,7 @@ msgstr ""
 "\n"
 "[niet in gebruikerslijst]"
 
-#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:843
+#: src/plugins/GUI/GUI_plugin.c:209 src/plugins/GUI/gui_userview.c:845
 msgid "(None)"
 msgstr "(Geen)"
 
@@ -151,11 +151,11 @@ msgstr "/GNU Gadu/"
 msgid "_Close"
 msgstr "_Sluiten"
 
-#: src/plugins/GUI/gui_chat.c:937
+#: src/plugins/GUI/gui_chat.c:938
 msgid "Chat Window"
 msgstr "Berichtenvenster"
 
-#: src/plugins/GUI/gui_chat.c:1106
+#: src/plugins/GUI/gui_chat.c:1107
 #, c-format
 msgid ""
 "Error initializing spell checking: \n"
@@ -453,7 +453,7 @@ msgstr ""
 
 #: src/plugins/GUI/gui_preferences.c:1073 src/plugins/xosd/plugin_xosd.c:407
 #: src/plugins/remote/remote_plugin.c:643 src/plugins/sms/sms_gui.c:172
-#: src/plugins/aaway/aaway.c:271 src/plugins/update/update_plugin.c:345
+#: src/plugins/aaway/aaway.c:273 src/plugins/update/update_plugin.c:345
 #: src/plugins/history/external/history_viewer.c:105
 #: src/plugins/sound/external/plugin_sound_external.c:141
 msgid "Preferences"
@@ -713,7 +713,7 @@ msgid "Background color"
 msgstr ""
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:559
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1579
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1589
 #: src/plugins/tlen/tlen_plugin.c:797 src/plugins/jabber/jabber_plugin.c:1442
 #, fuzzy
 msgid "_Preferences"
@@ -724,11 +724,11 @@ msgid "Docklet-dockapp2"
 msgstr ""
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:595
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1709
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1714
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1739
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1743
-#: src/plugins/xosd/plugin_xosd.c:509 src/plugins/aaway/aaway.c:304
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1719
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1724
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1749
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1753
+#: src/plugins/xosd/plugin_xosd.c:509 src/plugins/aaway/aaway.c:306
 #: src/plugins/ignore/ignore.c:300
 #: src/plugins/history/external/history_viewer.c:141
 #: src/plugins/sound/external/plugin_sound_external.c:172
@@ -950,14 +950,14 @@ msgid "_Update settings on success?"
 msgstr "Update instellingen bij succes?"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1098
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2516
-#: src/plugins/tlen/tlen_plugin.c:739 src/plugins/tlen/tlen_plugin.c:1210
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2526
+#: src/plugins/tlen/tlen_plugin.c:739 src/plugins/tlen/tlen_plugin.c:1222
 msgid "female"
 msgstr "vrouwelijk"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1099
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2518
-#: src/plugins/tlen/tlen_plugin.c:740 src/plugins/tlen/tlen_plugin.c:1212
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2528
+#: src/plugins/tlen/tlen_plugin.c:740 src/plugins/tlen/tlen_plugin.c:1224
 msgid "male"
 msgstr "mannelijk"
 
@@ -1003,213 +1003,213 @@ msgstr "Geslacht:"
 msgid "_Search only for active users"
 msgstr "Zoek alleen naar actieve gebruikers"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1248
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1258
 msgid "Userlist import failed!"
 msgstr "Importeren gebruikerslijst mislukt!"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1263
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1273
 msgid "Userlist export failed!"
 msgstr "Exporteren gebruikerslijst mislukt!"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1267
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1277
 msgid "Userlist export succeeded!"
 msgstr "Gebruikerslijst exporteren gelukt!"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1281
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1291
 msgid "Userlist delete failed!"
 msgstr "Verwijderen gebruikerslijst mislukt!"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1337
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1347
 msgid "File received succesful"
 msgstr "Bestand met succes ontvangen"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1363
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1373
 #, fuzzy, c-format
 msgid "Unable to create file %s ."
 msgstr "Kon bestand niet creëren"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1455
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1465
 #, c-format
 msgid "%s (%d) wants to send You a file: %s (%d bytes)"
 msgstr "%s (%d) wilt u een bestand toesturen: %s (%d bytes)"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1473
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1483
 #, c-format
 msgid "File %s received succesful"
 msgstr "Bestand %s met succes ontvangen"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1475
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1485
 msgid "File sent succesful"
 msgstr "Bestand met succes verzonden"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1490
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1497
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1500
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1507
 msgid "File refused"
 msgstr "Bestand geweigerd"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1542
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1557
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1552
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1567
 msgid "You cannot send file to this person"
 msgstr "U kan geen bestand sturen naar deze persoon"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1561
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1571
 #, c-format
 msgid "Sending File to %s"
 msgstr "Bezig met versturen van bestand naar %s"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1566
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1576
 #, fuzzy
 msgid "_Select File:"
 msgstr "Selecteer bestand:"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1576
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1586
 #: src/plugins/tlen/tlen_plugin.c:796 src/plugins/jabber/jabber_plugin.c:1439
 #, fuzzy
 msgid "_Add Contact"
 msgstr "Voek contact toe:"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1578
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1588
 #: src/plugins/tlen/tlen_plugin.c:798 src/plugins/jabber/jabber_plugin.c:1441
 #, fuzzy
 msgid "_Search for friends"
 msgstr "Zoek vrienden"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1581
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1591
 #, fuzzy
 msgid "_Import userlist"
 msgstr "Importeer gebruikerslijst"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1582
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1592
 #, fuzzy
 msgid "_Export userlist"
 msgstr "Exporteer gebruikerslijst"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1583
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1593
 #, fuzzy
 msgid "_Delete userlist"
 msgstr "Verwijder gebruikerslijst"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1585
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1595
 #, fuzzy
 msgid "_Register account"
 msgstr "Registreer account"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1612
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1622
 #: src/plugins/tlen/tlen_plugin.c:631 src/plugins/jabber/jabber_plugin.c:1230
 msgid "Available"
 msgstr "Beschikbaar"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1618
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1628
 msgid "Available with description"
 msgstr "Beschikbaar met beschrijving"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1624
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1634
 msgid "Busy"
 msgstr "Bezig"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1630
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1640
 msgid "Busy with description"
 msgstr "Bezig met beschrijving"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1636
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1646
 #: src/plugins/tlen/tlen_plugin.c:661
 msgid "Invisible"
 msgstr "Onzichtbaar"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1642
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1652
 msgid "Invisible with description"
 msgstr "Onzichtbaar met beschrijving"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1648
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1658
 msgid "Offline"
 msgstr "Offline"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1654
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1664
 msgid "Offline with description"
 msgstr "Offline met beschrijving"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1660
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1670
 msgid "Blocked"
 msgstr "Geblokkeerd"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1679
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1689
 msgid "Gadu-Gadu(c) protocol"
 msgstr "Gadu-Gadu(c) protocol"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1830
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1840
 msgid "no reason"
 msgstr "geen reden"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1851
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1861
 #: src/plugins/tlen/tlen_plugin.c:854 src/plugins/jabber/jabber_plugin.c:378
 #, fuzzy
 msgid "_Chat"
 msgstr "Bericht"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1853
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1863
 #, fuzzy
 msgid "Send _File"
 msgstr "Verstuur bestand"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1856
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1866
 #: src/plugins/jabber/jabber_plugin.c:382
 msgid "_Personal data"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1857
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1867
 #: src/plugins/jabber/jabber_plugin.c:394
 #, fuzzy
 msgid "E_dit"
 msgstr "Bewerk"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1858
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1868
 #: src/plugins/jabber/jabber_plugin.c:395
 #, fuzzy
 msgid "Rem_ove"
 msgstr "Verwijder"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1860
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1870
 #: src/plugins/jabber/jabber_plugin.c:397
 #, fuzzy
 msgid "Add _New"
 msgstr "Voe nieuw toe"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2143
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2153
 #: src/plugins/tlen/tlen_plugin.c:921 src/plugins/jabber/jabber_plugin.c:696
 msgid "Enter status description"
 msgstr "Voer statusbeschrijving in"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2145
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2155
 #, fuzzy
 msgid "_Description:"
 msgstr "Beschrijving:"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2229
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2239
 msgid "Unable to change status"
 msgstr "Kon status niet wijzigen"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2357
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2380
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2419
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2367
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2390
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2429
 msgid "Unable to send message"
 msgstr "Kon bericht niet verzenden"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2452
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2462
 msgid ""
 "Unable to send message\n"
 "You are not connected to Gadu-Gadu service"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2536
-#: src/plugins/tlen/tlen_plugin.c:1226
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2546
+#: src/plugins/tlen/tlen_plugin.c:1238
 msgid "Error! Cannot perform search!"
 msgstr "Fout! Kon zoekopdracht niet uitvoeren!"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2627
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2637
 msgid "You have to fill in all fields"
 msgstr "U moet alle velden invullen"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2691
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2701
 msgid "I still cannot open contacts files! Exiting..."
 msgstr "Ik kan nog steeds geen contactbestanden openen! Bezig met sluiten..."
 
@@ -1622,11 +1622,11 @@ msgstr "Registreer account"
 msgid "C_hange password"
 msgstr "Era wachtwoord"
 
-#: src/plugins/jabber/jabber_plugin.c:1522
+#: src/plugins/jabber/jabber_plugin.c:1524
 msgid "Jabber protocol"
 msgstr "Jabber protocol"
 
-#: src/plugins/jabber/jabber_plugin.c:1546
+#: src/plugins/jabber/jabber_plugin.c:1548
 msgid "Unable to read configuration file for plugin jabber"
 msgstr "Kan configuratiebestand van Jabberplugin niet lezen"
 
@@ -1825,20 +1825,20 @@ msgstr ""
 msgid "You are not registered with this server"
 msgstr "U kan geen bestand sturen naar deze persoon"
 
-#: src/plugins/jabber/jabber_login.c:54
+#: src/plugins/jabber/jabber_login.c:61
 msgid "Jabber ID and password must be specified in preferences!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_login.c:74 src/plugins/jabber/jabber_login.c:87
+#: src/plugins/jabber/jabber_login.c:81 src/plugins/jabber/jabber_login.c:94
 #, fuzzy
 msgid "Invalid Jabber ID!"
 msgstr "Ongeldig nummer!"
 
-#: src/plugins/jabber/jabber_login.c:168
+#: src/plugins/jabber/jabber_login.c:174
 msgid "SSL not supported by loudmouth"
 msgstr "SSL niet ondersteund door loudmouth"
 
-#: src/plugins/jabber/jabber_login.c:228
+#: src/plugins/jabber/jabber_login.c:234
 #, fuzzy
 msgid "Unable to open connection"
 msgstr "Kon bestand niet creëren"
@@ -2118,7 +2118,7 @@ msgstr "Verstuur SMS (extern)"
 msgid "Writing userlist failed!"
 msgstr "Schrijven van gebruikerslijst mislukt!"
 
-#: src/plugins/dbus/dbus_plugin.c:284
+#: src/plugins/dbus/dbus_plugin.c:287
 msgid "DBUS interface plugin"
 msgstr ""
 
@@ -2127,31 +2127,31 @@ msgstr ""
 msgid "Auto-Away Preferences"
 msgstr "Voorkeuren"
 
-#: src/plugins/aaway/aaway.c:255
+#: src/plugins/aaway/aaway.c:257
 msgid "Enable auto-away"
 msgstr ""
 
-#: src/plugins/aaway/aaway.c:256
+#: src/plugins/aaway/aaway.c:258
 #, fuzzy
 msgid "Auto away after time (minutes)"
 msgstr "Automatisch afwezig interval (in minuten)"
 
-#: src/plugins/aaway/aaway.c:257
+#: src/plugins/aaway/aaway.c:259
 #, fuzzy
 msgid "Enable away message"
 msgstr "Kon bericht niet verzenden"
 
-#: src/plugins/aaway/aaway.c:260
+#: src/plugins/aaway/aaway.c:262
 #, fuzzy
 msgid "Away message"
 msgstr "Toon berichten"
 
-#: src/plugins/aaway/aaway.c:294
+#: src/plugins/aaway/aaway.c:296
 #, fuzzy
 msgid "Auto Away"
 msgstr "Afwezig"
 
-#: src/plugins/aaway/aaway.c:301
+#: src/plugins/aaway/aaway.c:303
 msgid "I'm away from computer"
 msgstr ""
 

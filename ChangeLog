@@ -1,3 +1,6 @@
+17.07.2006
+- debian package from Lukasz Nowak
+
 02.07.2006
 - fixed import userlist from server. Skip malformed entries. (gadu-gadu/krzak)
 - welcome back.

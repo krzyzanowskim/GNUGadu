@@ -1,0 +1,61 @@
+gg2 (2.2.9-1) unstable; urgency=low
+
+  * 2.2.9
+
+ -- Marcin Krzyżanowski <krzak@hakore.com>  Thu, 18 Aug 2006 15:47:42 +0200
+
+gg2 (2.2.7-3) unstable; urgency=low
+
+  * poprawka do poprawki ;)
+
+ -- Lukasz Nowak <shufla@localhost.localdomain>  Thu, 18 Aug 2005 15:47:42 +0200
+
+gg2 (2.2.7-2) unstable; urgency=low
+
+  * obsługa jabbera
+
+ -- Lukasz Nowak <shufla@localhost.localdomain>  Thu, 18 Aug 2005 15:43:58 +0200
+
+gg2 (2.2.7-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Lukasz Nowak <shufla@localhost.localdomain>  Thu, 18 Aug 2005 15:02:23 +0200
+
+gg2 (2.2.6-4) unstable; urgency=low
+
+  * +xinerama-dev
+
+ -- Łukasz Nowak <Lukasz@Nowak.eu.org>  Mon, 20 Jun 2005 10:00:57 +0200
+
+gg2 (2.2.6-3) unstable; urgency=low
+
+  * Poprawka w debian/control
+
+ -- Łukasz Nowak <Lukasz@Nowak.eu.org>  Mon, 20 Jun 2005 09:44:40 +0200
+
+gg2 (2.2.6-2) unstable; urgency=low
+
+  * Ubuntuized
+
+ -- Łukasz Nowak <Lukasz@Nowak.eu.org>  Mon, 20 Jun 2005 09:22:29 +0200
+
+gg2 (2.2.6-1) unstable; urgency=low
+
+  * Next upstream release
+
+ -- Mateusz Kaduk <mateusz@kaduk.net>  Thu, 26 May 2005 19:53:21 +0200
+
+gg2 (2.2.5-2) unstable; urgency=low
+
+  * Fixed configure.in, not linking with Openssl
+  * Added patch for gghist by Bj
+
+ -- Mateusz Kaduk <mateusz@kaduk.net>  Mon, 18 Apr 2005 13:23:10 +0200
+
+gg2 (2.2.5-1) unstable; urgency=low
+
+  * Initial release (Closes: #267008)
+
+ -- Mateusz Kaduk <mateusz@kaduk.net>  Sun,  3 Apr 2005 18:52:31 +0200
+

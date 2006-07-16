@@ -1,0 +1,30 @@
+This package was debianized by Mateusz Kaduk <mateusz@kaduk.net> on
+Wen, 5 Jan 2005 22:55:24 +0200.
+
+It was downloaded from http://www.gnugadu.org
+
+Upstream Authors:
+	Marcin Krzyzanowski <krzak at linux.net.pl>
+	Igor Popik <thrull at slackware.pl>
+	and others from GNU Gadu Team
+
+Icons Authors:	
+	Icons for Tlen plugin by 
+		Pawel Bilinski <real at fr.pl>
+	Icons for GaduGadu plugin by 
+		Igor Popik <thrull at slackware.pl> 
+		GammaRay@Radiation Labs - http://www.satfilm.net.pl/~gammaray/
+		Pawel Bilinski <real at fr.pl>
+	Icons for Jabber
+		Everaldo - http://www.everaldo.com/
+	Emote icons not included in package due to license restricions.
+	
+Copyright:
+ 
+  This software is Copyright (C) 2002-2005 GNU Gadu Team
+  You are free to distribute this software under 
+  the terms of the GNU General Public License.
+  
+  On Debian systems, the complete text of the GNU General Public
+  License can be found in the file `/usr/share/common-licenses/GPL'.
+

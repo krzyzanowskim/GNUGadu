@@ -1,0 +1,1 @@
+?package(gg2):needs="X11" section="Apps/Net" title="GNU Gadu 2" command="/usr/bin/gg2"
