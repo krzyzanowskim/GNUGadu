@@ -1,4 +1,4 @@
-/* $Id: jabber_plugin.c,v 1.163 2005/10/12 12:07:43 krzyzak Exp $ */
+/* $Id: jabber_plugin.c,v 1.164 2006/07/19 22:21:04 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -209,7 +209,7 @@ static gpointer user_get_software_action(gpointer user_data)
 	
 	while(temp)
 	{
-	    if(!ggadu_strcmp(k->id, ((GGaduJabberSoftware *)temp->data)->jid))
+	    if(!ggadu_strcasecmp(k->id, ((GGaduJabberSoftware *)temp->data)->jid))
 	        break;
 
 	    temp = temp->next;

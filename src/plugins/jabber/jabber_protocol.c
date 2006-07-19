@@ -1,4 +1,4 @@
-/* $Id: jabber_protocol.c,v 1.47 2005/03/04 15:48:49 mkobierzycki Exp $ */
+/* $Id: jabber_protocol.c,v 1.48 2006/07/19 22:21:04 krzyzak Exp $ */
 
 /* 
  * Jabber plugin for GNU Gadu 2 
@@ -203,7 +203,7 @@ void jabber_get_version(gpointer user_data)
 	while (temp)
 	{
 		k0 = temp->data;
-		if (!ggadu_strcmp(k->id, k0->id))
+		if (!ggadu_strcasecmp(k->id, k0->id))
 			break;
 
 		temp = temp->next;
