@@ -62,7 +62,7 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>DESCRIPTION</title>
     <para>
-    This is a history viewer provied as a plugin for gg2.
+    This is a history viewer provied as a plugin for GNU Gadu.
     </para>
   </refsect1>
   <refsect1>

@@ -62,7 +62,7 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>DESCRIPTION</title>
     <para>
-    GNU Gadu 2 is a Gtk2 based instant messenger client based
+    GNU Gadu is a Gtk2 based instant messenger client based
     on plug-in system, which allows to extend its capabilities.
     .
     It was originally designed for using with Gadu-Gadu

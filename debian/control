@@ -1,7 +1,7 @@
 Source: gg2
 Section: net
 Priority: optional
-Maintainer: Lukasz Nowak <Lukasz@Nowak.eu.org>
+Maintainer: Marcin Krzyżanowski <krzak@hakore.com>
 Uploaders: Bartosz Fenski <fenio@debian.org>
 Build-Depends: debhelper (>= 4.0.0), libxosd-dev, libgtkspell-dev, libesd0-dev, autotools-dev, libaudiofile-dev, libpspell-dev, libgnutls-dev, libxt-dev, libdbus-1-dev, libdbus-glib-1-dev, libxss-dev, libxosd-dev, libxinerama-dev, dpatch, docbook-to-man
 Standards-Version: 3.6.1
@@ -11,15 +11,15 @@ Architecture: any
 Section: net
 Depends: ${shlibs:Depends}
 Description: Gnu Gadu2 Instant Messaging Client
- GNU Gadu 2 is a Gtk2 based instant messenger client based
+ GNU Gadu is a Gtk2 based instant messenger client based
  on plug-in system, which allows to extend its capabilities.
  .
  It was originally designed for using Gadu-Gadu
  (instant messenger very popular in Poland) service, but 
  it supports Jabber and Tlen.pl protocols as well.
  .
- Package contains the following plugins: aaway, dbus, docklet,
- history, ignore, sms, xosd.
+ Package contains the following plugins: gadu-gadu, jabber, tlen,
+ aaway, dbus, system-tray, history, ignore, sms, xosd, esd.
  .
  Homepage: http://www.gnugadu.org/
  
@@ -27,14 +27,30 @@ Package: gg2-emoticons
 Architecture: all
 Section: libs
 Depends: gg2 (>= ${Source-Version})
-Description: additional emote icons for Gnu Gadu2
- GNU Gadu 2 is a Gtk2 based instant messenger client based
+Description: additional emote icons for Gnu Gadu
+ GNU Gadu is a Gtk2 based instant messenger client based
  on plug-in system, which allows to extend its capabilities.
  .
  It was originally designed for using Gadu-Gadu
  (instant messenger very popular in Poland) service, but 
  it supports Jabber and Tlen.pl protocols as well.
  .
- This package contains additional emote icons for Gnu Gadu2.
+ This package contains additional emote icons for Gnu Gadu.
+ .
+ Homepage: http://www.gnugadu.org/
+
+Package: gg2-dev
+Architecture: all
+Section: libs
+Depends: gg2 (>= ${Source-Version})
+Description: additional emote icons for Gnu Gadu
+ GNU Gadu is a Gtk2 based instant messenger client based
+ on plug-in system, which allows to extend its capabilities.
+ .
+ It was originally designed for using Gadu-Gadu
+ (instant messenger very popular in Poland) service, but 
+ it supports Jabber and Tlen.pl protocols as well.
+ .
+ This package contains developer tools for third-party plugins.
  .
  Homepage: http://www.gnugadu.org/

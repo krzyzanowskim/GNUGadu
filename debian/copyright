@@ -1,10 +1,12 @@
 This package was debianized by Mateusz Kaduk <mateusz@kaduk.net> on
 Wen, 5 Jan 2005 22:55:24 +0200.
+and updated by Marcin Krzyzanowski <krzak@hakore.com> on
+Wen 19 Jul 2006 22:07:04 +0200.
 
 It was downloaded from http://www.gnugadu.org
 
 Upstream Authors:
-	Marcin Krzyzanowski <krzak at linux.net.pl>
+	Marcin Krzyzanowski <krzak at hakore.com>
 	Igor Popik <thrull at slackware.pl>
 	and others from GNU Gadu Team
 
@@ -17,7 +19,7 @@ Icons Authors:
 		Pawel Bilinski <real at fr.pl>
 	Icons for Jabber
 		Everaldo - http://www.everaldo.com/
-	Emote icons not included in package due to license restricions.
+	Emoticons not included in package due to license restricions.
 	
 Copyright:
  
