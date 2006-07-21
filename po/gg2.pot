@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2006-07-16 23:18+0200\n"
+"POT-Creation-Date: 2006-07-22 01:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -469,46 +469,77 @@ msgstr ""
 msgid "Wrap contacts' descriptions on users list"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1005
-msgid "Pa_ste As Text"
+#: src/plugins/GUI/gtkimhtml.c:804
+msgid "Paste as Plain _Text"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1450
+#: src/plugins/GUI/gtkimhtml.c:816
+msgid "_Reset formatting"
+msgstr ""
+
+#: src/plugins/GUI/gtkimhtml.c:1310
 msgid "Hyperlink color"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1451
+#: src/plugins/GUI/gtkimhtml.c:1311
 msgid "Color to draw hyperlinks."
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1657
+#: src/plugins/GUI/gtkimhtml.c:1314
+msgid "Hyperlink prelight color"
+msgstr ""
+
+#: src/plugins/GUI/gtkimhtml.c:1315
+msgid "Color to draw hyperlinks when mouse is over them."
+msgstr ""
+
+#: src/plugins/GUI/gtkimhtml.c:1539
 msgid "_Copy E-Mail Address"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1669
+#: src/plugins/GUI/gtkimhtml.c:1551
 msgid "_Open Link in Browser"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1679
+#: src/plugins/GUI/gtkimhtml.c:1561
 msgid "_Copy Link Location"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3251
+#: src/plugins/GUI/gtkimhtml.c:3261
 msgid ""
-"Unable to guess the image type based on the file extension supplied.  "
+"<span size='larger' weight='bold'>Unrecognized file type</span>\n"
+"\n"
 "Defaulting to PNG."
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3259
-#, c-format
-msgid "Error saving image: %s"
+#: src/plugins/GUI/gtkimhtml.c:3264
+msgid ""
+"Unrecognized file type\n"
+"\n"
+"Defaulting to PNG."
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3336 src/plugins/GUI/gtkimhtml.c:3348
+#: src/plugins/GUI/gtkimhtml.c:3277
+#, c-format
+msgid ""
+"<span size='larger' weight='bold'>Error saving image</span>\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/plugins/GUI/gtkimhtml.c:3280
+#, c-format
+msgid ""
+"Error saving image\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/plugins/GUI/gtkimhtml.c:3360 src/plugins/GUI/gtkimhtml.c:3372
 msgid "Save Image"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3376
+#: src/plugins/GUI/gtkimhtml.c:3400
 msgid "_Save Image..."
 msgstr ""
 
@@ -1100,8 +1131,8 @@ msgstr ""
 msgid "You have to enter your login and password first!"
 msgstr ""
 
-#: src/plugins/tlen/tlen_plugin.c:610 src/plugins/jabber/jabber_cb.c:514
-#: src/plugins/jabber/jabber_cb.c:592 src/plugins/sms/sms_gui.c:87
+#: src/plugins/tlen/tlen_plugin.c:610 src/plugins/jabber/jabber_cb.c:614
+#: src/plugins/jabber/jabber_cb.c:724 src/plugins/sms/sms_gui.c:87
 #: src/plugins/sms/sms_gui.c:105
 msgid "Nick"
 msgstr ""
@@ -1447,27 +1478,27 @@ msgstr ""
 msgid "Unable to read configuration file for plugin jabber"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:91
+#: src/plugins/jabber/jabber_cb.c:102
 msgid "Jabber disconnected"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:93
+#: src/plugins/jabber/jabber_cb.c:106
 msgid "Connection to the Jabber server timed out"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:95
+#: src/plugins/jabber/jabber_cb.c:110
 msgid "Connection hung up"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:97
+#: src/plugins/jabber/jabber_cb.c:114
 msgid "Generic error somewhere in the transport layer"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:99
+#: src/plugins/jabber/jabber_cb.c:118
 msgid "An unknown Jabber error"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:125
+#: src/plugins/jabber/jabber_cb.c:148
 #, c-format
 msgid ""
 "Account:\n"
@@ -1475,147 +1506,147 @@ msgid ""
 "created"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:135
+#: src/plugins/jabber/jabber_cb.c:164
 msgid "Username not available"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:149
+#: src/plugins/jabber/jabber_cb.c:181
 msgid "Register Jabber account"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:154
+#: src/plugins/jabber/jabber_cb.c:187
 msgid "Username"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:156
+#: src/plugins/jabber/jabber_cb.c:190
 msgid "Password"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:158 src/plugins/jabber/jabber_cb.c:510
-#: src/plugins/jabber/jabber_cb.c:588
+#: src/plugins/jabber/jabber_cb.c:193 src/plugins/jabber/jabber_cb.c:608
+#: src/plugins/jabber/jabber_cb.c:718
 msgid "Full name"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:160 src/plugins/jabber/jabber_cb.c:560
-#: src/plugins/jabber/jabber_cb.c:620
+#: src/plugins/jabber/jabber_cb.c:196 src/plugins/jabber/jabber_cb.c:680
+#: src/plugins/jabber/jabber_cb.c:766
 msgid "E-mail"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:161
+#: src/plugins/jabber/jabber_cb.c:199
 msgid "Update settings on success?"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:223
+#: src/plugins/jabber/jabber_cb.c:277
 msgid "Jabber authentication failed"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:258
+#: src/plugins/jabber/jabber_cb.c:317
 msgid "Subscription request confirmation"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:259
+#: src/plugins/jabber/jabber_cb.c:321
 #, c-format
 msgid ""
 "Person : %s\n"
 "wants to subscribe your presence"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:268
+#: src/plugins/jabber/jabber_cb.c:333
 #, c-format
 msgid ""
 "From %s\n"
 "You are now authorized"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:274
+#: src/plugins/jabber/jabber_cb.c:341
 #, c-format
 msgid ""
 "From %s\n"
 "Your authorization has been removed!"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:497
+#: src/plugins/jabber/jabber_cb.c:590
 msgid "Personal info:"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:502 src/plugins/jabber/jabber_cb.c:580
+#: src/plugins/jabber/jabber_cb.c:596 src/plugins/jabber/jabber_cb.c:706
 msgid "First name"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:506 src/plugins/jabber/jabber_cb.c:584
+#: src/plugins/jabber/jabber_cb.c:602 src/plugins/jabber/jabber_cb.c:712
 msgid "Last name"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:518 src/plugins/jabber/jabber_cb.c:596
+#: src/plugins/jabber/jabber_cb.c:620 src/plugins/jabber/jabber_cb.c:730
 msgid "Homepage"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:534
+#: src/plugins/jabber/jabber_cb.c:640
 msgid "Birthday"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:536
+#: src/plugins/jabber/jabber_cb.c:644
 msgid "Month"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:538
+#: src/plugins/jabber/jabber_cb.c:648
 msgid "Year"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:544 src/plugins/jabber/jabber_cb.c:604
+#: src/plugins/jabber/jabber_cb.c:657 src/plugins/jabber/jabber_cb.c:742
 msgid "Organization"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:548 src/plugins/jabber/jabber_cb.c:608
+#: src/plugins/jabber/jabber_cb.c:663 src/plugins/jabber/jabber_cb.c:749
 msgid "Telephone number"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:552 src/plugins/jabber/jabber_cb.c:612
+#: src/plugins/jabber/jabber_cb.c:669 src/plugins/jabber/jabber_cb.c:754
 msgid "Locality"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:556 src/plugins/jabber/jabber_cb.c:616
+#: src/plugins/jabber/jabber_cb.c:674 src/plugins/jabber/jabber_cb.c:760
 msgid "Country"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:573
+#: src/plugins/jabber/jabber_cb.c:695
 #, c-format
 msgid "%s's personal info:"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:600
+#: src/plugins/jabber/jabber_cb.c:736
 msgid "Birth date"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:642
+#: src/plugins/jabber/jabber_cb.c:793
 msgid "Password successfully changed"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:650
+#: src/plugins/jabber/jabber_cb.c:802
 msgid "User is not authorized"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:653
+#: src/plugins/jabber/jabber_cb.c:806
 msgid "Password change is not allowed by the server"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:656
+#: src/plugins/jabber/jabber_cb.c:812
 msgid "You are not registered with the server"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:668
+#: src/plugins/jabber/jabber_cb.c:826
 msgid "Account successfully removed"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:684
+#: src/plugins/jabber/jabber_cb.c:844
 msgid "You are not allowed to remove this account"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:687
+#: src/plugins/jabber/jabber_cb.c:849
 msgid "This account was not registered"
 msgstr ""
 
-#: src/plugins/jabber/jabber_cb.c:690
+#: src/plugins/jabber/jabber_cb.c:855
 msgid "You are not registered with this server"
 msgstr ""
 
