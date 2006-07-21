@@ -40,7 +40,8 @@ EXTRA_DIST = codeset.m4 gettext.m4 glibc2.m4 glibc21.m4 iconv.m4 intdiv0.m4 intm
 	debian/gg2.postinst \
 	debian/gg2.postrm \
 	debian/gg2.sgml \
-	debian/gghist.sgml
+	debian/gghist.sgml \
+	debian/compat
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)
