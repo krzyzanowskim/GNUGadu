@@ -1,6 +1,7 @@
 21.07.2006
 - close #232 (GUI/krzak)
 - update gtkimhtml widget (GUI/krzak)
+- fixed segfault bug in sound-external if error message was shown (GUI/krzak)
 
 19.07.2006
 - debian package updated, work with ubuntu. (krzak)
