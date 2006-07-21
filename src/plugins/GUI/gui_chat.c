@@ -1,4 +1,4 @@
-/* $Id: gui_chat.c,v 1.153 2005/10/12 12:07:43 krzyzak Exp $ */
+/* $Id: gui_chat.c,v 1.154 2006/07/21 22:06:03 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -1524,7 +1524,7 @@ void gui_chat_append(GtkWidget * chat, gpointer msg, gboolean self, gboolean not
 	    gtk_imhtml_toggle_fontface(GTK_IMHTML(history),fontstr_str);
 	
 	    fontstr_size = pango_font_description_get_size(fontdesc);
-	    print_debug("FONT SIZE :%d:%d",GTK_IMHTML(history)->original_fsize,fontstr_size);
+//	    print_debug("FONT SIZE :%d:%d",GTK_IMHTML(history)->original_fsize,fontstr_size);
 	    gtk_imhtml_font_set_size(GTK_IMHTML(history), fontstr_size);
 	
     	    pango_font_description_free(fontdesc);

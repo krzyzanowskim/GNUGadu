@@ -24,7 +24,10 @@ EXTRA_DIST = codeset.m4 gettext.m4 glibc2.m4 glibc21.m4 iconv.m4 intdiv0.m4 intm
 	gg2.spec \
 	gg2-devel.SlackBuild \
 	slack-desc \
-	esd.m4
+	esd.m4 \
+	debian/changelog \
+	debian/control \
+	debian/copyright
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)
