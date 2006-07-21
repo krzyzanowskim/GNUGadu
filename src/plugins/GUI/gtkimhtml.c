@@ -101,9 +101,6 @@ static void imhtml_toggle_underline(GtkIMHtml *imhtml);
 static void imhtml_font_grow(GtkIMHtml *imhtml);
 static void imhtml_font_shrink(GtkIMHtml *imhtml);
 static void imhtml_clear_formatting(GtkIMHtml *imhtml);
-void gaim_str_strip_char(char *str, char thechar);
-gboolean gaim_str_has_prefix(const char *s, const char *p);
-char *gaim_unescape_html(const char *html);
 
 /* POINT_SIZE converts from AIM font sizes to a point size scale factor. */
 #define MAX_FONT_SIZE 7
@@ -145,71 +142,6 @@ static GtkTargetEntry link_drag_drop_targets[] = {
  * forth between HTML and the clipboard format.
  */
 static UINT win_html_fmt;
-
-
-static gboolean
-gaim_str_has_prefix(const char *s, const char *p)
-{
-	if (!strncmp(s, p, strlen(p)))
-		return TRUE;
-
-	return FALSE;
-}
-
-void
-gaim_str_strip_char(char *text, char thechar)
-{
-	int i, j;
-
-	g_return_if_fail(text != NULL);
-
-	for (i = 0, j = 0; text[i]; i++)
-		if (text[i] != thechar)
-			text[j++] = text[i];
-
-	text[j++] = '\0';
-}
-
-char *
-gaim_unescape_html(const char *html) {
-	char *unescaped = NULL;
-
-	if (html != NULL) {
-		const char *c = html;
-		GString *ret = g_string_new("");
-		while (*c) {
-			if (!strncmp(c, "&amp;", 5)) {
-				ret = g_string_append_c(ret, '&');
-				c += 5;
-			} else if (!strncmp(c, "&lt;", 4)) {
-				ret = g_string_append_c(ret, '<');
-				c += 4;
-			} else if (!strncmp(c, "&gt;", 4)) {
-				ret = g_string_append_c(ret, '>');
-				c += 4;
-			} else if (!strncmp(c, "&quot;", 6)) {
-				ret = g_string_append_c(ret, '"');
-				c += 6;
-			} else if (!strncmp(c, "&apos;", 6)) {
-				ret = g_string_append_c(ret, '\'');
-				c += 6;
-			} else if (!strncmp(c, "<br>", 4)) {
-				ret = g_string_append_c(ret, '\n');
-				c += 4;
-			} else {
-				ret = g_string_append_c(ret, *c);
-				c++;
-			}
-		}
-
-		unescaped = ret->str;
-		g_string_free(ret, FALSE);
-	}
-	return unescaped;
-
-}
-
-
 
 static gchar *
 clipboard_win32_to_html(char *clipboard) {

@@ -27,7 +27,20 @@ EXTRA_DIST = codeset.m4 gettext.m4 glibc2.m4 glibc21.m4 iconv.m4 intdiv0.m4 intm
 	esd.m4 \
 	debian/changelog \
 	debian/control \
-	debian/copyright
+	debian/copyright \
+	debian/rules \
+	debian/gg2-dev.install \
+	debian/gg2-emoticons.install \
+	debian/gg2-emoticons.links \
+	debian/gg2.dirs \
+	debian/gg2.docs \
+	debian/gg2.install \
+	debian/gg2.lintian-overrides \
+	debian/gg2.menu \
+	debian/gg2.postinst \
+	debian/gg2.postrm \
+	debian/gg2.sgml \
+	debian/gghist.sgml
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)

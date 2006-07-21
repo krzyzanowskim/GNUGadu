@@ -785,6 +785,7 @@ char *gtk_imhtml_get_text(GtkIMHtml *imhtml, GtkTextIter *start, GtkTextIter *st
 
 /*@}*/
 
+
 #ifdef __cplusplus
 }
 #endif

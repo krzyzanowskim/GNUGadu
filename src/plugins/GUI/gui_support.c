@@ -1,4 +1,4 @@
-/* $Id: gui_support.c,v 1.19 2005/04/12 15:48:54 krzyzak Exp $ */
+/* $Id: gui_support.c,v 1.20 2006/07/21 22:34:58 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -31,6 +31,7 @@
 #include "plugins.h"
 #include "gui_main.h"
 #include "gui_chat.h"
+#include <string.h>
 
 extern GGaduPlugin *gui_handler;
 
@@ -402,3 +403,67 @@ ggadu_escape_html(const char *html) {
 
 	return g_string_free(ret, FALSE);
 }
+
+
+gboolean
+gaim_str_has_prefix(const char *s, const char *p)
+{
+	if (!strncmp(s, p, strlen(p)))
+		return TRUE;
+
+	return FALSE;
+}
+
+void
+gaim_str_strip_char(char *text, char thechar)
+{
+	int i, j;
+
+	g_return_if_fail(text != NULL);
+
+	for (i = 0, j = 0; text[i]; i++)
+		if (text[i] != thechar)
+			text[j++] = text[i];
+
+	text[j++] = '\0';
+}
+
+char *
+gaim_unescape_html(const char *html) {
+	char *unescaped = NULL;
+
+	if (html != NULL) {
+		const char *c = html;
+		GString *ret = g_string_new("");
+		while (*c) {
+			if (!strncmp(c, "&amp;", 5)) {
+				ret = g_string_append_c(ret, '&');
+				c += 5;
+			} else if (!strncmp(c, "&lt;", 4)) {
+				ret = g_string_append_c(ret, '<');
+				c += 4;
+			} else if (!strncmp(c, "&gt;", 4)) {
+				ret = g_string_append_c(ret, '>');
+				c += 4;
+			} else if (!strncmp(c, "&quot;", 6)) {
+				ret = g_string_append_c(ret, '"');
+				c += 6;
+			} else if (!strncmp(c, "&apos;", 6)) {
+				ret = g_string_append_c(ret, '\'');
+				c += 6;
+			} else if (!strncmp(c, "<br>", 4)) {
+				ret = g_string_append_c(ret, '\n');
+				c += 4;
+			} else {
+				ret = g_string_append_c(ret, *c);
+				c++;
+			}
+		}
+
+		unescaped = ret->str;
+		g_string_free(ret, FALSE);
+	}
+	return unescaped;
+
+}
+
