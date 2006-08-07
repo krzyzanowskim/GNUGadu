@@ -1,4 +1,4 @@
-/* $Id: gui_handlers.c,v 1.72 2005/04/13 14:47:28 krzyzak Exp $ */
+/* $Id: gui_handlers.c,v 1.73 2006/08/07 20:02:13 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -426,10 +426,10 @@ void handle_status_changed(GGaduSignal * signal)
 
 	g_mutex_lock(thread_status_changed_mutex);
 
-	if (!sp) return;
+	if (!sp) goto out;
 
 	gp = gui_find_protocol(signal->source_plugin_name, protocols);
-	if (!gp) return;
+	if (!gp) goto out;
 
 	if (gp->blinker > 0)
 		g_source_remove(gp->blinker);
@@ -458,7 +458,7 @@ void handle_status_changed(GGaduSignal * signal)
 	gtk_tooltips_set_tip(gp->tooltips, gp->statuslist_eventbox, tipdesc, NULL);
 	g_free(tipdesc);
 	/* GGaduStatusPrototype_free(sp); */
-	
+out:
 	print_debug("handle_status_changed end");
 	g_mutex_unlock(thread_status_changed_mutex);
 }
