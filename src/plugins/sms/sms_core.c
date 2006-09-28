@@ -1,10 +1,10 @@
-/* $Id: sms_core.c,v 1.45 2005/10/13 11:22:39 shaster Exp $ */
+/* $Id: sms_core.c,v 1.46 2006/09/28 20:00:53 shaster Exp $ */
 
 /*
  * SMS plugin for GNU Gadu 2
  *
  * Copyright (C) 2003 Bartlomiej Pawlak
- * Copyright (C) 2003-2005 GNU Gadu Team
+ * Copyright (C) 2003-2006 GNU Gadu Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -714,7 +714,6 @@ gint send_ERA(SMS * message, gint *era_left)
 	}
 
       out:
-	g_free(returncode);
 	g_free(recv_buff);
 
 	return ret;
