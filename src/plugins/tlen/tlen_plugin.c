@@ -1,4 +1,4 @@
-/* $Id: tlen_plugin.c,v 1.101 2005/11/23 11:24:56 krzyzak Exp $ */
+/* $Id: tlen_plugin.c,v 1.102 2006/09/28 20:08:28 shaster Exp $ */
 
 /* 
  * Tlen plugin for GNU Gadu 2 
@@ -281,6 +281,12 @@ gboolean test_chan(GIOChannel * source, GIOCondition condition, gpointer data)
 		case TLEN_EVENT_ENDROSTER:
 			{
 			    GGaduStatusPrototype *sp_temp = ggadu_find_status_prototype(p, session->status);
+
+			    if (sp_temp == NULL)
+			    {
+				print_debug("FIXME! ggadu_find_status_prototype() returned NULL\n");
+				break;
+			    }
 
 			    sp_temp->status = (int) loginstatus;
 
