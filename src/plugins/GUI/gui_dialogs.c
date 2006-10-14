@@ -1,4 +1,4 @@
-/* $Id: gui_dialogs.c,v 1.63 2004/12/26 22:23:18 shaster Exp $ */
+/* $Id: gui_dialogs.c,v 1.64 2006/10/14 20:56:50 krzyzak Exp $ */
 
 /* 
  * GUI (gtk+) plugin for GNU Gadu 2 
@@ -427,15 +427,22 @@ void gui_dialog_response(GtkDialog * dialog_widget, int resid, gpointer user_dat
 				{
 					GSList *ltmp = NULL;
 					gchar *val = NULL;
+					GSList *old_val = kv->value;
 					/* KURWA co z tym zwalnianiem, bo do chuja nie wiem czy to zwolnione czy 
 					   nie zwolnione ma byc do chuja NOOOOOOOOOOOO 
 					   i czemu KURWA XOSD SIE WYPIERDALA 
 					   dobra, dziala, ale tu JEST SIECZKA JAKAS */
-					g_slist_free(kv->value);
+					   
+					// Nie wiem o co biega ale zwolnienie kv->value powoduje ze val = NULL
+					// ale jaki to ma związek jedno do drugiego to sam Bóg raczy wiedzieć.
+					//g_slist_free(kv->value);
+					//kv->value = NULL;
 
 					ltmp = g_object_get_data(G_OBJECT(kv->user_data), "options-list");
 					val = g_slist_nth_data(ltmp, gtk_combo_box_get_active(GTK_COMBO_BOX(kv->user_data)));
 					kv->value = g_slist_append(NULL, g_strdup(val));
+					
+					g_slist_free(old_val);
 
 				}
 				break;

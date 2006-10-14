@@ -1,4 +1,4 @@
-/* $Id: gadu_gadu_plugin.c,v 1.249 2006/07/02 14:57:39 krzyzak Exp $ */
+/* $Id: gadu_gadu_plugin.c,v 1.250 2006/10/14 20:56:51 krzyzak Exp $ */
 
 /* 
  * Gadu-Gadu plugin for GNU Gadu 2 
@@ -1826,15 +1826,16 @@ void start_plugin()
 	load_addressbook_file("ISO-8859-2");
 	signal_emit(GGadu_PLUGIN_NAME, "gui send userlist", NULL, "main-gui");
 	test();			/* ?! */
+
 	if (ggadu_config_var_get(handler, "autoconnect") && !connected)
 	{
 		gchar *cp;
 		gint status;
 
-		status = (ggadu_config_var_check(handler, "status") ? (gint) ggadu_config_var_get(handler, "status") : GG_STATUS_AVAIL);
-
 		if (ggadu_config_var_get(handler, "private"))
 			status |= GG_STATUS_FRIENDS_MASK;
+
+		status = (ggadu_config_var_check(handler, "status") ? (gint) ggadu_config_var_get(handler, "status") : GG_STATUS_AVAIL);
 
 		cp = from_utf8("CP1250", ggadu_config_var_get(handler, "reason"));
 		gadu_gadu_login((ggadu_config_var_check(handler, "reason")) ? cp : g_strdup(_("no reason")), status);
@@ -2332,8 +2333,11 @@ void my_signal_receive(gpointer name, gpointer signal_ptr)
 							}
 							statuslist_tmp = statuslist_tmp->next;
 						}
+						
+						if (val == -1)
+						    val = GG_STATUS_AVAIL;
 
-						print_debug("changing var setting status to %d", val);
+						print_debug("changing var setting status to %d");
 						ggadu_config_var_set(handler, "status", (gpointer) val);
 					}
 					break;
