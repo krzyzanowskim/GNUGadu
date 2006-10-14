@@ -3,7 +3,7 @@ pkgdir = $(libdir)/gg2
 pkg_LTLIBRARIES = libxosd_plugin.la
 noinst_LIBRARIES =
 
-libxosd_plugin_la_CFLAGS = $(XOSD_CFLAGS)
+libxosd_plugin_la_CFLAGS = $(XOSD_CFLAGS) -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 
 libxosd_plugin_la_SOURCES = plugin_xosd.c\
     plugin_xosd.h

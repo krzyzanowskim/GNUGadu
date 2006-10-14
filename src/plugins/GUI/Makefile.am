@@ -6,9 +6,9 @@ pkg_LTLIBRARIES = libGUI_plugin.la
 noinst_LIBRARIES = 
 
 if USE_GTKSPELL
-libGUI_plugin_la_CFLAGS = $(GTK_CFLAGS) $(GTKSPELL_CFLAGS) -DUSE_GTKSPELL
+libGUI_plugin_la_CFLAGS = $(GTK_CFLAGS) $(GTKSPELL_CFLAGS) -DUSE_GTKSPELL -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 else
-libGUI_plugin_la_CFLAGS = $(GTK_CFLAGS)
+libGUI_plugin_la_CFLAGS = $(GTK_CFLAGS) -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 endif
 
 libGUI_plugin_la_SOURCES = gui_main.c \

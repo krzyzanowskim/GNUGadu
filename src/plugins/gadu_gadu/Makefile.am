@@ -33,9 +33,9 @@ libgadu_gadu_plugin_la_LDFLAGS = -avoid-version -pthread $(GNUTLS_LIBS)
 endif
 
 if EXTERNAL_LIBGADU
-libgadu_gadu_plugin_la_CFLAGS =  -I/usr/kerberos/include/ $(CFLAGS) $(GNUTLS_INCLUDES) $(LIBGADU_CFLAGS)
+libgadu_gadu_plugin_la_CFLAGS =  -I/usr/kerberos/include/ $(CFLAGS) $(GNUTLS_INCLUDES) $(LIBGADU_CFLAGS) -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 else
-libgadu_gadu_plugin_la_CFLAGS =  -I./libgadu/lib -I/usr/kerberos/include/ $(CFLAGS) $(GNUTLS_INCLUDES)
+libgadu_gadu_plugin_la_CFLAGS =  -I./libgadu/lib -I/usr/kerberos/include/ $(CFLAGS) $(GNUTLS_INCLUDES) -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 endif
 
 EXTRA_DIST = libgadu/autogen.sh \

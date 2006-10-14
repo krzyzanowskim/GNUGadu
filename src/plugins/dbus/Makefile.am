@@ -7,7 +7,7 @@ libdbus_plugin_la_SOURCES = dbus_plugin.c \
     dbus_plugin.h \
     libofi.h
 
-libdbus_plugin_la_CFLAGS = $(DBUS_CFLAGS)
+libdbus_plugin_la_CFLAGS = $(DBUS_CFLAGS) -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 libdbus_plugin_la_LIBADD = $(DBUS_LIBS) $(top_builddir)/lib/libgg2_core.la
 libdbus_plugin_la_LDFLAGS = -avoid-version  
 

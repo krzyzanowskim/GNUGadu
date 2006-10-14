@@ -23,7 +23,7 @@ endif
 ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
-	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-xosd --with-ignore --without-perl --with-dbus --with-dbus-dir=/usr/share/dbus-1/services/ --with-update --with-tlen --with-jabber --without-docklet-dockapp --without-arts --without-oss --without-external --with-esd --with-external-libgadu
+	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-xosd --with-ignore --without-perl --with-dbus --with-dbus-dir=/usr/share/dbus-1/services/ --with-update --with-tlen --with-jabber --without-docklet-dockapp --with-arts --without-oss --without-external --with-esd --with-external-libgadu
 
 build: build-stamp
 

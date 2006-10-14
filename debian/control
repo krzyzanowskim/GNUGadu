@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Marcin Krzyżanowski <krzak@hakore.com>
 Uploaders: Bartosz Fenski <fenio@debian.org>
-Build-Depends: debhelper (>= 4.0.0), libxosd-dev, libgtkspell-dev, libesd0-dev, autotools-dev, libaudiofile-dev, libpspell-dev, libgnutls-dev, libxt-dev, libdbus-1-dev, libdbus-glib-1-dev, libxss-dev, libxosd-dev, libxinerama-dev, dpatch, docbook-to-man
+Build-Depends: debhelper (>= 4.0.0), libxosd-dev, libgtkspell-dev, libesd0-dev, autotools-dev, libaudiofile-dev, libpspell-dev, libgnutls-dev, libxt-dev, libdbus-1-dev, libdbus-glib-1-dev, libxss-dev, libxosd-dev, libxinerama-dev, dpatch, docbook-to-man, libartsc0-dev
 Standards-Version: 3.6.1
 
 Package: gg2

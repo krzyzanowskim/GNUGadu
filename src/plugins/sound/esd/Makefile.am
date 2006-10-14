@@ -3,7 +3,7 @@ pkgdir = $(libdir)/gg2
 pkg_LTLIBRARIES = libsound_esd_plugin.la
 noinst_LIBRARIES =
 
-libsound_esd_plugin_la_CFLAGS = $(ESD_CFLAGS)
+libsound_esd_plugin_la_CFLAGS = $(ESD_CFLAGS) -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 
 libsound_esd_plugin_la_SOURCES = plugin_sound_esd.c
 

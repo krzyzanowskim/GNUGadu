@@ -3,7 +3,7 @@ pkgdir = $(libdir)/gg2
 pkg_LTLIBRARIES = libdocklet_system_tray_plugin.la
 noinst_LIBRARIES =
 
-libdocklet_system_tray_plugin_la_CFLAGS = $(GTK_CFLAGS)
+libdocklet_system_tray_plugin_la_CFLAGS = $(GTK_CFLAGS) -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 
 libdocklet_system_tray_plugin_la_SOURCES = docklet_plugin.c \
     docklet_plugin.h \

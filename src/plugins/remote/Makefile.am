@@ -7,6 +7,6 @@ libremote_plugin_la_SOURCES = remote_plugin.c \
     remote_plugin.h
     
 libremote_plugin_la_LIBADD = $(top_builddir)/lib/libgg2_core.la
-
+libremote_plugin_la_CFLAGS = -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\"
 libremote_plugin_la_LDFLAGS = -avoid-version  
 

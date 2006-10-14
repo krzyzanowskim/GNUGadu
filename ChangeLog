@@ -1,3 +1,6 @@
+14.10.2006
+- fixed build with new autotools (krzak)
+
 28.09.2006
 - fixed segfault in send_ERA. Patch by Kamil Pawlowski. (sms/shasta)
 
