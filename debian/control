@@ -25,7 +25,7 @@ Description: Gnu Gadu2 Instant Messaging Client
  
 Package: gg2-emoticons
 Architecture: all
-Section: libs
+Section: contrib
 Depends: gg2 (>= ${Source-Version})
 Description: additional emote icons for Gnu Gadu
  GNU Gadu is a Gtk2 based instant messenger client based
@@ -41,7 +41,7 @@ Description: additional emote icons for Gnu Gadu
 
 Package: gg2-dev
 Architecture: all
-Section: libs
+Section: devel
 Depends: gg2 (>= ${Source-Version})
 Description: additional emote icons for Gnu Gadu
  GNU Gadu is a Gtk2 based instant messenger client based
