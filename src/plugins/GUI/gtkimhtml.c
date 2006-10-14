@@ -101,6 +101,7 @@ static void imhtml_toggle_underline(GtkIMHtml *imhtml);
 static void imhtml_font_grow(GtkIMHtml *imhtml);
 static void imhtml_font_shrink(GtkIMHtml *imhtml);
 static void imhtml_clear_formatting(GtkIMHtml *imhtml);
+static gchar *gaim_markup_linkify(const char *text);
 
 /* POINT_SIZE converts from AIM font sizes to a point size scale factor. */
 #define MAX_FONT_SIZE 7
@@ -2265,7 +2266,7 @@ images can be looked up like that, instead of passing a GSList of them.
  */
 
 void gtk_imhtml_append_text_with_images (GtkIMHtml        *imhtml,
-                                         const gchar      *text,
+                                         const gchar      *text_clear,
                                          GtkIMHtmlOptions  options,
 					 GSList *unused)
 {
@@ -2273,11 +2274,13 @@ void gtk_imhtml_append_text_with_images (GtkIMHtml        *imhtml,
 	GdkRectangle rect;
 	int y, height, ins_offset = 0, sel_offset = 0;
 	gboolean fixins = FALSE, fixsel = FALSE;
+	const gchar *text;
 
 	g_return_if_fail (imhtml != NULL);
 	g_return_if_fail (GTK_IS_IMHTML (imhtml));
-	g_return_if_fail (text != NULL);
-
+	g_return_if_fail (text_clear != NULL);
+	
+	text = gaim_markup_linkify(text_clear);
 
 	gtk_text_buffer_get_end_iter(imhtml->text_buffer, &iter);
 	gtk_text_buffer_get_iter_at_mark(imhtml->text_buffer, &ins, gtk_text_buffer_get_insert(imhtml->text_buffer));
@@ -4825,4 +4828,348 @@ void gtk_imhtml_set_funcs(GtkIMHtml *imhtml, GtkIMHtmlFuncs *f)
 {
 	g_return_if_fail(imhtml != NULL);
 	imhtml->funcs = f;
+}
+
+/* Originally lifted from
+ * http://www.oreillynet.com/pub/a/network/excerpt/spcookbook_chap03/index3.html
+ * ... and slightly modified to be a bit more rfc822 compliant
+ * ... and modified a bit more to make domain checking rfc1035 compliant
+ *     with the exception permitted in rfc1101 for domains to start with digit
+ *     but not completely checking to avoid conflicts with IP addresses
+ */
+gboolean
+gaim_email_is_valid(const char *address)
+{
+	const char *c, *domain;
+	static char *rfc822_specials = "()<>@,;:\\\"[]";
+
+	/* first we validate the name portion (name@domain) (rfc822)*/
+	for (c = address;  *c;  c++) {
+		if (*c == '\"' && (c == address || *(c - 1) == '.' || *(c - 1) == '\"')) {
+			while (*++c) {
+				if (*c == '\\') {
+					if (*c++ && *c < 127 && *c != '\n' && *c != '\r') continue;
+					else return FALSE;
+				}
+				if (*c == '\"') break;
+				if (*c < ' ' || *c >= 127) return FALSE;
+			}
+			if (!*c++) return FALSE;
+			if (*c == '@') break;
+			if (*c != '.') return FALSE;
+			continue;
+		}
+		if (*c == '@') break;
+		if (*c <= ' ' || *c >= 127) return FALSE;
+		if (strchr(rfc822_specials, *c)) return FALSE;
+	}
+	/* strictly we should return false if (*(c - 1) == '.') too, but I think
+	 * we should permit user.@domain type addresses - they do work :) */
+	if (c == address) return FALSE;
+
+	/* next we validate the domain portion (name@domain) (rfc1035 & rfc1011) */
+	if (!*(domain = ++c)) return FALSE;
+	do {
+		if (*c == '.' && (c == domain || *(c - 1) == '.' || *(c - 1) == '-'))
+			return FALSE;
+		if (*c == '-' && *(c - 1) == '.') return FALSE;
+		if ((*c < '0' && *c != '-' && *c != '.') || (*c > '9' && *c < 'A') ||
+			(*c > 'Z' && *c < 'a') || (*c > 'z')) return FALSE;
+	} while (*++c);
+
+	if (*(c - 1) == '-') return FALSE;
+
+	return ((c - domain) > 3 ? TRUE : FALSE);
+}
+
+static gboolean
+badchar(char c)
+{
+	switch (c) {
+	case ' ':
+	case ',':
+	case '\0':
+	case '\n':
+	case '\r':
+	case '<':
+	case '>':
+	case '"':
+	case '\'':
+		return TRUE;
+	default:
+		return FALSE;
+	}
+}
+
+static gboolean
+badentity(const char *c)
+{
+	if (!g_ascii_strncasecmp(c, "&lt;", 4) ||
+		!g_ascii_strncasecmp(c, "&gt;", 4) ||
+		!g_ascii_strncasecmp(c, "&quot;", 6)) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static
+gchar *gaim_markup_linkify(const char *text)
+{
+	const char *c, *t, *q = NULL;
+	char *tmp, *tmpurlbuf, *url_buf;
+	gunichar g;
+	gboolean inside_html = FALSE;
+	int inside_paren = 0;
+	GString *ret = g_string_new("");
+	/* Assumes you have a buffer able to carry at least BUF_LEN * 2 bytes */
+
+	c = text;
+	while (*c) {
+
+		if(*c == '(' && !inside_html) {
+			inside_paren++;
+			ret = g_string_append_c(ret, *c);
+			c++;
+		}
+
+		if(inside_html) {
+			if(*c == '>') {
+				inside_html = FALSE;
+			} else if(!q && (*c == '\"' || *c == '\'')) {
+				q = c;
+			} else if(q) {
+				if(*c == *q)
+					q = NULL;
+			}
+		} else if(*c == '<') {
+			inside_html = TRUE;
+			if (!g_ascii_strncasecmp(c, "<A", 2)) {
+				while (1) {
+					if (!g_ascii_strncasecmp(c, "/A>", 3)) {
+						inside_html = FALSE;
+						break;
+					}
+					ret = g_string_append_c(ret, *c);
+					c++;
+					if (!(*c))
+						break;
+				}
+			}
+		} else if ((*c=='h') && (!g_ascii_strncasecmp(c, "http://", 7) ||
+					(!g_ascii_strncasecmp(c, "https://", 8)))) {
+			t = c;
+			while (1) {
+				if (badchar(*t) || badentity(t)) {
+
+					if (*(t) == ',' && (*(t + 1) != ' ')) {
+						t++;
+						continue;
+					}
+
+					if (*(t - 1) == '.')
+						t--;
+					if ((*(t - 1) == ')' && (inside_paren > 0))) {
+						t--;
+					}
+
+					url_buf = g_strndup(c, t - c);
+					tmpurlbuf = gaim_unescape_html(url_buf);
+					g_string_append_printf(ret, "<A HREF=\"%s\">%s</A>",
+							tmpurlbuf, url_buf);
+					g_free(url_buf);
+					g_free(tmpurlbuf);
+					c = t;
+					break;
+				}
+				t++;
+
+			}
+		} else if (!g_ascii_strncasecmp(c, "www.", 4) && (c == text || badchar(c[-1]) || badentity(c-1))) {
+			if (c[4] != '.') {
+				t = c;
+				while (1) {
+					if (badchar(*t) || badentity(t)) {
+						if (t - c == 4) {
+							break;
+						}
+
+						if (*(t) == ',' && (*(t + 1) != ' ')) {
+							t++;
+							continue;
+						}
+
+						if (*(t - 1) == '.')
+							t--;
+						if ((*(t - 1) == ')' && (inside_paren > 0))) {
+							t--;
+						}
+						url_buf = g_strndup(c, t - c);
+						tmpurlbuf = gaim_unescape_html(url_buf);
+						g_string_append_printf(ret,
+								"<A HREF=\"http://%s\">%s</A>", tmpurlbuf,
+								url_buf);
+						g_free(url_buf);
+						g_free(tmpurlbuf);
+						c = t;
+						break;
+					}
+					t++;
+				}
+			}
+		} else if (!g_ascii_strncasecmp(c, "ftp://", 6)) {
+			t = c;
+			while (1) {
+				if (badchar(*t) || badentity(t)) {
+					if (*(t - 1) == '.')
+						t--;
+					if ((*(t - 1) == ')' && (inside_paren > 0))) {
+						t--;
+					}
+					url_buf = g_strndup(c, t - c);
+					tmpurlbuf = gaim_unescape_html(url_buf);
+					g_string_append_printf(ret, "<A HREF=\"%s\">%s</A>",
+							tmpurlbuf, url_buf);
+					g_free(url_buf);
+					g_free(tmpurlbuf);
+					c = t;
+					break;
+				}
+				if (!t)
+					break;
+				t++;
+
+			}
+		} else if (!g_ascii_strncasecmp(c, "ftp.", 4) && (c == text || badchar(c[-1]) || badentity(c-1))) {
+			if (c[4] != '.') {
+				t = c;
+				while (1) {
+					if (badchar(*t) || badentity(t)) {
+						if (t - c == 4) {
+							break;
+						}
+						if (*(t - 1) == '.')
+							t--;
+						if ((*(t - 1) == ')' && (inside_paren > 0))) {
+							t--;
+						}
+						url_buf = g_strndup(c, t - c);
+						tmpurlbuf = gaim_unescape_html(url_buf);
+						g_string_append_printf(ret,
+								"<A HREF=\"ftp://%s\">%s</A>", tmpurlbuf,
+								url_buf);
+						g_free(url_buf);
+						g_free(tmpurlbuf);
+						c = t;
+						break;
+					}
+					if (!t)
+						break;
+					t++;
+				}
+			}
+		} else if (!g_ascii_strncasecmp(c, "mailto:", 7)) {
+			t = c;
+			while (1) {
+				if (badchar(*t) || badentity(t)) {
+					if (*(t - 1) == '.')
+						t--;
+					url_buf = g_strndup(c, t - c);
+					tmpurlbuf = gaim_unescape_html(url_buf);
+					g_string_append_printf(ret, "<A HREF=\"%s\">%s</A>",
+							  tmpurlbuf, url_buf);
+					g_free(url_buf);
+					g_free(tmpurlbuf);
+					c = t;
+					break;
+				}
+				if (!t)
+					break;
+				t++;
+
+			}
+		} else if (c != text && (*c == '@')) {
+			int flag;
+			GString *gurl_buf = NULL;
+			const char illegal_chars[] = "!@#$%^&*()[]{}/|\\<>\":;\r\n \0";
+
+			if (strchr(illegal_chars,*(c - 1)) || strchr(illegal_chars, *(c + 1)))
+				flag = 0;
+			else {
+				flag = 1;
+				gurl_buf = g_string_new("");
+			}
+
+			t = c;
+			while (flag) {
+				/* iterate backwards grabbing the local part of an email address */
+				g = g_utf8_get_char(t);
+				if (badchar(*t) || (g >= 127) || (*t == '(') ||
+					((*t == ';') && ((t > (text+2) && (!g_ascii_strncasecmp(t - 3, "&lt;", 4) ||
+				                                       !g_ascii_strncasecmp(t - 3, "&gt;", 4))) ||
+				                     (t > (text+4) && (!g_ascii_strncasecmp(t - 5, "&quot;", 6)))))) {
+					/* local part will already be part of ret, strip it out */
+					ret = g_string_truncate(ret, ret->len - (c - t));
+					ret = g_string_append_unichar(ret, g);
+					break;
+				} else {
+					g_string_prepend_unichar(gurl_buf, g);
+					t = g_utf8_find_prev_char(text, t);
+					if (t < text) {
+						ret = g_string_assign(ret, "");
+						break;
+					}
+				}
+			}
+
+			t = g_utf8_find_next_char(c, NULL);
+
+			while (flag) {
+				/* iterate forwards grabbing the domain part of an email address */
+				g = g_utf8_get_char(t);
+				if (badchar(*t) || (g >= 127) || (*t == ')') || badentity(t)) {
+					char *d;
+
+					url_buf = g_string_free(gurl_buf, FALSE);
+
+					/* strip off trailing periods */
+					if (strlen(url_buf) > 0) {
+						for (d = url_buf + strlen(url_buf) - 1; *d == '.'; d--, t--)
+							*d = '\0';
+					}
+
+					tmpurlbuf = gaim_unescape_html(url_buf);
+					if (gaim_email_is_valid(tmpurlbuf)) {
+						g_string_append_printf(ret, "<A HREF=\"mailto:%s\">%s</A>",
+								tmpurlbuf, url_buf);
+					} else {
+						g_string_append(ret, url_buf);
+					}
+					g_free(url_buf);
+					g_free(tmpurlbuf);
+					c = t;
+
+					break;
+				} else {
+					g_string_append_unichar(gurl_buf, g);
+					t = g_utf8_find_next_char(t, NULL);
+				}
+			}
+		}
+
+		if(*c == ')' && !inside_html) {
+			inside_paren--;
+			ret = g_string_append_c(ret, *c);
+			c++;
+		}
+
+		if (*c == 0)
+			break;
+
+		ret = g_string_append_c(ret, *c);
+		c++;
+
+	}
+	tmp = ret->str;
+	g_string_free(ret, FALSE);
+	return tmp;
 }

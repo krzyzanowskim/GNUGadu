@@ -1,6 +1,7 @@
 14.10.2006
 - fixed build with new autotools (krzak)
-- fix for autoconnect crash, #257,#256,#258,#260,#267,#275,#273,#274
+- fix for autoconnect crash, #257,#256,#258,#260,#267,#275,#273,#274 (krzak)
+- fix for links in chat window, #265 (GUI/krzak)
 
 28.09.2006
 - fixed segfault in send_ERA. Patch by Kamil Pawlowski. (sms/shasta)

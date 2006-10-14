@@ -338,7 +338,7 @@ void gtk_imhtml_set_protocol_name(GtkIMHtml *imhtml, const gchar *protocol_name)
  * @param unused  Use @c NULL value.
  */
 void gtk_imhtml_append_text_with_images(GtkIMHtml *imhtml,
-                                         const gchar *text,
+                                         const gchar *text_clear,
                                          GtkIMHtmlOptions options,
                                          GSList *unused);
 
