@@ -1,3 +1,3 @@
 [D-BUS Service]
 Name=org.freedesktop.im.GG
-Exec=@prefix@/bin/gg2
+Exec=@bindir@/gg2

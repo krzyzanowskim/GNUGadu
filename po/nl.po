@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: http://www.gnugadu.org/\n"
-"POT-Creation-Date: 2006-07-22 01:10+0200\n"
+"POT-Creation-Date: 2006-10-15 12:18+0200\n"
 "PO-Revision-Date: 04/06/04 21:02\n"
 "Last-Translator: Sander Devrieze <s.devrieze@pandora.be>\n"
 "Language-Team: Nederlands <i18n@kde.nl>\n"
@@ -225,7 +225,7 @@ msgstr "Inschakelen"
 msgid "Name"
 msgstr "Bijnaam"
 
-#: src/plugins/GUI/gui_preferences.c:192 src/plugins/tlen/tlen_plugin.c:923
+#: src/plugins/GUI/gui_preferences.c:192 src/plugins/tlen/tlen_plugin.c:929
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -533,57 +533,57 @@ msgstr "Toon contactbeschrijvingen in gebruikerslijst"
 msgid "Wrap contacts' descriptions on users list"
 msgstr "Toon contactbeschrijvingen in gebruikerslijst"
 
-#: src/plugins/GUI/gtkimhtml.c:804
+#: src/plugins/GUI/gtkimhtml.c:805
 msgid "Paste as Plain _Text"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:816
+#: src/plugins/GUI/gtkimhtml.c:817
 msgid "_Reset formatting"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1310
+#: src/plugins/GUI/gtkimhtml.c:1311
 msgid "Hyperlink color"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1311
+#: src/plugins/GUI/gtkimhtml.c:1312
 msgid "Color to draw hyperlinks."
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1314
+#: src/plugins/GUI/gtkimhtml.c:1315
 msgid "Hyperlink prelight color"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1315
+#: src/plugins/GUI/gtkimhtml.c:1316
 msgid "Color to draw hyperlinks when mouse is over them."
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1539
+#: src/plugins/GUI/gtkimhtml.c:1540
 msgid "_Copy E-Mail Address"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1551
+#: src/plugins/GUI/gtkimhtml.c:1552
 msgid "_Open Link in Browser"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:1561
+#: src/plugins/GUI/gtkimhtml.c:1562
 msgid "_Copy Link Location"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3261
+#: src/plugins/GUI/gtkimhtml.c:3264
 msgid ""
 "<span size='larger' weight='bold'>Unrecognized file type</span>\n"
 "\n"
 "Defaulting to PNG."
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3264
+#: src/plugins/GUI/gtkimhtml.c:3267
 msgid ""
 "Unrecognized file type\n"
 "\n"
 "Defaulting to PNG."
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3277
+#: src/plugins/GUI/gtkimhtml.c:3280
 #, c-format
 msgid ""
 "<span size='larger' weight='bold'>Error saving image</span>\n"
@@ -591,7 +591,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3280
+#: src/plugins/GUI/gtkimhtml.c:3283
 #, c-format
 msgid ""
 "Error saving image\n"
@@ -599,11 +599,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3360 src/plugins/GUI/gtkimhtml.c:3372
+#: src/plugins/GUI/gtkimhtml.c:3363 src/plugins/GUI/gtkimhtml.c:3375
 msgid "Save Image"
 msgstr ""
 
-#: src/plugins/GUI/gtkimhtml.c:3400
+#: src/plugins/GUI/gtkimhtml.c:3403
 msgid "_Save Image..."
 msgstr ""
 
@@ -649,12 +649,12 @@ msgstr "Doorzoek resultaten"
 msgid "_More options"
 msgstr "Server (optioneel)"
 
-#: src/plugins/GUI/gui_dialogs.c:716
+#: src/plugins/GUI/gui_dialogs.c:723
 #: src/plugins/docklet/system-tray/docklet_plugin.c:332
 msgid "About"
 msgstr "Over"
 
-#: src/plugins/GUI/gui_dialogs.c:746
+#: src/plugins/GUI/gui_dialogs.c:753
 #, fuzzy, c-format
 msgid ""
 "<b>GNU Gadu %s</b>\n"
@@ -745,7 +745,7 @@ msgstr ""
 
 #: src/plugins/docklet/dockapp/dockapp_plugin.c:559
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1589
-#: src/plugins/tlen/tlen_plugin.c:797 src/plugins/jabber/jabber_plugin.c:1442
+#: src/plugins/tlen/tlen_plugin.c:803 src/plugins/jabber/jabber_plugin.c:1442
 #, fuzzy
 msgid "_Preferences"
 msgstr "Voorkeuren"
@@ -831,7 +831,7 @@ msgid "Au_toconnect status"
 msgstr "Status bij automatisch opstarten"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:227
-#: src/plugins/tlen/tlen_plugin.c:781 src/plugins/jabber/jabber_plugin.c:1358
+#: src/plugins/tlen/tlen_plugin.c:787 src/plugins/jabber/jabber_plugin.c:1358
 #, fuzzy
 msgid "_Log chats to history file"
 msgstr "Log berichten in geschiedenisbestand"
@@ -860,7 +860,7 @@ msgid "You have to enter your GG# and password first!"
 msgstr "U moet eerst uw GG# en wachtwoord eerst invoeren!"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:361
-#: src/plugins/tlen/tlen_plugin.c:478 src/plugins/jabber/jabber_protocol.c:296
+#: src/plugins/tlen/tlen_plugin.c:484 src/plugins/jabber/jabber_protocol.c:296
 msgid "No users have been found!"
 msgstr "Geen gebruikers gevonden!"
 
@@ -878,7 +878,7 @@ msgid "%d sending you a  file"
 msgstr ""
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:850
-#: src/plugins/tlen/tlen_plugin.c:545
+#: src/plugins/tlen/tlen_plugin.c:551
 msgid "Program is about to leave"
 msgstr "Programma is bezig met afsluiten"
 
@@ -889,7 +889,7 @@ msgstr "Bent u zeker dat u de geselecteerde gebruikers wilt verwijderen?"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:932
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1093
-#: src/plugins/tlen/tlen_plugin.c:730 src/plugins/jabber/jabber_plugin.c:1292
+#: src/plugins/tlen/tlen_plugin.c:736 src/plugins/jabber/jabber_plugin.c:1292
 msgid "You have to be connected to perform searching!"
 msgstr "U bent verbonden om een zoekopdracht uit te voeren!"
 
@@ -900,7 +900,7 @@ msgstr "Wijzig contactinformatie"
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:959
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:973
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1104
-#: src/plugins/tlen/tlen_plugin.c:746
+#: src/plugins/tlen/tlen_plugin.c:752
 #, fuzzy
 msgid "_Nick:"
 msgstr "Bijnaam:"
@@ -981,14 +981,14 @@ msgid "_Update settings on success?"
 msgstr "Update instellingen bij succes?"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1098
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2526
-#: src/plugins/tlen/tlen_plugin.c:739 src/plugins/tlen/tlen_plugin.c:1222
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2530
+#: src/plugins/tlen/tlen_plugin.c:745 src/plugins/tlen/tlen_plugin.c:1228
 msgid "female"
 msgstr "vrouwelijk"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1099
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2528
-#: src/plugins/tlen/tlen_plugin.c:740 src/plugins/tlen/tlen_plugin.c:1224
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2532
+#: src/plugins/tlen/tlen_plugin.c:746 src/plugins/tlen/tlen_plugin.c:1230
 msgid "male"
 msgstr "mannelijk"
 
@@ -997,19 +997,19 @@ msgid "Gadu-Gadu search"
 msgstr "Gadu-Gadu zoekopdracht"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1102
-#: src/plugins/tlen/tlen_plugin.c:744
+#: src/plugins/tlen/tlen_plugin.c:750
 #, fuzzy
 msgid "_First name:"
 msgstr "Voornaam:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1103
-#: src/plugins/tlen/tlen_plugin.c:745
+#: src/plugins/tlen/tlen_plugin.c:751
 #, fuzzy
 msgid "_Last name:"
 msgstr "Achternaam:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1105
-#: src/plugins/tlen/tlen_plugin.c:747
+#: src/plugins/tlen/tlen_plugin.c:753
 #, fuzzy
 msgid "_City:"
 msgstr "Stad:"
@@ -1094,13 +1094,13 @@ msgid "_Select File:"
 msgstr "Selecteer bestand:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1586
-#: src/plugins/tlen/tlen_plugin.c:796 src/plugins/jabber/jabber_plugin.c:1439
+#: src/plugins/tlen/tlen_plugin.c:802 src/plugins/jabber/jabber_plugin.c:1439
 #, fuzzy
 msgid "_Add Contact"
 msgstr "Voek contact toe:"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1588
-#: src/plugins/tlen/tlen_plugin.c:798 src/plugins/jabber/jabber_plugin.c:1441
+#: src/plugins/tlen/tlen_plugin.c:804 src/plugins/jabber/jabber_plugin.c:1441
 #, fuzzy
 msgid "_Search for friends"
 msgstr "Zoek vrienden"
@@ -1126,7 +1126,7 @@ msgid "_Register account"
 msgstr "Registreer account"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1622
-#: src/plugins/tlen/tlen_plugin.c:631 src/plugins/jabber/jabber_plugin.c:1230
+#: src/plugins/tlen/tlen_plugin.c:637 src/plugins/jabber/jabber_plugin.c:1230
 msgid "Available"
 msgstr "Beschikbaar"
 
@@ -1143,7 +1143,7 @@ msgid "Busy with description"
 msgstr "Bezig met beschrijving"
 
 #: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1646
-#: src/plugins/tlen/tlen_plugin.c:661
+#: src/plugins/tlen/tlen_plugin.c:667
 msgid "Invisible"
 msgstr "Onzichtbaar"
 
@@ -1167,80 +1167,80 @@ msgstr "Geblokkeerd"
 msgid "Gadu-Gadu(c) protocol"
 msgstr "Gadu-Gadu(c) protocol"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1840
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1841
 msgid "no reason"
 msgstr "geen reden"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1861
-#: src/plugins/tlen/tlen_plugin.c:854 src/plugins/jabber/jabber_plugin.c:378
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1862
+#: src/plugins/tlen/tlen_plugin.c:860 src/plugins/jabber/jabber_plugin.c:378
 #, fuzzy
 msgid "_Chat"
 msgstr "Bericht"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1863
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1864
 #, fuzzy
 msgid "Send _File"
 msgstr "Verstuur bestand"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1866
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1867
 #: src/plugins/jabber/jabber_plugin.c:382
 msgid "_Personal data"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1867
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1868
 #: src/plugins/jabber/jabber_plugin.c:394
 #, fuzzy
 msgid "E_dit"
 msgstr "Bewerk"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1868
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1869
 #: src/plugins/jabber/jabber_plugin.c:395
 #, fuzzy
 msgid "Rem_ove"
 msgstr "Verwijder"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1870
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:1871
 #: src/plugins/jabber/jabber_plugin.c:397
 #, fuzzy
 msgid "Add _New"
 msgstr "Voe nieuw toe"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2153
-#: src/plugins/tlen/tlen_plugin.c:921 src/plugins/jabber/jabber_plugin.c:696
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2154
+#: src/plugins/tlen/tlen_plugin.c:927 src/plugins/jabber/jabber_plugin.c:696
 msgid "Enter status description"
 msgstr "Voer statusbeschrijving in"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2155
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2156
 #, fuzzy
 msgid "_Description:"
 msgstr "Beschrijving:"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2239
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2240
 msgid "Unable to change status"
 msgstr "Kon status niet wijzigen"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2367
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2390
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2429
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2371
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2394
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2433
 msgid "Unable to send message"
 msgstr "Kon bericht niet verzenden"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2462
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2466
 msgid ""
 "Unable to send message\n"
 "You are not connected to Gadu-Gadu service"
 msgstr ""
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2546
-#: src/plugins/tlen/tlen_plugin.c:1238
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2550
+#: src/plugins/tlen/tlen_plugin.c:1244
 msgid "Error! Cannot perform search!"
 msgstr "Fout! Kon zoekopdracht niet uitvoeren!"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2637
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2641
 msgid "You have to fill in all fields"
 msgstr "U moet alle velden invullen"
 
-#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2701
+#: src/plugins/gadu_gadu/gadu_gadu_plugin.c:2705
 msgid "I still cannot open contacts files! Exiting..."
 msgstr "Ik kan nog steeds geen contactbestanden openen! Bezig met sluiten..."
 
@@ -1268,91 +1268,91 @@ msgstr "Onbekende fout"
 msgid "Error while GETROSTERITEM"
 msgstr "Fout tijdens GETROSTERITEM"
 
-#: src/plugins/tlen/tlen_plugin.c:370
+#: src/plugins/tlen/tlen_plugin.c:376
 msgid "You received sound alert"
 msgstr ""
 
-#: src/plugins/tlen/tlen_plugin.c:523
+#: src/plugins/tlen/tlen_plugin.c:529
 msgid "You have to enter your login and password first!"
 msgstr "U moet eerst u gebruikersnaam en wachtwoord invoeren!"
 
-#: src/plugins/tlen/tlen_plugin.c:610 src/plugins/jabber/jabber_cb.c:614
+#: src/plugins/tlen/tlen_plugin.c:616 src/plugins/jabber/jabber_cb.c:614
 #: src/plugins/jabber/jabber_cb.c:724 src/plugins/sms/sms_gui.c:87
 #: src/plugins/sms/sms_gui.c:105
 msgid "Nick"
 msgstr "Bijnaam"
 
-#: src/plugins/tlen/tlen_plugin.c:611
+#: src/plugins/tlen/tlen_plugin.c:617
 msgid "Group"
 msgstr "Groep"
 
-#: src/plugins/tlen/tlen_plugin.c:637 src/plugins/jabber/jabber_plugin.c:1240
+#: src/plugins/tlen/tlen_plugin.c:643 src/plugins/jabber/jabber_plugin.c:1240
 msgid "Away"
 msgstr "Afwezig"
 
-#: src/plugins/tlen/tlen_plugin.c:643
+#: src/plugins/tlen/tlen_plugin.c:649
 msgid "Chatty"
 msgstr "Chatty"
 
-#: src/plugins/tlen/tlen_plugin.c:649
+#: src/plugins/tlen/tlen_plugin.c:655
 msgid "Very busy"
 msgstr "Zeer druk bezig"
 
-#: src/plugins/tlen/tlen_plugin.c:655 src/plugins/jabber/jabber_plugin.c:1250
+#: src/plugins/tlen/tlen_plugin.c:661 src/plugins/jabber/jabber_plugin.c:1250
 msgid "DND"
 msgstr "DND"
 
-#: src/plugins/tlen/tlen_plugin.c:667 src/plugins/jabber/jabber_plugin.c:1267
+#: src/plugins/tlen/tlen_plugin.c:673 src/plugins/jabber/jabber_plugin.c:1267
 msgid "Unavailable"
 msgstr "Niet beschikbaar"
 
-#: src/plugins/tlen/tlen_plugin.c:673 src/plugins/jabber/jabber_plugin.c:1272
+#: src/plugins/tlen/tlen_plugin.c:679 src/plugins/jabber/jabber_plugin.c:1272
 msgid "Set description ..."
 msgstr "Stel beschrijving in ..."
 
-#: src/plugins/tlen/tlen_plugin.c:742
+#: src/plugins/tlen/tlen_plugin.c:748
 msgid "Tlen search"
 msgstr "Tlen zoekopdracht"
 
-#: src/plugins/tlen/tlen_plugin.c:748
+#: src/plugins/tlen/tlen_plugin.c:754
 #, fuzzy
 msgid "@t_len.pl"
 msgstr "@tlen.pl"
 
-#: src/plugins/tlen/tlen_plugin.c:749
+#: src/plugins/tlen/tlen_plugin.c:755
 #, fuzzy
 msgid "_Gender:"
 msgstr "Geslacht:"
 
-#: src/plugins/tlen/tlen_plugin.c:760
+#: src/plugins/tlen/tlen_plugin.c:766
 msgid "Tlen plugin configuration"
 msgstr "Tlen plugin configuratie"
 
-#: src/plugins/tlen/tlen_plugin.c:776
+#: src/plugins/tlen/tlen_plugin.c:782
 msgid "Tlen login"
 msgstr "Tlen login"
 
-#: src/plugins/tlen/tlen_plugin.c:777
+#: src/plugins/tlen/tlen_plugin.c:783
 #, fuzzy
 msgid "_Password"
 msgstr "Wachtwoord"
 
-#: src/plugins/tlen/tlen_plugin.c:778 src/plugins/jabber/jabber_plugin.c:1354
+#: src/plugins/tlen/tlen_plugin.c:784 src/plugins/jabber/jabber_plugin.c:1354
 #, fuzzy
 msgid "_Autoconnect on startup"
 msgstr "Verbind automatisch tijdens opstarten"
 
-#: src/plugins/tlen/tlen_plugin.c:779 src/plugins/jabber/jabber_plugin.c:1356
+#: src/plugins/tlen/tlen_plugin.c:785 src/plugins/jabber/jabber_plugin.c:1356
 #, fuzzy
 msgid "A_utoconnect status"
 msgstr "Status bij automatisch opstarten"
 
-#: src/plugins/tlen/tlen_plugin.c:856 src/plugins/ignore/ignore.c:277
+#: src/plugins/tlen/tlen_plugin.c:862 src/plugins/ignore/ignore.c:277
 #, fuzzy
 msgid "_Remove"
 msgstr "Verwijder"
 
-#: src/plugins/tlen/tlen_plugin.c:857
+#: src/plugins/tlen/tlen_plugin.c:863
 #, fuzzy
 msgid "_Add New"
 msgstr "Voe nieuw toe"
@@ -1947,11 +1947,11 @@ msgstr "SMS plugin: "
 msgid "Please enter token"
 msgstr "Voer alstublieft een token in"
 
-#: src/plugins/sms/sms_core.c:469 src/plugins/sms/sms_core.c:893
+#: src/plugins/sms/sms_core.c:469 src/plugins/sms/sms_core.c:892
 msgid "Cannot connect!"
 msgstr "Kan niet verbinden!"
 
-#: src/plugins/sms/sms_core.c:502 src/plugins/sms/sms_core.c:852
+#: src/plugins/sms/sms_core.c:502 src/plugins/sms/sms_core.c:851
 msgid "SMS has been sent"
 msgstr "SMS is verzonden"
 
@@ -1963,11 +1963,11 @@ msgstr "Verkeerd token!"
 msgid "Bad token entered!"
 msgstr "Verkeerd token ingevoerd!"
 
-#: src/plugins/sms/sms_core.c:511 src/plugins/sms/sms_core.c:887
+#: src/plugins/sms/sms_core.c:511 src/plugins/sms/sms_core.c:886
 msgid "Daily limit exceeded!"
 msgstr "Dagelijkse limiet overschreden!"
 
-#: src/plugins/sms/sms_core.c:514 src/plugins/sms/sms_core.c:890
+#: src/plugins/sms/sms_core.c:514 src/plugins/sms/sms_core.c:889
 msgid "Gateway error!"
 msgstr "Gatewayfout!"
 
@@ -1979,72 +1979,72 @@ msgstr "Dienst niet geactiveerd!"
 msgid "Invalid number"
 msgstr "Ongeldig nummer"
 
-#: src/plugins/sms/sms_core.c:773
+#: src/plugins/sms/sms_core.c:772
 msgid "Specify recipient number!"
 msgstr "Specificeer nummer van ontvanger!"
 
-#: src/plugins/sms/sms_core.c:779
+#: src/plugins/sms/sms_core.c:778
 msgid "Specify sender name!"
 msgstr "Specificeer naam van zender!"
 
-#: src/plugins/sms/sms_core.c:785
+#: src/plugins/sms/sms_core.c:784
 msgid "Message is empty!"
 msgstr "Bericht is leeg!"
 
-#: src/plugins/sms/sms_core.c:824
+#: src/plugins/sms/sms_core.c:823
 msgid "Empty Era login!"
 msgstr "Lege Era login!"
 
-#: src/plugins/sms/sms_core.c:830
+#: src/plugins/sms/sms_core.c:829
 msgid "Empty Era password!"
 msgstr "Leeg Era wachtwoord!"
 
-#: src/plugins/sms/sms_core.c:839
+#: src/plugins/sms/sms_core.c:838
 msgid "Invalid number!"
 msgstr "Ongeldig nummer!"
 
-#: src/plugins/sms/sms_core.c:855
+#: src/plugins/sms/sms_core.c:854
 #, c-format
 msgid "SMS has been sent. Left: %d"
 msgstr "SMS is verzonden. Left: %d"
 
-#: src/plugins/sms/sms_core.c:863
+#: src/plugins/sms/sms_core.c:862
 msgid "SMS not delivered!"
 msgstr "SMS niet afgeleverd!"
 
-#: src/plugins/sms/sms_core.c:866
+#: src/plugins/sms/sms_core.c:865
 msgid "Unauthorized!"
 msgstr "Niet geauthorizeerd!"
 
-#: src/plugins/sms/sms_core.c:869
+#: src/plugins/sms/sms_core.c:868
 msgid "Access denied!"
 msgstr "Toegang geweigerd!"
 
-#: src/plugins/sms/sms_core.c:872
+#: src/plugins/sms/sms_core.c:871
 msgid "Syntax error!"
 msgstr "Syntaxisfout!"
 
-#: src/plugins/sms/sms_core.c:875
+#: src/plugins/sms/sms_core.c:874
 msgid "Invalid recipient!"
 msgstr "Ongeldige ontvanger!"
 
-#: src/plugins/sms/sms_core.c:878
+#: src/plugins/sms/sms_core.c:877
 msgid "Message too long!"
 msgstr "Bericht is te lang!"
 
-#: src/plugins/sms/sms_core.c:881
+#: src/plugins/sms/sms_core.c:880
 msgid "Error while reading token!"
 msgstr "Fout tijdens lezen van token!"
 
-#: src/plugins/sms/sms_core.c:884
+#: src/plugins/sms/sms_core.c:883
 msgid "Cannot write token image to file!"
 msgstr "Kan geen tokenafbeelding schrijven naar bestand!"
 
-#: src/plugins/sms/sms_core.c:896
+#: src/plugins/sms/sms_core.c:895
 msgid "Insufficent number of tokens!"
 msgstr ""
 
-#: src/plugins/sms/sms_core.c:901
+#: src/plugins/sms/sms_core.c:900
 msgid "Unknown error!"
 msgstr "Onbekende fout!"
 

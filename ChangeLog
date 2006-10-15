@@ -1,3 +1,6 @@
+15.10.2006
+- 2.3.0 (krzak)
+
 14.10.2006
 - fixed build with new autotools (krzak)
 - fix for autoconnect crash, #257,#256,#258,#260,#267,#275,#273,#274 (krzak)

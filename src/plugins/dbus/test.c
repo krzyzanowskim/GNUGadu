@@ -96,7 +96,6 @@ static void get_protocols(DBusConnection *bus)
 	dbus_message_unref(message);
 	dbus_message_unref(reply);
 	dbus_pending_call_unref (pending_call);
-	g_print("ZZ");
 }
 
 static void open_chat(DBusConnection *bus)
