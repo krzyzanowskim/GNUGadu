@@ -1,6 +1,7 @@
 16.10.2006
 - add missing src/plugins/GUI/gtksourceiter.c
 - add missing src/plugins/GUI/gtksourceiter.h
+- fix set font size in chat window. #264 (krzak)
 
 15.10.2006
 - 2.3.0 (krzak)

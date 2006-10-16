@@ -3645,11 +3645,15 @@ static GtkTextTag *find_font_size_tag(GtkIMHtml *imhtml, int size)
 		 * size. Our size 4 was actually smaller than our size 3 for
 		 * me. So this works around that oddity.
 		 */
-		GtkTextAttributes *attr = gtk_text_view_get_default_attributes(GTK_TEXT_VIEW(imhtml));
+/*		GtkTextAttributes *attr = gtk_text_view_get_default_attributes(GTK_TEXT_VIEW(imhtml));
 		tag = gtk_text_buffer_create_tag(imhtml->text_buffer, str, "size",
 		                                 (gint) (pango_font_description_get_size(attr->font) *
 		                                 (double) POINT_SIZE(size)), NULL);
 		gtk_text_attributes_unref(attr);
+*/
+		tag = gtk_text_buffer_create_tag(imhtml->text_buffer, str, "size",
+		                                 (gint)size, NULL);
+		
 	}
 
 	return tag;
