@@ -1,7 +1,22 @@
 ## Process this file with automake to produce Makefile.in
-SUBDIRS = intl lib src po pixmaps sounds themes contrib
+SUBDIRS = lib src po pixmaps sounds themes contrib
 
-EXTRA_DIST = codeset.m4 gettext.m4 glibc2.m4 glibc21.m4 iconv.m4 intdiv0.m4 intmax.m4 inttypes.m4 inttypes_h.m4 inttypes-pri.m4 isc-posix.m4 lcmessage.m4 lib-ld.m4 lib-link.m4 lib-prefix.m4 longdouble.m4 longlong.m4 nls.m4 po.m4 printf-posix.m4 progtest.m4 signed.m4 size_max.m4 stdint_h.m4 uintmax_t.m4 ulonglong.m4 wchar_t.m4 wint_t.m4 xsize.m4 codeset.m4 gettext.m4 glibc21.m4 iconv.m4 intdiv0.m4 intmax.m4 inttypes.m4 inttypes_h.m4 inttypes-pri.m4 isc-posix.m4 lcmessage.m4 lib-ld.m4 lib-link.m4 lib-prefix.m4 longdouble.m4 longlong.m4 nls.m4 po.m4 printf-posix.m4 progtest.m4 signed.m4 size_max.m4 stdint_h.m4 uintmax_t.m4 ulonglong.m4 wchar_t.m4 wint_t.m4 xsize.m4 \
+INTLTOOL = 			\
+	intltool-extract.in 	\
+	intltool-merge.in 	\
+	intltool-update.in
+
+
+EXTRA_DIST = codeset.m4 gettext.m4 glibc2.m4 glibc21.m4 iconv.m4 \
+	intdiv0.m4 intmax.m4 inttypes.m4 inttypes_h.m4 inttypes-pri.m4 \
+	isc-posix.m4 lcmessage.m4 lib-ld.m4 lib-link.m4 lib-prefix.m4 \
+	longdouble.m4 longlong.m4 nls.m4 po.m4 printf-posix.m4 progtest.m4 \
+	signed.m4 size_max.m4 stdint_h.m4 uintmax_t.m4 ulonglong.m4 \
+	wchar_t.m4 wint_t.m4 xsize.m4 codeset.m4 gettext.m4 \
+	intdiv0.m4 intmax.m4 inttypes.m4 inttypes_h.m4 \
+	inttypes-pri.m4 isc-posix.m4 lcmessage.m4 lib-ld.m4 \
+	lib-link.m4 lib-prefix.m4 longdouble.m4 longlong.m4 \
+	esd.m4 \
 	autogen.sh \
 	ANNOUNCE \
 	AUTHORS \
@@ -24,7 +39,6 @@ EXTRA_DIST = codeset.m4 gettext.m4 glibc2.m4 glibc21.m4 iconv.m4 intdiv0.m4 intm
 	gg2.spec \
 	gg2-devel.SlackBuild \
 	slack-desc \
-	esd.m4 \
 	debian/changelog \
 	debian/control \
 	debian/copyright \
@@ -41,7 +55,8 @@ EXTRA_DIST = codeset.m4 gettext.m4 glibc2.m4 glibc21.m4 iconv.m4 intdiv0.m4 intm
 	debian/gg2.postrm \
 	debian/gg2.sgml \
 	debian/gghist.sgml \
-	debian/compat
+	debian/compat	\
+	$(INTLTOOL)
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)

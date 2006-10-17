@@ -1,20 +1,24 @@
-# $Id: configure.in,v 1.135 2006/10/15 20:50:53 krzyzak Exp $
-
+# $Id: configure.in,v 1.136 2006/10/17 20:35:42 krzyzak Exp $
 m4_define([gg2_version],[2.3.0])
 
 AC_INIT(gg2,[gg2_version])
-AM_INIT_AUTOMAKE([gg2],[gg2_version])
+AC_PREREQ(2.59)
+AC_COPYRIGHT([Copyright (C) 2002-2006 GNU Gadu Team])
+
 AM_CONFIG_HEADER(config.h)
+#AM_INIT_AUTOMAKE([gg2],[gg2_version])
+ALL_LINGUAS="pl nl"
+AM_INIT_AUTOMAKE(1.9 dist-bzip2)
+
+AM_MAINTAINER_MODE
+
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
-GTK_MIN_VER="2.4.0"
 
-GETTEXT_PACKAGE=$PACKAGE
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
+GTK_MIN_VER="2.4.0"
 
 if test `uname -s` = "Linux"; then
  	AC_DEFINE_UNQUOTED(OS_NAME,"`uname -o`")
@@ -120,41 +124,25 @@ fi
 #  Resolver libgadu oparty na pthread
 #
 
-ACX_PTHREAD(
-[
- 	# workaround dla pkconfiga
-	if test "x$PTHREAD_CFLAGS" = "x-pthread"; then
-		PTHREAD_LIBS="$PTHREAD_LIBS -pthread"
-	fi
-	
-	LIBS="$PTHREAD_LIBS $LIBS"
-	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-	CFLAGS_LIBGADU="$CFLAGS_LIBGADU $PTHREAD_CFLAGS"
-	CC="$PTHREAD_CC"
-	
-	have_pthread=yes
-	
-	AC_DEFINE([HAVE_PTHREAD])
-	], [
-	AC_MSG_ERROR([Your system is not supporting pthreads])
-])
-
-
-# AC_CHECK_HEADERS(asm/byteorder.h byteswap.h endian.h machine/endian.h arpa/nameser_compat.h)
-# AC_CHECK_FUNCS(bswap_32 bswap_16)
-
 AC_TYPE_SIGNAL
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memset mkdir strcasecmp strchr strlen])
 
-# AM_PROG_LIBTOOL
-AM_MAINTAINER_MODE
+IT_PROG_INTLTOOL([0.35.0])
 
-
+dnl -----------------------------------------------------------
+dnl Language Support
+dnl -----------------------------------------------------------
 AC_CHECK_HEADERS(libintl.h)
-ALL_LINGUAS="pl nl"
-AM_GNU_GETTEXT([use-libtool])
+GETTEXT_PACKAGE=$PACKAGE
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[Gettext package name])
+
+AM_GLIB_GNU_GETTEXT
+
+dnl ALL_LINGUAS="pl nl"
+dnl AM_GNU_GETTEXT([use-libtool])
 
 if test "x$GCC" = "xyes"; then
    CFLAGS="$CFLAGS -Wall -Wno-uninitialized -Wchar-subscripts -Wnested-externs -Wpointer-arith -Wno-sign-compare"
@@ -165,7 +153,7 @@ PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
 if test "x$PKG_CONFIG" = "xno"; then
-	AC_MSG_ERROR([pkgconfig ])
+	AC_MSG_ERROR([pkgconfig])
 fi
 
 PKG_CHECK_MODULES(GLIB,glib-2.0 >= 2.2.0,[
@@ -442,7 +430,7 @@ if test "x$with_jabber" != "xno"; then
     AC_CHECK_LIB([loudmouth-1],[lm_connection_set_jid],new_loudmouth=yes,new_loudmouth=no)
     
     if test "x$new_loudmouth" != "xno"; then
-	AC_DEFINE(BUILD_WITH_NEW_LOUDMOUTH)
+	AC_DEFINE([BUILD_WITH_NEW_LOUDMOUTH])
     fi
     
     AC_SUBST(JABBER_LIBS)
@@ -688,26 +676,26 @@ AM_CONDITIONAL(BUILD_UPDATE, test "$with_update" = "yes")
 AM_CONDITIONAL(BUILD_GNUTLS, test "$with_gnutls" = "yes")
 
 # Set PACKAGE_DATA_DIR in config.h.
-if test "x${datadir}" = 'x${prefix}/share'; then
-  if test "x${prefix}" = "xNONE"; then
-    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${ac_default_prefix}/share/${PACKAGE}")
-  else
-    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${prefix}/share/${PACKAGE}")
-  fi
-else
-  AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${datadir}/${PACKAGE}")
-fi
+# if test "x${datadir}" = 'x${prefix}/share'; then
+#   if test "x${prefix}" = "xNONE"; then
+#     AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${ac_default_prefix}/share/${PACKAGE}")
+#   else
+#     AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${prefix}/share/${PACKAGE}")
+#   fi
+# else
+#   AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${datadir}/${PACKAGE}")
+# fi
 
 # Set PACKAGE_LOCAL_DIR in config.h.
-if test "x${datadir}" = 'x${prefix}/share'; then
-  if test "x${prefix}" = "xNONE"; then
-    AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/share/locale")
-  else
-    AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/share/locale")
-  fi
-else
-  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${datadir}/locale")
-fi
+# if test "x${datadir}" = 'x${prefix}/share'; then
+#   if test "x${prefix}" = "xNONE"; then
+#     AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/share/locale")
+#   else
+#     AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/share/locale")
+#   fi
+# else
+#   AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${datadir}/locale")
+# fi
 
 
 # Set PACKAGE_SOURCE_DIR in config.h.
