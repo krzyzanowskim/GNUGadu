@@ -1,4 +1,4 @@
-# $Id: configure.in,v 1.136 2006/10/17 20:35:42 krzyzak Exp $
+# $Id: configure.in,v 1.137 2006/10/18 17:15:43 krzyzak Exp $
 m4_define([gg2_version],[2.3.0])
 
 AC_INIT(gg2,[gg2_version])
@@ -731,7 +731,6 @@ gg2_perl_embed=$srcdir/lib/perl_embed.h
 
 
 AC_OUTPUT([ 
-intl/Makefile 
 po/Makefile.in
 Makefile
 lib/Makefile
