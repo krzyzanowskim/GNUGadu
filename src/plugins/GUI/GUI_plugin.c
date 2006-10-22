@@ -1,4 +1,4 @@
-/* $Id: GUI_plugin.c,v 1.112 2005/07/27 17:48:50 mkobierzycki Exp $ */
+/* $Id: GUI_plugin.c,v 1.113 2006/10/22 08:37:04 krzyzak Exp $ */
 
 /*
  * GUI (gtk+) plugin for GNU Gadu 2
@@ -559,6 +559,9 @@ void gui_main_window_create(gboolean visible)
 		height = DEFAULT_HEIGHT;
 
 	gtk_window_set_default_size(GTK_WINDOW(window), width, height);
+
+	ggadu_config_var_set(gui_handler, "height", (gpointer) height);
+	ggadu_config_var_set(gui_handler, "width", (gpointer) width);
 
 	top = (gint) ggadu_config_var_get(gui_handler, "top");
 	left = (gint) ggadu_config_var_get(gui_handler, "left");

@@ -1,3 +1,6 @@
+21.10.2006
+- patch for #278 (height and width config variables fix) by Maciej Borzecki (GUI)
+
 17.10.2006
 - autotools revolution (krzak)
 - fix locales dir for old autotools (krzak)
