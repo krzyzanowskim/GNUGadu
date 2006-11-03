@@ -1,4 +1,4 @@
-# $Id: configure.in,v 1.137 2006/10/18 17:15:43 krzyzak Exp $
+# $Id: configure.in,v 1.138 2006/11/03 13:26:24 krzyzak Exp $
 m4_define([gg2_version],[2.3.0])
 
 AC_INIT(gg2,[gg2_version])
@@ -687,15 +687,23 @@ AM_CONDITIONAL(BUILD_GNUTLS, test "$with_gnutls" = "yes")
 # fi
 
 # Set PACKAGE_LOCAL_DIR in config.h.
-# if test "x${datadir}" = 'x${prefix}/share'; then
-#   if test "x${prefix}" = "xNONE"; then
-#     AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/share/locale")
-#   else
-#     AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/share/locale")
-#   fi
-# else
-#   AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${datadir}/locale")
-# fi
+#if test "x${datadir}" = 'x${prefix}/share'; then
+#  if test "x${prefix}" = "xNONE"; then
+#    "${ac_default_prefix}/share/locale"
+#  else
+#    AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/share/locale")
+#  fi
+#else
+#    AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${datadir}/locale")
+#fi
+
+if test "x${localedirCOMMON}" = "xNONE"; then
+    localedirCOMMON=${datadir}/locale
+else
+    localedirCOMMON=${localedir}
+fi
+
+AC_SUBST(localedirCOMMON)
 
 
 # Set PACKAGE_SOURCE_DIR in config.h.

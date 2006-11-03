@@ -1,3 +1,6 @@
+03.11.2006
+- $localedirCOMMON to fix #227 with old autotools (krzak)
+
 21.10.2006
 - patch for #278 (height and width config variables fix) by Maciej Borzecki (GUI)
 
