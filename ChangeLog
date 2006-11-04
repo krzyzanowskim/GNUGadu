@@ -1,3 +1,6 @@
+04.11.2006
+- fix read configuration from .gg2 rather than from .gg (gadu-gadu/krzak)
+
 03.11.2006
 - $localedirCOMMON to fix #227 with old autotools (krzak)
 
